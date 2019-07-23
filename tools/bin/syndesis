@@ -57,6 +57,7 @@ Examples:
 * Build only UI                                  syndesis -m ui
 * Build only images with OpenShift S2I, fast     syndesis --images --s2i -f
 * Build only the server and meta image           syndesis --module server,meta --s2i
+* Build for integration test                     syndesis integration-test
 * Build for system test                          syndesis system-test
 * Start Minishift afresh                         syndesis minishift --full-reset --install
 * Setup debug port forward for rest pod          syndesis dev --debug rest

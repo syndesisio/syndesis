@@ -1,0 +1,2504 @@
+{
+  "connections": {
+    ":5": {
+      "configuredProperties": {
+        "password": "»ENC:0bd1954bab3133749e7735120f4a61d7fa920c006e7a7031fedfe668a17015b76dd5cbbb59f219b0be189d83259503d7",
+        "schema": "sampledb",
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+        "user": "sampledb"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke SQL to obtain, store, update, or delete data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "batch": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Batch update mode",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                      "order": 1,
+                      "placeholder": "for example ':#MYPARAMNAME'",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-connector",
+            "name": "Invoke SQL",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke SQL to obtain data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that returns results, such as SELECT.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored procedure template to perform.",
+                      "required": false,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-connector",
+            "name": "Invoke stored procedure",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored Procedure template to perform.",
+                      "required": true,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-start-connector",
+            "name": "Periodic stored procedure invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "jdbc-driver",
+            "type": "EXTENSION_TAG"
+          }
+        ],
+        "description": "Subscribe for and publish messages.",
+        "icon": "assets:sql.svg",
+        "id": "sql",
+        "name": "Database",
+        "properties": {
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Password for the database connection.",
+            "order": 3,
+            "required": true,
+            "secret": true,
+            "type": "string"
+          },
+          "schema": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Schema",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "labelHint": "Database schema.",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "url": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Connection URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "JDBC URL of the database.",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "user": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Username",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "Username for the database connection.",
+            "order": 2,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 170
+      },
+      "connectorId": "sql",
+      "description": "Connection to SampleDB",
+      "icon": "assets:sql.svg",
+      "id": "5",
+      "isDerived": false,
+      "name": "PostgresDB",
+      "tags": [
+        "sampledb"
+      ],
+      "uses": 0
+    },
+    ":i-LhBIs0tM_vFKbZySXDFz": {
+      "configuredProperties": {
+        "binary": "true",
+        "connectTimeout": "10000",
+        "disconnect": "false",
+        "host": "ftpserver",
+        "maximumReconnectAttempts": "3",
+        "passiveMode": "true",
+        "password": "»ENC:7dceb0f85800ce4fb9e8ac9b263f477c99d6eeffb3e2418c8461f756e69bd288",
+        "port": "21",
+        "reconnectDelay": "1000",
+        "timeout": "30000",
+        "username": "syndesis"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Upload a file to the FTP server",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Upload to FTP server",
+                  "name": "Upload to FTP server",
+                  "properties": {
+                    "directoryName": {
+                      "deprecated": false,
+                      "displayName": "FTP directory",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "FTP directory name in which to upload file",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileExist": {
+                      "defaultValue": "Override",
+                      "deprecated": false,
+                      "displayName": "If file exists",
+                      "enum": [
+                        {
+                          "label": "Override",
+                          "value": "Override"
+                        },
+                        {
+                          "label": "Append",
+                          "value": "Append"
+                        },
+                        {
+                          "label": "Fail",
+                          "value": "Fail"
+                        },
+                        {
+                          "label": "Ignore",
+                          "value": "Ignore"
+                        },
+                        {
+                          "label": "Move",
+                          "value": "Move"
+                        },
+                        {
+                          "label": "TryRename",
+                          "value": "TryRename"
+                        }
+                      ],
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileName": {
+                      "deprecated": false,
+                      "displayName": "File name expression",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Simple language expression that resolves to a file name",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "tempFileName": {
+                      "deprecated": false,
+                      "displayName": "Temporary file name while copying",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Temporary file name while copying",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "tempPrefix": {
+                      "deprecated": false,
+                      "displayName": "Temporary file prefix while copying",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Temporary file prefix while copying",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:ftp-upload-connector",
+            "name": "Upload",
+            "pattern": "To"
+          },
+          {
+            "actionType": "connector",
+            "description": "Download a file from the FTP server",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Download from FTP server",
+                  "name": "Download from FTP server",
+                  "properties": {
+                    "delay": {
+                      "defaultValue": "5000",
+                      "deprecated": false,
+                      "displayName": "Time interval before the next poll",
+                      "group": "consumer",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Wait this amount of time between polls",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "delete": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Delete file after download",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "consumer",
+                      "javaType": "boolean",
+                      "kind": "parameter",
+                      "labelHint": "Delete the file from the server after downloading it",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "directoryName": {
+                      "deprecated": false,
+                      "displayName": "FTP directory",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "FTP directory name from which to download file",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileName": {
+                      "deprecated": false,
+                      "displayName": "File name expression",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Simple language expression that resolves to a file name",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "initialDelay": {
+                      "defaultValue": "1000",
+                      "deprecated": false,
+                      "displayName": "Interval before polling starts",
+                      "group": "consumer",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Wait amount of time before starting to poll",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:ftp-download-connector",
+            "name": "Download",
+            "pattern": "From"
+          }
+        ],
+        "componentScheme": "ftp",
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Download and upload files.",
+        "icon": "assets:ftp.svg",
+        "id": "ftp",
+        "name": "FTP",
+        "properties": {
+          "binary": {
+            "defaultValue": "true",
+            "deprecated": false,
+            "displayName": "Binary file transfer mode",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Indicate whether file transfer mode is binary",
+            "order": 8,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "connectTimeout": {
+            "defaultValue": "10000",
+            "deprecated": false,
+            "displayName": "Connect timeout",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+            "order": 5,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "disconnect": {
+            "defaultValue": "false",
+            "deprecated": false,
+            "displayName": "Disconnect from server after use",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Disconnect from the server after performing the action",
+            "order": 10,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "host": {
+            "deprecated": false,
+            "displayName": "Host",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "path",
+            "labelHint": "Host name of the FTP server to connect to",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "maximumReconnectAttempts": {
+            "defaultValue": "3",
+            "deprecated": false,
+            "displayName": "Maximum reconnect attempts",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Try to reconnect no more than this many times",
+            "order": 7,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "passiveMode": {
+            "defaultValue": "true",
+            "deprecated": false,
+            "displayName": "Passive connection mode",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Indicates whether passive connection mode is being used",
+            "order": 9,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "password": {
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "common,security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Password for connecting to the FTP server",
+            "order": 3,
+            "raw": true,
+            "required": false,
+            "secret": true,
+            "type": "string"
+          },
+          "port": {
+            "defaultValue": "21",
+            "deprecated": false,
+            "displayName": "Port",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "path",
+            "labelHint": "FTP port",
+            "order": 4,
+            "required": true,
+            "secret": false,
+            "type": "integer"
+          },
+          "reconnectDelay": {
+            "defaultValue": "1000",
+            "deprecated": false,
+            "displayName": "Reconnect delay",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Number of milliseconds to wait before trying to reconnect",
+            "order": 6,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "timeout": {
+            "defaultValue": "30000",
+            "deprecated": false,
+            "displayName": "Data timeout",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Maximum number of milliseconds to wait for a reply",
+            "order": 11,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "username": {
+            "deprecated": false,
+            "displayName": "User name",
+            "group": "common,security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "User name for connecting to the FTP server",
+            "order": 2,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 170
+      },
+      "connectorId": "ftp",
+      "createdDate": 1560353407030,
+      "icon": "assets:ftp.svg",
+      "id": "i-LhBIs0tM_vFKbZySXDFz",
+      "isDerived": false,
+      "lastUpdated": 1560361844432,
+      "name": "FtpServer",
+      "userId": "developer",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":ftp": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Upload a file to the FTP server",
+          "descriptor": {
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Upload to FTP server",
+                "name": "Upload to FTP server",
+                "properties": {
+                  "directoryName": {
+                    "deprecated": false,
+                    "displayName": "FTP directory",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "FTP directory name in which to upload file",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileExist": {
+                    "defaultValue": "Override",
+                    "deprecated": false,
+                    "displayName": "If file exists",
+                    "enum": [
+                      {
+                        "label": "Override",
+                        "value": "Override"
+                      },
+                      {
+                        "label": "Append",
+                        "value": "Append"
+                      },
+                      {
+                        "label": "Fail",
+                        "value": "Fail"
+                      },
+                      {
+                        "label": "Ignore",
+                        "value": "Ignore"
+                      },
+                      {
+                        "label": "Move",
+                        "value": "Move"
+                      },
+                      {
+                        "label": "TryRename",
+                        "value": "TryRename"
+                      }
+                    ],
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "deprecated": false,
+                    "displayName": "File name expression",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Simple language expression that resolves to a file name",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "tempFileName": {
+                    "deprecated": false,
+                    "displayName": "Temporary file name while copying",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Temporary file name while copying",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "tempPrefix": {
+                    "deprecated": false,
+                    "displayName": "Temporary file prefix while copying",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Temporary file prefix while copying",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:ftp-upload-connector",
+          "name": "Upload",
+          "pattern": "To"
+        },
+        {
+          "actionType": "connector",
+          "description": "Download a file from the FTP server",
+          "descriptor": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Download from FTP server",
+                "name": "Download from FTP server",
+                "properties": {
+                  "delay": {
+                    "defaultValue": "5000",
+                    "deprecated": false,
+                    "displayName": "Time interval before the next poll",
+                    "group": "consumer",
+                    "javaType": "java.lang.Integer",
+                    "kind": "parameter",
+                    "labelHint": "Wait this amount of time between polls",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "delete": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Delete file after download",
+                    "enum": [
+                      {
+                        "label": "No",
+                        "value": "false"
+                      },
+                      {
+                        "label": "Yes",
+                        "value": "true"
+                      }
+                    ],
+                    "group": "consumer",
+                    "javaType": "boolean",
+                    "kind": "parameter",
+                    "labelHint": "Delete the file from the server after downloading it",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "directoryName": {
+                    "deprecated": false,
+                    "displayName": "FTP directory",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "FTP directory name from which to download file",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "deprecated": false,
+                    "displayName": "File name expression",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Simple language expression that resolves to a file name",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "initialDelay": {
+                    "defaultValue": "1000",
+                    "deprecated": false,
+                    "displayName": "Interval before polling starts",
+                    "group": "consumer",
+                    "javaType": "java.lang.Integer",
+                    "kind": "parameter",
+                    "labelHint": "Wait amount of time before starting to poll",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:ftp-download-connector",
+          "name": "Download",
+          "pattern": "From"
+        }
+      ],
+      "componentScheme": "ftp",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Download and upload files.",
+      "icon": "assets:ftp.svg",
+      "id": "ftp",
+      "name": "FTP",
+      "properties": {
+        "binary": {
+          "defaultValue": "true",
+          "deprecated": false,
+          "displayName": "Binary file transfer mode",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Indicate whether file transfer mode is binary",
+          "order": 8,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "connectTimeout": {
+          "defaultValue": "10000",
+          "deprecated": false,
+          "displayName": "Connect timeout",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+          "order": 5,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "disconnect": {
+          "defaultValue": "false",
+          "deprecated": false,
+          "displayName": "Disconnect from server after use",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Disconnect from the server after performing the action",
+          "order": 10,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "host": {
+          "deprecated": false,
+          "displayName": "Host",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "path",
+          "labelHint": "Host name of the FTP server to connect to",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "maximumReconnectAttempts": {
+          "defaultValue": "3",
+          "deprecated": false,
+          "displayName": "Maximum reconnect attempts",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Try to reconnect no more than this many times",
+          "order": 7,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "passiveMode": {
+          "defaultValue": "true",
+          "deprecated": false,
+          "displayName": "Passive connection mode",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Indicates whether passive connection mode is being used",
+          "order": 9,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "password": {
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "common,security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Password for connecting to the FTP server",
+          "order": 3,
+          "raw": true,
+          "required": false,
+          "secret": true,
+          "type": "string"
+        },
+        "port": {
+          "defaultValue": "21",
+          "deprecated": false,
+          "displayName": "Port",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "path",
+          "labelHint": "FTP port",
+          "order": 4,
+          "required": true,
+          "secret": false,
+          "type": "integer"
+        },
+        "reconnectDelay": {
+          "defaultValue": "1000",
+          "deprecated": false,
+          "displayName": "Reconnect delay",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Number of milliseconds to wait before trying to reconnect",
+          "order": 6,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "timeout": {
+          "defaultValue": "30000",
+          "deprecated": false,
+          "displayName": "Data timeout",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Maximum number of milliseconds to wait for a reply",
+          "order": 11,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "username": {
+          "deprecated": false,
+          "displayName": "User name",
+          "group": "common,security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "User name for connecting to the FTP server",
+          "order": 2,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 170
+    },
+    ":sql": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke SQL to obtain, store, update, or delete data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                "name": "SQL statement",
+                "properties": {
+                  "batch": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Batch update mode",
+                    "enum": [
+                      {
+                        "label": "No",
+                        "value": "false"
+                      },
+                      {
+                        "label": "Yes",
+                        "value": "true"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                    "order": 2,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                    "order": 1,
+                    "placeholder": "for example ':#MYPARAMNAME'",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-connector",
+          "name": "Invoke SQL",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke SQL to obtain data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that returns results, such as SELECT.",
+                "name": "SQL statement",
+                "properties": {
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed.",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-start-connector",
+          "name": "Periodic SQL invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored procedure template to perform.",
+                    "required": false,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-connector",
+          "name": "Invoke stored procedure",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored Procedure template to perform.",
+                    "required": true,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-start-connector",
+          "name": "Periodic stored procedure invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        }
+      ],
+      "connectorCustomizers": [
+        "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "jdbc-driver",
+          "type": "EXTENSION_TAG"
+        }
+      ],
+      "description": "Subscribe for and publish messages.",
+      "icon": "assets:sql.svg",
+      "id": "sql",
+      "name": "Database",
+      "properties": {
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Password for the database connection.",
+          "order": 3,
+          "required": true,
+          "secret": true,
+          "type": "string"
+        },
+        "schema": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Schema",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "labelHint": "Database schema.",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "url": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Connection URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "JDBC URL of the database.",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "user": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Username",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "Username for the database connection.",
+          "order": 2,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 170
+    }
+  },
+  "integrations": {
+    ":i-LhBKwSKM_vFKbZySXDIz": {
+      "createdAt": 1562933891049,
+      "flows": [
+        {
+          "id": "-LhBKGqS0uIEFviBxBHI",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Download a file from the FTP server",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "Todo",
+                    "specification": "[\n  {\"task\": \"FTP\", \"completed\": 0}\n]"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "name": "Download from FTP server",
+                      "properties": {
+                        "delay": {
+                          "defaultValue": "5000",
+                          "deprecated": false,
+                          "displayName": "Time interval before the next poll",
+                          "group": "consumer",
+                          "javaType": "java.lang.Integer",
+                          "kind": "parameter",
+                          "labelHint": "Wait this amount of time between polls",
+                          "required": false,
+                          "secret": false,
+                          "type": "duration"
+                        },
+                        "delete": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Delete file after download",
+                          "enum": [
+                            {
+                              "label": "No",
+                              "value": "false"
+                            },
+                            {
+                              "label": "Yes",
+                              "value": "true"
+                            }
+                          ],
+                          "group": "consumer",
+                          "javaType": "boolean",
+                          "kind": "parameter",
+                          "labelHint": "Delete the file from the server after downloading it",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "directoryName": {
+                          "deprecated": false,
+                          "displayName": "FTP directory",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "FTP directory name from which to download file",
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "deprecated": false,
+                          "displayName": "File name expression",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "Simple language expression that resolves to a file name",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "initialDelay": {
+                          "defaultValue": "1000",
+                          "deprecated": false,
+                          "displayName": "Interval before polling starts",
+                          "group": "consumer",
+                          "javaType": "java.lang.Integer",
+                          "kind": "parameter",
+                          "labelHint": "Wait amount of time before starting to poll",
+                          "required": false,
+                          "secret": false,
+                          "type": "duration"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:ftp-download-connector",
+                "name": "Download",
+                "pattern": "From"
+              },
+              "configuredProperties": {
+                "delay": "5000",
+                "delete": "false",
+                "directoryName": "io/syndesis/qe/itest/ftp",
+                "fileName": "todo.json",
+                "initialDelay": "1000"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "binary": "true",
+                  "connectTimeout": "10000",
+                  "disconnect": "false",
+                  "host": "ftpserver",
+                  "maximumReconnectAttempts": "3",
+                  "passiveMode": "true",
+                  "password": "»ENC:7dceb0f85800ce4fb9e8ac9b263f477c99d6eeffb3e2418c8461f756e69bd288",
+                  "port": "21",
+                  "reconnectDelay": "1000",
+                  "timeout": "30000",
+                  "username": "syndesis"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Upload a file to the FTP server",
+                      "descriptor": {
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Upload to FTP server",
+                            "name": "Upload to FTP server",
+                            "properties": {
+                              "directoryName": {
+                                "deprecated": false,
+                                "displayName": "FTP directory",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "FTP directory name in which to upload file",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileExist": {
+                                "defaultValue": "Override",
+                                "deprecated": false,
+                                "displayName": "If file exists",
+                                "enum": [
+                                  {
+                                    "label": "Override",
+                                    "value": "Override"
+                                  },
+                                  {
+                                    "label": "Append",
+                                    "value": "Append"
+                                  },
+                                  {
+                                    "label": "Fail",
+                                    "value": "Fail"
+                                  },
+                                  {
+                                    "label": "Ignore",
+                                    "value": "Ignore"
+                                  },
+                                  {
+                                    "label": "Move",
+                                    "value": "Move"
+                                  },
+                                  {
+                                    "label": "TryRename",
+                                    "value": "TryRename"
+                                  }
+                                ],
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileName": {
+                                "deprecated": false,
+                                "displayName": "File name expression",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Simple language expression that resolves to a file name",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "tempFileName": {
+                                "deprecated": false,
+                                "displayName": "Temporary file name while copying",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Temporary file name while copying",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "tempPrefix": {
+                                "deprecated": false,
+                                "displayName": "Temporary file prefix while copying",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Temporary file prefix while copying",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:ftp-upload-connector",
+                      "name": "Upload",
+                      "pattern": "To"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Download a file from the FTP server",
+                      "descriptor": {
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Download from FTP server",
+                            "name": "Download from FTP server",
+                            "properties": {
+                              "delay": {
+                                "defaultValue": "5000",
+                                "deprecated": false,
+                                "displayName": "Time interval before the next poll",
+                                "group": "consumer",
+                                "javaType": "java.lang.Integer",
+                                "kind": "parameter",
+                                "labelHint": "Wait this amount of time between polls",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "delete": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Delete file after download",
+                                "enum": [
+                                  {
+                                    "label": "No",
+                                    "value": "false"
+                                  },
+                                  {
+                                    "label": "Yes",
+                                    "value": "true"
+                                  }
+                                ],
+                                "group": "consumer",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "labelHint": "Delete the file from the server after downloading it",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "directoryName": {
+                                "deprecated": false,
+                                "displayName": "FTP directory",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "FTP directory name from which to download file",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileName": {
+                                "deprecated": false,
+                                "displayName": "File name expression",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Simple language expression that resolves to a file name",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "initialDelay": {
+                                "defaultValue": "1000",
+                                "deprecated": false,
+                                "displayName": "Interval before polling starts",
+                                "group": "consumer",
+                                "javaType": "java.lang.Integer",
+                                "kind": "parameter",
+                                "labelHint": "Wait amount of time before starting to poll",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:ftp-download-connector",
+                      "name": "Download",
+                      "pattern": "From"
+                    }
+                  ],
+                  "componentScheme": "ftp",
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Download and upload files.",
+                  "icon": "assets:ftp.svg",
+                  "id": "ftp",
+                  "name": "FTP",
+                  "properties": {
+                    "binary": {
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Binary file transfer mode",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Indicate whether file transfer mode is binary",
+                      "order": 8,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "connectTimeout": {
+                      "defaultValue": "10000",
+                      "deprecated": false,
+                      "displayName": "Connect timeout",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "disconnect": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Disconnect from server after use",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Disconnect from the server after performing the action",
+                      "order": 10,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "host": {
+                      "deprecated": false,
+                      "displayName": "Host",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Host name of the FTP server to connect to",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "maximumReconnectAttempts": {
+                      "defaultValue": "3",
+                      "deprecated": false,
+                      "displayName": "Maximum reconnect attempts",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Try to reconnect no more than this many times",
+                      "order": 7,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "passiveMode": {
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Passive connection mode",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Indicates whether passive connection mode is being used",
+                      "order": 9,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "password": {
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "common,security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Password for connecting to the FTP server",
+                      "order": 3,
+                      "raw": true,
+                      "required": false,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "port": {
+                      "defaultValue": "21",
+                      "deprecated": false,
+                      "displayName": "Port",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "path",
+                      "labelHint": "FTP port",
+                      "order": 4,
+                      "required": true,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "reconnectDelay": {
+                      "defaultValue": "1000",
+                      "deprecated": false,
+                      "displayName": "Reconnect delay",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Number of milliseconds to wait before trying to reconnect",
+                      "order": 6,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "timeout": {
+                      "defaultValue": "30000",
+                      "deprecated": false,
+                      "displayName": "Data timeout",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Maximum number of milliseconds to wait for a reply",
+                      "order": 11,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "username": {
+                      "deprecated": false,
+                      "displayName": "User name",
+                      "group": "common,security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "User name for connecting to the FTP server",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 170
+                },
+                "connectorId": "ftp",
+                "createdDate": 1560353407030,
+                "icon": "assets:ftp.svg",
+                "id": "i-LhBIs0tM_vFKbZySXDFz",
+                "isDerived": false,
+                "lastUpdated": 1560361844432,
+                "name": "FtpServer",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-LhBKHCz0uIEFviBxBHI",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false"
+              },
+              "id": "-LhBKu5Y0uIEFviBxBHL",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "Parameters of SQL [insert into todo (task, completed) values (:#task, :#done)]",
+                    "kind": "json-schema",
+                    "name": "Data Mapper (SQL Parameter)",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true},\"done\":{\"type\":\"integer\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_IN"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhBKHCz0uIEFviBxBHI\",\"uri\":\"atlas:json:-LhBKHCz0uIEFviBxBHI\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhBKf6H0uIEFviBxBHI\",\"uri\":\"atlas:json:-LhBKf6H0uIEFviBxBHI\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Collection\",\"mappingType\":\"COLLECTION\",\"collectionType\":null,\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.614696\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/<>/task\",\"fieldType\":\"STRING\",\"docId\":\"-LhBKHCz0uIEFviBxBHI\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/<>/task\",\"fieldType\":\"STRING\",\"docId\":\"-LhBKf6H0uIEFviBxBHI\",\"userCreated\":false}]}]}},{\"jsonType\":\"io.atlasmap.v2.Collection\",\"mappingType\":\"COLLECTION\",\"collectionType\":null,\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.594673\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"completed\",\"path\":\"/<>/completed\",\"fieldType\":\"INTEGER\",\"docId\":\"-LhBKHCz0uIEFviBxBHI\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"done\",\"path\":\"/<>/done\",\"fieldType\":\"INTEGER\",\"docId\":\"-LhBKf6H0uIEFviBxBHI\",\"userCreated\":false}]}]}}]},\"name\":\"UI.803145\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LhBKjpg0uIEFviBxBHK",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false"
+              },
+              "id": "-LhBKvmT0uIEFviBxBHM",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invoke SQL to obtain, store, update, or delete data.",
+                "descriptor": {
+                  "componentScheme": "sql",
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "description": "Parameters of SQL [insert into todo (task, completed) values (:#task, :#done)]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "collection"
+                    },
+                    "name": "SQL Parameter",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true},\"done\":{\"type\":\"integer\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_IN"
+                  },
+                  "outputDataShape": {
+                    "description": "Result of SQL [insert into todo (task, completed) values (:#task, :#done)]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "collection"
+                    },
+                    "name": "SQL Result",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"id\":{\"type\":\"integer\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_OUT"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                      "name": "SQL statement",
+                      "properties": {
+                        "batch": {
+                          "defaultValue": "false",
+                          "deprecated": false,
+                          "displayName": "Batch update mode",
+                          "enum": [
+                            {
+                              "label": "No",
+                              "value": "false"
+                            },
+                            {
+                              "label": "Yes",
+                              "value": "true"
+                            }
+                          ],
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "property",
+                          "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                          "order": 2,
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "query": {
+                          "defaultValue": "insert into todo (task, completed) values (:#task, :#done)",
+                          "deprecated": false,
+                          "displayName": "SQL statement",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                          "order": 1,
+                          "placeholder": "for example ':#MYPARAMNAME'",
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "sql-connector",
+                "name": "Invoke SQL",
+                "pattern": "To",
+                "tags": [
+                  "dynamic"
+                ]
+              },
+              "configuredProperties": {
+                "batch": "true",
+                "query": "insert into todo (task, completed) values (:#task, :#done)"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "password": "»ENC:0bd1954bab3133749e7735120f4a61d7fa920c006e7a7031fedfe668a17015b76dd5cbbb59f219b0be189d83259503d7",
+                  "schema": "sampledb",
+                  "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+                  "user": "sampledb"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke SQL to obtain, store, update, or delete data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "batch": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Batch update mode",
+                                "enum": [
+                                  {
+                                    "label": "No",
+                                    "value": "false"
+                                  },
+                                  {
+                                    "label": "Yes",
+                                    "value": "true"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "property",
+                                "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                                "order": 2,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                                "order": 1,
+                                "placeholder": "for example ':#MYPARAMNAME'",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-connector",
+                      "name": "Invoke SQL",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke SQL to obtain data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that returns results, such as SELECT.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed.",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-start-connector",
+                      "name": "Periodic SQL invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "property",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored procedure template to perform.",
+                                "required": false,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-connector",
+                      "name": "Invoke stored procedure",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored Procedure template to perform.",
+                                "required": true,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-start-connector",
+                      "name": "Periodic stored procedure invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    }
+                  ],
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "jdbc-driver",
+                      "type": "EXTENSION_TAG"
+                    }
+                  ],
+                  "description": "Subscribe for and publish messages.",
+                  "icon": "assets:sql.svg",
+                  "id": "sql",
+                  "name": "Database",
+                  "properties": {
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Password for the database connection.",
+                      "order": 3,
+                      "required": true,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "schema": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Schema",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "labelHint": "Database schema.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "url": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Connection URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "JDBC URL of the database.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "user": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Username",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Username for the database connection.",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 170
+                },
+                "connectorId": "sql",
+                "description": "Connection to SampleDB",
+                "icon": "assets:sql.svg",
+                "id": "5",
+                "isDerived": false,
+                "name": "PostgresDB",
+                "tags": [
+                  "sampledb"
+                ],
+                "uses": 0
+              },
+              "id": "-LhBKf6H0uIEFviBxBHI",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ],
+          "tags": [
+            "5",
+            "i-LhBIs0tM_vFKbZySXDFz"
+          ],
+          "type": "PRIMARY"
+        }
+      ],
+      "id": "i-LhBKwSKM_vFKbZySXDIz",
+      "name": "FtpToDB",
+      "tags": [
+        "ftp",
+        "sql"
+      ],
+      "updatedAt": 1562933953877,
+      "version": 4
+    }
+  }
+}

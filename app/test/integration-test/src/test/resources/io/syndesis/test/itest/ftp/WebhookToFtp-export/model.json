@@ -1,0 +1,1725 @@
+{
+  "connections": {
+    ":i-LhBIs0tM_vFKbZySXDFz": {
+      "configuredProperties": {
+        "binary": "true",
+        "connectTimeout": "10000",
+        "disconnect": "false",
+        "host": "ftpserver",
+        "maximumReconnectAttempts": "3",
+        "passiveMode": "true",
+        "password": "»ENC:7dceb0f85800ce4fb9e8ac9b263f477c99d6eeffb3e2418c8461f756e69bd288",
+        "port": "21",
+        "reconnectDelay": "1000",
+        "timeout": "30000",
+        "username": "syndesis"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Upload a file to the FTP server",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Upload to FTP server",
+                  "name": "Upload to FTP server",
+                  "properties": {
+                    "directoryName": {
+                      "deprecated": false,
+                      "displayName": "FTP directory",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "FTP directory name in which to upload file",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileExist": {
+                      "defaultValue": "Override",
+                      "deprecated": false,
+                      "displayName": "If file exists",
+                      "enum": [
+                        {
+                          "label": "Override",
+                          "value": "Override"
+                        },
+                        {
+                          "label": "Append",
+                          "value": "Append"
+                        },
+                        {
+                          "label": "Fail",
+                          "value": "Fail"
+                        },
+                        {
+                          "label": "Ignore",
+                          "value": "Ignore"
+                        },
+                        {
+                          "label": "Move",
+                          "value": "Move"
+                        },
+                        {
+                          "label": "TryRename",
+                          "value": "TryRename"
+                        }
+                      ],
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileName": {
+                      "deprecated": false,
+                      "displayName": "File name expression",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Simple language expression that resolves to a file name",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "tempFileName": {
+                      "deprecated": false,
+                      "displayName": "Temporary file name while copying",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Temporary file name while copying",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "tempPrefix": {
+                      "deprecated": false,
+                      "displayName": "Temporary file prefix while copying",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Temporary file prefix while copying",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:ftp-upload-connector",
+            "name": "Upload",
+            "pattern": "To"
+          },
+          {
+            "actionType": "connector",
+            "description": "Download a file from the FTP server",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Download from FTP server",
+                  "name": "Download from FTP server",
+                  "properties": {
+                    "delay": {
+                      "defaultValue": "5000",
+                      "deprecated": false,
+                      "displayName": "Time interval before the next poll",
+                      "group": "consumer",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Wait this amount of time between polls",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "delete": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Delete file after download",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "consumer",
+                      "javaType": "boolean",
+                      "kind": "parameter",
+                      "labelHint": "Delete the file from the server after downloading it",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "directoryName": {
+                      "deprecated": false,
+                      "displayName": "FTP directory",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "FTP directory name from which to download file",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "fileName": {
+                      "deprecated": false,
+                      "displayName": "File name expression",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Simple language expression that resolves to a file name",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "initialDelay": {
+                      "defaultValue": "1000",
+                      "deprecated": false,
+                      "displayName": "Interval before polling starts",
+                      "group": "consumer",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Wait amount of time before starting to poll",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:ftp-download-connector",
+            "name": "Download",
+            "pattern": "From"
+          }
+        ],
+        "componentScheme": "ftp",
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Download and upload files.",
+        "icon": "assets:ftp.svg",
+        "id": "ftp",
+        "name": "FTP",
+        "properties": {
+          "binary": {
+            "defaultValue": "true",
+            "deprecated": false,
+            "displayName": "Binary file transfer mode",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Indicate whether file transfer mode is binary",
+            "order": 8,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "connectTimeout": {
+            "defaultValue": "10000",
+            "deprecated": false,
+            "displayName": "Connect timeout",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+            "order": 5,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "disconnect": {
+            "defaultValue": "false",
+            "deprecated": false,
+            "displayName": "Disconnect from server after use",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Disconnect from the server after performing the action",
+            "order": 10,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "host": {
+            "deprecated": false,
+            "displayName": "Host",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "path",
+            "labelHint": "Host name of the FTP server to connect to",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "maximumReconnectAttempts": {
+            "defaultValue": "3",
+            "deprecated": false,
+            "displayName": "Maximum reconnect attempts",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Try to reconnect no more than this many times",
+            "order": 7,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "passiveMode": {
+            "defaultValue": "true",
+            "deprecated": false,
+            "displayName": "Passive connection mode",
+            "enum": [
+              {
+                "label": "No",
+                "value": "false"
+              },
+              {
+                "label": "Yes",
+                "value": "true"
+              }
+            ],
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Indicates whether passive connection mode is being used",
+            "order": 9,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "password": {
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "common,security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Password for connecting to the FTP server",
+            "order": 3,
+            "raw": true,
+            "required": false,
+            "secret": true,
+            "type": "string"
+          },
+          "port": {
+            "defaultValue": "21",
+            "deprecated": false,
+            "displayName": "Port",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "path",
+            "labelHint": "FTP port",
+            "order": 4,
+            "required": true,
+            "secret": false,
+            "type": "integer"
+          },
+          "reconnectDelay": {
+            "defaultValue": "1000",
+            "deprecated": false,
+            "displayName": "Reconnect delay",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Number of milliseconds to wait before trying to reconnect",
+            "order": 6,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "timeout": {
+            "defaultValue": "30000",
+            "deprecated": false,
+            "displayName": "Data timeout",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "labelHint": "Maximum number of milliseconds to wait for a reply",
+            "order": 11,
+            "required": false,
+            "secret": false,
+            "type": "integer"
+          },
+          "username": {
+            "deprecated": false,
+            "displayName": "User name",
+            "group": "common,security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "User name for connecting to the FTP server",
+            "order": 2,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 136
+      },
+      "connectorId": "ftp",
+      "createdDate": 1560353407030,
+      "icon": "assets:ftp.svg",
+      "id": "i-LhBIs0tM_vFKbZySXDFz",
+      "isDerived": false,
+      "lastUpdated": 1560361844432,
+      "name": "FtpServer",
+      "userId": "developer",
+      "uses": 0
+    },
+    ":webhook": {
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Start an integration from a Webhook",
+            "descriptor": {
+              "componentScheme": "servlet",
+              "configuredProperties": {
+                "headerFilterStrategy": "syndesisHeaderStrategy",
+                "httpMethodRestrict": "GET,POST"
+              },
+              "connectorCustomizers": [
+                "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Webhook Configuration",
+                  "name": "configuration",
+                  "properties": {
+                    "contextPath": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The Webhook token that will be set as final part of the URL",
+                      "displayName": "Webhook Token",
+                      "generator": "alphanum:50",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "required": true,
+                      "secret": false,
+                      "tags": [
+                        "context-path"
+                      ],
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:webhook-incoming",
+            "metadata": {
+              "serverBasePath": "/webhook"
+            },
+            "name": "Incoming Webhook",
+            "pattern": "From",
+            "tags": [
+              "expose"
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Create direct connections with external systems through Webhooks",
+        "icon": "assets:webhook.svg",
+        "id": "webhook",
+        "metadata": {
+          "hide-from-connection-pages": "true"
+        },
+        "name": "Webhook",
+        "version": 136
+      },
+      "connectorId": "webhook",
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "isDerived": false,
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":ftp": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Upload a file to the FTP server",
+          "descriptor": {
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Upload to FTP server",
+                "name": "Upload to FTP server",
+                "properties": {
+                  "directoryName": {
+                    "deprecated": false,
+                    "displayName": "FTP directory",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "FTP directory name in which to upload file",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileExist": {
+                    "defaultValue": "Override",
+                    "deprecated": false,
+                    "displayName": "If file exists",
+                    "enum": [
+                      {
+                        "label": "Override",
+                        "value": "Override"
+                      },
+                      {
+                        "label": "Append",
+                        "value": "Append"
+                      },
+                      {
+                        "label": "Fail",
+                        "value": "Fail"
+                      },
+                      {
+                        "label": "Ignore",
+                        "value": "Ignore"
+                      },
+                      {
+                        "label": "Move",
+                        "value": "Move"
+                      },
+                      {
+                        "label": "TryRename",
+                        "value": "TryRename"
+                      }
+                    ],
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "deprecated": false,
+                    "displayName": "File name expression",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Simple language expression that resolves to a file name",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "tempFileName": {
+                    "deprecated": false,
+                    "displayName": "Temporary file name while copying",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Temporary file name while copying",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "tempPrefix": {
+                    "deprecated": false,
+                    "displayName": "Temporary file prefix while copying",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Temporary file prefix while copying",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:ftp-upload-connector",
+          "name": "Upload",
+          "pattern": "To"
+        },
+        {
+          "actionType": "connector",
+          "description": "Download a file from the FTP server",
+          "descriptor": {
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Download from FTP server",
+                "name": "Download from FTP server",
+                "properties": {
+                  "delay": {
+                    "defaultValue": "5000",
+                    "deprecated": false,
+                    "displayName": "Time interval before the next poll",
+                    "group": "consumer",
+                    "javaType": "java.lang.Integer",
+                    "kind": "parameter",
+                    "labelHint": "Wait this amount of time between polls",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "delete": {
+                    "defaultValue": "false",
+                    "deprecated": false,
+                    "displayName": "Delete file after download",
+                    "enum": [
+                      {
+                        "label": "No",
+                        "value": "false"
+                      },
+                      {
+                        "label": "Yes",
+                        "value": "true"
+                      }
+                    ],
+                    "group": "consumer",
+                    "javaType": "boolean",
+                    "kind": "parameter",
+                    "labelHint": "Delete the file from the server after downloading it",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "directoryName": {
+                    "deprecated": false,
+                    "displayName": "FTP directory",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "FTP directory name from which to download file",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "fileName": {
+                    "deprecated": false,
+                    "displayName": "File name expression",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Simple language expression that resolves to a file name",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "initialDelay": {
+                    "defaultValue": "1000",
+                    "deprecated": false,
+                    "displayName": "Interval before polling starts",
+                    "group": "consumer",
+                    "javaType": "java.lang.Integer",
+                    "kind": "parameter",
+                    "labelHint": "Wait amount of time before starting to poll",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:ftp-download-connector",
+          "name": "Download",
+          "pattern": "From"
+        }
+      ],
+      "componentScheme": "ftp",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Download and upload files.",
+      "icon": "assets:ftp.svg",
+      "id": "ftp",
+      "name": "FTP",
+      "properties": {
+        "binary": {
+          "defaultValue": "true",
+          "deprecated": false,
+          "displayName": "Binary file transfer mode",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Indicate whether file transfer mode is binary",
+          "order": 8,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "connectTimeout": {
+          "defaultValue": "10000",
+          "deprecated": false,
+          "displayName": "Connect timeout",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+          "order": 5,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "disconnect": {
+          "defaultValue": "false",
+          "deprecated": false,
+          "displayName": "Disconnect from server after use",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Disconnect from the server after performing the action",
+          "order": 10,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "host": {
+          "deprecated": false,
+          "displayName": "Host",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "path",
+          "labelHint": "Host name of the FTP server to connect to",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "maximumReconnectAttempts": {
+          "defaultValue": "3",
+          "deprecated": false,
+          "displayName": "Maximum reconnect attempts",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Try to reconnect no more than this many times",
+          "order": 7,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "passiveMode": {
+          "defaultValue": "true",
+          "deprecated": false,
+          "displayName": "Passive connection mode",
+          "enum": [
+            {
+              "label": "No",
+              "value": "false"
+            },
+            {
+              "label": "Yes",
+              "value": "true"
+            }
+          ],
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Indicates whether passive connection mode is being used",
+          "order": 9,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "password": {
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "common,security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Password for connecting to the FTP server",
+          "order": 3,
+          "raw": true,
+          "required": false,
+          "secret": true,
+          "type": "string"
+        },
+        "port": {
+          "defaultValue": "21",
+          "deprecated": false,
+          "displayName": "Port",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "path",
+          "labelHint": "FTP port",
+          "order": 4,
+          "required": true,
+          "secret": false,
+          "type": "integer"
+        },
+        "reconnectDelay": {
+          "defaultValue": "1000",
+          "deprecated": false,
+          "displayName": "Reconnect delay",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Number of milliseconds to wait before trying to reconnect",
+          "order": 6,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "timeout": {
+          "defaultValue": "30000",
+          "deprecated": false,
+          "displayName": "Data timeout",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "labelHint": "Maximum number of milliseconds to wait for a reply",
+          "order": 11,
+          "required": false,
+          "secret": false,
+          "type": "integer"
+        },
+        "username": {
+          "deprecated": false,
+          "displayName": "User name",
+          "group": "common,security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "User name for connecting to the FTP server",
+          "order": 2,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 136
+    },
+    ":webhook": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Start an integration from a Webhook",
+          "descriptor": {
+            "componentScheme": "servlet",
+            "configuredProperties": {
+              "headerFilterStrategy": "syndesisHeaderStrategy",
+              "httpMethodRestrict": "GET,POST"
+            },
+            "connectorCustomizers": [
+              "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Webhook Configuration",
+                "name": "configuration",
+                "properties": {
+                  "contextPath": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "The Webhook token that will be set as final part of the URL",
+                    "displayName": "Webhook Token",
+                    "generator": "alphanum:50",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                      "context-path"
+                    ],
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:webhook-incoming",
+          "metadata": {
+            "serverBasePath": "/webhook"
+          },
+          "name": "Incoming Webhook",
+          "pattern": "From",
+          "tags": [
+            "expose"
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "version": 136
+    }
+  },
+  "integrations": {
+    ":i-LhZXRjtIxz9jVE-T0viz": {
+      "createdAt": 0,
+      "flows": [
+        {
+          "id": "-LhZWaF-F2V1Og-KzZgc",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Start an integration from a Webhook",
+                "descriptor": {
+                  "componentScheme": "servlet",
+                  "configuredProperties": {
+                    "headerFilterStrategy": "syndesisHeaderStrategy",
+                    "httpMethodRestrict": "GET,POST"
+                  },
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "Contact",
+                    "specification": "{\n  \"first_name\": \"John\",\n  \"company\": \"Red Hat\",\n  \"mail\": \"john@redhat.com\"\n}"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Webhook Configuration",
+                      "name": "configuration",
+                      "properties": {
+                        "contextPath": {
+                          "componentProperty": false,
+                          "defaultValue": "uFJxiLYRihWkkIgoCijZ2U7Dm4HgIhkLrnJVVApdFmZNbg07B6",
+                          "deprecated": false,
+                          "description": "The Webhook token that will be set as final part of the URL",
+                          "displayName": "Webhook Token",
+                          "generator": "alphanum:50",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "required": true,
+                          "secret": false,
+                          "tags": [
+                            "context-path"
+                          ],
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:webhook-incoming",
+                "metadata": {
+                  "serverBasePath": "/webhook"
+                },
+                "name": "Incoming Webhook",
+                "pattern": "From",
+                "tags": [
+                  "expose"
+                ]
+              },
+              "configuredProperties": {
+                "contextPath": "iDYblTmjJt2ggsfzImslYm4rX4eaBAK31e4vYCIK2x5nkGdoXJ"
+              },
+              "connection": {
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Start an integration from a Webhook",
+                      "descriptor": {
+                        "componentScheme": "servlet",
+                        "configuredProperties": {
+                          "headerFilterStrategy": "syndesisHeaderStrategy",
+                          "httpMethodRestrict": "GET,POST"
+                        },
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Webhook Configuration",
+                            "name": "configuration",
+                            "properties": {
+                              "contextPath": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "The Webhook token that will be set as final part of the URL",
+                                "displayName": "Webhook Token",
+                                "generator": "alphanum:50",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "tags": [
+                                  "context-path"
+                                ],
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:webhook-incoming",
+                      "metadata": {
+                        "serverBasePath": "/webhook"
+                      },
+                      "name": "Incoming Webhook",
+                      "pattern": "From",
+                      "tags": [
+                        "expose"
+                      ]
+                    }
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Create direct connections with external systems through Webhooks",
+                  "icon": "assets:webhook.svg",
+                  "id": "webhook",
+                  "metadata": {
+                    "hide-from-connection-pages": "true"
+                  },
+                  "name": "Webhook",
+                  "version": 136
+                },
+                "connectorId": "webhook",
+                "description": "Create direct connections with external systems through Webhooks",
+                "icon": "assets:webhook.svg",
+                "id": "webhook",
+                "isDerived": false,
+                "metadata": {
+                  "hide-from-connection-pages": "true"
+                },
+                "name": "Webhook",
+                "uses": 0
+              },
+              "id": "-LhZWaj1F2V1Og-KzZgc",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Data Mapper (Template JSON Schema)",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"fist_name\":{\"description\":\"Identifier for the symbol fist_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"},\"mail\":{\"description\":\"Identifier for the symbol mail\",\"type\":\"string\"}}}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhZWaj1F2V1Og-KzZgc\",\"uri\":\"atlas:json:-LhZWaj1F2V1Og-KzZgc\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhZX63LF2V1Og-KzZgd\",\"uri\":\"atlas:json:-LhZX63LF2V1Og-KzZgd\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.738908\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhZWaj1F2V1Og-KzZgc\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhZX63LF2V1Og-KzZgd\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.351774\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhZWaj1F2V1Og-KzZgc\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"fist_name\",\"path\":\"/fist_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhZX63LF2V1Og-KzZgd\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.198155\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"mail\",\"path\":\"/mail\",\"fieldType\":\"STRING\",\"docId\":\"-LhZWaj1F2V1Og-KzZgc\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"mail\",\"path\":\"/mail\",\"fieldType\":\"STRING\",\"docId\":\"-LhZX63LF2V1Og-KzZgd\",\"userCreated\":false}]}]},\"name\":\"UI.491877\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LhZXErfF2V1Og-KzZge",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"fist_name\":{\"description\":\"Identifier for the symbol fist_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"},\"mail\":{\"description\":\"Identifier for the symbol mail\",\"type\":\"string\"}}}"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                  }
+                },
+                "id": "-LhZXBj-F2V1Og-KzZgd",
+                "name": "Templater"
+              },
+              "configuredProperties": {
+                "language": "mustache",
+                "template": "{{fist_name}},{{company}},{{mail}}"
+              },
+              "id": "-LhZX63LF2V1Og-KzZgd",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Template",
+              "stepKind": "template"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Upload a file to the FTP server",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "metadata": {
+                      "userDefined": "true"
+                    }
+                  },
+                  "outputDataShape": {
+                    "kind": "none"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Upload to FTP server",
+                      "name": "Upload to FTP server",
+                      "properties": {
+                        "directoryName": {
+                          "deprecated": false,
+                          "displayName": "FTP directory",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "FTP directory name in which to upload file",
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "fileExist": {
+                          "defaultValue": "Override",
+                          "deprecated": false,
+                          "displayName": "If file exists",
+                          "enum": [
+                            {
+                              "label": "Override",
+                              "value": "Override"
+                            },
+                            {
+                              "label": "Append",
+                              "value": "Append"
+                            },
+                            {
+                              "label": "Fail",
+                              "value": "Fail"
+                            },
+                            {
+                              "label": "Ignore",
+                              "value": "Ignore"
+                            },
+                            {
+                              "label": "Move",
+                              "value": "Move"
+                            },
+                            {
+                              "label": "TryRename",
+                              "value": "TryRename"
+                            }
+                          ],
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "fileName": {
+                          "deprecated": false,
+                          "displayName": "File name expression",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "Simple language expression that resolves to a file name",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "tempFileName": {
+                          "deprecated": false,
+                          "displayName": "Temporary file name while copying",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "Temporary file name while copying",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "tempPrefix": {
+                          "deprecated": false,
+                          "displayName": "Temporary file prefix while copying",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "Temporary file prefix while copying",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:ftp-upload-connector",
+                "name": "Upload",
+                "pattern": "To"
+              },
+              "configuredProperties": {
+                "directoryName": "contacts",
+                "fileExist": "Override",
+                "fileName": "contacts.csv",
+                "tempPrefix": "tmp_"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "binary": "true",
+                  "connectTimeout": "10000",
+                  "disconnect": "false",
+                  "host": "ftpserver",
+                  "maximumReconnectAttempts": "3",
+                  "passiveMode": "true",
+                  "password": "»ENC:7dceb0f85800ce4fb9e8ac9b263f477c99d6eeffb3e2418c8461f756e69bd288",
+                  "port": "21",
+                  "reconnectDelay": "1000",
+                  "timeout": "30000",
+                  "username": "syndesis"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Upload a file to the FTP server",
+                      "descriptor": {
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Upload to FTP server",
+                            "name": "Upload to FTP server",
+                            "properties": {
+                              "directoryName": {
+                                "deprecated": false,
+                                "displayName": "FTP directory",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "FTP directory name in which to upload file",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileExist": {
+                                "defaultValue": "Override",
+                                "deprecated": false,
+                                "displayName": "If file exists",
+                                "enum": [
+                                  {
+                                    "label": "Override",
+                                    "value": "Override"
+                                  },
+                                  {
+                                    "label": "Append",
+                                    "value": "Append"
+                                  },
+                                  {
+                                    "label": "Fail",
+                                    "value": "Fail"
+                                  },
+                                  {
+                                    "label": "Ignore",
+                                    "value": "Ignore"
+                                  },
+                                  {
+                                    "label": "Move",
+                                    "value": "Move"
+                                  },
+                                  {
+                                    "label": "TryRename",
+                                    "value": "TryRename"
+                                  }
+                                ],
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileName": {
+                                "deprecated": false,
+                                "displayName": "File name expression",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Simple language expression that resolves to a file name",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "tempFileName": {
+                                "deprecated": false,
+                                "displayName": "Temporary file name while copying",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Temporary file name while copying",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "tempPrefix": {
+                                "deprecated": false,
+                                "displayName": "Temporary file prefix while copying",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Temporary file prefix while copying",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:ftp-upload-connector",
+                      "name": "Upload",
+                      "pattern": "To"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Download a file from the FTP server",
+                      "descriptor": {
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Download from FTP server",
+                            "name": "Download from FTP server",
+                            "properties": {
+                              "delay": {
+                                "defaultValue": "5000",
+                                "deprecated": false,
+                                "displayName": "Time interval before the next poll",
+                                "group": "consumer",
+                                "javaType": "java.lang.Integer",
+                                "kind": "parameter",
+                                "labelHint": "Wait this amount of time between polls",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "delete": {
+                                "defaultValue": "false",
+                                "deprecated": false,
+                                "displayName": "Delete file after download",
+                                "enum": [
+                                  {
+                                    "label": "No",
+                                    "value": "false"
+                                  },
+                                  {
+                                    "label": "Yes",
+                                    "value": "true"
+                                  }
+                                ],
+                                "group": "consumer",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "labelHint": "Delete the file from the server after downloading it",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "directoryName": {
+                                "deprecated": false,
+                                "displayName": "FTP directory",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "FTP directory name from which to download file",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "fileName": {
+                                "deprecated": false,
+                                "displayName": "File name expression",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Simple language expression that resolves to a file name",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "initialDelay": {
+                                "defaultValue": "1000",
+                                "deprecated": false,
+                                "displayName": "Interval before polling starts",
+                                "group": "consumer",
+                                "javaType": "java.lang.Integer",
+                                "kind": "parameter",
+                                "labelHint": "Wait amount of time before starting to poll",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:ftp-download-connector",
+                      "name": "Download",
+                      "pattern": "From"
+                    }
+                  ],
+                  "componentScheme": "ftp",
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Download and upload files.",
+                  "icon": "assets:ftp.svg",
+                  "id": "ftp",
+                  "name": "FTP",
+                  "properties": {
+                    "binary": {
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Binary file transfer mode",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Indicate whether file transfer mode is binary",
+                      "order": 8,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "connectTimeout": {
+                      "defaultValue": "10000",
+                      "deprecated": false,
+                      "displayName": "Connect timeout",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "disconnect": {
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Disconnect from server after use",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Disconnect from the server after performing the action",
+                      "order": 10,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "host": {
+                      "deprecated": false,
+                      "displayName": "Host",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Host name of the FTP server to connect to",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "maximumReconnectAttempts": {
+                      "defaultValue": "3",
+                      "deprecated": false,
+                      "displayName": "Maximum reconnect attempts",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Try to reconnect no more than this many times",
+                      "order": 7,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "passiveMode": {
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Passive connection mode",
+                      "enum": [
+                        {
+                          "label": "No",
+                          "value": "false"
+                        },
+                        {
+                          "label": "Yes",
+                          "value": "true"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Indicates whether passive connection mode is being used",
+                      "order": 9,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "password": {
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "common,security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Password for connecting to the FTP server",
+                      "order": 3,
+                      "raw": true,
+                      "required": false,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "port": {
+                      "defaultValue": "21",
+                      "deprecated": false,
+                      "displayName": "Port",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "path",
+                      "labelHint": "FTP port",
+                      "order": 4,
+                      "required": true,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "reconnectDelay": {
+                      "defaultValue": "1000",
+                      "deprecated": false,
+                      "displayName": "Reconnect delay",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Number of milliseconds to wait before trying to reconnect",
+                      "order": 6,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "timeout": {
+                      "defaultValue": "30000",
+                      "deprecated": false,
+                      "displayName": "Data timeout",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "labelHint": "Maximum number of milliseconds to wait for a reply",
+                      "order": 11,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "username": {
+                      "deprecated": false,
+                      "displayName": "User name",
+                      "group": "common,security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "User name for connecting to the FTP server",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 136
+                },
+                "connectorId": "ftp",
+                "createdDate": 1560353407030,
+                "icon": "assets:ftp.svg",
+                "id": "i-LhBIs0tM_vFKbZySXDFz",
+                "isDerived": false,
+                "lastUpdated": 1560361844432,
+                "name": "FtpServer",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-LhZWjyXF2V1Og-KzZgc",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ],
+          "type": "PRIMARY"
+        }
+      ],
+      "id": "i-LhZXRjtIxz9jVE-T0viz",
+      "name": "WebhookToFtp",
+      "tags": [
+        "ftp",
+        "webhook"
+      ],
+      "updatedAt": 1560759884901,
+      "version": 2
+    }
+  }
+}

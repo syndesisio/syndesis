@@ -1,26 +1,19 @@
-### Syndesis System Tests
+# Syndesis Testing
 
-This repository contains system tests for Syndesis.
-These test are meant to be run against Openshift _(either within or pointing to an Openshift installation)_.
+This repository contains integrated e2e tests for Syndesis.
 
-#### Running the tests
+## Integration Tests
 
-To run the test locally:
+These tests start Syndesis integration runtimes in [Docker](https://www.docker.com/) 
+(using [Testcontainers](https://www.testcontainers.org/)) in order to exchange messages with the running integration. 
 
-    mvn clean test
+The integration outcome gets consumed and verified by simulated 3rd party services and/or within the database.
 
-#### Running the tests against restricted environments
+Read the [documentation](integration-test) for details.
 
-In restricted environments, creating a new project for the purpose of testing can be sometimes problematic, due to lack of permissions.
-In such cases you can create a new project on manually and run the tests inside that project:
+## System Tests
 
-    oc new-project testing
-    mvn clean test -Dnamespace.to.use=testing
+These system tests are meant to be run against Openshift _(either within or pointing to an Openshift installation)_ and perform
+a full installation of Syndesis in that environment.
 
-
-#### The testing framework
-
-This project is using [Arquillian Cube](https://github.com/arquillian/arquillian-cube) as testing Framework.
-Arquillian creates a namespace, installs Syndesis in it and once everything is ready, it starts the test suite.
-
-More documentation at [Arquillian Cube with Kubernetes and Openshift](https://github.com/arquillian/arquillian-cube/blob/master/docs/kubernetes.adoc).
+Read the [documentation](system-test) for details.

@@ -1,0 +1,418 @@
+{
+  "connections": {
+    ":timer": {
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Simple Timer",
+            "descriptor": {
+              "componentScheme": "timer",
+              "configuredProperties": {
+                "timerName": "syndesis-timer"
+              },
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Period",
+                  "name": "Period",
+                  "properties": {
+                    "period": {
+                      "componentProperty": false,
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "description": "Period",
+                      "displayName": "Period",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": true,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:timer-action",
+            "name": "Simple Timer",
+            "pattern": "From"
+          },
+          {
+            "actionType": "connector",
+            "description": "Cron Timer",
+            "descriptor": {
+              "componentScheme": "quartz2",
+              "configuredProperties": {
+                "triggerName": "syndesis-quartz"
+              },
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Cron",
+                  "name": "cron",
+                  "properties": {
+                    "cron": {
+                      "componentProperty": false,
+                      "defaultValue": "0 0/1 * * * ?",
+                      "deprecated": false,
+                      "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
+                      "displayName": "Cron Expression",
+                      "javaType": "string",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing) expressed as a cron expression",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:timer-chron",
+            "name": "Cron Timer",
+            "pattern": "From"
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "org.apache.camel:camel-quartz2:2.21.0.fuse-730054",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Trigger events based on an interval or a quartz expression",
+        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjk5LjQiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjEyLjQgMjIyLjdjLTE1LjkgMTYtMzcuOCAyNi02MS45IDI2cy00Ni4yLTEwLTYxLjktMjZjLTE1LjktMTYuMS0yNS43LTM4LjItMjUuNy02Mi43IDAtMjQuNiA5LjctNDYuOCAyNS43LTYyLjguNS0uNi45LTEuMSAxLjUtMS41IDguNS03LjMgNS43LTQuOSA4LjUtNy4zIDE0LTEwLjUgMzEuMi0xNi44IDQ5LjgtMTcuM2g0LjNjMjMuMy41IDQ0LjQgMTAuNCA1OS44IDI2IDE1LjcgMTYuMSAyNS42IDM4LjMgMjUuNiA2Mi44LS4xIDI0LjUtOS45IDQ2LjYtMjUuNyA2Mi44eiIgZmlsbD0iI2MzMjI2NSIvPjxwYXRoIGQ9Ik0xNjEuNCA2NC43di02LjhoMTAuOGMxIDAgMS44LS40IDIuMy0xLjEuNi0uNy45LTEuNi45LTIuNlY0MC4xYzAtMS0uMy0xLjgtLjktMi41LS42LS43LTEuNC0xLjEtMi4zLTEuMWgtNDMuN2MtMSAwLTEuNi40LTIuMyAxLjEtLjcuNy0uOSAxLjUtLjkgMi41djE0LjFjMCAxIC4yIDEuOS45IDIuNi43LjcgMS40IDEuMSAyLjMgMS4xaDEwLjh2Ni44Yy0xNS4xIDEuOC0yOC42IDcuMS00MC40IDE0LjktNC41LTUuMi0zLTMuNC00LjUtNS4yIDIuNy0yLjMgMS44LTEuNiAyLjctMi4zLjctLjYgMS4yLTEuNSAxLjItMi40LjItLjktLjEtMS45LS44LTIuNi0xMS45LTE0LjQtNy45LTkuNS0xMS45LTE0LjQtMS4yLTEuNS0zLjMtMS42LTQuOC0uNC0yNC40IDIwLjktMTYuMyAxNC0yNC40IDIwLjktLjcuNi0xLjEgMS40LTEuMiAyLjMtLjEgMSAuMyAxLjguOCAyLjYgMTEuOCAxNC40IDcuOSA5LjUgMTEuOCAxNC40IDEuMiAxLjMgMy40IDEuNiA0LjkuNCA0LjYtNCAzLjEtMi42IDQuNi00IDQuNCA1LjMgMi45IDMuNiA0LjQgNS4zLTE1LjkgMTcuMS0yNS42IDQwLjItMjUuNiA2NS42IDAgNTIuNyA0Mi4yIDk1LjcgOTQuNCA5NS43czk0LjQtNDMgOTQuNC05NS43YzAtNDguOS0zNi41LTg5LjQtODMuNS05NS4xem0tMjkuNi0yMUgxNjl2Ny4xaC0zNy4zYy4xLTIuNC4xLTQuNy4xLTcuMXptMTQuNSAyMC4ydi02aDguNnY2SDE0Ni4zem0tNTcuMiAxNWM0LjEgNC45IDIuNyAzLjMgNC4xIDQuOS0yLjMgMS44LTQuNSAzLjctNi42IDUuNi00LTQuOS0yLjctMy4zLTQtNC45IDIuMi0xLjkgNC40LTMuOCA2LjUtNS42em0xMjMuMyAxNDMuOGMtMTUuOSAxNi0zNy44IDI2LTYxLjkgMjZzLTQ2LjItMTAtNjEuOS0yNmMtMTUuOS0xNi4xLTI1LjctMzguMi0yNS43LTYyLjcgMC0yNC42IDkuNy00Ni44IDI1LjctNjIuOC41LS42LjktMS4xIDEuNS0xLjUgOC41LTcuMyA1LjctNC45IDguNS03LjMgMTQtMTAuNSAzMS4yLTE2LjggNDkuOC0xNy4zaDQuM2MyMy4zLjUgNDQuNCAxMC40IDU5LjggMjYgMTUuNyAxNi4xIDI1LjYgMzguMyAyNS42IDYyLjgtLjEgMjQuNS05LjkgNDYuNi0yNS43IDYyLjh6Ii8+PHBhdGggZD0iTTE1MC40IDg3LjJjMSAwIDEuOS0uOSAxLjktMS44di03LjJjMC0xLTEtMS43LTEuOS0xLjctMSAwLTEuOS43LTEuOSAxLjd2Ny4yYzAgLjkuOSAxLjggMS45IDEuOHpNMTExLjYgODguM2MtLjUtLjgtMS41LTEuMS0yLjMtLjctLjguNi0xLjEgMS43LS43IDIuNSAzLjYgNi4xIDIuNCA0LjEgMy42IDYuMS41LjkgMS41IDEuMSAyLjMuNy44LS41IDEuMS0xLjUuNy0yLjUtMS4zLTItMi41LTQtMy42LTYuMXpNODcuNSAxMjEuMWMtNi4xLTMuNi00LTIuNC02LjEtMy42LS44LS40LTEuOS0uMS0yLjQuNy0uNC45LS4xIDEuOS43IDIuNCA2LjEgMy43IDQuMSAyLjUgNi4xIDMuNyAxIC40IDEuOS4xIDIuNC0uNy40LS44LjItMS45LS43LTIuNXpNNzYuOSAxNTguM2gtNy4xYy0xIDAtMS42LjctMS42IDEuNyAwIC45LjcgMS43IDEuNiAxLjdoNy4xYy45IDAgMS42LS44IDEuNi0xLjcgMC0xLS43LTEuNy0xLjYtMS43ek04NS44IDE5NS43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtLjguNi0xLjEgMS43LS43IDIuNS42LjggMS42IDEuMSAyLjQuNiA2LjEtMy42IDQtMi40IDYuMS0zLjYuOS0uNCAxLjEtMS42LjctMi40LS41LS44LTEuNi0xLjEtMi40LS43ek0xMTQuNSAyMjMuMWMtLjgtLjYtMS45LS4zLTIuNC43LTMuNSA2LjEtMi4zIDQuMS0zLjUgNi4xLS40LjgtLjEgMS45LjcgMi4zLjkuNiAxLjkuMyAyLjMtLjUgMy41LTYuMyAyLjMtNC4yIDMuNS02LjMuNS0uOC4yLTEuOS0uNi0yLjN6TTE1MC41IDIzMi45Yy0xIDAtMS44LjgtMS44IDEuOHY3LjFjMCAuOS44IDEuOCAxLjggMS44czEuOC0uOSAxLjgtMS44di03LjFjMC0xLS44LTEuOC0xLjgtMS44ek0xODguNiAyMjMuOGMtLjUtLjgtMS41LTEuMS0yLjMtLjctMSAuNi0xLjIgMS42LS43IDIuNCAzLjUgNi4zIDIuMyA0LjIgMy41IDYuMy41LjkgMS41IDEuMSAyLjQuNi44LS40IDEuMS0xLjUuNS0yLjQtMS0yLjEtMi4yLTQuMi0zLjQtNi4yek0yMjEgMTk5LjVjLTYuMS0zLjctNC4xLTIuNS02LjEtMy43LS44LS40LTEuOS0uMS0yLjMuNy0uNi44LS4zIDIgLjUgMi40IDYuMiAzLjcgNC4yIDIuNSA2LjIgMy43LjguNCAxLjkuMSAyLjMtLjcuNi0uOS40LTItLjYtMi40ek0yMzEgMTU4aC03Yy0xIDAtMS44IDEtMS44IDEuOSAwIDEgLjggMS44IDEuOCAxLjhoN2MuOSAwIDEuOC0uOCAxLjgtMS44IDAtLjktLjktMS45LTEuOC0xLjl6TTIxOS40IDExNy43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtMSAuNC0xLjIgMS41LS43IDIuMy40LjkgMS41IDEuMSAyLjMuNyA2LjItMy42IDQuMS0yLjQgNi4yLTMuNi44LS41IDEuMS0xLjYuNS0yLjUtLjMtLjgtMS40LTEuMS0yLjItLjV6TTE5MS42IDg3LjdjLS44LS42LTEuOS0uMy0yLjQuNS0zLjUgNi4zLTIuMyA0LjItMy41IDYuMy0uNC44LS4xIDEuOC43IDIuMy44LjYgMS45LjIgMi4zLS43IDMuNS02LjEgMi4zLTQuMSAzLjUtNi4xLjUtLjguMi0xLjktLjYtMi4zek0xNTQuOSAxMzguNmMtMS00My44LS42LTI5LjItMS00My44IDAtMS45LTEuNi0zLjQtMy4zLTMuNGgtLjdjLTEuOCAwLTMuMyAxLjUtMy4zIDMuNC0xIDQzLjktLjYgMjkuMy0xIDQzLjktOS41IDIuMi0xNi42IDEwLjgtMTYuNiAyMS4yIDAgMTIgOS42IDIxLjcgMjEuNSAyMS43IDExLjggMCAyMS40LTkuNyAyMS40LTIxLjcgMC0xMC41LTcuMi0xOS4yLTE3LTIxLjN6bTUuOSAzMS44Yy0yLjYgMi43LTYuMiA0LjQtMTAuMyA0LjQtNC4xIDAtNy43LTEuNy0xMC40LTQuNC0yLjYtMi42LTQuMS02LjMtNC4xLTEwLjQgMC00LjEgMS42LTcuOCA0LjEtMTAuNiAyLjctMi42IDYuMy00LjIgMTAuNC00LjQgNCAuMiA3LjYgMS44IDEwLjMgNC40IDIuNyAyLjggNC4zIDYuNCA0LjMgMTAuNiAwIDQtMS43IDcuNy00LjMgMTAuNHoiLz48cGF0aCBkPSJNMjA2LjIgMTU2LjFjLTM0LjgtLjgtMjMuMi0uNi0zNC44LS44LTItOS45LTEwLjYtMTcuMS0yMC45LTE3LjEtMTEuOSAwLTIxLjUgOS43LTIxLjUgMjEuOCAwIDEyIDkuNiAyMS43IDIxLjUgMjEuNyAxMC4zIDAgMTguOS03LjQgMjAuOS0xNy4xIDM0LjgtMSAyMy4yLS42IDM0LjgtMSAxLjkgMCAzLjItMS43IDMuMi0zLjR2LS43YzAtMS43LTEuMy0zLjMtMy4yLTMuNHoiLz48Zz48cGF0aCBkPSJNMTY3IDI5MS4yYy00LjQuNi04LjkgMS0xMy40IDEuMy0xLjkuMS0zLjQgMS43LTMuMyAzLjYuMSAxLjggMS42IDMuMyAzLjQgMy4zaC4yYzQuNy0uMiA5LjQtLjcgMTQtMS4zIDEuOS0uMyAzLjItMiAyLjktMy45LS4xLTEuOS0xLjgtMy4yLTMuOC0zek0yMTcuOCAyNzQuMWMtMS44IDEtMy42IDEuOS01LjQgMi45LTIuMiAxLjEtNC40IDIuMi02LjcgMy4yLTEuNy44LTIuNSAyLjgtMS44IDQuNi42IDEuMyAxLjggMi4xIDMuMiAyLjEuNSAwIC45LS4xIDEuNC0uMyAyLjMtMSA0LjctMi4xIDctMy4zbDUuNy0zYzEuNy0uOSAyLjMtMyAxLjMtNC43LS45LTEuOC0zLTIuNC00LjctMS41ek0xOTMuMiAyODVjLTQuMyAxLjQtOC42IDIuNy0xMyAzLjctMS45LjQtMyAyLjMtMi42IDQuMi40IDEuNiAxLjggMi43IDMuNCAyLjcuMyAwIC41IDAgLjgtLjEgNC41LTEuMSA5LjEtMi40IDEzLjYtMy45IDEuOC0uNiAyLjgtMi42IDIuMi00LjQtLjYtMS44LTIuNi0yLjgtNC40LTIuMnpNMTQwLjEgMjkyLjVjLTQuNS0uMi05LS42LTEzLjQtMS4yLTEuOS0uMy0zLjYgMS4xLTMuOSAyLjktLjMgMS45IDEuMSAzLjYgMi45IDMuOSA0LjYuNiA5LjQgMS4xIDE0LjEgMS4zaC4yYzEuOCAwIDMuNC0xLjQgMy40LTMuMy4xLTEuOS0xLjQtMy41LTMuMy0zLjZ6TTg3LjkgMjgwLjRjLTQuMS0xLjgtOC4yLTMuOC0xMi4xLTYtMS43LS45LTMuOC0uMy00LjcgMS40LS45IDEuNy0uMyAzLjggMS40IDQuNyA0LjEgMi4zIDguNCA0LjQgMTIuNyA2LjIuNC4yLjkuMyAxLjQuMyAxLjMgMCAyLjYtLjggMy4yLTIuMS43LTEuNy0uMS0zLjctMS45LTQuNXpNMzQuNCAyNDAuNGMtMS4yLTEuNS0zLjQtMS42LTQuOS0uNC0xLjUgMS4yLTEuNiAzLjQtLjQgNC45IDMgMy42IDYuMiA3LjEgOS42IDEwLjQuNy43IDEuNSAxIDIuNCAxIC45IDAgMS44LS4zIDIuNS0xIDEuMy0xLjQgMS4zLTMuNSAwLTQuOS0zLjMtMy4yLTYuNC02LjYtOS4yLTEwek01My41IDI1OS40Yy0xLjUtMS4yLTMuNi0xLTQuOS41LTEuMiAxLjUtMSAzLjYuNSA0LjkgMy42IDMgNy40IDUuOCAxMS4zIDguNC42LjQgMS4zLjYgMS45LjYgMS4xIDAgMi4yLS41IDIuOS0xLjUgMS4xLTEuNi43LTMuNy0uOS00LjgtMy43LTIuNi03LjMtNS4zLTEwLjgtOC4xek0xMTMuNSAyODguOWMtNC40LTEtOC43LTIuMi0xMy0zLjYtMS44LS42LTMuOC40LTQuNCAyLjItLjYgMS44LjQgMy44IDIuMiA0LjQgNC41IDEuNSA5IDIuOCAxMy42IDMuOC4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi43LjQtMi0uOC0zLjgtMi42LTQuMnpNMjk1LjUgMTY0Yy0xLjktLjMtMy42IDEtMy45IDIuOS0uNiA0LjQtMS41IDguOS0yLjUgMTMuMi0uNCAxLjkuNyAzLjcgMi42IDQuMi4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi42IDEuMS00LjUgMi05LjIgMi43LTEzLjkuMS0xLjgtMS4yLTMuNi0zLjEtMy45ek0yNTkuMiAyMzkuOWMtMi45IDMuNC01LjkgNi44LTkuMSA5LjktMS4zIDEuMy0xLjQgMy41IDAgNC45LjcuNyAxLjYgMSAyLjQgMSAuOSAwIDEuOC0uMyAyLjQtMSAzLjMtMy4zIDYuNS02LjggOS41LTEwLjQgMS4yLTEuNSAxLTMuNi0uNC00LjktMS40LTEuMS0zLjYtLjktNC44LjV6TTI4OS43IDE5MWMtMS44LS42LTMuOC40LTQuNCAyLjItMS40IDQuMy0zLjEgOC41LTQuOSAxMi42LS44IDEuNyAwIDMuOCAxLjggNC42LjUuMi45LjMgMS40LjMgMS4zIDAgMi42LS44IDMuMi0yIDEuOS00LjMgMy42LTguNyA1LjEtMTMuMS42LTIuMS0uNC00LTIuMi00LjZ6TTI5Ni42IDE0NC42Yy0xLjkgMC0zLjUgMS41LTMuNSAzLjRzLS4xIDMuNy0uMiA1LjZjLS4xIDEuOSAxLjQgMy41IDMuMyAzLjZoLjJjMS44IDAgMy4zLTEuNCAzLjQtMy4zLjEtMS45LjItMy45LjItNS44cy0xLjUtMy41LTMuNC0zLjV6TTI3OS4xIDIxNi40Yy0xLjctLjktMy44LS4zLTQuNyAxLjMtMi4yIDMuOS00LjYgNy43LTcuMSAxMS40LTEuMSAxLjYtLjcgMy43LjkgNC44LjYuNCAxLjMuNiAyIC42IDEuMSAwIDIuMi0uNSAyLjgtMS41IDIuNy0zLjkgNS4yLTcuOSA3LjQtMTIgMS0xLjYuNC0zLjctMS4zLTQuNnpNMjQwLjEgMjU4LjljLTMuNCAyLjgtNy4xIDUuNi0xMC44IDguMS0xLjYgMS4xLTIgMy4yLS45IDQuOC43IDEgMS44IDEuNSAyLjkgMS41LjcgMCAxLjMtLjIgMS45LS42IDMuOS0yLjcgNy43LTUuNSAxMS4zLTguNSAxLjUtMS4yIDEuNy0zLjQuNS00LjktMS4zLTEuNC0zLjUtMS42LTQuOS0uNHpNNDYuNCA1My4yQzkwLjcgNiAxNjAuMy02LjQgMjE3LjggMjEuOWwtOC4yIDExLjNjLS40LjYtLjUgMS40LS4zIDIuMS4zLjcuOSAxLjIgMS42IDEuNGw0Mi41IDguOGMuOC4yIDEuNy0uMiAyLjItLjkuNS0uNy42LTEuNi4xLTIuNEwyMzQuNiA0LjFjLS40LS43LTEtMS4xLTEuOC0xLjFzLTEuNS4zLTEuOS45bC05IDEyLjRDMTYxLjUtMTQgODguMS0xLjIgNDEuNCA0OC41LTQuOSA5Ny44LTEzLjMgMTcyLjkgMjAuOSAyMzEuMmMuNiAxLjEgMS44IDEuNyAzIDEuNy42IDAgMS4yLS4yIDEuNy0uNSAxLjYtMSAyLjItMy4xIDEuMi00LjdDLTUuOCAxNzIuMSAyLjIgMTAwLjMgNDYuNCA1My4yeiIvPjwvZz48L2c+PC9zdmc+",
+        "id": "timer",
+        "metadata": {
+          "hide-from-connection-pages": "true"
+        },
+        "name": "Timer",
+        "version": 49
+      },
+      "connectorId": "timer",
+      "description": "Trigger events based on an interval or a cron expression",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjk5LjQiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjEyLjQgMjIyLjdjLTE1LjkgMTYtMzcuOCAyNi02MS45IDI2cy00Ni4yLTEwLTYxLjktMjZjLTE1LjktMTYuMS0yNS43LTM4LjItMjUuNy02Mi43IDAtMjQuNiA5LjctNDYuOCAyNS43LTYyLjguNS0uNi45LTEuMSAxLjUtMS41IDguNS03LjMgNS43LTQuOSA4LjUtNy4zIDE0LTEwLjUgMzEuMi0xNi44IDQ5LjgtMTcuM2g0LjNjMjMuMy41IDQ0LjQgMTAuNCA1OS44IDI2IDE1LjcgMTYuMSAyNS42IDM4LjMgMjUuNiA2Mi44LS4xIDI0LjUtOS45IDQ2LjYtMjUuNyA2Mi44eiIgZmlsbD0iI2MzMjI2NSIvPjxwYXRoIGQ9Ik0xNjEuNCA2NC43di02LjhoMTAuOGMxIDAgMS44LS40IDIuMy0xLjEuNi0uNy45LTEuNi45LTIuNlY0MC4xYzAtMS0uMy0xLjgtLjktMi41LS42LS43LTEuNC0xLjEtMi4zLTEuMWgtNDMuN2MtMSAwLTEuNi40LTIuMyAxLjEtLjcuNy0uOSAxLjUtLjkgMi41djE0LjFjMCAxIC4yIDEuOS45IDIuNi43LjcgMS40IDEuMSAyLjMgMS4xaDEwLjh2Ni44Yy0xNS4xIDEuOC0yOC42IDcuMS00MC40IDE0LjktNC41LTUuMi0zLTMuNC00LjUtNS4yIDIuNy0yLjMgMS44LTEuNiAyLjctMi4zLjctLjYgMS4yLTEuNSAxLjItMi40LjItLjktLjEtMS45LS44LTIuNi0xMS45LTE0LjQtNy45LTkuNS0xMS45LTE0LjQtMS4yLTEuNS0zLjMtMS42LTQuOC0uNC0yNC40IDIwLjktMTYuMyAxNC0yNC40IDIwLjktLjcuNi0xLjEgMS40LTEuMiAyLjMtLjEgMSAuMyAxLjguOCAyLjYgMTEuOCAxNC40IDcuOSA5LjUgMTEuOCAxNC40IDEuMiAxLjMgMy40IDEuNiA0LjkuNCA0LjYtNCAzLjEtMi42IDQuNi00IDQuNCA1LjMgMi45IDMuNiA0LjQgNS4zLTE1LjkgMTcuMS0yNS42IDQwLjItMjUuNiA2NS42IDAgNTIuNyA0Mi4yIDk1LjcgOTQuNCA5NS43czk0LjQtNDMgOTQuNC05NS43YzAtNDguOS0zNi41LTg5LjQtODMuNS05NS4xem0tMjkuNi0yMUgxNjl2Ny4xaC0zNy4zYy4xLTIuNC4xLTQuNy4xLTcuMXptMTQuNSAyMC4ydi02aDguNnY2SDE0Ni4zem0tNTcuMiAxNWM0LjEgNC45IDIuNyAzLjMgNC4xIDQuOS0yLjMgMS44LTQuNSAzLjctNi42IDUuNi00LTQuOS0yLjctMy4zLTQtNC45IDIuMi0xLjkgNC40LTMuOCA2LjUtNS42em0xMjMuMyAxNDMuOGMtMTUuOSAxNi0zNy44IDI2LTYxLjkgMjZzLTQ2LjItMTAtNjEuOS0yNmMtMTUuOS0xNi4xLTI1LjctMzguMi0yNS43LTYyLjcgMC0yNC42IDkuNy00Ni44IDI1LjctNjIuOC41LS42LjktMS4xIDEuNS0xLjUgOC41LTcuMyA1LjctNC45IDguNS03LjMgMTQtMTAuNSAzMS4yLTE2LjggNDkuOC0xNy4zaDQuM2MyMy4zLjUgNDQuNCAxMC40IDU5LjggMjYgMTUuNyAxNi4xIDI1LjYgMzguMyAyNS42IDYyLjgtLjEgMjQuNS05LjkgNDYuNi0yNS43IDYyLjh6Ii8+PHBhdGggZD0iTTE1MC40IDg3LjJjMSAwIDEuOS0uOSAxLjktMS44di03LjJjMC0xLTEtMS43LTEuOS0xLjctMSAwLTEuOS43LTEuOSAxLjd2Ny4yYzAgLjkuOSAxLjggMS45IDEuOHpNMTExLjYgODguM2MtLjUtLjgtMS41LTEuMS0yLjMtLjctLjguNi0xLjEgMS43LS43IDIuNSAzLjYgNi4xIDIuNCA0LjEgMy42IDYuMS41LjkgMS41IDEuMSAyLjMuNy44LS41IDEuMS0xLjUuNy0yLjUtMS4zLTItMi41LTQtMy42LTYuMXpNODcuNSAxMjEuMWMtNi4xLTMuNi00LTIuNC02LjEtMy42LS44LS40LTEuOS0uMS0yLjQuNy0uNC45LS4xIDEuOS43IDIuNCA2LjEgMy43IDQuMSAyLjUgNi4xIDMuNyAxIC40IDEuOS4xIDIuNC0uNy40LS44LjItMS45LS43LTIuNXpNNzYuOSAxNTguM2gtNy4xYy0xIDAtMS42LjctMS42IDEuNyAwIC45LjcgMS43IDEuNiAxLjdoNy4xYy45IDAgMS42LS44IDEuNi0xLjcgMC0xLS43LTEuNy0xLjYtMS43ek04NS44IDE5NS43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtLjguNi0xLjEgMS43LS43IDIuNS42LjggMS42IDEuMSAyLjQuNiA2LjEtMy42IDQtMi40IDYuMS0zLjYuOS0uNCAxLjEtMS42LjctMi40LS41LS44LTEuNi0xLjEtMi40LS43ek0xMTQuNSAyMjMuMWMtLjgtLjYtMS45LS4zLTIuNC43LTMuNSA2LjEtMi4zIDQuMS0zLjUgNi4xLS40LjgtLjEgMS45LjcgMi4zLjkuNiAxLjkuMyAyLjMtLjUgMy41LTYuMyAyLjMtNC4yIDMuNS02LjMuNS0uOC4yLTEuOS0uNi0yLjN6TTE1MC41IDIzMi45Yy0xIDAtMS44LjgtMS44IDEuOHY3LjFjMCAuOS44IDEuOCAxLjggMS44czEuOC0uOSAxLjgtMS44di03LjFjMC0xLS44LTEuOC0xLjgtMS44ek0xODguNiAyMjMuOGMtLjUtLjgtMS41LTEuMS0yLjMtLjctMSAuNi0xLjIgMS42LS43IDIuNCAzLjUgNi4zIDIuMyA0LjIgMy41IDYuMy41LjkgMS41IDEuMSAyLjQuNi44LS40IDEuMS0xLjUuNS0yLjQtMS0yLjEtMi4yLTQuMi0zLjQtNi4yek0yMjEgMTk5LjVjLTYuMS0zLjctNC4xLTIuNS02LjEtMy43LS44LS40LTEuOS0uMS0yLjMuNy0uNi44LS4zIDIgLjUgMi40IDYuMiAzLjcgNC4yIDIuNSA2LjIgMy43LjguNCAxLjkuMSAyLjMtLjcuNi0uOS40LTItLjYtMi40ek0yMzEgMTU4aC03Yy0xIDAtMS44IDEtMS44IDEuOSAwIDEgLjggMS44IDEuOCAxLjhoN2MuOSAwIDEuOC0uOCAxLjgtMS44IDAtLjktLjktMS45LTEuOC0xLjl6TTIxOS40IDExNy43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtMSAuNC0xLjIgMS41LS43IDIuMy40LjkgMS41IDEuMSAyLjMuNyA2LjItMy42IDQuMS0yLjQgNi4yLTMuNi44LS41IDEuMS0xLjYuNS0yLjUtLjMtLjgtMS40LTEuMS0yLjItLjV6TTE5MS42IDg3LjdjLS44LS42LTEuOS0uMy0yLjQuNS0zLjUgNi4zLTIuMyA0LjItMy41IDYuMy0uNC44LS4xIDEuOC43IDIuMy44LjYgMS45LjIgMi4zLS43IDMuNS02LjEgMi4zLTQuMSAzLjUtNi4xLjUtLjguMi0xLjktLjYtMi4zek0xNTQuOSAxMzguNmMtMS00My44LS42LTI5LjItMS00My44IDAtMS45LTEuNi0zLjQtMy4zLTMuNGgtLjdjLTEuOCAwLTMuMyAxLjUtMy4zIDMuNC0xIDQzLjktLjYgMjkuMy0xIDQzLjktOS41IDIuMi0xNi42IDEwLjgtMTYuNiAyMS4yIDAgMTIgOS42IDIxLjcgMjEuNSAyMS43IDExLjggMCAyMS40LTkuNyAyMS40LTIxLjcgMC0xMC41LTcuMi0xOS4yLTE3LTIxLjN6bTUuOSAzMS44Yy0yLjYgMi43LTYuMiA0LjQtMTAuMyA0LjQtNC4xIDAtNy43LTEuNy0xMC40LTQuNC0yLjYtMi42LTQuMS02LjMtNC4xLTEwLjQgMC00LjEgMS42LTcuOCA0LjEtMTAuNiAyLjctMi42IDYuMy00LjIgMTAuNC00LjQgNCAuMiA3LjYgMS44IDEwLjMgNC40IDIuNyAyLjggNC4zIDYuNCA0LjMgMTAuNiAwIDQtMS43IDcuNy00LjMgMTAuNHoiLz48cGF0aCBkPSJNMjA2LjIgMTU2LjFjLTM0LjgtLjgtMjMuMi0uNi0zNC44LS44LTItOS45LTEwLjYtMTcuMS0yMC45LTE3LjEtMTEuOSAwLTIxLjUgOS43LTIxLjUgMjEuOCAwIDEyIDkuNiAyMS43IDIxLjUgMjEuNyAxMC4zIDAgMTguOS03LjQgMjAuOS0xNy4xIDM0LjgtMSAyMy4yLS42IDM0LjgtMSAxLjkgMCAzLjItMS43IDMuMi0zLjR2LS43YzAtMS43LTEuMy0zLjMtMy4yLTMuNHoiLz48Zz48cGF0aCBkPSJNMTY3IDI5MS4yYy00LjQuNi04LjkgMS0xMy40IDEuMy0xLjkuMS0zLjQgMS43LTMuMyAzLjYuMSAxLjggMS42IDMuMyAzLjQgMy4zaC4yYzQuNy0uMiA5LjQtLjcgMTQtMS4zIDEuOS0uMyAzLjItMiAyLjktMy45LS4xLTEuOS0xLjgtMy4yLTMuOC0zek0yMTcuOCAyNzQuMWMtMS44IDEtMy42IDEuOS01LjQgMi45LTIuMiAxLjEtNC40IDIuMi02LjcgMy4yLTEuNy44LTIuNSAyLjgtMS44IDQuNi42IDEuMyAxLjggMi4xIDMuMiAyLjEuNSAwIC45LS4xIDEuNC0uMyAyLjMtMSA0LjctMi4xIDctMy4zbDUuNy0zYzEuNy0uOSAyLjMtMyAxLjMtNC43LS45LTEuOC0zLTIuNC00LjctMS41ek0xOTMuMiAyODVjLTQuMyAxLjQtOC42IDIuNy0xMyAzLjctMS45LjQtMyAyLjMtMi42IDQuMi40IDEuNiAxLjggMi43IDMuNCAyLjcuMyAwIC41IDAgLjgtLjEgNC41LTEuMSA5LjEtMi40IDEzLjYtMy45IDEuOC0uNiAyLjgtMi42IDIuMi00LjQtLjYtMS44LTIuNi0yLjgtNC40LTIuMnpNMTQwLjEgMjkyLjVjLTQuNS0uMi05LS42LTEzLjQtMS4yLTEuOS0uMy0zLjYgMS4xLTMuOSAyLjktLjMgMS45IDEuMSAzLjYgMi45IDMuOSA0LjYuNiA5LjQgMS4xIDE0LjEgMS4zaC4yYzEuOCAwIDMuNC0xLjQgMy40LTMuMy4xLTEuOS0xLjQtMy41LTMuMy0zLjZ6TTg3LjkgMjgwLjRjLTQuMS0xLjgtOC4yLTMuOC0xMi4xLTYtMS43LS45LTMuOC0uMy00LjcgMS40LS45IDEuNy0uMyAzLjggMS40IDQuNyA0LjEgMi4zIDguNCA0LjQgMTIuNyA2LjIuNC4yLjkuMyAxLjQuMyAxLjMgMCAyLjYtLjggMy4yLTIuMS43LTEuNy0uMS0zLjctMS45LTQuNXpNMzQuNCAyNDAuNGMtMS4yLTEuNS0zLjQtMS42LTQuOS0uNC0xLjUgMS4yLTEuNiAzLjQtLjQgNC45IDMgMy42IDYuMiA3LjEgOS42IDEwLjQuNy43IDEuNSAxIDIuNCAxIC45IDAgMS44LS4zIDIuNS0xIDEuMy0xLjQgMS4zLTMuNSAwLTQuOS0zLjMtMy4yLTYuNC02LjYtOS4yLTEwek01My41IDI1OS40Yy0xLjUtMS4yLTMuNi0xLTQuOS41LTEuMiAxLjUtMSAzLjYuNSA0LjkgMy42IDMgNy40IDUuOCAxMS4zIDguNC42LjQgMS4zLjYgMS45LjYgMS4xIDAgMi4yLS41IDIuOS0xLjUgMS4xLTEuNi43LTMuNy0uOS00LjgtMy43LTIuNi03LjMtNS4zLTEwLjgtOC4xek0xMTMuNSAyODguOWMtNC40LTEtOC43LTIuMi0xMy0zLjYtMS44LS42LTMuOC40LTQuNCAyLjItLjYgMS44LjQgMy44IDIuMiA0LjQgNC41IDEuNSA5IDIuOCAxMy42IDMuOC4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi43LjQtMi0uOC0zLjgtMi42LTQuMnpNMjk1LjUgMTY0Yy0xLjktLjMtMy42IDEtMy45IDIuOS0uNiA0LjQtMS41IDguOS0yLjUgMTMuMi0uNCAxLjkuNyAzLjcgMi42IDQuMi4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi42IDEuMS00LjUgMi05LjIgMi43LTEzLjkuMS0xLjgtMS4yLTMuNi0zLjEtMy45ek0yNTkuMiAyMzkuOWMtMi45IDMuNC01LjkgNi44LTkuMSA5LjktMS4zIDEuMy0xLjQgMy41IDAgNC45LjcuNyAxLjYgMSAyLjQgMSAuOSAwIDEuOC0uMyAyLjQtMSAzLjMtMy4zIDYuNS02LjggOS41LTEwLjQgMS4yLTEuNSAxLTMuNi0uNC00LjktMS40LTEuMS0zLjYtLjktNC44LjV6TTI4OS43IDE5MWMtMS44LS42LTMuOC40LTQuNCAyLjItMS40IDQuMy0zLjEgOC41LTQuOSAxMi42LS44IDEuNyAwIDMuOCAxLjggNC42LjUuMi45LjMgMS40LjMgMS4zIDAgMi42LS44IDMuMi0yIDEuOS00LjMgMy42LTguNyA1LjEtMTMuMS42LTIuMS0uNC00LTIuMi00LjZ6TTI5Ni42IDE0NC42Yy0xLjkgMC0zLjUgMS41LTMuNSAzLjRzLS4xIDMuNy0uMiA1LjZjLS4xIDEuOSAxLjQgMy41IDMuMyAzLjZoLjJjMS44IDAgMy4zLTEuNCAzLjQtMy4zLjEtMS45LjItMy45LjItNS44cy0xLjUtMy41LTMuNC0zLjV6TTI3OS4xIDIxNi40Yy0xLjctLjktMy44LS4zLTQuNyAxLjMtMi4yIDMuOS00LjYgNy43LTcuMSAxMS40LTEuMSAxLjYtLjcgMy43LjkgNC44LjYuNCAxLjMuNiAyIC42IDEuMSAwIDIuMi0uNSAyLjgtMS41IDIuNy0zLjkgNS4yLTcuOSA3LjQtMTIgMS0xLjYuNC0zLjctMS4zLTQuNnpNMjQwLjEgMjU4LjljLTMuNCAyLjgtNy4xIDUuNi0xMC44IDguMS0xLjYgMS4xLTIgMy4yLS45IDQuOC43IDEgMS44IDEuNSAyLjkgMS41LjcgMCAxLjMtLjIgMS45LS42IDMuOS0yLjcgNy43LTUuNSAxMS4zLTguNSAxLjUtMS4yIDEuNy0zLjQuNS00LjktMS4zLTEuNC0zLjUtMS42LTQuOS0uNHpNNDYuNCA1My4yQzkwLjcgNiAxNjAuMy02LjQgMjE3LjggMjEuOWwtOC4yIDExLjNjLS40LjYtLjUgMS40LS4zIDIuMS4zLjcuOSAxLjIgMS42IDEuNGw0Mi41IDguOGMuOC4yIDEuNy0uMiAyLjItLjkuNS0uNy42LTEuNi4xLTIuNEwyMzQuNiA0LjFjLS40LS43LTEtMS4xLTEuOC0xLjFzLTEuNS4zLTEuOS45bC05IDEyLjRDMTYxLjUtMTQgODguMS0xLjIgNDEuNCA0OC41LTQuOSA5Ny44LTEzLjMgMTcyLjkgMjAuOSAyMzEuMmMuNiAxLjEgMS44IDEuNyAzIDEuNy42IDAgMS4yLS4yIDEuNy0uNSAxLjYtMSAyLjItMy4xIDEuMi00LjdDLTUuOCAxNzIuMSAyLjIgMTAwLjMgNDYuNCA1My4yeiIvPjwvZz48L2c+PC9zdmc+",
+      "id": "timer",
+      "isDerived": false,
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Timer",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":timer": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Simple Timer",
+          "descriptor": {
+            "componentScheme": "timer",
+            "configuredProperties": {
+              "timerName": "syndesis-timer"
+            },
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Period",
+                "name": "Period",
+                "properties": {
+                  "period": {
+                    "componentProperty": false,
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "description": "Period",
+                    "displayName": "Period",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": true,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:timer-action",
+          "name": "Simple Timer",
+          "pattern": "From"
+        },
+        {
+          "actionType": "connector",
+          "description": "Cron Timer",
+          "descriptor": {
+            "componentScheme": "quartz2",
+            "configuredProperties": {
+              "triggerName": "syndesis-quartz"
+            },
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Cron",
+                "name": "cron",
+                "properties": {
+                  "cron": {
+                    "componentProperty": false,
+                    "defaultValue": "0 0/1 * * * ?",
+                    "deprecated": false,
+                    "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
+                    "displayName": "Cron Expression",
+                    "javaType": "string",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing) expressed as a cron expression",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:timer-chron",
+          "name": "Cron Timer",
+          "pattern": "From"
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "org.apache.camel:camel-quartz2:2.21.0.fuse-730054",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Trigger events based on an interval or a quartz expression",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjk5LjQiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjEyLjQgMjIyLjdjLTE1LjkgMTYtMzcuOCAyNi02MS45IDI2cy00Ni4yLTEwLTYxLjktMjZjLTE1LjktMTYuMS0yNS43LTM4LjItMjUuNy02Mi43IDAtMjQuNiA5LjctNDYuOCAyNS43LTYyLjguNS0uNi45LTEuMSAxLjUtMS41IDguNS03LjMgNS43LTQuOSA4LjUtNy4zIDE0LTEwLjUgMzEuMi0xNi44IDQ5LjgtMTcuM2g0LjNjMjMuMy41IDQ0LjQgMTAuNCA1OS44IDI2IDE1LjcgMTYuMSAyNS42IDM4LjMgMjUuNiA2Mi44LS4xIDI0LjUtOS45IDQ2LjYtMjUuNyA2Mi44eiIgZmlsbD0iI2MzMjI2NSIvPjxwYXRoIGQ9Ik0xNjEuNCA2NC43di02LjhoMTAuOGMxIDAgMS44LS40IDIuMy0xLjEuNi0uNy45LTEuNi45LTIuNlY0MC4xYzAtMS0uMy0xLjgtLjktMi41LS42LS43LTEuNC0xLjEtMi4zLTEuMWgtNDMuN2MtMSAwLTEuNi40LTIuMyAxLjEtLjcuNy0uOSAxLjUtLjkgMi41djE0LjFjMCAxIC4yIDEuOS45IDIuNi43LjcgMS40IDEuMSAyLjMgMS4xaDEwLjh2Ni44Yy0xNS4xIDEuOC0yOC42IDcuMS00MC40IDE0LjktNC41LTUuMi0zLTMuNC00LjUtNS4yIDIuNy0yLjMgMS44LTEuNiAyLjctMi4zLjctLjYgMS4yLTEuNSAxLjItMi40LjItLjktLjEtMS45LS44LTIuNi0xMS45LTE0LjQtNy45LTkuNS0xMS45LTE0LjQtMS4yLTEuNS0zLjMtMS42LTQuOC0uNC0yNC40IDIwLjktMTYuMyAxNC0yNC40IDIwLjktLjcuNi0xLjEgMS40LTEuMiAyLjMtLjEgMSAuMyAxLjguOCAyLjYgMTEuOCAxNC40IDcuOSA5LjUgMTEuOCAxNC40IDEuMiAxLjMgMy40IDEuNiA0LjkuNCA0LjYtNCAzLjEtMi42IDQuNi00IDQuNCA1LjMgMi45IDMuNiA0LjQgNS4zLTE1LjkgMTcuMS0yNS42IDQwLjItMjUuNiA2NS42IDAgNTIuNyA0Mi4yIDk1LjcgOTQuNCA5NS43czk0LjQtNDMgOTQuNC05NS43YzAtNDguOS0zNi41LTg5LjQtODMuNS05NS4xem0tMjkuNi0yMUgxNjl2Ny4xaC0zNy4zYy4xLTIuNC4xLTQuNy4xLTcuMXptMTQuNSAyMC4ydi02aDguNnY2SDE0Ni4zem0tNTcuMiAxNWM0LjEgNC45IDIuNyAzLjMgNC4xIDQuOS0yLjMgMS44LTQuNSAzLjctNi42IDUuNi00LTQuOS0yLjctMy4zLTQtNC45IDIuMi0xLjkgNC40LTMuOCA2LjUtNS42em0xMjMuMyAxNDMuOGMtMTUuOSAxNi0zNy44IDI2LTYxLjkgMjZzLTQ2LjItMTAtNjEuOS0yNmMtMTUuOS0xNi4xLTI1LjctMzguMi0yNS43LTYyLjcgMC0yNC42IDkuNy00Ni44IDI1LjctNjIuOC41LS42LjktMS4xIDEuNS0xLjUgOC41LTcuMyA1LjctNC45IDguNS03LjMgMTQtMTAuNSAzMS4yLTE2LjggNDkuOC0xNy4zaDQuM2MyMy4zLjUgNDQuNCAxMC40IDU5LjggMjYgMTUuNyAxNi4xIDI1LjYgMzguMyAyNS42IDYyLjgtLjEgMjQuNS05LjkgNDYuNi0yNS43IDYyLjh6Ii8+PHBhdGggZD0iTTE1MC40IDg3LjJjMSAwIDEuOS0uOSAxLjktMS44di03LjJjMC0xLTEtMS43LTEuOS0xLjctMSAwLTEuOS43LTEuOSAxLjd2Ny4yYzAgLjkuOSAxLjggMS45IDEuOHpNMTExLjYgODguM2MtLjUtLjgtMS41LTEuMS0yLjMtLjctLjguNi0xLjEgMS43LS43IDIuNSAzLjYgNi4xIDIuNCA0LjEgMy42IDYuMS41LjkgMS41IDEuMSAyLjMuNy44LS41IDEuMS0xLjUuNy0yLjUtMS4zLTItMi41LTQtMy42LTYuMXpNODcuNSAxMjEuMWMtNi4xLTMuNi00LTIuNC02LjEtMy42LS44LS40LTEuOS0uMS0yLjQuNy0uNC45LS4xIDEuOS43IDIuNCA2LjEgMy43IDQuMSAyLjUgNi4xIDMuNyAxIC40IDEuOS4xIDIuNC0uNy40LS44LjItMS45LS43LTIuNXpNNzYuOSAxNTguM2gtNy4xYy0xIDAtMS42LjctMS42IDEuNyAwIC45LjcgMS43IDEuNiAxLjdoNy4xYy45IDAgMS42LS44IDEuNi0xLjcgMC0xLS43LTEuNy0xLjYtMS43ek04NS44IDE5NS43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtLjguNi0xLjEgMS43LS43IDIuNS42LjggMS42IDEuMSAyLjQuNiA2LjEtMy42IDQtMi40IDYuMS0zLjYuOS0uNCAxLjEtMS42LjctMi40LS41LS44LTEuNi0xLjEtMi40LS43ek0xMTQuNSAyMjMuMWMtLjgtLjYtMS45LS4zLTIuNC43LTMuNSA2LjEtMi4zIDQuMS0zLjUgNi4xLS40LjgtLjEgMS45LjcgMi4zLjkuNiAxLjkuMyAyLjMtLjUgMy41LTYuMyAyLjMtNC4yIDMuNS02LjMuNS0uOC4yLTEuOS0uNi0yLjN6TTE1MC41IDIzMi45Yy0xIDAtMS44LjgtMS44IDEuOHY3LjFjMCAuOS44IDEuOCAxLjggMS44czEuOC0uOSAxLjgtMS44di03LjFjMC0xLS44LTEuOC0xLjgtMS44ek0xODguNiAyMjMuOGMtLjUtLjgtMS41LTEuMS0yLjMtLjctMSAuNi0xLjIgMS42LS43IDIuNCAzLjUgNi4zIDIuMyA0LjIgMy41IDYuMy41LjkgMS41IDEuMSAyLjQuNi44LS40IDEuMS0xLjUuNS0yLjQtMS0yLjEtMi4yLTQuMi0zLjQtNi4yek0yMjEgMTk5LjVjLTYuMS0zLjctNC4xLTIuNS02LjEtMy43LS44LS40LTEuOS0uMS0yLjMuNy0uNi44LS4zIDIgLjUgMi40IDYuMiAzLjcgNC4yIDIuNSA2LjIgMy43LjguNCAxLjkuMSAyLjMtLjcuNi0uOS40LTItLjYtMi40ek0yMzEgMTU4aC03Yy0xIDAtMS44IDEtMS44IDEuOSAwIDEgLjggMS44IDEuOCAxLjhoN2MuOSAwIDEuOC0uOCAxLjgtMS44IDAtLjktLjktMS45LTEuOC0xLjl6TTIxOS40IDExNy43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtMSAuNC0xLjIgMS41LS43IDIuMy40LjkgMS41IDEuMSAyLjMuNyA2LjItMy42IDQuMS0yLjQgNi4yLTMuNi44LS41IDEuMS0xLjYuNS0yLjUtLjMtLjgtMS40LTEuMS0yLjItLjV6TTE5MS42IDg3LjdjLS44LS42LTEuOS0uMy0yLjQuNS0zLjUgNi4zLTIuMyA0LjItMy41IDYuMy0uNC44LS4xIDEuOC43IDIuMy44LjYgMS45LjIgMi4zLS43IDMuNS02LjEgMi4zLTQuMSAzLjUtNi4xLjUtLjguMi0xLjktLjYtMi4zek0xNTQuOSAxMzguNmMtMS00My44LS42LTI5LjItMS00My44IDAtMS45LTEuNi0zLjQtMy4zLTMuNGgtLjdjLTEuOCAwLTMuMyAxLjUtMy4zIDMuNC0xIDQzLjktLjYgMjkuMy0xIDQzLjktOS41IDIuMi0xNi42IDEwLjgtMTYuNiAyMS4yIDAgMTIgOS42IDIxLjcgMjEuNSAyMS43IDExLjggMCAyMS40LTkuNyAyMS40LTIxLjcgMC0xMC41LTcuMi0xOS4yLTE3LTIxLjN6bTUuOSAzMS44Yy0yLjYgMi43LTYuMiA0LjQtMTAuMyA0LjQtNC4xIDAtNy43LTEuNy0xMC40LTQuNC0yLjYtMi42LTQuMS02LjMtNC4xLTEwLjQgMC00LjEgMS42LTcuOCA0LjEtMTAuNiAyLjctMi42IDYuMy00LjIgMTAuNC00LjQgNCAuMiA3LjYgMS44IDEwLjMgNC40IDIuNyAyLjggNC4zIDYuNCA0LjMgMTAuNiAwIDQtMS43IDcuNy00LjMgMTAuNHoiLz48cGF0aCBkPSJNMjA2LjIgMTU2LjFjLTM0LjgtLjgtMjMuMi0uNi0zNC44LS44LTItOS45LTEwLjYtMTcuMS0yMC45LTE3LjEtMTEuOSAwLTIxLjUgOS43LTIxLjUgMjEuOCAwIDEyIDkuNiAyMS43IDIxLjUgMjEuNyAxMC4zIDAgMTguOS03LjQgMjAuOS0xNy4xIDM0LjgtMSAyMy4yLS42IDM0LjgtMSAxLjkgMCAzLjItMS43IDMuMi0zLjR2LS43YzAtMS43LTEuMy0zLjMtMy4yLTMuNHoiLz48Zz48cGF0aCBkPSJNMTY3IDI5MS4yYy00LjQuNi04LjkgMS0xMy40IDEuMy0xLjkuMS0zLjQgMS43LTMuMyAzLjYuMSAxLjggMS42IDMuMyAzLjQgMy4zaC4yYzQuNy0uMiA5LjQtLjcgMTQtMS4zIDEuOS0uMyAzLjItMiAyLjktMy45LS4xLTEuOS0xLjgtMy4yLTMuOC0zek0yMTcuOCAyNzQuMWMtMS44IDEtMy42IDEuOS01LjQgMi45LTIuMiAxLjEtNC40IDIuMi02LjcgMy4yLTEuNy44LTIuNSAyLjgtMS44IDQuNi42IDEuMyAxLjggMi4xIDMuMiAyLjEuNSAwIC45LS4xIDEuNC0uMyAyLjMtMSA0LjctMi4xIDctMy4zbDUuNy0zYzEuNy0uOSAyLjMtMyAxLjMtNC43LS45LTEuOC0zLTIuNC00LjctMS41ek0xOTMuMiAyODVjLTQuMyAxLjQtOC42IDIuNy0xMyAzLjctMS45LjQtMyAyLjMtMi42IDQuMi40IDEuNiAxLjggMi43IDMuNCAyLjcuMyAwIC41IDAgLjgtLjEgNC41LTEuMSA5LjEtMi40IDEzLjYtMy45IDEuOC0uNiAyLjgtMi42IDIuMi00LjQtLjYtMS44LTIuNi0yLjgtNC40LTIuMnpNMTQwLjEgMjkyLjVjLTQuNS0uMi05LS42LTEzLjQtMS4yLTEuOS0uMy0zLjYgMS4xLTMuOSAyLjktLjMgMS45IDEuMSAzLjYgMi45IDMuOSA0LjYuNiA5LjQgMS4xIDE0LjEgMS4zaC4yYzEuOCAwIDMuNC0xLjQgMy40LTMuMy4xLTEuOS0xLjQtMy41LTMuMy0zLjZ6TTg3LjkgMjgwLjRjLTQuMS0xLjgtOC4yLTMuOC0xMi4xLTYtMS43LS45LTMuOC0uMy00LjcgMS40LS45IDEuNy0uMyAzLjggMS40IDQuNyA0LjEgMi4zIDguNCA0LjQgMTIuNyA2LjIuNC4yLjkuMyAxLjQuMyAxLjMgMCAyLjYtLjggMy4yLTIuMS43LTEuNy0uMS0zLjctMS45LTQuNXpNMzQuNCAyNDAuNGMtMS4yLTEuNS0zLjQtMS42LTQuOS0uNC0xLjUgMS4yLTEuNiAzLjQtLjQgNC45IDMgMy42IDYuMiA3LjEgOS42IDEwLjQuNy43IDEuNSAxIDIuNCAxIC45IDAgMS44LS4zIDIuNS0xIDEuMy0xLjQgMS4zLTMuNSAwLTQuOS0zLjMtMy4yLTYuNC02LjYtOS4yLTEwek01My41IDI1OS40Yy0xLjUtMS4yLTMuNi0xLTQuOS41LTEuMiAxLjUtMSAzLjYuNSA0LjkgMy42IDMgNy40IDUuOCAxMS4zIDguNC42LjQgMS4zLjYgMS45LjYgMS4xIDAgMi4yLS41IDIuOS0xLjUgMS4xLTEuNi43LTMuNy0uOS00LjgtMy43LTIuNi03LjMtNS4zLTEwLjgtOC4xek0xMTMuNSAyODguOWMtNC40LTEtOC43LTIuMi0xMy0zLjYtMS44LS42LTMuOC40LTQuNCAyLjItLjYgMS44LjQgMy44IDIuMiA0LjQgNC41IDEuNSA5IDIuOCAxMy42IDMuOC4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi43LjQtMi0uOC0zLjgtMi42LTQuMnpNMjk1LjUgMTY0Yy0xLjktLjMtMy42IDEtMy45IDIuOS0uNiA0LjQtMS41IDguOS0yLjUgMTMuMi0uNCAxLjkuNyAzLjcgMi42IDQuMi4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi42IDEuMS00LjUgMi05LjIgMi43LTEzLjkuMS0xLjgtMS4yLTMuNi0zLjEtMy45ek0yNTkuMiAyMzkuOWMtMi45IDMuNC01LjkgNi44LTkuMSA5LjktMS4zIDEuMy0xLjQgMy41IDAgNC45LjcuNyAxLjYgMSAyLjQgMSAuOSAwIDEuOC0uMyAyLjQtMSAzLjMtMy4zIDYuNS02LjggOS41LTEwLjQgMS4yLTEuNSAxLTMuNi0uNC00LjktMS40LTEuMS0zLjYtLjktNC44LjV6TTI4OS43IDE5MWMtMS44LS42LTMuOC40LTQuNCAyLjItMS40IDQuMy0zLjEgOC41LTQuOSAxMi42LS44IDEuNyAwIDMuOCAxLjggNC42LjUuMi45LjMgMS40LjMgMS4zIDAgMi42LS44IDMuMi0yIDEuOS00LjMgMy42LTguNyA1LjEtMTMuMS42LTIuMS0uNC00LTIuMi00LjZ6TTI5Ni42IDE0NC42Yy0xLjkgMC0zLjUgMS41LTMuNSAzLjRzLS4xIDMuNy0uMiA1LjZjLS4xIDEuOSAxLjQgMy41IDMuMyAzLjZoLjJjMS44IDAgMy4zLTEuNCAzLjQtMy4zLjEtMS45LjItMy45LjItNS44cy0xLjUtMy41LTMuNC0zLjV6TTI3OS4xIDIxNi40Yy0xLjctLjktMy44LS4zLTQuNyAxLjMtMi4yIDMuOS00LjYgNy43LTcuMSAxMS40LTEuMSAxLjYtLjcgMy43LjkgNC44LjYuNCAxLjMuNiAyIC42IDEuMSAwIDIuMi0uNSAyLjgtMS41IDIuNy0zLjkgNS4yLTcuOSA3LjQtMTIgMS0xLjYuNC0zLjctMS4zLTQuNnpNMjQwLjEgMjU4LjljLTMuNCAyLjgtNy4xIDUuNi0xMC44IDguMS0xLjYgMS4xLTIgMy4yLS45IDQuOC43IDEgMS44IDEuNSAyLjkgMS41LjcgMCAxLjMtLjIgMS45LS42IDMuOS0yLjcgNy43LTUuNSAxMS4zLTguNSAxLjUtMS4yIDEuNy0zLjQuNS00LjktMS4zLTEuNC0zLjUtMS42LTQuOS0uNHpNNDYuNCA1My4yQzkwLjcgNiAxNjAuMy02LjQgMjE3LjggMjEuOWwtOC4yIDExLjNjLS40LjYtLjUgMS40LS4zIDIuMS4zLjcuOSAxLjIgMS42IDEuNGw0Mi41IDguOGMuOC4yIDEuNy0uMiAyLjItLjkuNS0uNy42LTEuNi4xLTIuNEwyMzQuNiA0LjFjLS40LS43LTEtMS4xLTEuOC0xLjFzLTEuNS4zLTEuOS45bC05IDEyLjRDMTYxLjUtMTQgODguMS0xLjIgNDEuNCA0OC41LTQuOSA5Ny44LTEzLjMgMTcyLjkgMjAuOSAyMzEuMmMuNiAxLjEgMS44IDEuNyAzIDEuNy42IDAgMS4yLS4yIDEuNy0uNSAxLjYtMSAyLjItMy4xIDEuMi00LjdDLTUuOCAxNzIuMSAyLjIgMTAwLjMgNDYuNCA1My4yeiIvPjwvZz48L2c+PC9zdmc+",
+      "id": "timer",
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Timer",
+      "version": 49
+    }
+  },
+  "integrations": {
+    ":i-LaoFttXSifRdMEhgj-qz": {
+      "createdAt": 1553507524190,
+      "flows": [
+        {
+          "id": "-LaoFeNBJNDTpod1VflJ",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Simple Timer",
+                "descriptor": {
+                  "componentScheme": "timer",
+                  "configuredProperties": {
+                    "timerName": "syndesis-timer"
+                  },
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "kind": "none"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Period",
+                      "name": "Period",
+                      "properties": {
+                        "period": {
+                          "componentProperty": false,
+                          "defaultValue": "60000",
+                          "deprecated": false,
+                          "description": "Period",
+                          "displayName": "Period",
+                          "javaType": "long",
+                          "kind": "parameter",
+                          "labelHint": "Delay between scheduling (executing).",
+                          "required": true,
+                          "secret": false,
+                          "type": "duration"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:timer-action",
+                "name": "Simple Timer",
+                "pattern": "From"
+              },
+              "configuredProperties": {
+                "period": "1000"
+              },
+              "connection": {
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Simple Timer",
+                      "descriptor": {
+                        "componentScheme": "timer",
+                        "configuredProperties": {
+                          "timerName": "syndesis-timer"
+                        },
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Period",
+                            "name": "Period",
+                            "properties": {
+                              "period": {
+                                "componentProperty": false,
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "description": "Period",
+                                "displayName": "Period",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": true,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:timer-action",
+                      "name": "Simple Timer",
+                      "pattern": "From"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Cron Timer",
+                      "descriptor": {
+                        "componentScheme": "quartz2",
+                        "configuredProperties": {
+                          "triggerName": "syndesis-quartz"
+                        },
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Cron",
+                            "name": "cron",
+                            "properties": {
+                              "cron": {
+                                "componentProperty": false,
+                                "defaultValue": "0 0/1 * * * ?",
+                                "deprecated": false,
+                                "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
+                                "displayName": "Cron Expression",
+                                "javaType": "string",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing) expressed as a cron expression",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:timer-chron",
+                      "name": "Cron Timer",
+                      "pattern": "From"
+                    }
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "org.apache.camel:camel-quartz2:2.21.0.fuse-730054",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Trigger events based on an interval or a quartz expression",
+                  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjk5LjQiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjEyLjQgMjIyLjdjLTE1LjkgMTYtMzcuOCAyNi02MS45IDI2cy00Ni4yLTEwLTYxLjktMjZjLTE1LjktMTYuMS0yNS43LTM4LjItMjUuNy02Mi43IDAtMjQuNiA5LjctNDYuOCAyNS43LTYyLjguNS0uNi45LTEuMSAxLjUtMS41IDguNS03LjMgNS43LTQuOSA4LjUtNy4zIDE0LTEwLjUgMzEuMi0xNi44IDQ5LjgtMTcuM2g0LjNjMjMuMy41IDQ0LjQgMTAuNCA1OS44IDI2IDE1LjcgMTYuMSAyNS42IDM4LjMgMjUuNiA2Mi44LS4xIDI0LjUtOS45IDQ2LjYtMjUuNyA2Mi44eiIgZmlsbD0iI2MzMjI2NSIvPjxwYXRoIGQ9Ik0xNjEuNCA2NC43di02LjhoMTAuOGMxIDAgMS44LS40IDIuMy0xLjEuNi0uNy45LTEuNi45LTIuNlY0MC4xYzAtMS0uMy0xLjgtLjktMi41LS42LS43LTEuNC0xLjEtMi4zLTEuMWgtNDMuN2MtMSAwLTEuNi40LTIuMyAxLjEtLjcuNy0uOSAxLjUtLjkgMi41djE0LjFjMCAxIC4yIDEuOS45IDIuNi43LjcgMS40IDEuMSAyLjMgMS4xaDEwLjh2Ni44Yy0xNS4xIDEuOC0yOC42IDcuMS00MC40IDE0LjktNC41LTUuMi0zLTMuNC00LjUtNS4yIDIuNy0yLjMgMS44LTEuNiAyLjctMi4zLjctLjYgMS4yLTEuNSAxLjItMi40LjItLjktLjEtMS45LS44LTIuNi0xMS45LTE0LjQtNy45LTkuNS0xMS45LTE0LjQtMS4yLTEuNS0zLjMtMS42LTQuOC0uNC0yNC40IDIwLjktMTYuMyAxNC0yNC40IDIwLjktLjcuNi0xLjEgMS40LTEuMiAyLjMtLjEgMSAuMyAxLjguOCAyLjYgMTEuOCAxNC40IDcuOSA5LjUgMTEuOCAxNC40IDEuMiAxLjMgMy40IDEuNiA0LjkuNCA0LjYtNCAzLjEtMi42IDQuNi00IDQuNCA1LjMgMi45IDMuNiA0LjQgNS4zLTE1LjkgMTcuMS0yNS42IDQwLjItMjUuNiA2NS42IDAgNTIuNyA0Mi4yIDk1LjcgOTQuNCA5NS43czk0LjQtNDMgOTQuNC05NS43YzAtNDguOS0zNi41LTg5LjQtODMuNS05NS4xem0tMjkuNi0yMUgxNjl2Ny4xaC0zNy4zYy4xLTIuNC4xLTQuNy4xLTcuMXptMTQuNSAyMC4ydi02aDguNnY2SDE0Ni4zem0tNTcuMiAxNWM0LjEgNC45IDIuNyAzLjMgNC4xIDQuOS0yLjMgMS44LTQuNSAzLjctNi42IDUuNi00LTQuOS0yLjctMy4zLTQtNC45IDIuMi0xLjkgNC40LTMuOCA2LjUtNS42em0xMjMuMyAxNDMuOGMtMTUuOSAxNi0zNy44IDI2LTYxLjkgMjZzLTQ2LjItMTAtNjEuOS0yNmMtMTUuOS0xNi4xLTI1LjctMzguMi0yNS43LTYyLjcgMC0yNC42IDkuNy00Ni44IDI1LjctNjIuOC41LS42LjktMS4xIDEuNS0xLjUgOC41LTcuMyA1LjctNC45IDguNS03LjMgMTQtMTAuNSAzMS4yLTE2LjggNDkuOC0xNy4zaDQuM2MyMy4zLjUgNDQuNCAxMC40IDU5LjggMjYgMTUuNyAxNi4xIDI1LjYgMzguMyAyNS42IDYyLjgtLjEgMjQuNS05LjkgNDYuNi0yNS43IDYyLjh6Ii8+PHBhdGggZD0iTTE1MC40IDg3LjJjMSAwIDEuOS0uOSAxLjktMS44di03LjJjMC0xLTEtMS43LTEuOS0xLjctMSAwLTEuOS43LTEuOSAxLjd2Ny4yYzAgLjkuOSAxLjggMS45IDEuOHpNMTExLjYgODguM2MtLjUtLjgtMS41LTEuMS0yLjMtLjctLjguNi0xLjEgMS43LS43IDIuNSAzLjYgNi4xIDIuNCA0LjEgMy42IDYuMS41LjkgMS41IDEuMSAyLjMuNy44LS41IDEuMS0xLjUuNy0yLjUtMS4zLTItMi41LTQtMy42LTYuMXpNODcuNSAxMjEuMWMtNi4xLTMuNi00LTIuNC02LjEtMy42LS44LS40LTEuOS0uMS0yLjQuNy0uNC45LS4xIDEuOS43IDIuNCA2LjEgMy43IDQuMSAyLjUgNi4xIDMuNyAxIC40IDEuOS4xIDIuNC0uNy40LS44LjItMS45LS43LTIuNXpNNzYuOSAxNTguM2gtNy4xYy0xIDAtMS42LjctMS42IDEuNyAwIC45LjcgMS43IDEuNiAxLjdoNy4xYy45IDAgMS42LS44IDEuNi0xLjcgMC0xLS43LTEuNy0xLjYtMS43ek04NS44IDE5NS43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtLjguNi0xLjEgMS43LS43IDIuNS42LjggMS42IDEuMSAyLjQuNiA2LjEtMy42IDQtMi40IDYuMS0zLjYuOS0uNCAxLjEtMS42LjctMi40LS41LS44LTEuNi0xLjEtMi40LS43ek0xMTQuNSAyMjMuMWMtLjgtLjYtMS45LS4zLTIuNC43LTMuNSA2LjEtMi4zIDQuMS0zLjUgNi4xLS40LjgtLjEgMS45LjcgMi4zLjkuNiAxLjkuMyAyLjMtLjUgMy41LTYuMyAyLjMtNC4yIDMuNS02LjMuNS0uOC4yLTEuOS0uNi0yLjN6TTE1MC41IDIzMi45Yy0xIDAtMS44LjgtMS44IDEuOHY3LjFjMCAuOS44IDEuOCAxLjggMS44czEuOC0uOSAxLjgtMS44di03LjFjMC0xLS44LTEuOC0xLjgtMS44ek0xODguNiAyMjMuOGMtLjUtLjgtMS41LTEuMS0yLjMtLjctMSAuNi0xLjIgMS42LS43IDIuNCAzLjUgNi4zIDIuMyA0LjIgMy41IDYuMy41LjkgMS41IDEuMSAyLjQuNi44LS40IDEuMS0xLjUuNS0yLjQtMS0yLjEtMi4yLTQuMi0zLjQtNi4yek0yMjEgMTk5LjVjLTYuMS0zLjctNC4xLTIuNS02LjEtMy43LS44LS40LTEuOS0uMS0yLjMuNy0uNi44LS4zIDIgLjUgMi40IDYuMiAzLjcgNC4yIDIuNSA2LjIgMy43LjguNCAxLjkuMSAyLjMtLjcuNi0uOS40LTItLjYtMi40ek0yMzEgMTU4aC03Yy0xIDAtMS44IDEtMS44IDEuOSAwIDEgLjggMS44IDEuOCAxLjhoN2MuOSAwIDEuOC0uOCAxLjgtMS44IDAtLjktLjktMS45LTEuOC0xLjl6TTIxOS40IDExNy43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtMSAuNC0xLjIgMS41LS43IDIuMy40LjkgMS41IDEuMSAyLjMuNyA2LjItMy42IDQuMS0yLjQgNi4yLTMuNi44LS41IDEuMS0xLjYuNS0yLjUtLjMtLjgtMS40LTEuMS0yLjItLjV6TTE5MS42IDg3LjdjLS44LS42LTEuOS0uMy0yLjQuNS0zLjUgNi4zLTIuMyA0LjItMy41IDYuMy0uNC44LS4xIDEuOC43IDIuMy44LjYgMS45LjIgMi4zLS43IDMuNS02LjEgMi4zLTQuMSAzLjUtNi4xLjUtLjguMi0xLjktLjYtMi4zek0xNTQuOSAxMzguNmMtMS00My44LS42LTI5LjItMS00My44IDAtMS45LTEuNi0zLjQtMy4zLTMuNGgtLjdjLTEuOCAwLTMuMyAxLjUtMy4zIDMuNC0xIDQzLjktLjYgMjkuMy0xIDQzLjktOS41IDIuMi0xNi42IDEwLjgtMTYuNiAyMS4yIDAgMTIgOS42IDIxLjcgMjEuNSAyMS43IDExLjggMCAyMS40LTkuNyAyMS40LTIxLjcgMC0xMC41LTcuMi0xOS4yLTE3LTIxLjN6bTUuOSAzMS44Yy0yLjYgMi43LTYuMiA0LjQtMTAuMyA0LjQtNC4xIDAtNy43LTEuNy0xMC40LTQuNC0yLjYtMi42LTQuMS02LjMtNC4xLTEwLjQgMC00LjEgMS42LTcuOCA0LjEtMTAuNiAyLjctMi42IDYuMy00LjIgMTAuNC00LjQgNCAuMiA3LjYgMS44IDEwLjMgNC40IDIuNyAyLjggNC4zIDYuNCA0LjMgMTAuNiAwIDQtMS43IDcuNy00LjMgMTAuNHoiLz48cGF0aCBkPSJNMjA2LjIgMTU2LjFjLTM0LjgtLjgtMjMuMi0uNi0zNC44LS44LTItOS45LTEwLjYtMTcuMS0yMC45LTE3LjEtMTEuOSAwLTIxLjUgOS43LTIxLjUgMjEuOCAwIDEyIDkuNiAyMS43IDIxLjUgMjEuNyAxMC4zIDAgMTguOS03LjQgMjAuOS0xNy4xIDM0LjgtMSAyMy4yLS42IDM0LjgtMSAxLjkgMCAzLjItMS43IDMuMi0zLjR2LS43YzAtMS43LTEuMy0zLjMtMy4yLTMuNHoiLz48Zz48cGF0aCBkPSJNMTY3IDI5MS4yYy00LjQuNi04LjkgMS0xMy40IDEuMy0xLjkuMS0zLjQgMS43LTMuMyAzLjYuMSAxLjggMS42IDMuMyAzLjQgMy4zaC4yYzQuNy0uMiA5LjQtLjcgMTQtMS4zIDEuOS0uMyAzLjItMiAyLjktMy45LS4xLTEuOS0xLjgtMy4yLTMuOC0zek0yMTcuOCAyNzQuMWMtMS44IDEtMy42IDEuOS01LjQgMi45LTIuMiAxLjEtNC40IDIuMi02LjcgMy4yLTEuNy44LTIuNSAyLjgtMS44IDQuNi42IDEuMyAxLjggMi4xIDMuMiAyLjEuNSAwIC45LS4xIDEuNC0uMyAyLjMtMSA0LjctMi4xIDctMy4zbDUuNy0zYzEuNy0uOSAyLjMtMyAxLjMtNC43LS45LTEuOC0zLTIuNC00LjctMS41ek0xOTMuMiAyODVjLTQuMyAxLjQtOC42IDIuNy0xMyAzLjctMS45LjQtMyAyLjMtMi42IDQuMi40IDEuNiAxLjggMi43IDMuNCAyLjcuMyAwIC41IDAgLjgtLjEgNC41LTEuMSA5LjEtMi40IDEzLjYtMy45IDEuOC0uNiAyLjgtMi42IDIuMi00LjQtLjYtMS44LTIuNi0yLjgtNC40LTIuMnpNMTQwLjEgMjkyLjVjLTQuNS0uMi05LS42LTEzLjQtMS4yLTEuOS0uMy0zLjYgMS4xLTMuOSAyLjktLjMgMS45IDEuMSAzLjYgMi45IDMuOSA0LjYuNiA5LjQgMS4xIDE0LjEgMS4zaC4yYzEuOCAwIDMuNC0xLjQgMy40LTMuMy4xLTEuOS0xLjQtMy41LTMuMy0zLjZ6TTg3LjkgMjgwLjRjLTQuMS0xLjgtOC4yLTMuOC0xMi4xLTYtMS43LS45LTMuOC0uMy00LjcgMS40LS45IDEuNy0uMyAzLjggMS40IDQuNyA0LjEgMi4zIDguNCA0LjQgMTIuNyA2LjIuNC4yLjkuMyAxLjQuMyAxLjMgMCAyLjYtLjggMy4yLTIuMS43LTEuNy0uMS0zLjctMS45LTQuNXpNMzQuNCAyNDAuNGMtMS4yLTEuNS0zLjQtMS42LTQuOS0uNC0xLjUgMS4yLTEuNiAzLjQtLjQgNC45IDMgMy42IDYuMiA3LjEgOS42IDEwLjQuNy43IDEuNSAxIDIuNCAxIC45IDAgMS44LS4zIDIuNS0xIDEuMy0xLjQgMS4zLTMuNSAwLTQuOS0zLjMtMy4yLTYuNC02LjYtOS4yLTEwek01My41IDI1OS40Yy0xLjUtMS4yLTMuNi0xLTQuOS41LTEuMiAxLjUtMSAzLjYuNSA0LjkgMy42IDMgNy40IDUuOCAxMS4zIDguNC42LjQgMS4zLjYgMS45LjYgMS4xIDAgMi4yLS41IDIuOS0xLjUgMS4xLTEuNi43LTMuNy0uOS00LjgtMy43LTIuNi03LjMtNS4zLTEwLjgtOC4xek0xMTMuNSAyODguOWMtNC40LTEtOC43LTIuMi0xMy0zLjYtMS44LS42LTMuOC40LTQuNCAyLjItLjYgMS44LjQgMy44IDIuMiA0LjQgNC41IDEuNSA5IDIuOCAxMy42IDMuOC4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi43LjQtMi0uOC0zLjgtMi42LTQuMnpNMjk1LjUgMTY0Yy0xLjktLjMtMy42IDEtMy45IDIuOS0uNiA0LjQtMS41IDguOS0yLjUgMTMuMi0uNCAxLjkuNyAzLjcgMi42IDQuMi4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi42IDEuMS00LjUgMi05LjIgMi43LTEzLjkuMS0xLjgtMS4yLTMuNi0zLjEtMy45ek0yNTkuMiAyMzkuOWMtMi45IDMuNC01LjkgNi44LTkuMSA5LjktMS4zIDEuMy0xLjQgMy41IDAgNC45LjcuNyAxLjYgMSAyLjQgMSAuOSAwIDEuOC0uMyAyLjQtMSAzLjMtMy4zIDYuNS02LjggOS41LTEwLjQgMS4yLTEuNSAxLTMuNi0uNC00LjktMS40LTEuMS0zLjYtLjktNC44LjV6TTI4OS43IDE5MWMtMS44LS42LTMuOC40LTQuNCAyLjItMS40IDQuMy0zLjEgOC41LTQuOSAxMi42LS44IDEuNyAwIDMuOCAxLjggNC42LjUuMi45LjMgMS40LjMgMS4zIDAgMi42LS44IDMuMi0yIDEuOS00LjMgMy42LTguNyA1LjEtMTMuMS42LTIuMS0uNC00LTIuMi00LjZ6TTI5Ni42IDE0NC42Yy0xLjkgMC0zLjUgMS41LTMuNSAzLjRzLS4xIDMuNy0uMiA1LjZjLS4xIDEuOSAxLjQgMy41IDMuMyAzLjZoLjJjMS44IDAgMy4zLTEuNCAzLjQtMy4zLjEtMS45LjItMy45LjItNS44cy0xLjUtMy41LTMuNC0zLjV6TTI3OS4xIDIxNi40Yy0xLjctLjktMy44LS4zLTQuNyAxLjMtMi4yIDMuOS00LjYgNy43LTcuMSAxMS40LTEuMSAxLjYtLjcgMy43LjkgNC44LjYuNCAxLjMuNiAyIC42IDEuMSAwIDIuMi0uNSAyLjgtMS41IDIuNy0zLjkgNS4yLTcuOSA3LjQtMTIgMS0xLjYuNC0zLjctMS4zLTQuNnpNMjQwLjEgMjU4LjljLTMuNCAyLjgtNy4xIDUuNi0xMC44IDguMS0xLjYgMS4xLTIgMy4yLS45IDQuOC43IDEgMS44IDEuNSAyLjkgMS41LjcgMCAxLjMtLjIgMS45LS42IDMuOS0yLjcgNy43LTUuNSAxMS4zLTguNSAxLjUtMS4yIDEuNy0zLjQuNS00LjktMS4zLTEuNC0zLjUtMS42LTQuOS0uNHpNNDYuNCA1My4yQzkwLjcgNiAxNjAuMy02LjQgMjE3LjggMjEuOWwtOC4yIDExLjNjLS40LjYtLjUgMS40LS4zIDIuMS4zLjcuOSAxLjIgMS42IDEuNGw0Mi41IDguOGMuOC4yIDEuNy0uMiAyLjItLjkuNS0uNy42LTEuNi4xLTIuNEwyMzQuNiA0LjFjLS40LS43LTEtMS4xLTEuOC0xLjFzLTEuNS4zLTEuOS45bC05IDEyLjRDMTYxLjUtMTQgODguMS0xLjIgNDEuNCA0OC41LTQuOSA5Ny44LTEzLjMgMTcyLjkgMjAuOSAyMzEuMmMuNiAxLjEgMS44IDEuNyAzIDEuNy42IDAgMS4yLS4yIDEuNy0uNSAxLjYtMSAyLjItMy4xIDEuMi00LjdDLTUuOCAxNzIuMSAyLjIgMTAwLjMgNDYuNCA1My4yeiIvPjwvZz48L2c+PC9zdmc+",
+                  "id": "timer",
+                  "metadata": {
+                    "hide-from-connection-pages": "true"
+                  },
+                  "name": "Timer",
+                  "version": 49
+                },
+                "connectorId": "timer",
+                "description": "Trigger events based on an interval or a cron expression",
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjk5LjQiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjEyLjQgMjIyLjdjLTE1LjkgMTYtMzcuOCAyNi02MS45IDI2cy00Ni4yLTEwLTYxLjktMjZjLTE1LjktMTYuMS0yNS43LTM4LjItMjUuNy02Mi43IDAtMjQuNiA5LjctNDYuOCAyNS43LTYyLjguNS0uNi45LTEuMSAxLjUtMS41IDguNS03LjMgNS43LTQuOSA4LjUtNy4zIDE0LTEwLjUgMzEuMi0xNi44IDQ5LjgtMTcuM2g0LjNjMjMuMy41IDQ0LjQgMTAuNCA1OS44IDI2IDE1LjcgMTYuMSAyNS42IDM4LjMgMjUuNiA2Mi44LS4xIDI0LjUtOS45IDQ2LjYtMjUuNyA2Mi44eiIgZmlsbD0iI2MzMjI2NSIvPjxwYXRoIGQ9Ik0xNjEuNCA2NC43di02LjhoMTAuOGMxIDAgMS44LS40IDIuMy0xLjEuNi0uNy45LTEuNi45LTIuNlY0MC4xYzAtMS0uMy0xLjgtLjktMi41LS42LS43LTEuNC0xLjEtMi4zLTEuMWgtNDMuN2MtMSAwLTEuNi40LTIuMyAxLjEtLjcuNy0uOSAxLjUtLjkgMi41djE0LjFjMCAxIC4yIDEuOS45IDIuNi43LjcgMS40IDEuMSAyLjMgMS4xaDEwLjh2Ni44Yy0xNS4xIDEuOC0yOC42IDcuMS00MC40IDE0LjktNC41LTUuMi0zLTMuNC00LjUtNS4yIDIuNy0yLjMgMS44LTEuNiAyLjctMi4zLjctLjYgMS4yLTEuNSAxLjItMi40LjItLjktLjEtMS45LS44LTIuNi0xMS45LTE0LjQtNy45LTkuNS0xMS45LTE0LjQtMS4yLTEuNS0zLjMtMS42LTQuOC0uNC0yNC40IDIwLjktMTYuMyAxNC0yNC40IDIwLjktLjcuNi0xLjEgMS40LTEuMiAyLjMtLjEgMSAuMyAxLjguOCAyLjYgMTEuOCAxNC40IDcuOSA5LjUgMTEuOCAxNC40IDEuMiAxLjMgMy40IDEuNiA0LjkuNCA0LjYtNCAzLjEtMi42IDQuNi00IDQuNCA1LjMgMi45IDMuNiA0LjQgNS4zLTE1LjkgMTcuMS0yNS42IDQwLjItMjUuNiA2NS42IDAgNTIuNyA0Mi4yIDk1LjcgOTQuNCA5NS43czk0LjQtNDMgOTQuNC05NS43YzAtNDguOS0zNi41LTg5LjQtODMuNS05NS4xem0tMjkuNi0yMUgxNjl2Ny4xaC0zNy4zYy4xLTIuNC4xLTQuNy4xLTcuMXptMTQuNSAyMC4ydi02aDguNnY2SDE0Ni4zem0tNTcuMiAxNWM0LjEgNC45IDIuNyAzLjMgNC4xIDQuOS0yLjMgMS44LTQuNSAzLjctNi42IDUuNi00LTQuOS0yLjctMy4zLTQtNC45IDIuMi0xLjkgNC40LTMuOCA2LjUtNS42em0xMjMuMyAxNDMuOGMtMTUuOSAxNi0zNy44IDI2LTYxLjkgMjZzLTQ2LjItMTAtNjEuOS0yNmMtMTUuOS0xNi4xLTI1LjctMzguMi0yNS43LTYyLjcgMC0yNC42IDkuNy00Ni44IDI1LjctNjIuOC41LS42LjktMS4xIDEuNS0xLjUgOC41LTcuMyA1LjctNC45IDguNS03LjMgMTQtMTAuNSAzMS4yLTE2LjggNDkuOC0xNy4zaDQuM2MyMy4zLjUgNDQuNCAxMC40IDU5LjggMjYgMTUuNyAxNi4xIDI1LjYgMzguMyAyNS42IDYyLjgtLjEgMjQuNS05LjkgNDYuNi0yNS43IDYyLjh6Ii8+PHBhdGggZD0iTTE1MC40IDg3LjJjMSAwIDEuOS0uOSAxLjktMS44di03LjJjMC0xLTEtMS43LTEuOS0xLjctMSAwLTEuOS43LTEuOSAxLjd2Ny4yYzAgLjkuOSAxLjggMS45IDEuOHpNMTExLjYgODguM2MtLjUtLjgtMS41LTEuMS0yLjMtLjctLjguNi0xLjEgMS43LS43IDIuNSAzLjYgNi4xIDIuNCA0LjEgMy42IDYuMS41LjkgMS41IDEuMSAyLjMuNy44LS41IDEuMS0xLjUuNy0yLjUtMS4zLTItMi41LTQtMy42LTYuMXpNODcuNSAxMjEuMWMtNi4xLTMuNi00LTIuNC02LjEtMy42LS44LS40LTEuOS0uMS0yLjQuNy0uNC45LS4xIDEuOS43IDIuNCA2LjEgMy43IDQuMSAyLjUgNi4xIDMuNyAxIC40IDEuOS4xIDIuNC0uNy40LS44LjItMS45LS43LTIuNXpNNzYuOSAxNTguM2gtNy4xYy0xIDAtMS42LjctMS42IDEuNyAwIC45LjcgMS43IDEuNiAxLjdoNy4xYy45IDAgMS42LS44IDEuNi0xLjcgMC0xLS43LTEuNy0xLjYtMS43ek04NS44IDE5NS43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtLjguNi0xLjEgMS43LS43IDIuNS42LjggMS42IDEuMSAyLjQuNiA2LjEtMy42IDQtMi40IDYuMS0zLjYuOS0uNCAxLjEtMS42LjctMi40LS41LS44LTEuNi0xLjEtMi40LS43ek0xMTQuNSAyMjMuMWMtLjgtLjYtMS45LS4zLTIuNC43LTMuNSA2LjEtMi4zIDQuMS0zLjUgNi4xLS40LjgtLjEgMS45LjcgMi4zLjkuNiAxLjkuMyAyLjMtLjUgMy41LTYuMyAyLjMtNC4yIDMuNS02LjMuNS0uOC4yLTEuOS0uNi0yLjN6TTE1MC41IDIzMi45Yy0xIDAtMS44LjgtMS44IDEuOHY3LjFjMCAuOS44IDEuOCAxLjggMS44czEuOC0uOSAxLjgtMS44di03LjFjMC0xLS44LTEuOC0xLjgtMS44ek0xODguNiAyMjMuOGMtLjUtLjgtMS41LTEuMS0yLjMtLjctMSAuNi0xLjIgMS42LS43IDIuNCAzLjUgNi4zIDIuMyA0LjIgMy41IDYuMy41LjkgMS41IDEuMSAyLjQuNi44LS40IDEuMS0xLjUuNS0yLjQtMS0yLjEtMi4yLTQuMi0zLjQtNi4yek0yMjEgMTk5LjVjLTYuMS0zLjctNC4xLTIuNS02LjEtMy43LS44LS40LTEuOS0uMS0yLjMuNy0uNi44LS4zIDIgLjUgMi40IDYuMiAzLjcgNC4yIDIuNSA2LjIgMy43LjguNCAxLjkuMSAyLjMtLjcuNi0uOS40LTItLjYtMi40ek0yMzEgMTU4aC03Yy0xIDAtMS44IDEtMS44IDEuOSAwIDEgLjggMS44IDEuOCAxLjhoN2MuOSAwIDEuOC0uOCAxLjgtMS44IDAtLjktLjktMS45LTEuOC0xLjl6TTIxOS40IDExNy43Yy02LjEgMy42LTQgMi40LTYuMSAzLjYtMSAuNC0xLjIgMS41LS43IDIuMy40LjkgMS41IDEuMSAyLjMuNyA2LjItMy42IDQuMS0yLjQgNi4yLTMuNi44LS41IDEuMS0xLjYuNS0yLjUtLjMtLjgtMS40LTEuMS0yLjItLjV6TTE5MS42IDg3LjdjLS44LS42LTEuOS0uMy0yLjQuNS0zLjUgNi4zLTIuMyA0LjItMy41IDYuMy0uNC44LS4xIDEuOC43IDIuMy44LjYgMS45LjIgMi4zLS43IDMuNS02LjEgMi4zLTQuMSAzLjUtNi4xLjUtLjguMi0xLjktLjYtMi4zek0xNTQuOSAxMzguNmMtMS00My44LS42LTI5LjItMS00My44IDAtMS45LTEuNi0zLjQtMy4zLTMuNGgtLjdjLTEuOCAwLTMuMyAxLjUtMy4zIDMuNC0xIDQzLjktLjYgMjkuMy0xIDQzLjktOS41IDIuMi0xNi42IDEwLjgtMTYuNiAyMS4yIDAgMTIgOS42IDIxLjcgMjEuNSAyMS43IDExLjggMCAyMS40LTkuNyAyMS40LTIxLjcgMC0xMC41LTcuMi0xOS4yLTE3LTIxLjN6bTUuOSAzMS44Yy0yLjYgMi43LTYuMiA0LjQtMTAuMyA0LjQtNC4xIDAtNy43LTEuNy0xMC40LTQuNC0yLjYtMi42LTQuMS02LjMtNC4xLTEwLjQgMC00LjEgMS42LTcuOCA0LjEtMTAuNiAyLjctMi42IDYuMy00LjIgMTAuNC00LjQgNCAuMiA3LjYgMS44IDEwLjMgNC40IDIuNyAyLjggNC4zIDYuNCA0LjMgMTAuNiAwIDQtMS43IDcuNy00LjMgMTAuNHoiLz48cGF0aCBkPSJNMjA2LjIgMTU2LjFjLTM0LjgtLjgtMjMuMi0uNi0zNC44LS44LTItOS45LTEwLjYtMTcuMS0yMC45LTE3LjEtMTEuOSAwLTIxLjUgOS43LTIxLjUgMjEuOCAwIDEyIDkuNiAyMS43IDIxLjUgMjEuNyAxMC4zIDAgMTguOS03LjQgMjAuOS0xNy4xIDM0LjgtMSAyMy4yLS42IDM0LjgtMSAxLjkgMCAzLjItMS43IDMuMi0zLjR2LS43YzAtMS43LTEuMy0zLjMtMy4yLTMuNHoiLz48Zz48cGF0aCBkPSJNMTY3IDI5MS4yYy00LjQuNi04LjkgMS0xMy40IDEuMy0xLjkuMS0zLjQgMS43LTMuMyAzLjYuMSAxLjggMS42IDMuMyAzLjQgMy4zaC4yYzQuNy0uMiA5LjQtLjcgMTQtMS4zIDEuOS0uMyAzLjItMiAyLjktMy45LS4xLTEuOS0xLjgtMy4yLTMuOC0zek0yMTcuOCAyNzQuMWMtMS44IDEtMy42IDEuOS01LjQgMi45LTIuMiAxLjEtNC40IDIuMi02LjcgMy4yLTEuNy44LTIuNSAyLjgtMS44IDQuNi42IDEuMyAxLjggMi4xIDMuMiAyLjEuNSAwIC45LS4xIDEuNC0uMyAyLjMtMSA0LjctMi4xIDctMy4zbDUuNy0zYzEuNy0uOSAyLjMtMyAxLjMtNC43LS45LTEuOC0zLTIuNC00LjctMS41ek0xOTMuMiAyODVjLTQuMyAxLjQtOC42IDIuNy0xMyAzLjctMS45LjQtMyAyLjMtMi42IDQuMi40IDEuNiAxLjggMi43IDMuNCAyLjcuMyAwIC41IDAgLjgtLjEgNC41LTEuMSA5LjEtMi40IDEzLjYtMy45IDEuOC0uNiAyLjgtMi42IDIuMi00LjQtLjYtMS44LTIuNi0yLjgtNC40LTIuMnpNMTQwLjEgMjkyLjVjLTQuNS0uMi05LS42LTEzLjQtMS4yLTEuOS0uMy0zLjYgMS4xLTMuOSAyLjktLjMgMS45IDEuMSAzLjYgMi45IDMuOSA0LjYuNiA5LjQgMS4xIDE0LjEgMS4zaC4yYzEuOCAwIDMuNC0xLjQgMy40LTMuMy4xLTEuOS0xLjQtMy41LTMuMy0zLjZ6TTg3LjkgMjgwLjRjLTQuMS0xLjgtOC4yLTMuOC0xMi4xLTYtMS43LS45LTMuOC0uMy00LjcgMS40LS45IDEuNy0uMyAzLjggMS40IDQuNyA0LjEgMi4zIDguNCA0LjQgMTIuNyA2LjIuNC4yLjkuMyAxLjQuMyAxLjMgMCAyLjYtLjggMy4yLTIuMS43LTEuNy0uMS0zLjctMS45LTQuNXpNMzQuNCAyNDAuNGMtMS4yLTEuNS0zLjQtMS42LTQuOS0uNC0xLjUgMS4yLTEuNiAzLjQtLjQgNC45IDMgMy42IDYuMiA3LjEgOS42IDEwLjQuNy43IDEuNSAxIDIuNCAxIC45IDAgMS44LS4zIDIuNS0xIDEuMy0xLjQgMS4zLTMuNSAwLTQuOS0zLjMtMy4yLTYuNC02LjYtOS4yLTEwek01My41IDI1OS40Yy0xLjUtMS4yLTMuNi0xLTQuOS41LTEuMiAxLjUtMSAzLjYuNSA0LjkgMy42IDMgNy40IDUuOCAxMS4zIDguNC42LjQgMS4zLjYgMS45LjYgMS4xIDAgMi4yLS41IDIuOS0xLjUgMS4xLTEuNi43LTMuNy0uOS00LjgtMy43LTIuNi03LjMtNS4zLTEwLjgtOC4xek0xMTMuNSAyODguOWMtNC40LTEtOC43LTIuMi0xMy0zLjYtMS44LS42LTMuOC40LTQuNCAyLjItLjYgMS44LjQgMy44IDIuMiA0LjQgNC41IDEuNSA5IDIuOCAxMy42IDMuOC4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi43LjQtMi0uOC0zLjgtMi42LTQuMnpNMjk1LjUgMTY0Yy0xLjktLjMtMy42IDEtMy45IDIuOS0uNiA0LjQtMS41IDguOS0yLjUgMTMuMi0uNCAxLjkuNyAzLjcgMi42IDQuMi4zLjEuNS4xLjguMSAxLjYgMCAzLTEuMSAzLjQtMi42IDEuMS00LjUgMi05LjIgMi43LTEzLjkuMS0xLjgtMS4yLTMuNi0zLjEtMy45ek0yNTkuMiAyMzkuOWMtMi45IDMuNC01LjkgNi44LTkuMSA5LjktMS4zIDEuMy0xLjQgMy41IDAgNC45LjcuNyAxLjYgMSAyLjQgMSAuOSAwIDEuOC0uMyAyLjQtMSAzLjMtMy4zIDYuNS02LjggOS41LTEwLjQgMS4yLTEuNSAxLTMuNi0uNC00LjktMS40LTEuMS0zLjYtLjktNC44LjV6TTI4OS43IDE5MWMtMS44LS42LTMuOC40LTQuNCAyLjItMS40IDQuMy0zLjEgOC41LTQuOSAxMi42LS44IDEuNyAwIDMuOCAxLjggNC42LjUuMi45LjMgMS40LjMgMS4zIDAgMi42LS44IDMuMi0yIDEuOS00LjMgMy42LTguNyA1LjEtMTMuMS42LTIuMS0uNC00LTIuMi00LjZ6TTI5Ni42IDE0NC42Yy0xLjkgMC0zLjUgMS41LTMuNSAzLjRzLS4xIDMuNy0uMiA1LjZjLS4xIDEuOSAxLjQgMy41IDMuMyAzLjZoLjJjMS44IDAgMy4zLTEuNCAzLjQtMy4zLjEtMS45LjItMy45LjItNS44cy0xLjUtMy41LTMuNC0zLjV6TTI3OS4xIDIxNi40Yy0xLjctLjktMy44LS4zLTQuNyAxLjMtMi4yIDMuOS00LjYgNy43LTcuMSAxMS40LTEuMSAxLjYtLjcgMy43LjkgNC44LjYuNCAxLjMuNiAyIC42IDEuMSAwIDIuMi0uNSAyLjgtMS41IDIuNy0zLjkgNS4yLTcuOSA3LjQtMTIgMS0xLjYuNC0zLjctMS4zLTQuNnpNMjQwLjEgMjU4LjljLTMuNCAyLjgtNy4xIDUuNi0xMC44IDguMS0xLjYgMS4xLTIgMy4yLS45IDQuOC43IDEgMS44IDEuNSAyLjkgMS41LjcgMCAxLjMtLjIgMS45LS42IDMuOS0yLjcgNy43LTUuNSAxMS4zLTguNSAxLjUtMS4yIDEuNy0zLjQuNS00LjktMS4zLTEuNC0zLjUtMS42LTQuOS0uNHpNNDYuNCA1My4yQzkwLjcgNiAxNjAuMy02LjQgMjE3LjggMjEuOWwtOC4yIDExLjNjLS40LjYtLjUgMS40LS4zIDIuMS4zLjcuOSAxLjIgMS42IDEuNGw0Mi41IDguOGMuOC4yIDEuNy0uMiAyLjItLjkuNS0uNy42LTEuNi4xLTIuNEwyMzQuNiA0LjFjLS40LS43LTEtMS4xLTEuOC0xLjFzLTEuNS4zLTEuOS45bC05IDEyLjRDMTYxLjUtMTQgODguMS0xLjIgNDEuNCA0OC41LTQuOSA5Ny44LTEzLjMgMTcyLjkgMjAuOSAyMzEuMmMuNiAxLjEgMS44IDEuNyAzIDEuNy42IDAgMS4yLS4yIDEuNy0uNSAxLjYtMSAyLjItMy4xIDEuMi00LjdDLTUuOCAxNzIuMSAyLjIgMTAwLjMgNDYuNCA1My4yeiIvPjwvZz48L2c+PC9zdmc+",
+                "id": "timer",
+                "isDerived": false,
+                "metadata": {
+                  "hide-from-connection-pages": "true"
+                },
+                "name": "Timer",
+                "uses": 0
+              },
+              "id": "-LaoFetnJNDTpod1VflJ",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "false",
+                "contextLoggingEnabled": "false",
+                "customText": "Hello Syndesis!"
+              },
+              "id": "-LaoFinWJNDTpod1VflJ",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            }
+          ]
+        }
+      ],
+      "id": "i-LaoFttXSifRdMEhgj-qz",
+      "name": "SayHello",
+      "tags": [
+        "timer"
+      ],
+      "updatedAt": 0,
+      "version": 1
+    }
+  }
+}

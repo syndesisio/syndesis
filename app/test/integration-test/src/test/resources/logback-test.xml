@@ -1,0 +1,70 @@
+<!--
+  ~ Copyright (C) 2016 Red Hat, Inc.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<configuration>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
+    </encoder>
+    <file>target/integration-test.log</file>
+  </appender>
+
+  <appender name="INTEGRATION_RUNTIME_FILE" class="ch.qos.logback.core.FileAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
+    </encoder>
+    <file>target/integration-runtime.log</file>
+  </appender>
+
+  <appender name="SERVER_CONTAINER_FILE" class="ch.qos.logback.core.FileAppender">
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
+    </encoder>
+    <file>target/syndesis-server.log</file>
+  </appender>
+
+  <logger name="org.apache.camel.util.IntrospectionSupport" level="INFO"/>
+  <logger name="org.apache.camel" level="INFO"/>
+  <logger name="io.syndesis" level="DEBUG"/>
+  <logger name="com.consol.citrus" level="DEBUG"/>
+  <logger name="org.springframework" level="DEBUG"/>
+  <logger name="org.eclipse.jetty" level="WARN"/>
+  <logger name="org.testcontainers" level="INFO"/>
+  <logger name="org.hibernate.validator" level="WARN"/>
+
+  <logger name="INTEGRATION_RUNTIME_CONTAINER" level="INFO">
+    <!--appender-ref ref="STDOUT"/-->
+    <appender-ref ref="INTEGRATION_RUNTIME_FILE"/>
+  </logger>
+
+  <logger name="SERVER_CONTAINER" level="INFO">
+    <!--appender-ref ref="STDOUT"/-->
+    <appender-ref ref="SERVER_CONTAINER_FILE"/>
+  </logger>
+
+  <root level="DEBUG">
+    <appender-ref ref="STDOUT"/>
+    <appender-ref ref="FILE"/>
+  </root>
+
+</configuration>

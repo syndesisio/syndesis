@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+    <groupId>io.syndesis.test</groupId>
+    <artifactId>test-parent</artifactId>
+    <version>1.8-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <artifactId>integration-test</artifactId>
+  <name>Test :: Integration Test</name>
+
+  <properties>
+    <basepom.failsafe.timeout>0</basepom.failsafe.timeout>
+
+    <!-- Skip tests by default -->
+    <skip.integration.tests>true</skip.integration.tests>
+
+    <syndesis.integration.runtime>spring-boot</syndesis.integration.runtime>
+    <syndesis.camel.k.customizers>health,logging,syndesis</syndesis.camel.k.customizers>
+    <syndesis.logging.enabled>false</syndesis.logging.enabled>
+    <syndesis.server.port>8080</syndesis.server.port>
+    <syndesis.management.port>8081</syndesis.management.port>
+    <syndesis.debug.port>5005</syndesis.debug.port>
+    <syndesis.debug.enabled>false</syndesis.debug.enabled>
+    <syndesis.s2i.build.enabled>false</syndesis.s2i.build.enabled>
+    <syndesis.output.directory>${project.build.directory}/integrations</syndesis.output.directory>
+    <syndesis.image.tag>${syndesis.version}</syndesis.image.tag>
+  </properties>
+
+  <dependencies>
+    <!-- === Internal dependencies (don't touch without discussion) ========================== -->
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.test</groupId>
+      <artifactId>test-support</artifactId>
+    </dependency>
+
+    <!-- Citrus -->
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-http</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-java-dsl</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-jms</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-ftp</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.consol.citrus</groupId>
+      <artifactId>citrus-mail</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.testcontainers</groupId>
+      <artifactId>testcontainers</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jdbc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-web</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.geronimo.specs</groupId>
+      <artifactId>geronimo-jms_2.0_spec</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.ftpserver</groupId>
+      <artifactId>ftpserver-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-net</groupId>
+      <artifactId>commons-net</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-library</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-client</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>com.github.spotbugs</groupId>
+      <artifactId>spotbugs-annotations</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.glassfish</groupId>
+      <artifactId>javax.el</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Logging -->
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ch.qos.logback</groupId>
+      <artifactId>logback-classic</artifactId>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-install-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <configuration>
+          <skipITs>${skip.integration.tests}</skipITs>
+          <systemProperties>
+            <camel.version>${camel.version}</camel.version>
+            <camelk.runtime.version>${camel-k-runtime.version}</camelk.runtime.version>
+            <syndesis.version>${syndesis.version}</syndesis.version>
+            <syndesis.integration.runtime>${syndesis.integration.runtime}</syndesis.integration.runtime>
+            <syndesis.camel.k.customizers>${syndesis.camel.k.customizers}</syndesis.camel.k.customizers>
+            <syndesis.logging.enabled>${syndesis.logging.enabled}</syndesis.logging.enabled>
+            <syndesis.server.port>${syndesis.server.port}</syndesis.server.port>
+            <syndesis.management.port>${syndesis.management.port}</syndesis.management.port>
+            <syndesis.debug.port>${syndesis.debug.port}</syndesis.debug.port>
+            <syndesis.debug.enabled>${syndesis.debug.enabled}</syndesis.debug.enabled>
+            <syndesis.s2i.build.enabled>${syndesis.s2i.build.enabled}</syndesis.s2i.build.enabled>
+            <syndesis.output.directory>${syndesis.output.directory}</syndesis.output.directory>
+            <syndesis.image.tag>${syndesis.image.tag}</syndesis.image.tag>
+          </systemProperties>
+        </configuration>
+        <executions>
+          <execution>
+            <id>integration-tests</id>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>binding.xjb</ignoredResourcePattern>
+            <ignore>com/consol/citrus/schema/citrus-config.xsd</ignore>
+            <ignore>com/consol/citrus/schema/citrus-config-${citrus.version}.xsd</ignore>
+            <ignore>com/consol/citrus/schema/citrus-testcase.xsd</ignore>
+            <ignore>com/consol/citrus/schema/citrus-testcase-${citrus.version}.xsd</ignore>
+          </ignoredResourcePatterns>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <!-- Integration tests enabled -->
+    <profile>
+      <id>integration-tests</id>
+      <activation>
+        <property>
+          <name>::integration-tests</name>
+        </property>
+      </activation>
+      <properties>
+        <skip.integration.tests>false</skip.integration.tests>
+      </properties>
+    </profile>
+  </profiles>
+
+</project>

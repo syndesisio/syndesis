@@ -1,0 +1,2480 @@
+{
+  "connections": {
+    ":5": {
+      "configuredProperties": {
+        "password": "»ENC:262a4ea3d2c8120aa9b5f5bf12369f67758d48d57033d3fc44f73b2bf393728d565a9240a49d0e79face60287da69584",
+        "schema": "sampledb",
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+        "user": "sampledb"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke SQL to obtain, store, update, or delete data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                      "placeholder": "for example ':#MYPARAMNAME'",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-connector",
+            "name": "Invoke SQL",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke SQL to obtain data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that returns results.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored procedure template to perform.",
+                      "required": false,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-connector",
+            "name": "Invoke stored procedure",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored Procedure template to perform.",
+                      "required": true,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-start-connector",
+            "name": "Periodic stored procedure invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "jdbc-driver",
+            "type": "EXTENSION_TAG"
+          }
+        ],
+        "description": "Subscribe for and publish messages.",
+        "icon": "assets:sql.svg",
+        "id": "sql",
+        "name": "Database",
+        "properties": {
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Password for the database connection.",
+            "order": 3,
+            "required": true,
+            "secret": true,
+            "type": "string"
+          },
+          "schema": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Schema",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "labelHint": "Database schema.",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "url": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Connection URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "JDBC URL of the database.",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "user": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Username",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "Username for the database connection.",
+            "order": 2,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 135
+      },
+      "connectorId": "sql",
+      "description": "Connection to SampleDB",
+      "icon": "assets:sql.svg",
+      "id": "5",
+      "isDerived": false,
+      "name": "PostgresDB",
+      "tags": [
+        "sampledb"
+      ],
+      "uses": 0
+    },
+    ":i-LhL2-ccjv5WqGyjCaVVz": {
+      "configuredProperties": {
+        "host": "syndesis.smtp.de",
+        "password": "»ENC:82100f50ea636b43ce480869abe450ee6427524c2c15b21eb460cb0fa1609540",
+        "port": "2525",
+        "secureType": "None",
+        "username": "syndesis"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Send messages to the email account that this connection is authorized to access.",
+            "descriptor": {
+              "connectorCustomizers": [
+                "io.syndesis.connector.email.customizer.EMailSendCustomizer"
+              ],
+              "connectorFactory": "io.syndesis.connector.email.component.EMailComponentFactory",
+              "inputDataShape": {
+                "kind": "java",
+                "name": "EmailMessage",
+                "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                "type": "io.syndesis.connector.email.model.EMailMessageModel"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Specify the emails that you want to obtain.",
+                  "name": "Send messages to Email",
+                  "properties": {
+                    "bcc": {
+                      "deprecated": false,
+                      "displayName": "Email bcc",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                      "order": 6,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "cc": {
+                      "deprecated": false,
+                      "displayName": "Email cc",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "from": {
+                      "deprecated": false,
+                      "displayName": "Email from",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Email address of the sender (must be valid email address to avoid sender verification failure)",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "priority": {
+                      "defaultValue": "injectedData",
+                      "deprecated": false,
+                      "displayName": "Parameter Priority",
+                      "enum": [
+                        {
+                          "label": "Input Values",
+                          "value": "inputValues"
+                        },
+                        {
+                          "label": "Consumed Data",
+                          "value": "consumedData"
+                        }
+                      ],
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Whether the input values above or the consumed data gets priority in being applied to the generated emails",
+                      "order": 7,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "subject": {
+                      "deprecated": false,
+                      "displayName": "Email subject",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "The text to insert in the subject line of the email.",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "text": {
+                      "deprecated": false,
+                      "displayName": "Email text",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "The email message that you want to send.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "textarea"
+                    },
+                    "to": {
+                      "deprecated": false,
+                      "displayName": "Email to",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "One or more comma-separated email addresses to send the email to.",
+                      "order": 1,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:email-send-connector",
+            "name": "Send Email",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          }
+        ],
+        "componentScheme": "email-send",
+        "configuredProperties": {
+          "protocol": "smtp"
+        },
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Send email messages.",
+        "icon": "assets:email-send.svg",
+        "id": "email-send",
+        "metadata": {
+          "tech-preview": "true"
+        },
+        "name": "Send Email (smtp)",
+        "properties": {
+          "host": {
+            "componentProperty": true,
+            "deprecated": false,
+            "description": "The hostname of the email server.",
+            "displayName": "Email Host Name",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "label": "common",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "label": "common,security",
+            "labelHint": "Specify a password for authentication of the email service, if required.",
+            "order": 4,
+            "required": true,
+            "secret": true,
+            "type": "string"
+          },
+          "port": {
+            "componentProperty": true,
+            "deprecated": false,
+            "description": "The port of the email server.",
+            "displayName": "Email Server Port Number",
+            "group": "common",
+            "javaType": "java.lang.Integer",
+            "kind": "parameter",
+            "label": "common",
+            "order": 2,
+            "required": true,
+            "secret": false,
+            "type": "integer"
+          },
+          "secureType": {
+            "componentProperty": true,
+            "defaultValue": "None",
+            "deprecated": false,
+            "displayName": "Security Method",
+            "enum": [
+              {
+                "label": "None",
+                "value": "None"
+              },
+              {
+                "label": "StartTLS",
+                "value": "StartTLS"
+              },
+              {
+                "label": "SSL / TLS",
+                "value": "SSL/TLS"
+              }
+            ],
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "label": "security",
+            "labelHint": "Specify what security protocol (if any) the connection requires",
+            "order": 5,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "serverCertificate": {
+            "componentProperty": true,
+            "deprecated": false,
+            "description": "If the SSL email server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+            "displayName": "Server Certificate",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "label": "common,security",
+            "order": 6,
+            "relation": [
+              {
+                "action": "DISABLE",
+                "when": [
+                  {
+                    "id": "secureType",
+                    "value": "None"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "textarea"
+          },
+          "username": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "User Name",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "label": "common,security",
+            "labelHint": "Specify a user name for authentication of the email service url, if required.",
+            "order": 3,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 14
+      },
+      "connectorId": "email-send",
+      "createdDate": 1560516758048,
+      "icon": "assets:email-send.svg",
+      "id": "i-LhL2-ccjv5WqGyjCaVVz",
+      "isDerived": false,
+      "lastUpdated": 1560516758048,
+      "name": "SMTP",
+      "userId": "developer",
+      "uses": 0
+    },
+    ":webhook": {
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Start an integration from a Webhook",
+            "descriptor": {
+              "componentScheme": "servlet",
+              "configuredProperties": {
+                "headerFilterStrategy": "syndesisHeaderStrategy",
+                "httpMethodRestrict": "GET,POST"
+              },
+              "connectorCustomizers": [
+                "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Webhook Configuration",
+                  "name": "configuration",
+                  "properties": {
+                    "contextPath": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "The Webhook token that will be set as final part of the URL",
+                      "displayName": "Webhook Token",
+                      "generator": "alphanum:50",
+                      "javaType": "String",
+                      "kind": "parameter",
+                      "required": true,
+                      "secret": false,
+                      "tags": [
+                        "context-path"
+                      ],
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis:webhook-incoming",
+            "metadata": {
+              "serverBasePath": "/webhook"
+            },
+            "name": "Incoming Webhook",
+            "pattern": "From",
+            "tags": [
+              "expose"
+            ]
+          }
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Create direct connections with external systems through Webhooks",
+        "icon": "assets:webhook.svg",
+        "id": "webhook",
+        "metadata": {
+          "hide-from-connection-pages": "true"
+        },
+        "name": "Webhook",
+        "version": 135
+      },
+      "connectorId": "webhook",
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "isDerived": false,
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":email-send": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Send messages to the email account that this connection is authorized to access.",
+          "descriptor": {
+            "connectorCustomizers": [
+              "io.syndesis.connector.email.customizer.EMailSendCustomizer"
+            ],
+            "connectorFactory": "io.syndesis.connector.email.component.EMailComponentFactory",
+            "inputDataShape": {
+              "kind": "java",
+              "name": "EmailMessage",
+              "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+              "type": "io.syndesis.connector.email.model.EMailMessageModel"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Specify the emails that you want to obtain.",
+                "name": "Send messages to Email",
+                "properties": {
+                  "bcc": {
+                    "deprecated": false,
+                    "displayName": "Email bcc",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                    "order": 6,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "cc": {
+                    "deprecated": false,
+                    "displayName": "Email cc",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                    "order": 5,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "from": {
+                    "deprecated": false,
+                    "displayName": "Email from",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Email address of the sender (must be valid email address to avoid sender verification failure)",
+                    "order": 2,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "priority": {
+                    "defaultValue": "injectedData",
+                    "deprecated": false,
+                    "displayName": "Parameter Priority",
+                    "enum": [
+                      {
+                        "label": "Input Values",
+                        "value": "inputValues"
+                      },
+                      {
+                        "label": "Consumed Data",
+                        "value": "consumedData"
+                      }
+                    ],
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Whether the input values above or the consumed data gets priority in being applied to the generated emails",
+                    "order": 7,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "subject": {
+                    "deprecated": false,
+                    "displayName": "Email subject",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "The text to insert in the subject line of the email.",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "text": {
+                    "deprecated": false,
+                    "displayName": "Email text",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "The email message that you want to send.",
+                    "order": 4,
+                    "required": false,
+                    "secret": false,
+                    "type": "textarea"
+                  },
+                  "to": {
+                    "deprecated": false,
+                    "displayName": "Email to",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "One or more comma-separated email addresses to send the email to.",
+                    "order": 1,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:email-send-connector",
+          "name": "Send Email",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        }
+      ],
+      "componentScheme": "email-send",
+      "configuredProperties": {
+        "protocol": "smtp"
+      },
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Send email messages.",
+      "icon": "assets:email-send.svg",
+      "id": "email-send",
+      "metadata": {
+        "tech-preview": "true"
+      },
+      "name": "Send Email (smtp)",
+      "properties": {
+        "host": {
+          "componentProperty": true,
+          "deprecated": false,
+          "description": "The hostname of the email server.",
+          "displayName": "Email Host Name",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "label": "common",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "label": "common,security",
+          "labelHint": "Specify a password for authentication of the email service, if required.",
+          "order": 4,
+          "required": true,
+          "secret": true,
+          "type": "string"
+        },
+        "port": {
+          "componentProperty": true,
+          "deprecated": false,
+          "description": "The port of the email server.",
+          "displayName": "Email Server Port Number",
+          "group": "common",
+          "javaType": "java.lang.Integer",
+          "kind": "parameter",
+          "label": "common",
+          "order": 2,
+          "required": true,
+          "secret": false,
+          "type": "integer"
+        },
+        "secureType": {
+          "componentProperty": true,
+          "defaultValue": "None",
+          "deprecated": false,
+          "displayName": "Security Method",
+          "enum": [
+            {
+              "label": "None",
+              "value": "None"
+            },
+            {
+              "label": "StartTLS",
+              "value": "StartTLS"
+            },
+            {
+              "label": "SSL / TLS",
+              "value": "SSL/TLS"
+            }
+          ],
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "label": "security",
+          "labelHint": "Specify what security protocol (if any) the connection requires",
+          "order": 5,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "serverCertificate": {
+          "componentProperty": true,
+          "deprecated": false,
+          "description": "If the SSL email server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+          "displayName": "Server Certificate",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "label": "common,security",
+          "order": 6,
+          "relation": [
+            {
+              "action": "DISABLE",
+              "when": [
+                {
+                  "id": "secureType",
+                  "value": "None"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "textarea"
+        },
+        "username": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "User Name",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "label": "common,security",
+          "labelHint": "Specify a user name for authentication of the email service url, if required.",
+          "order": 3,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 14
+    },
+    ":sql": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke SQL to obtain, store, update, or delete data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                "name": "SQL statement",
+                "properties": {
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                    "placeholder": "for example ':#MYPARAMNAME'",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-connector",
+          "name": "Invoke SQL",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke SQL to obtain data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that returns results.",
+                "name": "SQL statement",
+                "properties": {
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed.",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-start-connector",
+          "name": "Periodic SQL invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored procedure template to perform.",
+                    "required": false,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-connector",
+          "name": "Invoke stored procedure",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored Procedure template to perform.",
+                    "required": true,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-start-connector",
+          "name": "Periodic stored procedure invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        }
+      ],
+      "connectorCustomizers": [
+        "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "jdbc-driver",
+          "type": "EXTENSION_TAG"
+        }
+      ],
+      "description": "Subscribe for and publish messages.",
+      "icon": "assets:sql.svg",
+      "id": "sql",
+      "name": "Database",
+      "properties": {
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Password for the database connection.",
+          "order": 3,
+          "required": true,
+          "secret": true,
+          "type": "string"
+        },
+        "schema": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Schema",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "labelHint": "Database schema.",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "url": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Connection URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "JDBC URL of the database.",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "user": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Username",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "Username for the database connection.",
+          "order": 2,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 135
+    },
+    ":webhook": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Start an integration from a Webhook",
+          "descriptor": {
+            "componentScheme": "servlet",
+            "configuredProperties": {
+              "headerFilterStrategy": "syndesisHeaderStrategy",
+              "httpMethodRestrict": "GET,POST"
+            },
+            "connectorCustomizers": [
+              "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Webhook Configuration",
+                "name": "configuration",
+                "properties": {
+                  "contextPath": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "The Webhook token that will be set as final part of the URL",
+                    "displayName": "Webhook Token",
+                    "generator": "alphanum:50",
+                    "javaType": "String",
+                    "kind": "parameter",
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                      "context-path"
+                    ],
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis:webhook-incoming",
+          "metadata": {
+            "serverBasePath": "/webhook"
+          },
+          "name": "Incoming Webhook",
+          "pattern": "From",
+          "tags": [
+            "expose"
+          ]
+        }
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Create direct connections with external systems through Webhooks",
+      "icon": "assets:webhook.svg",
+      "id": "webhook",
+      "metadata": {
+        "hide-from-connection-pages": "true"
+      },
+      "name": "Webhook",
+      "version": 135
+    }
+  },
+  "integrations": {
+    ":i-LhL3nkvjv5WqGyjCaVXz": {
+      "createdAt": 1560517229627,
+      "flows": [
+        {
+          "id": "-LhL22wB71G_Hn4CaeFQ",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Start an integration from a Webhook",
+                "descriptor": {
+                  "componentScheme": "servlet",
+                  "configuredProperties": {
+                    "headerFilterStrategy": "syndesisHeaderStrategy",
+                    "httpMethodRestrict": "GET,POST"
+                  },
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "Contact",
+                    "specification": "{\n  \"first_name\": \"John\",\n  \"company\": \"Red Hat\",\n  \"mail\": \"john@redhat.com\"\n}"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "name": "configuration",
+                      "properties": {
+                        "contextPath": {
+                          "componentProperty": false,
+                          "defaultValue": "OKSp4hDsnERoEj8gVvzbz5ffsMbLm8HUtZG8lhCUGyMdLwyBXV",
+                          "deprecated": false,
+                          "description": "The Webhook token that will be set as final part of the URL",
+                          "displayName": "Webhook Token",
+                          "generator": "alphanum:50",
+                          "javaType": "String",
+                          "kind": "parameter",
+                          "required": true,
+                          "secret": false,
+                          "tags": [
+                            "context-path"
+                          ],
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:webhook-incoming",
+                "metadata": {
+                  "serverBasePath": "/webhook"
+                },
+                "name": "Incoming Webhook",
+                "pattern": "From",
+                "tags": [
+                  "expose"
+                ]
+              },
+              "configuredProperties": {
+                "contextPath": "test-webhook"
+              },
+              "connection": {
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Start an integration from a Webhook",
+                      "descriptor": {
+                        "componentScheme": "servlet",
+                        "configuredProperties": {
+                          "headerFilterStrategy": "syndesisHeaderStrategy",
+                          "httpMethodRestrict": "GET,POST"
+                        },
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Webhook Configuration",
+                            "name": "configuration",
+                            "properties": {
+                              "contextPath": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "The Webhook token that will be set as final part of the URL",
+                                "displayName": "Webhook Token",
+                                "generator": "alphanum:50",
+                                "javaType": "String",
+                                "kind": "parameter",
+                                "required": true,
+                                "secret": false,
+                                "tags": [
+                                  "context-path"
+                                ],
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:webhook-incoming",
+                      "metadata": {
+                        "serverBasePath": "/webhook"
+                      },
+                      "name": "Incoming Webhook",
+                      "pattern": "From",
+                      "tags": [
+                        "expose"
+                      ]
+                    }
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Create direct connections with external systems through Webhooks",
+                  "icon": "assets:webhook.svg",
+                  "id": "webhook",
+                  "metadata": {
+                    "hide-from-connection-pages": "true"
+                  },
+                  "name": "Webhook",
+                  "version": 135
+                },
+                "connectorId": "webhook",
+                "description": "Create direct connections with external systems through Webhooks",
+                "icon": "assets:webhook.svg",
+                "id": "webhook",
+                "isDerived": false,
+                "metadata": {
+                  "hide-from-connection-pages": "true"
+                },
+                "name": "Webhook",
+                "uses": 0
+              },
+              "id": "-LhL23Q971G_Hn4CaeFQ",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Data Mapper (Template JSON Schema)",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.856885\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.89481\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}]}]},\"name\":\"UI.258840\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LhMIgmqwTVrrl0uikKQ",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                  }
+                },
+                "id": "-LhMBjh-wTVrrl0uikKO",
+                "name": "Templater"
+              },
+              "configuredProperties": {
+                "language": "mustache",
+                "template": "Welcome {{first_name}},\n\nhave a great start here at {{company}}!\n\nRegards,\nPeople Team"
+              },
+              "id": "-LhL2aST71G_Hn4CaeFR",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Template",
+              "stepKind": "template"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "java",
+                    "name": "Data Mapper (EmailMessage)",
+                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                    "type": "io.syndesis.connector.email.model.EMailMessageModel"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhMIgmqwTVrrl0uikKQ\",\"uri\":\"atlas:json:-LhMIgmqwTVrrl0uikKQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2rq-71G_Hn4CaeFT\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"TARGET\"}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.696398\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2aST71G_Hn4CaeFR\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"content\",\"path\":\"/content\",\"fieldType\":\"ANY\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\",\"className\":\"java.lang.Object\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.702522\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"mail\",\"path\":\"/mail\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"to\",\"path\":\"/to\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.220732\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.4693\",\"value\":\"people-team@syndesis.org\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"from\",\"path\":\"/from\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.234274\",\"inputField\":[{\"jsonType\":\"io.atlasmap.v2.PropertyField\",\"name\":\"/subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"DOC.Properties.4693\",\"value\":\"Welcome!\"}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2rq-71G_Hn4CaeFT\"}]}]},\"name\":\"UI.255005\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[{\"name\":\"from\",\"value\":\"people-team@syndesis.org\",\"fieldType\":\"STRING\"},{\"name\":\"subject\",\"value\":\"Welcome!\",\"fieldType\":\"STRING\"}]}}}"
+              },
+              "id": "-LhMIj8_wTVrrl0uikKR",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Send messages to the email account that this connection is authorized to access.",
+                "descriptor": {
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.email.customizer.EMailSendCustomizer"
+                  ],
+                  "connectorFactory": "io.syndesis.connector.email.component.EMailComponentFactory",
+                  "inputDataShape": {
+                    "kind": "java",
+                    "name": "EmailMessage",
+                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                    "type": "io.syndesis.connector.email.model.EMailMessageModel"
+                  },
+                  "outputDataShape": {
+                    "kind": "none"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "name": "Send messages to Email",
+                      "properties": {
+                        "bcc": {
+                          "deprecated": false,
+                          "displayName": "Email bcc",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                          "order": 6,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "cc": {
+                          "deprecated": false,
+                          "displayName": "Email cc",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                          "order": 5,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "from": {
+                          "deprecated": false,
+                          "displayName": "Email from",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "Email address of the sender (must be valid email address to avoid sender verification failure)",
+                          "order": 2,
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "priority": {
+                          "defaultValue": "injectedData",
+                          "deprecated": false,
+                          "displayName": "Parameter Priority",
+                          "enum": [
+                            {
+                              "label": "Input Values",
+                              "value": "inputValues"
+                            },
+                            {
+                              "label": "Consumed Data",
+                              "value": "consumedData"
+                            }
+                          ],
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "Whether the input values above or the consumed data gets priority in being applied to the generated emails",
+                          "order": 7,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "subject": {
+                          "deprecated": false,
+                          "displayName": "Email subject",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "The text to insert in the subject line of the email.",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "text": {
+                          "deprecated": false,
+                          "displayName": "Email text",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "The email message that you want to send.",
+                          "order": 4,
+                          "required": false,
+                          "secret": false,
+                          "type": "textarea"
+                        },
+                        "to": {
+                          "deprecated": false,
+                          "displayName": "Email to",
+                          "group": "producer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "producer",
+                          "labelHint": "One or more comma-separated email addresses to send the email to.",
+                          "order": 1,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis:email-send-connector",
+                "name": "Send Email",
+                "pattern": "To",
+                "tags": [
+                  "dynamic"
+                ]
+              },
+              "connection": {
+                "configuredProperties": {
+                  "host": "syndesis.smtp.de",
+                  "password": "»ENC:82100f50ea636b43ce480869abe450ee6427524c2c15b21eb460cb0fa1609540",
+                  "port": "2525",
+                  "secureType": "None",
+                  "username": "syndesis"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Send messages to the email account that this connection is authorized to access.",
+                      "descriptor": {
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.email.customizer.EMailSendCustomizer"
+                        ],
+                        "connectorFactory": "io.syndesis.connector.email.component.EMailComponentFactory",
+                        "inputDataShape": {
+                          "kind": "java",
+                          "name": "EmailMessage",
+                          "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.email.model.EMailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/from\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"from\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getFrom\",\"setMethod\":\"setFrom\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/content\",\"status\":\"SUPPORTED\",\"fieldType\":\"ANY\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"content\",\"className\":\"java.lang.Object\",\"canonicalClassName\":\"java.lang.Object\",\"getMethod\":\"getContent\",\"setMethod\":\"setContent\",\"primitive\":false,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.email.model\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"interface\":false}}",
+                          "type": "io.syndesis.connector.email.model.EMailMessageModel"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Specify the emails that you want to obtain.",
+                            "name": "Send messages to Email",
+                            "properties": {
+                              "bcc": {
+                                "deprecated": false,
+                                "displayName": "Email bcc",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                                "order": 6,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "cc": {
+                                "deprecated": false,
+                                "displayName": "Email cc",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                                "order": 5,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "from": {
+                                "deprecated": false,
+                                "displayName": "Email from",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Email address of the sender (must be valid email address to avoid sender verification failure)",
+                                "order": 2,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "priority": {
+                                "defaultValue": "injectedData",
+                                "deprecated": false,
+                                "displayName": "Parameter Priority",
+                                "enum": [
+                                  {
+                                    "label": "Input Values",
+                                    "value": "inputValues"
+                                  },
+                                  {
+                                    "label": "Consumed Data",
+                                    "value": "consumedData"
+                                  }
+                                ],
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Whether the input values above or the consumed data gets priority in being applied to the generated emails",
+                                "order": 7,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "subject": {
+                                "deprecated": false,
+                                "displayName": "Email subject",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "The text to insert in the subject line of the email.",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "text": {
+                                "deprecated": false,
+                                "displayName": "Email text",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "The email message that you want to send.",
+                                "order": 4,
+                                "required": false,
+                                "secret": false,
+                                "type": "textarea"
+                              },
+                              "to": {
+                                "deprecated": false,
+                                "displayName": "Email to",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "One or more comma-separated email addresses to send the email to.",
+                                "order": 1,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis:email-send-connector",
+                      "name": "Send Email",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    }
+                  ],
+                  "componentScheme": "email-send",
+                  "configuredProperties": {
+                    "protocol": "smtp"
+                  },
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Send email messages.",
+                  "icon": "assets:email-send.svg",
+                  "id": "email-send",
+                  "metadata": {
+                    "tech-preview": "true"
+                  },
+                  "name": "Send Email (smtp)",
+                  "properties": {
+                    "host": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "description": "The hostname of the email server.",
+                      "displayName": "Email Host Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "common",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "common,security",
+                      "labelHint": "Specify a password for authentication of the email service, if required.",
+                      "order": 4,
+                      "required": true,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "port": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "description": "The port of the email server.",
+                      "displayName": "Email Server Port Number",
+                      "group": "common",
+                      "javaType": "java.lang.Integer",
+                      "kind": "parameter",
+                      "label": "common",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "integer"
+                    },
+                    "secureType": {
+                      "componentProperty": true,
+                      "defaultValue": "None",
+                      "deprecated": false,
+                      "displayName": "Security Method",
+                      "enum": [
+                        {
+                          "label": "None",
+                          "value": "None"
+                        },
+                        {
+                          "label": "StartTLS",
+                          "value": "StartTLS"
+                        },
+                        {
+                          "label": "SSL / TLS",
+                          "value": "SSL/TLS"
+                        }
+                      ],
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "security",
+                      "labelHint": "Specify what security protocol (if any) the connection requires",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "serverCertificate": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "description": "If the SSL email server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+                      "displayName": "Server Certificate",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "common,security",
+                      "order": 6,
+                      "relation": [
+                        {
+                          "action": "DISABLE",
+                          "when": [
+                            {
+                              "id": "secureType",
+                              "value": "None"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "textarea"
+                    },
+                    "username": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "User Name",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "common,security",
+                      "labelHint": "Specify a user name for authentication of the email service url, if required.",
+                      "order": 3,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 14
+                },
+                "connectorId": "email-send",
+                "createdDate": 1560516758048,
+                "icon": "assets:email-send.svg",
+                "id": "i-LhL2-ccjv5WqGyjCaVVz",
+                "isDerived": false,
+                "lastUpdated": 1560516758048,
+                "name": "SMTP",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-LhL2rq-71G_Hn4CaeFT",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Data Mapper (Template JSON Schema)",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2mUy71G_Hn4CaeFS\",\"uri\":\"atlas:json:-LhL2mUy71G_Hn4CaeFS\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2uXR71G_Hn4CaeFU\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3Iyu71G_Hn4CaeFW\",\"uri\":\"atlas:json:-LhL3Iyu71G_Hn4CaeFW\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.542929\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.256674\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL23Q971G_Hn4CaeFQ\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}]}]},\"name\":\"UI.833264\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LhL3T3B71G_Hn4CaeFX",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"first_name\":{\"description\":\"Identifier for the symbol first_name\",\"type\":\"string\"},\"company\":{\"description\":\"Identifier for the symbol company\",\"type\":\"string\"}}}"
+                  },
+                  "outputDataShape": {
+                    "kind": "json-schema",
+                    "name": "Template JSON Schema",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"Template JSON Schema\",\"properties\":{\"message\":{\"description\":\"Identifier for the symbol message\",\"type\":\"string\"}}}"
+                  }
+                },
+                "id": "-LhL3Rfq71G_Hn4CaeFW",
+                "name": "Templater"
+              },
+              "configuredProperties": {
+                "language": "mustache",
+                "template": "New hire for {{first_name}} from {{company}}"
+              },
+              "id": "-LhL3Iyu71G_Hn4CaeFW",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Template",
+              "stepKind": "template"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "Parameters of SQL [insert into todo (task) values (:#task)]",
+                    "kind": "json-schema",
+                    "name": "Data Mapper (SQL Parameter)",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_IN"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL23Q971G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL23Q971G_Hn4CaeFQ\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2mUy71G_Hn4CaeFS\",\"uri\":\"atlas:json:-LhL2mUy71G_Hn4CaeFS\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2aST71G_Hn4CaeFR\",\"uri\":\"atlas:json:-LhL2aST71G_Hn4CaeFR\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-LhL2uXR71G_Hn4CaeFU\",\"uri\":\"atlas:java?className=io.syndesis.connector.email.model.EMailMessageModel\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3T3B71G_Hn4CaeFX\",\"uri\":\"atlas:json:-LhL3T3B71G_Hn4CaeFX\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL3Iyu71G_Hn4CaeFW\",\"uri\":\"atlas:json:-LhL3Iyu71G_Hn4CaeFW\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LhL2Sh271G_Hn4CaeFQ\",\"uri\":\"atlas:json:-LhL2Sh271G_Hn4CaeFQ\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Collection\",\"mappingType\":\"COLLECTION\",\"collectionType\":null,\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.372661\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-LhL3Iyu71G_Hn4CaeFW\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/<>/task\",\"fieldType\":\"STRING\",\"docId\":\"-LhL2Sh271G_Hn4CaeFQ\",\"userCreated\":false}]}]}}]},\"name\":\"UI.334550\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LhL3WN071G_Hn4CaeFY",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invoke SQL to obtain, store, update, or delete data.",
+                "descriptor": {
+                  "componentScheme": "sql",
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "description": "Parameters of SQL [insert into todo (task) values (:#task)]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "collection"
+                    },
+                    "name": "SQL Parameter",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"task\":{\"type\":\"string\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_IN"
+                  },
+                  "outputDataShape": {
+                    "description": "Result of SQL [insert into todo (task) values (:#task)]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "collection"
+                    },
+                    "name": "SQL Result",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"id\":{\"type\":\"integer\",\"required\":true}}}}",
+                    "type": "SQL_PARAM_OUT"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "name": "SQL statement",
+                      "properties": {
+                        "query": {
+                          "defaultValue": "insert into todo (task) values (:#task)",
+                          "deprecated": false,
+                          "displayName": "SQL statement",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                          "placeholder": "for example ':#MYPARAMNAME'",
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "sql-connector",
+                "name": "Invoke SQL",
+                "pattern": "To",
+                "tags": [
+                  "dynamic"
+                ]
+              },
+              "configuredProperties": {
+                "query": "insert into todo (task) values (:#task)"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "password": "»ENC:262a4ea3d2c8120aa9b5f5bf12369f67758d48d57033d3fc44f73b2bf393728d565a9240a49d0e79face60287da69584",
+                  "schema": "sampledb",
+                  "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+                  "user": "sampledb"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke SQL to obtain, store, update, or delete data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                                "placeholder": "for example ':#MYPARAMNAME'",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-connector",
+                      "name": "Invoke SQL",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke SQL to obtain data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that returns results.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed.",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-start-connector",
+                      "name": "Periodic SQL invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "property",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored procedure template to perform.",
+                                "required": false,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-connector",
+                      "name": "Invoke stored procedure",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored Procedure template to perform.",
+                                "required": true,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-start-connector",
+                      "name": "Periodic stored procedure invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    }
+                  ],
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "jdbc-driver",
+                      "type": "EXTENSION_TAG"
+                    }
+                  ],
+                  "description": "Subscribe for and publish messages.",
+                  "icon": "assets:sql.svg",
+                  "id": "sql",
+                  "name": "Database",
+                  "properties": {
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Password for the database connection.",
+                      "order": 3,
+                      "required": true,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "schema": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Schema",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "labelHint": "Database schema.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "url": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Connection URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "JDBC URL of the database.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "user": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Username",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Username for the database connection.",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 135
+                },
+                "connectorId": "sql",
+                "description": "Connection to SampleDB",
+                "icon": "assets:sql.svg",
+                "id": "5",
+                "isDerived": false,
+                "name": "PostgresDB",
+                "tags": [
+                  "sampledb"
+                ],
+                "uses": 0
+              },
+              "id": "-LhL2Sh271G_Hn4CaeFQ",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ],
+          "type": "PRIMARY"
+        }
+      ],
+      "id": "i-LhL3nkvjv5WqGyjCaVXz",
+      "name": "SendMail",
+      "tags": [
+        "email-send",
+        "sql",
+        "webhook"
+      ],
+      "updatedAt": 1560623259605,
+      "version": 11
+    }
+  }
+}

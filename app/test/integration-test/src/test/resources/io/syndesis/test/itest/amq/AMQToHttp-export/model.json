@@ -1,0 +1,2295 @@
+{
+  "connections": {
+    ":i-LaFS0e6-BN8sNztsxF9z": {
+      "configuredProperties": {
+        "brokerUrl": "tcp://broker-amq-tcp:61616",
+        "password": "»ENC:8bfe740c2892ee8ccff41a7681e2b779a83bab6a985a659d1d4be1f6702aa0d9",
+        "skipCertificateCheck": "true",
+        "username": "amq"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Send data to the destination you specify.",
+            "descriptor": {
+              "componentScheme": "sjms",
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "none"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                  "name": "Select the JMS Destination",
+                  "properties": {
+                    "destinationName": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "Name of the queue or topic to send data to.",
+                      "displayName": "Destination Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "destinationType": {
+                      "componentProperty": false,
+                      "defaultValue": "topic",
+                      "deprecated": false,
+                      "displayName": "Destination Type",
+                      "enum": [
+                        {
+                          "label": "Topic",
+                          "value": "topic"
+                        },
+                        {
+                          "label": "Queue",
+                          "value": "queue"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "By default, the destination is a topic.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "persistent": {
+                      "componentProperty": false,
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Persistent",
+                      "group": "producer",
+                      "javaType": "boolean",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-activemq-publish",
+            "name": "Publish messages",
+            "pattern": "To"
+          },
+          {
+            "actionType": "connector",
+            "description": "Receive data from the destination you specify.",
+            "descriptor": {
+              "componentScheme": "sjms",
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                  "name": "Select the JMS Destination",
+                  "properties": {
+                    "destinationName": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "Name of the queue or topic to receive data from.",
+                      "displayName": "Destination Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "destinationType": {
+                      "componentProperty": false,
+                      "defaultValue": "topic",
+                      "deprecated": false,
+                      "displayName": "Destination Type",
+                      "enum": [
+                        {
+                          "label": "Topic",
+                          "value": "topic"
+                        },
+                        {
+                          "label": "Queue",
+                          "value": "queue"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "By default, the destination is a topic.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "durableSubscriptionId": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Durable Subscription ID",
+                      "group": "consumer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "consumer",
+                      "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "messageSelector": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Message Selector",
+                      "group": "consumer (advanced)",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "consumer,advanced",
+                      "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-activemq-subscribe",
+            "name": "Subscribe for messages",
+            "pattern": "From"
+          },
+          {
+            "actionType": "connector",
+            "description": "Send data to the destination you specify and receive a response.",
+            "descriptor": {
+              "componentScheme": "sjms",
+              "configuredProperties": {
+                "exchangePattern": "InOut"
+              },
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                  "name": "Select the JMS Destination",
+                  "properties": {
+                    "destinationName": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "description": "Name of the queue or topic to send data to.",
+                      "displayName": "Destination Name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "destinationType": {
+                      "componentProperty": false,
+                      "defaultValue": "topic",
+                      "deprecated": false,
+                      "displayName": "Destination Type",
+                      "enum": [
+                        {
+                          "label": "Topic",
+                          "value": "topic"
+                        },
+                        {
+                          "label": "Queue",
+                          "value": "queue"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "By default, the destination is a topic.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "messageSelector": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Message Selector",
+                      "group": "consumer (advanced)",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "consumer,advanced",
+                      "labelHint": "Specify a filter expression to receive only responses that meet certain criteria.",
+                      "order": 3,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "namedReplyTo": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Named Reply To",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "The destination sends the response to this queue or topic.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "persistent": {
+                      "componentProperty": false,
+                      "defaultValue": "true",
+                      "deprecated": false,
+                      "displayName": "Persistent",
+                      "group": "producer",
+                      "javaType": "boolean",
+                      "kind": "parameter",
+                      "label": "producer",
+                      "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "boolean"
+                    },
+                    "responseTimeOut": {
+                      "componentProperty": false,
+                      "defaultValue": "5000",
+                      "deprecated": false,
+                      "displayName": "Response Time Out",
+                      "group": "producer (advanced)",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "label": "producer,advanced",
+                      "labelHint": "Amount of time a connection waits for a response message before throwing a runtime exception.",
+                      "order": 6,
+                      "required": false,
+                      "secret": false,
+                      "type": "integer"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-activemq-request",
+            "name": "Request response using messages",
+            "pattern": "Pipe"
+          }
+        ],
+        "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Subscribe for and publish messages.",
+        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+        "id": "activemq",
+        "name": "Red Hat AMQ",
+        "properties": {
+          "brokerCertificate": {
+            "componentProperty": true,
+            "deprecated": false,
+            "description": "Red Hat AMQ Broker X.509 PEM Certificate",
+            "displayName": "Broker Certificate",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 6,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "skipCertificateCheck",
+                    "value": "false"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "textarea"
+          },
+          "brokerUrl": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Broker URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "labelHint": "Location to send data to or obtain data from.",
+            "order": 1,
+            "placeholder": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "clientCertificate": {
+            "componentProperty": true,
+            "deprecated": false,
+            "description": "Red Hat AMQ Client X.509 PEM Certificate",
+            "displayName": "Client Certificate",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "order": 7,
+            "relation": [
+              {
+                "action": "ENABLE",
+                "when": [
+                  {
+                    "id": "skipCertificateCheck",
+                    "value": "false"
+                  }
+                ]
+              }
+            ],
+            "required": false,
+            "secret": false,
+            "type": "textarea"
+          },
+          "clientID": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Client ID",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Password for the specified user account.",
+            "order": 3,
+            "required": false,
+            "secret": true,
+            "type": "string"
+          },
+          "skipCertificateCheck": {
+            "componentProperty": true,
+            "defaultValue": "false",
+            "deprecated": false,
+            "displayName": "Check Certificates",
+            "enum": [
+              {
+                "label": "Disable",
+                "value": "true"
+              },
+              {
+                "label": "Enable",
+                "value": "false"
+              }
+            ],
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+            "order": 5,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "username": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "User Name",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Access the broker with this user’s authorization credentials.",
+            "order": 2,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 54
+      },
+      "connectorId": "activemq",
+      "createdDate": 1552906721861,
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+      "id": "i-LaFS0e6-BN8sNztsxF9z",
+      "isDerived": false,
+      "lastUpdated": 1552906721861,
+      "name": "AMQ",
+      "userId": "developer",
+      "uses": 0
+    },
+    ":i-LaLP76LY6PgTmnD_vPFz": {
+      "configuredProperties": {
+        "baseUrl": "http://todo-syndesis.192.168.64.15.nip.io/api"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke an http endpoint URL",
+            "descriptor": {
+              "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "properties",
+                  "name": "properties",
+                  "properties": {
+                    "httpMethod": {
+                      "defaultValue": "GET",
+                      "deprecated": false,
+                      "displayName": "Http Method",
+                      "enum": [
+                        {
+                          "label": "GET",
+                          "value": "GET"
+                        },
+                        {
+                          "label": "PUT",
+                          "value": "PUT"
+                        },
+                        {
+                          "label": "POST",
+                          "value": "POST"
+                        },
+                        {
+                          "label": "DELETE",
+                          "value": "DELETE"
+                        },
+                        {
+                          "label": "HEAD",
+                          "value": "HEAD"
+                        },
+                        {
+                          "label": "OPTIONS",
+                          "value": "OPTIONS"
+                        },
+                        {
+                          "label": "TRACE",
+                          "value": "TRACE"
+                        },
+                        {
+                          "label": "PATCH",
+                          "value": "PATCH"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "The specific http method to execute.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "path": {
+                      "deprecated": false,
+                      "displayName": "URL Path",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+            "name": "Invoke URL",
+            "pattern": "To"
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke an http endpoint URL",
+            "descriptor": {
+              "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "properties",
+                  "name": "properties",
+                  "properties": {
+                    "httpMethod": {
+                      "defaultValue": "GET",
+                      "deprecated": false,
+                      "displayName": "Http Method",
+                      "enum": [
+                        {
+                          "label": "GET",
+                          "value": "GET"
+                        },
+                        {
+                          "label": "PUT",
+                          "value": "PUT"
+                        },
+                        {
+                          "label": "POST",
+                          "value": "POST"
+                        },
+                        {
+                          "label": "DELETE",
+                          "value": "DELETE"
+                        },
+                        {
+                          "label": "HEAD",
+                          "value": "HEAD"
+                        },
+                        {
+                          "label": "OPTIONS",
+                          "value": "OPTIONS"
+                        },
+                        {
+                          "label": "TRACE",
+                          "value": "TRACE"
+                        },
+                        {
+                          "label": "PATCH",
+                          "value": "PATCH"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "The specific http method to execute.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "path": {
+                      "deprecated": false,
+                      "displayName": "URL Path",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Endpoint Path",
+                      "placeholder": "eg '/path/to/endpoint'",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "1800000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+            "name": "Periodic invoke URL",
+            "pattern": "From"
+          }
+        ],
+        "componentScheme": "http4",
+        "configuredProperties": {
+          "headerFilterStrategy": "syndesisHeaderStrategy"
+        },
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Invoke various HTTP methods.",
+        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+        "id": "http4",
+        "name": "HTTP",
+        "properties": {
+          "baseUrl": {
+            "deprecated": false,
+            "displayName": "Base URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Base Http Endpoint URL",
+            "placeholder": "eg 'www.redhat.com'",
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 54
+      },
+      "connectorId": "http4",
+      "createdDate": 1553006625238,
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+      "id": "i-LaLP76LY6PgTmnD_vPFz",
+      "isDerived": false,
+      "lastUpdated": 1553006625238,
+      "name": "TodoHttpApi",
+      "userId": "developer",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":activemq": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Send data to the destination you specify.",
+          "descriptor": {
+            "componentScheme": "sjms",
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "none"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                "name": "Select the JMS Destination",
+                "properties": {
+                  "destinationName": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "Name of the queue or topic to send data to.",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "destinationType": {
+                    "componentProperty": false,
+                    "defaultValue": "topic",
+                    "deprecated": false,
+                    "displayName": "Destination Type",
+                    "enum": [
+                      {
+                        "label": "Topic",
+                        "value": "topic"
+                      },
+                      {
+                        "label": "Queue",
+                        "value": "queue"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "By default, the destination is a topic.",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "persistent": {
+                    "componentProperty": false,
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "displayName": "Persistent",
+                    "group": "producer",
+                    "javaType": "boolean",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-activemq-publish",
+          "name": "Publish messages",
+          "pattern": "To"
+        },
+        {
+          "actionType": "connector",
+          "description": "Receive data from the destination you specify.",
+          "descriptor": {
+            "componentScheme": "sjms",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                "name": "Select the JMS Destination",
+                "properties": {
+                  "destinationName": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "Name of the queue or topic to receive data from.",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "destinationType": {
+                    "componentProperty": false,
+                    "defaultValue": "topic",
+                    "deprecated": false,
+                    "displayName": "Destination Type",
+                    "enum": [
+                      {
+                        "label": "Topic",
+                        "value": "topic"
+                      },
+                      {
+                        "label": "Queue",
+                        "value": "queue"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "By default, the destination is a topic.",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "durableSubscriptionId": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Durable Subscription ID",
+                    "group": "consumer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "consumer",
+                    "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "messageSelector": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Message Selector",
+                    "group": "consumer (advanced)",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "consumer,advanced",
+                    "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                    "order": 4,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-activemq-subscribe",
+          "name": "Subscribe for messages",
+          "pattern": "From"
+        },
+        {
+          "actionType": "connector",
+          "description": "Send data to the destination you specify and receive a response.",
+          "descriptor": {
+            "componentScheme": "sjms",
+            "configuredProperties": {
+              "exchangePattern": "InOut"
+            },
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                "name": "Select the JMS Destination",
+                "properties": {
+                  "destinationName": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "description": "Name of the queue or topic to send data to.",
+                    "displayName": "Destination Name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "destinationType": {
+                    "componentProperty": false,
+                    "defaultValue": "topic",
+                    "deprecated": false,
+                    "displayName": "Destination Type",
+                    "enum": [
+                      {
+                        "label": "Topic",
+                        "value": "topic"
+                      },
+                      {
+                        "label": "Queue",
+                        "value": "queue"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "By default, the destination is a topic.",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "messageSelector": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Message Selector",
+                    "group": "consumer (advanced)",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "consumer,advanced",
+                    "labelHint": "Specify a filter expression to receive only responses that meet certain criteria.",
+                    "order": 3,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "namedReplyTo": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Named Reply To",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "The destination sends the response to this queue or topic.",
+                    "order": 4,
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "persistent": {
+                    "componentProperty": false,
+                    "defaultValue": "true",
+                    "deprecated": false,
+                    "displayName": "Persistent",
+                    "group": "producer",
+                    "javaType": "boolean",
+                    "kind": "parameter",
+                    "label": "producer",
+                    "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                    "order": 5,
+                    "required": false,
+                    "secret": false,
+                    "type": "boolean"
+                  },
+                  "responseTimeOut": {
+                    "componentProperty": false,
+                    "defaultValue": "5000",
+                    "deprecated": false,
+                    "displayName": "Response Time Out",
+                    "group": "producer (advanced)",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "label": "producer,advanced",
+                    "labelHint": "Amount of time a connection waits for a response message before throwing a runtime exception.",
+                    "order": 6,
+                    "required": false,
+                    "secret": false,
+                    "type": "integer"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-activemq-request",
+          "name": "Request response using messages",
+          "pattern": "Pipe"
+        }
+      ],
+      "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Subscribe for and publish messages.",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+      "id": "activemq",
+      "name": "Red Hat AMQ",
+      "properties": {
+        "brokerCertificate": {
+          "componentProperty": true,
+          "deprecated": false,
+          "description": "Red Hat AMQ Broker X.509 PEM Certificate",
+          "displayName": "Broker Certificate",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 6,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "skipCertificateCheck",
+                  "value": "false"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "textarea"
+        },
+        "brokerUrl": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Broker URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "labelHint": "Location to send data to or obtain data from.",
+          "order": 1,
+          "placeholder": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "clientCertificate": {
+          "componentProperty": true,
+          "deprecated": false,
+          "description": "Red Hat AMQ Client X.509 PEM Certificate",
+          "displayName": "Client Certificate",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "order": 7,
+          "relation": [
+            {
+              "action": "ENABLE",
+              "when": [
+                {
+                  "id": "skipCertificateCheck",
+                  "value": "false"
+                }
+              ]
+            }
+          ],
+          "required": false,
+          "secret": false,
+          "type": "textarea"
+        },
+        "clientID": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Client ID",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Password for the specified user account.",
+          "order": 3,
+          "required": false,
+          "secret": true,
+          "type": "string"
+        },
+        "skipCertificateCheck": {
+          "componentProperty": true,
+          "defaultValue": "false",
+          "deprecated": false,
+          "displayName": "Check Certificates",
+          "enum": [
+            {
+              "label": "Disable",
+              "value": "true"
+            },
+            {
+              "label": "Enable",
+              "value": "false"
+            }
+          ],
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+          "order": 5,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "username": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "User Name",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Access the broker with this user’s authorization credentials.",
+          "order": 2,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 54
+    },
+    ":http4": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke an http endpoint URL",
+          "descriptor": {
+            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "properties",
+                "name": "properties",
+                "properties": {
+                  "httpMethod": {
+                    "defaultValue": "GET",
+                    "deprecated": false,
+                    "displayName": "Http Method",
+                    "enum": [
+                      {
+                        "label": "GET",
+                        "value": "GET"
+                      },
+                      {
+                        "label": "PUT",
+                        "value": "PUT"
+                      },
+                      {
+                        "label": "POST",
+                        "value": "POST"
+                      },
+                      {
+                        "label": "DELETE",
+                        "value": "DELETE"
+                      },
+                      {
+                        "label": "HEAD",
+                        "value": "HEAD"
+                      },
+                      {
+                        "label": "OPTIONS",
+                        "value": "OPTIONS"
+                      },
+                      {
+                        "label": "TRACE",
+                        "value": "TRACE"
+                      },
+                      {
+                        "label": "PATCH",
+                        "value": "PATCH"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The specific http method to execute.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "path": {
+                    "deprecated": false,
+                    "displayName": "URL Path",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+          "name": "Invoke URL",
+          "pattern": "To"
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke an http endpoint URL",
+          "descriptor": {
+            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "properties",
+                "name": "properties",
+                "properties": {
+                  "httpMethod": {
+                    "defaultValue": "GET",
+                    "deprecated": false,
+                    "displayName": "Http Method",
+                    "enum": [
+                      {
+                        "label": "GET",
+                        "value": "GET"
+                      },
+                      {
+                        "label": "PUT",
+                        "value": "PUT"
+                      },
+                      {
+                        "label": "POST",
+                        "value": "POST"
+                      },
+                      {
+                        "label": "DELETE",
+                        "value": "DELETE"
+                      },
+                      {
+                        "label": "HEAD",
+                        "value": "HEAD"
+                      },
+                      {
+                        "label": "OPTIONS",
+                        "value": "OPTIONS"
+                      },
+                      {
+                        "label": "TRACE",
+                        "value": "TRACE"
+                      },
+                      {
+                        "label": "PATCH",
+                        "value": "PATCH"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The specific http method to execute.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "path": {
+                    "deprecated": false,
+                    "displayName": "URL Path",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Endpoint Path",
+                    "placeholder": "eg '/path/to/endpoint'",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "1800000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+          "name": "Periodic invoke URL",
+          "pattern": "From"
+        }
+      ],
+      "componentScheme": "http4",
+      "configuredProperties": {
+        "headerFilterStrategy": "syndesisHeaderStrategy"
+      },
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Invoke various HTTP methods.",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+      "id": "http4",
+      "name": "HTTP",
+      "properties": {
+        "baseUrl": {
+          "deprecated": false,
+          "displayName": "Base URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Base Http Endpoint URL",
+          "placeholder": "eg 'www.redhat.com'",
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 54
+    }
+  },
+  "integrations": {
+    ":i-Lb2W9vHWCrZgKbJf31Jz": {
+      "createdAt": 1553763446482,
+      "flows": [
+        {
+          "id": "-Lb2VScpxSMPeF9ULktx",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Receive data from the destination you specify.",
+                "descriptor": {
+                  "componentScheme": "sjms",
+                  "inputDataShape": {
+                    "kind": "none"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "TodoJms",
+                    "specification": "{\"id\": \"1\", \"name\": \"foo\", \"done\": 0}"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                      "name": "Select the JMS Destination",
+                      "properties": {
+                        "destinationName": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "description": "Name of the queue or topic to receive data from.",
+                          "displayName": "Destination Name",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "order": 1,
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "destinationType": {
+                          "componentProperty": false,
+                          "defaultValue": "topic",
+                          "deprecated": false,
+                          "displayName": "Destination Type",
+                          "enum": [
+                            {
+                              "label": "Topic",
+                              "value": "topic"
+                            },
+                            {
+                              "label": "Queue",
+                              "value": "queue"
+                            }
+                          ],
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "By default, the destination is a topic.",
+                          "order": 2,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "durableSubscriptionId": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Durable Subscription ID",
+                          "group": "consumer",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "consumer",
+                          "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                          "order": 3,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "messageSelector": {
+                          "componentProperty": false,
+                          "deprecated": false,
+                          "displayName": "Message Selector",
+                          "group": "consumer (advanced)",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "label": "consumer,advanced",
+                          "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                          "order": 4,
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis.connector:connector-activemq-subscribe",
+                "name": "Subscribe for messages",
+                "pattern": "From"
+              },
+              "configuredProperties": {
+                "destinationName": "todos",
+                "destinationType": "queue"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "brokerUrl": "tcp://broker-amq-tcp:61616",
+                  "password": "»ENC:8bfe740c2892ee8ccff41a7681e2b779a83bab6a985a659d1d4be1f6702aa0d9",
+                  "skipCertificateCheck": "true",
+                  "username": "amq"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Send data to the destination you specify.",
+                      "descriptor": {
+                        "componentScheme": "sjms",
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                            "name": "Select the JMS Destination",
+                            "properties": {
+                              "destinationName": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Name of the queue or topic to send data to.",
+                                "displayName": "Destination Name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "destinationType": {
+                                "componentProperty": false,
+                                "defaultValue": "topic",
+                                "deprecated": false,
+                                "displayName": "Destination Type",
+                                "enum": [
+                                  {
+                                    "label": "Topic",
+                                    "value": "topic"
+                                  },
+                                  {
+                                    "label": "Queue",
+                                    "value": "queue"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "By default, the destination is a topic.",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "persistent": {
+                                "componentProperty": false,
+                                "defaultValue": "true",
+                                "deprecated": false,
+                                "displayName": "Persistent",
+                                "group": "producer",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-activemq-publish",
+                      "name": "Publish messages",
+                      "pattern": "To"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Receive data from the destination you specify.",
+                      "descriptor": {
+                        "componentScheme": "sjms",
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                            "name": "Select the JMS Destination",
+                            "properties": {
+                              "destinationName": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Name of the queue or topic to receive data from.",
+                                "displayName": "Destination Name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "destinationType": {
+                                "componentProperty": false,
+                                "defaultValue": "topic",
+                                "deprecated": false,
+                                "displayName": "Destination Type",
+                                "enum": [
+                                  {
+                                    "label": "Topic",
+                                    "value": "topic"
+                                  },
+                                  {
+                                    "label": "Queue",
+                                    "value": "queue"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "By default, the destination is a topic.",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "durableSubscriptionId": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Durable Subscription ID",
+                                "group": "consumer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "consumer",
+                                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "messageSelector": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Message Selector",
+                                "group": "consumer (advanced)",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "consumer,advanced",
+                                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                                "order": 4,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-activemq-subscribe",
+                      "name": "Subscribe for messages",
+                      "pattern": "From"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Send data to the destination you specify and receive a response.",
+                      "descriptor": {
+                        "componentScheme": "sjms",
+                        "configuredProperties": {
+                          "exchangePattern": "InOut"
+                        },
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+                            "name": "Select the JMS Destination",
+                            "properties": {
+                              "destinationName": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "description": "Name of the queue or topic to send data to.",
+                                "displayName": "Destination Name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "destinationType": {
+                                "componentProperty": false,
+                                "defaultValue": "topic",
+                                "deprecated": false,
+                                "displayName": "Destination Type",
+                                "enum": [
+                                  {
+                                    "label": "Topic",
+                                    "value": "topic"
+                                  },
+                                  {
+                                    "label": "Queue",
+                                    "value": "queue"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "By default, the destination is a topic.",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "messageSelector": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Message Selector",
+                                "group": "consumer (advanced)",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "consumer,advanced",
+                                "labelHint": "Specify a filter expression to receive only responses that meet certain criteria.",
+                                "order": 3,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "namedReplyTo": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Named Reply To",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "The destination sends the response to this queue or topic.",
+                                "order": 4,
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "persistent": {
+                                "componentProperty": false,
+                                "defaultValue": "true",
+                                "deprecated": false,
+                                "displayName": "Persistent",
+                                "group": "producer",
+                                "javaType": "boolean",
+                                "kind": "parameter",
+                                "label": "producer",
+                                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                                "order": 5,
+                                "required": false,
+                                "secret": false,
+                                "type": "boolean"
+                              },
+                              "responseTimeOut": {
+                                "componentProperty": false,
+                                "defaultValue": "5000",
+                                "deprecated": false,
+                                "displayName": "Response Time Out",
+                                "group": "producer (advanced)",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "label": "producer,advanced",
+                                "labelHint": "Amount of time a connection waits for a response message before throwing a runtime exception.",
+                                "order": 6,
+                                "required": false,
+                                "secret": false,
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-activemq-request",
+                      "name": "Request response using messages",
+                      "pattern": "Pipe"
+                    }
+                  ],
+                  "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Subscribe for and publish messages.",
+                  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+                  "id": "activemq",
+                  "name": "Red Hat AMQ",
+                  "properties": {
+                    "brokerCertificate": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "description": "Red Hat AMQ Broker X.509 PEM Certificate",
+                      "displayName": "Broker Certificate",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 6,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "skipCertificateCheck",
+                              "value": "false"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "textarea"
+                    },
+                    "brokerUrl": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Broker URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "labelHint": "Location to send data to or obtain data from.",
+                      "order": 1,
+                      "placeholder": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "clientCertificate": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "description": "Red Hat AMQ Client X.509 PEM Certificate",
+                      "displayName": "Client Certificate",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "order": 7,
+                      "relation": [
+                        {
+                          "action": "ENABLE",
+                          "when": [
+                            {
+                              "id": "skipCertificateCheck",
+                              "value": "false"
+                            }
+                          ]
+                        }
+                      ],
+                      "required": false,
+                      "secret": false,
+                      "type": "textarea"
+                    },
+                    "clientID": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Client ID",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Password for the specified user account.",
+                      "order": 3,
+                      "required": false,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "skipCertificateCheck": {
+                      "componentProperty": true,
+                      "defaultValue": "false",
+                      "deprecated": false,
+                      "displayName": "Check Certificates",
+                      "enum": [
+                        {
+                          "label": "Disable",
+                          "value": "true"
+                        },
+                        {
+                          "label": "Enable",
+                          "value": "false"
+                        }
+                      ],
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+                      "order": 5,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "username": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "User Name",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Access the broker with this user’s authorization credentials.",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 54
+                },
+                "connectorId": "activemq",
+                "createdDate": 1552906721861,
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+                "id": "i-LaFS0e6-BN8sNztsxF9z",
+                "isDerived": false,
+                "lastUpdated": 1552906721861,
+                "name": "AMQ",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-Lb2VT4lxSMPeF9ULktx",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false"
+              },
+              "id": "-Lb2W51LxSMPeF9ULku0",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "name": "Data Mapper (TodoHttp)",
+                    "specification": "{\"id\": \"1\", \"task\": \"foo\", \"completed\": 0}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-Lb2VT4lxSMPeF9ULktx\",\"uri\":\"atlas:json:-Lb2VT4lxSMPeF9ULktx\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-Lb2VeVmxSMPeF9ULktx\",\"uri\":\"atlas:json:-Lb2VeVmxSMPeF9ULktx\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"mappingType\":\"MAP\",\"id\":\"mapping.385343\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"id\",\"path\":\"/id\",\"fieldType\":\"STRING\",\"docId\":\"-Lb2VT4lxSMPeF9ULktx\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"id\",\"path\":\"/id\",\"fieldType\":\"STRING\",\"docId\":\"-Lb2VeVmxSMPeF9ULktx\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"mappingType\":\"MAP\",\"id\":\"mapping.11874\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"done\",\"path\":\"/done\",\"fieldType\":\"INTEGER\",\"docId\":\"-Lb2VT4lxSMPeF9ULktx\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"completed\",\"path\":\"/completed\",\"fieldType\":\"INTEGER\",\"docId\":\"-Lb2VeVmxSMPeF9ULktx\",\"userCreated\":false}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"mappingType\":\"MAP\",\"id\":\"mapping.939666\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"name\",\"path\":\"/name\",\"fieldType\":\"STRING\",\"docId\":\"-Lb2VT4lxSMPeF9ULktx\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"task\",\"path\":\"/task\",\"fieldType\":\"STRING\",\"docId\":\"-Lb2VeVmxSMPeF9ULktx\",\"userCreated\":false}]}]},\"name\":\"UI.52413\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-Lb2W2X2xSMPeF9ULku-",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "configuredProperties": {
+                "bodyLoggingEnabled": "true",
+                "contextLoggingEnabled": "false"
+              },
+              "id": "-Lb2W6B3xSMPeF9ULku1",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Log",
+              "stepKind": "log"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invoke an http endpoint URL",
+                "descriptor": {
+                  "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                  "inputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "TodoHttp",
+                    "specification": "{\"id\": \"1\", \"task\": \"foo\", \"completed\": 0}"
+                  },
+                  "outputDataShape": {
+                    "kind": "any"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "properties",
+                      "name": "properties",
+                      "properties": {
+                        "httpMethod": {
+                          "defaultValue": "GET",
+                          "deprecated": false,
+                          "displayName": "Http Method",
+                          "enum": [
+                            {
+                              "label": "GET",
+                              "value": "GET"
+                            },
+                            {
+                              "label": "PUT",
+                              "value": "PUT"
+                            },
+                            {
+                              "label": "POST",
+                              "value": "POST"
+                            },
+                            {
+                              "label": "DELETE",
+                              "value": "DELETE"
+                            },
+                            {
+                              "label": "HEAD",
+                              "value": "HEAD"
+                            },
+                            {
+                              "label": "OPTIONS",
+                              "value": "OPTIONS"
+                            },
+                            {
+                              "label": "TRACE",
+                              "value": "TRACE"
+                            },
+                            {
+                              "label": "PATCH",
+                              "value": "PATCH"
+                            }
+                          ],
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "The specific http method to execute.",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "path": {
+                          "deprecated": false,
+                          "displayName": "URL Path",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                "name": "Invoke URL",
+                "pattern": "To"
+              },
+              "configuredProperties": {
+                "httpMethod": "POST",
+                "path": "/"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "baseUrl": "http://todo-syndesis.192.168.64.15.nip.io/api"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke an http endpoint URL",
+                      "descriptor": {
+                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "properties",
+                            "name": "properties",
+                            "properties": {
+                              "httpMethod": {
+                                "defaultValue": "GET",
+                                "deprecated": false,
+                                "displayName": "Http Method",
+                                "enum": [
+                                  {
+                                    "label": "GET",
+                                    "value": "GET"
+                                  },
+                                  {
+                                    "label": "PUT",
+                                    "value": "PUT"
+                                  },
+                                  {
+                                    "label": "POST",
+                                    "value": "POST"
+                                  },
+                                  {
+                                    "label": "DELETE",
+                                    "value": "DELETE"
+                                  },
+                                  {
+                                    "label": "HEAD",
+                                    "value": "HEAD"
+                                  },
+                                  {
+                                    "label": "OPTIONS",
+                                    "value": "OPTIONS"
+                                  },
+                                  {
+                                    "label": "TRACE",
+                                    "value": "TRACE"
+                                  },
+                                  {
+                                    "label": "PATCH",
+                                    "value": "PATCH"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "The specific http method to execute.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "path": {
+                                "deprecated": false,
+                                "displayName": "URL Path",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                      "name": "Invoke URL",
+                      "pattern": "To"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke an http endpoint URL",
+                      "descriptor": {
+                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "properties",
+                            "name": "properties",
+                            "properties": {
+                              "httpMethod": {
+                                "defaultValue": "GET",
+                                "deprecated": false,
+                                "displayName": "Http Method",
+                                "enum": [
+                                  {
+                                    "label": "GET",
+                                    "value": "GET"
+                                  },
+                                  {
+                                    "label": "PUT",
+                                    "value": "PUT"
+                                  },
+                                  {
+                                    "label": "POST",
+                                    "value": "POST"
+                                  },
+                                  {
+                                    "label": "DELETE",
+                                    "value": "DELETE"
+                                  },
+                                  {
+                                    "label": "HEAD",
+                                    "value": "HEAD"
+                                  },
+                                  {
+                                    "label": "OPTIONS",
+                                    "value": "OPTIONS"
+                                  },
+                                  {
+                                    "label": "TRACE",
+                                    "value": "TRACE"
+                                  },
+                                  {
+                                    "label": "PATCH",
+                                    "value": "PATCH"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "The specific http method to execute.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "path": {
+                                "deprecated": false,
+                                "displayName": "URL Path",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Endpoint Path",
+                                "placeholder": "eg '/path/to/endpoint'",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "1800000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+                      "name": "Periodic invoke URL",
+                      "pattern": "From"
+                    }
+                  ],
+                  "componentScheme": "http4",
+                  "configuredProperties": {
+                    "headerFilterStrategy": "syndesisHeaderStrategy"
+                  },
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Invoke various HTTP methods.",
+                  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+                  "id": "http4",
+                  "name": "HTTP",
+                  "properties": {
+                    "baseUrl": {
+                      "deprecated": false,
+                      "displayName": "Base URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Base Http Endpoint URL",
+                      "placeholder": "eg 'www.redhat.com'",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 54
+                },
+                "connectorId": "http4",
+                "createdDate": 1553006625238,
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+                "id": "i-LaLP76LY6PgTmnD_vPFz",
+                "isDerived": false,
+                "lastUpdated": 1553006625238,
+                "name": "TodoHttpApi",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-Lb2VeVmxSMPeF9ULktx",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ]
+        }
+      ],
+      "id": "i-Lb2W9vHWCrZgKbJf31Jz",
+      "name": "AMQToHttp",
+      "tags": [
+        "activemq",
+        "http4"
+      ],
+      "updatedAt": 0,
+      "version": 1
+    }
+  }
+}

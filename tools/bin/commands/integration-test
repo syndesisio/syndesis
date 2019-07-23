@@ -1,0 +1,45 @@
+#!/bin/bash
+
+integration-test::description() {
+    echo "Run integration tests"
+}
+
+integration-test::usage() {
+    cat - <<EOT
+-t  --test <test_name>         The test to run
+-c  --clean                    Run clean builds (mvn clean)
+    --release                  Syndesis version to use
+EOT
+}
+
+integration-test::run() {
+    source "$(basedir)/commands/util/maven_funcs"
+
+    call_maven "$(maven_args)" ":integration-test"
+}
+
+maven_args() {
+    local args=""
+
+    if [ "$(hasflag --clean -c)" ]; then
+        args="$args clean"
+    fi
+
+    args="$args verify"
+
+    local tests="$(readopt --test -t)"
+    if [ -n "${tests}" ]; then
+        args="$args -Dit.test=${tests}"
+    fi
+
+    local release_version="$(readopt --release)"
+    if [ -n "${release_version}" ]; then
+        args="$args -Dsyndesis.version=${release_version}"
+    fi
+
+    args="$args -Dskip.integration.tests=false"
+
+    echo $args
+}
+
+
