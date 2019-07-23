@@ -171,7 +171,7 @@ function setFlowId(flow: Flow) {
   return flow.id ? flow : { ...flow, ...{ id: generateKey() } };
 }
 
-function setStepId(step: Step) {
+export function setStepId(step: Step) {
   return step.id ? step : { ...step, ...{ id: generateKey() } };
 }
 
