@@ -177,7 +177,23 @@ dev::run() {
             fi
             sleep 5 # give the router time to reload the configuration
         fi
-        oc --as system:admin adm prune images --registry-url=http://$(oc --as system:admin -n default get route docker-registry -o jsonpath='{.spec.host}') --confirm
+        local prune_cmd='oc --as system:admin adm prune images --registry-url=http://$(oc --as system:admin -n default get route docker-registry -o jsonpath={.spec.host}) --confirm 2>&1'
+        # prevent lost line break when capturing the prune_cmd output
+        IFS=''
+        local prune_output=$(eval $prune_cmd)
+        echo $prune_output
+        # sometimes there are error trying to remove old images from registry, as
+        # error deleting blob sha256:1daebdc712936afb9b1ba54cfd8b06ad55470e05ad346dc8156c448ed2223c6b from the registry: 401 Unauthorized
+        # the following block retrieves the full image address to remove it
+        if [[ $prune_output == *"error deleting blob"* ]]; then
+            echo Error removing some images, forcing their removal.
+            local imgs=`echo $prune_output|grep 'error deleting blob' | awk '{print $4}'  ORS='|' | sed 's/|$//g'`
+            oc --as system:admin get images --show-kind=true|awk '{print $1}'|grep -E "$imgs" | while read img; do
+                oc --as system:admin delete $img;
+            done
+        fi
+
+
         echo done
     elif [ $(hasflag --update-manifest) ]; then
         local connector=$(readopt --update-manifest)
