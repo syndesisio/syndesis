@@ -2357,7 +2357,6 @@ objects:
     resources:
     - daemonsets
     - deployments
-    - deployments/rollback
     - deployments/scale
     - ingresses
     - networkpolicies
