@@ -53,6 +53,7 @@ update_resources::run() {
 
     run_update_scripts "$backupdir" "$workdir" "$tag" "$migrationdir"
     apply_resources "$workdir/resources" "$DONT_TOUCH_RESOURCES"
+    link_pull_secret
 }
 
 update_resources::rollback() {
@@ -117,6 +118,22 @@ apply_resources() {
     done
 }
 
+link_pull_secret() {
+  if oc get secret syndesis-pull-secret -o name >/dev/null 2>&1; then
+    # Add pull secrets to every service account specific to syndesis
+    for sa in $(oc get sa -o jsonpath='{.items[*].metadata.name}'); do
+      # For all sa's which start with "syndesis-" + the camel k operator
+      if [ ${sa/#syndesis-/} != $sa ] || [ $sa == "camel-k-operator" ]; then
+        echo "       ### Linking syndesis-pull-secret --> SA $sa (pull)"
+        oc secrets link $sa syndesis-pull-secret --for=pull
+      fi
+    done
+
+    # Add pull and push secrets to the builder account
+    echo "       ### Linking syndesis-pull-secret --> SA builder (pull + mount)"
+    oc secrets link builder syndesis-pull-secret --for=pull,mount
+  fi
+}
 
 # Just as reference, not currently used
 remove_rcs_for_dc() {
