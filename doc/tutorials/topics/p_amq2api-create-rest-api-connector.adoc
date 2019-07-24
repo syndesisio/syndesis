@@ -44,14 +44,15 @@ click *Next*.
 . On the *Review Actions* page, click *Next*. If you see
 a warning, you can ignore it.
 . Click *Next* again to accept *HTTP Basic Authorization*.
-. On the *Review/Edit Connector Details* page, {prodname} populates
-the fields with values from the OpenAPI document.
+. On the *Review/Edit Connector Details* page: 
 .. If you want to, you can
-change the values in the *Connector Name* and *Description* fields.
-.. Confirm that the value in the *Host* field is correct. For example,
-it should be something like this:
+change the values in the *Name* and *Description* fields.
+.. In the *Host* field, enter the name of the service host, 
+which is something like this: 
 `\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
-.. Confirm that the value in the *Base URL* field is `/api`.
+.. In the *Base URL* field, enter the part of the URL that follows the 
+host name in service requests: `/api`.
+ 
 . Click *Save*.
 +
 {prodname} displays the *API Client Connectors*. There is a new entry for
