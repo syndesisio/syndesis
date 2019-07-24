@@ -399,6 +399,23 @@ jobs:
             ./tools/bin/syndesis build --batch-mode --module upgrade --docker
       - <<: *push_images
 
+  integration-test:
+    working_directory: /workspace
+    environment:
+      <<: *common_env
+    machine:
+      image: ubuntu-1604:201903-01
+    steps:
+      - <<: *load_m2
+      - run:
+        name: Run integration tests
+        command: |
+          ./tools/bin/syndesis integration-test | tee test_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: test_log.txt
 
   system-test:
     <<: *job_defaults
@@ -516,3 +533,13 @@ workflows:
               only: master
           requires:
             - server
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 7-23 * * 1-5"
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - integration-test
