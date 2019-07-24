@@ -1,4 +1,25 @@
 describe('Create a Connection', () => {
+  const connectionName = 'E2E DB Connection';
+  const connectionSlug = 'e2e-db-connection';
+
+  function deleteConnection() {
+    cy.visit('/connections');
+
+    cy.get('[data-testid=connection-card-' + connectionSlug + '-card]').within(
+      () => {
+        cy.get('[data-testid=connection-card-kebab]').click();
+        cy.get('[data-testid=connection-card-delete-action]').click();
+      }
+    );
+
+    cy.get('#deleteConfirmationDialogContent').should('be.visible');
+    cy.get('.modal-footer')
+      .contains('Delete')
+      .click();
+
+    cy.get('.toast-pf.alert-success').should('be.visible');
+  }
+
   /**
    * Happy Path
    *
@@ -21,8 +42,6 @@ describe('Create a Connection', () => {
       'contain',
       '/connections/create/connection-basics'
     );
-
-    cy.get('.pf-c-page__sidebar-body').should('be.hidden');
 
     cy.get('.active > a > .wizard-pf-step-number').should('have.text', '1');
   });
@@ -57,14 +76,6 @@ describe('Create a Connection', () => {
       .type('jdbc:postgresql://syndesis-db:5432/sampledb')
       .should('have.value', 'jdbc:postgresql://syndesis-db:5432/sampledb');
 
-    /**
-     * Test Cancellation modal
-     */
-    cy.get('[data-testid=connection-creator-layout-cancel-button').click();
-    cy.get('#deleteConfirmationDialogContent').should('be.visible');
-    cy.get('.modal-footer > .btn-default').click();
-    cy.get('#deleteConfirmationDialogContent').should('not.be.visible');
-
     cy.get('[data-testid=user]')
       .clear()
       .type('sampledb')
@@ -85,13 +96,30 @@ describe('Create a Connection', () => {
       .click();
   });
 
+  it('ensures the page renders properly', () => {
+    /**
+     * Sidebar should be collapsed
+     */
+    cy.get('.pf-c-page__sidebar-body').should('be.hidden');
+
+    /**
+     * Test Cancellation modal
+     */
+    cy.get('[data-testid=connection-creator-layout-cancel-button]')
+      .should('exist')
+      .click();
+    cy.get('#deleteConfirmationDialogContent').should('be.visible');
+    cy.get('.modal-footer > .btn-default').click();
+    cy.get('#deleteConfirmationDialogContent').should('not.be.visible');
+  });
+
   it('loads Step 3: Name connection', () => {
     cy.get('.active > a > .wizard-pf-step-number').should('have.text', '3');
 
     cy.get('[data-testid=name]')
       .clear()
-      .type('Test PostgreSQL DB')
-      .should('have.value', 'Test PostgreSQL DB');
+      .type(connectionName)
+      .should('have.value', connectionName);
 
     cy.get('[data-testid=description]')
       .clear()
@@ -103,12 +131,16 @@ describe('Create a Connection', () => {
       .click();
   });
 
-  it.skip('loads the Connections page with new Connection', () => {
+  it('loads the Connections page with new Connection', () => {
     cy.location('pathname').should('eq', '/connections/');
 
-    cy.get('.list-view-toolbar > input.form-control').type(
-      'Test PostgreSQL DB{enter}'
+    cy.get('.form-control').type(connectionName + '{enter}');
+    cy.get('[data-testid=connection-card-' + connectionSlug + '-card]').should(
+      'exist'
     );
-    cy.get('[data-testid=test-postgresql-db]').should('exist');
+  });
+
+  it('deletes any created test connection', () => {
+    deleteConnection();
   });
 });
