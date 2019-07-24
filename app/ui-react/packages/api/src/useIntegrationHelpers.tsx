@@ -21,6 +21,7 @@ import {
   prepareIntegrationForSaving,
   removeStepFromFlow,
   setDescriptorOnStep,
+  setStepId,
   setStepInFlow,
 } from './helpers';
 
@@ -68,16 +69,17 @@ export const useIntegrationHelpers = () => {
         action.id!,
         configuredProperties
       );
-      const step: Step = setDescriptorOnStep(
-        {
-          action,
-          configuredProperties,
-          connection,
-          id: key(), // let's explicitly set the ID here
-          metadata: { configured: true } as any,
-          stepKind: 'endpoint',
-        },
-        actionDescriptor!
+      const step: Step = setStepId(
+        setDescriptorOnStep(
+          {
+            action,
+            configuredProperties,
+            connection,
+            metadata: { configured: true } as any,
+            stepKind: 'endpoint',
+          },
+          actionDescriptor!
+        )
       );
       return insertStepIntoFlowBefore(
         integration,
@@ -109,13 +111,12 @@ export const useIntegrationHelpers = () => {
     configuredProperties: any
   ): Promise<Integration> => {
     return produce(integration, async () => {
-      const step: Step = {
+      const step: Step = setStepId({
         ...createStep(),
         ...stepKind,
         configuredProperties,
-        id: key(), // let's explicitly set the ID here
         metadata: { configured: true } as any,
-      };
+      });
 
       return insertStepIntoFlowBefore(
         integration,
