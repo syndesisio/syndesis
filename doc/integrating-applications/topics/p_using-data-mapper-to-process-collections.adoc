@@ -10,7 +10,7 @@ subsequent connection that is in the flow expects a collection as the input, you
 use the data mapper to specify how you want the flow to 
 process the collection.  
 
-When a step outputs a collection, the flow visualization panel 
+When a step outputs a collection, the flow visualization 
 displays *Collection* in the details about the step. For example: 
 
 image:images/data-type-collection.png[Data Type: SQL Result (Collection)]

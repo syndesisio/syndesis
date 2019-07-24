@@ -13,12 +13,12 @@ that you previously uploaded.
 
 .Procedure
 
-. In {prodname}, in the left panel, click *Customizations*.
-. Click the *Extensions* tab. 
+. In {prodname}, in the left panel, click *Customizations* > *Extensions*. 
 . At the right of the entry for the extension that you want to update, 
 click *Update*. 
-. Click *Browse*, select the updated `.jar` file, and click *Open*.
-. Confirm that the extension details are correct and click *Update*. 
+. Click in the dotted-line box to navigate to and select the 
+updated `.jar` file, and click *Open*.
+. Confirm that the extension details are correct and click *Import Extension*. 
 . In the details page for the updated extension, determine which integrations
 use the connector or custom step(s) defined in the extension. 
 

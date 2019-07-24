@@ -70,7 +70,7 @@ to display the visualization for that flow.
 +
 This operation flow has a data mapper step and a connection to the
 sample database that is provided with {prodname}. 
-In the operation flow visualization panel, 
+In the operation flow visualization, 
 click *Configure* on the database connection to view the SQL statement that it executes. 
 ... Click *Next* or *Cancel*. 
 ... In the operation flow visualization, on the 

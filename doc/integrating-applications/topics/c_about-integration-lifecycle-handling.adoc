@@ -48,8 +48,8 @@ you are updating the draft version of the integration.
 
 In {prodname}, you can see a list of the versions of an integration in the 
 integration's summary page. To view this page, in the left navigation
-panel, click *Integrations* and then click the entry for the integration
-whose versions you want to see. 
+panel, click *Integrations*. In the entry for the integration that you
+are interested in, click *View*. 
 
 .Description of integration states
 

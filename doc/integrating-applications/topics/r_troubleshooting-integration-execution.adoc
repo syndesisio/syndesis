@@ -18,8 +18,8 @@ In this situation, try reconnecting to the application and
 then republishing the integration:
 
 . In the left panel, click *Integrations*. 
-. In the list of integrations, click the entry for the integration
-that stopped running. 
+. In the list of integrations, at the right of the entry for the integration
+that stopped running, click *View*. 
 . In the integration's summary page, in the flow visualization, 
 click the icon for the application that you want to reconnect to. 
 +

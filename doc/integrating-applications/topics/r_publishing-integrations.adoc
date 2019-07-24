@@ -21,9 +21,7 @@ in the upper right, click *Publish*.
 * Publish the draft version of an integration:
 +
 . In the left {prodname} panel, click *Integrations*.
-. In the list of integrations, click the entry for the integration
-that you want to publish. 
-. On the integration's summary page, in the *Details* tab,
+. In the list of integrations, 
 to the right of the draft entry, click 
 image:shared/images/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
 select *Publish*.

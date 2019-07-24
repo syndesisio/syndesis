@@ -55,7 +55,7 @@ to use to complete the integration. When this integration is running,
 {prodname} will connect to this application with the data that the integration
 has been operating on.
 
-.. On the *Choose an action* page, click the action you want this connection
+.. On the *Choose an action* page, select the action you want this connection
 to perform. The available actions vary for each connection.
 
 .. On the page for configuring the action, enter values in the fields.

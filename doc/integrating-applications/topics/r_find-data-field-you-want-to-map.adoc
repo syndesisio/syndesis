@@ -41,9 +41,8 @@ folder for that step.
 +
 As you add steps to a flow, {prodname} numbers and renumbers them to
 indicate the order in which {prodname} processes the steps.
-When you are creating or editing a flow, these numbers are visible
-in the visualization panel on the left. When you are adding a data
-mapping step, the step numbers appear in the folder labels in the
+When you are adding a data
+mapper step, the step numbers appear in the folder labels in the
 *Sources* panel and in the *Target* panel.
 +
 The folder label also displays the name of the data type that is output

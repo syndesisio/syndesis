@@ -18,7 +18,7 @@ flow nor at the end of a flow.
 {prodname} provides a *Timer* connection; you do not need to create a timer
 connection.  
 
-. On the *Choose an action* page, select *Cron Timer* or *Simple Timer*. 
+. On the *Choose an action* page, select *Cron* or *Simple*. 
 +
 * A `cron` timer requires a `cron` expression that specifies the
 schedule for triggering integration execution. 

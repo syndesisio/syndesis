@@ -15,7 +15,7 @@ The integration that you want to start is in the *Stopped* state.
 .Procedure
 
 . In the left navigation panel, click *Integrations*. 
-. In the list of integrations, to the right of the entry for the
+. In the list of integrations, on the right of the entry for the
 integration that you want to start, click  
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab].
 . Select *Start*. 
