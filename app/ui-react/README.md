@@ -1,3 +1,5 @@
+[![Cypress.io tests](https://img.shields.io/badge/cypress.io-tests-green.svg?style=flat-square)](https://cypress.io)
+
 # Syndesis UI
 
 Syndesis UI is a single page application built with React.
@@ -679,6 +681,8 @@ E2E Test Writing Flow:
 In order to avoid extensive mocking of the app and countless server requests, we instead have a recorder for network fetch payload that will resemble E2E and integration tests as closely as possible, and can later be replayed for testing. These "tapes" are essentially snapshots of selected API responses and can be used to provide contract-compliant mock data from a specific time, which can be used for both E2E and integration tests, so long as they are used with Cypress.
 
 The way it works is that the `syndesis` dev server interacts with a given API via a proxy set up by CRA, records the responses, and allows you to replay those responses for later use (i.e. in tests). Recordings are stored in [`syndesis/tapes/[value of the syndesis-mock-session request header]/api/v1/path/xxx.json5`](syndesis/tapes), where the value of the mock-session request header should match the name of the test file (e.g. `homepage.spec.js`).
+
+**NOTE: Only record a session if you think you need it (e.g. writing a new test for which there are no tapes), otherwise you can create unnecessary tapes.** If a tape for your test exists but isn't working properly, record a new one.
 
 To see this in action, you can record a session:
 
