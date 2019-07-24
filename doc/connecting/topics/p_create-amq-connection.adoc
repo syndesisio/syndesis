@@ -29,7 +29,7 @@ connectors.
 +
 .. In the *Broker URL* field, enter the location that you want to send data
 to or obtain data from, for example, `tcp://localhost:61616`. 
-.. In the *User Name* field, enter the user name for the account that you want
+.. In the *User name* field, enter the user name for the account that you want
 to use to access this broker. 
 .. In the *Password* field, enter the password for the account that you want
 to use to access this broker.
@@ -37,13 +37,13 @@ to use to access this broker.
 and reopen without missing messages. The destination type must be a topic.
 .. If this connection will be used in a development
 environment, you can save some time by disabling
-*Check Certificates*. Disabling the checking of certificates is a convenience for
+*Check certificates*. Disabling the checking of certificates is a convenience for
 development environments. For secure production environments, always enable 
-*Check Certificates*.
-.. In the *Broker Certificate* field, paste the Red Hat AMQ broker's PEM certificate text.
+*Check certificates*.
+.. In the *Broker certificate* field, paste the Red Hat AMQ broker's PEM certificate text.
 This is required except when you disable
 checking the certificates. 
-.. In the *Client Certificate* field, paste the Red Hat client's PEM certificate text. 
+.. In the *Client certificate* field, paste the Red Hat client's PEM certificate text. 
 Content in this field is always optional. 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 

@@ -20,13 +20,13 @@ you want to use to start the integration.
 . On the *Choose an action* page, select the *Subscribe for messages* action
 to receive messages from the queue or topic that you specify. 
 . Configure the action:
-.. In the *Destination Name* field, enter the name of the queue or topic 
+.. In the *Destination name* field, enter the name of the queue or topic 
 to receive data from. 
-.. For the *Destination Type*, accept *Queue* or select *Topic*. 
-.. In the *Durable Subscription ID* field, to allow connections to 
+.. For the *Destination type*, accept *Queue* or select *Topic*. 
+.. In the *Durable subscription ID* field, to allow connections to 
 close and reopen without missing messages, enter the durable
 subscription ID. The destination type must be a topic. 
-.. In the *Message Selector* field, if you want to receive only 
+.. In the *Message selector* field, if you want to receive only 
 data that satisfies a particular condition, enter a filter expression.
 +
 A message selector is a string that contains an expression. The syntax of 

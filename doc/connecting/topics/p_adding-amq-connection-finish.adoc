@@ -21,9 +21,9 @@ connection.
 you want to use to finish the integration. 
 . On the *Choose an action* page, select the *Publish messages* action to
 publish messages to the queue or topic that you specify. 
-. In the *Destination Name* field, enter the name of the queue or 
+. In the *Destination name* field, enter the name of the queue or 
 topic to send messages to. 
-. For the *Destination Type*, accept *Queue* or select *Topic*. 
+. For the *Destination type*, accept *Queue* or select *Topic*. 
 . Select *Persistent* to guarantee message delivery even if
 a connection fails. 
 
