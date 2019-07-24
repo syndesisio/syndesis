@@ -408,9 +408,9 @@ jobs:
     steps:
       - <<: *load_m2
       - run:
-        name: Run integration tests
-        command: |
-          ./tools/bin/syndesis integration-test | tee test_log.txt
+          name: Run integration tests
+          command: |
+            ./tools/bin/syndesis integration-test | tee test_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
