@@ -19,7 +19,7 @@ already available are listed here.
 . Click *Create API Connector*.
 . On the *Create API Client Connector* page, do one of the following:
 +
-* Click *Browse* and select the OpenAPI file that you want to upload.
+* Click in the dotted-line box and select the OpenAPI file that you want to upload.
 * Select *Use a URL* and paste the URL for your OpenAPI document
 in the input field. 
 

@@ -14,15 +14,15 @@ available to the next step in the flow.
 Often, you must map data fields that are received from a
 connection to data fields that the next connection in the flow 
 can operate on. After you add all connections to a flow, 
-check the flow visualization panel
-on the left. For each connection that requires data mapping before
+check the flow visualization.
+For each connection that requires data mapping before
 it can operate on the input data,
 {prodname} displays
 image:images/DataTypeMismatchWarning.png[title="a warning"]. Click this
 icon to see *Data Type Mismatch: Add a data
-mapping step before this connection to resolve the difference.*
+mapper step before this connection to resolve the difference.*
 
 You can click the link in the message to display the *Configure Mapper*
-page in which you add and specify a data mapping step. However, 
+page in which you add and specify a data mapper step. However, 
 the recommendation is to add other needed steps, and then add 
 data mapper steps last. 

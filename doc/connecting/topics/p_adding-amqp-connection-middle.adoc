@@ -27,9 +27,9 @@ prompting you to choose the finish connection.
 publish messages to the queue or topic that you specify without receiving
 a response. To configure this
 action:
-.. In the *Destination Name* field, enter the name of the queue or 
+.. In the *Destination name* field, enter the name of the queue or 
 topic to send messages to. 
-.. For the *Destination Type*, accept *Queue* or select *Topic*. 
+.. For the *Destination type*, accept *Queue* or select *Topic*. 
 .. Select *Persistent* to guarantee message delivery even if
 a connection fails. 
 +
@@ -48,16 +48,16 @@ with a log step.
 +
 To configure this action:
 
-.. In the *Destination Name* field, enter the name of the queue or topic 
+.. In the *Destination name* field, enter the name of the queue or topic 
 to send messages to. 
-.. For the *Destination Type*, accept *Queue* or select *Topic*.
+.. For the *Destination type*, accept *Queue* or select *Topic*.
 
 
-.. In the *Durable Subscription ID* field, to allow connections to 
+.. In the *Durable subscription ID* field, to allow connections to 
 close and reopen without missing messages, enter the durable
 subscription ID. The destination type must be a topic. 
 
-.. In the *Message Selector* field, if you want to receive only responses 
+.. In the *Message selector* field, if you want to receive only responses 
 that satisfy a particular condition, enter a filter expression. 
 +
 A message selector is a string that contains an expression. The syntax of 

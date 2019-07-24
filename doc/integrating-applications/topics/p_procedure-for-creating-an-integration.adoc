@@ -26,33 +26,36 @@ want to connect to in this integration.
 
 . Choose and configure the start connection:
 
-.. On the *Choose a Start Connection* page, click the connection that you want
+.. On the *Choose a connection* page, click the connection that you want
 to use to start the integration. When this integration is running,
 {prodname} will connect to this application and obtain data that you want
 the integration to operate on.
 
-.. On the *Choose an Action* page, click the action you want this connection
+.. On the *Choose an action* page, select the action you want this connection
 to perform. The available actions vary for each connection.
 
 .. On the page for configuring the action, enter values in the fields.
 .. Optionally, if the connection requires data type specification, 
 {prodname} prompts you to click
 *Next* to specify the input and/or output type of the action. 
-.. Click *Done* to add the start connection.
+.. Click *Next* to add the start connection.
 
 +
 As an alternative to connecting to an application, a start connection can
 be a timer that triggers integration execution at intervals that you specify
 or it can be a webhook that accepts HTTP requests. 
++
+After you choose and configure the start connection, {prodname}
+prompts you to choose the finish connection. 
 
 . Choose and configure the finish connection:
 
-.. On the *Choose a Finish Connection* page, click the connection you want
+.. On the *Choose a connection* page, click the connection you want
 to use to complete the integration. When this integration is running,
 {prodname} will connect to this application with the data that the integration
 has been operating on.
 
-.. On the *Choose an Action* page, click the action you want this connection
+.. On the *Choose an action* page, select the action you want this connection
 to perform. The available actions vary for each connection.
 
 .. On the page for configuring the action, enter values in the fields.
@@ -75,7 +78,7 @@ any required configuration details.
 data between connections. See
 link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[About adding steps between connections].
 
-. In the flow visualization panel on the left, look for any
+. In the integration visualization, look for any
 image:shared/images/WarningIcon.png[Warning] icons. These 
 warnings indicate that a data mapper step is needed before 
 this connection. Add the required data mapper steps. 
@@ -84,23 +87,21 @@ this connection. Add the required data mapper steps.
 click *Save* or *Publish* according to whether you want
 to start running the integration.
 
-. In the *Integration Name* field, enter a name that distinguishes this
+. In the *Name* field, enter a name that distinguishes this
 integration from any other integrations.
 
-. In the *Description* field, enter a description, for example, you can
+. Optionally, in the *Description* field, enter a description, for example, you can
 indicate what this integration does.
 
-. If you are ready to start running the integration, in the upper right,
-click *Publish*. Otherwise, click *Save*.
-
-.Results
-In the {prodname} *Integrations* page, you can see your new integration
-in the list of integrations. If you published the integration, then you
+. If you are ready to start running the integration, click *Save and publish*.
++
+{prodname} displays the integration summary. You
 can see that {prodname} is in the process of publishing it. It may take 
 a few moments for the status of the integration to become *Running*. 
-If you saved the integration, then
++
+If you do not want to publish the integration, click *Save*. {prodname}
+saves the integration and displays its flow visualization. You can 
+continue editing it. Or, in the breadcrumbs at the top of the page, 
+click *Integrations* to display the list of integrations. 
+If you saved but did not publish the integration, then
 *Stopped* appears on the integration's entry.
-
-Click the integration's entry to see a summary of the integration, 
-including its version history, logs for any executions, and aggregate
-execution metrics. 

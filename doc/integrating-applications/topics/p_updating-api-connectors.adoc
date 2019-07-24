@@ -12,7 +12,7 @@ the new API client connector, you use it to create a new connection and
 then you edit each integration that uses a connection that was created
 from the out-of-date connector. 
 
-.Prerequisite
+.Prerequisites
 
 Be prepared to do one of the following:
 

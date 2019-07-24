@@ -23,7 +23,7 @@ a simple integration's finish connection.
 . On the *Choose an action* page, select *Add Issue*.
 . In the *Issue Key* field, enter the Jira identifier of the issue
 that you want to add watchers to or remove watchers from. 
-Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
+Examples of issue keys: `GATE-1234`, `Ent-239`. 
 . Optionally, in the *Add Watchers* field, enter a comma-separated list of 
 Jira user names. These people receive notifications when this issue is updated. 
 . Optionally, in the *Remove Watchers* field, enter a comma-separated list of 

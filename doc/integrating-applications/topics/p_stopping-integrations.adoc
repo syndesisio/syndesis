@@ -16,7 +16,7 @@ The integration that you want to stop is in the *Running* state.
 . In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, identify the entry for the integration that you
 want to stop running. The entry shows that this integration is *Running*.
-. At the far right of this integration's entry, click
+. On the far right of this integration's entry, click
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab]
 and select *Stop*.
 

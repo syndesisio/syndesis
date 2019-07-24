@@ -28,5 +28,6 @@ running.
 .Procedure
 
 . In the left panel, click *Integrations*. 
-. Click the entry for the integration for which you want to view metrics. 
+. At the right of the entry for the integration for which you want to view metrics, 
+click *View*. 
 . In the integration's summary page, click *Metrics*.

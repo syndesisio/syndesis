@@ -7,13 +7,12 @@
 To make a custom feature available for use in an integration, upload
 the extension to {prodname}.
 
-.Prerequisite
-A developer has provided a `.jar` file that contains a {prodname} extension. 
+.Prerequisites
+* A developer has provided a `.jar` file that contains a {prodname} extension. 
 
 .Procedure
 
-. In the left {prodname} panel, click *Customizations*. 
-. At the top, click *Extensions*. 
+. In the left {prodname} panel, click *Customizations* > *Extensions*. 
 . Click *Import Extension*. 
 . Drag and drop, or choose, the `.jar` file that contains the extension 
 that you want to upload.

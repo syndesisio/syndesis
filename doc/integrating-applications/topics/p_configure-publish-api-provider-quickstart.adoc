@@ -27,7 +27,7 @@ same as the simple integrations that you already published.
 
 .Procedure
 
-. To import the Task API quickstart integration:
+. Import the Task API quickstart integration:
 .. Go to 
 https://github.com/syndesisio/syndesis-quickstarts/tree/master/api-provider 
 and download `TaskAPI-export.zip`. 
@@ -39,75 +39,76 @@ that it has successfully imported the file.
 an entry for the *Task API* integration that you just imported. The entry
 indicates that configuration is required. 
 
-. To configure the Task API integration:
+. Configure the Task API integration:
 .. Click the *Task API* entry to display the integration summary. 
 .. In the upper right, click *Edit Integration* to display a list
 of the operations that this API provides. 
-.. To configure the flow for the *Create Task* operation: 
-... Click the *POST* entry for the *Create Task* operation to display a 
-page that prompts you to add to the integration. 
+.. Update one step in the flow for the *Create Task* operation: 
+... In the *POST* entry for the *Create Task* operation, click *Create flow* to display 
+the visualization for that flow. 
 +
 Connections and steps have already been
-added to this flow. In the operation flow visualization panel
-on the left, move your cursor over the icons to see what they represent. Click a 
-step to view its configuration. When you are done
-examining one, click another one to examine it. When you click 
+added to this flow. In the operation flow visualization, 
+to view the configuration for a step, click its *Configure* button. 
+Click *Cancel* or *Next* to go back to the flow visualization.
+When you are done
+examining the configuration for one step, click *Configure* for another one to examine it. When you click 
 a database connection, you can see the SQL statement that it executes. 
-... In the operation flow visualization panel on the left, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. You might have to scroll down to see it. When you hover 
-over it, {prodname} displays *Provided API Return Path*. 
-... If you need to, scroll up on the right, click in the 
-*Return Code* input field and scroll to select 
+... In the operation flow visualization, on the 
+*Provided API Return Path* step, which is the last step in the flow,
+click *Configure*. 
+You might have to scroll down to see it. 
+... Click in the *Return Code* input field and scroll to select 
 *201 Created*. 
 ... Click *Next*.
 ... In the upper right, click *Save*.
-... At the top, to the right of *Operations*, click the down arrow
-and then click *Go to Operations List*. 
-.. To configure the flow for the *Delete Task for ID* operation:
-... Click the *DELETE* entry for the *Delete Task for ID* operation 
-to display a page that prompts you to add to the integration. 
+
+.. Update one step in the flow for the *Delete Task for ID* operation:
+... In the *DELETE* entry for the *Delete Task for ID* operation, 
+click *Create flow* 
+to display the visualization for that flow.  
 +
 This operation flow has a data mapper step and a connection to the
 sample database that is provided with {prodname}. 
-In the operation flow visualization panel, 
-click the database connection to view the SQL statement that it executes. 
-... In the operation flow visualization panel, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. 
+In the operation flow visualization, 
+click *Configure* on the database connection to view the SQL statement that it executes. 
+... Click *Next* or *Cancel*. 
+... In the operation flow visualization, on the 
+*Provided API Return Path* step, which is the last step in the flow, 
+click *Configure*. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Next*.
 ... In the upper right, click *Save*.
 
-.. To configure the flow for the *Get Task by ID* operation:
+.. Update one step in the flow for the *Get Task by ID* operation:
 
-... At the top of the page, to the right of *Operations*, click the down arrow
-and then click *Get Task by ID*. 
+... In the *GET* entry for the *Get Task by ID* operation, 
+click *Create flow* 
+to display the visualization for that flow. 
 +
 This operation flow has two data mapper steps, a connection to the
 sample database that is provided with {prodname}, and a log step. 
 
-... In the operation flow visualization panel, click an icon for a step
-or connection to view its configuration. When you are done examining one,
-click another one. 
+... In the operation flow visualization, click *Configure* on a step
+to view its configuration. When you are done examining the configuration, 
+click *Next* or *Cancel*. Do this for as many steps as you want. 
 
-... In the operation flow visualization panel, click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-at the bottom. 
+... In the operation flow visualization, on the 
+*Provided API Return Path* step, which is the last step in the flow, 
+click *Configure*. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
 ... Click *Next*.
 
-. In the upper right, click *Publish*.
+. In the upper right, click *Publish*, and then *Save and publish*. 
 +
-{prodname} displays the integrations list page and shows 
-publication progress as it assemblies, builds, deploys, and 
+{prodname} displays the summary page for this integration and shows 
+publication progress as it assembles, builds, deploys, and 
 starts the integration. 
 
-. When the entry for the *Task API* integration displays *Running*, 
-click the entry to display the summary page for the integration, which provides 
-the external URL for the Task API service. 
+. When the *Task API* integration summary page displays *Running*, 
+{prodname} displays the external URL for the Task API service. 
 It looks something like this: 
 +
 `\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`

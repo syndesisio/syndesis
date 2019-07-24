@@ -29,16 +29,16 @@ page for adding the client ID and client secret that registration provides. To s
 applications this applies to, in the left panel of {prodname}, click
 *Settings*. 
 
-.Prerequisite
+.Prerequisites
 
-In the {prodname} *Settings* page, there is an entry for the application
+* In the {prodname} *Settings* page, there is an entry for the application
 that uses the OAuth protocol to authorize access. 
 
 .Procedure overview
 
-. In the {prodname} *OAuth Application Management* page, in the entry for the
-application with which you want to register {prodname},
-click *Register* to display the client ID and client secret fields.
+. In the {prodname} *OAuth Application Management* page, expand the entry for the
+application with which you want to register {prodname}. 
+This displays the client ID and client secret fields.
 . Near the top of the *OAuth Application Management* page, where you see
 `*During registration, enter this callback URL:*`, copy that URL to the
 clipboard.

@@ -11,7 +11,8 @@ of the versions of each integration.
 
 . In the left panel, click *Integrations* to display a list of the
 integrations in your environment.
-. Click the entry for the integration whose versions you want to see.
+. At the right of the entry for the integration whose versions you want to see, 
+click *View*. 
 
 .Result 
 In the page that appears, the *History* section lists the versions

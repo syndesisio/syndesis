@@ -24,8 +24,7 @@ link:{LinkFuseOnlineIntegrationGuide}#making-extensions-available_custom[Making 
 
 .Procedure
 
-. In the visualization panel on the left, where you want to add a custom step to
-the flow, click the
+. In the flow visualization, where you want to add a custom step, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click the custom step that you want to add.

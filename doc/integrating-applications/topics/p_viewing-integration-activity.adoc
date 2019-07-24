@@ -23,8 +23,8 @@ information.
 .Procedure
 
 . In the left panel, click *Integrations*.
-. Click the entry for the integration for which you want to view activity
-information.
+. At the right of the entry for the integration for which you want to view activity
+information, click *View*.
 . In the integration's summary page, click the *Activity* tab.
 . Optionally, enter date and/or keyword filters to limit the executions
 listed.

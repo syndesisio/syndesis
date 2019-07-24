@@ -29,11 +29,12 @@ indicates that the data is a *(Collection)*.
 
 .Procedure
 
-. In the visualization panel on the left, where you want to 
-add a split step to the flow, click the
+. In the flow visualization, where you want to 
+add a split step, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Split*. This step does not require any configuration. 
+. Click *Next*. 
 
 .Additional information 
 

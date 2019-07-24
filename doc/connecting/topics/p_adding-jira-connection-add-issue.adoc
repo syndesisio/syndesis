@@ -49,7 +49,7 @@ and a list of allowable values should display.
 Jira user names. These people receive notifications when this issue is updated. 
 .. In the *Project Key* field, enter the short name of a Jira project that a Jira 
 administrator has defined. The connection creates the new issue in this
-project. For example, a project key is something like `GATEWAY`.
+project. For example, a project key is something like `GATE`.
 .. Optionally, in the *Description* field, enter any information about this
 issue that it is helpful to capture. 
 

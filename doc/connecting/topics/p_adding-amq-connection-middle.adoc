@@ -24,19 +24,19 @@ want in the middle of the flow.
 * *Publish messages* to
 publish messages to the queue or topic that you specify. To configure this
 action:
-.. In the *Destination Name* field, enter the name of the queue or 
+.. In the *Destination name* field, enter the name of the queue or 
 topic to send messages to. 
-.. For the *Destination Type*, accept *Queue* or select *Topic*. 
+.. For the *Destination type*, accept *Queue* or select *Topic*. 
 .. Select *Persistent* to guarantee message delivery even if
 a connection fails. 
 +
 * *Request response using messages* to send messages to the JMS destination that 
 you specify and receive a response. To configure this action:
 
-.. In the *Destination Name* field, enter the name of the queue or topic 
+.. In the *Destination name* field, enter the name of the queue or topic 
 to send messages to. 
-.. For the *Destination Type*, accept *Queue* or select *Topic*.
-.. In the *Message Selector* field, if you want to receive only responses
+.. For the *Destination type*, accept *Queue* or select *Topic*.
+.. In the *Message selector* field, if you want to receive only responses
 that satisfy a particular condition, enter a filter expression.
 +
 A message selector is a string that contains an expression. The syntax of 
@@ -50,12 +50,12 @@ The message consumer receives only those messages whose headers and
 properties match the message selector expression. A message selector cannot select messages on 
 the basis of the content of the message body.
 
-.. In the *Named Reply To* field, enter the name of
+.. In the *Named reply to* field, enter the name of
 a queue or topic. The destination sends its response
 to this queue or topic. 
 .. Select *Persistent* to guarantee message delivery even if
 a connection fails.  
-.. In the *Response Time Out* field, specify the number of milliseconds that this 
+.. In the *Response time out* field, specify the number of milliseconds that this 
 connection waits for a 
 response message before throwing a runtime exception. 
 The default is 5000 milliseconds (5 seconds).

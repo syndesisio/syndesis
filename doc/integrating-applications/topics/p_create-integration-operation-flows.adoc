@@ -32,88 +32,84 @@ link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[inf
 
 .Procedure
 
-. In the *Operations* list page, click the entry for an operation
-whose flow you want to edit. 
+. In the *Operations* list page, for the operation
+whose flow you want to edit, click *Create flow*. 
 
-. Add all desired connections to this flow. For each connection that you 
-want to add:
-.. In the flow visualization panel on the left, click the 
-plus sign where you want to add a connection. 
-.. On the *Choose a Step* page, click the connection that you want 
-to add to this flow. 
-.. Click the action that you want this connection to perform.  
+. For each connection that you want to add to this flow:
+.. In the flow visualization, click the plus sign to add a connection
+at that location. 
+.. Click the connection that you want to add. 
+.. Select the action that you want this connection to perform.  
 .. Configure the action by entering data in the labeled fields. 
-.. Click *Done*. 
-.. In the upper right, click *Save*. 
+.. Click *Next*. 
 
 +
-For each connection that you want to add to this flow, repeat
-this subset of instructions. Add all desired connections to the flow
+Add all desired connections to the flow
 before you continue. 
 
 . In this operation flow, to process data between connections:
-.. In the flow visualization panel on the left, click the
+.. In the flow visualization, click the
 plus sign where you want to add a step. 
-.. On the *Choose a Step* page, click the step that you want to add. 
+.. Click the step that you want to add. 
 .. Configure the step by entering data in the labeled fields. 
-.. Click *Done*. 
-.. In the upper right, click *Save*. 
+.. Click *Next*. 
 
 +
 For help, see
 link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
 
 +
-Repeat this subset of instructions to add another step that processes
-data between connections.
+If you want to add another step that processes
+data between connections, repeat this subset of instructions. 
 
-. In the flow visualization panel on the left, check for 
-data type mismatch 
+. Map data to fields in the next connection: 
+.. In the flow visualization, check for data type mismatch 
 image:images/DataTypeMismatchWarning.png[data mismatch] icons, which
 indicate that the connection cannot process the incoming data. You need
-to add a data mapper step here. Go back to the previous 
-subset of instructions. 
-On the *Choose a Step* page, click *Data Mapper*, and define the
-needed mappings. For help, see
+to add a data mapper step here. 
+.. For each data mismatch icon in the flow visualization:
+... Click the plus sign that is just before that step. 
+... Click *Data Mapper*.
+... Define the needed mappings. For help, see
 link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
+... Click *Done* to add the data mapper step to the flow. 
 
-. In the flow visualization panel on the left, at the bottom, hover over the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
-to see that it is the *Provided API Return Path*. 
+. In the flow visualization, on the 
+*Provided API Return Path* step, click *Configure*.  
 +
 Every API provider integration finishes each operation flow by 
 sending a response to the REST API caller that triggered execution of the 
 operation flow. The response contains the return code that is 
-specified here. 
+configured here. 
 +
 In this release, whenever an API call triggers 
 execution of this flow, the return code is the code that
 is specified in this step. 
 Error handling is expected to be supported in a future release. 
 +
-Accept the flow's default return code, *200 OK*, or specify another 
+Accept the flow's default return code, *501 Not implemented*, or specify another 
 return code as follows:
 
-.. Click the 
-image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon.
 .. Click in the *Return Code* input field, which displays a list of 
 possible return codes. 
 .. Scroll to the return code that you want and click it. 
 .. Click *Next*.
 
 . When this flow has all needed 
-connections and steps, do one of the following:
-* *Publish* - To start running the integration, in the upper right, click *Publish*.
+connections and steps and there are no data mismatch icons, or when 
+you no longer want to edit the flow for now, do one of the following:
+* *Publish* -- To start running the integration, in the upper right, click *Publish*.
 This builds the integration, deploys the REST API service to 
 OpenShift, and makes the integration available to be executed. 
 You can publish the integration each time that you
 complete the creation of an operation's flow or each
 time that you edit an operation's flow.
-* *Edit another flow* - To edit the flow for another operation, select it from the 
-*Operations* drop-down list, which is at the top of the page, 
-and looks something like this: 
-+
-image:images/operations-dropdown-list.jpg[operations] 
+* *Save* -- To display the list of operations, in the upper right, 
+click *Save*.  
+* *Operation* -- To switch to editing another operation's flow, in the breadcrumbs at 
+the top of the page, display the *Operation* dropdown and click the
+operation whose flow you want to edit. {prodname} saves the current state
+of the flow you have been editing. 
 
 Repeat this procedure to edit another operation's 
 flow.
