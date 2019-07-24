@@ -65,7 +65,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
         //
         // Will return injected data if not set
         //
-        priority = ConnectorOptions.extractOptionAndMap(options, PRIORITY, Priority::priorityFromId);
+        priority = ConnectorOptions.extractOptionAndMap(options, PRIORITY, Priority::priorityFromId, null);
     }
 
     private Object updateMail(String inputValue, Object dataValue) {

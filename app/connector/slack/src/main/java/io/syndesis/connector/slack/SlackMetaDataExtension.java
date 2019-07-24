@@ -36,7 +36,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
 
 public class SlackMetaDataExtension extends AbstractMetaDataExtension {
@@ -50,7 +50,7 @@ public class SlackMetaDataExtension extends AbstractMetaDataExtension {
     @SuppressWarnings("unchecked")
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String token = (String) parameters.get("token");
+        final String token = ConnectorOptions.extractOption(parameters, "token");
 
         if (token != null) {
             LOG.debug("Retrieving channels for connection to slack with token {}", token);

@@ -17,6 +17,7 @@ package io.syndesis.connector.fhir.customizer;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelExecutionException;
@@ -47,9 +48,9 @@ public class FhirPatchCustomizer implements ComponentProxyCustomizer {
         options.put("apiName", FhirCustomizerHelper.getFhirApiName(FhirPatchApiMethod.class));
         options.put("methodName", "patchById");
 
-        resourceType = (String) options.get("resourceType");
-        id = (String) options.get("id");
-        patch = (String) options.get("patch");
+        resourceType = ConnectorOptions.extractOption(options, "resourceType");
+        id = ConnectorOptions.extractOption(options, "id");
+        patch = ConnectorOptions.extractOption(options, "patch");
 
         component.setBeforeProducer(this::beforeProducer);
     }
@@ -74,7 +75,7 @@ public class FhirPatchCustomizer implements ComponentProxyCustomizer {
                     } else if (entry.getValue() instanceof Map) {
                         @SuppressWarnings("unchecked")
                         Map<String, String> operation = (Map<String, String>) entry.getValue();
-                        if (ObjectHelper.isEmpty(operation.get("op"))) {
+                        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(operation, "op"))) {
                             operation.put("op", "replace"); //'replace' by default
                         }
                         list.add(operation);

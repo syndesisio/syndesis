@@ -29,6 +29,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -79,7 +80,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         enrichedProperties.put("resourceType",resourceTypeResult);
         enrichedProperties.put("containedResourceTypes", resourceTypeResult);
 
-        if (ObjectHelper.isNotEmpty(properties.get("resourceType"))) {
+        if (ObjectHelper.isNotEmpty(ConnectorOptions.extractOption(properties, "resourceType"))) {
             return createSyndesisMetadata(actionId, properties, enrichedProperties);
         } else {
             return SyndesisMetadata.of(enrichedProperties);
@@ -87,8 +88,8 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
     }
 
     private SyndesisMetadata createSyndesisMetadata(String actionId, Map<String, Object> properties, Map<String, List<PropertyPair>> enrichedProperties) {
-        String containedResourceTypes = (String) properties.get("containedResourceTypes");
-        String type = (String) properties.get("resourceType");
+        String containedResourceTypes = ConnectorOptions.extractOption(properties, "containedResourceTypes");
+        String type = ConnectorOptions.extractOption(properties, "resourceType");
 
         if (actionId.contains("read")) {
             return new SyndesisMetadata(
@@ -126,7 +127,8 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                     .description("FHIR " + actionId)
                     .name(actionId).build());
         } else if (actionId.contains("patch")) {
-            Integer operationNumber = Integer.valueOf((String) properties.get("operationNumber"));
+            Integer operationNumber = ConnectorOptions.extractOptionAndMap(
+                properties, "operationNumber", Integer::valueOf, 0);
             return new SyndesisMetadata(
                 enrichedProperties,
                 new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)//

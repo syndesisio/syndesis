@@ -32,6 +32,7 @@ import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -57,20 +58,14 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = (String) options.get("spreadsheetId");
-        range = (String) options.get("range");
+        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        range = ConnectorOptions.extractOption(options, "range");
 
-        majorDimension = Optional.ofNullable(options.get("majorDimension"))
-                                  .map(Object::toString)
-                                  .orElse(RangeCoordinate.DIMENSION_ROWS);
-        valueInputOption = Optional.ofNullable(options.get("valueInputOption"))
-                                   .map(Object::toString)
-                                   .orElse("USER_ENTERED");
+        majorDimension = ConnectorOptions.extractOption(options, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
+        valueInputOption = ConnectorOptions.extractOption(options, "valueInputOption", "USER_ENTERED");
 
-        columnNames = Optional.ofNullable(options.get("columnNames"))
-                .map(Object::toString)
-                .map(names -> names.split(","))
-                .orElse(new String[]{});
+        columnNames = ConnectorOptions.extractOptionAndMap(options, "columnNames",
+            names -> names.split(","), new String[]{});
 
         Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 

@@ -19,11 +19,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
-
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
@@ -33,6 +31,7 @@ import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import com.amazonaws.services.sns.model.ListTopicsResult;
 import com.amazonaws.services.sns.model.Topic;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class AWSSNSMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -42,9 +41,9 @@ public class AWSSNSMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String accessKey = (String)parameters.get("accessKey");
-        final String secretKey = (String)parameters.get("secretKey");
-        final String region = (String)parameters.get("region");
+        final String accessKey = ConnectorOptions.extractOption(parameters, "accessKey");
+        final String secretKey = ConnectorOptions.extractOption(parameters, "secretKey");
+        final String region = ConnectorOptions.extractOption(parameters, "region");
         AmazonSNSClientBuilder clientBuilder;
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);

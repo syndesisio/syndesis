@@ -37,6 +37,7 @@ import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
 import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.ListQueuesResult;
 import com.amazonaws.services.sqs.model.QueueAttributeName;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -46,9 +47,9 @@ public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String accessKey = (String)parameters.get("accessKey");
-        final String secretKey = (String)parameters.get("secretKey");
-        final String region = (String)parameters.get("region");
+        final String accessKey = ConnectorOptions.extractOption(parameters, "accessKey");
+        final String secretKey = ConnectorOptions.extractOption(parameters, "secretKey");
+        final String region = ConnectorOptions.extractOption(parameters, "region");
         AmazonSQSClientBuilder clientBuilder;
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
         AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);

@@ -16,12 +16,7 @@
 package io.syndesis.connector.rest.swagger.auth.oauth;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
-
-import io.syndesis.connector.rest.swagger.Configuration;
-import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
@@ -36,10 +31,12 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.connector.rest.swagger.Configuration;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 /**
  * Refreshes the OAuth token based on the expiry time of the token.
@@ -56,7 +53,8 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenProcessor.class);
 
-    Optional<Long> expiresInOverride = Optional.ofNullable(System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE")).map(Long::valueOf);
+    Long expiresInOverride = ConnectorOptions.extractOptionAndMap(System.getenv(),
+        "AUTHTOKEN_EXPIRES_IN_OVERRIDE", Long::valueOf, null);
 
     // Always refresh on (re)start
     final AtomicReference<Boolean> isFirstTime = new AtomicReference<>(Boolean.TRUE);
@@ -124,8 +122,8 @@ class OAuthRefreshTokenProcessor implements Processor {
             LOG.info("Successful access token refresh");
 
             Long expiresInSeconds = null;
-            if (expiresInOverride.isPresent()) {
-                expiresInSeconds = expiresInOverride.get();
+            if (expiresInOverride != null) {
+                expiresInSeconds = expiresInOverride;
             } else {
                 final JsonNode expiresIn = body.get("expires_in");
                 if (isPresentAndHasValue(expiresIn)) {

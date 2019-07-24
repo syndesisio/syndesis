@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.sql.customizer;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -24,17 +23,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.connector.sql.common.DbMetaDataHelper;
-import io.syndesis.connector.sql.common.JSONBeanUtil;
-import io.syndesis.connector.sql.common.SqlParam;
-import io.syndesis.connector.sql.common.SqlStatementMetaData;
-import io.syndesis.connector.sql.common.SqlStatementParser;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import javax.sql.DataSource;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.sql.SqlConstants;
@@ -42,6 +31,16 @@ import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlParameterValue;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.sql.common.DbMetaDataHelper;
+import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlParam;
+import io.syndesis.connector.sql.common.SqlStatementMetaData;
+import io.syndesis.connector.sql.common.SqlStatementParser;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
@@ -108,19 +107,17 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
     private void initJdbcMap(Map<String, Object> options) {
         if (jdbcTypeMap == null) {
-            batch = Optional.ofNullable(options.get("batch"))
-                    .map(Object::toString)
-                    .map(Boolean::valueOf)
-                    .orElse(false);
+            batch = ConnectorOptions.extractOptionAndMap(options, "batch", Boolean::valueOf, false);
 
-            final String sql =  String.valueOf(options.get("query"));
-            final DataSource dataSource = (DataSource) options.get("dataSource");
+            final String sql =  ConnectorOptions.extractOption(options, "query");
+            final DataSource dataSource = ConnectorOptions.extractOptionAsType(
+                options, "dataSource", DataSource.class);
 
             final Map<String, Integer> tmpMap = new HashMap<>();
             try (Connection connection = dataSource.getConnection()) {
                 DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
-                final String defaultSchema = dbHelper.getDefaultSchema((String) options.getOrDefault("user", ""));
-                final String schemaPattern = (String) options.getOrDefault("schema", defaultSchema);
+                final String defaultSchema = dbHelper.getDefaultSchema(ConnectorOptions.extractOption(options, "user", ""));
+                final String schemaPattern = ConnectorOptions.extractOption(options, "schema", defaultSchema);
 
                 SqlStatementMetaData statementInfo = new SqlStatementParser(connection, schemaPattern, sql).parse();
                 for (SqlParam sqlParam: statementInfo.getInParams()) {

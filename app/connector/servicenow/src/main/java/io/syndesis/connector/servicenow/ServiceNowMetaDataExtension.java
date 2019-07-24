@@ -54,6 +54,7 @@ import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * An implementation of the MetaData extension {@link MetaDataExtension} that
@@ -75,8 +76,8 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final String objectType = (String)parameters.get("objectType");
-        final String metaType = (String)parameters.getOrDefault("metaType", "definition");
+        final String objectType = ConnectorOptions.extractOption(parameters, "objectType");
+        final String metaType = ConnectorOptions.extractOption(parameters, "metaType", "definition");
 
         // Retrieve the table definition as json-scheme
         if (ObjectHelper.equalIgnoreCase(objectType, ServiceNowConstants.RESOURCE_TABLE) && ObjectHelper.equalIgnoreCase(metaType, "definition")) {
@@ -128,7 +129,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     private Optional<MetaData> tableDefinition(MetaContext context) throws Exception {
         final List<String> names = getObjectHierarchy(context);
         final ObjectNode root = context.getConfiguration().getOrCreateMapper().createObjectNode();
-        final String baseUrn = (String)context.getParameters().getOrDefault("baseUrn", "org:apache:camel:component:servicenow");
+        final String baseUrn = ConnectorOptions.extractOption(context.getParameters(), "baseUrn", "org:apache:camel:component:servicenow");
 
         // Schema
         root.put("$schema", "http://json-schema.org/schema#");
@@ -150,8 +151,8 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             context.getStack().pop();
         }
 
-        final String dateFormat = properties.getOrDefault("glide.sys.date_format", "yyyy-MM-dd");
-        final String timeFormat = properties.getOrDefault("glide.sys.time_format", "HH:mm:ss");
+        final String dateFormat = ConnectorOptions.extractOption(properties, "glide.sys.date_format", "yyyy-MM-dd");
+        final String timeFormat = ConnectorOptions.extractOption(properties, "glide.sys.time_format", "HH:mm:ss");
 
         return Optional.of(
             MetaDataBuilder.on(getCamelContext())
@@ -579,9 +580,9 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
                 throw new IllegalStateException(e);
             }
 
-            this.instanceName = (String)parameters.get("instanceName");
-            this.objectType = (String)parameters.getOrDefault("objectType", ServiceNowConstants.RESOURCE_TABLE);
-            this.objectName = (String)parameters.getOrDefault("objectName", configuration.getTable());
+            this.instanceName = ConnectorOptions.extractOption(parameters, "instanceName");
+            this.objectType = ConnectorOptions.extractOption(parameters, "objectType", ServiceNowConstants.RESOURCE_TABLE);
+            this.objectName = ConnectorOptions.extractOption(parameters, "objectName", configuration.getTable());
 
             ObjectHelper.notNull(instanceName, "instanceName");
 

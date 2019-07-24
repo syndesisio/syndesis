@@ -19,9 +19,11 @@ package io.syndesis.connector.sheets.meta;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Map;
-import java.util.Optional;
 import java.util.StringJoiner;
-
+import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
+import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
@@ -31,10 +33,7 @@ import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.GoogleSheetsConnectorHelper;
 import io.syndesis.connector.sheets.model.CellCoordinate;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
-import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
-import org.apache.camel.util.ObjectHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * @author Christoph Deppisch
@@ -94,14 +93,12 @@ public final class GoogleSheetsMetaDataHelper {
                     .append(CellCoordinate.getColumnName(rangeCoordinate.getColumnEndIndex()))
                     .append(headerRow);
 
-        final String rootUrl = properties.getOrDefault("rootUrl", Sheets.DEFAULT_ROOT_URL).toString();
+        final String rootUrl = ConnectorOptions.extractOption(properties, "rootUrl", Sheets.DEFAULT_ROOT_URL);
 
-        final boolean validateCertificates = Optional.ofNullable(properties.get("validateCertificates"))
-                                                .map(Object::toString)
-                                                .map(Boolean::valueOf)
-                                                .orElse(false);
+        final boolean validateCertificates = ConnectorOptions.extractOptionAndMap(
+            properties, "validateCertificates", Boolean::valueOf, false);
 
-        final String serverCertificate = properties.getOrDefault("serverCertificate", "").toString();
+        final String serverCertificate = ConnectorOptions.extractOption(properties, "serverCertificate", "");
 
         try {
             final GoogleSheetsClientFactory clientFactory = GoogleSheetsConnectorHelper.createClientFactory(rootUrl, serverCertificate, validateCertificates);

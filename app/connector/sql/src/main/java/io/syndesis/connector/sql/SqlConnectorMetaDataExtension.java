@@ -24,6 +24,7 @@ import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
@@ -37,19 +38,17 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
-        final String sqlStatement = (String) properties.get("query");
-        final boolean batch = Optional.ofNullable(properties.get("batch"))
-                                        .map(Object::toString)
-                                        .map(Boolean::valueOf)
-                                        .orElse(false);
+        final String sqlStatement = ConnectorOptions.extractOption(properties, "query");
+        final boolean batch = ConnectorOptions.extractOptionAndMap(
+             properties, "batch", Boolean::valueOf, false);
 
         MetaData metaData = EMPTY_METADATA;
 
         if (sqlStatement != null) {
             try (Connection connection = SqlSupport.createConnection(properties)) {
                 DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
-                final String defaultSchema = dbHelper.getDefaultSchema((String) properties.getOrDefault("user", ""));
-                final String schemaPattern = (String) properties.getOrDefault("schema", defaultSchema);
+                final String defaultSchema = dbHelper.getDefaultSchema(ConnectorOptions.extractOption(properties, "user", ""));
+                final String schemaPattern = ConnectorOptions.extractOption(properties, "schema", defaultSchema);
                 final SqlStatementParser parser = new SqlStatementParser(connection, schemaPattern, sqlStatement);
                 final SqlStatementMetaData sqlStatementMetaData = parseStatement(parser);
 

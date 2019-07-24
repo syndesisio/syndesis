@@ -36,6 +36,7 @@ import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
 import io.syndesis.connector.sheets.model.CellCoordinate;
 import io.syndesis.connector.sheets.model.GooglePivotTable;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -57,7 +58,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = (String) options.get("spreadsheetId");
+        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());

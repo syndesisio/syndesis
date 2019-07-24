@@ -16,7 +16,7 @@
 package io.syndesis.connector.slack;
 
 import java.util.Map;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -31,8 +31,8 @@ public class SlackChannelCustomizer implements ComponentProxyCustomizer {
     }
 
     private void sanitizeUserOrChannel(Map<String, Object> options) {
-        String username = (String) options.get("receiver");
-        String channel = (String) options.remove("channel");
+        String username = ConnectorOptions.extractOption(options, "receiver");
+        String channel = ConnectorOptions.popOption(options, "channel");
 
         if (channel != null) {
             if (channel.trim().charAt(0) == '#') {

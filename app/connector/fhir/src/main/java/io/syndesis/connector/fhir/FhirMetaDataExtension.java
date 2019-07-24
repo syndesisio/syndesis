@@ -16,6 +16,7 @@
 package io.syndesis.connector.fhir;
 
 import ca.uhn.fhir.context.FhirVersionEnum;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
@@ -31,11 +32,11 @@ public class FhirMetaDataExtension extends AbstractMetaDataExtension {
         super(context);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        String fhirVersion = (String) parameters.get("fhirVersion");
-        FhirVersionEnum fhirVersionEnum = fhirVersion == null ? FhirVersionEnum.DSTU3 : FhirVersionEnum.valueOf(fhirVersion);
+        FhirVersionEnum fhirVersionEnum = ConnectorOptions.extractOptionAndMap(
+            parameters, "fhirVersion",
+            FhirVersionEnum::valueOf, FhirVersionEnum.DSTU3);
 
         Set<String> resources = getResources(fhirVersionEnum);
 

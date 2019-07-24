@@ -19,13 +19,6 @@ package io.syndesis.connector.sheets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.api.services.sheets.v4.model.Sheet;
-import com.google.api.services.sheets.v4.model.SheetProperties;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
-import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
-import io.syndesis.connector.sheets.model.GoogleSheet;
-import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
@@ -34,6 +27,13 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.SheetProperties;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
+import io.syndesis.connector.sheets.model.GoogleSheet;
+import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * @author Christoph Deppisch
@@ -59,8 +59,8 @@ public class GoogleSheetsCreateSpreadsheetCustomizerTest extends AbstractGoogleS
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("create", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("create", ConnectorOptions.extractOption(options, "methodName"));
 
         Spreadsheet spreadsheet = (Spreadsheet) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content");
         Assert.assertNull(spreadsheet.getSpreadsheetId());

@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.google.common.base.Splitter;
 import io.syndesis.connector.jira.JiraIssue;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -51,8 +52,9 @@ public class UpdateIssueCustomizer implements ComponentProxyCustomizer {
         if (options.get(ISSUE_ASSIGNEE) != null) {
             jiraIssue.setAssignee(options.get(ISSUE_ASSIGNEE).toString());
         }
-        if (options.get("description") != null) {
-            jiraIssue.setDescription(options.get("description").toString());
+        String description = ConnectorOptions.extractOption(options, "description");
+        if (description != null) {
+            jiraIssue.setDescription(description);
         }
         if (options.get(ISSUE_COMPONENTS) != null) {
             String comps = options.get(ISSUE_COMPONENTS).toString();

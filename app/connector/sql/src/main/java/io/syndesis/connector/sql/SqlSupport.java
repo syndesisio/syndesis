@@ -30,6 +30,7 @@ import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public final class SqlSupport {
     private SqlSupport() {
@@ -37,9 +38,9 @@ public final class SqlSupport {
 
     public static Connection createConnection(final Map<String, Object> properties) throws SQLException {
         return DriverManager.getConnection(
-            String.valueOf(properties.get("url")),
-            String.valueOf(properties.get("user")),
-            String.valueOf(properties.get("password"))
+            ConnectorOptions.extractOption(properties, "url"),
+            ConnectorOptions.extractOption(properties, "user"),
+            ConnectorOptions.extractOption(properties, "password")
         );
     }
 
@@ -78,14 +79,16 @@ public final class SqlSupport {
 
         final Map<String, StoredProcedureMetadata> storedProcedures = new HashMap<>();
 
-        try (Connection connection = DriverManager.getConnection(String.valueOf(parameters.get("url")),
-            String.valueOf(parameters.get("user")), String.valueOf(parameters.get("password")));) {
+        try (Connection connection = DriverManager.getConnection(
+                    ConnectorOptions.extractOption(parameters, "url"),
+                    ConnectorOptions.extractOption(parameters, "user"),
+                    ConnectorOptions.extractOption(parameters, "password"));) {
 
             final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
-            final String catalog = (String) parameters.getOrDefault("catalog", null);
-            final String defaultSchema = dbHelper.getDefaultSchema((String) parameters.getOrDefault("user", ""));
-            final String schemaPattern = (String) parameters.getOrDefault("schema", defaultSchema);
-            final String procedurePattern = (String) parameters.getOrDefault("procedure-pattern", null);
+            final String catalog = ConnectorOptions.extractOption(parameters, "catalog");
+            final String defaultSchema = dbHelper.getDefaultSchema(ConnectorOptions.extractOption(parameters, "user", ""));
+            final String schemaPattern = ConnectorOptions.extractOption(parameters, "schema", defaultSchema);
+            final String procedurePattern = ConnectorOptions.extractOption(parameters, "procedure-pattern");
 
             try (ResultSet procedureSet = dbHelper.fetchProcedures(catalog, schemaPattern, procedurePattern)) {
                 while (procedureSet.next()) {

@@ -17,6 +17,7 @@
 package io.syndesis.connector.kudu;
 
 import io.syndesis.connector.kudu.model.KuduTable;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -48,7 +49,8 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
         }
 
         if (!options.isEmpty()) {
-            String[] columns = ((String) options.get("columns")).split(";", -1);
+            String[] columns = ConnectorOptions.extractOptionAndMap(options, "columns",
+                names -> names.split(";", -1), new String[]{});
             KuduTable.ColumnSchema[] columnSchemas = new KuduTable.ColumnSchema[columns.length];
 
             for (int i = 0; i < columns.length; i++) {

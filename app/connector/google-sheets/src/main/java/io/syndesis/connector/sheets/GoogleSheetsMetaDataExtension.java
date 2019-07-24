@@ -21,6 +21,7 @@ import java.util.Optional;
 
 import io.syndesis.connector.sheets.meta.GoogleValueRangeMetaData;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
@@ -35,22 +36,12 @@ public class GoogleSheetsMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
-        final String spreadsheetId = Optional.ofNullable(properties.get("spreadsheetId"))
-                                     .map(Object::toString)
-                                     .orElse("");
+        final String spreadsheetId = ConnectorOptions.extractOption(properties, "spreadsheetId", "");
+        final String range = ConnectorOptions.extractOption(properties, "range", "");
+        final String headerRow = ConnectorOptions.extractOption(properties, "headerRow");
 
-        final String range = Optional.ofNullable(properties.get("range"))
-                                     .map(Object::toString)
-                                     .orElse("");
-
-        final String headerRow = Optional.ofNullable(properties.get("headerRow"))
-                                     .map(Object::toString)
-                                     .orElse(null);
-
-        final String[] columnNames = Optional.ofNullable(properties.get("columnNames"))
-                                             .map(Object::toString)
-                                             .map(names -> names.split(","))
-                                             .orElse(new String[]{});
+        final String[] columnNames = ConnectorOptions.extractOptionAndMap(properties, "columnNames",
+            names -> names.split(","), new String[]{});
 
         Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 
@@ -61,16 +52,12 @@ public class GoogleSheetsMetaDataExtension extends AbstractMetaDataExtension {
             valueRangeMetaData.setHeaderRow(headerRow);
             valueRangeMetaData.setColumnNames(columnNames);
 
-            final String majorDimension = Optional.ofNullable(properties.get("majorDimension"))
-                    .map(Object::toString)
-                    .orElse(RangeCoordinate.DIMENSION_ROWS);
+            final String majorDimension = ConnectorOptions.extractOption(properties, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
 
             valueRangeMetaData.setMajorDimension(majorDimension);
 
-            final boolean split = Optional.ofNullable(properties.get("splitResults"))
-                    .map(Object::toString)
-                    .map(Boolean::valueOf)
-                    .orElse(false);
+            final boolean split = ConnectorOptions.extractOptionAndMap(properties, "splitResults",
+                    Boolean::valueOf, false);
 
             valueRangeMetaData.setSplit(split);
 

@@ -29,6 +29,7 @@ import com.google.api.services.sheets.v4.model.UpdateSheetPropertiesRequest;
 import com.google.api.services.sheets.v4.model.UpdateSpreadsheetPropertiesRequest;
 import io.syndesis.connector.sheets.model.GoogleSheet;
 import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -54,10 +55,10 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = (String) options.get("spreadsheetId");
-        title = (String) options.get("title");
-        timeZone = (String) options.get("timeZone");
-        locale = (String) options.get("locale");
+        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        title = ConnectorOptions.extractOption(options, "title");
+        timeZone = ConnectorOptions.extractOption(options, "timeZone");
+        locale = ConnectorOptions.extractOption(options, "locale");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());

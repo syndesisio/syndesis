@@ -18,7 +18,9 @@ package io.syndesis.connector.jira.customizer;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.camel.RuntimeCamelException;
 import com.google.common.base.Splitter;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -38,14 +40,17 @@ public class WatchersCustomizer implements ComponentProxyCustomizer {
         if (options.get(ISSUE_KEY) != null) {
             issueKey = options.get(ISSUE_KEY).toString();
         }
-        if (options.get("addWatchers") != null) {
-            String watchers = options.get("addWatchers").toString();
-            addWatchers = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watchers);
+
+        try {
+            addWatchers = ConnectorOptions.extractOptionAndMap(options, "addWatchers",
+                (String watchers) -> Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watchers));
+
+            removeWatchers = ConnectorOptions.extractOptionAndMap(options, "removeWatchers",
+                (String watchers) -> Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watchers));
+        } catch (Exception ex) {
+            throw new RuntimeCamelException(ex);
         }
-        if (options.get("removeWatchers") != null) {
-            String watchers = options.get("removeWatchers").toString();
-            removeWatchers = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watchers);
-        }
+
         component.setBeforeProducer(this::beforeProducer);
     }
 

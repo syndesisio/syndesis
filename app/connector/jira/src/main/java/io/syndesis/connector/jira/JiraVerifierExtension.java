@@ -22,6 +22,7 @@ import java.util.Map;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.RestClientException;
 import com.atlassian.jira.rest.client.api.domain.ServerInfo;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -57,7 +58,7 @@ public class JiraVerifierExtension extends DefaultComponentVerifierExtension {
 
         JiraRestClient client = null;
         try {
-            String privateKey = parameters.get(PRIVATE_KEY).toString();
+            String privateKey = ConnectorOptions.extractOption(parameters, PRIVATE_KEY);
             boolean isRawEnvloped = privateKey != null && privateKey.length() > 4 && "RAW(".equals(privateKey.substring(0, 4));
             if (isRawEnvloped) {
                 // remove the RAW envelope

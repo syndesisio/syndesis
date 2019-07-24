@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.MetaDataExtension;
+import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -39,12 +41,10 @@ import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.MetaDataExtension;
-import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 
 @SuppressWarnings("PMD.GodClass")
 public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
@@ -163,7 +163,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
             @SuppressWarnings("unchecked")
             final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
                 .getPayload();
-            final String procedureName = (String) properties.get(PROCEDURE_NAME);
+            final String procedureName = ConnectorOptions.extractOption(properties, PROCEDURE_NAME);
             final StoredProcedureMetadata storedProcedure = procedureMap.get(procedureName);
             ppList.add(new PropertyPair(storedProcedure.getTemplate(), PROCEDURE_TEMPLATE));
             enrichedProperties.put(PROCEDURE_TEMPLATE, ppList);
@@ -219,7 +219,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
         // return list of stored procedures in the database
         @SuppressWarnings("unchecked")
         final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
-        if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(String.valueOf(properties.get(PATTERN)))) {
+        if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(ConnectorOptions.extractOption(properties, PATTERN))) {
             enrichedProperties.put(PROCEDURE_NAME, obtainFromProcedureList(procedureMap));
         } else {
             enrichedProperties.put(PROCEDURE_NAME, obtainToProcedureList(procedureMap));
@@ -279,7 +279,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     }
 
     static boolean isPresentAndNonNull(final Map<String, Object> properties, final String property) {
-        return isPresent(properties, property) && properties.get(property) != null;
+        return ConnectorOptions.extractOption(properties, property) != null;
     }
 
     @SuppressWarnings("PMD.CyclomaticComplexity")

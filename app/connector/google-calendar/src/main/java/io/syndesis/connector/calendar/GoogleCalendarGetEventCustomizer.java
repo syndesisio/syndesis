@@ -15,22 +15,21 @@
  */
 package io.syndesis.connector.calendar;
 
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
-import com.google.api.services.calendar.model.Event;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
-
-import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
+import com.google.api.services.calendar.model.Event;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomizer {
 
@@ -45,8 +44,8 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        calendarId = (String) options.get("calendarId");
-        eventId = (String) options.get("eventId");
+        calendarId = ConnectorOptions.extractOption(options, "calendarId");
+        eventId = ConnectorOptions.extractOption(options, "eventId");
 
         options.put("apiName",
                 GoogleCalendarApiCollection.getCollection().getApiName(CalendarEventsApiMethod.class).getName());

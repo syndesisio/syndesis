@@ -16,7 +16,6 @@
 package io.syndesis.connector.gmail;
 
 import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -25,8 +24,9 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.component.google.mail.BatchGoogleMailClientFactory;
 import org.apache.camel.component.google.mail.GoogleMailClientFactory;
 import org.apache.camel.component.google.mail.GoogleMailConfiguration;
-
+import org.apache.camel.util.ObjectHelper;
 import com.google.api.services.gmail.Gmail;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class GmailVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -58,12 +58,16 @@ public class GmailVerifierExtension extends DefaultComponentVerifierExtension {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY);
 
         try {
+            String profile = ConnectorOptions.extractOption(parameters, "userId");
+            if (ObjectHelper.isEmpty(profile)) {
+                throw new IllegalStateException("The profile parameter has not been not defined");
+            }
             GoogleMailConfiguration configuration = setProperties(new GoogleMailConfiguration(), parameters);
             GoogleMailClientFactory clientFactory = new BatchGoogleMailClientFactory();
             Gmail client = clientFactory.makeClient(configuration.getClientId(), configuration.getClientSecret(),
-                    configuration.getScopes(), configuration.getApplicationName(),
-                    configuration.getRefreshToken(), configuration.getAccessToken());
-            client.users().getProfile((String) parameters.get("userId")).execute();
+                                                    configuration.getScopes(), configuration.getApplicationName(),
+                                                    configuration.getRefreshToken(), configuration.getAccessToken());
+            client.users().getProfile(profile).execute();
         } catch (Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())
                 .detail("gmail_exception_message", e.getMessage()).detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())

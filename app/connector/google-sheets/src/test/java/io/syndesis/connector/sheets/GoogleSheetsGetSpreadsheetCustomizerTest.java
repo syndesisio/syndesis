@@ -19,12 +19,6 @@ package io.syndesis.connector.sheets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.api.services.sheets.v4.model.Sheet;
-import com.google.api.services.sheets.v4.model.SheetProperties;
-import com.google.api.services.sheets.v4.model.Spreadsheet;
-import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
-import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
@@ -32,6 +26,12 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import com.google.api.services.sheets.v4.model.Sheet;
+import com.google.api.services.sheets.v4.model.SheetProperties;
+import com.google.api.services.sheets.v4.model.Spreadsheet;
+import com.google.api.services.sheets.v4.model.SpreadsheetProperties;
+import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class GoogleSheetsGetSpreadsheetCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -71,8 +71,8 @@ public class GoogleSheetsGetSpreadsheetCustomizerTest extends AbstractGoogleShee
         inbound.getIn().setBody(spreadsheet);
         getComponent().getBeforeConsumer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("get", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         GoogleSpreadsheet model = (GoogleSpreadsheet) inbound.getIn().getBody();
         Assert.assertEquals(getSpreadsheetId(), model.getSpreadsheetId());

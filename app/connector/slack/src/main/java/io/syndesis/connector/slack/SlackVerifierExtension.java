@@ -15,13 +15,12 @@
  */
 package io.syndesis.connector.slack;
 
+import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
@@ -36,8 +35,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-
-import static io.syndesis.connector.slack.utils.SlackUtils.readResponse;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -52,7 +50,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     protected Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS);
 
-        if (ObjectHelper.isEmpty(parameters.get("token")) || ObjectHelper.isEmpty(parameters.get("webhookUrl"))) {
+        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "token")) || ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "webhookUrl"))) {
             builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
                     "You must specify a webhookUrl and a token").parameterKey("webhookUrl").parameterKey("token").build());
         }
@@ -70,8 +68,7 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
     @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        String webhookUrl = (String)parameters.get("webhookUrl");
-
+        String webhookUrl = ConnectorOptions.extractOption(parameters, "webhookUrl");
         if (ObjectHelper.isNotEmpty(webhookUrl)) {
 
             try {
@@ -101,9 +98,9 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
                 builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid webhookUrl").parameterKey("webhookUrl").build());
             }
         }
-        if (ObjectHelper.isNotEmpty((String)parameters.get("token"))) {
-            String token = (String)parameters.get("token");
 
+        String token = ConnectorOptions.extractOption(parameters, "token");
+        if (ObjectHelper.isNotEmpty(token)) {
             try {
                 HttpClient client = HttpClientBuilder.create().useSystemProperties().build();
                 HttpPost httpPost = new HttpPost("https://slack.com/api/channels.list");

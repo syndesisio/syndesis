@@ -20,7 +20,15 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
+import org.apache.camel.Exchange;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
+import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
+import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
+import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
+import org.apache.camel.impl.DefaultExchange;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.Test;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetResponse;
 import com.google.api.services.sheets.v4.model.Sheet;
@@ -31,15 +39,7 @@ import com.google.api.services.sheets.v4.model.UpdateSheetPropertiesRequest;
 import com.google.api.services.sheets.v4.model.UpdateSpreadsheetPropertiesRequest;
 import io.syndesis.connector.sheets.model.GoogleSheet;
 import io.syndesis.connector.sheets.model.GoogleSpreadsheet;
-import org.apache.camel.Exchange;
-import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
-import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
-import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
-import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
-import org.apache.camel.impl.DefaultExchange;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * @author Christoph Deppisch
@@ -66,8 +66,8 @@ public class GoogleSheetsUpdateSpreadsheetCustomizerTest extends AbstractGoogleS
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("batchUpdate", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("batchUpdate", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
