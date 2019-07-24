@@ -22,7 +22,7 @@ available connectors.
 . Click the *Todo App API* connector that you just created.
 +
 {prodname} populates the *Host* and *Base Path* fields from the
-connector information.
+OpenAPI document that you provided when you created the connector.
 . In the *Username* field, enter any value. For this sample integration,
 user name and password values are required but they are not used.
 . In the *Password* field, enter any value. 
