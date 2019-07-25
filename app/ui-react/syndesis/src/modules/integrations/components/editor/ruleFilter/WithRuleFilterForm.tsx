@@ -103,13 +103,15 @@ export const WithRuleFilterForm: React.FunctionComponent<
       },
       arrayDefinitionOptions: {
         arrayControlAttributes: {
-          className: 'col-md-3 form-group',
+          className: 'form-group with-rule-filter-form__action',
         },
+        /*
         controlLabelAttributes: {
           style: { display: 'none' },
         },
+        */
         formGroupAttributes: {
-          className: 'col-md-3',
+          className: 'with-rule-filter-form__group',
         },
         i18nAddElementText: t('integrations:editor:ruleForm:addRule'),
         minElements: 1,
@@ -139,23 +141,25 @@ export const WithRuleFilterForm: React.FunctionComponent<
       values
     );
   return (
-    <AutoForm<IRuleFilterConfig>
-      definition={toFormDefinition(definition)}
-      i18nRequiredProperty={t('shared:requiredFieldMessage')}
-      initialValue={initialValue}
-      onSave={onSave}
-      validate={validator}
-      validateInitial={validator}
-      key={step.id}
-    >
-      {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-        children({
-          form: <>{fields}</>,
-          isSubmitting,
-          isValid,
-          submitForm,
-        })
-      }
-    </AutoForm>
+    <div className="with-rule-filter-form">
+      <AutoForm<IRuleFilterConfig>
+        definition={toFormDefinition(definition)}
+        i18nRequiredProperty={t('shared:requiredFieldMessage')}
+        initialValue={initialValue}
+        onSave={onSave}
+        validate={validator}
+        validateInitial={validator}
+        key={step.id}
+      >
+        {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
+          children({
+            form: <>{fields}</>,
+            isSubmitting,
+            isValid,
+            submitForm,
+          })
+        }
+      </AutoForm>
+    </div>
   );
 };
