@@ -182,26 +182,3 @@ body {
   white-space: normal;
   word-break: break-word;
 }
-
-/* basic filter styles */
-.with-rule-filter-form fieldset {
-  position: relative;
-  margin-top: 40px;
-  margin-bottom: 40px;
-}
-
-.with-rule-filter-form__group {
-  width: 80%;
-}
-
-.with-rule-filter-form__action {
-  position: absolute;
-  top: 50%;
-  left: calc(85% + 6px);
-  width: 20%;
-  border-left: 1px solid var(--pf-global--BorderColor--100);
-  transform: translateY(-50%);
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 5%;
-}

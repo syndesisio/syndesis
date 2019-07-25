@@ -3,6 +3,7 @@ import { FilterOptions, Op, StepKind } from '@syndesis/models';
 import { toFormDefinition, validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import './WithRuleFilterForm.css';
 
 export interface IWithRuleFilterFormChildrenProps {
   form: JSX.Element;
