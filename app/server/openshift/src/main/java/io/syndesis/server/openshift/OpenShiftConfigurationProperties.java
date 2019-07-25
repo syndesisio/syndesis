@@ -39,6 +39,7 @@ public class OpenShiftConfigurationProperties {
     private String deploymentMemoryRequestMi = "280";
     private String deploymentMemoryLimitMi = "512";
     private String mavenOptions = "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx300m";
+    private String additionalMavenArguments = "--strict-checksums";
 
     private String apiBaseUrl;
 
@@ -142,6 +143,14 @@ public class OpenShiftConfigurationProperties {
 
     public void setMavenOptions(String mavenOptions) {
         this.mavenOptions = mavenOptions;
+    }
+
+    public String getAdditionalMavenArguments() {
+        return additionalMavenArguments;
+    }
+
+    public void setAdditionalMavenArguments(String additionalMavenArguments) {
+        this.additionalMavenArguments = additionalMavenArguments;
     }
 
     public String getIntegrationDataPath() {
