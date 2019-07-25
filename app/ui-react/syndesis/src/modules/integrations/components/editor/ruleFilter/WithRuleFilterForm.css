@@ -1,21 +1,37 @@
-.with-rule-filter-form fieldset {
-  position: relative;
-  margin-top: 40px;
+.with-rule-filter-form,
+.with-rule-filter-form .pf-c-page__main-section {
+  flex-grow: 1;
+}
+
+.with-rule-filter-form {
+  display: flex;
+}
+
+.with-rule-filter-form .form-array-fields {
   margin-bottom: 40px;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  grid-template-rows: repeat(3, auto);
+}
+
+.with-rule-filter-form fieldset:first-of-type .form-array-fields {
+  margin-top: 40px;
 }
 
 .with-rule-filter-form__group {
-  width: 80%;
+  grid-column: 1 / 2;
 }
 
 .with-rule-filter-form__action {
-  position: absolute;
-  top: 50%;
-  left: calc(85% + 6px);
-  width: 20%;
+  align-self: center;
+  grid-column: 2 / 3;
+  grid-row: 1 / -1;
   border-left: 1px solid var(--pf-global--BorderColor--100);
-  transform: translateY(-50%);
-  padding-top: 20px;
-  padding-bottom: 20px;
-  padding-left: 5%;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 25px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 0;
+  margin-left: 31px;
 }

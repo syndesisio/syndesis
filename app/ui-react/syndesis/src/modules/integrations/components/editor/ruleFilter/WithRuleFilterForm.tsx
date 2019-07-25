@@ -106,16 +106,11 @@ export const WithRuleFilterForm: React.FunctionComponent<
         arrayControlAttributes: {
           className: 'form-group with-rule-filter-form__action',
         },
-        /*
-        controlLabelAttributes: {
-          style: { display: 'none' },
-        },
-        */
         formGroupAttributes: {
           className: 'with-rule-filter-form__group',
         },
         i18nAddElementText: t('integrations:editor:ruleForm:addRule'),
-        minElements: 1,
+        minElements: 1
       },
       required: true,
       type: 'array',

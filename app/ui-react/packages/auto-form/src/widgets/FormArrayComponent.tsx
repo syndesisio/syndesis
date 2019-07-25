@@ -50,70 +50,70 @@ export class FormArrayComponent extends React.Component<
                 const controlGroupName = `${fieldName}-array-controls`;
                 return (
                   <fieldset>
-                    {options.rowTitle && (
-                      <div key={titleKey} {...arrayRowTitleAttributes}>
-                        <h5 className="form-array-control__row-title">
-                          <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
-                        </h5>
-                      </div>
-                    )}
-                    {propertiesArray.map(property =>
-                      getField({
-                        allFieldsRequired:
-                          this.props.allFieldsRequired || false,
-                        key: `${fieldName}.${property.name}`,
-                        name: `${fieldName}.${property.name}`,
-                        property: {
-                          controlLabelAttributes,
-                          fieldAttributes,
-                          formGroupAttributes,
-                          ...property,
-                        },
-                        value: rowValue[property.name],
-                      })
-                    )}
-                    <div
-                      key={controlGroupName}
-                      {...formGroupAttributes}
-                      {...arrayControlAttributes}
-                    >
-                      <label
-                        htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
-                        className="control-label"
-                        {...controlLabelAttributes}
-                      >
-                        &nbsp;
-                      </label>
-                      <div id={toValidHtmlId(`${controlGroupName}-control`)}>
-                        <div className="form-array-control__array-controls">
-                          {options.showSortControls && (
-                            <>
-                              <TextButton
-                                onClick={() => {
-                                  this.props.move(index, index - 1);
-                                }}
-                                enable={index > 0}
-                              >
-                                <i className="fa fa-arrow-circle-o-up" />
-                              </TextButton>
-                              <TextButton
-                                onClick={() => {
-                                  this.props.move(index, index + 1);
-                                }}
-                                enable={index < values.length - 1}
-                              >
-                                <i className="fa fa-arrow-circle-o-down" />
-                              </TextButton>
-                            </>
-                          )}
-                          <TextButton
-                            onClick={() => this.props.remove(index)}
-                            enable={values.length > minElements}
-                          >
-                            <i className="fa fa-trash-o" />
-                          </TextButton>
+                    <div className="form-array-fields">
+                      {options.rowTitle && (
+                        <div key={titleKey} {...arrayRowTitleAttributes}>
+                          <h5 className="form-array-control__row-title">
+                            <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
+                          </h5>
                         </div>
-                        <div className="help-block">&nbsp;</div>
+                      )}
+                      {propertiesArray.map(property =>
+                        getField({
+                          allFieldsRequired:
+                            this.props.allFieldsRequired || false,
+                          key: `${fieldName}.${property.name}`,
+                          name: `${fieldName}.${property.name}`,
+                          property: {
+                            controlLabelAttributes,
+                            fieldAttributes,
+                            formGroupAttributes,
+                            ...property,
+                          },
+                          value: rowValue[property.name],
+                        })
+                      )}
+                      <div
+                        key={controlGroupName}
+                        {...formGroupAttributes}
+                        {...arrayControlAttributes}
+                      >
+                        <label
+                          htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
+                          className="control-label"
+                          {...controlLabelAttributes}
+                        >
+                        </label>
+                        <div id={toValidHtmlId(`${controlGroupName}-control`)}>
+                          <div className="form-array-control__array-controls">
+                            {options.showSortControls && (
+                              <>
+                                <TextButton
+                                  onClick={() => {
+                                    this.props.move(index, index - 1);
+                                  }}
+                                  enable={index > 0}
+                                >
+                                  <i className="fa fa-arrow-circle-o-up" />
+                                </TextButton>
+                                <TextButton
+                                  onClick={() => {
+                                    this.props.move(index, index + 1);
+                                  }}
+                                  enable={index < values.length - 1}
+                                >
+                                  <i className="fa fa-arrow-circle-o-down" />
+                                </TextButton>
+                              </>
+                            )}
+                            <TextButton
+                              onClick={() => this.props.remove(index)}
+                              enable={values.length > minElements}
+                            >
+                              <i className="fa fa-trash-o" />
+                            </TextButton>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </fieldset>
