@@ -339,6 +339,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                     // https://github.com/syndesisio/syndesis-rest/issues/682
                     .withEnv(
                         new EnvVar("MAVEN_OPTS", config.getMavenOptions(), null),
+                        new EnvVar("MAVEN_ARGS_APPEND", config.getAdditionalMavenArguments(), null),
                         new EnvVar("BUILD_LOGLEVEL", config.isDebug() ? "5" : "1", null)
                     )
                   .endSourceStrategy()
