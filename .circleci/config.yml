@@ -400,22 +400,23 @@ jobs:
       - <<: *push_images
 
   integration-test:
-    working_directory: /workspace
     environment:
       <<: *common_env
     machine:
-      image: ubuntu-1604:201903-01
+      enabled: true
     steps:
+      - checkout
       - <<: *load_m2
       - run:
           name: Run integration tests
           command: |
-            ./tools/bin/syndesis integration-test | tee test_log.txt
-      - <<: *save_junit
+            mkdir -p ~/junit/
+            ./tools/bin/syndesis integration-test | tee ~/test_log.txt
+            find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} ~/junit
       - store_test_results:
-          path: /workspace/junit
+          path: ~/junit
       - store_artifacts:
-          path: test_log.txt
+          path: ~/test_log.txt
 
   system-test:
     <<: *job_defaults
@@ -494,22 +495,10 @@ workflows:
   version: 2
   syndesis:
     jobs:
-      - system-test:
-          filters:
-            branches:
-              only: system-test
-      - doc:
-          filters:
-            branches:
-              only: master
-      - license-check
-      - ui
-      - ui-legacy
       - common
-      - operator
       - extension:
           requires:
-           - common
+            - common
       - integration:
           requires:
             - extension
@@ -521,25 +510,41 @@ workflows:
             - connector
       - server:
           requires:
-            - integration
             - connector
-            - common
       - s2i:
           requires:
             - server
-      - upgrade:
-          filters:
-            branches:
-              only: master
+      - integration-test
           requires:
-            - server
+            - s2i
   nightly:
     triggers:
       - schedule:
-          cron: "0 7-23 * * 1-5"
+          cron: "0 0 * * 1-5"
           filters:
             branches:
               only:
                 - master
     jobs:
+      - common
+      - extension:
+          requires:
+            - common
+      - integration:
+          requires:
+            - extension
+      - connector:
+          requires:
+            - integration
+      - meta:
+          requires:
+            - connector
+      - server:
+          requires:
+            - connector
+      - s2i:
+          requires:
+            - server
       - integration-test
+          requires:
+            - s2i
