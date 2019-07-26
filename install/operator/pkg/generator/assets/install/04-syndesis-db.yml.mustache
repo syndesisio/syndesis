@@ -152,7 +152,6 @@
   spec:
     ports:
     - name: postgresql
-      nodePort: 0
       port: 5432
       protocol: TCP
       targetPort: 5432
@@ -211,8 +210,7 @@
       spec:
         serviceAccountName: syndesis-default
         containers:
-        - capabilities: {}
-          env:
+        - env:
           - name: POSTGRESQL_USER
             value: {{Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_PASSWORD
@@ -260,8 +258,7 @@
             name: syndesis-sampledb-config
           - mountPath: /opt/app-root/src/postgresql-cfg/
             name: syndesis-db-conf
-        - capabilities: {}
-          env:
+        - env:
           - name: DATA_SOURCE_NAME
             value: postgresql://{{Env.POSTGRESQL_USER}}:{{Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH

@@ -1,4 +1,4 @@
-{{#IncludeDint}}
+{{if eq (or .Syndesis.Spec.Addons.komodo.enabled "false") "true"}}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -27,7 +27,7 @@
       syndesis.io/component: komodo-server
     name: komodo-server
   spec:
-    replicas: {{Env.DATAVIRT_ENABLED}}
+    replicas: 1
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -54,7 +54,7 @@
           - name: JAVA_APP_DIR
             value: /deployments
           - name: JAVA_OPTIONS
-            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp -Djava.net.preferIPv4Addresses=true -Dlog4j.logger.org.apache.http=DEBUG -Dkomodo.user={{Env.POSTGRESQL_USER}} -Dkomodo.password={{Env.POSTGRESQL_PASSWORD}} -Dkomodo.connectionUrl=jdbc:postgresql://syndesis-db:5432/{{Env.POSTGRESQL_DATABASE}} -Dkomodo.binaryStoreUrl=jdbc:postgresql://syndesis-db:5432/{{Env.POSTGRESQL_DATABASE}} -Dkomodo.connectionDriver=org.postgresql.Driver"
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp -Djava.net.preferIPv4Addresses=true -Dlog4j.logger.org.apache.http=DEBUG -Dkomodo.user={{.Env.POSTGRESQL_USER}} -Dkomodo.password={{.Env.POSTGRESQL_PASSWORD}} -Dkomodo.connectionUrl=jdbc:postgresql://syndesis-db:5432/{{.Env.POSTGRESQL_DATABASE}} -Dkomodo.binaryStoreUrl=jdbc:postgresql://syndesis-db:5432/{{.Env.POSTGRESQL_DATABASE}} -Dkomodo.connectionDriver=org.postgresql.Driver"
           - name: NAMESPACE
             valueFrom:
               fieldRef:
@@ -62,23 +62,23 @@
           - name: GC_MAX_METASPACE_SIZE
             value: "512"
           - name: BUILD_IMAGE_STREAM
-            value: {{ Images.Syndesis.S2i }}:latest
+            value: {{ .Images.Syndesis.S2i }}:latest
           - name: POSTGRESQL_PASSWORD
-            value: {{Env.POSTGRESQL_PASSWORD}}
+            value: {{.Env.POSTGRESQL_PASSWORD}}
           - name: POSTGRESQL_USER
-            value: {{Env.POSTGRESQL_USER}}
+            value: {{.Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_DATABASE
-            value: {{Env.POSTGRESQL_DATABASE}}
+            value: {{.Env.POSTGRESQL_DATABASE}}
           - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: '{{Env.CONTROLLERS_EXPOSE_VIA3SCALE}}'
-{{#Debug}}
+            value: '{{.Env.CONTROLLERS_EXPOSE_VIA3SCALE}}'
+{{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
-{{/Debug}}{{^WithDockerImages}}
+{{end}}{{if (not .WithDockerImages)}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
-{{/WithDockerImages}}
+{{else}}
+          image: {{.Env.SYNDESIS_REGISTRY}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}
+{{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -116,7 +116,7 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: {{Env.KOMODO_MEMORY_LIMIT}}
+              memory: {{.Env.KOMODO_MEMORY_LIMIT}}
               cpu: 750m
             requests:
               memory: 256Mi
@@ -125,16 +125,16 @@
           configMap:
             name: syndesis-server-config
     triggers:
-{{^WithDockerImages}}
+{{if (not .WithDockerImages)}}
     - imageChangeParams:
         automatic: true
         containerNames:
         - komodo-server
         from:
           kind: ImageStreamTag
-          name: {{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
-          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
+          name: {{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}
+          namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{/WithDockerImages}}
+{{end}}
     - type: ConfigChange
-{{/IncludeDint}}
+{{end}}

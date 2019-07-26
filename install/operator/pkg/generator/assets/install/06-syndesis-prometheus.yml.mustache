@@ -7,7 +7,11 @@
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-prometheus
-
+{{#ImagePullSecrets.0}}
+  imagePullSecrets:
+{{/ImagePullSecrets.0}}{{#ImagePullSecrets}}
+  - name: "{{.}}"
+{{/ImagePullSecrets}}
 - apiVersion: v1
   kind: ConfigMap
   metadata:

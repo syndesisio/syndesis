@@ -49,7 +49,6 @@ const (
 	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
 	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
-	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
@@ -158,7 +157,7 @@ func envRouteHostname(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func routeHostnameFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvRouteHostname); ok {
+	if v, ok := getString(config, EnvRouteHostname); ok && syndesis.Spec.RouteHostname == "" {
 		syndesis.Spec.RouteHostname = v
 	}
 }
@@ -173,7 +172,7 @@ func envOpenShiftConsoleUrl(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func openShiftConsoleUrlFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvOpenshiftConsoleUrl); ok {
+	if v, ok := getString(config, EnvOpenshiftConsoleUrl); ok && syndesis.Spec.OpenShiftConsoleUrl == "" {
 		syndesis.Spec.OpenShiftConsoleUrl = v
 	}
 }
@@ -186,7 +185,7 @@ func envOpenshiftProject(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 }
 
 func sarNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSarNamespace); ok {
+	if v, ok := getString(config, EnvSarNamespace); ok && syndesis.Spec.SarNamespace == "" {
 		syndesis.Spec.SarNamespace = v
 	}
 }
@@ -213,7 +212,7 @@ func envSyndesisRegistry(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func syndesisRegistryFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisRegistry); ok {
+	if v, ok := getString(config, EnvSyndesisRegistry); ok && syndesis.Spec.Registry == "" {
 		syndesis.Spec.Registry = v
 	}
 }
@@ -228,7 +227,7 @@ func envDemoDataEnabled(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func demoDataEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvDemoDataEnabled); ok {
+	if v, ok := getBool(config, EnvDemoDataEnabled); ok && syndesis.Spec.DemoData == nil {
 		syndesis.Spec.DemoData = &v
 	}
 }
@@ -254,13 +253,13 @@ func envIntegrationStateCheckInterval(syndesis *v1alpha1.Syndesis) *SyndesisEnvV
 }
 
 func maxIntegrationsPerUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getInt(config, EnvMaxIntegrationsPerUser); ok {
+	if v, ok := getInt(config, EnvMaxIntegrationsPerUser); ok && syndesis.Spec.Integration.Limit == nil {
 		syndesis.Spec.Integration.Limit = &v
 	}
 }
 
 func integrationStateCheckInterval(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getInt(config, EnvIntegrationStateCheckInterval); ok {
+	if v, ok := getInt(config, EnvIntegrationStateCheckInterval); ok && syndesis.Spec.Integration.StateCheckInterval == nil {
 		syndesis.Spec.Integration.StateCheckInterval = &v
 	}
 }
@@ -286,13 +285,13 @@ func envTestSupport(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 }
 
 func controllersIntegrationsEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvControllersIntegrationEnabled); ok {
+	if v, ok := getBool(config, EnvControllersIntegrationEnabled); ok && syndesis.Spec.DeployIntegrations != nil {
 		syndesis.Spec.DeployIntegrations = &v
 	}
 }
 
 func testSupportFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvTestSupport); ok {
+	if v, ok := getBool(config, EnvTestSupport); ok && syndesis.Spec.TestSupport == nil {
 		syndesis.Spec.TestSupport = &v
 	}
 }
@@ -307,7 +306,7 @@ func envImageStreamNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig 
 	return nil
 }
 func imageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvImageStreamNamespace); ok {
+	if v, ok := getString(config, EnvImageStreamNamespace); ok && syndesis.Spec.ImageStreamNamespace == "" {
 		syndesis.Spec.ImageStreamNamespace = v
 	}
 }
@@ -322,13 +321,9 @@ func envPostgresqlMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig
 	}
 	return nil
 }
+
 func postgresqlMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getQuantity(config, EnvPostgresqlMemoryLimit); ok {
-		if syndesis.Spec.Components.Db.Resources.Limits == nil {
-			syndesis.Spec.Components.Db.Resources.Limits = make(v1.ResourceList, 0)
-		}
-		syndesis.Spec.Components.Db.Resources.Limits[v1.ResourceMemory] = v
-	}
+	resourceMemoryListFromEnv(&syndesis.Spec.Components.Db.Resources.Resources, config, EnvPostgresqlMemoryLimit)
 }
 
 func envPostgresqlImageStreamNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
@@ -341,7 +336,7 @@ func envPostgresqlImageStreamNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnv
 	return nil
 }
 func postgresqlImageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlImageStreamNamespace); ok {
+	if v, ok := getString(config, EnvPostgresqlImageStreamNamespace); ok && syndesis.Spec.Components.Db.ImageStreamNamespace == "" {
 		syndesis.Spec.Components.Db.ImageStreamNamespace = v
 	}
 }
@@ -356,7 +351,7 @@ func envPostgresqlUser(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func postgresqlUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlUser); ok {
+	if v, ok := getString(config, EnvPostgresqlUser); ok && syndesis.Spec.Components.Db.User == "" {
 		syndesis.Spec.Components.Db.User = v
 	}
 }
@@ -371,7 +366,7 @@ func envPostgresqlDatabase(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func postgresqlDatabaseFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlDatabase); ok {
+	if v, ok := getString(config, EnvPostgresqlDatabase); ok && syndesis.Spec.Components.Db.Database == "" {
 		syndesis.Spec.Components.Db.Database = v
 	}
 }
@@ -386,7 +381,7 @@ func envPostgresqlVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarCon
 	return nil
 }
 func postgresqlVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlVolumeCapacity); ok {
+	if v, ok := getString(config, EnvPostgresqlVolumeCapacity); ok && syndesis.Spec.Components.Db.Resources.VolumeCapacity == "" {
 		syndesis.Spec.Components.Db.Resources.VolumeCapacity = v
 	}
 }
@@ -401,13 +396,9 @@ func envPrometheusMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig
 	}
 	return nil
 }
+
 func prometheusMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getQuantity(config, EnvPrometheusMemoryLimit); ok {
-		if syndesis.Spec.Components.Prometheus.Resources.Limits == nil {
-			syndesis.Spec.Components.Prometheus.Resources.Limits = make(v1.ResourceList, 0)
-		}
-		syndesis.Spec.Components.Prometheus.Resources.Limits[v1.ResourceMemory] = v
-	}
+	resourceMemoryListFromEnv(&syndesis.Spec.Components.Prometheus.Resources.Resources, config, EnvPrometheusMemoryLimit)
 }
 
 func envPrometheusVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
@@ -420,7 +411,7 @@ func envPrometheusVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarCon
 	return nil
 }
 func prometheusVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPrometheusVolumeCapacity); ok {
+	if v, ok := getString(config, EnvPrometheusVolumeCapacity); ok && syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity == "" {
 		syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity = v
 	}
 }
@@ -436,11 +427,17 @@ func envServerMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func serverMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getQuantity(config, EnvServerMemoryLimit); ok {
-		if syndesis.Spec.Components.Server.Resources.Limits == nil {
-			syndesis.Spec.Components.Server.Resources.Limits = make(v1.ResourceList, 0)
+	resourceMemoryListFromEnv(&syndesis.Spec.Components.Server.Resources, config, EnvServerMemoryLimit)
+}
+
+func resourceMemoryListFromEnv(r *v1alpha1.Resources, config map[string]string, envVar SyndesisEnvVar) {
+	if r.Limits == nil {
+		r.Limits = make(v1.ResourceList, 0)
+	}
+	if v, found := getQuantity(config, envVar); found {
+		if _, found := r.Limits[v1.ResourceMemory]; !found {
+			r.Limits[v1.ResourceMemory] = v
 		}
-		syndesis.Spec.Components.Server.Resources.Limits[v1.ResourceMemory] = v
 	}
 }
 
@@ -455,12 +452,7 @@ func envMetaMemoryLimit(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func metaMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getQuantity(config, EnvMetaMemoryLimit); ok {
-		if syndesis.Spec.Components.Meta.Resources.Limits == nil {
-			syndesis.Spec.Components.Meta.Resources.Limits = make(v1.ResourceList, 0)
-		}
-		syndesis.Spec.Components.Meta.Resources.Limits[v1.ResourceMemory] = v
-	}
+	resourceMemoryListFromEnv(&syndesis.Spec.Components.Meta.Resources.Resources, config, EnvMetaMemoryLimit)
 }
 
 func envMetaVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
@@ -473,7 +465,7 @@ func envMetaVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	return nil
 }
 func metaVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvMetaVolumeCapacity); ok {
+	if v, ok := getString(config, EnvMetaVolumeCapacity); ok && syndesis.Spec.Components.Meta.Resources.VolumeCapacity == "" {
 		syndesis.Spec.Components.Meta.Resources.VolumeCapacity = v
 	}
 }
@@ -487,23 +479,28 @@ func envUpgradeVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig
 	}
 	return nil
 }
+
 func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok {
+	if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok && syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity == "" {
 		syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity = v
 	}
 }
 
 func envExposeVia3Scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	v := false
+	if syndesis.Spec.Components.Server.Features.ExposeVia3Scale != nil {
+		v = *syndesis.Spec.Components.Server.Features.ExposeVia3Scale
+	}
 	return &SyndesisEnvVarConfig{
 		Var:   EnvExposeVia3Scale,
-		Value: strconv.FormatBool(syndesis.Spec.Components.Server.Features.ExposeVia3Scale),
+		Value: strconv.FormatBool(v),
 	}
 }
 
 func exposeVia3Scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvExposeVia3Scale); ok {
+	if v, ok := getString(config, EnvExposeVia3Scale); ok && syndesis.Spec.Components.Server.Features.ExposeVia3Scale == nil {
 		if b, err := strconv.ParseBool(v); err != nil {
-			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = b
+			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = &b
 		}
 	}
 }

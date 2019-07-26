@@ -1,12 +1,22 @@
 package action
 
 import (
+	"bytes"
 	"context"
+	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/go-openapi/swag"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/api/meta"
+	"k8s.io/apimachinery/pkg/api/resource"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/yaml"
+	"text/template"
 
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -21,7 +31,6 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/addons"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
@@ -45,11 +54,20 @@ func newInstallAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOpe
 }
 
 func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
-	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling)
+	return syndesisPhaseIs(syndesis,
+		v1alpha1.SyndesisPhaseInstalling,
+		v1alpha1.SyndesisPhaseInstalled,
+		v1alpha1.SyndesisPhaseStarting,
+		v1alpha1.SyndesisPhaseStartupFailed,
+	)
 }
 
 func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
-	a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
+	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
+		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
+	}
+
+	resourcesThatShouldExist := map[types.UID]bool{}
 
 	// Check if an image secret exists, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
@@ -62,14 +80,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		}
 	}
 
-	token, err := installServiceAccount(ctx, a.client, syndesis, secret)
+	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
 	if err != nil {
 		return err
 	}
+	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
-	// Let's use a copy of the original parameter from now on, so that it can be changed inside this action
-	originalSyndesis := syndesis
-	syndesis = syndesis.DeepCopy()
+	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
 
 	// Detect if the route should be auto-generated
 	autoGenerateRoute := syndesis.Spec.RouteHostname == ""
@@ -81,21 +98,33 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		OAuthClientSecret: token,
 	}
 
-	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
-		a.log.Info("Addon enabled", "addon", "komodo")
-	}
-
-	all, err := syndesistemplate.GetInstallResources(a.scheme, syndesis, params)
+	config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(ctx, a.client, syndesis.Namespace)
 	if err != nil {
-		fmt.Println(err)
-		return err
+		config = map[string]string{}
 	}
-	list, unstructured := util.SeperateStructuredAndUnstructured(a.scheme, all)
+	renderContext, err := syndesistemplate.GetRenderContext(syndesis, params, config)
+	if secret != nil {
+		renderContext.ImagePullSecrets = append(renderContext.ImagePullSecrets, secret.Name)
+	}
+	configuration.SetConfigurationFromEnvVars(renderContext.Env, syndesis)
 
-	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, list, autoGenerateRoute)
 	if err != nil {
 		return err
 	}
+
+	// Render the route resource...
+	all, err := generator.RenderDir("./route/", renderContext)
+	if err != nil {
+		return err
+	}
+
+	routes, _ := util.SeperateStructuredAndUnstructured(a.scheme, all)
+	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes, autoGenerateRoute)
+	if err != nil {
+		return err
+	}
+
+	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
 	if autoGenerateRoute {
 		// Set the right hostname after generating the route
@@ -107,110 +136,355 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if err != nil {
 			return err
 		}
+	}
 
-		// Recreate the list of resources to inject the route hostname
-		all, err = syndesistemplate.GetInstallResources(a.scheme, syndesis, params)
-		if err != nil {
-			return err
-		}
-		list, unstructured = util.SeperateStructuredAndUnstructured(a.scheme, all)
+	// Render the remaining syndesis resources...
+	all, err = generator.RenderDir("./install/", renderContext)
+	if err != nil {
+		return err
 	}
 
 	// Link the image secret to service accounts
 	if secret != nil {
-		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, list, secret)
+		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, secret)
 		if err != nil {
 			return err
 		}
 	}
 
-	for _, res := range list {
-		if _, isSyndesisRoute := isSyndesisRoute(res); isSyndesisRoute {
-			// Syndesis route already installed
-			continue
-		}
+	// Install the resources..
+	for _, res := range all {
+
 		operation.SetNamespaceAndOwnerReference(res, syndesis)
+		o, modificationType, err := CreateOrUpdate(ctx, a.client, &res)
+		resourcesThatShouldExist[o.GetUID()] = true
 
-		err = createOrReplace(ctx, a.client, res)
-		if err != nil && !k8serrors.IsAlreadyExists(err) {
-			if bytes, err := yaml.Marshal(res); err == nil {
-				fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
-			}
-			return err
-		}
-	}
-
-	// Install any types we are working with in unstructured form.
-	for _, res := range unstructured {
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
-
-		err = createOrReplace(ctx, a.client, &res)
-		if err != nil && !k8serrors.IsAlreadyExists(err) {
+		if err != nil {
 			gvk := res.GroupVersionKind()
 			_, err := a.mgr.GetRESTMapper().RESTMapping(gvk.GroupKind(), gvk.Version)
 			if meta.IsNoMatchError(err) {
-				// CRD for that resource type is not availabl..
-				a.log.Info("Skipping install resource.  CRD not installed?", "GroupVersionKind", res.GroupVersionKind(), "Name", res.GetName())
-			} else {
-				if bytes, err := yaml.Marshal(res); err == nil {
-					fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
+				// CRD for that resource type is not available..
+				if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
+					a.log.Info("Skipping install resource.  CRD not installed?", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
 				}
+			} else {
+				a.log.Info("Failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
 				return err
 			}
 		}
+		if modificationType != controllerutil.OperationResultNone {
+			a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+		}
 	}
 
-	// Install addons
-	if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
-		addons, err := addons.GetAddonsResources(addonsDir)
-		if err != nil {
-			return err
+	// Find resources which need to be deleted.
+	labelSelector, err := labels.Parse("owner=" + string(syndesis.GetUID()))
+	if err != nil {
+		panic(err)
+	}
+	options := client.ListOptions{
+		Namespace:     syndesis.Namespace,
+		LabelSelector: labelSelector,
+	}
+	err = ListInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+		for _, res := range list {
+			if resourcesThatShouldExist[res.GetUID()] {
+				continue
+			}
+			if res.GetOwnerReferences() == nil || len(res.GetOwnerReferences()) == 0 {
+				continue
+			}
+			if res.GetOwnerReferences()[0].UID != syndesis.GetUID() {
+				continue
+			}
+
+			// Found a resource that should not exist!
+			err := a.client.Delete(ctx, &res)
+			if err != nil {
+				if !k8serrors.IsNotFound(err) {
+					a.log.Error(err, "could not deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+				}
+			} else {
+				a.log.Info("resource deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			}
 		}
-		for _, addon := range addons {
-			operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
+		return nil
+	})
+	if err != nil {
+		return err
+	}
 
-			operation.SetNamespaceAndOwnerReference(addon, syndesis)
+	target := syndesis.DeepCopy()
+	addRouteAnnotation(target, syndesisRoute)
+	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
+		// Installation completed, set the next state
+		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		target.Status.Description = ""
+		a.log.Info("Syndesis resource installed", "name", target.Name)
+	}
+	_, c, err := CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+	if c != controllerutil.OperationResultNone {
+		a.log.Info("Updated CRD ", "name", syndesis.Name)
+	}
+	return err
+}
 
-			err = createOrReplace(ctx, a.client, addon)
-			if err != nil && !k8serrors.IsAlreadyExists(err) {
+func ListInChunks(ctx context.Context, api kubernetes.Interface, c client.Client, options client.ListOptions, handler func([]unstructured.Unstructured) error) error {
+	types, err := getTypes(api)
+	if err != nil {
+		return err
+	}
+nextType:
+	for _, t := range types {
+		options := client.ListOptions{
+			Namespace:     options.Namespace,
+			LabelSelector: options.LabelSelector,
+			Raw: &metav1.ListOptions{
+				TypeMeta: t,
+				Limit:    200,
+			},
+		}
+		for {
+			list := unstructured.UnstructuredList{
+				Object: map[string]interface{}{
+					"apiVersion": t.APIVersion,
+					"kind":       t.Kind,
+				},
+			}
+			if err := c.List(ctx, &options, &list); err != nil {
+				if k8serrors.IsNotFound(err) ||
+					k8serrors.IsForbidden(err) ||
+					k8serrors.IsMethodNotSupported(err) {
+					continue nextType
+				}
+				return err
+			}
 
-				if meta.IsNoMatchError(err) {
-					// CRD for that resource type is not available.
-					a.log.Info("Skipping install resource.  CRD not installed?", "GroupVersionKind", addon.GroupVersionKind(), "Name", addon.GetName())
-				} else {
-					if bytes, err := yaml.Marshal(addon); err == nil {
-						fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
+			err = handler(list.Items)
+			if err != nil {
+				return err
+			}
+
+			if len(list.GetContinue()) == 0 {
+				break
+			}
+
+			// keep loading....
+			options.Raw.Continue = list.GetContinue()
+		}
+	}
+	return nil
+}
+
+func ToUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
+
+	// It might be already Unstructured..
+	if u, ok := obj.(*unstructured.Unstructured); ok {
+		return u, nil
+	}
+
+	// Convert it..
+	fields, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
+	if err != nil {
+		return nil, err
+	}
+	return &unstructured.Unstructured{fields}, nil
+}
+
+func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
+	if len(skipFields) == 0 {
+		skipFields = append(skipFields, "kind", "apiVersion", "status")
+	}
+	desired, err := ToUnstructured(o)
+	if err != nil {
+		return desired, controllerutil.OperationResultNone, err
+	}
+
+	createdCopy := desired.DeepCopy()
+	modType, err := controllerutil.CreateOrUpdate(ctx, cl, createdCopy, func(o runtime.Object) error {
+		existing := o.(*unstructured.Unstructured)
+
+		if desired.GetAPIVersion() == "v1" && desired.GetKind() == "Secret" {
+			if desired.Object["stringData"] != nil && existing.Object["data"] != nil {
+				from := desired.Object["stringData"].(map[string]interface{})
+				to := existing.Object["data"].(map[string]interface{})
+				updates := map[string]interface{}{}
+				for key, value := range from {
+					plain := value.(string)
+					encoded := base64.StdEncoding.EncodeToString([]byte(plain))
+					if to[key] != encoded {
+						updates[key] = value
 					}
-					return err
+				}
+				if len(updates) > 0 {
+					desired.Object["stringData"] = updates
+				} else {
+					delete(desired.Object, "stringData")
 				}
 			}
 		}
-	}
 
-	// Installation completed, set the next state
-	target := originalSyndesis.DeepCopy()
-	target.Status.Phase = v1alpha1.SyndesisPhaseStarting
-	target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-	target.Status.Description = ""
-	addRouteAnnotation(target, syndesisRoute)
-	a.log.Info("Syndesis resource installed", "name", target.Name)
+		mergePath := desired.GetAPIVersion() + "/" + desired.GetKind()
 
-	return a.client.Update(ctx, target)
+		for key, value := range desired.Object {
+			if swag.ContainsStrings(skipFields, key) {
+				continue
+			}
+			switch key {
+			case "metadata":
+				to := existing.Object[key].(map[string]interface{})
+				from := value.(map[string]interface{})
+				mergeMap(mergePath+"/metadata", to, from)
+			case "spec": // skip updating this field.
+				to := existing.Object[key].(map[string]interface{})
+				from := value.(map[string]interface{})
+				mergeMap(mergePath+"/metadata", to, from)
+			default:
+				existing.Object[key] = value
+			}
+		}
+
+		//if d.GetKind() == "DeploymentConfig" && d.GetName() == "syndesis-meta" {
+		//	Debug("existing:", existing, "(index .Object.spec.template.spec.containers 0).resources.limits.memory")
+		//}
+		return nil
+	})
+	return createdCopy, modType, err
 }
 
-func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (string, error) {
+func Debug(msg string, o interface{}, fields ...string) {
+	s := Dump(o, fields...)
+	if s != "" {
+		fmt.Println(msg, s)
+	}
+}
+
+func Dump(o interface{}, fields ...string) string {
+	if len(fields) == 0 {
+		data, err := yaml.Marshal(o)
+		if err != nil {
+			panic(err)
+		} else {
+			return string(data)
+		}
+	}
+
+	rc := ""
+	for _, field := range fields {
+		t, err := template.New("test").Parse("{{" + field + "}}")
+		if err != nil {
+			panic(err)
+		}
+		buffer := &bytes.Buffer{}
+		err = t.Execute(buffer, o)
+		if err != nil {
+			return ""
+		}
+		if len(rc) > 0 {
+			rc += "\n    "
+		}
+		rc += field + " => " + string(buffer.Bytes())
+	}
+	return rc
+}
+
+func MustMarshal(data []byte, err error) []byte {
+	if err != nil {
+		panic(err)
+	}
+	return data
+}
+
+func mergeMap(path string, to map[string]interface{}, from map[string]interface{}) {
+	for key, value := range from {
+		to[key] = mergeValue(path+"/"+key, to[key], value)
+	}
+}
+
+func mergeArray(path string, to []interface{}, from []interface{}) []interface{} {
+	nexPath := path + "/#"
+	for key, value := range from {
+		if key < len(to) {
+			to[key] = mergeValue(nexPath, to[key], value)
+		} else {
+			to = append(to, mergeValue(nexPath, to[key], value))
+		}
+	}
+	return to
+}
+
+func mergeValue(path string, to interface{}, from interface{}) interface{} {
+
+	switch from := from.(type) {
+	case map[string]interface{}:
+		if to, ok := to.(map[string]interface{}); ok {
+			mergeMap(path, to, from)
+			return to
+		}
+	case []interface{}:
+		if toMap, ok := to.([]interface{}); ok {
+			return mergeArray(path, toMap, from)
+		}
+	}
+	if from == to || from == nil {
+		return to
+	}
+	if to == nil {
+		return from
+	}
+
+	// Looks like we might have a different value...
+
+	// Apply special handling for some fields.
+	switch path {
+	case "apps.openshift.io/v1/DeploymentConfig/metadata/template/spec/containers/#/image":
+		return to
+	case "apps.openshift.io/v1/DeploymentConfig/metadata/triggers/#/imageChangeParams/from/namespace":
+		return to
+	case "v1/PersistentVolumeClaim/metadata/resources/requests/storage":
+		return to
+	case "apps.openshift.io/v1/DeploymentConfig/metadata/template/spec/containers/#/resources/limits/memory":
+		// This might be the same value, in a different format.
+		fromQ := resource.MustParse(fmt.Sprint(from))
+		fromI, _ := fromQ.AsInt64()
+		toQ := resource.MustParse(fmt.Sprint(to))
+		toI, _ := toQ.AsInt64()
+		if fromI == toI {
+			return to
+		} else {
+			return from
+		}
+	}
+
+	fromT := reflect.TypeOf(from)
+	toT := reflect.TypeOf(to)
+	if fromT != toT && fromT.ConvertibleTo(toT) {
+		from = reflect.ValueOf(from).Convert(toT).Interface()
+		if from == to {
+			return to
+		} else {
+			return from
+		}
+	}
+
+	return from
+}
+
+func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
 	sa := newSyndesisServiceAccount()
 	if secret != nil {
 		linkImagePullSecret(sa, secret)
 	}
+
 	operation.SetNamespaceAndOwnerReference(sa, syndesis)
 	// We don't replace the service account if already present, to let Kubernetes generate its tokens
-	err := cl.Create(ctx, sa)
-	if err != nil && !k8serrors.IsAlreadyExists(err) {
-		return "", err
+	o, _, err := CreateOrUpdate(ctx, cl, sa)
+	if err != nil {
+		return nil, err
 	}
-
-	return serviceaccount.GetServiceAccountToken(ctx, cl, sa.Name, syndesis.Namespace)
+	sa.SetUID(o.GetUID())
+	return sa, nil
 }
 
 func newSyndesisServiceAccount() *corev1.ServiceAccount {
@@ -264,10 +538,11 @@ func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1alp
 	}
 
 	// We don't replace the route if already present, to let OpenShift generate its host
-	err = cl.Create(ctx, route)
-	if err != nil && !k8serrors.IsAlreadyExists(err) {
+	o, _, err := CreateOrUpdate(ctx, cl, route)
+	if err != nil {
 		return nil, err
 	}
+	route.SetUID(o.GetUID())
 
 	if route.Spec.Host != "" {
 		return route, nil
@@ -286,7 +561,6 @@ func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1alp
 	if route.Spec.Host == "" {
 		return nil, errors.New("hostname still not present on syndesis route")
 	}
-
 	return route, nil
 }
 
@@ -308,14 +582,7 @@ func isSyndesisRoute(resource runtime.Object) (*v1.Route, bool) {
 	return nil, false
 }
 
-func isServiceAccount(resource runtime.Object) (*corev1.ServiceAccount, bool) {
-	if sa, ok := resource.(*corev1.ServiceAccount); ok {
-		return sa, true
-	}
-	return nil, false
-}
-
-func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, resources []runtime.Object, secret *corev1.Secret) error {
+func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) error {
 	// Link the builder service account to the image pull/push secret if it exists
 	builder := &corev1.ServiceAccount{}
 	err := cl.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)
@@ -330,14 +597,6 @@ func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syn
 			return err
 		}
 	}
-
-	// Link the Syndesis service accounts to the image pull secret if it exists
-	for _, res := range resources {
-		if sa, ok := isServiceAccount(res); ok {
-			linkImagePullSecret(sa, secret)
-		}
-	}
-
 	return nil
 }
 

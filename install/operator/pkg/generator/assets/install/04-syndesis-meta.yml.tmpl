@@ -31,7 +31,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: {{Env.META_VOLUME_CAPACITY}}
+        storage: {{.Env.META_VOLUME_CAPACITY}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -76,14 +76,14 @@
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-{{#Debug}}
+{{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
-{{/Debug}}{{^WithDockerImages}}
+{{end}}{{if (not .WithDockerImages)}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
-{{/WithDockerImages}}
+{{else}}
+          image: {{.Env.SYNDESIS_REGISTRY}}/{{.Images.SyndesisImagesPrefix}}/{{.Images.Syndesis.Verifier}}:{{.Tags.Syndesis}}
+{{end}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -113,7 +113,7 @@
             protocol: TCP
           resources:
             limits:
-              memory: {{Env.META_MEMORY_LIMIT}}
+              memory: {{.Syndesis.Spec.Components.Meta.Resources.Limits.Memory.String}}
             requests:
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
@@ -131,17 +131,17 @@
           configMap:
             name: syndesis-meta-config
     triggers:
-{{^WithDockerImages}}
+{{if (not .WithDockerImages)}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{ProductName}}-meta
+        - {{.ProductName}}-meta
         from:
           kind: ImageStreamTag
-          name: {{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
-          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
+          name: {{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}
+          namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{/WithDockerImages}}
+{{end}}
     - type: ConfigChange
 
 - apiVersion: v1

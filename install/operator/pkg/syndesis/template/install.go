@@ -7,7 +7,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"math/rand"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -82,19 +81,28 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
-func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams) (*generator.Context, error) {
+func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) (*generator.Context, error) {
 	// Parse the config
 	renderContext, err := GetTemplateContext()
 	if err != nil {
 		return nil, err
 	}
 
-	// Setup the config..
-	config := configuration.GetEnvVars(syndesis)
-	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
-	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
-		config["DATAVIRT_ENABLED"] = "1"
+	if syndesis.Spec.Addons == nil {
+		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
 	}
+	if syndesis.Spec.Addons["todo"] == nil {
+		syndesis.Spec.Addons["todo"] = v1alpha1.Parameters{}
+	}
+	if syndesis.Spec.Addons["todo"]["enabled"] == "" {
+		syndesis.Spec.Addons["todo"]["enabled"] = "true"
+	}
+
+	// Setup the config..
+	config := make(map[string]string)
+	copyMap(config, env)
+	copyMap(config, configuration.GetEnvVars(syndesis))
+	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 
 	ifMissingGeneratePwd(config, configuration.EnvOpenshiftOauthClientSecret, 64)
 	ifMissingGeneratePwd(config, configuration.EnvPostgresqlPassword, 16)
@@ -124,7 +132,6 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams) (*gene
 	ifMissingSet(config, configuration.EnvMetaMemoryLimit, "512Mi")
 	ifMissingSet(config, configuration.EnvServerMemoryLimit, "800Mi")
 	ifMissingSet(config, configuration.EnvKomodoMemoryLimit, "1024Mi")
-	ifMissingSet(config, configuration.EnvDatavirtEnabled, "0")
 	maxIntegrations := "0"
 	if renderContext.Ocp {
 		maxIntegrations = "1"
@@ -140,22 +147,13 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams) (*gene
 		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
 
-	renderContext.Syndesis = syndesis.DeepCopy()
+	renderContext.Syndesis = syndesis
 	renderContext.Env = config
 	return renderContext, nil
 }
 
-func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params ResourceParams) ([]unstructured.Unstructured, error) {
-	renderContext, err := GetRenderContext(syndesis, params)
-	if err != nil {
-		return nil, err
+func copyMap(dst map[string]string, src map[string]string) {
+	for key, value := range src {
+		dst[key] = value
 	}
-
-	// Render the files in the install directory
-	res, err := generator.RenderDir("./install/", renderContext)
-	if err != nil {
-		return nil, err
-	}
-
-	return res, nil
 }

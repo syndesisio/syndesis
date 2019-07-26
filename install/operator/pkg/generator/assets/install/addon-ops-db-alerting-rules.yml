@@ -1,3 +1,4 @@
+{{if eq (or .Syndesis.Spec.Addons.ops.enabled "false") "true"}}
 apiVersion: monitoring.coreos.com/v1
 kind: PrometheusRule
 metadata:
@@ -36,3 +37,4 @@ spec:
           for: 5m
           labels:
             severity: critical
+  {{end}}

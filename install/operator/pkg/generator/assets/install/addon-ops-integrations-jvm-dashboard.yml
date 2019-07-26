@@ -1,3 +1,4 @@
+{{if eq (or .Syndesis.Spec.Addons.ops.enabled "false") "true"}}
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
@@ -2770,3 +2771,4 @@ spec:
       "uid": "7Cx0ve4Wk",
       "version": 1
     }
+{{end}}
