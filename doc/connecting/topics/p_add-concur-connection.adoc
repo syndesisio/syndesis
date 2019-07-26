@@ -11,17 +11,19 @@ A connection to SAP Concur can perform any one of 85 actions.
 .Prerequisites
 * You created a SAP Concur connection.
 * You are creating or editing a flow. 
-* {prodname} is prompting you to choose a step, or to choose the
+* {prodname} is prompting you to add to the integration, or to choose the
 finish connection in a simple integration.
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the SAP Concur
 connection that you want to add to the flow. When the integration
-uses the connection that you select to connect to SAP Concur, {prodname}
-uses the credentials defined in that connection.
+uses the connection that you select, {prodname}
+uses the credentials defined in that connection to connect to SAP Concur.
 
-. Click the action that you want the selected connection to perform.  Each
+. Select the action that you want the connection to perform.  Each
 SAP Concur connection that you add to a flow performs only the action 
 you choose.
 +
@@ -29,8 +31,8 @@ For details about SAP Concur actions, visit the
 https://developer.concur.com/api-explorer/[SAP Concur developer center]
 and expand *v3.0*.
 
-. Click *Done* to add the connection to the flow.
+. Click *Next* to add the connection to the flow.
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears in the integration visualization
+where you added it. 

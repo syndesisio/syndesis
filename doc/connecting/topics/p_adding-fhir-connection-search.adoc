@@ -16,12 +16,13 @@ add a FHIR connection to the middle of a flow.
 * You created a connection to the FHIR server that has the 
 resources that you want to obtain. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step.  
+to add to the integration.  
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. 
 . Click the FHIR connection that has the resources that you want to obtain. 
-. On the *Choose an Action* page, click *Search*. 
+. On the *Choose an action* page, select *Search*. 
 . Click in the *Resource Type* field to display a list
 of FHIR resource types. Select or enter the type of resource 
 that you want to obtain. 
@@ -32,8 +33,8 @@ link:http://hl7.org/fhir/STU3/search.html[FHIR Release 3 Search].
 .  Click *Next* to add this connection to the flow. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. During execution, this 
+The connection appears in the integration visualization 
+where you added it. During execution, this 
 connection returns a list of resources that satisfy the query 
 that you specified. {prodname} treats this list as a collection. 
 

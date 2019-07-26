@@ -33,13 +33,15 @@ of a flow, or as a simple integration’s finish connection.
 * You created a connection to the FHIR server on which you want to 
 update or create a resource. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step.  Or, {prodname} is prompting you to  add a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to  add a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to update a resource on a FHIR server. 
-. On the *Choose an Action* page, click *Update*. 
+. On the *Choose an action* page, select *Update*. 
 . Click in the *Resource Type* field to display a list
 of FHIR resource types. Select or enter the type of resource 
 that you want to update or create.
@@ -56,7 +58,7 @@ resource. There is no harm in selecting a resource that is not actually containe
 
 . If this flow needs additional steps to obtain the data that you want the 
 updated resource to contain, add them before this FHIR connection. 
-. In the integration visualization panel, click the plus sign that is 
+. In the integration visualization, click the plus sign that is 
 before the FHIR connection that updates a resource.
 . Click *Data Mapper*. 
 . In the data mapper: 
@@ -68,8 +70,8 @@ changing, as well as fields whose values need to be updated.
 .. Click *Done* to add the data mapper step to the flow. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. During execution, the connection 
+The connection appears in the integration visualization 
+where you added it. During execution, the connection 
 updates or creates a resource on the FHIR server and returns a 
 *MethodOutcome* resource that includes an `id.idPart` field. 
 This field contains the updated/created resource's ID, 

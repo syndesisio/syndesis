@@ -14,9 +14,9 @@ You created an Amazon S3 connection.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Amazon S3 connection that
+. On the *Choose a connection* page, click the Amazon S3 connection that
 you want to use to start the integration.
-. On the *Choose an Action* page, click the action that you
+. On the *Choose an action* page, select the action that you
 want the connection to perform:
 +
 * *Get Object* obtains a file from the bucket that the connection
@@ -46,14 +46,14 @@ only when its name starts with that string.
 .. Indicate whether you want to  
 *Obtain files and then delete them from the bucket*.
 
-. After you configure the action, click *Done* to specify the action's output type. 
+. After you configure the action, click *Next* to specify the action's output type. 
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
-Otherwise, select one of the following as the schema type:
+Otherwise, click in the *Select Type* field and select one of the following as the schema type:
 +
 * *JSON schema* is a document that describes the structure of JSON data.
 The document's media type is `application/schema+json`. 
@@ -70,17 +70,19 @@ For example, if you select *JSON schema* then you would paste the content of
 a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
+data type. For example, if you are specifying a JSON schema for
+vendors then you might specify `*Vendor*` as the data type name. 
 +
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
 for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
+in the integration visualization and in the data mapper. 
 
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Next*. 
 
-The connection appears at the beginning of the integration flow. 
+.Result
+The integration now has a start connection and {prodname} is prompting
+you to choose the finish connection. 

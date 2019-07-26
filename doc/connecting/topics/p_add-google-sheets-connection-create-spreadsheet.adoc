@@ -19,13 +19,15 @@ adds data to the spreadsheet.
 access the Google account in which you want to create the 
 spreadsheet. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the Google account that you want to use to create the spreadsheet.
-. On the *Choose an Action* page, click *Create spreadsheet*.
+. On the *Choose an action* page, select *Create spreadsheet*.
 . To configure the *Create spreadsheet* action:
 +
 .. In the *Title* field, enter the title of the new spreadsheet.
@@ -34,9 +36,8 @@ new spreadsheet should use, for example, `India Standard Time`, or `Tokyo`.
 .. In the *Locale* field, enter the locale of the 
 new spreadsheet, for example, `Canada`, or `Hong Kong`.
 
-. Click *Done* to add the connection to the flow.
-The connection appears in the integration visualization flow in the
-location where you added it.
+. Click *Next* to add the connection to the flow.
+The connection appears in the integration visualization where you added it.
 
 .Result
 A connection that creates a spreadsheet returns the spreadsheet ID for 

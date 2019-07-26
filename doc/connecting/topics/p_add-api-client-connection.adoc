@@ -4,10 +4,10 @@
 [id='add-api-client-connection_{context}']
 = Adding an API client connection to an integration
 
-In an integration, to connect to a REST API, add a connection to that
-REST API to a flow. 
+In an integration, to connect to a REST API, add a step that
+connects to that REST API. 
 
-In this release, a connection to a REST API can be in the 
+In this release, a connection to a REST API can be a step that is in the 
 middle of a flow or it can be the finish connection in a simple
 integration. In other words, a connection to a REST API 
 cannot be a start connection. 
@@ -17,21 +17,24 @@ cannot be a start connection.
 * You are creating or editing a flow.
 * The flow already has its start connection. 
 * {prodname} is prompting you to select a finish connection
-or to choose a step.
+or to add to the integration. 
 
 .Procedure
 
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . On the page that displays available steps, click the REST API
 connection that you want to add to the flow.
-. Click the action that you want the connection to perform.
+. Select the action that you want the connection to perform.
 The actions that are available are based on the resource operations
 specified in the OpenAPI document that was uploaded to {prodname} and that
 describes the API that you are connecting to.
 . Depending on the action you select, enter any parameters that
 {prodname} prompts for.
-. Click *Done*.
+. Click *Next*.
 
 .Result
-The connection appears in the flow 
-in the location where you added it. 
+The connection appears in the integration visualization 
+where you added it. 
  

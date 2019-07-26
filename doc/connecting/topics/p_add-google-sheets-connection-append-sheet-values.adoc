@@ -15,12 +15,15 @@ Google spreadsheet in which you want to append data.
 * You have access to the ID for the spreadsheet in which
 you want to append data. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the spreadsheet in which you want to append data.
-. On the *Choose an Action* page, click *Append values to a sheet*.
+. On the *Choose an action* page, select *Append values to a sheet*.
 . To configure the *Append values to a sheet* action:
 +
 .. In the *SpreadsheetId* field, do one of the following: 
@@ -60,9 +63,8 @@ which defaults to *User entered*.
 * *Raw* does nothing. Google Sheets inserts the input data as is.
 * *User entered* enables automatic conversion of recognizable data. 
 
-.. Click *Done* to add the connection to the flow.
-The connection appears in the integration visualization flow in the
-location where you added it.
+.. Click *Next* to add the connection to the flow.
+The connection appears in the integration visualization where you added it.
 +
 The values that you specify to configure the *Append values to a sheet* 
 action determine the fields that the data mapper displays for mapping
@@ -71,9 +73,9 @@ to or from this connection.
 . If you want to add any other connections to the flow, add them now
 and then return to these instructions. 
 . After the flow has all desired connections, 
-in the integration visualization flow, click the plus sign that is
+in the integration visualization, click the plus sign that is
 just before the Google Sheets connection that appends data to a sheet.
-. Click the *Data Mapper* card to add a data mapping step to the flow. 
+. Click *Data Mapper* to add a data mapping step to the flow. 
 
 . In the data mapper: 
 

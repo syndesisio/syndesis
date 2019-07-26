@@ -20,7 +20,7 @@ a simple integration's finish connection.
 want to add a Jira connection. Skip this step if you are adding 
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use. 
-. On the *Choose an Action* page, select *Add Issue*.
+. On the *Choose an action* page, select *Add Issue*.
 . In the *Issue Key* field, enter the Jira identifier of the issue
 that you want to add watchers to or remove watchers from. 
 Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
@@ -32,5 +32,5 @@ removes these users from the list of watchers.
 . Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location you added it. 
+The connection appears in the integration visualization
+where you added it. 

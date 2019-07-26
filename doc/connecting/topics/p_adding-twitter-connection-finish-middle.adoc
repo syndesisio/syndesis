@@ -12,17 +12,19 @@ only the specified user.
 .Prerequisites
 * You created a Twitter connection.
 * You are creating or editing a flow and {prodname} is
-prompting you to choose a step. Or, for a simple integration, 
+prompting you to add to the integration. Or, for a simple integration, 
 {prodname} is prompting you to choose a finish connection.
 
 .Procedure
 
+. On the *Add to Integration* page, click the plus sign where you 
+want to add a Twitter connection. 
 . Click the Twitter
 connection that you want to add to the integration. When the integration
 uses the selected connection to connect to Twitter, {prodname} uses the
 credentials defined in that connection.
 
-. Click the *Send* action.
+. Select the *Send* action.
 
 . In the *Default Message* field, enter the message that you want the 
 connection to send when a data mapper step does not map 
@@ -34,8 +36,8 @@ message that you specify here.
 . In the *User* field, enter the Twitter handle of the user who you want 
 to send a direct message to. For example, both *Aslan* and *@Aslan* are correct.
 
-. Click *Done* to add the connection to the integration.
+. Click *Next* to add the connection to the integration.
 
 .Result
-The connection appears in the middle of a flow, or as the finish 
-connection in a simple integration. 
+The connection appears in the middle or at the end of  
+an integration visualization. 

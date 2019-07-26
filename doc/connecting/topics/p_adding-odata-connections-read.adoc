@@ -18,10 +18,10 @@ You created an OData connection.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the OData connection that
+. On the *Choose a connection* page, click the OData connection that
 you want to use to start the integration. 
-. On the *Choose an Action* page, click the *Read* action.
-. To configure the *Read* action: 
+. On the *Choose an action* page, select the *Read* action.
+. Configure the *Read* action: 
 
 .. In the *Resource Collection* field, select the name of the OData resource   
 that you want to query. {prodname} fetches data from the 
@@ -97,11 +97,11 @@ The values that you specify for *Backoff Idle Threshold* and
 *Backoff Multiplier* are useful for reducing CPU overhead since the 
 connection can automatically poll less often during quiet periods. 
 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears in the integration flow as the 
-integration's start connection. 
+The integration now has a start connection and {prodname} is prompting
+you to choose the finish connection. 
 
 During execution, what the connection returns depends on what you specified 
 in the *Entity Key Predicate* and *Query Options* fields. The OData connection can return: 

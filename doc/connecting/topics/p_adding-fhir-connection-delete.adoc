@@ -12,14 +12,16 @@ or as a simple integration's finish connection.
 * You created a connection to the FHIR server that has the resource 
 that you want to delete.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to select a 
+to add to the integration. Or, {prodname} is prompting you to select a 
 finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to delete the resource.  
-. On the *Choose an Action* page, click *Delete*. 
+. On the *Choose an action* page, select *Delete*. 
 . Click in the *Resource Type* field to display a list
 of FHIR resource types. Select or enter the type 
 of resource that you want to delete. 
@@ -30,12 +32,12 @@ plan to map the resource ID from an earlier step in the integration.
 for the resource. Leave this field blank to delete 
 the most recent version of the resource or to map the version ID of 
 the resource that you want to delete from a previous step.  
-.  Click *Done* to add this connection to the flow. 
+.  Click *Next* to add this connection to the flow. 
 . 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. During execution, the connection 
+The connection appears in the integration visualization 
+where you added it. During execution, the connection 
 deletes the specified resource on the FHIR server and returns a 
 *MethodOutcome* resource that includes an `id.idPart` field. 
 This field contains the resource ID for the deleted resource.

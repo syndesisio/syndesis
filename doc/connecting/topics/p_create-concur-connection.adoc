@@ -48,13 +48,13 @@ this connection to use to access SAP Concur.
 .. Enter the SAP Concur password associated with the email address.
 .. Click *Sign In*, which returns you to {prodname}. 
 
-. In the {prodname} *Connection Name* field, enter your choice of a name that
+. In the {prodname} *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*SAP Concur Test1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample SAP Concur connection to the implementation site.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *SAP Concur Test1* appears as a connection that you can 
 choose to add to an integration.

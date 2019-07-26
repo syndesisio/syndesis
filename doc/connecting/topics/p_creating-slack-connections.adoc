@@ -49,12 +49,12 @@ connection and displays a message that indicates whether
 validation is successful. If validation fails, revise the
 connection configuration values and try again.
 . If validation is successful, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Slack for Tracking Company Sales*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection.
-. In the upper right, click *Create* to see the updated list of available 
+. Click *Save* to see the updated list of available 
 connections, including the connection that you just created. 
 If you entered the example name, you would
 see that *Slack for Tracking Company Sales* appears as a connection that you can 

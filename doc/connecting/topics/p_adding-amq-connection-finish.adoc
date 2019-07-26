@@ -17,9 +17,9 @@ connection.
 
 .Procedure
 
-. On the *Choose a Finish Connection* page, click the Red Hat AMQ connection that
+. On the *Choose a connection* page, click the Red Hat AMQ connection that
 you want to use to finish the integration. 
-. On the *Choose an Action* page, click the *Publish messages* action to
+. On the *Choose an action* page, select the *Publish messages* action to
 publish messages to the queue or topic that you specify. 
 . In the *Destination Name* field, enter the name of the queue or 
 topic to send messages to. 
@@ -31,10 +31,11 @@ a connection fails.
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
-Otherwise, select one of the following as the schema type:
+Otherwise, click in the *Select Type* field and 
+select one of the following as the schema type:
 +
 * *JSON schema* is a document that describes the structure of JSON data.
 The document's media type is `application/schema+json`. 
@@ -57,12 +58,12 @@ vendors then you might specify `*Vendor*` as the data type name.
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
 for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
+in the integration visualization and in the data mapper. 
 
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears at the  end of the integration flow. 
+The connection appears at the end of the integration visualization. 

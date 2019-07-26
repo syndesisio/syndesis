@@ -13,22 +13,25 @@ finish connection.
 .Prerequisites
 * You created an OData connection.
 * You are creating or editing an integration and {prodname} is
-prompting you to choose a step. Or, {prodname} is 
+prompting you to add to the integration. Or, {prodname} is 
 prompting you to choose a finish connection.  
 
 .Procedure
 
+. On the *Add to Integration* page, click the plus sign where you 
+want to add an OData connection. Skip this step if you are adding 
+a simple integration's finish connection. 
 . Click the OData connection that you want to use. Note that when an OData 
 connection updates or deletes an entity, the connection does not return anything. 
 When the OData connection creates an entity, the connection returns the new entity. 
-. On the *Choose an Action* page, click the action that you want the 
+. On the *Choose an action* page, select the action that you want the 
 connection to perform:  
 +
 * *Create* adds an entity to an OData resource. 
 * *Delete* removes an entity from an OData resource. 
 * *Update* changes an entity that is in an OData resource. 
 
-. To configure the action, select the OData resource that
+. Configure the action by selecting the OData resource that
 you want to update. 
 +
 It is important for you to have an understanding of how the OData 
@@ -40,10 +43,10 @@ overwrite the existing entity, or it might update some fields in the
 existing entity, or it might ignore the operation. It is up to you to 
 know how the OData service behaves in this situation.
  
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears in the integration flow in the location where
+The connection appears in the integration visualization where
 you added it. 
 
 .Next steps

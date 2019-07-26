@@ -64,14 +64,14 @@ and paste them into the connection configuration fields.
 it can validate this connection. If validation fails, try again and 
 be sure to enter the correct values. 
 . When validation is successful, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Jira Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Jira connection
 that uses the jkim account.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *Jira Connect 1* appears as a connection that you can 
 choose to add to an integration.

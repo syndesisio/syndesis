@@ -12,16 +12,19 @@ add a Salesforce connection to the integration.
 * You created a Salesforce connection. 
 * You are creating or updating an integration. 
 * {prodname} is prompting you to choose a start connection, or to choose a 
-finish connection, or to choose a step.
+finish connection, or to add to the integration. 
 
 .Procedure
 
+. If you are adding to the Salesforce connection to the middle of 
+a flow, click the plust sign where you want to add the connection. 
+Skip this step if {prodname} is prompting for a start or finish connection. 
 . Click the Salesforce
 connection that you want to add to the flow. When the integration
 uses the connection that you select to connect to Salesforce, {prodname}
 uses the credentials defined in that connection.
 
-. Click the action that you want the selected connection to perform.  Each
+. Select the action that you want the selected connection to perform.  Each
 Salesforce connection
 that you add to a flow performs only the action you choose.
 
@@ -29,8 +32,4 @@ that you add to a flow performs only the action you choose.
 might be a contact, lead or price book entry. Click in the *Object* field
 to select from a list of Salesforce objects or enter the name of the object.
 
-. Click *Done* to add the connection to the flow.
-
-.Result
-The connection appears in the integration flow 
-in the location where you added it. 
+. Click *Next* to add the connection to the flow.
