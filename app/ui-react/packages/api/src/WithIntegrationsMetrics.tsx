@@ -20,7 +20,7 @@ export class WithIntegrationsMetrics extends React.Component<
           errors: 0, // int64
           id: '-1',
           integrationDeploymentMetrics: [],
-          lastProcessed: `${Date.now()}`, // date-time
+          lastProcessed: undefined, // date-time
           messages: 0, // int64
           metricsProvider: 'null',
           start: `${Date.now()}`, // date-time
