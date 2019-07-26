@@ -48,9 +48,11 @@ func TestSpecificConfig(t *testing.T) {
 					Database:             "db",
 					User:                 "user",
 					Resources: v1alpha1.ResourcesWithVolume{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("1Gi"),
+						Resources: v1alpha1.Resources{
+							ResourceRequirements: v12.ResourceRequirements{
+								Limits: v12.ResourceList{
+									"memory": resource.MustParse("1Gi"),
+								},
 							},
 						},
 						VolumeCapacity: "2Gi",
@@ -64,15 +66,15 @@ func TestSpecificConfig(t *testing.T) {
 							},
 						},
 					},
-					Features: v1alpha1.ServerFeatures{
-						ExposeVia3Scale: false,
-					},
+					Features: v1alpha1.ServerFeatures{},
 				},
 				Meta: v1alpha1.MetaConfiguration{
 					Resources: v1alpha1.ResourcesWithVolume{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("4Gi"),
+						Resources: v1alpha1.Resources{
+							ResourceRequirements: v12.ResourceRequirements{
+								Limits: v12.ResourceList{
+									"memory": resource.MustParse("4Gi"),
+								},
 							},
 						},
 						VolumeCapacity: "5Gi",
@@ -80,9 +82,11 @@ func TestSpecificConfig(t *testing.T) {
 				},
 				Prometheus: v1alpha1.PrometheusConfiguration{
 					Resources: v1alpha1.ResourcesWithVolume{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("6Gi"),
+						Resources: v1alpha1.Resources{
+							ResourceRequirements: v12.ResourceRequirements{
+								Limits: v12.ResourceList{
+									"memory": resource.MustParse("6Gi"),
+								},
 							},
 						},
 						VolumeCapacity: "7Gi",

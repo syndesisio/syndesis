@@ -15,7 +15,7 @@ const (
 )
 
 func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params ResourceParams) ([]unstructured.Unstructured, error) {
-	renderContext, err := GetRenderContext(syndesis, params)
+	renderContext, err := GetRenderContext(syndesis, params, map[string]string{})
 	if err != nil {
 		return nil, err
 	}

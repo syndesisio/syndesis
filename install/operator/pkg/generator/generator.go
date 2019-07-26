@@ -75,6 +75,7 @@ type Context struct {
 	Env              map[string]string
 	Syndesis         *v1alpha1.Syndesis
 	IncludeDint      bool
+	ImagePullSecrets []string
 }
 
 // TODO: Could be added from a local configuration file

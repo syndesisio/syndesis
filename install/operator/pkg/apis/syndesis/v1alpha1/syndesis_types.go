@@ -91,8 +91,8 @@ type Resources struct {
 }
 
 type ResourcesWithVolume struct {
-	v1.ResourceRequirements `json:",inline,omitempty"`
-	VolumeCapacity          string `json:"volumeCapacity,omitempty"`
+	Resources      `json:",inline,omitempty"`
+	VolumeCapacity string `json:"volumeCapacity,omitempty"`
 }
 
 type VolumeOnlyResources struct {
@@ -100,7 +100,7 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	ExposeVia3Scale bool `json:"exposeVia3Scale,omitempty"`
+	ExposeVia3Scale *bool `json:"exposeVia3Scale,omitempty"`
 }
 
 type AddonsSpec map[string]Parameters
