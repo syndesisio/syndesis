@@ -45,7 +45,6 @@ func printVersion() {
 
 func main() {
 	configuration.TemplateConfig = pflag.StringP("template-config", "t", "/conf/template-config.yml", "Path to template config used for installation")
-	configuration.AddonsDirLocation = pflag.StringP("addons", "a", "", "Path to the addons directory used for installation")
 	configuration.Registry = pflag.StringP("registry", "r", "docker.io", "Registry to use for loading images like the upgrade pod")
 
 	// Add the zap logger flag set to the CLI. The flag set must

@@ -22,7 +22,6 @@ Images:
     Upgrade: syndesis-upgrade
     Verifier: syndesis-meta
   SyndesisImagesPrefix: syndesis
-IncludeDint: true
 Name: fuse-ignite
 Ocp: false
 Oso: false

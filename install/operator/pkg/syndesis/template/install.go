@@ -88,14 +88,21 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env ma
 		return nil, err
 	}
 
+	if syndesis.Spec.Addons == nil {
+		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
+	}
+	if syndesis.Spec.Addons["todo"] == nil {
+		syndesis.Spec.Addons["todo"] = v1alpha1.Parameters{}
+	}
+	if syndesis.Spec.Addons["todo"]["enabled"] == "" {
+		syndesis.Spec.Addons["todo"]["enabled"] = "true"
+	}
+
 	// Setup the config..
 	config := make(map[string]string)
 	copyMap(config, env)
 	copyMap(config, configuration.GetEnvVars(syndesis))
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
-	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
-		config["DATAVIRT_ENABLED"] = "1"
-	}
 
 	ifMissingGeneratePwd(config, configuration.EnvOpenshiftOauthClientSecret, 64)
 	ifMissingGeneratePwd(config, configuration.EnvPostgresqlPassword, 16)
@@ -125,7 +132,6 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env ma
 	ifMissingSet(config, configuration.EnvMetaMemoryLimit, "512Mi")
 	ifMissingSet(config, configuration.EnvServerMemoryLimit, "800Mi")
 	ifMissingSet(config, configuration.EnvKomodoMemoryLimit, "1024Mi")
-	ifMissingSet(config, configuration.EnvDatavirtEnabled, "0")
 	maxIntegrations := "0"
 	if renderContext.Ocp {
 		maxIntegrations = "1"

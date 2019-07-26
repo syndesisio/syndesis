@@ -74,7 +74,6 @@ type Context struct {
 	PrometheusRules  string
 	Env              map[string]string
 	Syndesis         *v1alpha1.Syndesis
-	IncludeDint      bool
 	ImagePullSecrets []string
 }
 
