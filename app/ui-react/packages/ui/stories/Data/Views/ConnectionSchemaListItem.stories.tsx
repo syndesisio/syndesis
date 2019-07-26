@@ -4,7 +4,7 @@ import * as React from 'react';
 import { ConnectionSchemaListItem } from '../../../src';
 
 const stories = storiesOf(
-  'Data/Virtualizations/Views/ConnectionSchemaListItem',
+  'Data/Views/ConnectionSchemaListItem',
   module
 );
 

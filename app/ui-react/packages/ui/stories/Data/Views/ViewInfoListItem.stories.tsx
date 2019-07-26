@@ -7,7 +7,7 @@ import * as React from 'react';
 import { ViewInfoListItem } from '../../../src';
 
 const stories = storiesOf(
-  'Data/Virtualizations/Views/ViewInfoListItem',
+  'Data/Views/ViewInfoListItem',
   module
 );
 

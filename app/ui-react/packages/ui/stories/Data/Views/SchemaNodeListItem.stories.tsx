@@ -6,7 +6,7 @@ import * as React from 'react';
 import { SchemaNodeListItem } from '../../../src';
 
 const stories = storiesOf(
-  'Data/Virtualizations/Views/SchemaNodeListItem',
+  'Data/Views/SchemaNodeListItem',
   module
 );
 

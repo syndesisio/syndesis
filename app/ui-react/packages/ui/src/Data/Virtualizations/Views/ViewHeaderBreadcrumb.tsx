@@ -26,7 +26,6 @@ export interface IViewHeaderBreadcrumbProps {
   dataHref: H.LocationDescriptor;
   dashboardString: string;
   dataString: string;
-  i18nViews: string;
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
@@ -170,8 +169,7 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
           {props.dataString}
         </Link>
         <span>
-          {props.virtualizationName + ' '}
-          {props.i18nViews}
+          {props.virtualizationName}
         </span>
       </Breadcrumb>
     </>

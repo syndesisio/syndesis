@@ -18,7 +18,13 @@ export default include('/data', {
           selectSources: 'selectSources',
         }),
         edit: include(':viewDefinitionId', {
+          criteria: 'criteria',
+          groupBy: 'groupBy',
+          join: 'join',
+          properties: 'properties',
           root: '',
+          sql: 'sql',
+          viewOutput: 'viewOutput',
         }),
         importSource: include('importSource', {
           root: '',

@@ -1,4 +1,5 @@
 export * from './Views';
+export * from './ViewEditor';
 export * from './PublishStatusWithProgress';
 export * from './SqlClientContent';
 export * from './SqlClientForm';
