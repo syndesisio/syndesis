@@ -21,6 +21,8 @@ import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.syndesis.connector.support.util.ConnectorOptions;
+
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -39,31 +41,43 @@ public class KnativeMetaDataExtension extends AbstractMetaDataExtension {
     @Override
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public Optional<MetaData> meta(Map<String, Object> parameters) {
+        String name = ConnectorOptions.extractOption(parameters, "name");
+        if (name == null) {
+            // lookup resources on Kubernetes
+            String type = ConnectorOptions.extractOption(parameters, "type");
+            if (type == null) {
+                type = TYPE_CHANNEL;
+            }
+            LOG.debug("Retrieving Knative resources of type {}", type);
 
-        String type = ConnectorOptions.extractOption(parameters, "type");
-        if (type == null) {
-            type = TYPE_CHANNEL;
+            Set<String> channelNames = new TreeSet<>();
+            switch (type) {
+                case TYPE_CHANNEL:
+                    channelNames.addAll(KnativeMetaDataSupport.listChannels());
+                    break;
+                case TYPE_ENDPOINT:
+                    channelNames.addAll(KnativeMetaDataSupport.listServices());
+                    break;
+                default:
+                    throw new RuntimeException("Unsupported Knative type: " + type);
+            }
+
+            return Optional.of(
+                MetaDataBuilder.on(getCamelContext())
+                    .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+                    .withAttribute(MetaData.JAVA_TYPE, String.class)
+                    .withPayload(channelNames)
+                    .build()
+            );
+        } else {
+            // Just return the chosen resource
+            return Optional.of(
+                MetaDataBuilder.on(getCamelContext())
+                    .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+                    .withAttribute(MetaData.JAVA_TYPE, String.class)
+                    .withPayload(Collections.singleton(name))
+                    .build()
+            );
         }
-        LOG.debug("Retrieving Knative resources of type {}", type);
-
-        Set<String> channelNames = new TreeSet<>();
-        switch (type) {
-            case TYPE_CHANNEL:
-                channelNames.addAll(KnativeMetaDataSupport.listChannels());
-                break;
-            case TYPE_ENDPOINT:
-                channelNames.addAll(KnativeMetaDataSupport.listServices());
-                break;
-            default:
-                throw new RuntimeException("Unsupported Knative type: " + type);
-        }
-
-        return Optional.of(
-            MetaDataBuilder.on(getCamelContext())
-                .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                .withAttribute(MetaData.JAVA_TYPE, String.class)
-                .withPayload(channelNames)
-                .build()
-        );
     }
 }
