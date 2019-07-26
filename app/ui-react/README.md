@@ -660,15 +660,25 @@ You can find the configuration settings for Jest in `./packages/ui/package.json`
 
 #### E2E Testing
 
+_Configuration_
+First, configure your environment. We provide a sample configuration file for your environment, located at `syndesis/cypress.env.example.json`. Duplicate (don't simply rename) this file, and name as `cypress.env.json`. By default, Cypress will load these vars for your tests. If, in turn, you'd like to override those, you always can set vars in the terminal. See [here](https://docs.cypress.io/guides/guides/environment-variables.html#Option-3-CYPRESS) for more information. In tests, you can access either type of variable like this:
+
+```
+cy.get('[data-testid=username]').type(Cypress.env('username'))
+```
+
+Where `username` would just be a property in your `cypress.env.json` file or `export CYPRESS_username=example`.
+
+_Running Tests_
 To run all E2E tests: `$ yarn e2e`
 
-To run E2E tests directly in the terminal: `$ yarn e2e:terminal`
+To run E2E tests directly in the terminal, no browser: `$ yarn e2e:terminal`
 
 Cypress will check the `baseUrl` you have configured, which should be your app server. If it cannot load it, it will not validate and will not run. The `baseUrl` is defined in [`./syndesis/cypress.json`](syndesis/cypress.json), though this should already be pre-configured for you.
 
 E2E tests are written using [Cypress](https://www.cypress.io/) and live in the [`syndesis/cypress/integration`](syndesis/cypress/integration) directory. You can find the configuration settings for Cypress under [`syndesis/cypress.json`](syndesis/cypress.json).
 
-E2E Test Writing Flow:
+_E2E Test Writing Flow:_
 
 1. Run the dev server as usual.
 2. Define the happy path and use cases.
@@ -693,7 +703,7 @@ To see this in action, you can record a session:
 
 At the moment, you must select tests individually in the Cypress UI (for the BE recorder/replayer), because Cypress passes a custom header with the test name, which is then used to create the tape directory. If you do not select tests individually, it will throw all recordings into `syndesis/tapes/All Specs`, which could cause duplicate data unnecessarily.
 
-To replay a session (run Cypress tests using the tapes, disallowing outbound requests to the server):
+To replay a session (run Cypress tests using the tapes, disallowing outbound requests to the API server):
 
 `$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn replay` or `$ yarn replay <session-name>`
 

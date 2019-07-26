@@ -22,27 +22,19 @@ describe('Create an Integration', () => {
       '/connections/create/connection-basics'
     );
 
-    cy.get('[data-testid=connection-card-database-card]').click();
+    cy.get('[data-testid=connection-card-todo-app-api-card]').click();
 
-    cy.get('[data-testid=url]')
-      .clear()
-      .type('jdbc:postgresql://syndesis-db:5432/sampledb')
-      .should('have.value', 'jdbc:postgresql://syndesis-db:5432/sampledb');
+    cy.location('pathname').should('contain', '/configure-fields');
 
-    cy.get('[data-testid=user]')
+    cy.get('[data-testid=username]')
       .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
+      .type(Cypress.env('connectorTodoUser'))
+      .should('have.value', Cypress.env('connectorTodoUser'));
 
     cy.get('[data-testid=password]')
       .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
-
-    cy.get('[data-testid=schema]')
-      .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
+      .type(Cypress.env('connectorTodoPassword'))
+      .should('have.value', Cypress.env('connectorTodoPassword'));
 
     cy.get('[data-testid=connection-creator-layout-next-button]')
       .should('not.be.disabled')
@@ -93,11 +85,12 @@ describe('Create an Integration', () => {
       cy.get('.dropdown-toggle').click();
       cy.get('[data-testid=integration-actions-delete]').click();
     });
-    cy.contains(integrationName, '.dropdown-toggle').click();
-    cy.get('#deleteConfirmationDialogContent').should('be.visible');
-    cy.get('.modal-footer')
-      .contains('Delete')
-      .click();
+    cy.get('.modal-dialog').should('be.visible');
+    cy.get('.modal-dialog').within(() => {
+      cy.get('.modal-footer')
+        .contains('Delete')
+        .click();
+    });
   }
 
   /**
@@ -116,8 +109,8 @@ describe('Create an Integration', () => {
    * Delete items created in this test
    */
   after(function() {
-    deleteConnection();
     deleteIntegration();
+    deleteConnection();
   });
 
   /**
@@ -165,9 +158,24 @@ describe('Create an Integration', () => {
     });
   });
 
-  it('loads Configure Action for the start connection', () => {
-    cy.get('[data-testid=cron]').should('not.be.empty');
+  it('checks that the page renders properly', () => {
+    /**
+     * Sidebar should be collapsed
+     */
+    cy.get('.pf-c-page__sidebar-body').should('be.hidden');
 
+    /**
+     * Test Cancellation modal
+     */
+    cy.get('a#integration-editor-cancel-button')
+      .should('exist')
+      .click();
+    cy.get('.modal-dialog').should('be.visible');
+    cy.get('.modal-footer > .btn-default').click();
+    cy.get('.modal-dialog').should('not.be.visible');
+  });
+
+  it('loads Configure Action for the start connection', () => {
     cy.get('button#integration-editor-form-next-button').should(
       'not.be.disabled'
     );
@@ -181,6 +189,7 @@ describe('Create an Integration', () => {
     /**
      * Select Log connection
      */
+    cy.wait(200);
     cy.get('[data-testid=connection-card-log-card]').click();
   });
 
@@ -190,21 +199,6 @@ describe('Create an Integration', () => {
     cy.get('[data-testid=customtext]').should('be.visible');
     cy.get('[data-testid=bodyloggingenabled]').check();
     cy.get('button#integration-editor-form-next-button').click();
-  });
-
-  it('checks that the page renders properly', () => {
-    /**
-     * Sidebar should be collapsed
-     */
-    cy.get('.pf-c-page__sidebar-body').should('be.hidden');
-
-    /**
-     * Test Cancellation modal
-     */
-    cy.get('a#integration-editor-cancel-button').click();
-    cy.get('#deleteConfirmationDialogContent').should('be.visible');
-    cy.get('.modal-footer > .btn-default').click();
-    cy.get('#deleteConfirmationDialogContent').should('not.be.visible');
   });
 
   it('loads Add to Integration page', () => {
@@ -225,26 +219,22 @@ describe('Create an Integration', () => {
 
   it('prompts users to add a step', () => {
     /**
-     * Use DB connection created earlier
+     * Use connection created earlier
      */
     cy.get('[data-testid|=connection-card-' + connectionSlug + ']')
       .should('be.visible')
       .click();
 
     cy.get(
-      '[data-testid=integration-editor-actions-list-item-invoke-sql-list-item]'
+      '[data-testid=integration-editor-actions-list-item-list-all-tasks-list-item]'
     ).within(() => {
       cy.get('[data-testid=select-action-page-select-button]').click();
     });
 
-    cy.get('[data-testid=query]')
-      .should('be.visible')
-      .clear()
-      .type('select * from todo limit 1;');
-
-    cy.get('button#integration-editor-form-next-button')
-      .should('not.be.disabled')
-      .click();
+    cy.wait(200);
+    cy.get(
+      '[data-testid=integration-editor-nothing-to-configure-next-button]'
+    ).click();
 
     /**
      * Ensure all Connections are visible
@@ -254,7 +244,7 @@ describe('Create an Integration', () => {
     ).should('exist');
 
     cy.get(
-      '[data-testid=integration-editor-steps-list-item-log-list-item]'
+      '[data-testid=integration-editor-steps-list-item-list-all-tasks-list-item]'
     ).should('exist');
 
     cy.get(
@@ -279,29 +269,13 @@ describe('Create an Integration', () => {
       .click();
   });
 
-  it('loads integration list with newly created integration', () => {
+  it('loads integration detail page with newly created integration', () => {
     /**
      * May not be a good test, re-assess as very dependent on time.
      */
-    cy.get(
-      '[data-testid|=integrations-list-item-' + integrationSlug + ']'
-    ).within(() => {
-      cy.get('[data-testid=integration-status-detail]').should('be.visible');
-    });
 
-    cy.location('pathname').should('eq', '/integrations');
-
-    cy.get('.form-control').type(integrationName + '{enter}');
-    cy.get(
-      '[data-testid|=integrations-list-item-' + integrationSlug + ']'
-    ).should('exist');
-  });
-
-  it('loads the Integration detail page', () => {
-    cy.get(
-      '[data-testid|=integrations-list-item-' + integrationSlug + ']'
-    ).within(() => {
-      cy.get('[data-testid=integration-actions-view-button]').click();
-    });
+    cy.get('.toast-pf.alert-info').should('be.visible');
+    cy.get('.integration-status-detail').should('exist');
+    cy.location('pathname').should('contain', 'details');
   });
 });

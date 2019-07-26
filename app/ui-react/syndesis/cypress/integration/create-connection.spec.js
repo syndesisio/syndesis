@@ -73,23 +73,23 @@ describe('Create a Connection', () => {
 
     cy.get('[data-testid=url]')
       .clear()
-      .type('jdbc:postgresql://syndesis-db:5432/sampledb')
-      .should('have.value', 'jdbc:postgresql://syndesis-db:5432/sampledb');
+      .type(Cypress.env('connectorDbUrl'))
+      .should('have.value', Cypress.env('connectorDbUrl'));
 
     cy.get('[data-testid=user]')
       .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
+      .type(Cypress.env('connectorDbUser'))
+      .should('have.value', Cypress.env('connectorDbUser'));
 
     cy.get('[data-testid=password]')
       .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
+      .type(Cypress.env('connectorDbPassword'))
+      .should('have.value', Cypress.env('connectorDbPassword'));
 
     cy.get('[data-testid=schema]')
       .clear()
-      .type('sampledb')
-      .should('have.value', 'sampledb');
+      .type(Cypress.env('connectorDbSchema'))
+      .should('have.value', Cypress.env('connectorDbSchema'));
 
     cy.get('[data-testid=connection-creator-layout-next-button]')
       .should('not.be.disabled')

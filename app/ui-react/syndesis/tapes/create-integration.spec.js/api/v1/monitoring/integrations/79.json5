@@ -1,0 +1,77 @@
+{
+    meta: {
+        createdAt: '2019-07-26T13:29:03.107Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/monitoring/integrations',
+        method: 'GET',
+        headers: {
+            'syndesis-mock-request': '24',
+            'syndesis-mock-session': 'create-integration.spec.js',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '259',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 26 Jul 2019 13:29:03 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: [
+            {
+                id: 'i-LkANbdO-OrgXelAq8JFz:1',
+                integrationId: 'i-LkANbdO-OrgXelAq8JFz',
+                deploymentVersion: 1,
+                detailedState: {
+                    value: 'STARTING',
+                    currentStep: 4,
+                    totalSteps: 4,
+                },
+                namespace: 'syndesis-staging',
+                podName: 'i-sample-amq-to-todo-5283-vd8ck',
+                linkType: 'LOGS',
+            },
+        ],
+    },
+}

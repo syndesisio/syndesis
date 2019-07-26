@@ -1,13 +1,13 @@
 {
     meta: {
-        createdAt: '2019-07-26T13:28:37.481Z',
+        createdAt: '2019-07-26T13:28:55.638Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
     },
     req: {
         url: '/api/v1/connections?per_page=50',
         method: 'GET',
         headers: {
-            'syndesis-mock-request': '1',
+            'syndesis-mock-request': '16',
             'syndesis-mock-session': 'create-integration.spec.js',
             referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
@@ -27,7 +27,7 @@
                 'application/json',
             ],
             date: [
-                'Fri, 26 Jul 2019 13:28:47 GMT',
+                'Fri, 26 Jul 2019 13:28:55 GMT',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',

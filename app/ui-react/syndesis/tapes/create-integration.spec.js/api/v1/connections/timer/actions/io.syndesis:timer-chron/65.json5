@@ -1,0 +1,105 @@
+{
+    meta: {
+        createdAt: '2019-07-26T13:28:50.312Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/connections/timer/actions/io.syndesis:timer-chron',
+        method: 'POST',
+        headers: {
+            'syndesis-mock-request': '10',
+            'syndesis-mock-session': 'create-integration.spec.js',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: 'e30=',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'access-control-allow-credentials': [
+                'true',
+            ],
+            'access-control-allow-origin': [
+                'http://localhost:3000',
+            ],
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '641',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 26 Jul 2019 13:28:50 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            vary: [
+                'Origin',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            inputDataShape: {
+                kind: 'none',
+            },
+            outputDataShape: {
+                kind: 'none',
+            },
+            propertyDefinitionSteps: [
+                {
+                    name: 'cron',
+                    properties: {
+                        cron: {
+                            componentProperty: false,
+                            defaultValue: '0 0/1 * * * ?',
+                            deprecated: false,
+                            description: 'A cron expression, for example the expression for every minute is 0 0/1 * * * ?',
+                            displayName: 'Cron Expression',
+                            javaType: 'string',
+                            kind: 'parameter',
+                            labelHint: 'Delay between scheduling (executing) the integration expressed as a cron expression',
+                            required: true,
+                            secret: false,
+                            type: 'string',
+                        },
+                    },
+                    description: 'Cron',
+                },
+            ],
+            configuredProperties: {
+                triggerName: 'syndesis-quartz',
+            },
+            componentScheme: 'quartz2',
+            _meta: {},
+        },
+    },
+}
