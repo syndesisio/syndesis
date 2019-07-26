@@ -18,6 +18,7 @@ package io.syndesis.server.endpoint.v1.handler.meta;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +49,25 @@ public class SplitMetadataHandlerTest {
 
     @Test
     public void shouldCreateMetaDataFromPreviousStep() throws IOException {
+        Step firstStep = new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                .outputDataShape(new DataShape.Builder()
+                                        .kind(DataShapeKinds.JSON_INSTANCE)
+                                        .specification("[{\"message\": \"Should be ignored\"}]")
+                                        .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
+                                        .addVariant(new DataShape.Builder()
+                                                .kind(DataShapeKinds.JSON_INSTANCE)
+                                                .specification("{\"message\": \"Should be ignored\"}")
+                                                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
+                                                .build())
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+
         Step previousStep = new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .action(new ConnectorAction.Builder()
@@ -78,7 +98,7 @@ public class SplitMetadataHandlerTest {
                 .stepKind(StepKind.log)
                 .build();
 
-        DynamicActionMetadata metadata = metadataHandler.createMetadata(splitStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
+        DynamicActionMetadata metadata = metadataHandler.createMetadata(splitStep, Arrays.asList(firstStep, previousStep), Collections.singletonList(subsequentStep));
 
         Assert.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.inputShape());
         Assert.assertNotNull(metadata.outputShape());
