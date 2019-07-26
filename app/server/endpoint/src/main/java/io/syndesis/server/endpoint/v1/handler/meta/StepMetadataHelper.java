@@ -53,17 +53,6 @@ final class StepMetadataHelper {
     }
 
     /**
-     * Finds first step in list that has a proper output data shape.
-     * @param steps list of steps to evaluate
-     * @return optional matching step
-     */
-    static Optional<Step> getFirstWithOutputShape(List<Step> steps) {
-        return steps.stream()
-                .filter(Step::hasOutputDataShape)
-                .findFirst();
-    }
-
-    /**
      * Finds last step in list that has a proper output data shape.
      * @param steps list of steps to evaluate
      * @return optional matching step
