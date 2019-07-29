@@ -29,11 +29,11 @@
 	<packaging>jar</packaging>
 
 	<dependencies>
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-mongodb3</artifactId>
-            <scope>runtime</scope>
-        </dependency>
+    <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-mongodb3</artifactId>
+        <scope>runtime</scope>
+    </dependency>
 		<dependency>
 			<groupId>org.apache.camel</groupId>
 			<artifactId>camel-core</artifactId>

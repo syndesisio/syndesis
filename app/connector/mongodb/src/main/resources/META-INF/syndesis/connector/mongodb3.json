@@ -6,9 +6,6 @@
       "description": "Mongo DB producer",
       "descriptor": {
         "componentScheme": "mongodb3",
-        "connectorCustomizers": [
-          "io.syndesis.connector.mongo.MongoOperationCustomizer"
-        ],        
         "inputDataShape": {
           "kind": "json-schema"
         },
@@ -55,9 +52,9 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
-              }              
+              }
             }
-		}    
+		}
         ]
       },
       "id": "io.syndesis.connector:connector-mongodb-producer",
@@ -69,9 +66,6 @@
       "description": "Mongo DB consumer",
       "descriptor": {
         "componentScheme": "mongodb3",
-        "connectorCustomizers": [
-          "io.syndesis.connector.mongo.MongoOperationCustomizer"
-        ],        
         "inputDataShape": {
           "kind": "json-schema"
         },
@@ -154,7 +148,7 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
-              }, 
+              },
               "tailTrackCollection": {
                 "deprecated": false,
                 "displayName": "Collection used to store tail tracking",
@@ -178,20 +172,20 @@
                 "required": false,
                 "secret": false,
                 "type": "string"
-              }                                                                 
+              }
             }
-		}    
+		}
         ]
       },
       "id": "io.syndesis.connector:connector-mongodb-consumer",
       "name": "Mongo consumer",
       "pattern": "From"
-    }    
+    }
   ],
   "configuredProperties": {},
   "connectorCustomizers": [
     "io.syndesis.connector.mongo.MongoClientCustomizer"
-  ],   
+  ],
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -247,7 +241,7 @@
       "secret": false,
       "tags": [],
       "type": "string"
-    },    
+    },
     "user": {
       "componentProperty": true,
       "deprecated": false,
@@ -277,7 +271,7 @@
       "secret": false,
       "tags": [],
       "type": "string"
-    }    
+    }
   },
   "tags": [
     "verifier"
