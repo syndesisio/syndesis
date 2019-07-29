@@ -1,10 +1,10 @@
 import { ViewEditorState } from '@syndesis/models';
 import { useApiResource } from './useApiResource';
 
-export const useViewEditorStates = (idPattern?: string) => {
+export const useViewEditorStates = (virtualization: string) => {
   const url =
     'service/userProfile/viewEditorState' +
-    (idPattern ? '?pattern=' + idPattern : '');
+    (virtualization ? '?virtualization=' + virtualization : '');
   return useApiResource<ViewEditorState[]>({
     defaultValue: [],
     url,

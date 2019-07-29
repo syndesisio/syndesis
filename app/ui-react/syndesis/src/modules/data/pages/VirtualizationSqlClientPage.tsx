@@ -44,7 +44,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
 
   const { resource: editorStates } = useViewEditorStates(
-    virtualization.serviceVdbName + '*'
+    virtualization.keng__id
   );
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
