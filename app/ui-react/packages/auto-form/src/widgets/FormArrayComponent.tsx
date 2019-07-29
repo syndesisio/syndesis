@@ -82,8 +82,7 @@ export class FormArrayComponent extends React.Component<
                           htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
                           className="control-label"
                           {...controlLabelAttributes}
-                        >
-                        </label>
+                        />
                         <div id={toValidHtmlId(`${controlGroupName}-control`)}>
                           <div className="form-array-control__array-controls">
                             {options.showSortControls && (

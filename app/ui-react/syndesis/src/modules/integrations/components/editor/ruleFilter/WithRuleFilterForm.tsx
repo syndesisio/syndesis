@@ -132,8 +132,7 @@ export const WithRuleFilterForm: React.FunctionComponent<
   const validator = (values: IRuleFilterConfig) =>
     validateRequiredProperties(
       definition,
-      (field: string) =>
-        t('integrations:editor:ruleForm:fieldRequired', { field }),
+      (field: string) => '', // return an empty string here so the help text isn't replaced
       values
     );
   return (
