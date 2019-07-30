@@ -106,7 +106,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     hasData: hasEditorStates,
     error: editorStatesError,
     read,
-  } = useViewEditorStates(virtualization.serviceVdbName + '*');
+  } = useViewEditorStates(params.virtualizationId);
 
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,

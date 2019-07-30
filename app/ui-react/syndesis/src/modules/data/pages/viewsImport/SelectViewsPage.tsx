@@ -70,7 +70,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
 
   const virtualization = state.virtualization;
   const { resource: editorStates } = useViewEditorStates(
-    virtualization.serviceVdbName + '*'
+    virtualization.keng__id
   );
 
   const handleCreateViews = async () => {
