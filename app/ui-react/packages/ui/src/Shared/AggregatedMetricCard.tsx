@@ -1,8 +1,8 @@
+import { Card, CardBody, Title } from '@patternfly/react-core';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
   AggregateStatusNotifications,
-  Card,
   Icon,
 } from 'patternfly-react';
 import * as React from 'react';
@@ -23,8 +23,8 @@ export class AggregatedMetricCard extends React.PureComponent<
 
   public render() {
     return (
-      <Card accented={true} aggregated={true} matchHeight={true}>
-        <Card.Title>
+      <Card className="aggregate-status">
+        <Title size="md">
           <AggregateStatusCount>
             <span data-testid={'aggregated-metric-card-total-count'}>
               {this.formatNumber(this.props.total)}
@@ -34,8 +34,8 @@ export class AggregatedMetricCard extends React.PureComponent<
               {this.props.title}
             </span>
           </AggregateStatusCount>
-        </Card.Title>
-        <Card.Body>
+        </Title>
+        <CardBody>
           <AggregateStatusNotifications>
             <AggregateStatusNotification>
               <Icon type="pf" name="ok" />
@@ -50,7 +50,7 @@ export class AggregatedMetricCard extends React.PureComponent<
               </span>
             </AggregateStatusNotification>
           </AggregateStatusNotifications>
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }

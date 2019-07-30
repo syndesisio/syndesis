@@ -1,5 +1,5 @@
 import { Text } from '@patternfly/react-core';
-import { Card } from 'patternfly-react';
+import { Card, CardBody } from '@patternfly/react-core';
 import * as React from 'react';
 import './ConnectionsMetric.css';
 
@@ -12,10 +12,10 @@ export class ConnectionsMetric extends React.PureComponent<
 > {
   public render() {
     return (
-      <Card accented={true} aggregated={true} matchHeight={true}>
-        <Card.Body className={'connections-metric__body'}>
+      <Card className="aggregate-status">
+        <CardBody className={'connections-metric__body'}>
           <Text>{this.props.i18nTitle}</Text>
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }

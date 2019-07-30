@@ -1,5 +1,5 @@
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Card } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationsEmptyState } from '../Integration';
 
@@ -20,14 +20,14 @@ export class TopIntegrationsCard extends React.Component<
 > {
   public render() {
     return (
-      <Card accented={false} className={'top-integrations'}>
-        <Card.Heading className={'top-integrations__heading'}>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
+      <Card className={'top-integrations'}>
+        <CardHeader className={'top-integrations__heading'}>
+          <Title size={'md'}>{this.props.i18nTitle}</Title>
           <div className={'top-integrations__heading-daterange'}>
             {this.props.i18nLast30Days}
           </div>
-        </Card.Heading>
-        <Card.Body>
+        </CardHeader>
+        <CardBody>
           {this.props.children ? (
             this.props.children
           ) : (
@@ -39,7 +39,7 @@ export class TopIntegrationsCard extends React.Component<
               linkCreateIntegration={this.props.linkCreateIntegration}
             />
           )}
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }

@@ -1,4 +1,4 @@
-import { Card } from 'patternfly-react';
+import { Card, CardBody, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import './UptimeMetric.css';
 
@@ -13,19 +13,14 @@ export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
     const startAsDate = new Date(this.props.start);
     const startAsHuman = startAsDate.toLocaleString();
     return (
-      <Card
-        className="metrics-uptime"
-        accented={true}
-        aggregated={true}
-        matchHeight={true}
-      >
-        <Card.Title className="metrics-uptime__header">
+      <Card className="metrics-uptime aggregate-status">
+        <Title size="md" className="metrics-uptime__header">
           <div>{this.props.i18nTitle}</div>
           <div className="metrics-uptime__uptime">since {startAsHuman}</div>
-        </Card.Title>
-        <Card.Body>
+        </Title>
+        <CardBody>
           <span>{this.props.durationDifference}</span>
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }

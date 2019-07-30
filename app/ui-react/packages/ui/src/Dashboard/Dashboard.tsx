@@ -1,6 +1,11 @@
-import { Title } from '@patternfly/react-core';
+import {
+  Grid,
+  GridItem,
+  Stack,
+  StackItem,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink, PageSection } from '../Layout';
@@ -35,70 +40,59 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
       <>
         <SimplePageHeader i18nTitle={this.props.i18nTitle} titleSize={'xl'} />
         <PageSection>
-          <Grid fluid={true}>
-            <Grid.Row className={'show-grid dashboard__integrations__actions'}>
-              <Grid.Col xs={6} xsOffset={6}>
-                <ButtonLink
-                  data-testid={'dashboard-create-integration-button'}
-                  href={this.props.linkToIntegrationCreation}
-                  as={'primary'}
-                  className={'pull-right'}
-                >
-                  {this.props.i18nLinkCreateIntegration}
-                </ButtonLink>
-                <Link
-                  data-testid={'dashboard-integrations-link'}
-                  to={this.props.linkToIntegrations}
-                  className={'pull-right view'}
-                >
-                  {this.props.i18nLinkToIntegrations}
-                </Link>
-              </Grid.Col>
-            </Grid.Row>
-
-            <Grid.Row className={'dashboard__metrics'}>
-              <CardGrid fluid={true} matchHeight={true}>
-                <CardGrid.Row>
-                  <CardGrid.Col sm={6} md={3}>
-                    {this.props.integrationsOverview}
-                  </CardGrid.Col>
-                  <CardGrid.Col sm={6} md={3}>
-                    {this.props.connectionsOverview}
-                  </CardGrid.Col>
-                  <CardGrid.Col sm={6} md={3}>
-                    {this.props.messagesOverview}
-                  </CardGrid.Col>
-                  <CardGrid.Col sm={6} md={3}>
-                    {this.props.uptimeOverview}
-                  </CardGrid.Col>
-                </CardGrid.Row>
-              </CardGrid>
-            </Grid.Row>
-
-            <Grid.Row className={'dashboard__integrations'}>
+          <Stack>
+            <StackItem
+              className="dashboard__integrations__actions"
+              isFilled={false}
+            >
+              <ButtonLink
+                data-testid={'dashboard-create-integration-button'}
+                href={this.props.linkToIntegrationCreation}
+                as={'primary'}
+                className={'pull-right'}
+              >
+                {this.props.i18nLinkCreateIntegration}
+              </ButtonLink>
+              <Link
+                data-testid={'dashboard-integrations-link'}
+                to={this.props.linkToIntegrations}
+                className={'pull-right view'}
+              >
+                {this.props.i18nLinkToIntegrations}
+              </Link>
+            </StackItem>
+            <StackItem className="dashboard__metrics" isFilled={false}>
+              <Grid md={6} xl={3} gutter={'sm'}>
+                <GridItem>{this.props.integrationsOverview}</GridItem>
+                <GridItem>{this.props.connectionsOverview}</GridItem>
+                <GridItem>{this.props.messagesOverview}</GridItem>
+                <GridItem>{this.props.uptimeOverview}</GridItem>
+              </Grid>
+            </StackItem>
+            <StackItem className="dashboard__integrations" isFilled={false}>
               {/* TODO last minute empty state hack with minimal changes, this needs a revisit */
               this.props.noIntegrations ? (
-                <>
-                  <Grid.Col sm={12} md={12}>
-                    {this.props.topIntegrations}
-                  </Grid.Col>
-                </>
+                <>{this.props.topIntegrations}</>
               ) : (
                 <>
-                  <Grid.Col sm={12} md={7}>
-                    {this.props.topIntegrations}
-                  </Grid.Col>
-                  <Grid.Col sm={12} md={5}>
-                    {this.props.integrationBoard}
-                  </Grid.Col>
-                  <Grid.Col sm={12} md={5}>
-                    {this.props.integrationUpdates}
-                  </Grid.Col>
+                  <Grid gutter={'lg'}>
+                    <GridItem xl={7} xlRowSpan={12}>
+                      {this.props.topIntegrations}
+                    </GridItem>
+                    <GridItem lg={6} xl={5} xlRowSpan={6}>
+                      {this.props.integrationBoard}
+                    </GridItem>
+                    <GridItem lg={6} xl={5} xlRowSpan={6}>
+                      {this.props.integrationUpdates}
+                    </GridItem>
+                  </Grid>
                 </>
               )}
-            </Grid.Row>
-
-            <Grid.Row className={'dashboard__connections__actions'}>
+            </StackItem>
+            <StackItem
+              className="dashboard__connections__actions"
+              isFilled={false}
+            >
               <Title size={'lg'} className={'pull-left'}>
                 {this.props.i18nConnections}
               </Title>
@@ -117,14 +111,14 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               >
                 {this.props.i18nLinkToConnections}
               </Link>
-            </Grid.Row>
-
-            <Grid.Row>
-              <CardGrid fluid={true} matchHeight={true}>
-                <CardGrid.Row>{this.props.connections}</CardGrid.Row>
-              </CardGrid>
-            </Grid.Row>
-          </Grid>
+            </StackItem>
+            <StackItem
+              className="dashboard__connections__grid"
+              isFilled={false}
+            >
+              {this.props.connections}
+            </StackItem>
+          </Stack>
         </PageSection>
       </>
     );

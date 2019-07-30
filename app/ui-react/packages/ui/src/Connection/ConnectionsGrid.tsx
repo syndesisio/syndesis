@@ -1,12 +1,8 @@
-import { CardGrid } from 'patternfly-react';
+import { Gallery } from '@patternfly/react-core';
 import * as React from 'react';
 
 export class ConnectionsGrid extends React.Component {
   public render() {
-    return (
-      <CardGrid fluid={true} matchHeight={true}>
-        <CardGrid.Row>{this.props.children}</CardGrid.Row>
-      </CardGrid>
-    );
+    return <Gallery gutter={'sm'}>{this.props.children}</Gallery>;
   }
 }

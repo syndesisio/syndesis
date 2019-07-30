@@ -1,4 +1,5 @@
-import { Card, DonutChart, patternfly } from 'patternfly-react';
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
+import { DonutChart, patternfly } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationBoardProps {
@@ -42,10 +43,10 @@ export class IntegrationBoard extends React.PureComponent<
 
     return (
       <Card>
-        <Card.Heading>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
-        </Card.Heading>
-        <Card.Body>
+        <CardHeader>
+          <Title size={'md'}>{this.props.i18nTitle}</Title>
+        </CardHeader>
+        <CardBody>
           <DonutChart
             id="integration-board"
             size={{ height: 120 }}
@@ -60,7 +61,7 @@ export class IntegrationBoard extends React.PureComponent<
             }}
             legend={{ show: true, position: 'right' }}
           />
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }
