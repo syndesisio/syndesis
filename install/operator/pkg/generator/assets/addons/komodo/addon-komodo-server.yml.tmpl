@@ -1,4 +1,3 @@
-{{if eq (or .Syndesis.Spec.Addons.komodo.enabled "false") "true"}}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -137,4 +136,3 @@
       type: ImageChange
 {{end}}
     - type: ConfigChange
-{{end}}

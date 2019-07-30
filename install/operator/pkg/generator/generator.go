@@ -205,101 +205,124 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 	response := []unstructured.Unstructured{}
 	for _, f := range files {
 		filePath := directory + f.Name()
-		var obj interface{} = nil
+		r, err := Render(assets, filePath, context)
+		if err != nil {
+			return nil, err
+		}
+		response = append(response, r...)
+	}
+	return response, nil
+}
 
-		// We can process go lang templates.
-		if strings.HasSuffix(f.Name(), ".yml.tmpl") {
-			fileData, err := AssetAsBytes(filePath)
-			if err != nil {
-				return nil, err
-			}
+func Render(assets http.FileSystem, filePath string, context interface{}) ([]unstructured.Unstructured, error) {
+	var obj interface{} = nil
+	response := []unstructured.Unstructured{}
 
-			tmpl, err := template.New(filePath).Funcs(templateFunctions).Parse(string(fileData))
-			if err != nil {
-				return nil, err
-			}
-
-			buffer := &bytes.Buffer{}
-			err = tmpl.Execute(buffer, context)
-			if err != nil {
-				return nil, err
-			}
-			rawYaml := buffer.Bytes()
-
-			err = util.UnmarshalYaml(rawYaml, &obj)
-			if err != nil {
-				return nil, fmt.Errorf("%s:\n%s\n", err, string(rawYaml))
-			}
+	// We can load plain yml files..
+	if strings.HasSuffix(filePath, ".yml") {
+		fileData, err := AssetAsBytes(filePath)
+		if err != nil {
+			return nil, err
 		}
 
-		// We can process mustache templates.
-		if strings.HasSuffix(f.Name(), ".yml.mustache") {
-			fileData, err := AssetAsBytes(filePath)
+		err = util.UnmarshalYaml(fileData, &obj)
+		if err != nil {
+			return nil, fmt.Errorf("%s:\n%s\n", err, string(fileData))
+		}
+	}
+
+	// We can process go lang templates.
+	if strings.HasSuffix(filePath, ".yml.tmpl") {
+		fileData, err := AssetAsBytes(filePath)
+		if err != nil {
+			return nil, err
+		}
+
+		tmpl, err := template.New(filePath).Funcs(templateFunctions).Parse(string(fileData))
+		if err != nil {
+			return nil, err
+		}
+
+		buffer := &bytes.Buffer{}
+		err = tmpl.Execute(buffer, context)
+		if err != nil {
+			return nil, err
+		}
+		rawYaml := buffer.Bytes()
+
+		err = util.UnmarshalYaml(rawYaml, &obj)
+		if err != nil {
+			return nil, fmt.Errorf("%s:\n%s\n", err, string(rawYaml))
+		}
+	}
+
+	// We can process mustache templates.
+	if strings.HasSuffix(filePath, ".yml.mustache") {
+		fileData, err := AssetAsBytes(filePath)
+		if err != nil {
+			return nil, err
+		}
+
+		rawYaml := mustache.Render(string(fileData), context)
+		err = util.UnmarshalYaml([]byte(rawYaml), &obj)
+		if err != nil {
+			return nil, fmt.Errorf("%s:\n%s\n", err, rawYaml)
+		}
+
+		// This is only here to assist in migrating from mustache to go lang templates.
+		fileDataTmpl, err := AssetAsBytes(filePath + ".tmpl")
+		if err == nil {
+			t, err := template.New(filePath + ".tmpl").Parse(string(fileDataTmpl))
 			if err != nil {
 				return nil, err
 			}
 
-			rawYaml := mustache.Render(string(fileData), context)
-			err = util.UnmarshalYaml([]byte(rawYaml), &obj)
+			x := &bytes.Buffer{}
+			err = t.Execute(x, context)
+			if err != nil {
+				return nil, err
+			}
+
+			var objTmpl interface{} = nil
+			err = util.UnmarshalYaml([]byte(x.String()), &objTmpl)
 			if err != nil {
 				return nil, fmt.Errorf("%s:\n%s\n", err, rawYaml)
 			}
 
-			// This is only here to assist in migrating from mustache to go lang templates.
-			fileDataTmpl, err := AssetAsBytes(filePath + ".tmpl")
-			if err == nil {
-				t, err := template.New(filePath + ".tmpl").Parse(string(fileDataTmpl))
-				if err != nil {
-					return nil, err
-				}
-
-				x := &bytes.Buffer{}
-				err = t.Execute(x, context)
-				if err != nil {
-					return nil, err
-				}
-
-				var objTmpl interface{} = nil
-				err = util.UnmarshalYaml([]byte(x.String()), &objTmpl)
-				if err != nil {
-					return nil, fmt.Errorf("%s:\n%s\n", err, rawYaml)
-				}
-
-				must1 := string(Must(yaml.Marshal(obj)))
-				must2 := string(Must(yaml.Marshal(objTmpl)))
-				if must1 != must2 {
-					return nil, fmt.Errorf("template did not render the same way")
-				}
+			must1 := string(Must(yaml.Marshal(obj)))
+			must2 := string(Must(yaml.Marshal(objTmpl)))
+			if must1 != must2 {
+				return nil, fmt.Errorf("template did not render the same way")
 			}
-
-		}
-
-		switch v := obj.(type) {
-		case []interface{}:
-			for _, value := range v {
-				if x, ok := value.(map[string]interface{}); ok {
-					u := unstructured.Unstructured{x}
-					//annotatedForDebugging(u, name, rawYaml)
-					response = append(response, u)
-				} else {
-					return nil, errors.New("list did not contain objects")
-				}
-			}
-		case map[string]interface{}:
-			u := unstructured.Unstructured{v}
-			//annotatedForDebugging(u, name, rawYaml)
-			response = append(response, u)
-		case nil:
-			// It's ok if a template chooses not to generate any resources..
-
-		default:
-			return nil, fmt.Errorf("Unexptected yaml unmarshal type: %v", obj)
 		}
 
 	}
 
+	switch v := obj.(type) {
+	case []interface{}:
+		for _, value := range v {
+			if x, ok := value.(map[string]interface{}); ok {
+				u := unstructured.Unstructured{x}
+				//annotatedForDebugging(u, name, rawYaml)
+				response = append(response, u)
+			} else {
+				return nil, errors.New("list did not contain objects")
+			}
+		}
+	case map[string]interface{}:
+		u := unstructured.Unstructured{v}
+		//annotatedForDebugging(u, name, rawYaml)
+		response = append(response, u)
+	case nil:
+		// It's ok if a template chooses not to generate any resources..
+
+	default:
+		return nil, fmt.Errorf("Unexptected yaml unmarshal type: %v", obj)
+	}
+
 	return response, nil
 }
+
 func Must(data []byte, err error) []byte {
 	if err != nil {
 		panic(err)

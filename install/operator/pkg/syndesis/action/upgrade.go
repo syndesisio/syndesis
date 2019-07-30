@@ -18,7 +18,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
+	stemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -46,7 +46,7 @@ func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := syndesistemplate.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := stemplate.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}
@@ -179,9 +179,12 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 }
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
-	unstructured, err := syndesistemplate.GetUpgradeResources(scheme, syndesis, syndesistemplate.ResourceParams{
+
+	c, err := stemplate.GetTemplateContext()
+
+	unstructured, err := stemplate.GetUpgradeResources(scheme, syndesis, stemplate.ResourceParams{
 		OAuthClientSecret: "-",
-		UpgradeRegistry:   *configuration.Registry,
+		UpgradeRegistry:   c.Registry,
 	})
 	if err != nil {
 		return nil, err

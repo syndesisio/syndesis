@@ -12,6 +12,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/yaml"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
@@ -145,4 +146,55 @@ func jsonIfYaml(source []byte, filename string) ([]byte, error) {
 		return yaml.ToJSON(source)
 	}
 	return source, nil
+}
+
+func ToUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
+
+	// It might be already Unstructured..
+	if u, ok := obj.(*unstructured.Unstructured); ok {
+		return u, nil
+	}
+
+	// Convert it..
+	fields, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
+	if err != nil {
+		return nil, err
+	}
+	return &unstructured.Unstructured{fields}, nil
+}
+
+func ToMetaObject(resource interface{}) metav1.Object {
+	switch resource := resource.(type) {
+	case metav1.Object:
+		return resource
+	case unstructured.Unstructured:
+		return &resource
+	}
+	panic("Not a metav1.Object")
+}
+
+func ToRuntimeObject(resource interface{}) runtime.Object {
+	switch resource := resource.(type) {
+	case runtime.Object:
+		return resource
+	case unstructured.Unstructured:
+		return &resource
+	}
+	panic("Not a runtime.Object")
+}
+
+func UnstructuredsToRuntimeObject(items []unstructured.Unstructured) runtime.Object {
+	switch len(items) {
+	case 0:
+		return nil
+	case 1:
+		return &items[0]
+	default:
+		list := unstructured.UnstructuredList{
+			Items: items,
+		}
+		list.SetAPIVersion("v1")
+		list.SetKind("List")
+		return &list
+	}
 }
