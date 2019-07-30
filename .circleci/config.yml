@@ -399,23 +399,51 @@ jobs:
             ./tools/bin/syndesis build --batch-mode --module upgrade --docker
       - <<: *push_images
 
+  # Test support depends on integration, server, mount workspace .m2
+  test-support:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Test Support
+          command: |
+            ./tools/bin/syndesis build --batch-mode --module :test-parent,:test-support | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
+          paths:
+            - ~/.m2
+      - <<: *save_m2
+
+  # Integration test depends on test-support
   integration-test:
-    working_directory: /workspace
     environment:
       <<: *common_env
     machine:
       image: ubuntu-1604:201903-01
     steps:
+      - checkout
       - <<: *load_m2
       - run:
           name: Run integration tests
           command: |
-            ./tools/bin/syndesis integration-test | tee test_log.txt
-      - <<: *save_junit
+            mkdir -p /tmp/src
+            mkdir -p ~/junit/
+            ./tools/bin/syndesis integration-test | tee ~/test_log.txt
+            find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} ~/junit
       - store_test_results:
-          path: /workspace/junit
+          path: ~/junit
       - store_artifacts:
-          path: test_log.txt
+          path: ~/test_log.txt
 
   system-test:
     <<: *job_defaults
@@ -509,7 +537,7 @@ workflows:
       - operator
       - extension:
           requires:
-           - common
+            - common
       - integration:
           requires:
             - extension
@@ -536,10 +564,35 @@ workflows:
   nightly:
     triggers:
       - schedule:
-          cron: "0 7-23 * * 1-5"
+          cron: "0 0 * * 1-5"
           filters:
             branches:
               only:
                 - master
     jobs:
-      - integration-test
+      - common
+      - extension:
+          requires:
+            - common
+      - integration:
+          requires:
+            - extension
+      - connector:
+          requires:
+            - integration
+      - meta:
+          requires:
+            - connector
+      - server:
+          requires:
+            - connector
+      - s2i:
+          requires:
+            - server
+      - test-support:
+          requires:
+            - s2i
+      - integration-test:
+          requires:
+            - s2i
+            - test-support

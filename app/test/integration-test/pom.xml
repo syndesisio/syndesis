@@ -199,6 +199,13 @@
           <skip>true</skip>
         </configuration>
       </plugin>
+      <!-- Required only for CircleCi build as the used JVM to run the tests has limited cryptography -->
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
