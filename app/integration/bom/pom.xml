@@ -28,7 +28,7 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-740038</camel.version>
+    <camel.version>2.21.0.fuse-750007</camel.version>
     <atlasmap.version>1.41.1</atlasmap.version>
     <jackson.databind.version>2.8.11.3</jackson.databind.version>
   </properties>
@@ -382,6 +382,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-jira</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-mongodb</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>

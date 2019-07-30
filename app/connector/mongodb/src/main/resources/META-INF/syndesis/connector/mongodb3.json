@@ -1,0 +1,279 @@
+{
+  "version": 3,
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Mongo DB producer",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Producer configuration",
+            "name": "Database",
+            "properties": {
+              "database": {
+                "deprecated": false,
+                "displayName": "Database name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Database name",
+                "placeholder": "database",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection name",
+                "placeholder": "collection",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "operation": {
+                "deprecated": false,
+                "displayName": "Operation to perform",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Operation name",
+                "placeholder": "operation",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+		}
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-producer",
+      "name": "Mongo producer",
+      "pattern": "To"
+    },
+	{
+      "actionType": "connector",
+      "description": "Mongo DB consumer",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Consumer configuration",
+            "name": "Database",
+            "properties": {
+              "database": {
+                "deprecated": false,
+                "displayName": "Database name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Database name",
+                "placeholder": "database",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection name",
+                "placeholder": "collection",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackIncreasingField": {
+                "deprecated": false,
+                "displayName": "Collection field used to track incoming documents",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "tailTrackIncreasingField",
+                "placeholder": "_id",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "persistentTailTracking": {
+                "deprecated": false,
+                "displayName": "Persistent tracking enabled",
+                "group": "common",
+                "javaType": "boolean",
+                "kind": "path",
+                "labelHint": "persistentTailTracking",
+                "placeholder": "false",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "persistentId": {
+                "deprecated": false,
+                "displayName": "Field used to store the tracking progress",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "persistentId",
+                "placeholder": "idTracker",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackDb": {
+                "deprecated": false,
+                "displayName": "DB used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "tailTrackDb",
+                "placeholder": "tailTrackDb",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackCollection": {
+                "deprecated": false,
+                "displayName": "Collection used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "tailTrackCollection",
+                "placeholder": "tailTrackCollection",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackField": {
+                "deprecated": false,
+                "displayName": "Field used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "tailTrackField",
+                "placeholder": "tailTrackField",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+		}
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-consumer",
+      "name": "Mongo consumer",
+      "pattern": "From"
+    }
+  ],
+  "configuredProperties": {},
+  "connectorCustomizers": [
+    "io.syndesis.connector.mongo.MongoClientCustomizer"
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Mongo DB connector.",
+  "icon": "data:image/webp;base64,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",
+  "id": "mongodb3",
+  "name": "MongoDB",
+  "properties": {
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Password for the database connection.",
+      "order": "4",
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "host": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Database host",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Database host.",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "port": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Database port",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Database port.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "user": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Username",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Username for the database connection.",
+      "order": "3",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "adminDB": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "AdminDB",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Administration database used to grant permissions.",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

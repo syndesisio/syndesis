@@ -205,6 +205,11 @@
       <artifactId>connector-jira</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-mongodb</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
