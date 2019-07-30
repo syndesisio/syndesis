@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { ViewInfoList, ViewInfoListItem } from '../../../src';
 
-const stories = storiesOf('Data/Virtualizations/Views/ViewInfoList', module);
+const stories = storiesOf('Data/Views/ViewInfoList', module);
 
 const viewName1 = 'Customers';
 const viewDesc1 = 'Description for Customers';

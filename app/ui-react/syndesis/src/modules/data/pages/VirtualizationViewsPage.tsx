@@ -225,7 +225,6 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                       dashboardString={t('shared:Home')}
                       dataHref={resolvers.data.root()}
                       dataString={t('shared:Virtualizations')}
-                      i18nViews={t('virtualization.views')}
                       i18nCancelText={t('shared:Cancel')}
                       i18nDelete={t('shared:Delete')}
                       i18nDeleteModalMessage={t(
@@ -336,11 +335,12 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                           key={index}
                           viewName={viewDefinition.viewName}
                           viewDescription={viewDefinition.keng__description}
-                          viewEditPageLink={resolvers.data.virtualizations.views.edit(
+                          viewEditPageLink={resolvers.data.virtualizations.views.edit.sql(
                             {
                               virtualization,
                               // tslint:disable-next-line: object-literal-sort-keys
                               viewDefinition,
+                              previewExpanded:true,
                             }
                           )}
                           i18nCancelText={t('shared:Cancel')}

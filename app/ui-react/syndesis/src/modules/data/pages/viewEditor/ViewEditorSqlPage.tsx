@@ -1,50 +1,56 @@
 import { useVirtualizationHelpers } from '@syndesis/api';
-import { TableColumns } from '@syndesis/models';
 import {
   RestDataService,
   ViewDefinition,
   ViewEditorState,
 } from '@syndesis/models';
+import { TableColumns } from '@syndesis/models';
 import {
   Breadcrumb,
+  DdlEditor,
   IViewEditValidationResult,
-  ViewEditContent,
 } from '@syndesis/ui';
+import { ExpandablePreview, PageSection } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { UIContext } from '../../../app';
-import resolvers from '../../resolvers';
+import { UIContext } from '../../../../app';
+import resolvers from '../../../resolvers';
+import {
+  ViewEditorNavBar
+} from '../../shared';
 
 /**
  * @param virtualization - the Virtualization
- * @param editorState - the ViewDefinition
+ * @param viewDefinition - the ViewDefinition
  */
-export interface IViewEditRouteState {
+export interface IViewEditorSqlRouteState {
   virtualization: RestDataService;
   viewDefinition: ViewDefinition;
+  previewExpanded: boolean;
 }
 
-export const ViewEditPage: React.FunctionComponent = () => {
+export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
-  const [isWorking, setIsWorking] = React.useState(false);
+  const [isSaving, setIsSaving] = React.useState(false);
+  const [isValidating, setIsValidating] = React.useState(false);
   const [viewValid, setViewValid] = React.useState(true);
   const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { state, history } = useRouteData<null, IViewEditRouteState>();
+  const { state, history } = useRouteData<null, IViewEditorSqlRouteState>();
   const { refreshVirtualizationViews, validateViewDefinition } = useVirtualizationHelpers();
 
   const handleValidationStarted = async (): Promise<void> => {
-    setIsWorking(true);
+    setIsValidating(true);
   };
 
   const handleValidationComplete = async (
     validation: IViewEditValidationResult
   ): Promise<void> => {
-    setIsWorking(false);
+    setIsValidating(false);
     setValidationResults([validation]);
     setViewValid(validation.type === 'success');
   };
@@ -61,6 +67,7 @@ export const ViewEditPage: React.FunctionComponent = () => {
 
   // Save the View with new DDL and description
   const handleSaveView = async (ddlValue: string) => {
+    setIsSaving(true);
     // View Definition
     const viewDefn: ViewDefinition = {
       compositions: state.viewDefinition.compositions,
@@ -85,6 +92,7 @@ export const ViewEditPage: React.FunctionComponent = () => {
         state.virtualization.keng__id,
         [viewEditorState]
       );
+      setIsSaving(false);
       pushNotification(
         t(
           'virtualization.saveViewSuccess',
@@ -98,7 +106,8 @@ export const ViewEditPage: React.FunctionComponent = () => {
       const details = error.message
         ? error.message
         : '';
-      pushNotification(
+        setIsSaving(false);
+        pushNotification(
         t('virtualization.saveViewFailed', {
           details,
           name: state.viewDefinition.viewName,
@@ -148,7 +157,7 @@ export const ViewEditPage: React.FunctionComponent = () => {
   };
 
   const initialView = state.viewDefinition.ddl ? state.viewDefinition.ddl : '';
-  const virtualization = state.virtualization;
+  const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
 
   const getSourceTableInfos = (): TableColumns[] => {
     // TODO: replace this hardcoded data with server call (or table-column info on the virtualization)
@@ -160,6 +169,12 @@ export const ViewEditPage: React.FunctionComponent = () => {
       }
     ];
     return sourceTables;
+  };
+
+  const handlePreviewExpandedChanged = (
+    expanded: boolean
+  ) => {
+    setPreviewExpanded(expanded);
   };
 
   return (
@@ -174,7 +189,7 @@ export const ViewEditPage: React.FunctionComponent = () => {
         <Link
           to={resolvers.data.virtualizations.views.root(
             {
-              virtualization,
+              virtualization:state.virtualization,
             }
           )}
         >
@@ -182,23 +197,33 @@ export const ViewEditPage: React.FunctionComponent = () => {
         </Link>
         <span>{state.viewDefinition.viewName}</span>
       </Breadcrumb>
-      <ViewEditContent
-        viewDdl={initialView}
-        i18nCancelLabel={t('shared:Cancel')}
-        i18nSaveLabel={t('shared:Save')}
-        i18nTitle={t('virtualization.viewEditorTitle')}
-        i18nDescription={t('virtualization.viewEditorDescription')}
-        i18nValidateLabel={t('shared:Validate')}
-        isValid={viewValid}
-        isWorking={isWorking}
-        sourceTableInfos={getSourceTableInfos()}
-        onCancel={handleCancel}
-        onValidate={handleValidateView}
-        onSave={handleSaveView}
-        validationResults={
-          validationResults
-        }
-      />
+      <PageSection variant={'light'} noPadding={true}>
+        <ViewEditorNavBar virtualization={state.virtualization} viewDefinition={state.viewDefinition} previewExpanded={previewExpanded} />
+      </PageSection>
+        <DdlEditor
+          viewDdl={initialView}
+          i18nCancelLabel={t('shared:Cancel')}
+          i18nSaveLabel={t('shared:Save')}
+          i18nValidateLabel={t('shared:Validate')}
+          isValid={viewValid}
+          isSaving={isSaving}
+          isValidating={isValidating}
+          sourceTableInfos={getSourceTableInfos()}
+          onCancel={handleCancel}
+          onValidate={handleValidateView}
+          onSave={handleSaveView}
+          validationResults={
+            validationResults
+          }
+        />
+      <PageSection variant={'light'} noPadding={true}>
+        <ExpandablePreview
+          i18nHidePreview={t('data:virtualization.preview.hidePreview')}
+          i18nShowPreview={t('data:virtualization.preview.showPreview')}
+          initialExpanded={previewExpanded}
+          onPreviewExpandedChanged={handlePreviewExpandedChanged}
+        />
+      </PageSection>
     </>
   );
 }

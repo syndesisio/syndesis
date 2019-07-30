@@ -104,7 +104,6 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         dashboardString={t('shared:Home')}
         dataHref={resolvers.data.root()}
         dataString={t('shared:Virtualizations')}
-        i18nViews={t('virtualization.views')}
         i18nCancelText={t('shared:Cancel')}
         i18nDelete={t('shared:Delete')}
         i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {

@@ -35,6 +35,10 @@
     "importDataSourceTip": "Import views from a data source",
     "importDataSourceWizardStep1": "Select Connection",
     "importDataSourceWizardStep2": "Select Views",
+    "preview": {
+      "hidePreview": "Hide Preview",
+      "showPreview": "Show Preview"
+    },
     "unpublishModalMessage": "This Virtualization has been published.  Please unpublish Virtualization \"{{name}}\" first.",
     "unpublishModalTitle": "Unpublish Virtualization",
     "viewEmptyStateTitle": "Create Views",
@@ -42,8 +46,10 @@
     "viewDdlDisplay": "DDL",
     "viewDescriptionDisplay": "Description",
     "viewDescriptionValidationError": "View description cannot contain a quote",
-    "viewEditorTitle": "View Definition",
-    "viewEditorDescription": "Edit, validate and save the View Definition",
+    "viewEditor": {
+      "viewOutputTab": "View Output",
+      "sqlTab": "SQL"
+    },
     "viewNameDisplay": "View Name",
     "viewSqlFormRowLimit": "Row Limit",
     "viewSqlFormRowLimitDescription": "Maximum number of rows to return from your query",

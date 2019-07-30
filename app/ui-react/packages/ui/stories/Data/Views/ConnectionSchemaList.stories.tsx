@@ -11,7 +11,7 @@ import {
 } from '../../../src';
 
 const stories = storiesOf(
-  'Data/Virtualizations/Views/ConnectionSchemaList',
+  'Data/Views/ConnectionSchemaList',
   module
 );
 

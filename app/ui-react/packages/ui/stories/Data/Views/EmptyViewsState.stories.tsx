@@ -6,7 +6,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { EmptyViewsState } from '../../../src';
 
-const stories = storiesOf('Data/Virtualizations/Views/EmptyViewsState', module);
+const stories = storiesOf('Data/Views/EmptyViewsState', module);
 stories.addDecorator(withKnobs);
 
 const title = 'Create View';
