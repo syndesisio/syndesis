@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"k8s.io/apimachinery/pkg/api/meta"
 	"strings"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -196,5 +197,17 @@ func UnstructuredsToRuntimeObject(items []unstructured.Unstructured) runtime.Obj
 		list.SetAPIVersion("v1")
 		list.SetKind("List")
 		return &list
+	}
+}
+
+func IsNoKindMatchError(err error) bool {
+	if err == nil {
+		return false
+	}
+	switch err.(type) {
+	case *meta.NoKindMatchError:
+		return true
+	default:
+		return false
 	}
 }

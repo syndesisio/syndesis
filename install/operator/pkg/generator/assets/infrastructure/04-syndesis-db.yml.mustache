@@ -263,11 +263,7 @@
             value: postgresql://{{Env.POSTGRESQL_USER}}:{{Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
-{{^WithDockerImages}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: {{Env.SYNDESIS_REGISTRY}}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
-{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           name: syndesis-db-metrics
           livenessProbe:

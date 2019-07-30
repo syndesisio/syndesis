@@ -17,11 +17,15 @@ type SyndesisSpec struct {
 	TestSupport          *bool           `json:"testSupport,omitempty"`
 	ImageStreamNamespace string          `json:"imageStreamNamespace,omitempty"`
 	Integration          IntegrationSpec `json:"integration,omitempty"`
-	Registry             string          `json:"registry,omitempty"`
-	Components           ComponentsSpec  `json:"components,omitempty"`
-	OpenShiftConsoleUrl  string          `json:"openShiftConsoleUrl,omitempty"`
-	SarNamespace         string          `json:"sarNamespace,omitempty"`
-	Addons               AddonsSpec      `json:"addons,omitempty"`
+	// The container registry to pull syndesis images from
+	Registry            string         `json:"registry,omitempty"`
+	Components          ComponentsSpec `json:"components,omitempty"`
+	OpenShiftConsoleUrl string         `json:"openShiftConsoleUrl,omitempty"`
+	SarNamespace        string         `json:"sarNamespace,omitempty"`
+	Addons              AddonsSpec     `json:"addons,omitempty"`
+	// if true, then the image streams are changed to used local development builds
+	DevImages *bool `json:"devImages,omitempty"`
+
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html

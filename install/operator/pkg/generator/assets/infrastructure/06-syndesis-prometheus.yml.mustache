@@ -171,11 +171,7 @@
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-{{^WithDockerImages}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.PrometheusImagePrefix }}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
-{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
@@ -210,7 +206,6 @@
           configMap:
             name: syndesis-prometheus-config
     triggers:
-{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -220,5 +215,4 @@
           name: {{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
           namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{/WithDockerImages}}
     - type: ConfigChange

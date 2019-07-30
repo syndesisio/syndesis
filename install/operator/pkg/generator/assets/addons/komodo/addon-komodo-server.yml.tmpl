@@ -73,11 +73,8 @@
 {{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
-{{end}}{{if (not .WithDockerImages)}}
-          image: ' '
-{{else}}
-          image: {{.Env.SYNDESIS_REGISTRY}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}
 {{end}}
+          image: ' '
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -124,7 +121,6 @@
           configMap:
             name: syndesis-server-config
     triggers:
-{{if (not .WithDockerImages)}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -134,5 +130,22 @@
           name: {{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}
           namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{end}}
     - type: ConfigChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Syndesis.Komodo }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}'
+      importPolicy:
+        scheduled: true
+      name: "{{ .Tags.Komodo }}"

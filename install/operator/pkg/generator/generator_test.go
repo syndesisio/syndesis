@@ -15,7 +15,7 @@ import (
 
 func TestGenerator(t *testing.T) {
 
-	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "template-config.yaml"))
+	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
 	require.NoError(t, err)
 
 	// Parse the config

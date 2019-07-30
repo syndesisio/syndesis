@@ -1,0 +1,282 @@
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    name: syndesises.syndesis.io
+    labels:
+      app: syndesis
+  spec:
+    group: syndesis.io
+    names:
+      kind: Syndesis
+      listKind: SyndesisList
+      plural: syndesises
+# TODO:  Use "syndeses" when upgrading the CRD version
+      singular: syndesis
+    scope: Namespaced
+    version: v1alpha1
+    additionalPrinterColumns:
+      - JSONPath: .status.phase
+        description: The syndesis phase
+        name: Phase
+        type: string
+      - JSONPath: .status.version
+        description: The syndesis version
+        name: Version
+        type: string
+# TODO: Enable when upgrading the CRD version
+#    subresources:
+#      status: {}
+
+- kind: ClusterRole
+  apiVersion: rbac.authorization.k8s.io/v1beta1
+  metadata:
+    name: syndesis-extra-permissions
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+      rbac.authorization.k8s.io/aggregate-to-admin: "true"
+      rbac.authorization.k8s.io/aggregate-to-edit: "true"
+  rules:
+
+    # We can R/W the syndesis api group CRs
+    - apiGroups:
+        - syndesis.io
+      resources:
+        - "*"
+        - "*/*"
+      verbs:
+        - '*'
+
+    # We can read all resources..
+    - apiGroups:
+        - "*"
+      resources:
+        - "*"
+      verbs: [ get, list, watch ]
+
+    # These are the resources that we modify////
+    - apiGroups:
+        - ""
+        - build.openshift.io
+        - apps.openshift.io
+        - image.openshift.io
+        - rbac.authorization.k8s.io
+        - template.openshift.io
+        - authorization.openshift.io
+        - route.openshift.io
+        - monitoring.coreos.com
+        - integreatly.org
+      resources:
+        - buildconfigs
+        - buildconfigs/instantiatebinary
+        - buildconfigs/webhooks
+        - builds
+        - builds/details
+        - builds/log
+        - configmaps
+        - endpoints
+        - persistentvolumeclaims
+        - pods
+        - replicationcontrollers
+        - replicationcontrollers/scale
+        - replicationcontrollers/status
+        - secrets
+        - serviceaccounts
+        - services
+        - deploymentconfigs
+        - deploymentconfigs/scale
+        - deploymentconfigrollbacks
+        - deploymentconfigs/instantiate
+        - deploymentconfigs/rollback
+        - imagestreams
+        - imagestreamimages
+        - imagestreammappings
+        - imagestreams/secrets
+        - imagestreamtags
+        - roles
+        - rolebindings
+        - processedtemplates
+        - templateconfigs
+        - templateinstances
+        - templates
+        - rolebindings
+        - routes
+        - routes/custom-host
+        - alertmanagers
+        - prometheuses
+        - servicemonitors
+        - prometheusrules
+        - grafanadashboards
+      verbs:
+        - '*'
+
+    - apiGroups:
+        - camel.apache.org
+      resources:
+        - "*"
+      verbs:
+        - '*'
+
+#
+# From `kamel install -o yaml`
+#
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    labels:
+      app: camel-k
+    name: integrationplatforms.camel.apache.org
+  spec:
+    additionalPrinterColumns:
+      - JSONPath: .status.phase
+        description: The IntegrationPlatform phase
+        name: Phase
+        type: string
+    group: camel.apache.org
+    names:
+      kind: IntegrationPlatform
+      listKind: IntegrationPlatformList
+      plural: integrationplatforms
+      shortNames:
+        - ip
+      singular: integrationplatform
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1alpha1
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    labels:
+      app: camel-k
+    name: integrationkits.camel.apache.org
+  spec:
+    additionalPrinterColumns:
+      - JSONPath: .status.phase
+        description: The IntegrationKit phase
+        name: Phase
+        type: string
+      - JSONPath: .metadata.labels.camel\.apache\.org\/kit\.type
+        description: The IntegrationKit type
+        name: Type
+        type: string
+      - JSONPath: .status.image
+        description: The IntegrationKit image
+        name: Image
+        type: string
+    group: camel.apache.org
+    names:
+      kind: IntegrationKit
+      listKind: IntegrationKitList
+      plural: integrationkits
+      shortNames:
+        - ik
+      singular: integrationkit
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1alpha1
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    labels:
+      app: camel-k
+    name: integrations.camel.apache.org
+  spec:
+    additionalPrinterColumns:
+      - JSONPath: .status.phase
+        description: The Integration phase
+        name: Phase
+        type: string
+      - JSONPath: .status.kit
+        description: The IntegrationKit to use
+        name: Kit
+        type: string
+    group: camel.apache.org
+    names:
+      kind: Integration
+      listKind: IntegrationList
+      plural: integrations
+      shortNames:
+        - it
+      singular: integration
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1alpha1
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    labels:
+      app: camel-k
+    name: camelcatalogs.camel.apache.org
+  spec:
+    additionalPrinterColumns:
+      - JSONPath: .spec.version
+        description: The Catalog version
+        name: Version
+        type: string
+    group: camel.apache.org
+    names:
+      kind: CamelCatalog
+      listKind: CamelCatalogList
+      plural: camelcatalogs
+      shortNames:
+        - cc
+      singular: camelcatalog
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1alpha1
+- apiVersion: apiextensions.k8s.io/v1beta1
+  kind: CustomResourceDefinition
+  metadata:
+    labels:
+      app: camel-k
+    name: builds.camel.apache.org
+  spec:
+    additionalPrinterColumns:
+      - JSONPath: .status.phase
+        description: The build phase
+        name: Phase
+        type: string
+      - JSONPath: .status.startedAt
+        description: The time at which the build was last (re-)started
+        name: Age
+        type: date
+      - JSONPath: .status.duration
+        description: The build last execution duration
+        name: Duration
+        type: string
+      - JSONPath: .status.failure.recovery.attempt
+        description: The number of execution attempts
+        name: Attempts
+        type: integer
+    group: camel.apache.org
+    names:
+      kind: Build
+      listKind: BuildList
+      plural: builds
+      singular: build
+    scope: Namespaced
+    subresources:
+      status: {}
+    version: v1alpha1
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: ClusterRole
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: camel-k
+      rbac.authorization.k8s.io/aggregate-to-admin: "true"
+      rbac.authorization.k8s.io/aggregate-to-edit: "true"
+    name: camel-k:edit
+  rules:
+    - apiGroups:
+        - camel.apache.org
+      resources:
+        - '*'
+      verbs:
+        - '*'

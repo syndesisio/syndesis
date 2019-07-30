@@ -58,7 +58,7 @@ func ifMissingSet(config map[string]string, name configuration.SyndesisEnvVar, v
 }
 
 func GetTemplateContext() (*generator.Context, error) {
-	templateConfig, err := util.LoadJsonFromFile(*configuration.TemplateConfig)
+	templateConfig, err := util.LoadJsonFromFile(configuration.TemplateConfig)
 	if err != nil {
 		return nil, err
 	}
