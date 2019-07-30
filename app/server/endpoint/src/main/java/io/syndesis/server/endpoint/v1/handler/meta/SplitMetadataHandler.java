@@ -49,7 +49,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
 
     @Override
     public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
-        Optional<Step> previousStepWithDataShape = StepMetadataHelper.getFirstWithOutputShape(previousSteps);
+        Optional<Step> previousStepWithDataShape = StepMetadataHelper.getLastWithOutputShape(previousSteps);
 
         DataShape inputShape = previousStepWithDataShape.flatMap(Step::inputDataShape)
                                                         .orElse(StepMetadataHelper.NO_SHAPE);
