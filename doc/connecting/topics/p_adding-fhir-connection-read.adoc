@@ -38,7 +38,7 @@ plan to map it from an earlier step that is in the flow.
 . In the *Resource version* field, optionally specify a version ID
 for the resource. Leave this field blank to obtain 
 the most recent version of the resource or to map the version ID of 
-the resource that you want from a previous step. 
+the resource that you want to obtain from a previous step. 
 .  Click *Next* to add this connection to the flow. 
 
 .Result

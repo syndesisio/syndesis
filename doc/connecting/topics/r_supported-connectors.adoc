@@ -84,7 +84,7 @@ document. You can then create a connection to that REST API.
 
 Create a REST API provider integration by uploading an OpenAPI document
 that defines operations that trigger integration execution. See
-link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[triggering integration execution with API calls]
+link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[Creating an integration that is triggered by a REST API call]
 in {NameOfFuseOnlineIntegrationGuide}.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-sf_connectors[Salesforce]
@@ -125,5 +125,5 @@ connector. For information about coding the
 extension and creating its `.jar` file, which you upload to
 {prodname}, see:
 
-* link:{LinkToolingUserGuide}#fuseonlineextension[{NameOfToolingUserGuide}, how to use Fuse tooling to develop extensions]
-* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_dev-extension[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]
+* link:{LinkToolingUserGuide}#FuseOnlineExtension[{NameOfToolingUserGuide}, how to use Fuse tooling to develop extensions]
+* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_extensions[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]

@@ -30,7 +30,7 @@ which takes you to a Google sign-in page.
 If *Connect Google Calendar* does not display, then your {prodname} environment
 is not registered as a Google client application with the Google Calendar API
 enabled. See 
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google]. 
+link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering {prodname} as a Google client application]. 
 When your environment is not registered with
 Google, then when you try to create a Google Calendar connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
