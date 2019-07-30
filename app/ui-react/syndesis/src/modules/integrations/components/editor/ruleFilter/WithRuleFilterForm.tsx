@@ -3,6 +3,7 @@ import { FilterOptions, Op, StepKind } from '@syndesis/models';
 import { toFormDefinition, validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import './WithRuleFilterForm.css';
 
 export interface IWithRuleFilterFormChildrenProps {
   form: JSX.Element;
@@ -103,16 +104,13 @@ export const WithRuleFilterForm: React.FunctionComponent<
       },
       arrayDefinitionOptions: {
         arrayControlAttributes: {
-          className: 'col-md-3 form-group',
-        },
-        controlLabelAttributes: {
-          style: { display: 'none' },
+          className: 'form-group with-rule-filter-form__action',
         },
         formGroupAttributes: {
-          className: 'col-md-3',
+          className: 'with-rule-filter-form__group',
         },
         i18nAddElementText: t('integrations:editor:ruleForm:addRule'),
-        minElements: 1,
+        minElements: 1
       },
       required: true,
       type: 'array',
@@ -134,28 +132,29 @@ export const WithRuleFilterForm: React.FunctionComponent<
   const validator = (values: IRuleFilterConfig) =>
     validateRequiredProperties(
       definition,
-      (field: string) =>
-        t('integrations:editor:ruleForm:fieldRequired', { field }),
+      (field: string) => '', // return an empty string here so the help text isn't replaced
       values
     );
   return (
-    <AutoForm<IRuleFilterConfig>
-      definition={toFormDefinition(definition)}
-      i18nRequiredProperty={t('shared:requiredFieldMessage')}
-      initialValue={initialValue}
-      onSave={onSave}
-      validate={validator}
-      validateInitial={validator}
-      key={step.id}
-    >
-      {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-        children({
-          form: <>{fields}</>,
-          isSubmitting,
-          isValid,
-          submitForm,
-        })
-      }
-    </AutoForm>
+    <div className="with-rule-filter-form">
+      <AutoForm<IRuleFilterConfig>
+        definition={toFormDefinition(definition)}
+        i18nRequiredProperty={t('shared:requiredFieldMessage')}
+        initialValue={initialValue}
+        onSave={onSave}
+        validate={validator}
+        validateInitial={validator}
+        key={step.id}
+      >
+        {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
+          children({
+            form: <>{fields}</>,
+            isSubmitting,
+            isValid,
+            submitForm,
+          })
+        }
+      </AutoForm>
+    </div>
   );
 };
