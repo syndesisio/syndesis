@@ -1,8 +1,7 @@
-{{if eq (or .Syndesis.Spec.Addons.ops.enabled "false") "true"}}
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: syndesis-infra
+  name: syndesis-integrations
   labels:
     app: syndesis
     syndesis.io/app: syndesis
@@ -11,15 +10,8 @@ metadata:
     monitoring-key: middleware
 spec:
   endpoints:
-  - targetPort: metrics
+  - port: metrics
   selector:
     matchLabels:
       syndesis.io/app: syndesis
-    matchExpressions:
-      - key: syndesis.io/component
-        operator: In
-        values:
-          - syndesis-db
-          - syndesis-meta
-          - syndesis-server
-  {{end}}
+      syndesis.io/component: integration

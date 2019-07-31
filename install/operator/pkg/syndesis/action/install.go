@@ -1,29 +1,20 @@
 package action
 
 import (
-	"bytes"
 	"context"
-	"encoding/base64"
 	"errors"
-	"fmt"
-	"github.com/go-openapi/swag"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/apimachinery/pkg/api/meta"
-	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/labels"
-	"reflect"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-	"sigs.k8s.io/yaml"
-	"text/template"
-
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"k8s.io/client-go/kubernetes"
 
@@ -139,9 +130,30 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	// Render the remaining syndesis resources...
-	all, err = generator.RenderDir("./install/", renderContext)
+	all, err = generator.RenderDir("./infrastructure/", renderContext)
 	if err != nil {
 		return err
+	}
+
+	for addon, properties := range syndesis.Spec.Addons {
+		if properties["enabled"] != "true" {
+			continue
+		}
+
+		addonDir := "./addons/" + addon + "/"
+		f, err := generator.GetAssetsFS().Open(addonDir)
+		if err != nil {
+			a.log.Info("unsuported addon configured", "addon", addon)
+			continue
+		}
+		f.Close()
+
+		resources, err := generator.RenderDir(addonDir, renderContext)
+		if err != nil {
+			return err
+		}
+
+		all = append(all, resources...)
 	}
 
 	// Link the image secret to service accounts
@@ -156,7 +168,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	for _, res := range all {
 
 		operation.SetNamespaceAndOwnerReference(res, syndesis)
-		o, modificationType, err := CreateOrUpdate(ctx, a.client, &res)
+		o, modificationType, err := util.CreateOrUpdate(ctx, a.client, &res)
 		resourcesThatShouldExist[o.GetUID()] = true
 
 		if err != nil {
@@ -223,7 +235,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		target.Status.Description = ""
 		a.log.Info("Syndesis resource installed", "name", target.Name)
 	}
-	_, c, err := CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+	_, c, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
 	if c != controllerutil.OperationResultNone {
 		a.log.Info("Updated CRD ", "name", syndesis.Name)
 	}
@@ -277,200 +289,6 @@ nextType:
 	return nil
 }
 
-func ToUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
-
-	// It might be already Unstructured..
-	if u, ok := obj.(*unstructured.Unstructured); ok {
-		return u, nil
-	}
-
-	// Convert it..
-	fields, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
-	if err != nil {
-		return nil, err
-	}
-	return &unstructured.Unstructured{fields}, nil
-}
-
-func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
-	if len(skipFields) == 0 {
-		skipFields = append(skipFields, "kind", "apiVersion", "status")
-	}
-	desired, err := ToUnstructured(o)
-	if err != nil {
-		return desired, controllerutil.OperationResultNone, err
-	}
-
-	createdCopy := desired.DeepCopy()
-	modType, err := controllerutil.CreateOrUpdate(ctx, cl, createdCopy, func(o runtime.Object) error {
-		existing := o.(*unstructured.Unstructured)
-
-		if desired.GetAPIVersion() == "v1" && desired.GetKind() == "Secret" {
-			if desired.Object["stringData"] != nil && existing.Object["data"] != nil {
-				from := desired.Object["stringData"].(map[string]interface{})
-				to := existing.Object["data"].(map[string]interface{})
-				updates := map[string]interface{}{}
-				for key, value := range from {
-					plain := value.(string)
-					encoded := base64.StdEncoding.EncodeToString([]byte(plain))
-					if to[key] != encoded {
-						updates[key] = value
-					}
-				}
-				if len(updates) > 0 {
-					desired.Object["stringData"] = updates
-				} else {
-					delete(desired.Object, "stringData")
-				}
-			}
-		}
-
-		mergePath := desired.GetAPIVersion() + "/" + desired.GetKind()
-
-		for key, value := range desired.Object {
-			if swag.ContainsStrings(skipFields, key) {
-				continue
-			}
-			switch key {
-			case "metadata":
-				to := existing.Object[key].(map[string]interface{})
-				from := value.(map[string]interface{})
-				mergeMap(mergePath+"/metadata", to, from)
-			case "spec": // skip updating this field.
-				to := existing.Object[key].(map[string]interface{})
-				from := value.(map[string]interface{})
-				mergeMap(mergePath+"/metadata", to, from)
-			default:
-				existing.Object[key] = value
-			}
-		}
-
-		//if d.GetKind() == "DeploymentConfig" && d.GetName() == "syndesis-meta" {
-		//	Debug("existing:", existing, "(index .Object.spec.template.spec.containers 0).resources.limits.memory")
-		//}
-		return nil
-	})
-	return createdCopy, modType, err
-}
-
-func Debug(msg string, o interface{}, fields ...string) {
-	s := Dump(o, fields...)
-	if s != "" {
-		fmt.Println(msg, s)
-	}
-}
-
-func Dump(o interface{}, fields ...string) string {
-	if len(fields) == 0 {
-		data, err := yaml.Marshal(o)
-		if err != nil {
-			panic(err)
-		} else {
-			return string(data)
-		}
-	}
-
-	rc := ""
-	for _, field := range fields {
-		t, err := template.New("test").Parse("{{" + field + "}}")
-		if err != nil {
-			panic(err)
-		}
-		buffer := &bytes.Buffer{}
-		err = t.Execute(buffer, o)
-		if err != nil {
-			return ""
-		}
-		if len(rc) > 0 {
-			rc += "\n    "
-		}
-		rc += field + " => " + string(buffer.Bytes())
-	}
-	return rc
-}
-
-func MustMarshal(data []byte, err error) []byte {
-	if err != nil {
-		panic(err)
-	}
-	return data
-}
-
-func mergeMap(path string, to map[string]interface{}, from map[string]interface{}) {
-	for key, value := range from {
-		to[key] = mergeValue(path+"/"+key, to[key], value)
-	}
-}
-
-func mergeArray(path string, to []interface{}, from []interface{}) []interface{} {
-	nexPath := path + "/#"
-	for key, value := range from {
-		if key < len(to) {
-			to[key] = mergeValue(nexPath, to[key], value)
-		} else {
-			to = append(to, mergeValue(nexPath, to[key], value))
-		}
-	}
-	return to
-}
-
-func mergeValue(path string, to interface{}, from interface{}) interface{} {
-
-	switch from := from.(type) {
-	case map[string]interface{}:
-		if to, ok := to.(map[string]interface{}); ok {
-			mergeMap(path, to, from)
-			return to
-		}
-	case []interface{}:
-		if toMap, ok := to.([]interface{}); ok {
-			return mergeArray(path, toMap, from)
-		}
-	}
-	if from == to || from == nil {
-		return to
-	}
-	if to == nil {
-		return from
-	}
-
-	// Looks like we might have a different value...
-
-	// Apply special handling for some fields.
-	switch path {
-	case "apps.openshift.io/v1/DeploymentConfig/metadata/template/spec/containers/#/image":
-		return to
-	case "apps.openshift.io/v1/DeploymentConfig/metadata/triggers/#/imageChangeParams/from/namespace":
-		return to
-	case "v1/PersistentVolumeClaim/metadata/resources/requests/storage":
-		return to
-	case "apps.openshift.io/v1/DeploymentConfig/metadata/template/spec/containers/#/resources/limits/memory":
-		// This might be the same value, in a different format.
-		fromQ := resource.MustParse(fmt.Sprint(from))
-		fromI, _ := fromQ.AsInt64()
-		toQ := resource.MustParse(fmt.Sprint(to))
-		toI, _ := toQ.AsInt64()
-		if fromI == toI {
-			return to
-		} else {
-			return from
-		}
-	}
-
-	fromT := reflect.TypeOf(from)
-	toT := reflect.TypeOf(to)
-	if fromT != toT && fromT.ConvertibleTo(toT) {
-		from = reflect.ValueOf(from).Convert(toT).Interface()
-		if from == to {
-			return to
-		} else {
-			return from
-		}
-	}
-
-	return from
-}
-
 func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
 	sa := newSyndesisServiceAccount()
 	if secret != nil {
@@ -479,7 +297,7 @@ func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1al
 
 	operation.SetNamespaceAndOwnerReference(sa, syndesis)
 	// We don't replace the service account if already present, to let Kubernetes generate its tokens
-	o, _, err := CreateOrUpdate(ctx, cl, sa)
+	o, _, err := util.CreateOrUpdate(ctx, cl, sa)
 	if err != nil {
 		return nil, err
 	}
@@ -538,7 +356,7 @@ func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1alp
 	}
 
 	// We don't replace the route if already present, to let OpenShift generate its host
-	o, _, err := CreateOrUpdate(ctx, cl, route)
+	o, _, err := util.CreateOrUpdate(ctx, cl, route)
 	if err != nil {
 		return nil, err
 	}

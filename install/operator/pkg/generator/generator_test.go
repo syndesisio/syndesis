@@ -27,19 +27,9 @@ func TestGenerator(t *testing.T) {
 		Spec: v1alpha1.SyndesisSpec{},
 	}
 
-	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./install/", gen)
+	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", gen)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
-	assert.True(t, contains(resources, "DeploymentConfig", "todo"))
-
-	// Verifiy we can disable deploying the todo app.
-	gen.Syndesis.Spec.Addons = v1alpha1.AddonsSpec{
-		"todo": v1alpha1.Parameters{
-			"enabled": "false",
-		},
-	}
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./install/", gen)
-	assert.False(t, contains(resources, "DeploymentConfig", "todo"))
 
 	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./upgrade/", gen)
 	require.NoError(t, err)

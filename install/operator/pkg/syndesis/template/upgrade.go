@@ -21,7 +21,7 @@ func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	}
 
 	// Render the files in the update directory
-	res, err := generator.RenderDir("./update/", renderContext)
+	res, err := generator.RenderDir("./upgrade/", renderContext)
 	if err != nil {
 		return nil, err
 	}

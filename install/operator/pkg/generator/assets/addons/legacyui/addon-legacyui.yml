@@ -1,4 +1,3 @@
-{{if eq (or .Syndesis.Spec.Addons.legacyui.enabled "false") "true"}}
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -352,4 +351,3 @@
             "productBuild": false
          }
         }
-{{end}}

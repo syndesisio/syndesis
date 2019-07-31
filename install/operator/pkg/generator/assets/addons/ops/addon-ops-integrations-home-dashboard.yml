@@ -1,4 +1,3 @@
-{{if eq (or .Syndesis.Spec.Addons.ops.enabled "false") "true"}}
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
@@ -448,4 +447,3 @@ spec:
       "uid": "5kt-N6VWz",
       "version": 1
     }
-{{end}}
