@@ -18,7 +18,6 @@ import { getOdataUrl, getPreviewVdbName, getPublishingDetails } from '../shared/
  */
 export interface IVirtualizationSqlClientPageRouteParams {
   virtualizationId: string;
-  virtualization: RestDataService;
 }
 
 /**
@@ -44,7 +43,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
 
   const { resource: editorStates } = useViewEditorStates(
-    virtualization.keng__id
+    params.virtualizationId
   );
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
