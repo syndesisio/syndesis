@@ -1,0 +1,134 @@
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Syndesis.Rest }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+  spec:
+    tags:
+    - name: "{{ .Tags.Syndesis }}"
+      from:
+      {{if .Syndesis.Spec.DevImages}}
+        kind: ImageStreamTag
+        name: '{{ .Images.Syndesis.Rest }}:latest'
+      {{else}}
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Tags.Syndesis }}'
+      importPolicy:
+        scheduled: true
+      {{end}}
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Syndesis.Ui }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
+  spec:
+    tags:
+    - name: "{{ .Tags.Syndesis }}"
+      from:
+      {{if .Syndesis.Spec.DevImages}}
+        kind: ImageStreamTag
+        name: '{{ .Images.Syndesis.Ui }}:latest'
+      {{else}}
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Tags.Syndesis }}'
+      importPolicy:
+        scheduled: true
+      {{end}}
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Syndesis.Verifier }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
+  spec:
+    tags:
+    - name: "{{ .Tags.Syndesis }}"
+      from:
+      {{if .Syndesis.Spec.DevImages}}
+        kind: ImageStreamTag
+        name: '{{ .Images.Syndesis.Verifier }}:latest'
+      {{else}}
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}'
+      importPolicy:
+        scheduled: true
+      {{end}}
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Support.OAuthProxy }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-oauthproxy
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: {{.Images.OAuthProxyImagePrefix}}/{{ .Images.Support.OAuthProxyImage }}:{{ .Tags.OAuthProxy }}
+      importPolicy:
+        scheduled: true
+      name: "{{ .Tags.OAuthProxy }}"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Support.Prometheus }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-prometheus
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Tags.Prometheus }}'
+      importPolicy:
+        scheduled: true
+      name: "{{ .Tags.Prometheus }}"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Support.PostgresExporter }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-db-metrics
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PostgresExporterImagePrefix}}/{{ .Images.Support.PostgresExporter }}:{{ .Tags.PostgresExporter }}'
+      importPolicy:
+        scheduled: true
+      name: "{{ .Tags.PostgresExporter }}"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: {{ .Images.Syndesis.S2i }}
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: s2i-java
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Tags.Syndesis }}'
+      importPolicy:
+        scheduled: true
+      name: "{{ .Tags.Syndesis }}"

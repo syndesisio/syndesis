@@ -15,7 +15,7 @@ func GetDeclaredResourceTypes(scheme *runtime.Scheme) ([]metav1.TypeMeta, error)
 
 	generator.CreateSyndesisContext()
 
-	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateConfig)
+	res, err := util.LoadResourceFromFile(scheme, configuration.TemplateConfig)
 	if err != nil {
 		return nil, err
 	}

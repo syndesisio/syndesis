@@ -1,3 +1,6 @@
 # Temporary Build Files
 build/_output
 deploy/operatorsource.yaml
+dist
+.*
+build.sh

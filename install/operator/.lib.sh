@@ -59,7 +59,10 @@ docker_is_available() {
 build_operator()
 {
     local strategy="$1"
-    local gopackage="$2"
+    shift
+    local gopackage="$1"
+    shift
+
     if [ "$strategy" == "auto" ] ; then
 
         if docker_is_available; then
@@ -105,10 +108,19 @@ build_operator()
 
         echo building executable
         go test ./cmd/... ./pkg/...
-        echo building executable
-        GOOS=linux GOARCH=amd64 go build -o ./build/_output/bin/operator \
-            -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
-            ./cmd/manager
+
+        for GOARCH in amd64 ; do
+          for GOOS in linux darwin windows ; do
+            export GOARCH GOOS
+            echo building ./dist/${GOOS}-${GOARCH}/operator executable
+            go build "$@" -o ./dist/${GOOS}-${GOARCH}/operator \
+                -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
+                ./cmd/manager
+          done
+        done
+        mkdir -p ./build/_output/bin
+        cp ./dist/linux-amd64/operator ./build/_output/bin/operator
+
     ;;
     "docker")
 
@@ -117,14 +129,41 @@ build_operator()
         echo Building executable with Docker
         echo ======================================================
         rm -rf build/_output
-        docker build -t "${BUILDER_IMAGE_NAME}" .
+
+        OPTS=""
+        for i in "$@" ; do
+          OPTS="$OPTS '$i'"
+        done
+
+        docker build -t "${BUILDER_IMAGE_NAME}" . -f - <<EODockerfile
+FROM golang:1.12.0
+WORKDIR /go/src/${gopackage}
+ENV GO111MODULE=on
+# This will speed up subsequent builds if the go deps don't change due thx to image layer caching.
+# Note: the vendor dir is in .dockerignore file so that the build context sent to docker is really small.
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+
+COPY . .
+RUN go mod vendor
+RUN go test ./cmd/... ./pkg/...
+RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
+EODockerfile
 
         echo ======================================================
-        echo Extracting executable from Docker
-        echo ======================================================
+
+        for GOARCH in amd64 ; do
+          for GOOS in linux darwin windows ; do
+            echo extracting executable to ./dist/${GOOS}-${GOARCH}/operator
+            docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/operator > ./dist/${GOOS}-${GOARCH}/operator
+          done
+        done
+        chmod a+x ./dist/*/operator
         mkdir -p ./build/_output/bin
-        docker run "${BUILDER_IMAGE_NAME}" cat /operator > ./build/_output/bin/operator
-        chmod a+x ./build/_output/bin/operator
+        cp ./dist/linux-amd64/operator ./build/_output/bin/operator
     ;;
     *)
         echo invalid build strategy: $strategy
@@ -157,7 +196,7 @@ build_image()
         local arch="$(mktemp -t ${S2I_STREAM_NAME}-dockerXXX).tar"
         echo $arch
         trap "rm $arch" EXIT
-        tar cvf $arch build
+        tar --exclude-from=.dockerignore -cvf $arch build 
         cd build
         tar uvf $arch Dockerfile
         oc start-build --from-archive=$arch ${S2I_STREAM_NAME}

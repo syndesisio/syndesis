@@ -5,3 +5,9 @@ vendor
 .dockerignore
 .gitignore
 .idea
+dist
+.Dockerfile
+build/_output/bin/client-gen
+build/_output/bin/deepcopy-gen
+build/_output/bin/informer-gen
+build/_output/bin/lister-gen

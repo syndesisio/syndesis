@@ -116,11 +116,8 @@
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
-{{/Debug}}{{^WithDockerImages}}
+{{/Debug}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: '{{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}'
-{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -165,7 +162,6 @@
           configMap:
             name: syndesis-server-config
     triggers:
-{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -175,7 +171,6 @@
           name: '{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}'
           namespace: '{{Env.IMAGE_STREAM_NAMESPACE}}'
       type: ImageChange
-{{/WithDockerImages}}
     - type: ConfigChange
 
 # workaround camel-k metrics

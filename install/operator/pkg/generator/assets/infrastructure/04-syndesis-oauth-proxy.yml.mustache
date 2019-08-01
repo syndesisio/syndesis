@@ -50,9 +50,7 @@
       spec:
         containers:
         - name: syndesis-oauthproxy
-{{^WithDockerImages}}
-          image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
-          image: {{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxyImage }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          image: ' '
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:{{Env.OPENSHIFT_PROJECT}}:syndesis-oauth-client
@@ -116,7 +114,6 @@
           secret:
             secretName: syndesis-oauthproxy-tls
     triggers:
-{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -126,5 +123,4 @@
           name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
           namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{/WithDockerImages}}
     - type: ConfigChange

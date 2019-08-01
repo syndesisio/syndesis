@@ -47,6 +47,12 @@ func mergeMap(path string, to map[string]interface{}, from map[string]interface{
 	if path == "v1/Secret" {
 		mergeSecretValues(to, from)
 	}
+	if path == "image.openshift.io/v1/ImageStream/spec/tags/#" {
+		// ImageStreamTag kinds are imply any previous importPolicy has to be removed.
+		if MustRenderGoTemplate("{{.from.kind}}", from) == "ImageStreamTag" {
+			to["importPolicy"] = map[string]interface{}{}
+		}
+	}
 	for key, value := range from {
 		field := path + "/" + key
 		if skip[field] {
@@ -131,13 +137,14 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 
 func mergeSecretValues(to map[string]interface{}, from map[string]interface{}) {
 	if from["stringData"] != nil && to["data"] != nil {
-		from := from["stringData"].(map[string]interface{})
-		to := to["data"].(map[string]interface{})
+		stringData := from["stringData"].(map[string]interface{})
+		data := to["data"].(map[string]interface{})
+
 		updates := map[string]interface{}{}
-		for key, value := range from {
+		for key, value := range stringData {
 			plain := value.(string)
 			encoded := base64.StdEncoding.EncodeToString([]byte(plain))
-			if to[key] != encoded {
+			if data[key] != encoded {
 				updates[key] = value
 			}
 		}

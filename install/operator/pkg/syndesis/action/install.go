@@ -7,14 +7,15 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/api/meta"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/runtime"
+	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"time"
 
 	"k8s.io/client-go/kubernetes"
 
@@ -52,6 +53,8 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 		v1alpha1.SyndesisPhaseStartupFailed,
 	)
 }
+
+var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
 func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
@@ -94,14 +97,14 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		config = map[string]string{}
 	}
 	renderContext, err := syndesistemplate.GetRenderContext(syndesis, params, config)
+	if err != nil {
+		return err
+	}
+
 	if secret != nil {
 		renderContext.ImagePullSecrets = append(renderContext.ImagePullSecrets, secret.Name)
 	}
 	configuration.SetConfigurationFromEnvVars(renderContext.Env, syndesis)
-
-	if err != nil {
-		return err
-	}
 
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", renderContext)
@@ -169,24 +172,24 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 		operation.SetNamespaceAndOwnerReference(res, syndesis)
 		o, modificationType, err := util.CreateOrUpdate(ctx, a.client, &res)
-		resourcesThatShouldExist[o.GetUID()] = true
-
 		if err != nil {
-			gvk := res.GroupVersionKind()
-			_, err := a.mgr.GetRESTMapper().RESTMapping(gvk.GroupKind(), gvk.Version)
-			if meta.IsNoMatchError(err) {
-				// CRD for that resource type is not available..
-				if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
-					a.log.Info("Skipping install resource.  CRD not installed?", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			if util.IsNoKindMatchError(err) {
+				gvk := res.GroupVersionKind()
+				if _, found := kindsReportedNotAvailable[gvk]; !found {
+					kindsReportedNotAvailable[gvk] = time.Now()
+					a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
 				}
 			} else {
 				a.log.Info("Failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
 				return err
 			}
+		} else {
+			resourcesThatShouldExist[o.GetUID()] = true
+			if modificationType != controllerutil.OperationResultNone {
+				a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+			}
 		}
-		if modificationType != controllerutil.OperationResultNone {
-			a.log.Info("resource "+string(modificationType), "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
-		}
+
 	}
 
 	// Find resources which need to be deleted.

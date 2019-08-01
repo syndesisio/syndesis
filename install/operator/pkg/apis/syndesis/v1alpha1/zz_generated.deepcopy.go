@@ -349,6 +349,11 @@ func (in *SyndesisSpec) DeepCopyInto(out *SyndesisSpec) {
 			(*out)[key] = outVal
 		}
 	}
+	if in.DevImages != nil {
+		in, out := &in.DevImages, &out.DevImages
+		*out = new(bool)
+		**out = **in
+	}
 	return
 }
 

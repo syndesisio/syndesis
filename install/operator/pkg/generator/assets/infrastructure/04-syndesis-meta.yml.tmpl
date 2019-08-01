@@ -79,11 +79,8 @@
 {{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
-{{end}}{{if (not .WithDockerImages)}}
-          image: ' '
-{{else}}
-          image: {{.Env.SYNDESIS_REGISTRY}}/{{.Images.SyndesisImagesPrefix}}/{{.Images.Syndesis.Verifier}}:{{.Tags.Syndesis}}
 {{end}}
+          image: ' '
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -131,7 +128,6 @@
           configMap:
             name: syndesis-meta-config
     triggers:
-{{if (not .WithDockerImages)}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -141,7 +137,6 @@
           name: {{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}
           namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
-{{end}}
     - type: ConfigChange
 
 - apiVersion: v1
