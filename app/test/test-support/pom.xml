@@ -28,6 +28,22 @@
   <artifactId>test-support</artifactId>
   <name>Test :: Support</name>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
+        <artifactId>server-endpoint</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.github.mikegirard</groupId>
+            <artifactId>spring-social-salesforce</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
     <dependency>

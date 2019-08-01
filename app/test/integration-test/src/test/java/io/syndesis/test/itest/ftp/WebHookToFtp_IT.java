@@ -66,7 +66,7 @@ public class WebHookToFtp_IT extends FtpTestSupport {
     @ClassRule
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
             .name("webhook-to-ftp")
-            .fromExport(WebHookToFtp_IT.class.getResource("WebHookToFtp-export"))
+            .fromExport(WebHookToFtp_IT.class.getResource("WebhookToFtp-export"))
             .customize("$..configuredProperties.contextPath", "contact")
             .customize("$..configuredProperties.directoryName", "public")
             .customize("$..configuredProperties.host", GenericContainer.INTERNAL_HOST_HOSTNAME)

@@ -37,6 +37,7 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
 public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAssemblyContainer> {
 
     private static final String S2I_ASSEMBLE_SCRIPT = "/usr/local/s2i/assemble";
+    private static final String SRC_DIR = "/tmp/src";
 
     public SyndesisS2iAssemblyContainer(String integrationName, Path projectDir, String imageTag) {
         super(new ImageFromDockerfile(integrationName + "-s2i", true)
@@ -44,7 +45,8 @@ public class SyndesisS2iAssemblyContainer extends GenericContainer<SyndesisS2iAs
                         .cmd(S2I_ASSEMBLE_SCRIPT)
                         .build()));
 
-        withFileSystemBind(projectDir.toAbsolutePath().toString(), "/tmp/src", BindMode.READ_WRITE);
+        withFileSystemBind(projectDir.toAbsolutePath().toString(), SRC_DIR, BindMode.READ_WRITE);
+
         waitingFor(new LogMessageWaitStrategy().withRegEx(".*\\.\\.\\. done.*\\s")
                                                .withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));
     }

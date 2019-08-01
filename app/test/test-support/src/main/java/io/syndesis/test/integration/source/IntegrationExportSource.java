@@ -30,11 +30,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Json;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  */
 public class IntegrationExportSource implements IntegrationSource {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(IntegrationExportSource.class);
 
     private final JsonNode model;
 
@@ -44,6 +49,8 @@ public class IntegrationExportSource implements IntegrationSource {
 
     public IntegrationExportSource(Path pathToExport) {
         try {
+            LOG.info(String.format("Reading integration export source: '%s'", pathToExport.toAbsolutePath()));
+
             if (pathToExport.toFile().isDirectory()) {
                 this.model = readModel(pathToExport);
             } else {

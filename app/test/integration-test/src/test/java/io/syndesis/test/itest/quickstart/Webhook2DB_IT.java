@@ -53,7 +53,7 @@ public class Webhook2DB_IT extends SyndesisIntegrationTestSupport {
     @ClassRule
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("webhook-to-db")
-                            .fromExport(Webhook2DB_IT.class.getResource("Webhook2DB-export"))
+                            .fromExport(Webhook2DB_IT.class.getResource("Webhook2Db-export"))
                             .customize("$..configuredProperties.contextPath", "quickstart")
                             .build()
                             .withNetwork(getSyndesisDb().getNetwork())

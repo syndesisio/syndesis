@@ -40,11 +40,16 @@ import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.integration.source.IntegrationSource;
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Christoph Deppisch
  */
 public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProjectBuilder<T>> implements ProjectBuilder {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(AbstractMavenProjectBuilder.class);
 
     private final String name;
     private final String syndesisVersion;
@@ -63,6 +68,9 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
     public Path build(IntegrationSource source) {
         try {
             Path projectDir = Files.createTempDirectory(outputDir, name);
+
+            LOG.info(String.format("Building integration project in directory: '%s'", projectDir.toAbsolutePath()));
+
             ProjectGenerator projectGenerator = new ProjectGenerator(projectGeneratorConfiguration,
                     new StaticIntegrationResourceManager(source),
                     mavenProperties);

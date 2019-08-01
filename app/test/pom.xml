@@ -32,6 +32,18 @@
 
   <name>Test</name>
 
+  <build>
+    <plugins>
+      <!-- Required only for CircleCi build as the used JVM to run the tests has limited cryptography -->
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencyManagement>
     <dependencies>
       <!-- Redefine Activemq deps -->

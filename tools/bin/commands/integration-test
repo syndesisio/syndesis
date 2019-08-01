@@ -8,14 +8,19 @@ integration-test::usage() {
     cat - <<EOT
 -t  --test <test_name>         The test to run
 -c  --clean                    Run clean builds (mvn clean)
-    --release                  Syndesis version to use
+    --release <version>        Syndesis version to use
+    --image <tag>              Syndesis S2i image tag to use
+    --logging                  Container logging enabled
+    --s2i                      S2i build enabled
+    --mount-path <path>        Container mount path for integration projects
+-o  --output <directory_path>  Integration project output directory
 EOT
 }
 
 integration-test::run() {
     source "$(basedir)/commands/util/maven_funcs"
 
-    call_maven "$(maven_args)" ":integration-test"
+    call_maven "$(maven_args)" ":test-parent,:test-support,:integration-test"
 }
 
 maven_args() {
@@ -35,6 +40,29 @@ maven_args() {
     local release_version="$(readopt --release)"
     if [ -n "${release_version}" ]; then
         args="$args -Dsyndesis.version=${release_version}"
+    fi
+
+    local image_tag="$(readopt --image)"
+    if [ -n "${image_tag}" ]; then
+        args="$args -Dsyndesis.image.tag=${image_tag}"
+    fi
+
+    if [ "$(hasflag --logging)" ]; then
+        args="$args -Dsyndesis.logging.enabled=true"
+    fi
+
+    if [ "$(hasflag --s2i)" ]; then
+        args="$args -Dsyndesis.s2i.build.enabled=true"
+    fi
+
+    local output_directory="$(readopt --output -o)"
+    if [ -n "${output_directory}" ]; then
+        args="$args -Dsyndesis.output.directory=${output_directory}"
+    fi
+
+    local mount_path="$(readopt --mount-path)"
+    if [ -n "${mount_path}" ]; then
+        args="$args -Dsyndesis.project.mount.path=${mount_path}"
     fi
 
     args="$args -Dskip.integration.tests=false"
