@@ -1,4 +1,4 @@
-import { Alert, Button, Card } from 'patternfly-react';
+import { Alert, AlertActionCloseButton, Button, Card, CardBody, CardFooter } from '@patternfly/react-core';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
@@ -6,7 +6,7 @@ import './DdlEditor.css';
 
 export interface IViewEditValidationResult {
   message: string;
-  type: 'error' | 'success';
+  type: 'danger' | 'success';
 }
 
 interface ITableInfo {
@@ -16,11 +16,6 @@ interface ITableInfo {
 
 export interface IDdlEditorProps {
   viewDdl: string;
-
-  /**
-   * The localized text for the cancel button.
-   */
-  i18nCancelLabel: string;
 
   /**
    * The localized text for the save button.
@@ -68,17 +63,13 @@ export interface IDdlEditorProps {
    * @param ddl the ddl
    */
   onValidate: (ddl: string) => void;
-
-  /**
-   * The callback for cancel editing
-   */
-  onCancel: () => void;
 }
 
 interface IDdlEditorState {
   ddlValue: string;
   initialDdlValue: string;
   needsValidation: boolean;
+  validationAlertVisible: boolean;
 }
 
 export class DdlEditor extends React.Component<
@@ -95,16 +86,19 @@ export class DdlEditor extends React.Component<
       ddlValue: this.props.viewDdl,
       initialDdlValue: this.props.viewDdl,
       needsValidation: false,
+      validationAlertVisible: false
     };
     this.handleDdlChange = this.handleDdlChange.bind(this);
     this.handleDdlValidation = this.handleDdlValidation.bind(this);
     this.handleSave = this.handleSave.bind(this);
+    this.hideValidationAlert = this.hideValidationAlert.bind(this);
   }
 
-  public handleDdlValidation = () => (event: any) => {
+  public handleDdlValidation = () => {
     this.props.onValidate(this.state.ddlValue);
     this.setState({
       needsValidation: false,
+      validationAlertVisible: true
     });
   };
 
@@ -118,6 +112,12 @@ export class DdlEditor extends React.Component<
   public handleSave = () => (event: any) => {
     const currentDdl = this.state.ddlValue;
     this.props.onSave(currentDdl);
+  };
+
+  public hideValidationAlert = () => {
+    this.setState({
+      validationAlertVisible: false,
+    });
   };
 
   /**
@@ -139,6 +139,8 @@ export class DdlEditor extends React.Component<
   }
 
   public render() {
+    const { validationAlertVisible } = this.state;
+
     const editorOptions = {
       autofocus: true,
       extraKeys: { 'Ctrl-Space': 'autocomplete' },
@@ -156,41 +158,37 @@ export class DdlEditor extends React.Component<
     return (
       <PageSection>
         <Card>
-          <Card.Body>
-            {this.props.validationResults.map((e, idx) => (
-              <Alert key={idx} type={e.type}>
-                {e.message}
+          <CardBody>
+            {validationAlertVisible ? this.props.validationResults.map((e, idx) => (
+              <Alert key={idx}
+                variant={e.type}
+                title="DDL Validation"
+                action={<AlertActionCloseButton onClose={this.hideValidationAlert} />}
+              >{e.message}
               </Alert>
-            ))}
+            )) : null}
             <TextEditor
               value={this.state.initialDdlValue}
               options={editorOptions}
               onChange={this.handleDdlChange}
             />
+          </CardBody>
+          <CardFooter>
             <Button
-              bsStyle="default"
-              disabled={this.props.isValidating || !this.state.needsValidation}
-              onClick={this.handleDdlValidation()}
+              variant="secondary" 
+              className="ddl-editor__button"
+              isDisabled={this.props.isValidating || !this.state.needsValidation}
+              onClick={this.handleDdlValidation}
             >
               {this.props.isValidating ? (
                 <Loader size={'sm'} inline={true} />
               ) : null}
               {this.props.i18nValidateLabel}
             </Button>
-          </Card.Body>
-          <Card.Footer>
             <Button
-              bsStyle="default"
+              variant="primary"
               className="ddl-editor__button"
-              disabled={this.props.isValidating || this.props.isSaving}
-              onClick={this.props.onCancel}
-            >
-              {this.props.i18nCancelLabel}
-            </Button>
-            <Button
-              bsStyle="primary"
-              className="ddl-editor__button"
-              disabled={
+              isDisabled={
                 this.props.isSaving ||
                 this.props.isValidating ||
                 !this.props.isValid ||
@@ -201,7 +199,7 @@ export class DdlEditor extends React.Component<
               {this.props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
               {this.props.i18nSaveLabel}
             </Button>
-          </Card.Footer>
+          </CardFooter>
         </Card>
       </PageSection>
     );

@@ -22,7 +22,6 @@ import {
 import { VirtualizationHandlers } from '../shared/VirtualizationHandlers';
 import {
   getOdataUrl,
-  getPreviewVdbName,
   getPublishingDetails,
 } from '../shared/VirtualizationUtils';
 
@@ -190,7 +189,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           {() => (
             <WithVirtualizationSqlClientForm
               views={viewDefinitionDescriptors}
-              targetVdb={getPreviewVdbName()}
+              virtualizationId={params.virtualizationId}
               linkCreateView={resolvers.data.virtualizations.create()}
               linkImportViews={resolvers.data.virtualizations.views.importSource.selectConnection(
                 { virtualization: state.virtualization }
