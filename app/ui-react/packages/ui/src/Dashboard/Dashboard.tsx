@@ -40,7 +40,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
       <>
         <SimplePageHeader i18nTitle={this.props.i18nTitle} titleSize={'xl'} />
         <PageSection>
-          <Stack>
+          <Stack gutter={'md'}>
             <StackItem
               className="dashboard__integrations__actions"
               isFilled={false}

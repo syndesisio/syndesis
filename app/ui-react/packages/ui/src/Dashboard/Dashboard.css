@@ -11,16 +11,6 @@
   padding: 0 10px;
 }
 
-/* .dashboard__metrics .pf-l-grid__item {
-  margin-bottom: var(--pf-global--spacer--md);
-}
-
-@media screen and (min-width: 768px) {
-  .dashboard__metrics .pf-l-grid__item {
-    margin-bottom: 0;
-  }
-} */
-
 .dashboard__metrics .pf-c-card.aggregate-status {
   padding: 10px 10px 16px 10px;
   text-align: center;
@@ -39,18 +29,3 @@
   --pf-c-card__body--FontSize: var(--pf-global--icon--FontSize--lg);
   font-weight: var(--pf-global--FontWeight--light);
 }
-
-
-/* .dashboard__connections__actions,
-.dashboard__integrations__actions,
-.dashboard__metrics,
-.dashboard__integrations,
-.dashboard__integrations .pf-l-grid__item {
-  margin-bottom: var(--pf-global--spacer--lg);
-}
-
-@media screen and (min-width: 1200px) {
-  .dashboard__integrations .pf-l-grid__item {
-    margin-bottom: 0;
-  }
-} */
