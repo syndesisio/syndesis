@@ -61,6 +61,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nLinkToIntegrations}
               </Link>
             </StackItem>
+
             <StackItem className="dashboard__metrics" isFilled={false}>
               <Grid md={6} xl={3} gutter={'sm'}>
                 <GridItem>{this.props.integrationsOverview}</GridItem>
@@ -69,6 +70,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 <GridItem>{this.props.uptimeOverview}</GridItem>
               </Grid>
             </StackItem>
+
             <StackItem className="dashboard__integrations" isFilled={false}>
               {/* TODO last minute empty state hack with minimal changes, this needs a revisit */
               this.props.noIntegrations ? (
@@ -89,6 +91,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 </>
               )}
             </StackItem>
+
             <StackItem
               className="dashboard__connections__actions"
               isFilled={false}
@@ -112,6 +115,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nLinkToConnections}
               </Link>
             </StackItem>
+
             <StackItem
               className="dashboard__connections__grid"
               isFilled={false}

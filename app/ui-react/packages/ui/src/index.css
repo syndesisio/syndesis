@@ -12,6 +12,8 @@
 @import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
 @import url('~@patternfly/patternfly/layouts/Level/level.css');
 @import url('~@patternfly/patternfly/layouts/Split/split.css');
+/* @import url('~@patternfly/patternfly/layouts/Stack/stack.css'); */
+/* @import url('~@patternfly/patternfly/layouts/Gallery/gallery.css'); */
 @import url('~@patternfly/patternfly/utilities/Display/display.css');
 
 :root {

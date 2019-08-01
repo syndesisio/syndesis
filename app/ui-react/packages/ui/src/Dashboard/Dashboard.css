@@ -11,7 +11,7 @@
   padding: 0 10px;
 }
 
-.dashboard__metrics .pf-l-grid__item {
+/* .dashboard__metrics .pf-l-grid__item {
   margin-bottom: var(--pf-global--spacer--md);
 }
 
@@ -19,7 +19,7 @@
   .dashboard__metrics .pf-l-grid__item {
     margin-bottom: 0;
   }
-}
+} */
 
 .dashboard__metrics .pf-c-card.aggregate-status {
   padding: 10px 10px 16px 10px;
@@ -41,7 +41,7 @@
 }
 
 
-.dashboard__connections__actions,
+/* .dashboard__connections__actions,
 .dashboard__integrations__actions,
 .dashboard__metrics,
 .dashboard__integrations,
@@ -53,4 +53,4 @@
   .dashboard__integrations .pf-l-grid__item {
     margin-bottom: 0;
   }
-}
+} */

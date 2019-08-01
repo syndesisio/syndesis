@@ -57,88 +57,95 @@ export class Connections extends React.Component<IConnectionsProps> {
                     };
 
                     return (
-                      <ConnectionsGrid>
-                        <WithLoader
-                          error={this.props.error}
-                          loading={this.props.loading}
-                          loaderChildren={
-                            <>
-                              {new Array(5).fill(0).map((_, index) => (
-                                <ConnectionsGridCell key={index}>
-                                  <ConnectionSkeleton />
-                                </ConnectionsGridCell>
-                              ))}
-                            </>
-                          }
-                          errorChildren={
-                            <ApiError error={this.props.errorMessage!} />
-                          }
-                        >
-                          {() =>
-                            this.props.connections.map((c, index) => {
-                              const handleDelete = (): void => {
-                                doDelete(c.id!, c.name); // must have an ID if deleting
-                              };
-
-                              return (
-                                <ConnectionsGridCell key={index}>
-                                  <ConnectionCard
-                                    name={c.name}
-                                    description={c.description || ''}
-                                    icon={
-                                      <EntityIcon
-                                        entity={c}
-                                        alt={c.name}
-                                        width={46}
-                                      />
-                                    }
-                                    href={this.props.getConnectionHref(c)}
-                                    i18nCannotDelete={t('cannotDelete')}
-                                    i18nConfigRequired={t(
-                                      'configurationRequired'
-                                    )}
-                                    i18nTechPreview={t('shared:techPreview')}
-                                    isConfigRequired={c.isConfigRequired}
-                                    isTechPreview={c.isTechPreview}
-                                    menuProps={
-                                      this.props.includeConnectionMenu
-                                        ? {
-                                            editHref: this.props
-                                              .getConnectionEditHref!(c),
-                                            i18nCancelLabel: t('shared:Cancel'),
-                                            i18nDeleteLabel: t('shared:Delete'),
-                                            i18nDeleteModalMessage: t(
-                                              'deleteModalMessage',
-                                              { connectionName: c.name }
+                      <WithLoader
+                        error={this.props.error}
+                        loading={this.props.loading}
+                        loaderChildren={
+                          <>
+                            {new Array(5).fill(0).map((_, index) => (
+                              <ConnectionsGridCell key={index}>
+                                <ConnectionSkeleton />
+                              </ConnectionsGridCell>
+                            ))}
+                          </>
+                        }
+                        errorChildren={
+                          <ApiError error={this.props.errorMessage!} />
+                        }
+                      >
+                        {() => {
+                          return (
+                            <ConnectionsGrid>
+                              {this.props.connections.map((c, index) => {
+                                const handleDelete = (): void => {
+                                  doDelete(c.id!, c.name); // must have an ID if deleting
+                                };
+                                return (
+                                  <ConnectionsGridCell key={index}>
+                                    <ConnectionCard
+                                      name={c.name}
+                                      description={c.description || ''}
+                                      icon={
+                                        <EntityIcon
+                                          entity={c}
+                                          alt={c.name}
+                                          width={46}
+                                        />
+                                      }
+                                      href={this.props.getConnectionHref(c)}
+                                      i18nCannotDelete={t('cannotDelete')}
+                                      i18nConfigRequired={t(
+                                        'configurationRequired'
+                                      )}
+                                      i18nTechPreview={t('shared:techPreview')}
+                                      isConfigRequired={c.isConfigRequired}
+                                      isTechPreview={c.isTechPreview}
+                                      menuProps={
+                                        this.props.includeConnectionMenu
+                                          ? {
+                                              editHref: this.props
+                                                .getConnectionEditHref!(c),
+                                              i18nCancelLabel: t(
+                                                'shared:Cancel'
+                                              ),
+                                              i18nDeleteLabel: t(
+                                                'shared:Delete'
+                                              ),
+                                              i18nDeleteModalMessage: t(
+                                                'deleteModalMessage',
+                                                { connectionName: c.name }
+                                              ),
+                                              i18nDeleteModalTitle: t(
+                                                'deleteModalTitle'
+                                              ),
+                                              i18nEditLabel: t('shared:Edit'),
+                                              i18nMenuTitle: t(
+                                                'connectionCardMenuTitle'
+                                              ),
+                                              i18nViewLabel: t('shared:View'),
+                                              isDeleteEnabled:
+                                                (c.uses as number) === 0,
+                                              onDelete: handleDelete,
+                                            }
+                                          : undefined
+                                      }
+                                      techPreviewPopoverHtml={
+                                        <span
+                                          dangerouslySetInnerHTML={{
+                                            __html: t(
+                                              'shared:techPreviewPopoverHtml'
                                             ),
-                                            i18nDeleteModalTitle: t(
-                                              'deleteModalTitle'
-                                            ),
-                                            i18nEditLabel: t('shared:Edit'),
-                                            i18nMenuTitle: t(
-                                              'connectionCardMenuTitle'
-                                            ),
-                                            i18nViewLabel: t('shared:View'),
-                                            isDeleteEnabled:
-                                              (c.uses as number) === 0,
-                                            onDelete: handleDelete,
-                                          }
-                                        : undefined
-                                    }
-                                    techPreviewPopoverHtml={
-                                      <span
-                                        dangerouslySetInnerHTML={{
-                                          __html: t('shared:techPreviewPopoverHtml'),
-                                        }}
-                                      />
-                                    }
-                                  />
-                                </ConnectionsGridCell>
-                              );
-                            })
-                          }
-                        </WithLoader>
-                      </ConnectionsGrid>
+                                          }}
+                                        />
+                                      }
+                                    />
+                                  </ConnectionsGridCell>
+                                );
+                              })}
+                            </ConnectionsGrid>
+                          );
+                        }}
+                      </WithLoader>
                     );
                   }}
                 </WithConnectionHelpers>
