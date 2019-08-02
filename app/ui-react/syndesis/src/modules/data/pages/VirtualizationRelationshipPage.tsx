@@ -18,7 +18,6 @@ import {
  */
 export interface IVirtualizationRelationshipPageRouteParams {
   virtualizationId: string;
-  virtualization: RestDataService;
 }
 
 /**

@@ -29,7 +29,6 @@ import resolvers from '../../resolvers';
  */
 export interface IVirtualizationViewsPageRouteParams {
   virtualizationId: string;
-  virtualization: RestDataService;
 }
 
 /**
