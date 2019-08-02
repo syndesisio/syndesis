@@ -13,7 +13,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-version: 2
+version: 2.1
 
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
@@ -113,13 +113,13 @@ jobs:
       - save_cache:
           key: syndesis-yarn-{{ checksum "app/ui-react/yarn.lock" }}
           paths:
-          - /usr/local/share/.cache/yarn/v1
+            - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
       - save_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui-react/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
       - <<: *push_images
 
   ui-legacy:
@@ -153,17 +153,17 @@ jobs:
       - save_cache:
           key: syndesis-yarn-legacy-{{ checksum "app/ui-angular/yarn.lock" }}
           paths:
-          - /usr/local/share/.cache/yarn/v1
+            - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
       - save_cache:
           key: syndesis-mvn-ui-legacy{{ checksum "app/ui-angular/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
       - <<: *push_images
 
-  # Connector depends on integration, mount workspace .m2
-  connector:
+  # All connectors job depends on integration, mount workspace .m2
+  connectors:
     <<: *job_defaults
     environment:
       <<: *common_env
@@ -184,9 +184,92 @@ jobs:
       - save_cache:
           key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
       - <<: *save_m2
 
+  # Connector support depends on integration, mount workspace .m2
+  connector-support:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Connector Support
+          command: |
+            ./tools/bin/syndesis build --batch-mode --module :connector-support-util,:connector-support-verifier,:connector-support-maven-plugin,:connector-support-processor,:connector-support-test | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
+          paths:
+            - ~/.m2
+      - <<: *save_m2
+
+  # Connector support catalog depends on integration, mount workspace .m2
+  connector-catalog:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-connector-support-catalog-{{ checksum "app/connector/support/catalog/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Connector Support
+          command: |
+            ./tools/bin/syndesis build --batch-mode --module :connector-support-catalog | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-connector-support-catalog-{{ checksum "app/connector/support/catalog/pom.xml" }}
+          paths:
+            - ~/.m2
+      - persist_to_workspace:
+          root: ~/.m2
+          paths:
+            - repository/io/syndesis/connector/connector-support-catalog
+
+  # Connector parameterized depends on connector-support, mount workspace .m2
+  connector:
+    <<: *job_defaults
+    environment:
+      <<: *common_env
+    parameters:
+      module:
+        type: string
+    steps:
+      - checkout
+      - restore_cache:
+          key: syndesis-mvn-connector-<< parameters.module >>-{{ checksum "app/connector/<< parameters.module >>/pom.xml" }}
+      - <<: *load_m2
+      - run:
+          name: Build Connector connector-<< parameters.module >>
+          command: |
+            ./tools/bin/syndesis build --batch-mode --module :connector-<< parameters.module >> | tee build_log.txt
+      - <<: *save_junit
+      - store_test_results:
+          path: /workspace/junit
+      - store_artifacts:
+          path: build_log.txt
+      - save_cache:
+          key: syndesis-mvn-connector-<< parameters.module >>-{{ checksum "app/connector/<< parameters.module >>/pom.xml" }}
+          paths:
+            - ~/.m2
+      - persist_to_workspace:
+          root: ~/.m2
+          paths:
+            - repository/io/syndesis/connector/connector-<< parameters.module >>
 
   # Meta depends on connectors, mount workspace .m2
   meta:
@@ -214,7 +297,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   # Common has no dependencies, just load cache
   common:
@@ -239,7 +322,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   # Extension depends on common
   extension:
@@ -264,7 +347,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   # integration dependes on extension, mount workspace .m2
   integration:
@@ -288,7 +371,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
       - <<: *save_m2
 
   # S2I image
@@ -314,7 +397,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   # "server" depends on common, connector and integration, mount workspace .m2
   server:
@@ -353,7 +436,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   operator:
     docker:
@@ -479,7 +562,7 @@ jobs:
       - save_cache:
           key: syndesis-mvn-tests-{{ checksum "all-poms" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   license-check:
     <<: *job_defaults
@@ -501,7 +584,7 @@ jobs:
       - save_cache:
           key: syndesis-license-check-{{ checksum "all-poms" }}
           paths:
-          - ~/.m2
+            - ~/.m2
 
   doc:
     docker:
@@ -519,7 +602,6 @@ jobs:
             ./tools/bin/syndesis doc --local --html --pdf --gh-pages
 
 workflows:
-  version: 2
   syndesis:
     jobs:
       - system-test:
@@ -541,16 +623,234 @@ workflows:
       - integration:
           requires:
             - extension
-      - connector:
+      - connector-support:
           requires:
             - integration
+      - connector:
+          name: connector-activemq
+          module: activemq
+          requires:
+            - connector-support
+      - connector:
+          name: connector-api-provider
+          module: api-provider
+          requires:
+            - connector-support
+      - connector:
+          name: connector-amqp
+          module: amqp
+          requires:
+            - connector-support
+      - connector:
+          name: connector-aws-s3
+          module: aws-s3
+          requires:
+            - connector-support
+      - connector:
+          name: connector-aws-sqs
+          module: aws-sqs
+          requires:
+            - connector-support
+      - connector:
+          name: connector-aws-sns
+          module: aws-sns
+          requires:
+            - connector-support
+      - connector:
+          name: connector-box
+          module: box
+          requires:
+            - connector-support
+      - connector:
+          name: connector-dropbox
+          module: dropbox
+          requires:
+            - connector-support
+      - connector:
+          name: connector-email
+          module: email
+          requires:
+            - connector-support
+      - connector:
+          name: connector-ftp
+          module: ftp
+          requires:
+            - connector-support
+      - connector:
+          name: connector-fhir
+          module: fhir
+          requires:
+            - connector-support
+      - connector:
+          name: connector-gmail
+          module: gmail
+          requires:
+            - connector-support
+      - connector:
+          name: connector-google-calendar
+          module: google-calendar
+          requires:
+            - connector-support
+      - connector:
+          name: connector-google-sheets
+          module: google-sheets
+          requires:
+            - connector-support
+      - connector:
+          name: connector-http
+          module: http
+          requires:
+            - connector-support
+      - connector:
+          name: connector-irc
+          module: irc
+          requires:
+            - connector-support
+      - connector:
+          name: connector-jira
+          module: jira
+          requires:
+            - connector-support
+      - connector:
+          name: connector-kafka
+          module: kafka
+          requires:
+            - connector-support
+      - connector:
+          name: connector-log
+          module: log
+          requires:
+            - connector-support
+      - connector:
+          name: connector-mqtt
+          module: mqtt
+          requires:
+            - connector-support
+      - connector:
+          name: connector-rest-swagger
+          module: rest-swagger
+          requires:
+            - connector-support
+      - connector:
+          name: connector-salesforce
+          module: salesforce
+          requires:
+            - connector-support
+      - connector:
+          name: connector-sftp
+          module: sftp
+          requires:
+            - connector-support
+      - connector:
+          name: connector-slack
+          module: slack
+          requires:
+            - connector-support
+      - connector:
+          name: connector-sql
+          module: sql
+          requires:
+            - connector-support
+      - connector:
+          name: connector-telegram
+          module: telegram
+          requires:
+            - connector-support
+      - connector:
+          name: connector-timer
+          module: timer
+          requires:
+            - connector-support
+      - connector:
+          name: connector-twitter
+          module: twitter
+          requires:
+            - connector-support
+      - connector:
+          name: connector-servicenow
+          module: servicenow
+          requires:
+            - connector-support
+      - connector:
+          name: connector-webhook
+          module: webhook
+          requires:
+            - connector-support
+      - connector:
+          name: connector-concur
+          module: concur
+          requires:
+            - connector-support
+      - connector:
+          name: connector-kudu
+          module: kudu
+          requires:
+            - connector-support
+      - connector:
+          name: connector-odata
+          module: odata
+          requires:
+            - connector-support
+      - connector:
+          name: connector-knative
+          module: knative
+          requires:
+            - connector-support
+      - connector:
+          name: connector-flow
+          module: flow
+          requires:
+            - connector-support
+      - connector:
+          name: connector-mongodb
+          module: mongodb
+          requires:
+            - connector-support
+      - connector-catalog:
+          requires:
+            - connector-activemq
+            - connector-api-provider
+            - connector-amqp
+            - connector-aws-s3
+            - connector-aws-sqs
+            - connector-aws-sns
+            - connector-box
+            - connector-dropbox
+            - connector-email
+            - connector-ftp
+            - connector-fhir
+            - connector-gmail
+            - connector-google-calendar
+            - connector-google-sheets
+            - connector-http
+            - connector-irc
+            - connector-jira
+            - connector-kafka
+            - connector-log
+            - connector-mqtt
+            - connector-rest-swagger
+            - connector-salesforce
+            - connector-sftp
+            - connector-slack
+            - connector-sql
+            - connector-telegram
+            - connector-timer
+            - connector-twitter
+            - connector-servicenow
+            - connector-webhook
+            - connector-concur
+            - connector-kudu
+            - connector-odata
+            - connector-knative
+            - connector-flow
+            - connector-mongodb
       - meta:
           requires:
-            - connector
+            - connector-catalog
       - server:
           requires:
             - integration
-            - connector
+            - connector-catalog
             - common
       - s2i:
           requires:
@@ -577,15 +877,15 @@ workflows:
       - integration:
           requires:
             - extension
-      - connector:
+      - connectors:
           requires:
             - integration
       - meta:
           requires:
-            - connector
+            - connectors
       - server:
           requires:
-            - connector
+            - connectors
       - s2i:
           requires:
             - server
