@@ -42,3 +42,25 @@ ${in.body.title}
 ----
 
 . Click *Next* to add the advanced filter step to the flow. 
+
+.Additional property specifcation in some kinds of flows
+
+In an expression, an additional property specification is required when 
+the advanced filter step is in one of the following kinds of flows: 
+
+* An API provider integration operation flow
+* A simple integration that starts with a webhook connection
+* A simple integration that starts with a custom REST API connection
+
+In these flows, {prodname} wraps the actual message content inside a `body` 
+property. This means that the input to the advanced filter contains a 
+`body` property that contains another `body` property that contains 
+the actual message content. Consequently, in an advanced filter expression
+that is in one of these kinds of flows, 
+you must specify two instances of `body`. For example, suppose you want 
+to evaluate content that is in the `completed` field of the input message. 
+Specify the expression like this: 
+
+----
+${body.body.completed} = 1
+----

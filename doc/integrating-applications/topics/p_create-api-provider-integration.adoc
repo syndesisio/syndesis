@@ -60,8 +60,5 @@ link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-s
 document defines. 
 
 .Next step
-For each operation, create the flow that executes the operation. 
-When you save a flow, {prodname} prompts you to 
-enter a name and description for the integration and click *S 
-You are ready to 
-link:{LinkFuseOnlineIntegrationGuide}#create-integration-operation-flows_api-provider[define a flow for each operation].
+For each operation,
+link:{LinkFuseOnlineIntegrationGuide}#create-integration-operation-flows_api-provider[define a flow that executes that operation].
