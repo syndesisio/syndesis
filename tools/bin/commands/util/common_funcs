@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Minimal version for GO
+GO_MIN_VERSION=1.12
+
 # Checks if a flag is present in the arguments.
 hasflag() {
     filters="$@"
@@ -160,4 +163,112 @@ has_changes() {
   if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
     echo "true"
   fi
+}
+
+docker_is_available() {
+    set +e
+    which docker &>/dev/null
+    if [ $? -ne 0 ]; then
+        set -e
+        echo "ERROR: 'docker' command not installed"
+        return
+    fi
+
+    if docker info > /dev/null 2> /dev/null ; then
+        echo "OK"
+    else
+        echo "ERROR: the 'docker' command is not connected to a server"
+    fi
+
+    set -e
+}
+
+go_is_available() {
+    set +e
+    which go &>/dev/null
+    if [ $? -ne 0 ]; then
+        set -e
+        echo "ERROR: 'go' command not installed"
+        return
+    fi
+
+    test=$(go version | sed -n 's/go version go\([0-9].[0-9][0-9]\).*/\1/p')
+    if [ -z "$test" ]; then
+        echo "ERROR: 'go' command version cannot be determined"
+        return
+    fi
+
+    gocompare=$(compare_version $test $GO_MIN_VERSION \"go\")
+    if [[ "$gocompare" != "OK" ]] ; then
+        set -e
+        echo "ERROR: 'go' command ($test) does not meet the minimum version of $GO_MIN_VERSION"
+        return
+    fi
+
+    set -e
+
+    echo "OK"
+}
+
+compare_version_part() {
+    local test=$1
+    local min=$2
+
+    test=`expr $test`
+    min=`expr $min`
+
+    if [ $test -eq $min ]; then
+        echo 0;
+    elif [ $test -gt $min ]; then
+        echo 1;
+    else
+        # $test -lt $min
+        echo -1
+    fi
+}
+
+compare_version() {
+    local test=$1
+    local min=$2
+
+    testparts=( ${test//./ } )
+    minparts=( ${min//./ } )
+
+    local i=0
+    while [ $i -lt ${#minparts[@]} ]
+    do
+        local testpart=${testparts[$i]}
+        local minpart=${minparts[$i]}
+
+        if [ -z "$testpart" ]; then
+            # test version does not extend as far as minimum
+            # in parts so append a 0
+            testpart=0
+        fi
+
+        ret=$(compare_version_part $testpart $minpart)
+        if [ $ret == -1 ]; then
+            #
+            # version part is less than minimum while all preceding
+            # parts were equal so version does not meet minimum
+            #
+            echo "ERROR: version ($test) should be at least $min"
+            return
+        elif [ $ret == 1 ]; then
+            #
+            # version part is greater than minimum so no need to test
+            # any further parts as version is greater than minimum
+            #
+            echo "OK"
+            return
+        fi
+
+        #
+        # Only if the version part is equal will the loop continue
+        # with further parts.
+        #
+        i=`expr $i + 1`
+    done
+
+    echo "OK"
 }

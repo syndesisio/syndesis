@@ -3,6 +3,9 @@
 # Minimal version for OC
 OC_MIN_VERSION=3.9.0
 
+# Constant for signal to configure oc via minishift
+SETUP_MINISHIFT="setup-minishift"
+
 check_oc_version()
 {
     local minimum=${OC_MIN_VERSION}
@@ -11,7 +14,26 @@ check_oc_version()
         local test=$(oc version | grep 'Client Version' | sed "s/^.*GitVersion:\"v\(.*\)\", GitCommit.*$/\1/")
     fi
 
-    echo $(compare_oc_version $test $minimum)
+    echo $(compare_version $test $minimum)
+}
+
+is_minishift_available() {
+    # Check for minishift
+    set +e
+    which minishift &>/dev/null
+    if [ $? -ne 0 ]; then
+        set -e
+        echo "ERROR: 'minishift is not installed so cannot use for 'oc'"
+        return
+    fi
+
+    local running=$(minishift status | grep Minishift | sed 's/Minishift:\( \)*//g')
+    if [ "$running" != "Running" ]; then
+      echo "ERROR: minishift is not running"
+      return
+    fi
+
+    echo "OK"
 }
 
 setup_oc() {
@@ -27,8 +49,8 @@ setup_oc() {
     fi
 
     # Check for minishift
-    which minishift &>/dev/null
-    if [ $? -eq 0 ]; then
+    hasminishift=$(is_minishift_available)
+    if [ "$hasminishift" == "OK" ]; then
       set -e
       eval $(minishift oc-env)
       err=$(check_oc_version)
@@ -41,6 +63,48 @@ setup_oc() {
     # Error, no oc found
     echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
     exit 1
+}
+
+setup_minishift_oc() {
+   eval $(minishift oc-env)
+   echo $(check_oc_version)
+}
+
+#
+# Same as setup_oc but doesn't exit
+# if oc not found
+#
+is_oc_available() {
+
+    # Check path first if it already exists
+    set +e
+    which oc &>/dev/null
+    if [ $? -eq 0 ]; then
+      set -e
+      echo $(check_oc_version)
+      return
+    fi
+
+    #
+    # Check for minishift
+    #
+    # Will return $SETUP_MINISHIFT as the result since
+    # this will signal the parent shell should call setup_minishift_oc.
+    # This cannot be called here since this will be called from a child
+    # shell and so the changes to the PATH variable will not be propogated
+    # to the parent shell.
+    #
+    hasminishift=$(is_minishift_available)
+    if [ "$hasminishift" == "OK" ]; then
+      set -e
+      echo "$SETUP_MINISHIFT"
+      return
+    fi
+
+    set -e
+
+    # Error, no oc found
+    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
 }
 
 recreate_project() {
@@ -638,69 +702,4 @@ get_route() {
 
 syndesis_deployments() {
   oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
-}
-
-compare_version_part() {
-    local test=$1
-    local min=$2
-
-    test=`expr $test`
-    min=`expr $min`
-
-    if [ $test -eq $min ]; then
-        echo 0;
-    elif [ $test -gt $min ]; then
-        echo 1;
-    else
-        # $test -lt $min
-        echo -1
-    fi
-}
-
-compare_oc_version() {
-    local test=$1
-    local min=$2
-
-    echo -n "Testing oc version '$test' against required minimum '$min' ... "
-
-    testparts=( ${test//./ } )
-    minparts=( ${min//./ } )
-
-    local i=0
-    while [ $i -lt ${#minparts[@]} ]
-    do
-        local testpart=${testparts[$i]}
-        local minpart=${minparts[$i]}
-
-        if [ -z "$testpart" ]; then
-            # test version does not extend as far as minimum
-            # in parts so append a 0
-            testpart=0
-        fi
-
-        ret=$(compare_version_part $testpart $minpart)
-        if [ $ret == -1 ]; then
-            #
-            # version part is less than minimum while all preceding
-            # parts were equal so version does not meet minimum
-            #
-            echo "ERROR: oc version ($test) should be at least $min"
-            return
-        elif [ $ret == 1 ]; then
-            #
-            # version part is greater than minimum so no need to test
-            # any further parts as version is greater than minimum
-            #
-            echo "OK"
-            return
-        fi
-
-        #
-        # Only if the version part is equal will the loop continue
-        # with further parts.
-        #
-        i=`expr $i + 1`
-    done
-
-    echo "OK"
 }

@@ -39,71 +39,51 @@ readopt() {
     echo $default
 }
 
-
-docker_is_available() {
-    if [[ "$(which docker)" == "" ]] ; then
-        echo "warn: docker command not installed"
-        echo
-        return 0
-    fi
-
-    if docker info > /dev/null 2> /dev/null ; then
-        return 1
-    else
-        echo "warn: the docker comamand is not conected to a server"
-        echo
-        return 0
-    fi
-}
-
 build_operator()
 {
     local strategy="$1"
     shift
-    local gopackage="$1"
-    shift
+
+    local hasgo=$(go_is_available)
+    local hasdocker=$(docker_is_available)
 
     if [ "$strategy" == "auto" ] ; then
-
-        if docker_is_available; then
-            if [[ "$(which go)" == "" ]] ; then
-                echo 'error: you must have either docker or go installed to build this project.'
-                exit 1
-            else
-                strategy="go"
-            fi
+        if [ "$hasgo" == "OK" ]; then
+            # Prefer go over docker - TODO: do we prefer this?
+            strategy="go"
+        elif [ "$hasdocker" == "OK" ]; then
+            # go not available so try docker
+            printf "WARN: Building with 'docker' since 'go' command is not available ... \n\t\t$hasgo\n"
+            strategy="docker"
         else
-            if [[ "$(which go)" == "" ]] ; then
-                echo 'warn: building with docker since you do not have go installed.'
-                strategy="docker"
-            else
-                strategy="go"
-            fi
+            echo "ERROR: Building the operator requires either 'docker' or 'go' commands to be installed."
+            exit 1
         fi
     fi
 
-
     case "$strategy" in
     "go")
+        if [ "$hasgo" != "OK" ]; then
+            echo "$hasgo"
+            exit 1
+        fi
+
         echo ======================================================
         echo Building executable with go tooling
         echo ======================================================
         export GO111MODULE=on
 
         go mod vendor
-        if [[ "$(which operator-sdk)" != "" ]] ; then
-            if [[ "$(pwd)" != "$GOPATH/src/${gopackage}" ]] ; then
-                echo
-                echo "warnning: operator-sdk only works on project's in the \$GOPATH"
-                echo "          can't use it to update the generated code"
-                echo "          please move this project under the \$GOPATH so that :'$(pwd)'"
-                echo "          is located at '$GOPATH/src/${gopackage}'"
-                echo
-            else
-                operator-sdk generate k8s
-                # operator-sdk generate openapi
-            fi
+
+        local hassdk=$(operatorsdk_is_available)
+        if [ "$hassdk" == "OK" ]; then
+            operator-sdk generate k8s
+            # operator-sdk generate openapi
+        else
+            # display warning message and move on
+            printf "$hassdk\n\n"
         fi
+
         go generate ./pkg/...
 
         echo building executable
@@ -124,6 +104,11 @@ build_operator()
     ;;
     "docker")
 
+        if [ "$hasdocker" != "OK" ]; then
+            echo "$hasdocker"
+            exit 1
+        fi
+
         local BUILDER_IMAGE_NAME="operator-builder"
         echo ======================================================
         echo Building executable with Docker
@@ -137,7 +122,7 @@ build_operator()
 
         docker build -t "${BUILDER_IMAGE_NAME}" . -f - <<EODockerfile
 FROM golang:1.12.0
-WORKDIR /go/src/${gopackage}
+WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
 # This will speed up subsequent builds if the go deps don't change due thx to image layer caching.
 # Note: the vendor dir is in .dockerignore file so that the build context sent to docker is really small.
@@ -177,15 +162,31 @@ build_image()
     local OPERATOR_IMAGE_NAME="$2"
     local S2I_STREAM_NAME="$3"
 
+    local hasdocker=$(docker_is_available)
+    local hasoc=$(is_oc_available)
+
     if [ "$strategy" == "auto" ] ; then
-        strategy=docker
-        if [ -n "$(which oc)" ] ; then
-            strategy=s2i
+
+        if [ "$hasoc" == "OK" -o "$hasoc" == "$SETUP_MINISHIFT" ]; then
+            strategy="s2i"
+        elif [ "$hasdocker" == "OK" ]; then
+            printf "\nWARN: Building image with 'docker' since 'oc' command is not available for s2i ... \n\t\t$hasoc\n"
+            strategy="docker"
+        else
+            echo "ERROR: Building an image requires either 'docker' or 'oc' commands to be installed."
+            exit 1
         fi
     fi
 
     case "$strategy" in
     "s2i")
+        if [ "$hasoc" == "$SETUP_MINISHIFT" ]; then
+            setup_minishift_oc > /dev/null
+        elif [ "$hasoc" != "OK" ]; then
+            echo "$hasoc"
+            exit 1
+        fi
+
         echo ======================================================
         echo Building image with S2I
         echo ======================================================
@@ -196,12 +197,17 @@ build_image()
         local arch="$(mktemp -t ${S2I_STREAM_NAME}-dockerXXX).tar"
         echo $arch
         trap "rm $arch" EXIT
-        tar --exclude-from=.dockerignore -cvf $arch build 
+        tar --exclude-from=.dockerignore -cvf $arch build
         cd build
         tar uvf $arch Dockerfile
         oc start-build --from-archive=$arch ${S2I_STREAM_NAME}
     ;;
     "docker")
+        if [ "$hasdocker" != "OK" ]; then
+            echo "$hasdocker"
+            exit 1
+        fi
+
         echo ======================================================
         echo Building image with Docker
         echo ======================================================
