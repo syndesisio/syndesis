@@ -13,9 +13,9 @@ fi
 mkdir -p "${target_dir}/m2/repo"
 
 echo "Your local maven repo points to $local_repo"
-
+cp $target_dir/settings.xml $target_dir/settings_local.xml
 echo "Proceeding to create a maven repo for the docker image based on the local repo."
-sed -i "s#file:///tmp/artifacts/m2#file://${local_repo}#g" $target_dir/settings.xml
-${project_dir}/../mvnw -f $target_dir/m2/project/pom.xml -s $target_dir/settings.xml -Dmaven.repo.local=$target_dir/m2/repo package
+sed -i "s#file:///tmp/artifacts/m2#file://${local_repo}#g" $target_dir/settings_local.xml
+${project_dir}/../mvnw -f $target_dir/m2/project/pom.xml -s $target_dir/settings_local.xml -Dmaven.repo.local=$target_dir/m2/repo install
 
 cp "${project_dir}/src/main/docker/Dockerfile" $target_dir
