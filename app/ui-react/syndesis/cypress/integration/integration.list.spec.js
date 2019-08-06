@@ -14,6 +14,4 @@ describe('Integration List', () => {
      */
     cy.get('.pf-c-page__sidebar-body').should('be.visible');
   });
-
-  it('');
 });

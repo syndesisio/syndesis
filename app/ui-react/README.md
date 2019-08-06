@@ -701,8 +701,6 @@ To see this in action, you can record a session:
 3. In a separate tab, run Cypress with `yarn e2e`.
 4. In the browser window, select each test to run for which you want to record the network request payload. You should see a log of this recording in the terminal tab from step 2, and a newly generated `.json5` file in `syndesis/tapes/<name of test you have selected>`.
 
-At the moment, you must select tests individually in the Cypress UI (for the BE recorder/replayer), because Cypress passes a custom header with the test name, which is then used to create the tape directory. If you do not select tests individually, it will throw all recordings into `syndesis/tapes/All Specs`, which could cause duplicate data unnecessarily.
-
 To replay a session (run Cypress tests using the tapes, disallowing outbound requests to the API server):
 
 `$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn replay` or `$ yarn replay <session-name>`

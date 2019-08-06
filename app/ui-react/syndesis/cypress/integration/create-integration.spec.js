@@ -9,71 +9,11 @@ describe('Create an Integration', () => {
   const integrationSlug = 'e2e-todo-integration-' + nameInt;
 
   function createConnection() {
-    /**
-     * Create To Do Connection
-     * NOTE: This will break if a Connection with the same name already exists.
-     */
-    cy.visit('/');
-
-    cy.get('[data-testid=dashboard-create-connection-button]').click();
-
-    cy.location('pathname').should(
-      'contain',
-      '/connections/create/connection-basics'
-    );
-
-    cy.get('[data-testid=connection-card-todo-app-api-card]').click();
-
-    cy.location('pathname').should('contain', '/configure-fields');
-
-    cy.get('[data-testid=username]')
-      .clear()
-      .type(Cypress.env('connectorTodoUser'))
-      .should('have.value', Cypress.env('connectorTodoUser'));
-
-    cy.get('[data-testid=password]')
-      .clear()
-      .type(Cypress.env('connectorTodoPassword'))
-      .should('have.value', Cypress.env('connectorTodoPassword'));
-
-    cy.get('[data-testid=connection-creator-layout-next-button]')
-      .should('not.be.disabled')
-      .click();
-
-    cy.get('[data-testid=name]')
-      .clear()
-      .type(connectionName);
-
-    cy.get('[data-testid=description]')
-      .clear()
-      .type('Subscribe for and publish messages.');
-
-    cy.get('[data-testid=connection-creator-layout-next-button]').click();
-
-    cy.location('pathname').should('eq', '/connections/');
-
-    cy.get('.form-control').type(connectionName + '{enter}');
-    cy.get('[data-testid|=connection-card-' + connectionSlug + ']').should(
-      'exist'
-    );
+    cy.createConnection({ name: connectionName, slug: connectionSlug });
   }
 
   function deleteConnection() {
-    cy.visit('/connections');
-
-    cy.get('[data-testid|=connection-card-' + connectionSlug + ']').within(
-      () => {
-        cy.get('[data-testid=connection-card-kebab]').click();
-        cy.get('[data-testid=connection-card-delete-action]').click();
-      }
-    );
-
-    cy.get('#deleteConfirmationDialogContent').should('be.visible');
-    cy.get('.modal-footer')
-      .contains('Delete')
-      .click();
-
-    cy.get('.toast-pf.alert-success').should('be.visible');
+    cy.deleteConnection({ slug: connectionSlug });
   }
 
   function deleteIntegration() {
@@ -109,8 +49,8 @@ describe('Create an Integration', () => {
    * Delete items created in this test
    */
   after(function() {
-    deleteIntegration();
-    deleteConnection();
+    //deleteIntegration();
+    //deleteConnection();
   });
 
   /**
@@ -275,7 +215,6 @@ describe('Create an Integration', () => {
      */
 
     cy.get('.toast-pf.alert-info').should('be.visible');
-    cy.get('.integration-status-detail').should('exist');
     cy.location('pathname').should('contain', 'details');
   });
 });

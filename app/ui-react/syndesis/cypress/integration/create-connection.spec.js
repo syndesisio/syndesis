@@ -2,24 +2,6 @@ describe('Create a Connection', () => {
   const connectionName = 'E2E DB Connection';
   const connectionSlug = 'e2e-db-connection';
 
-  function deleteConnection() {
-    cy.visit('/connections');
-
-    cy.get('[data-testid=connection-card-' + connectionSlug + '-card]').within(
-      () => {
-        cy.get('[data-testid=connection-card-kebab]').click();
-        cy.get('[data-testid=connection-card-delete-action]').click();
-      }
-    );
-
-    cy.get('#deleteConfirmationDialogContent').should('be.visible');
-    cy.get('.modal-footer')
-      .contains('Delete')
-      .click();
-
-    cy.get('.toast-pf.alert-success').should('be.visible');
-  }
-
   /**
    * Happy Path
    *
@@ -140,7 +122,7 @@ describe('Create a Connection', () => {
     );
   });
 
-  it('deletes any created test connection', () => {
-    deleteConnection();
+  it.skip('deletes any created test connection', () => {
+    cy.deleteConnection({ slug: connectionSlug });
   });
 });

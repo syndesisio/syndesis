@@ -19,6 +19,10 @@ describe('Integration Import', () => {
     cy.get('.dnd-file-chooser').should('contain', 'No file selected');
   });
 
-  it('allows users to select an integration to import', () => {});
-  it('uploads the imported integration', () => {});
+  it.skip('opens the file select dialog', () => {
+    cy.get('.dnd-file-chooser').click();
+  });
+
+  it.skip('allows users to select an integration to import', () => {});
+  it.skip('uploads the imported integration', () => {});
 });
