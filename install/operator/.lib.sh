@@ -120,7 +120,7 @@ build_operator()
           OPTS="$OPTS '$i'"
         done
 
-        docker build -t "${BUILDER_IMAGE_NAME}" . -f - <<EODockerfile
+        cat > "${BUILDER_IMAGE_NAME}.tmp" <<EODockerfile
 FROM golang:1.12.0
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
@@ -137,6 +137,9 @@ RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/operator    -g
 RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 EODockerfile
+
+        docker build -t "${BUILDER_IMAGE_NAME}" . -f "${BUILDER_IMAGE_NAME}.tmp"
+        rm -f "${BUILDER_IMAGE_NAME}.tmp"
 
         echo ======================================================
 
