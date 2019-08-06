@@ -16,6 +16,10 @@ echo "Your local maven repo points to $local_repo"
 cp $target_dir/settings.xml $target_dir/settings_local.xml
 echo "Proceeding to create a maven repo for the docker image based on the local repo."
 sed -i "s#file:///tmp/artifacts/m2#file://${local_repo}#g" $target_dir/settings_local.xml
-${project_dir}/../mvnw -f $target_dir/m2/project/pom.xml -s $target_dir/settings_local.xml -Dmaven.repo.local=$target_dir/m2/repo install
+${project_dir}/../mvnw -f $target_dir/m2/project/pom.xml -s $target_dir/settings_local.xml \
+  -Dmaven.repo.local=$target_dir/m2/repo package
+echo "Cleaning repository metadata to let docker image use it without id repository constraint."
+echo "Issue targeted for review in maven 4. See MNG-5185"
+find $target_dir/m2/repo/ -name "*.repositories" -delete
 
 cp "${project_dir}/src/main/docker/Dockerfile" $target_dir
