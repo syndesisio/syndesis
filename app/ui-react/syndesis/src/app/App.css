@@ -1,2 +1,6 @@
 @import url('~@syndesis/ui/dist/ui.css');
 @import url('~@syndesis/auto-form/dist/auto-form.css');
+
+body {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+}

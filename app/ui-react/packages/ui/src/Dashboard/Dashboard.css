@@ -3,19 +3,29 @@
   padding: 0.3em 0.8em;
 }
 
+.dashboard__integrations .pf-c-card__header {
+  border-bottom: 1px solid #d1d1d1;
+}
+
 .dashboard__connections__actions {
   padding: 0 10px;
 }
 
-.dashboard__metrics .card-pf.card-pf-aggregate-status {
-  padding: 0 10px 24px 10px;
+.dashboard__metrics .pf-c-card.aggregate-status {
+  padding: 10px 10px 16px 10px;
+  text-align: center;
+  min-height: 118px;
 }
 
-.dashboard__metrics .card-pf-title .card-pf-aggregate-status-count {
+.dashboard__metrics .aggregate-status .pf-c-card__body {
+  margin-top: var(--pf-global--spacer--md);
+}
+
+.dashboard__metrics .pf-c-card .pf-c-title .card-pf-aggregate-status-count {
   font-size: 14px;
 }
 
 .dashboard__metrics .metrics-uptime {
-  font-size: 24px;
-  font-weight: 300;
+  --pf-c-card__body--FontSize: var(--pf-global--icon--FontSize--lg);
+  font-weight: var(--pf-global--FontWeight--light);
 }

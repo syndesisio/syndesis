@@ -1,5 +1,8 @@
 import {
   Button,
+  Card,
+  CardBody,
+  CardFooter,
   Dropdown,
   DropdownPosition,
   KebabToggle,
@@ -9,7 +12,7 @@ import {
   Tooltip,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Card, Icon } from 'patternfly-react';
+import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../helpers';
@@ -128,7 +131,6 @@ export class ConnectionCard extends React.PureComponent<
         )}
         <Card
           data-testid={`connection-card-${toValidHtmlId(this.props.name)}-card`}
-          matchHeight={true}
           className={'connection-card'}
         >
           {this.props.isTechPreview && (
@@ -229,7 +231,7 @@ export class ConnectionCard extends React.PureComponent<
             to={this.props.href}
             className={'connection-card__content'}
           >
-            <Card.Body>
+            <CardBody>
               <div className={'connection-card__body'}>
                 <div className="connection-card__icon">{this.props.icon}</div>
                 <Title
@@ -246,9 +248,9 @@ export class ConnectionCard extends React.PureComponent<
                   {this.props.description}
                 </Text>
               </div>
-            </Card.Body>
+            </CardBody>
             {this.props.isConfigRequired && (
-              <Card.Footer
+              <CardFooter
                 className={
                   'connection-card__footer--config-required alert alert-warning'
                 }
@@ -256,7 +258,7 @@ export class ConnectionCard extends React.PureComponent<
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
                 {this.props.i18nConfigRequired}
-              </Card.Footer>
+              </CardFooter>
             )}
           </Link>
         </Card>

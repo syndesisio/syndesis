@@ -14,7 +14,6 @@ import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
 import i18n from './i18n';
-import './index.css';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
 import { DashboardModule } from './modules/dashboard';

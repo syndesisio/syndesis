@@ -33,10 +33,6 @@ export const App: React.FunctionComponent<IAppBaseProps> = ({
   config,
   routes,
 }) => {
-  const logout = () => {
-    // do nothing
-  };
-
   const getPodLogUrl = (
     monitoring: IntegrationMonitoring | undefined
   ): string | undefined => {
@@ -69,7 +65,6 @@ export const App: React.FunctionComponent<IAppBaseProps> = ({
           value={{
             config,
             getPodLogUrl,
-            logout,
             user: data,
           }}
         >

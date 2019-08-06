@@ -74,10 +74,10 @@ a.connection-card__content:focus {
   text-decoration: none;
 }
 
-.connection-card__footer--config-required {
+.pf-c-card__footer.connection-card__footer--config-required {
   background-color: #fdf2e5;
   border-color: #ec7a08;
   font-size: smaller;
   text-align: center;
-  padding: 15px;
+  padding: 16px;
 }
