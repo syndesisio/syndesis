@@ -116,16 +116,15 @@ required if you want an aggregate step in the flow.
 .. In the *Delay* field, accept the default of 30 seconds or
 specify how often you want the connection to obtain spreadsheet data.
 
-.. In the *Max results* field, accept the default of *0* 
-to obtain all data in the minor dimension of the result matrix. 
-To limit the data that the connection returns for the minor dimension 
-specify an integer. 
+.. In the *Max results* field, accept the default of *0* if you do not 
+want to restrict how many rows or columns polling can return. The setting 
+of *Max results* applies to the setting of the major dimension in the 
+result matrix. To limit the data that the connection returns for the 
+major dimension, specify an integer. 
 +
-For example, suppose that the *Major dimension* is rows and that 
-*Max results* is 25. The poll returns a row object for each row
-that the range setting includes. Each row object contains no more than 
-25 column values. 
-
+For example, suppose that the major dimension is rows and that *Max results* 
+is set to *25*. The poll returns no more than 25 rows of values. 
+ 
 . Click *Next* to view the column names in the data that the connection 
 obtains when *Major dimension* is set to *Rows*. If *Major dimension* is 
 *Columns*, content in this field is ignored and you can click *Next* 
