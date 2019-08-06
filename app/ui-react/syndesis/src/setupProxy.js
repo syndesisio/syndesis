@@ -24,7 +24,7 @@ module.exports = function(app) {
       target: process.env.BACKEND,
       secure: false,
       changeOrigin: true,
-      ws: !process.env.PROXY_NO_WS,
+      ws: !!process.env.PROXY_NO_WS === true,
       headers: {
         'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
         'X-Forwarded-Access-Token': 'supersecret',
