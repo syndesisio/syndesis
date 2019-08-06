@@ -124,7 +124,20 @@ major dimension, specify an integer.
 +
 For example, suppose that the major dimension is rows and that *Max results* 
 is set to *25*. The poll returns no more than 25 rows of values. 
- 
++
+When *Range* specifies the major dimension and you also specify 
+*Max results*, polling uses the lower number to determine how much 
+data to return. Consequently, setting a value for *Max results* is 
+more helpful when you specify only the minor dimension for *Range*. 
+For example, consider a sheet that has 30 rows with three columns of 
+values in each row. Suppose that *Major dimension* is *Rows* and 
+*Range* is *A:C*. If you set *Max results* to *10*, polling returns 
+10 rows of data. If you accept *0* as the setting of *Max results*, 
+polling returns 30 rows. However, if you specify *Range* as *A1:C15* 
+and you also specify *Max results* as *25*, polling returns 15 
+rows. If you specify *Range* as *A1:C30* and you also 
+specify *Max results* as *25*, polling returns 25 rows.
+
 . Click *Next* to view the column names in the data that the connection 
 obtains when *Major dimension* is set to *Rows*. If *Major dimension* is 
 *Columns*, content in this field is ignored and you can click *Next* 
