@@ -47,6 +47,7 @@
       "Pending": "Pending",
       "Publish": "Publish",
       "Published": "Running",
+      "Remove": "Remove",
       "requiredFieldMessage": "* Required field",
       "resultsCount": "{{count}} Results",
       "Save": "Save",
