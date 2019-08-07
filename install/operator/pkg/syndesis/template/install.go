@@ -122,6 +122,17 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env ma
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
 
+	ifMissingSet(config, configuration.EnvSyndesisMetaTag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisServerTag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisUITag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisS2ITag, renderContext.Tags.Syndesis)
+
+	ifMissingSet(config, configuration.EnvPostgresTag, renderContext.Tags.Postgresql)
+	ifMissingSet(config, configuration.EnvPostgresExporterTag, renderContext.Tags.PostgresExporter)
+	ifMissingSet(config, configuration.EnvKomodoTag, renderContext.Tags.Komodo)
+	ifMissingSet(config, configuration.EnvOauthProxyTag, renderContext.Tags.OAuthProxy)
+	ifMissingSet(config, configuration.EnvPrometheusTag, renderContext.Tags.Prometheus)
+
 	ifMissingSet(config, configuration.EnvSyndesisRegistry, renderContext.Registry)
 
 	ifMissingSet(config, configuration.EnvControllersIntegrationEnabled, "true")

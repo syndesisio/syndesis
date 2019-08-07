@@ -44,6 +44,16 @@ const (
 	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
 	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
 
+	EnvSyndesisServerTag              SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
+	EnvSyndesisUITag              	  SyndesisEnvVar = "SYNDESIS_UI_TAG"
+	EnvSyndesisS2ITag              	  SyndesisEnvVar = "SYNDESIS_S2I_TAG"
+	EnvSyndesisMetaTag                SyndesisEnvVar = "SYNDESIS_META_TAG"
+	EnvPostgresTag              	  SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
+	EnvPostgresExporterTag            SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
+	EnvKomodoTag                      SyndesisEnvVar = "KOMODO_TAG"
+	EnvPrometheusTag              	  SyndesisEnvVar = "PROMETHEUS_TAG"
+	EnvOauthProxyTag              	  SyndesisEnvVar = "OAUTH_PROXY_TAG"
+
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvExposeVia3Scale       SyndesisEnvVar = "CONTROLLERS_EXPOSE_VIA3SCALE"
@@ -88,6 +98,17 @@ var (
 		envMetaMemoryLimit,
 		envMetaVolumeCapacity,
 
+		envServerTag,
+		envMetaTag,
+		envUITag,
+		envS2ITag,
+
+		envPostgresTag,
+		envPostgresExporterTag,
+		envKomodoTag,
+		envOauthProxyTag,
+		envPrometheusTag,
+
 		envUpgradeVolumeCapacity,
 	}
 
@@ -120,6 +141,17 @@ var (
 		sarNamespaceFromEnv,
 
 		upgradeVolumeCapacityFromEnv,
+
+		syndesisServerTagFromEnv,
+		syndesisUITagFromEnv,
+		syndesisS2ITagFromEnv,
+		syndesisMetaTagFromEnv,
+
+		postgresTagFromEnv,
+		postgresExporterTagFromEnv,
+		komodoTagFromEnv,
+		oauthProxyTagFromEnv,
+		prometheusTagFromEnv,
 	}
 )
 
@@ -208,6 +240,141 @@ func envSyndesisRegistry(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 func syndesisRegistryFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvSyndesisRegistry); ok && syndesis.Spec.Registry == "" {
 		syndesis.Spec.Registry = v
+	}
+}
+
+func envServerTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Server.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvSyndesisServerTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func syndesisServerTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvSyndesisServerTag); ok && syndesis.Spec.Components.Server.Tag == "" {
+		syndesis.Spec.Components.Server.Tag = v
+	}
+}
+
+func envMetaTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Meta.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvSyndesisMetaTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func syndesisMetaTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvSyndesisMetaTag); ok && syndesis.Spec.Components.Meta.Tag == "" {
+		syndesis.Spec.Components.Meta.Tag = v
+	}
+}
+
+func envUITag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.UI.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvSyndesisUITag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func syndesisUITagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvSyndesisUITag); ok && syndesis.Spec.Components.UI.Tag == "" {
+		syndesis.Spec.Components.UI.Tag = v
+	}
+}
+
+func envS2ITag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.S2I.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvSyndesisS2ITag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func syndesisS2ITagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvSyndesisS2ITag); ok && syndesis.Spec.Components.S2I.Tag == "" {
+		syndesis.Spec.Components.S2I.Tag = v
+	}
+}
+
+func envPostgresTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Db.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvPostgresTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func postgresTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvPostgresTag); ok && syndesis.Spec.Components.Db.Tag == "" {
+		syndesis.Spec.Components.Db.Tag = v
+	}
+}
+
+func envPostgresExporterTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.PostgresExporter.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvPostgresExporterTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func postgresExporterTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvPostgresExporterTag); ok && syndesis.Spec.Components.PostgresExporter.Tag == "" {
+		syndesis.Spec.Components.PostgresExporter.Tag = v
+	}
+}
+
+func envKomodoTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Komodo.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvKomodoTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func komodoTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvKomodoTag); ok && syndesis.Spec.Components.Komodo.Tag == "" {
+		syndesis.Spec.Components.Komodo.Tag = v
+	}
+}
+
+func envOauthProxyTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Oauth.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvOauthProxyTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func oauthProxyTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvOauthProxyTag); ok && syndesis.Spec.Components.Oauth.Tag == "" {
+		syndesis.Spec.Components.Oauth.Tag = v
+	}
+}
+
+func envPrometheusTag(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if tag := syndesis.Spec.Components.Prometheus.Tag; tag != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvPrometheusTag,
+			Value: tag,
+		}
+	}
+	return nil
+}
+func prometheusTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvPrometheusTag); ok && syndesis.Spec.Components.Prometheus.Tag == "" {
+		syndesis.Spec.Components.Prometheus.Tag = v
 	}
 }
 

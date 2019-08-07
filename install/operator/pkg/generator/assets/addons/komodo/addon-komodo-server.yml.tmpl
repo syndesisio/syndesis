@@ -145,7 +145,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}'
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Tags.Komodo }}"
+      name: "{{ .Syndesis.Spec.Components.Komodo.Tag }}"

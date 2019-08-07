@@ -190,7 +190,7 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 }
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
-	resources, err := generator.Render(generator.GetAssetsFS(), fromFile, RenderScope{
+	resources, err := generator.Render(fromFile, RenderScope{
 		Namespace: o.Namespace,
 		Image:     o.image,
 		DevImages: o.devImages,
