@@ -158,7 +158,7 @@ export function massageValue(
           : 0;
       return sanitizeInitialArrayValue(
         property.arrayDefinition || {},
-        value,
+        value || defaultValue,
         minElements
       );
     default:
