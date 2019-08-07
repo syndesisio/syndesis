@@ -19,8 +19,8 @@ display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
 . If you want to use Hyper Text Transfer Protocol to connect to the endpoint, 
-then click the *HTTP* connector. If you want to use Secure
-Hyper Text Transfer protocol, then click the 
+then click the *HTTP* connector. If you want to use
+Hyper Text Transfer Protocol Secure, then click the 
 *HTTPS* connector.
 . In the *Base URL* field, enter the endpoint path. For example, 
 `www.mycompany.com/sales`.
