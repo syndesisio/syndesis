@@ -15,10 +15,6 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
-import static java.lang.String.format;
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import java.io.ByteArrayOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -34,12 +30,7 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.fasterxml.jackson.databind.JsonNode;
-
 import io.fabric8.kubernetes.api.model.Pod;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -47,6 +38,13 @@ import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.jsondb.JsonDBException;
 import io.syndesis.server.openshift.OpenShiftService;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static io.syndesis.server.jsondb.impl.JsonRecordSupport.validateKey;
+import static java.lang.String.format;
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @SuppressWarnings("PMD.GodClass")
 class PodLogMonitor implements Consumer<InputStream> {
@@ -148,13 +146,15 @@ class PodLogMonitor implements Consumer<InputStream> {
             }
 
             line.write(c);
-            if (c == '\n') {
-                processLine(new String(line.toByteArray(), UTF_8));
-                line.reset();
+            // cut really long lines to avoid blowing up our memory.
+            if (line.size() > 1024 * 10) {
+                // as the string is prematurely cut, add the closing terminator to the json value
+                line.write("\"}".getBytes(UTF_8));
+                c = '\n';
             }
 
-            // drop really long lines to avoid blowing up our memory.
-            if (line.size() > 1024 * 10) {
+            if (c == '\n') {
+                processLine(new String(line.toByteArray(), UTF_8));
                 line.reset();
             }
         }
