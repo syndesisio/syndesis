@@ -21,7 +21,7 @@ connects to the database.
 is on your classpath. If you uploaded a JDBC driver library extension to 
 connect to a proprietary database, then the upload process puts the driver
 on your classpath. See 
-link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_custom[Creating JDBC driver library extensions]. 
+link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[Creating JDBC driver library extensions]. 
 . In {prodname}, in the left panel, click *Connections* to
 display any available connections.
 . In the upper right, click *Create Connection* to display

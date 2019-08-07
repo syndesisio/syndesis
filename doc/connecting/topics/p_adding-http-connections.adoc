@@ -26,7 +26,7 @@ is the only available action. This action invokes the endpoint at intervals
 that you specify and triggers the integration if the endpoint returns
 any data. 
 
-* If you are adding a middle or finiah connection, then *Invoke URL* 
+* If you are adding a middle or finish connection, then *Invoke URL* 
 is the only available action. This action invokes the endpoint once. 
 
 . In the *URL Path* field, specify the location of the endpoint that you 
