@@ -3,6 +3,8 @@ package action
 import (
 	"context"
 	"errors"
+	"fmt"
+	"github.com/mcuadros/go-version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
@@ -13,6 +15,7 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"time"
@@ -96,7 +99,13 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if err != nil {
 		config = map[string]string{}
 	}
-	renderContext, err := syndesistemplate.GetRenderContext(syndesis, params, config)
+
+	renderContext, err := syndesistemplate.GetTemplateContext()
+	if err != nil {
+		return err
+	}
+
+	err = syndesistemplate.SetupRenderContext(renderContext, syndesis, params, config)
 	if err != nil {
 		return err
 	}
@@ -105,6 +114,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		renderContext.ImagePullSecrets = append(renderContext.ImagePullSecrets, secret.Name)
 	}
 	configuration.SetConfigurationFromEnvVars(renderContext.Env, syndesis)
+
+	err = checkTags(renderContext)
+	if err != nil {
+		fmt.Println("error:", err)
+		os.Exit(1)
+	}
 
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", renderContext)
@@ -243,6 +258,37 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		a.log.Info("Updated CRD ", "name", syndesis.Name)
 	}
 	return err
+}
+
+// Checks that the tags from syndesis components is valid beetween the supported versions
+func checkTags(context *generator.Context) error {
+	c := version.NewConstrainGroupFromString(fmt.Sprintf(">=%s,<%s", context.TagMinor, context.TagMajor))
+	if c.Match(version.Normalize(context.Syndesis.Spec.Components.Server.Tag)) == false {
+		return fmt.Errorf("tag for server[%s] component is not supporter, versions supported are between [%s] and [%s]",
+			context.Syndesis.Spec.Components.Server.Tag,
+			context.TagMinor,
+			context.TagMajor)
+	}
+	if c.Match(version.Normalize(context.Syndesis.Spec.Components.Meta.Tag)) == false {
+		return fmt.Errorf("tag for meta[%s] component is not supporter, versions supported are between [%s] and [%s]",
+			context.Syndesis.Spec.Components.Meta.Tag,
+			context.TagMinor,
+			context.TagMajor)
+	}
+	if	c.Match(version.Normalize(context.Syndesis.Spec.Components.UI.Tag)) == false {
+		return fmt.Errorf("tag for ui[%s] component is not supporter, versions supported are between [%s] and [%s]",
+			context.Syndesis.Spec.Components.UI.Tag,
+			context.TagMinor,
+			context.TagMajor)
+	}
+	if	c.Match(version.Normalize(context.Syndesis.Spec.Components.S2I.Tag)) == false {
+		return fmt.Errorf("tag for ui[%s] component is not supporter, versions supported are between [%s] and [%s]",
+			context.Syndesis.Spec.Components.UI.Tag,
+			context.TagMinor,
+			context.TagMajor)
+	}
+
+	return nil
 }
 
 func ListInChunks(ctx context.Context, api kubernetes.Interface, c client.Client, options client.ListOptions, handler func([]unstructured.Unstructured) error) error {

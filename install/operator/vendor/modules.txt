@@ -124,6 +124,8 @@ github.com/mailru/easyjson/buffer
 github.com/markbates/inflect
 # github.com/matttproud/golang_protobuf_extensions v1.0.1
 github.com/matttproud/golang_protobuf_extensions/pbutil
+# github.com/mcuadros/go-version v0.0.0-20190308113854-92cdf37c5b75
+github.com/mcuadros/go-version
 # github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd
 github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
@@ -360,9 +362,9 @@ k8s.io/apimachinery/pkg/runtime/serializer
 k8s.io/apimachinery/pkg/runtime/serializer/json
 k8s.io/apimachinery/pkg/runtime/serializer/versioning
 k8s.io/apimachinery/pkg/util/json
-k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/labels
 k8s.io/apimachinery/pkg/api/resource
+k8s.io/apimachinery/pkg/api/meta
 k8s.io/apimachinery/pkg/util/yaml
 k8s.io/apimachinery/pkg/util/net
 k8s.io/apimachinery/pkg/conversion
@@ -380,8 +382,8 @@ k8s.io/apimachinery/pkg/util/wait
 k8s.io/apimachinery/pkg/runtime/serializer/protobuf
 k8s.io/apimachinery/pkg/runtime/serializer/recognizer
 k8s.io/apimachinery/pkg/util/framer
-k8s.io/apimachinery/pkg/apis/meta/v1beta1
 k8s.io/apimachinery/pkg/util/validation
+k8s.io/apimachinery/pkg/apis/meta/v1beta1
 k8s.io/apimachinery/third_party/forked/golang/reflect
 k8s.io/apimachinery/pkg/version
 k8s.io/apimachinery/pkg/util/clock

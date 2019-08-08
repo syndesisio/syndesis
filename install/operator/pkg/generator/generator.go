@@ -64,7 +64,8 @@ type Context struct {
 	EarlyAccess      bool
 	Oso              bool
 	Ocp              bool
-	Tag              string
+	TagMinor         string
+	TagMajor         string
 	Registry         string
 	Images           images
 	Tags             tags
