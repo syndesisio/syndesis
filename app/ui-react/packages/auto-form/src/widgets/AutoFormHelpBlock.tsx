@@ -6,12 +6,8 @@ export interface IAutoFormHelpBlockProps {
   description?: string;
 }
 
-export class AutoFormHelpBlock extends React.Component<
+export const AutoFormHelpBlock: React.FunctionComponent<
   IAutoFormHelpBlockProps
-> {
-  public render() {
-    return (
-      <HelpBlock>{this.props.error || this.props.description || ''}</HelpBlock>
-    );
-  }
-}
+> = props => {
+  return <HelpBlock>{props.error || props.description || ''}</HelpBlock>;
+};
