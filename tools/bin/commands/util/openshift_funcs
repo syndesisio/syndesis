@@ -307,6 +307,7 @@ EOT
 
   addons:
     komodo:
+       enabled: "true"
 EOT
 )
         syndesis="${syndesis}${extra}"
