@@ -263,29 +263,23 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 // Checks that the tags from syndesis components is valid beetween the supported versions
 func checkTags(context *generator.Context) error {
 	c := version.NewConstrainGroupFromString(fmt.Sprintf(">=%s,<%s", context.TagMinor, context.TagMajor))
-	if c.Match(version.Normalize(context.Syndesis.Spec.Components.Server.Tag)) == false {
-		return fmt.Errorf("tag for server[%s] component is not supporter, versions supported are between [%s] and [%s]",
-			context.Syndesis.Spec.Components.Server.Tag,
-			context.TagMinor,
-			context.TagMajor)
+	var images = []struct {
+		name  string
+		tag   string
+	}{
+		{"server", context.Syndesis.Spec.Components.Server.Tag},
+		{"meta", context.Syndesis.Spec.Components.Meta.Tag},
+		{"s2i", context.Syndesis.Spec.Components.UI.Tag},
+		{"s2i", context.Syndesis.Spec.Components.S2I.Tag},
 	}
-	if c.Match(version.Normalize(context.Syndesis.Spec.Components.Meta.Tag)) == false {
-		return fmt.Errorf("tag for meta[%s] component is not supporter, versions supported are between [%s] and [%s]",
-			context.Syndesis.Spec.Components.Meta.Tag,
-			context.TagMinor,
-			context.TagMajor)
-	}
-	if	c.Match(version.Normalize(context.Syndesis.Spec.Components.UI.Tag)) == false {
-		return fmt.Errorf("tag for ui[%s] component is not supporter, versions supported are between [%s] and [%s]",
-			context.Syndesis.Spec.Components.UI.Tag,
-			context.TagMinor,
-			context.TagMajor)
-	}
-	if	c.Match(version.Normalize(context.Syndesis.Spec.Components.S2I.Tag)) == false {
-		return fmt.Errorf("tag for ui[%s] component is not supporter, versions supported are between [%s] and [%s]",
-			context.Syndesis.Spec.Components.UI.Tag,
-			context.TagMinor,
-			context.TagMajor)
+	for _, image := range images {
+		if c.Match(version.Normalize(image.tag)) == false {
+			return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
+				image.name,
+				image.tag,
+				context.TagMinor,
+				context.TagMajor)
+		}
 	}
 
 	return nil
