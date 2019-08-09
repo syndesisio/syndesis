@@ -39,7 +39,6 @@
       rbac.authorization.k8s.io/aggregate-to-admin: "true"
       rbac.authorization.k8s.io/aggregate-to-edit: "true"
   rules:
-
     # We can R/W the syndesis api group CRs
     - apiGroups:
         - syndesis.io
@@ -55,7 +54,6 @@
       resources:
         - "*"
       verbs: [ get, list, watch ]
-
     # These are the resources that we modify////
     - apiGroups:
         - ""
@@ -118,7 +116,6 @@
         - "*"
       verbs:
         - '*'
-
 #
 # From `kamel install -o yaml`
 #

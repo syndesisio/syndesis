@@ -81,13 +81,7 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
-func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) (*generator.Context, error) {
-	// Parse the config
-	renderContext, err := GetTemplateContext()
-	if err != nil {
-		return nil, err
-	}
-
+func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) (error) {
 	if syndesis.Spec.Addons == nil {
 		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
 	}
@@ -122,6 +116,18 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env ma
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
 
+
+	ifMissingSet(config, configuration.EnvSyndesisMetaTag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisServerTag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisUITag, renderContext.Tags.Syndesis)
+	ifMissingSet(config, configuration.EnvSyndesisS2ITag, renderContext.Tags.Syndesis)
+
+	ifMissingSet(config, configuration.EnvPostgresTag, renderContext.Tags.Postgresql)
+	ifMissingSet(config, configuration.EnvPostgresExporterTag, renderContext.Tags.PostgresExporter)
+	ifMissingSet(config, configuration.EnvKomodoTag, renderContext.Tags.Komodo)
+	ifMissingSet(config, configuration.EnvOauthProxyTag, renderContext.Tags.OAuthProxy)
+	ifMissingSet(config, configuration.EnvPrometheusTag, renderContext.Tags.Prometheus)
+
 	ifMissingSet(config, configuration.EnvSyndesisRegistry, renderContext.Registry)
 
 	ifMissingSet(config, configuration.EnvControllersIntegrationEnabled, "true")
@@ -141,15 +147,15 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams, env ma
 	ifMissingSet(config, configuration.EnvUpgradeVolumeCapacity, "1Gi")
 	ifMissingSet(config, configuration.EnvExposeVia3Scale, "false")
 	if config[string(configuration.EnvOpenshiftProject)] == "" {
-		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvOpenshiftProject)
+		return fmt.Errorf("required config var not set: %s", configuration.EnvOpenshiftProject)
 	}
 	if config[string(configuration.EnvSarNamespace)] == "" {
-		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
+		return fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
 
 	renderContext.Syndesis = syndesis
 	renderContext.Env = config
-	return renderContext, nil
+	return nil
 }
 
 func copyMap(dst map[string]string, src map[string]string) {

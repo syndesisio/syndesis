@@ -55,21 +55,49 @@ type IntegrationSpec struct {
 }
 
 type ComponentsSpec struct {
-	Db         DbConfiguration         `json:"db,omitempty"`
-	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
-	Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
-	Server     ServerConfiguration     `json:"server,omitempty"`
-	Meta       MetaConfiguration       `json:"meta,omitempty"`
-	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
+	Server           ServerConfiguration           `json:"server,omitempty"`
+	Meta             MetaConfiguration             `json:"meta,omitempty"`
+	UI               UIConfiguration               `json:"ui,omitempty"`
+	S2I              S2IConfiguration              `json:"s2i,omitempty"`
+	Db               DbConfiguration               `json:"db,omitempty"`
+	Oauth            OauthConfiguration            `json:"oauth,omitempty"`
+	PostgresExporter PostgresExporterConfiguration `json:"psql,omitempty"`
+	Prometheus       PrometheusConfiguration       `json:"prometheus,omitempty"`
+	Grafana          GrafanaConfiguration          `json:"grafana,omitempty"`
+	Komodo           KomodoConfiguration           `json:"komodo,omitempty"`
+	Upgrade          UpgradeConfiguration          `json:"upgrade,omitempty"`
+}
+
+type OauthConfiguration struct {
+	Tag		string	`json:"tag,omitempty"`
+}
+
+type PostgresExporterConfiguration struct {
+	Tag		string	`json:"tag,omitempty"`
+}
+
+type KomodoConfiguration struct {
+	Tag		string	`json:"tag,omitempty"`
+}
+
+type S2IConfiguration struct {
+	Tag		string	`json:"tag,omitempty"`
+}
+
+type UIConfiguration struct {
+	Tag		string	`json:"tag,omitempty"`
 }
 
 type DbConfiguration struct {
+	Tag                  string              `json:"tag,omitempty"`
 	Resources            ResourcesWithVolume `json:"resources,omitempty"`
 	User                 string              `json:"user,omitempty"`
 	Database             string              `json:"database,omitempty"`
 	ImageStreamNamespace string              `json:"imageStreamNamespace,omitempty"`
 }
+
 type PrometheusConfiguration struct {
+	Tag       string              `json:"tag,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
@@ -78,11 +106,13 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
+	Tag       string         `json:"tag,omitempty"`
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
+	Tag       string              `json:"tag,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 

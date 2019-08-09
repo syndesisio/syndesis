@@ -35,12 +35,13 @@ spec:
             resources:
                 limits:
                     memory: 512Mi
-                volumeCapacity: 1Gi
+                volumeCapacity: 10Gi
         server:
             resources:
                 limits:
                     memory: 800Mi
         meta:
+            tag: latest
             resources:
                 limits:
                     memory: 512Mi

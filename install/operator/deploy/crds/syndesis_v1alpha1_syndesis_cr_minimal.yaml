@@ -1,0 +1,8 @@
+# Minimal syndesis installation
+apiVersion: "syndesis.io/v1alpha1"
+kind: "Syndesis"
+metadata:
+  name: "example"
+spec:
+  integration:
+    limit: 1

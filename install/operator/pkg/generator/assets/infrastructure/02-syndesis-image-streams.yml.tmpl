@@ -9,14 +9,14 @@
       syndesis.io/component: syndesis-server
   spec:
     tags:
-    - name: "{{ .Tags.Syndesis }}"
+    - name: "{{ .Syndesis.Spec.Components.Server.Tag }}"
       from:
       {{if .Syndesis.Spec.DevImages}}
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Rest }}:latest'
       {{else}}
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Tags.Syndesis }}'
+        name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
       importPolicy:
         scheduled: true
       {{end}}
@@ -31,14 +31,14 @@
       syndesis.io/component: syndesis-ui
   spec:
     tags:
-    - name: "{{ .Tags.Syndesis }}"
+    - name: "{{ .Syndesis.Spec.Components.UI.Tag }}"
       from:
       {{if .Syndesis.Spec.DevImages}}
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Ui }}:latest'
       {{else}}
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Tags.Syndesis }}'
+        name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
       importPolicy:
         scheduled: true
       {{end}}
@@ -53,14 +53,14 @@
       syndesis.io/component: syndesis-meta
   spec:
     tags:
-    - name: "{{ .Tags.Syndesis }}"
+    - name: "{{ .Syndesis.Spec.Components.Meta.Tag }}"
       from:
       {{if .Syndesis.Spec.DevImages}}
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Verifier }}:latest'
       {{else}}
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}'
+        name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}'
       importPolicy:
         scheduled: true
       {{end}}
@@ -77,10 +77,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{.Images.OAuthProxyImagePrefix}}/{{ .Images.Support.OAuthProxyImage }}:{{ .Tags.OAuthProxy }}
+        name: {{.Images.OAuthProxyImagePrefix}}/{{ .Images.Support.OAuthProxyImage }}:{{ .Syndesis.Spec.Components.Oauth.Tag }}
       importPolicy:
         scheduled: true
-      name: "{{ .Tags.OAuthProxy }}"
+      name: "{{ .Syndesis.Spec.Components.Oauth.Tag }}"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -94,10 +94,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Tags.Prometheus }}'
+        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Tags.Prometheus }}"
+      name: "{{ .Syndesis.Spec.Components.Prometheus.Tag }}"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -111,10 +111,10 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PostgresExporterImagePrefix}}/{{ .Images.Support.PostgresExporter }}:{{ .Tags.PostgresExporter }}'
+        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PostgresExporterImagePrefix}}/{{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Tags.PostgresExporter }}"
+      name: "{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -128,7 +128,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Tags.Syndesis }}'
+        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Tags.Syndesis }}"
+      name: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
