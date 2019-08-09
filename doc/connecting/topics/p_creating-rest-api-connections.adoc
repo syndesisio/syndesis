@@ -33,7 +33,7 @@ one of the following:
 |*Security type*
 |*{prodname} displays*
 
-|HTTP Basic Authorization
+|HTTP Basic Authentication
 |Input fields for user name and password.
 
 |OAuth 2.0
