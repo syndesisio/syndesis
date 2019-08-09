@@ -251,7 +251,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                     isValid={isValid}
                                     submitForm={submitForm}
                                   >
-                                    {fields}
+                                      {fields}
                                   </EditorPageCard>
                                 )}
                               </WithChoiceConfigurationForm>

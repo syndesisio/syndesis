@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
@@ -49,90 +50,85 @@ export class ConnectorConfigurationForm extends React.Component<
   public render() {
     return (
       <Container>
-        <form
-          className="required-pf"
-          data-testid={'connector-configuration-form'}
-          role="form"
-          onSubmit={this.props.handleSubmit}
-          style={{
-            margin: 'auto',
-            maxWidth: 600,
-          }}
-        >
-          <div className="row row-cards-pf">
-            <div className="card-pf">
-              <div className="card-pf-heading">
-                {this.props.i18nFormTitle && (
-                  <div className="card-pf-title">
-                    {this.props.i18nFormTitle}
-                  </div>
-                )}
-              </div>
-              <div className="card-pf-body">
-                {this.props.validationResults!.map((e, idx) => (
-                  <Alert key={idx} type={e.type}>
-                    {e.message}
-                  </Alert>
-                ))}
+        <div className="row row-cards-pf">
+          <div className="card-pf">
+            <div className="card-pf-heading">
+              {this.props.i18nFormTitle && (
+                <div className="card-pf-title">{this.props.i18nFormTitle}</div>
+              )}
+            </div>
+            <div className="card-pf-body">
+              {this.props.validationResults!.map((e, idx) => (
+                <Alert key={idx} type={e.type}>
+                  {e.message}
+                </Alert>
+              ))}
+              <Form
+                isHorizontal={true}
+                data-testid={'connector-configuration-form'}
+                onSubmit={this.props.handleSubmit}
+                style={{
+                  margin: 'auto',
+                  maxWidth: 600,
+                }}
+              >
                 {this.props.children}
-              </div>
-              <div className="card-pf-footer">
-                <ButtonLink
-                  data-testid={'connection-creator-layout-back-button'}
-                  href={this.props.backHref}
-                  className={'wizard-pf-back'}
-                >
-                  <i className="fa fa-angle-left" /> Back
-                </ButtonLink>
-                &nbsp;
-                {this.props.onValidate && (
+              </Form>
+            </div>
+            <div className="card-pf-footer">
+              <ButtonLink
+                data-testid={'connection-creator-layout-back-button'}
+                href={this.props.backHref}
+                className={'wizard-pf-back'}
+              >
+                <i className="fa fa-angle-left" /> Back
+              </ButtonLink>
+              &nbsp;
+              {this.props.onValidate && (
+                <>
+                  <ButtonLink
+                    data-testid={'connection-creator-layout-back-button'}
+                    onClick={this.props.onValidate}
+                    className={'wizard-pf-back'}
+                    disabled={
+                      this.props.isValidating ||
+                      this.props.isNextLoading ||
+                      this.props.isNextDisabled
+                    }
+                  >
+                    {this.props.isValidating ? (
+                      <Loader size={'xs'} inline={true} />
+                    ) : null}
+                    Validate
+                  </ButtonLink>
+                  &nbsp;
+                </>
+              )}
+              <ButtonLink
+                data-testid={'connection-creator-layout-next-button'}
+                onClick={this.props.onNext}
+                as={'primary'}
+                className={'wizard-pf-next'}
+                disabled={this.props.isNextLoading || this.props.isNextDisabled}
+              >
+                {this.props.isNextLoading ? (
+                  <Loader
+                    size={'xs'}
+                    inline={true}
+                    data-testid={'connection-creator-layout-loading'}
+                  />
+                ) : null}
+                {this.props.isLastStep ? (
+                  this.props.i18nSave
+                ) : (
                   <>
-                    <ButtonLink
-                      data-testid={'connection-creator-layout-back-button'}
-                      onClick={this.props.onValidate}
-                      className={'wizard-pf-back'}
-                      disabled={
-                        this.props.isValidating ||
-                        this.props.isNextLoading ||
-                        this.props.isNextDisabled
-                      }
-                    >
-                      {this.props.isValidating ? (
-                        <Loader size={'xs'} inline={true} />
-                      ) : null}
-                      Validate
-                    </ButtonLink>
-                    &nbsp;
+                    {this.props.i18nNext} <i className="fa fa-angle-right" />
                   </>
                 )}
-                <ButtonLink
-                  data-testid={'connection-creator-layout-next-button'}
-                  onClick={this.props.onNext}
-                  as={'primary'}
-                  className={'wizard-pf-next'}
-                  disabled={
-                    this.props.isNextLoading || this.props.isNextDisabled
-                  }
-                >
-                  {this.props.isNextLoading ? (
-                    <Loader
-                      size={'xs'}
-                      inline={true}
-                      data-testid={'connection-creator-layout-loading'}
-                    />
-                  ) : null}
-                  {this.props.isLastStep ? (
-                    this.props.i18nSave
-                  ) : (
-                    <>
-                      {this.props.i18nNext} <i className="fa fa-angle-right" />
-                    </>
-                  )}
-                </ButtonLink>
-              </div>
+              </ButtonLink>
             </div>
           </div>
-        </form>
+        </div>
       </Container>
     );
   }

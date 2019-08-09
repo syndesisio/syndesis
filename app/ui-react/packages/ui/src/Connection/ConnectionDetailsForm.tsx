@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import { Alert, Button, Card } from 'patternfly-react';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';
@@ -93,10 +94,9 @@ export class ConnectionDetailsForm extends React.Component<
                 <Card.Title>{this.props.i18nTitle}</Card.Title>
               </Card.Heading>
               <Card.Body>
-                <form
-                  className="required-pf"
+                <Form
+                  isHorizontal={true}
                   data-testid={'connection-details-form'}
-                  role="form"
                   onSubmit={this.props.handleSubmit}
                 >
                   {this.props.validationResults.map((e, idx) => (
@@ -128,7 +128,7 @@ export class ConnectionDetailsForm extends React.Component<
                       </Button>
                     )}
                   </div>
-                </form>
+                </Form>
               </Card.Body>
               {this.props.isEditing ? (
                 <Card.Footer>
