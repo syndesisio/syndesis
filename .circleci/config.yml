@@ -200,7 +200,7 @@ jobs:
       - run:
           name: Build Connector Support
           command: |
-            ./tools/bin/syndesis build --batch-mode --module :connector-support-util,:connector-support-verifier,:connector-support-maven-plugin,:connector-support-processor,:connector-support-test | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module :connector-parent,:connector-support-util,:connector-support-verifier,:connector-support-maven-plugin,:connector-support-processor,:connector-support-test | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit

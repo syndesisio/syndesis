@@ -5,7 +5,7 @@ import { AutoForm, IFormDefinition } from '../src';
 import { FormWrapper } from './FormWrapper';
 import { StoryWrapper } from './StoryWrapper';
 
-const stories = storiesOf('AutoForm', module);
+const stories = storiesOf('AutoForm General Examples', module);
 
 const definition = {
   brokerCertificate: {
@@ -177,7 +177,7 @@ stories.add('Kitchen Sink', () => {
     return errors;
   };
   return (
-    <StoryWrapper>
+    <StoryWrapper definition={definition}>
       <AutoForm
         definition={object('Definition', definition)}
         initialValue={object('Initial Value', initialValue)}

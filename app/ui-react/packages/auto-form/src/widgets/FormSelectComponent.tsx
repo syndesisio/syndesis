@@ -15,7 +15,8 @@ export const FormSelectComponent: React.FunctionComponent<
 > = props => {
   const isMultiple =
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
-  const { onChange, onBlur, ...field } = props.field;
+  const { onChange, onBlur, value, ...field } = props.field;
+  const updatedValue = isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     if (isMultiple) {
       const newValue = getSelectedValues(event.currentTarget);
@@ -60,6 +61,7 @@ export const FormSelectComponent: React.FunctionComponent<
         disabled={props.form.isSubmitting || props.property.disabled}
         componentClass="select"
         title={props.property.controlHint}
+        value={updatedValue}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
           <option key={`${index}-${opt.label}`} value={opt.value}>

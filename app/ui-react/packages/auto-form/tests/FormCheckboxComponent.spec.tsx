@@ -6,7 +6,7 @@ export default describe('FormCheckboxComponent', () => {
   const fieldId = 'test01TestCheckbox';
   const definition = {
     [fieldId]: {
-      defaultValue: 'false',
+      defaultValue: 'true',
       description: 'whether or not to log everything (very verbose).',
       displayName: 'Log everything',
       required: true,
@@ -34,5 +34,12 @@ export default describe('FormCheckboxComponent', () => {
     const { getByLabelText } = render(form);
     const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
+  });
+
+  it('Should render set to the default value', () => {
+    const { getByTestId } = render(form);
+    expect(
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
+    ).toEqual("true");
   });
 });

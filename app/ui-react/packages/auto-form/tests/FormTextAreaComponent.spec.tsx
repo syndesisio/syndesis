@@ -37,4 +37,11 @@ describe('FormTextareaComponent', () => {
     const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
   });
+
+  it('Should render set to the default value', () => {
+    const { getByTestId } = render(form);
+    expect(
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLTextAreaElement).value.substr(-6)
+    ).toEqual('Error!');
+  });
 });

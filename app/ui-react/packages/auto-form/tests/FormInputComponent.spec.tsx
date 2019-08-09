@@ -36,6 +36,13 @@ describe('FormInputComponent: text', () => {
     const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
   });
+
+  it('Should render set to the default value', () => {
+    const { getByTestId } = render(form);
+    expect(
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
+    ).toEqual("INFO");
+  });
 });
 
 describe('FormInputComponent: password', () => {
@@ -67,20 +74,22 @@ describe('FormInputComponent: password', () => {
     expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
-  it('Should use the definition key as an id', () => {
-    const { getByTestId } = render(form);
-    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
-  });
-
   it('Should use the displayName as a label', () => {
     const { getByLabelText } = render(form);
     const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
   });
+
+  it('Should render set to the default value', () => {
+    const { getByTestId } = render(form);
+    expect(
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
+    ).toEqual("supersecret");
+  });
 });
 
 describe('FormInputComponent: number', () => {
-  const fieldId = 'testPasswordInput';
+  const fieldId = 'testNumberInput';
   const definition = {
     [fieldId]: {
       defaultValue: '123',
@@ -112,5 +121,12 @@ describe('FormInputComponent: number', () => {
     const { getByLabelText } = render(form);
     const displayName = definition[fieldId].displayName;
     expect(getByLabelText(displayName)).toBeTruthy();
+  });
+
+  it('Should render set to the default value', () => {
+    const { getByTestId } = render(form);
+    expect(
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
+    ).toEqual("123");
   });
 });
