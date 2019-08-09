@@ -2,11 +2,9 @@ import {
   Connection,
   ProjectedColumn,
   RestDataService,
-  RestVdbModel,
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
-  ViewEditorState,
   ViewInfo,
   VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
@@ -36,22 +34,6 @@ export function getPreviewVdbName(): string {
 }
 
 /**
- * Get the DDL for the specified model view
- */
-export function getViewDdl(vdbModel: RestVdbModel, viewName: string): string {
-  const views = vdbModel.keng__ddl.split('CREATE VIEW ');
-  if (views.length > 0) {
-    const viewDdl = views.find(
-      view => view.startsWith(viewName) || view.startsWith('"' + viewName)
-    );
-    if (viewDdl) {
-      return 'CREATE VIEW ' + viewDdl;
-    }
-  }
-  return 'CREATE VIEW';
-}
-
-/**
  * Recursively flattens the tree structure of SchemaNodes,
  * into an array of ViewInfos
  * @param viewInfos the array of ViewInfos
@@ -76,7 +58,7 @@ export function generateViewInfos(
 
     // Creates ViewInfo if the SchemaNode is queryable
     if (schemaNode.queryable === true) {
-      const vwName = schemaNode.connectionName + '_' + schemaNode.name;
+      const vwName = schemaNode.name;
       // Determine whether ViewInfo should be selected
       const selectedState =
         selectedViewNames.findIndex(viewName => viewName === vwName) === -1
@@ -156,22 +138,22 @@ export function generateSchemaNodeInfos(
 }
 
 /**
- * Generate a ViewEditorState for the supplied info
- * @param serviceVdbName the name of the virtualization vdb
+ * Generate a ViewDefinition for the supplied info
  * @param schemaNodeInfo the SchemaNodeInfo for the view
+ * @param dataVirtName the name of the virtualization
  * @param vwName the name for the view
  * @param vwDescription the (optional) description for the view
  */
-export function generateViewEditorState(
-  serviceVdbName: string,
+export function generateViewDefinition(
   schemaNodeInfo: SchemaNodeInfo[],
+  dataVirtName: string,
   vwName: string,
   vwDescription?: string
-): ViewEditorState {
+): ViewDefinition {
   const srcPaths: string[] = loadPaths(schemaNodeInfo);
-  return getViewEditorState(
-    serviceVdbName,
+  return getViewDefinition(
     vwName,
+    dataVirtName,
     PROJECTED_COLS_ALL,
     srcPaths,
     false,
@@ -193,50 +175,18 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
 }
 
 /**
- * Generates ViewEditorStates for the supplied ViewInfos
- * @param serviceVdbName the name of the virtualization vdb
- * @param viewInfos the array of ViewInfos
- */
-export function generateViewEditorStates(
-  serviceVdbName: string,
-  viewInfos: ViewInfo[]
-): ViewEditorState[] {
-  const editorStates: ViewEditorState[] = [];
-  for (const viewInfo of viewInfos) {
-    const path =
-      'connection=' +
-      viewInfo.connectionName +
-      '/' +
-      viewInfo.viewSourceNode.path;
-    const srcPaths: string[] = [path];
-
-    editorStates.push(
-      getViewEditorState(
-        serviceVdbName,
-        viewInfo.viewName,
-        PROJECTED_COLS_ALL,
-        srcPaths,
-        false
-      )
-    );
-  }
-
-  return editorStates;
-}
-
-/**
- * Generate a ViewEditorState for the supplied values.
- * @param serviceVdbName the name of the virtualization vdb
+ * Generate a ViewDefinition for the supplied values.
  * @param name the view name
+ * @param dataVirtName the name of the virtualization
  * @param projectedCols projected columns for the view
  * @param srcPaths paths for the sources used in the view
  * @param userDefined specifies if the ddl has been altered from defaults
  * @param description the (optional) view description
  * @param viewDdl the (optional) view DDL
  */
-function getViewEditorState(
-  serviceVdbName: string,
+function getViewDefinition(
   name: string,
+  dataVirtName: string,
   projectedCols: ProjectedColumn[],
   srcPaths: string[],
   userDefined: boolean,
@@ -246,20 +196,17 @@ function getViewEditorState(
   // View Definition
   const viewDefn: ViewDefinition = {
     compositions: [],
+    dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
+    name,
     projectedColumns: projectedCols,
     sourcePaths: srcPaths,
-    viewName: name,
   };
 
-  const editorState: ViewEditorState = {
-    id: serviceVdbName + '.' + name,
-    viewDefinition: viewDefn,
-  };
-  return editorState;
+  return viewDefn;
 }
 
 /**

@@ -1,5 +1,5 @@
-import { useViewEditorStates, useVirtualizationHelpers } from '@syndesis/api';
-import { RestDataService, ViewEditorState } from '@syndesis/models';
+import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
+import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
   SqlClientContentSkeleton,
@@ -55,7 +55,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
 
-  const { resource: editorStates, error, loading } = useViewEditorStates(
+  const { resource: viewDefinitionDescriptors, error, loading } = useViewDefinitionDescriptors(
     params.virtualizationId
   );
 
@@ -167,9 +167,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         >
           {() => (
             <WithVirtualizationSqlClientForm
-              views={editorStates.map(
-                (editorState: ViewEditorState) => editorState.viewDefinition
-              )}
+              views={viewDefinitionDescriptors}
               targetVdb={getPreviewVdbName()}
               linkCreateView={resolvers.data.virtualizations.create()}
               linkImportViews={resolvers.data.virtualizations.views.importSource.selectConnection(

@@ -14,7 +14,7 @@ import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { ViewCreateSteps } from '../../shared';
-import { generateViewEditorState } from '../../shared/VirtualizationUtils';
+import { generateViewDefinition } from '../../shared/VirtualizationUtils';
 
 export interface ISaveForm {
   name: string;
@@ -89,20 +89,20 @@ export const SelectNamePage: React.FunctionComponent = () => {
       validationMsg = await doValidateName(value.name);
     }
     if (validationMsg.length === 0) {
-      // ViewEditorState for the source
-      const viewEditorState = generateViewEditorState(
-        state.virtualization.serviceVdbName,
+      // ViewDefinition for the source
+      const viewDefinition = generateViewDefinition(
         state.schemaNodeInfo,
+        state.virtualization.keng__id,
         value.name,
         value.description
       );
       try {
-        await refreshVirtualizationViews(state.virtualization.keng__id, [
-          viewEditorState,
-        ]);
+        await refreshVirtualizationViews(state.virtualization.keng__id,
+          viewDefinition
+        );
         pushNotification(
           t('virtualization.createViewSuccess', {
-            name: viewEditorState.viewDefinition.viewName,
+            name: viewDefinition.name,
           }),
           'success'
         );

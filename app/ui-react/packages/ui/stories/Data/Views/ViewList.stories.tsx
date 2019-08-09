@@ -24,6 +24,7 @@ const deleteActionText = 'Delete View';
 const viewItems = [
   <ViewListItem
     key="viewListItem1"
+    viewId="viewListItem1"
     viewName={text('name', viewName1)}
     viewDescription={text('description', viewDescription1)}
     viewEditPageLink={''}
@@ -38,6 +39,7 @@ const viewItems = [
   />,
   <ViewListItem
     key="viewListItem2"
+    viewId="viewListItem2"
     viewName={text('name', viewName2)}
     viewEditPageLink={''}
     i18nCancelText={'Cancel'}
