@@ -1,5 +1,8 @@
 import { FieldArrayRenderProps, FieldProps, FormikActions } from 'formik';
 
+/**
+ * The top-level object that makes up a form definition, basically a map of properties
+ */
 export interface IFormDefinition {
   [name: string]: IFormDefinitionProperty;
 }
@@ -47,6 +50,9 @@ export interface IFormArrayDefinitionOptions {
   i18nAddElementText: string;
 }
 
+/**
+ * Each item in a form definition is one of these
+ */
 export interface IFormDefinitionProperty {
   arrayDefinition?: IFormDefinition;
   arrayDefinitionOptions?: IFormArrayDefinitionOptions;
@@ -67,6 +73,8 @@ export interface IFormDefinitionProperty {
   kind?: string;
   label?: string;
   labelHint?: string;
+  mapsetKeys?: IMapsetKey[];
+  mapsetValueDefinition?: IFormDefinitionProperty;
   order?: number;
   placeholder?: string;
   relation?: IFormPropertyRelation[];
@@ -75,6 +83,11 @@ export interface IFormDefinitionProperty {
   tags?: string[];
   type: string;
   dataList?: string[];
+}
+
+export interface IMapsetKey {
+  displayName: string;
+  name: string;
 }
 
 export interface INamedConfigurationProperty extends IFormDefinitionProperty {

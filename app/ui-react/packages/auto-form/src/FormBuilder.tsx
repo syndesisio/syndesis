@@ -14,6 +14,8 @@ import {
   FormDurationComponent,
   FormHiddenComponent,
   FormInputComponent,
+  FormLegendComponent,
+  FormMapsetComponent,
   FormSelectComponent,
   FormTextAreaComponent,
 } from './widgets';
@@ -44,6 +46,8 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
       checkbox: FormCheckboxComponent,
       duration: FormDurationComponent,
       hidden: FormHiddenComponent,
+      legend: FormLegendComponent,
+      mapset: FormMapsetComponent,
       select: FormSelectComponent,
       textarea: FormTextAreaComponent,
       ...(this.props.customComponents || {}),

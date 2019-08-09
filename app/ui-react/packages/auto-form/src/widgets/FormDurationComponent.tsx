@@ -1,15 +1,14 @@
-import { Popover } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import {
-  ControlLabel,
-  DropdownButton,
-  Form,
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
   FormGroup,
-  MenuItem,
-} from 'patternfly-react';
+  InputGroup, Popover,
+  TextInput,
+} from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
-import { AutoFormHelpBlock } from './AutoFormHelpBlock';
 import { getValidationState, toValidHtmlId } from './helpers';
 
 interface IDuration {
@@ -48,125 +47,111 @@ function calculateValue(duration: IDuration, value: number) {
   return value * duration.value;
 }
 
-export interface IFormDurationComponentState {
-  duration: IDuration;
-}
-
-export class FormDurationComponent extends React.Component<
-  IFormControlProps,
-  IFormDurationComponentState
-> {
-  private inputField: HTMLInputElement = undefined as any;
-  constructor(props: IFormControlProps) {
-    super(props);
-    // find the highest duration that keeps the duration above 1
-    const index =
-      durations.findIndex(d => !(this.props.field.value / d.value >= 1.0)) - 1;
-    // if the index is invalid than we use the highest available duration.
-    const duration = durations[index] || durations[durations.length - 1];
-    this.state = {
-      duration,
-    };
-    this.handleOnSelect = this.handleOnSelect.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleBlur = this.handleBlur.bind(this);
-    this.receiveInputRef = this.receiveInputRef.bind(this);
-  }
-  public receiveInputRef(ref: HTMLInputElement) {
-    this.inputField = ref;
-  }
-  public handleOnSelect(eventKey: number, event: React.ChangeEvent) {
-    const newDuration =
-      durations.find(duration => duration.value === eventKey) || durations[0];
-    this.setState({
-      duration: newDuration,
-    });
-    this.props.form.setFieldValue(
-      this.props.field.name,
-      calculateValue(newDuration, this.inputField.valueAsNumber),
+export const FormDurationComponent: React.FunctionComponent<
+  IFormControlProps
+> = props => {
+  const { value, onChange, ...field } = props.field;
+  // find the highest duration that keeps the duration above 1
+  const index = durations.findIndex(d => !(value / d.value >= 1.0)) - 1;
+  // if the index is invalid than we use the highest available duration.
+  const initialDuration = durations[index] || durations[durations.length - 1];
+  const [duration, setDuration] = React.useState(initialDuration);
+  const [isOpen, setIsOpen] = React.useState(false);
+  const handleToggle = () => {
+    setIsOpen(!isOpen);
+  };
+  const handleClick = (
+    selectedDuration: IDuration,
+    event: React.SyntheticEvent
+  ) => {
+    event.preventDefault();
+    setIsOpen(false);
+    const inputValue = calculateDuration(duration, props.field.value);
+    setDuration(selectedDuration);
+    props.form.setFieldValue(
+      field.name,
+      calculateValue(selectedDuration, inputValue),
       true
     );
-  }
-  public handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.props.form.setFieldValue(
-      this.props.field.name,
-      calculateValue(this.state.duration, event.target.valueAsNumber),
+  };
+  const handleChange = (
+    val: string,
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    props.form.setFieldValue(
+      field.name,
+      calculateValue(duration, parseInt(val, 10)),
       true
     );
-  }
-  public handleBlur(event: React.ChangeEvent<HTMLInputElement>) {
-    this.props.form.setFieldValue(
-      this.props.field.name,
-      calculateValue(this.state.duration, event.target.valueAsNumber),
+  };
+  const handleBlur = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.form.setFieldValue(
+      field.name,
+      calculateValue(duration, event.target.valueAsNumber),
       true
     );
-  }
-  public render() {
-    const controlId = `${toValidHtmlId(this.props.field.name)}-duration`;
-    return (
-      <FormGroup
-        {...this.props.property.formGroupAttributes}
-        controlId={toValidHtmlId(this.props.field.name)}
-        validationState={getValidationState(this.props)}
-      >
-        <ControlLabel
-          className={
-            this.props.property.required && !this.props.allFieldsRequired
-              ? 'required-pf'
-              : ''
-          }
-          {...this.props.property.controlLabelAttributes}
-        >
-          {this.props.property.displayName}
-        </ControlLabel>
-        {this.props.property.labelHint && (
-          <Popover
-            aria-label={this.props.property.labelHint}
-            bodyContent={this.props.property.labelHint}
-          >
-            <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-          </Popover>
-        )}
-        <Form.InputGroup>
-          <Form.FormControl
-            min={0}
-            {...this.props.property.fieldAttributes}
-            data-testid={toValidHtmlId(this.props.field.name)}
-            type={'number'}
-            defaultValue={calculateDuration(
-              this.state.duration,
-              this.props.field.value
-            )}
-            disabled={
-              this.props.form.isSubmitting || this.props.property.disabled
-            }
-            onChange={this.handleChange}
-            onBlur={this.handleBlur}
-            inputRef={this.receiveInputRef}
-            title={this.props.property.controlHint}
-          />
-          <DropdownButton
-            id={controlId}
-            data-testid={controlId}
-            componentClass={Form.InputGroup.Button}
-            title={this.state.duration.label}
-            onSelect={this.handleOnSelect}
-            disabled={
-              this.props.form.isSubmitting || this.props.property.disabled
-            }
-          >
-            {durations.map((duration, index) => (
-              <MenuItem key={index} eventKey={duration.value}>
-                {duration.label}
-              </MenuItem>
-            ))}
-          </DropdownButton>
-        </Form.InputGroup>
-        <AutoFormHelpBlock
-          error={this.props.form.errors[this.props.field.name] as string}
-          description={this.props.property.description}
+  };
+  const id = toValidHtmlId(field.name);
+  const controlId = `${id}-duration`;
+  return (
+    <FormGroup
+      label={
+        <>
+          {props.property.displayName || ''}
+          {props.property.labelHint && (
+            <Popover
+              aria-label={props.property.labelHint}
+              bodyContent={props.property.labelHint}
+            >
+              <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+            </Popover>
+          )}
+        </>
+      }
+      {...props.property.formGroupAttributes}
+      fieldId={id}
+      isRequired={props.property.required}
+      isValid={getValidationState(props)}
+      helperText={props.property.description}
+      helperTextInvalid={props.form.errors[props.field.name]}
+    >
+      <InputGroup>
+        <TextInput
+          min={0}
+          {...props.property.fieldAttributes}
+          data-testid={id}
+          id={id}
+          type={'number'}
+          defaultValue={`${calculateDuration(duration, props.field.value)}`}
+          isDisabled={props.form.isSubmitting || props.property.disabled}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          title={props.property.controlHint}
         />
-      </FormGroup>
-    );
-  }
-}
+        <Dropdown
+          data-testid={controlId}
+          id={controlId}
+          title={duration.label}
+          toggle={
+            <DropdownToggle onToggle={handleToggle}>
+              {duration.label}
+            </DropdownToggle>
+          }
+          isOpen={isOpen}
+          disabled={props.form.isSubmitting || props.property.disabled}
+        >
+          {durations.map(d => (
+            <DropdownItem
+              key={d.value}
+              value={d.value}
+              component={'button'}
+              onClick={e => handleClick(d, e)}
+            >
+              {d.label}
+            </DropdownItem>
+          ))}
+        </Dropdown>
+      </InputGroup>
+    </FormGroup>
+  );
+};

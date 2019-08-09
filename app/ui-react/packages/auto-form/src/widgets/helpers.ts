@@ -2,10 +2,10 @@ import { IFormControlProps } from '../models';
 
 export function getValidationState({ form, field }: IFormControlProps) {
   return form.touched[field.name] && form.errors[field.name]
-    ? 'error'
+    ? false
     : form.touched[field.name]
-    ? null
-    : null;
+    ? undefined
+    : undefined;
 }
 
 /**

@@ -33,6 +33,9 @@ export function sanitizeValues<T>(
 ): T {
   return Object.keys(definition).reduce((result, key): any => {
     const prop = definition[key];
+    if (prop.type === 'legend') {
+      return result;
+    }
     const value = massageValue(prop, initialValue[key], prop.defaultValue);
     return { ...result, [key]: value };
   }, {}) as T;
@@ -137,6 +140,7 @@ export function sanitizeInitialArrayValue(
  *
  * @param property
  * @param value
+ * @param defaultValue
  */
 export function massageValue(
   property: IFormDefinitionProperty,
@@ -161,17 +165,20 @@ export function massageValue(
         value || defaultValue,
         minElements
       );
-    default:
+    case 'mapset': {
+      const answer: any = value || defaultValue || {};
+      return typeof answer === 'string' ? JSON.parse(answer) : answer;
+    }
+    default: {
       // if the value has an enum property
       // a select control is used, default
       // to the first available value
-      if (
-        typeof value === 'undefined' &&
-        property.enum &&
-        property.enum.length > 0
-      ) {
-        return defaultValue || property.enum[0].value || '';
-      }
-      return value || defaultValue || '';
+      const answer: any =
+        value ||
+        defaultValue ||
+        (property.enum && property.enum.length > 0 && property.enum[0].value) ||
+        '';
+      return typeof answer === 'string' ? answer : JSON.stringify(answer);
+    }
   }
 }

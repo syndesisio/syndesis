@@ -66,7 +66,10 @@ stories.add('General Example', () => {
         )}
         validate={action('validate')}
         validateInitial={action('validateInitial')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -111,7 +114,10 @@ stories.add('Empty with Default Value', () => {
         )}
         validate={action('validate')}
         validateInitial={action('validateInitial')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
