@@ -2,6 +2,7 @@ export * from './Views';
 export * from './ViewEditor';
 export * from './PublishStatusWithProgress';
 export * from './SqlClientContent';
+export * from './SqlClientContentSkeleton';
 export * from './SqlClientForm';
 export * from './VirtualizationDetailsHeader';
 export * from './VirtualizationList';
