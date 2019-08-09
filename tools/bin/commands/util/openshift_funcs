@@ -224,6 +224,7 @@ deploy_syndesis_operator() {
 create_syndesis() {
     local route="${1:-}"
     local console="${2:-}"
+    local force_dev="${3:-}"
 
     local syndesis_installed=$(oc get syndesis -o name | wc -l)
     local force=$(hasflag --force)
@@ -241,6 +242,16 @@ metadata:
 spec:
 EOT
 )
+    if [ $(hasflag --dev) ] || [ -n "$force_dev" ]; then
+        extra=$(cat <<EOT
+
+  devImages: true
+EOT
+)
+
+        syndesis="${syndesis}${extra}"
+    fi
+
     local extra=""
     if [ -n "$console" ]; then
         extra=$(cat <<EOT

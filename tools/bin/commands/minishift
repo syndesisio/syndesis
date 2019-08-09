@@ -161,7 +161,7 @@ minishift::run() {
         if [ -z "$route" ]; then
             route="syndesis.$(minishift ip).nip.io"
         fi
-        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console")
+        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console" "with_dev_images")
         check_error "$result"
 
         # Wait until everything's up and finally patch imagestreams for triggers
