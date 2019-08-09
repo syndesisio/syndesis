@@ -2462,8 +2462,18 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>openshift-client</artifactId>
+        <version>${kubernetes.client.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
     </dependencies>
-
   </dependencyManagement>
 
   <!-- Metadata need to publish to central -->
