@@ -92,6 +92,13 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 		syndesis.Spec.Addons["todo"]["enabled"] = "true"
 	}
 
+	if syndesis.Spec.Addons["komodo"] == nil {
+		syndesis.Spec.Addons["komodo"] = v1alpha1.Parameters{}
+	}
+	if syndesis.Spec.Addons["komodo"]["enabled"] == "" {
+		syndesis.Spec.Addons["komodo"]["enabled"] = "false"
+	}
+
 	// Setup the config..
 	config := make(map[string]string)
 	copyMap(config, env)

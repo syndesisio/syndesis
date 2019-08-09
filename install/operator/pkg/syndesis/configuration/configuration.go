@@ -43,6 +43,7 @@ const (
 	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
 	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
+	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvSyndesisServerTag              SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
 	EnvSyndesisUITag              	  SyndesisEnvVar = "SYNDESIS_UI_TAG"
@@ -110,6 +111,7 @@ var (
 		envPrometheusTag,
 
 		envUpgradeVolumeCapacity,
+		envDatavirtEnabled,
 	}
 
 	setters = []SyndesisEnvVarSetter{
@@ -663,5 +665,16 @@ func exposeVia3Scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
 		if b, err := strconv.ParseBool(v); err != nil {
 			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = &b
 		}
+	}
+}
+
+func envDatavirtEnabled(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	v := "0"
+	if komodo := syndesis.Spec.Addons["komodo"]["enabled"]; komodo == "true" {
+		v = "1"
+	}
+	return &SyndesisEnvVarConfig{
+		Var:   EnvDatavirtEnabled,
+		Value: v,
 	}
 }
