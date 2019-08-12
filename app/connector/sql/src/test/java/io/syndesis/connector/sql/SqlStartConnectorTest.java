@@ -15,20 +15,17 @@
  */
 package io.syndesis.connector.sql;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import java.util.stream.Collectors;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,10 +37,12 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
 
     private final String sqlQuery;
     private final List<Map<String, String[]>> expectedResults;
+    private final Map<String, Object> parameters;
 
-    public SqlStartConnectorTest(String sqlQuery, List<Map<String, String[]>> expectedResults) {
+    public SqlStartConnectorTest(String sqlQuery, List<Map<String, String[]>> expectedResults, Map<String, Object> parameters) {
         this.sqlQuery = sqlQuery;
         this.expectedResults = expectedResults;
+        this.parameters = parameters;
     }
 
     @Override
@@ -53,9 +52,38 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
 
     @Override
     protected List<String> setupStatements() {
-        return Arrays.asList("CREATE TABLE NAME (id INTEGER PRIMARY KEY, firstName VARCHAR(255), lastName VARCHAR(255))",
-                "INSERT INTO NAME VALUES (1, 'Joe', 'Jackson')",
-                "INSERT INTO NAME VALUES (2, 'Roger', 'Waters')");
+        String dbProductName = null;
+        try {
+            dbProductName = db.connection.getMetaData().getDatabaseProductName();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Assert.fail(e.getMessage());
+        }
+        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
+            return Arrays.asList("CREATE TABLE NAME ("
+                    + "ID SERIAL PRIMARY KEY, "
+                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
+        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
+            return Arrays.asList("CREATE TABLE NAME ("
+                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
+        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
+            return Arrays.asList("CREATE TABLE NAME (ID INTEGER NOT NULL "
+                    + "GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), "
+                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
+        } else {
+            return Arrays.asList("CREATE TABLE NAME ("
+                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
+                    + "firstName VARCHAR(255), lastName VARCHAR(255))",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Joe', 'Jackson')",
+                    "INSERT INTO NAME (firstname, lastname) VALUES ('Roger', 'Waters')");
+        }
     }
 
     @Override
@@ -85,11 +113,16 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
         return Arrays.asList(new Object[][] {
                 { "SELECT * FROM NAME ORDER BY id", Arrays.asList(Collections.singletonMap("ID", new String[] { "1", "2" }),
                         Collections.singletonMap("FIRSTNAME", new String[] { "Joe", "Roger" }),
-                        Collections.singletonMap("LASTNAME", new String[] { "Jackson", "Waters" }))},
+                        Collections.singletonMap("LASTNAME", new String[] { "Jackson", "Waters" })),
+                        Collections.emptyMap()},
                 { "SELECT * FROM NAME WHERE id = 2", Arrays.asList(Collections.singletonMap("ID", new String[] { "2" }),
                         Collections.singletonMap("FIRSTNAME", new String[] { "Roger" }),
-                        Collections.singletonMap("LASTNAME", new String[] { "Waters" }))},
-                { "SELECT * FROM NAME WHERE id = 99", Collections.emptyList()}
+                        Collections.singletonMap("LASTNAME", new String[] { "Waters" })),
+                        Collections.emptyMap()},
+                { "SELECT * FROM NAME WHERE id = 99", Collections.emptyList(), Collections.emptyMap()},
+                { "INSERT INTO NAME (firstname, lastname) VALUES ('Kurt', 'Cobain')",
+                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"3"})),
+                        Collections.emptyMap()}
         });
     }
 
@@ -99,26 +132,22 @@ public class SqlStartConnectorTest extends SqlConnectorTestSupport {
 
     @Test
     public void sqlStartConnectorTest() throws Exception {
-        MockEndpoint mock = context.getEndpoint("mock:result", MockEndpoint.class);
-        mock.expectedMessageCount(1);
 
-        ProducerTemplate template = context.createProducerTemplate();
-        template.sendBody("direct:start", null);
+        String body;
+        if (parameters.isEmpty()) {
+            body = null;
+        } else {
+            body = JSONBeanUtil.toJSONBean(parameters);
+        }
 
-        mock.assertIsSatisfied();
-
-        Exchange exchange = mock.getExchanges().get(0);
-        List<?> body = exchange.getIn().getBody(List.class);
-        List<Properties> jsonBeans = body.stream()
-                .map(Object::toString)
-                .map(JSONBeanUtil::parsePropertiesFromJSONBean)
-                .collect(Collectors.toList());
-
+        @SuppressWarnings("unchecked")
+        List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
+        
         Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
 
         for (Map<String, String[]> result : expectedResults) {
             for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
-                validateProperty(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+                validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
             }
         }
     }

@@ -23,6 +23,7 @@ import java.util.Properties;
 
 import javax.sql.DataSource;
 
+import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
@@ -75,11 +76,15 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
     }
 
     private void init(Map<String, Object> options) {
-        if (isInit) {
+        if (!isInit) {
             final String sql =  ConnectorOptions.extractOption(options, "query");
             final DataSource dataSource = ConnectorOptions.extractOptionAsType(options, "dataSource", DataSource.class);
             try (Connection connection = dataSource.getConnection()) {
-                SqlStatementMetaData statementInfo = new SqlStatementParser(connection, null, sql).parse();
+                DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
+                final String defaultSchema = dbHelper.getDefaultSchema(ConnectorOptions.extractOption(options, "user", ""));
+                final String schemaPattern = ConnectorOptions.extractOption(options, "schema", defaultSchema);
+
+                SqlStatementMetaData statementInfo = new SqlStatementParser(connection, schemaPattern, sql).parse();
                 if (statementInfo.getAutoIncrementColumnName() != null) {
                     isRetrieveGeneratedKeys = true;
                     autoIncrementColumnName = statementInfo.getAutoIncrementColumnName();
