@@ -15,23 +15,20 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.Map;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
-import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.Map;
 
 public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientCustomizer.class);
 
-    private String operation;
     private CamelContext camelContext;
 
     @Override
@@ -46,14 +43,6 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        // Validate operation parameter, set only once
-        if (operation == null) {
-            Object operation = options.get("operation");
-            if (operation instanceof String) {
-                this.operation = (String) operation;
-            }
-            component.setBeforeProducer(this::checkValidOperation);
-        }
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
@@ -79,16 +68,6 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                 LOGGER.warn(
                     "Not enough information provided to set-up the MongoDB client. Required at least host, user and password.");
             }
-        }
-    }
-
-    // Validate the operation among a list of possible values
-    @SuppressWarnings("PMD")
-    private void checkValidOperation(Exchange exchange) {
-        try {
-            MongoProducerOperation.valueOf(operation);
-        } catch (NullPointerException | IllegalArgumentException e) {
-            throw new IllegalArgumentException(String.format("Operation %s is not supported. Supported operations are %s", operation, Arrays.toString(MongoProducerOperation.values())));
         }
     }
 }

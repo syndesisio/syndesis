@@ -3,6 +3,9 @@
   "actions": [
     {
       "actionType": "connector",
+      "connectorCustomizers": [
+        "io.syndesis.connector.mongo.MongoProducerCustomizer"
+      ],
       "description": "Mongo DB producer",
       "descriptor": {
         "componentScheme": "mongodb3",
