@@ -15,11 +15,9 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.io.IOException;
-import java.util.HashSet;
-import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mongodb.client.model.CreateCollectionOptions;
+import io.syndesis.common.model.integration.Step;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.bson.Document;
@@ -28,11 +26,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.mongodb.client.model.CreateCollectionOptions;
+import java.io.IOException;
+import java.util.List;
 
-import io.syndesis.common.model.integration.Step;
-
-@SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert" })
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
@@ -54,7 +51,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
     @Override
     protected List<Step> createSteps() {
         return fromMongoToMock("result", "io.syndesis.connector:connector-mongodb-consumer", DATABASE, COLLECTION,
-                "id");
+            "id");
     }
 
     // **************************
@@ -67,13 +64,13 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMessageCount(1);
         mock.expectedMessagesMatches((Exchange e) -> {
-            try{
+            try {
                 Document doc = e.getMessage().getBody(Document.class);
                 JsonNode jsonNode = MAPPER.readTree(doc.toJson());
                 int id = jsonNode.get("id").asInt();
                 String value = jsonNode.get("someKey").asText();
                 return id <= ID && "someValue".equals(value);
-            }catch(IOException ex) {
+            } catch (IOException ex) {
                 return false;
             }
         });

@@ -15,21 +15,16 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import io.syndesis.common.model.integration.Step;
 import org.bson.Document;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.util.List;
+import java.util.UUID;
 
-import io.syndesis.common.model.integration.Step;
-
-@SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert" })
-public class MongoDBConnectorFindyAllTest extends MongoDBConnectorTestSupport {
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
+public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
     // **************************
     // Set up
     // **************************
@@ -37,7 +32,7 @@ public class MongoDBConnectorFindyAllTest extends MongoDBConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-                "findAll");
+            "findById");
     }
 
     // **************************
@@ -45,7 +40,7 @@ public class MongoDBConnectorFindyAllTest extends MongoDBConnectorTestSupport {
     // **************************
 
     @Test
-    public void mongoFindAllTest() throws IOException {
+    public void mongoFindByIdTest() throws IOException {
         // When
         String uniqueId = UUID.randomUUID().toString();
         Document doc = new Document();
@@ -58,25 +53,11 @@ public class MongoDBConnectorFindyAllTest extends MongoDBConnectorTestSupport {
         doc2.append("unique", uniqueId2);
         collection.insertOne(doc2);
         // Given
-        @SuppressWarnings("unchecked")
-        List<Document> results = template.requestBody("direct:start", null, List.class);
-        List<String> jsonStrings = results.stream().map(Document::toJson).collect(Collectors.toList());
+        Document result = template.requestBody("direct:start", 1, Document.class);
+        Document result2 = template.requestBody("direct:start", 2, Document.class);
         // Then
-        assertEquals(2, results.size());
-        assertEquals(uniqueId, getUniqueFromDocWithId(jsonStrings, 1));
-        assertEquals(uniqueId2, getUniqueFromDocWithId(jsonStrings, 2));
-    }
-
-    private String getUniqueFromDocWithId(List<String> results, int i) throws IOException {
-        for (String json : results) {
-            JsonNode jsonNode = MAPPER.readTree(json);
-            int _id = jsonNode.get("_id").asInt();
-            String unique = jsonNode.get("unique").textValue();
-            if (_id == i) {
-                return unique;
-            }
-        }
-        return null;
+        assertEquals(uniqueId, result.get("unique"));
+        assertEquals(uniqueId2, result2.get("unique"));
     }
 
 }

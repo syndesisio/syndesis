@@ -49,9 +49,9 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
     @Override
     public Result verifyParameters(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
-                .error(ResultErrorHelper.requiresOption("host", parameters))
-                .error(ResultErrorHelper.requiresOption("user", parameters))
-                .error(ResultErrorHelper.requiresOption("password", parameters));
+            .error(ResultErrorHelper.requiresOption("host", parameters))
+            .error(ResultErrorHelper.requiresOption("user", parameters))
+            .error(ResultErrorHelper.requiresOption("password", parameters));
         return builder.build();
     }
 
@@ -62,8 +62,8 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
     @Override
     public Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials)
-                .build();
+            .error(parameters, this::verifyCredentials)
+            .build();
     }
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
@@ -81,20 +81,20 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
             mongoClient.getConnectPoint();
         } catch (MongoSecurityException e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
-                    VerificationError.StandardCode.AUTHENTICATION,
-                    String.format("Unable to authenticate %s against %s authentication database!", mongoConf.getUser(), mongoConf.getAdminDB()))
-                    .parameterKey("");
+                VerificationError.StandardCode.AUTHENTICATION,
+                String.format("Unable to authenticate %s against %s authentication database!", mongoConf.getUser(), mongoConf.getAdminDB()))
+                .parameterKey("");
             builder.error(errorBuilder.build());
         } catch (MongoSocketException e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
-                    VerificationError.StandardCode.GENERIC,
-                    String.format("Unable to connect to %s on port %s!", mongoConf.getHost(), mongoConf.getPort()));
+                VerificationError.StandardCode.GENERIC,
+                String.format("Unable to connect to %s on port %s!", mongoConf.getHost(), mongoConf.getPort()));
             builder.error(errorBuilder.build());
         } catch (Exception e) {
             // TODO We will always hit a MongoTimerException, did not find a way to catch the above yet...
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
-                    VerificationError.StandardCode.GENERIC,
-                    e.getMessage());
+                VerificationError.StandardCode.GENERIC,
+                e.getMessage());
             builder.error(errorBuilder.build());
         }
     }
