@@ -1410,6 +1410,12 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-aws-ddb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-aws-s3</artifactId>
         <version>${project.version}</version>
       </dependency>

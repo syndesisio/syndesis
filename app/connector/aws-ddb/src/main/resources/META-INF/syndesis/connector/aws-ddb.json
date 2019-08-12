@@ -1,0 +1,235 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Query items from an AWS Dynamo DB",
+      "descriptor": {
+        "componentScheme": "aws-ddb",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.ddb.customizer.DDBConnectorCustomizerQuery"
+        ],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Poll an Amazon DDB Table",
+            "name": "Query",
+            "properties": {
+              "element": {
+                "deprecated": false,
+                "displayName": "Filter",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "property",
+                "labelHint": "Characteristics of the element to be queried. Can contain input parameters prefixed by ':#'. Should contain at least a key.",
+                "placeholder": "for example '{\"key\" : :#MYPARAMNAME}'",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "attributes": {
+                "deprecated": false,
+                "displayName": "Attributes to query",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "property",
+                "labelHint": "Comma separated elements to query. Can contain input parameters prefixed by ':#'. If missing, it will use the parameters from the filter",
+                "placeholder": "for example 'attribute1,attribute2,:#attributes'",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-ddb-query-connector",
+      "name": "Query",
+      "pattern": "To",
+      "tags": [
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Insert an item into an AWS Dynamo DB",
+      "descriptor": {
+        "componentScheme": "aws-ddb",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.ddb.customizer.DDBConnectorCustomizerPutItem"
+        ],
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Insert an item on a DynamoDB table",
+            "name": "Put Item",
+            "properties": {
+              "element": {
+                "deprecated": false,
+                "displayName": "JSON definition of the element",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "property",
+                "labelHint": "Element to be inserted. Can contain input parameters prefixed by ':#'.",
+                "placeholder": "for example '{key : :#MYPARAMNAME}'",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-ddb-putitem-to-connector",
+      "name": "Put Item",
+      "pattern": "To",
+      "tags": [
+      ]
+    }
+  ],
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+"description": "Interact with a Dynamo DB instance.",
+  "icon": "assets:sql.svg",
+  "id": "aws-ddb",
+  "name": "AWS-DDB",
+  "properties": {
+    "region": {
+      "defaultValue": "EU CENTRAL 1",
+      "deprecated": false,
+      "displayName": "Region",
+      "enum": [
+        {
+          "value": "GovCloud",
+          "label": "us-gov-west-1"
+        },
+        {
+          "value": "US_EAST_1",
+          "label": "us-east-1"
+        },
+        {
+          "value": "US_EAST_2",
+          "label": "us-east-2"
+        },
+        {
+          "value": "US_WEST_1",
+          "label": "us-west-1"
+        },
+        {
+          "value": "US_WEST_2",
+          "label": "us-west-2"
+        },
+        {
+          "value": "EU_WEST_1",
+          "label": "eu-west-1"
+        },
+        {
+          "value": "EU_WEST_2",
+          "label": "eu-west-2"
+        },
+        {
+          "value": "EU_WEST_3",
+          "label": "eu-west-3"
+        },
+        {
+          "value": "EU_CENTRAL_1",
+          "label": "eu-central-1"
+        },
+        {
+          "value": "AP_SOUTH_1",
+          "label": "ap-south-1"
+        },
+        {
+          "value": "AP_SOUTHEAST_1",
+          "label": "ap-southeast-1"
+        },
+        {
+          "value": "AP_SOUTHEAST_2",
+          "label": "ap-southeast-2"
+        },
+        {
+          "value": "AP_NORTHEAST_1",
+          "label": "ap-northeast-1"
+        },
+        {
+          "value": "AP_NORTHEAST_2",
+          "label": "ap-northeast-2"
+        },
+        {
+          "value": "SA_EAST_1",
+          "label": "sa-east-1"
+        },
+        {
+          "value": "CN_NORTH_1",
+          "label": "cn-north-1"
+        },
+        {
+          "value": "CN_NORTHWEST_1",
+          "label": "cn-northwest-1"
+        }
+      ],
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The region where the bucket is located. This option is used in the com.amazonaws.services.s3.model.CreateBucketRequest.",
+      "order": "3",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "secretKey": {
+      "deprecated": false,
+      "displayName": "Secret Key",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Amazon AWS Secret Key",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "tableName": {
+      "deprecated": false,
+      "displayName": "Table Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "labelHint": "Name of the table we are going to interact with",
+      "order": "4",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "accessKey": {
+      "deprecated": false,
+      "displayName": "Access Key",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Amazon AWS Access Key",
+      "order": "1",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}
