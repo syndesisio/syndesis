@@ -9,7 +9,7 @@ End-to-end (e2e) testing is automated testing for real user scenarios.
 ### Running
 
 You can run your local code with
-```$xslt
+```shell
 operator-sdk test local ./tests/e2e --up-local --local-operator-flags "run --operator-config build/conf/config.yaml"
 ```
 
