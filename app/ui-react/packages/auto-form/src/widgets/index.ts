@@ -1,4 +1,3 @@
-export * from './AutoFormHelpBlock';
 export * from './FormArrayComponent';
 export * from './FormLegendComponent';
 export * from './FormInputComponent';

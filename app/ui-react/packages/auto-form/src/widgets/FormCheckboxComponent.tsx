@@ -18,6 +18,7 @@ export const FormCheckboxComponent: React.FunctionComponent<
   };
   return (
     <FormGroup
+      label={props.property.displayNameCheckbox}
       {...props.property.formGroupAttributes}
       fieldId={id}
       isValid={getValidationState(props)}

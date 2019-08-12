@@ -40,17 +40,21 @@ export const FormSelectComponent: React.FunctionComponent<
   return (
     <FormGroup
       label={
-        <>
-          {props.property.displayName || ''}
-          {props.property.labelHint && (
-            <Popover
-              aria-label={props.property.labelHint}
-              bodyContent={props.property.labelHint}
-            >
-              <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-            </Popover>
-          )}
-        </>
+        props.property.displayName ? (
+          <>
+            {props.property.displayName}
+            {props.property.labelHint && (
+              <Popover
+                aria-label={props.property.labelHint}
+                bodyContent={props.property.labelHint}
+              >
+                <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+              </Popover>
+            )}
+          </>
+        ) : (
+          undefined
+        )
       }
       {...props.property.formGroupAttributes}
       fieldId={id}

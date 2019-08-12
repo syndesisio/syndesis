@@ -1,7 +1,11 @@
 import { Formik, FormikActions, FormikErrors, FormikProps } from 'formik';
 import * as React from 'react';
-import { FormBuilder } from './FormBuilder';
+import {
+  AutoFormContext,
+  AutoFormContextDefaultValue,
+} from './AutoFormContext';
 import { IAutoFormActions, IFormDefinition, IFormErrors } from './models';
+import { useFormBuilder } from './useFormBuilder';
 
 export interface IAutoFormProps<T> {
   /**
@@ -59,6 +63,9 @@ export interface IAutoFormChildrenProps<T> {
    * Fragment containing all of the form fields
    */
   fields: JSX.Element;
+  /**
+   * The same fields as an array of separate elements
+   */
   fieldsAsArray: JSX.Element[];
   /**
    * Function to trigger a form submit which will then trigger onSave
@@ -66,80 +73,75 @@ export interface IAutoFormChildrenProps<T> {
   validateForm: () => Promise<IFormErrors<T> | FormikErrors<T>>;
 }
 
-export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
-  constructor(props: IAutoFormProps<T>) {
-    super(props);
-  }
-  public handleSave(value: T, formikBag: FormikActions<T>) {
-    if (typeof this.props.onSave === 'function') {
-      this.props.onSave(value, formikBag as IAutoFormActions<T>);
+export const AutoForm = <T extends any>(
+  props: IAutoFormProps<T>
+): React.ReactElement => {
+  const { getField, getPropertiesArray, getInitialValues } = useFormBuilder();
+  const initialValues = getInitialValues(
+    props.definition,
+    props.initialValue
+  ) as T;
+  const propertiesArray = getPropertiesArray(props.definition);
+  const isInitialValid =
+    typeof props.validateInitial === 'function'
+      ? Object.keys(props.validateInitial(initialValues) || {}).length === 0
+      : props.isInitialValid || false;
+
+  const handleSave = (value: T, formikBag: FormikActions<T>) => {
+    if (typeof props.onSave === 'function') {
+      props.onSave(value, formikBag as IAutoFormActions<T>);
     }
-  }
-  public render() {
-    return (
-      <FormBuilder
-        definition={this.props.definition}
-        initialValue={this.props.initialValue || ({} as T)}
-        customComponents={this.props.customComponents || {}}
-        i18nRequiredProperty={this.props.i18nRequiredProperty}
+  };
+
+  return (
+    <AutoFormContext.Provider
+      value={{
+        typemaps: {
+          ...AutoFormContextDefaultValue.typemaps,
+          ...props.customComponents,
+        },
+      }}
+    >
+      <Formik<T>
+        initialValues={initialValues}
+        onSubmit={handleSave}
+        isInitialValid={isInitialValid}
+        validate={props.validate}
       >
-        {({ initialValue, propertiesArray, getField }) => {
-          const isInitialValid =
-            typeof this.props.validateInitial === 'function'
-              ? Object.keys(this.props.validateInitial(initialValue) || {})
-                  .length === 0
-              : this.props.isInitialValid || false;
-          return (
-            <Formik<T>
-              initialValues={initialValue}
-              onSubmit={
-                this.props.onSave ||
-                (() => {
-                  /* todo right now silently ignore */
-                })
-              }
-              isInitialValid={isInitialValid}
-              validate={this.props.validate}
-            >
-              {({ values, touched, dirty, errors, ...rest }) => {
-                const propertyComponents = propertiesArray.map(property => {
-                  const err =
-                    typeof errors === 'object'
-                      ? errors
-                      : { [property.name]: errors };
-                  return getField({
-                    allFieldsRequired: this.props.allFieldsRequired || false,
-                    errors: err as IFormErrors<T>,
-                    property,
-                    value: (values || {})[property.name],
-                    ...rest,
-                  });
-                });
-                return this.props.children({
-                  dirty,
-                  errors,
-                  fields: (
-                    <React.Fragment>
-                      {this.props.i18nFieldsStatusText && (
-                        <p
-                          className="fields-status-pf"
-                          dangerouslySetInnerHTML={{
-                            __html: this.props.i18nFieldsStatusText,
-                          }}
-                        />
-                      )}
-                      {propertyComponents}
-                    </React.Fragment>
-                  ),
-                  fieldsAsArray: propertyComponents,
-                  values,
-                  ...(rest as FormikProps<T>),
-                });
-              }}
-            </Formik>
-          );
+        {({ values, touched, dirty, errors, ...rest }) => {
+          const propertyComponents = propertiesArray.map(property => {
+            const err =
+              typeof errors === 'object' ? errors : { [property.name]: errors };
+            return getField({
+              allFieldsRequired: props.allFieldsRequired || false,
+              errors: err as IFormErrors<T>,
+              property,
+              value: (values || {})[property.name],
+              ...rest,
+            });
+          });
+          return props.children({
+            dirty,
+            errors,
+            fields: (
+              <React.Fragment>
+                {props.i18nFieldsStatusText && (
+                  <p
+                    className="fields-status-pf"
+                    dangerouslySetInnerHTML={{
+                      __html: props.i18nFieldsStatusText,
+                    }}
+                  />
+                )}
+                {propertyComponents}
+              </React.Fragment>
+            ),
+            fieldsAsArray: propertyComponents,
+            values,
+            ...(rest as FormikProps<T>),
+          });
         }}
-      </FormBuilder>
-    );
-  }
-}
+      </Formik>
+    </AutoFormContext.Provider>
+  );
+};

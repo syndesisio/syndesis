@@ -10,12 +10,27 @@ const stories = storiesOf('Syndesis AutoForm UIs', module);
 
 stories.add('API Provider Return Configuration', () => {
   const errors = [
-    { displayName: 'SqlDataAccessError', name: 'SQL_DATA_ACCESS_ERROR' },
+    { displayName: 'Server Error', name: 'SERVER_ERROR' },
     {
-      displayName: 'SqlEntityNotFoundError',
+      displayName: 'Data Access Error',
+      name: 'SQL_DATA_ACCESS_ERROR',
+    },
+    {
+      displayName: 'Entity not found error',
       name: 'SQL_ENTITY_NOT_FOUND_ERROR',
     },
-    { displayName: 'SqlConnectorError', name: 'SQL_CONNECTOR_ERROR' },
+    {
+      displayName: 'SQL connector error',
+      name: 'SQL_CONNECTOR_ERROR',
+    },
+    {
+      displayName: 'Twitter connector error',
+      name: 'TWITTER_CONNECTOR_ERROR',
+    },
+    {
+      displayName: 'Salesforce connector error',
+      name: 'SALESFORCE_CONNECTOR_ERROR',
+    },
   ];
 
   const responseCodes = [
@@ -36,15 +51,17 @@ stories.add('API Provider Return Configuration', () => {
       type: 'legend',
     },
     errorResponseCodes: {
-      componentProperty: false,
       defaultValue: '{}',
-      description:
+      displayName: 'Assign HTTP response code to errors',
+      labelHint:
         'The return code to set according to different error situations',
-      displayName: 'Error Response Codes',
       mapsetKeys: [...errors],
+      mapsetOptions: {
+        i18nKeyColumnTitle: 'When the error message is',
+        i18nValueColumnTitle: 'Return this HTTP response code',
+      },
       mapsetValueDefinition: {
-        displayName: 'Status Code',
-        enum: [{ label: 'Use Default', value: '0' }, ...responseCodes],
+        enum: [{ label: 'Use Default Response', value: '0' }, ...responseCodes],
         type: 'select',
       },
       order: 4,
@@ -59,6 +76,7 @@ stories.add('API Provider Return Configuration', () => {
     },
     returnBody: {
       displayName: 'Include error message in the return body',
+      displayNameCheckbox: 'Select return body preference',
       order: 3,
       type: 'boolean',
     },
@@ -66,9 +84,9 @@ stories.add('API Provider Return Configuration', () => {
 
   const initialValue = {
     errorResponseCodes: {
-      SQL_CONNECTOR_ERROR: { status: '500' },
-      SQL_DATA_ACCESS_ERROR: { status: '403' },
-      SQL_ENTITY_NOT_FOUND_ERROR: { status: '404' },
+      SQL_CONNECTOR_ERROR: '500',
+      SQL_DATA_ACCESS_ERROR: '403',
+      SQL_ENTITY_NOT_FOUND_ERROR: '404',
     },
     httpResponseCode: '500',
     returnBody: false,

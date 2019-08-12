@@ -80,7 +80,6 @@
     "@patternfly/react-core": "^3.38.1",
     "@patternfly/react-icons": "^3.10.1",
     "@patternfly/react-styles": "^3.3.3",
-    "formik": "^1.5.4",
-    "patternfly-react": "^2.32.2"
+    "formik": "^1.5.4"
   }
 }
