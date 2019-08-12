@@ -1,0 +1,77 @@
+{
+    meta: {
+        createdAt: '2019-08-16T15:04:31.891Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/metrics/integrations',
+        method: 'GET',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '2',
+            'syndesis-mock-session': 'create-integration.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '252',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 16 Aug 2019 15:04:41 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            metricsProvider: 'prometheus',
+            messages: 239135,
+            errors: 201,
+            start: 1565895203000,
+            lastProcessed: 1565967877126,
+            topIntegrations: {
+                'i-LkyLYtmPGkOb1jvk-9tz': 153422,
+                'i-LkQCPQ9-Zt_AOvokXPUz': 34622,
+                'i-Lm5DBAw1gwj4RBCnF0Zz': 0,
+                'i-Lka9_VefJU73mIBD3t7z': 0,
+            },
+        },
+    },
+}

@@ -3,43 +3,28 @@ describe('Create an Integration', () => {
     return Math.floor(Math.random() * (100 + 1));
   };
   const nameInt = randomInteger();
-  const connectionName = 'E2E Todo Connection ' + nameInt;
+  const connectionName = 'E2E Todo Connection';
   const integrationName = 'E2E Todo Integration ' + nameInt;
-  const connectionSlug = 'e2e-todo-connection-' + nameInt;
+  const connectionSlug = 'e2e-todo-connection';
   const integrationSlug = 'e2e-todo-integration-' + nameInt;
-
-  function createConnection() {
-    cy.createConnection({ name: connectionName, slug: connectionSlug });
-  }
-
-  function deleteConnection() {
-    cy.deleteConnection({ slug: connectionSlug });
-  }
-
-  function deleteIntegration() {
-    cy.visit('/integrations');
-
-    cy.get(
-      '[data-testid|=integrations-list-item-' + integrationSlug + ']'
-    ).within(() => {
-      cy.get('.dropdown-toggle').click();
-      cy.get('[data-testid=integration-actions-delete]').click();
-    });
-    cy.get('.modal-dialog').should('be.visible');
-    cy.get('.modal-dialog').within(() => {
-      cy.get('.modal-footer')
-        .contains('Delete')
-        .click();
-    });
-  }
 
   /**
    * SETUP
    *
    * Runs once before all tests in the block
+   * Check that at least one E2E connection is available,
+   * otherwise create one.
    */
   before(function() {
-    createConnection();
+    cy.visit('/connections');
+
+    cy.get('.form-control').type(connectionName + '{enter}');
+    const testCnx = Cypress.$(
+      '[data-testid|=connection-card-' + connectionSlug + ']'
+    );
+    if (testCnx.length === 0) {
+      cy.createConnection({ name: connectionName, slug: connectionSlug });
+    }
   });
 
   /**
@@ -49,8 +34,11 @@ describe('Create an Integration', () => {
    * Delete items created in this test
    */
   after(function() {
-    //deleteIntegration();
-    //deleteConnection();
+    /**
+     * TODO: We need to keep these for now until db snapshot & restore is implemented from tests.
+     */
+    //cy.deleteIntegration({ slug: integrationSlug });
+    //cy.deleteConnection({ slug: connectionSlug });
   });
 
   /**
@@ -162,6 +150,7 @@ describe('Create an Integration', () => {
      * Use connection created earlier
      */
     cy.get('[data-testid|=connection-card-' + connectionSlug + ']')
+      .eq(0)
       .should('be.visible')
       .click();
 
@@ -210,10 +199,6 @@ describe('Create an Integration', () => {
   });
 
   it('loads integration detail page with newly created integration', () => {
-    /**
-     * May not be a good test, re-assess as very dependent on time.
-     */
-
     cy.get('.toast-pf.alert-info').should('be.visible');
     cy.location('pathname').should('contain', 'details');
   });

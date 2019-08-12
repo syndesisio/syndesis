@@ -51,7 +51,9 @@ describe('Create a Connection', () => {
 
     cy.get('[data-testid=user]').focus();
 
-    cy.get('.form-group.has-error').should('be.visible');
+    cy.get('[data-testid=connector-configuration-form]')
+      .contains('is required')
+      .should('be.visible');
 
     cy.get('[data-testid=url]')
       .clear()
@@ -120,9 +122,5 @@ describe('Create a Connection', () => {
     cy.get('[data-testid=connection-card-' + connectionSlug + '-card]').should(
       'exist'
     );
-  });
-
-  it.skip('deletes any created test connection', () => {
-    cy.deleteConnection({ slug: connectionSlug });
   });
 });

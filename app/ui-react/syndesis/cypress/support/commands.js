@@ -24,6 +24,9 @@
 // -- This is will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+/**
+ * CREATE CONNECTION
+ */
 Cypress.Commands.add('createConnection', cnx => {
   /**
    * Create To Do Connection
@@ -72,6 +75,9 @@ Cypress.Commands.add('createConnection', cnx => {
   cy.get('[data-testid|=connection-card-' + cnx.slug + ']').should('exist');
 });
 
+/**
+ * DELETE CONNECTION
+ */
 Cypress.Commands.add('deleteConnection', cnx => {
   cy.visit('/connections');
 
@@ -85,6 +91,9 @@ Cypress.Commands.add('deleteConnection', cnx => {
     .click();
 });
 
+/**
+ * DELETE INTEGRATION
+ */
 Cypress.Commands.add('deleteIntegration', int => {
   cy.visit('/integrations');
 

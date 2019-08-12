@@ -1,0 +1,67 @@
+{
+    meta: {
+        createdAt: '2019-08-16T15:04:10.374Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+    },
+    req: {
+        url: '/api/v1/connectors/sql',
+        method: 'GET',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '8',
+            'syndesis-mock-session': 'create-connection.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-encoding': [
+                'gzip',
+            ],
+            'content-length': [
+                '1251',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 16 Aug 2019 15:04:11 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: 'H4sIAAAAAAAAAO1Y227jNhD9FYJ9SAsoQrfdLgq/eW21m2LjdSNn0UURFJQ0tpmVSIWXJG6Qf++QuthWnIsdB0iL5sW6DIdzDmfOjHJDrQZNez8FlGe0R/VFTgN6CUpzKWjv3duAstTgNdr8edPaHKZSCEiNVGgtWAH4+Ehcyq9A4t8/4rMMdKp4abyXlVfESCITw7gIiMblEBBbZszgr1QkgxwMELxn4YoT3KWHe4vSmiG+iuesBPfkKxcunnMtxaFO51AwehtQac3TDEslS1BmMYQpF9yFGhsoK6A1JhexNhheAcLQdgl3lN3QCwtq4S6kygBjfONCLhWkuAD3m7JcAz7iuszZYrTZ40xJW+LzVBYFchXQc3bJJgsXt78McyZmYWwUFzN8WyMpmZnjXc4SyD9wdNRx7GhOgMA1pBZjCcmACYJn5ognnkhSMoURGTxpgiFP+TVkJFmQg943B457DDmFucw9MDrFw4FrVpQ5OIvjL+P+Sf941D+ODtBWwYXlykE2yiJiDakC0xJgKjS6woDEJ8yk8xXefnC8TZnNzWeWW2frV9In0PneuapTaHc260ToMHqqwVGDRCE1LbWaODKORnF0MgnI6XjYn0QBGUYfo0mE1BKPyfFfBUUKhMUdb0peaXLFzZwkK0GH2/IXUBC28Enqg8U3I+lqdo2622D5+gtm6/K924Lent3edos0EpgMhJFOIs2ZcbfK1ME3yGNEPGgZcNVbcRCi88AdQCkFOohduUGrLK1uDCyWf8H/xvxDLJTLUC8EBsR12NqEuCZMW8MwvsgHd9fTM4Ri2Mz7yRZYuTylZ41u1Ye/qldYPIjUQZ5IT1Srah7nJm0bg+Iy46knh6OaYU5yn2DrHDZ2LM8X3q6rettqm0AS/xe1zaK2g/I4njKbg4quEZKumtwDOvTue/x7ig5VB78GXWhbgFoHn8t1wLUEd1APAR0jVHMFIEgdMyIg31bY8fK7dfR1TJvhZ1ZV2bpVzaMjq4TGX42EaGzXFkWL6brwX7bMY1eI+631X5QsutWO80f2wChTGWAPkCmegIL75hp2x/J1TC/jJhziH3QrvY22yuGb5WmOm4ZYl9Xj6d/daa+N2G1C5BTz8u6ZbFEHGqfL1DjuMM8xeHMf6AbiY6gnjZslXowrs2m37LfTvA5C0kTr9A8jxPGj2AL1nGcZbKr92NNxD6n3FnddNXupcefopRu6L/HH+3qXgW2b/LMk4CWa/Cuo/T3UwtMr/8H+3xb+Pf3/v931/x16N3663j101q9Y7lCDXkLzqsHmbLn8ErNyyp3PVuecpiRMb9ABpvUVjr8rU/CPwXPEoPG3TBE8J6u4b+o7DQHtFBGseFpNoGZP/2Huzjer0ZKaMGTwoQSq7jZ+K6DcLol5+xxi4srbviajVQdrItJAr6LfZjpqgVuVr3//7Y560B4AOT35uO+58Lfh+4Hz23SI5tx3+TK0GtT6p+DuqE/R10vMwY3fXRN9M3avlCWghInUqwIOEbXJcf9zNKL1v4Y3Cl2vvTpEyeu9CX8+jEf9cfzh08RPYrWj6I9JNIqPPo3+mvR/bRyeZ0l6mCmOeuX1q6PXNnG3SYWWCdRrm+Rcz0mBjZvNQDuoPPXGqABgdM+prr6cPVet/QQmrUphTaD/Abf5z4csFwAA',
+    },
+}
