@@ -12,4 +12,5 @@ export * from './ViewInfoListSkeleton';
 export * from './ViewList';
 export * from './ViewListItem';
 export * from './ViewListSkeleton';
+export * from './ViewOutputToolbar';
 export * from './ViewsImportLayout';

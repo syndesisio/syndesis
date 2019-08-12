@@ -22,6 +22,7 @@
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
     "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
     "virtualizationDetailPageTitle": "$t(shared:DataVirtualization)",
+    "virtualizationsDisabled": "Le virtualizzazioni non sono abilitate nella tua installazione. Fare riferimento alla documentazione per istruzioni su come abilitarli.",
     "views": "Views",
     "relationship": "Relationship",
     "sqlClient": "SQL Client",
@@ -47,8 +48,18 @@
     "viewDescriptionDisplay": "Description",
     "viewDescriptionValidationError": "View description cannot contain a quote",
     "viewEditor": {
-      "viewOutputTab": "View Output",
-      "sqlTab": "SQL"
+      "ActiveFilter": "Filtro Attivo:",
+      "AddColumn": "Aggiungi Colonna",
+      "applyColumnFilter": "Applica filtro colonna",
+      "columnFilterSearchString": "Stringa di ricerca del filtro di colonna",
+      "RemoveColumn": "Rimuovi Colonna",
+      "i18nRemoveColumnDialogConfirmMessage": "Sei sicuro di voler rimuovere queste colonne di output?",
+      "removeColumnDialogHeader": "Rimuovere le Colonne?",
+      "removeColumnDialogMessage": "Le seguenti colonne verranno rimosse dalla tabella di output:",
+      "reorderColumnDown": "Riordina colonna verso il basso",
+      "reorderColumnUp": "Riordina colonna in alto",
+      "sqlTab": "SQL",
+      "viewOutputTab": "Visualizza Produzione"
     },
     "viewNameDisplay": "View Name",
     "viewSqlFormRowLimit": "Row Limit",

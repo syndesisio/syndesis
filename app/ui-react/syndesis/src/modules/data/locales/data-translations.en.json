@@ -48,8 +48,18 @@
     "viewDescriptionDisplay": "Description",
     "viewDescriptionValidationError": "View description cannot contain a quote",
     "viewEditor": {
-      "viewOutputTab": "View Output",
-      "sqlTab": "SQL"
+      "ActiveFilter": "Active Filter:",
+      "AddColumn": "Add Column",
+      "applyColumnFilter": "Apply column filter",
+      "columnFilterSearchString": "Column filter search string",
+      "RemoveColumn": "Remove Column",
+      "i18nRemoveColumnDialogConfirmMessage": "Are you sure you want to remove these output columns?",
+      "removeColumnDialogHeader": "Remove column(s)?",
+      "removeColumnDialogMessage": "The following columns will be removed from the output table:",
+      "reorderColumnDown": "Reorder column down",
+      "reorderColumnUp": "Reorder column up",
+      "sqlTab": "SQL",
+      "viewOutputTab": "View Output"
     },
     "viewNameDisplay": "View Name",
     "viewSqlFormRowLimit": "Row Limit",
