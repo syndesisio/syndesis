@@ -15,9 +15,9 @@ operator-sdk test local ./tests/e2e --up-local --local-operator-flags "run --ope
 
 OR
 
-You can run from an existing docker image with:
+Before running, replace `REPLACE_IMAGE` in the `deploy/operator.yaml` with the image you have built. You can then run from an existing docker image with:
 
 ```$xslt
-test local ./tests/e2e^C
+test local ./tests/e2e
 ```
 For a full list of available options have a look at the [SDK Cli reference](https://github.com/operator-framework/operator-sdk/blob/master/doc/sdk-cli-reference.md#test)
