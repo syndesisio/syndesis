@@ -45,6 +45,7 @@ minishift::usage() {
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --deploy-latest           Deploy latest tags from dockerhub.
+    --nodev                   Do not set the devImages flag in CR (deploys all images)
 EOT
 }
 
@@ -161,7 +162,13 @@ minishift::run() {
         if [ -z "$route" ]; then
             route="syndesis.$(minishift ip).nip.io"
         fi
-        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console" "with_dev_images")
+
+        local dev_images="with_dev_images"
+        if [ $(hasflag --nodev) ] ; then
+            dev_images=""
+        fi
+
+        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console" "$dev_images")
         check_error "$result"
 
         # Wait until everything's up and finally patch imagestreams for triggers
