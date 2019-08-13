@@ -27,7 +27,7 @@ spec:
       "gnetId": null,
       "graphTooltip": 0,
       "id": 23,
-      "iteration": 1562604595947,
+      "iteration": 1565392375219,
       "links": [
         {
           "icon": "external link",
@@ -182,7 +182,7 @@ spec:
           ],
           "targets": [
             {
-              "expr": "sort(\n  topk(5,\n    (\n      sum(rate(org_apache_camel_ExchangesFailed{namespace=\"myproject\", job=\"syndesis-integrations\", type=\"routes\"}[5m])) by (pod)\n      / \n      sum(rate(org_apache_camel_ExchangesTotal{namespace=\"myproject\", job=\"syndesis-integrations\", type=\"routes\"}[5m])) by (pod)\n    )\n  )\n)",
+              "expr": "sort(\n  topk(5,\n    sum(\n      rate(org_apache_camel_ExchangesFailed{namespace=\"$namespace\", job=\"syndesis-integrations\", type=\"routes\"}[5m])\n      /\n      rate(org_apache_camel_ExchangesTotal{namespace=\"$namespace\", job=\"syndesis-integrations\", type=\"routes\"}[5m])\n    ) by (pod) * 100\n  )\n)",
               "format": "table",
               "instant": true,
               "intervalFactor": 1,
@@ -389,8 +389,8 @@ spec:
           {
             "allValue": null,
             "current": {
-              "text": "myproject",
-              "value": "myproject"
+              "text": "syndesis",
+              "value": "syndesis"
             },
             "datasource": "Prometheus",
             "definition": "label_values(up{job=\"syndesis-integrations\"}, namespace)",
@@ -445,5 +445,5 @@ spec:
       "timezone": "",
       "title": "Syndesis - Integrations - Home",
       "uid": "5kt-N6VWz",
-      "version": 1
+      "version": 2
     }
