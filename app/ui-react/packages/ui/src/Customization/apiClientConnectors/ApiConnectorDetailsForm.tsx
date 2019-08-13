@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import { Card } from 'patternfly-react';
 import * as React from 'react';
 import './ApiConnectorDetailsForm.css';
@@ -53,11 +54,7 @@ export class ApiConnectorDetailsForm extends React.Component<
           </Card.Heading>
         )}
         <Card.Body className="api-connector-details-form__body">
-          <form
-            className="required-pf"
-            role="form"
-            onSubmit={this.props.handleSubmit}
-          >
+          <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
             <fieldset disabled={!this.props.isEditing}>
               <div className="form-group api-connector-details-form__iconContainer">
                 <label className="control-label" htmlFor="iconFileInput">
@@ -82,9 +79,9 @@ export class ApiConnectorDetailsForm extends React.Component<
                   />
                 </div>
               </div>
-              {this.props.fields}
             </fieldset>
-          </form>
+            {this.props.fields}
+          </Form>
         </Card.Body>
         <Card.Footer>{this.props.footer}</Card.Footer>
       </Card>

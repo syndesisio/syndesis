@@ -1,10 +1,15 @@
-import { Popover } from '@patternfly/react-core';
+import {
+  FormGroup,
+  FormSelect,
+  FormSelectOption,
+  Popover,
+} from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
-import { AutoFormHelpBlock } from './AutoFormHelpBlock';
 import { getValidationState, toValidHtmlId } from './helpers';
+
+import './FormSelectComponent.css';
 
 function getSelectedValues(select: HTMLSelectElement) {
   return Array.from(select.selectedOptions).map(option => option.value);
@@ -16,8 +21,13 @@ export const FormSelectComponent: React.FunctionComponent<
   const isMultiple =
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
   const { onChange, onBlur, value, ...field } = props.field;
-  const updatedValue = isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
-  const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const id = toValidHtmlId(field.name);
+  const updatedValue =
+    isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
+  const handleChange = (
+    _: string,
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     if (isMultiple) {
       const newValue = getSelectedValues(event.currentTarget);
       props.form.setFieldValue(props.field.name, newValue);
@@ -25,54 +35,56 @@ export const FormSelectComponent: React.FunctionComponent<
       onChange(event);
     }
   };
+  const handleBlur = (event: React.ChangeEvent<HTMLSelectElement>) =>
+    handleChange('', event);
   return (
     <FormGroup
+      label={
+        props.property.displayName ? (
+          <>
+            {props.property.displayName}
+            {props.property.labelHint && (
+              <Popover
+                aria-label={props.property.labelHint}
+                bodyContent={props.property.labelHint}
+              >
+                <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+              </Popover>
+            )}
+          </>
+        ) : (
+          undefined
+        )
+      }
       {...props.property.formGroupAttributes}
-      controlId={toValidHtmlId(field.name)}
-      validationState={getValidationState(props)}
+      fieldId={id}
+      isRequired={props.property.required}
+      isValid={getValidationState(props)}
+      helperText={props.property.description}
+      helperTextInvalid={props.form.errors[props.field.name]}
     >
-      {props.property.displayName && (
-        <ControlLabel
-          className={
-            props.property.required && !props.allFieldsRequired
-              ? 'required-pf'
-              : ''
-          }
-          {...props.property.controlLabelAttributes}
-        >
-          {props.property.displayName}
-        </ControlLabel>
-      )}
-      {props.property.labelHint && (
-        <Popover
-          aria-label={props.property.labelHint}
-          bodyContent={props.property.labelHint}
-        >
-          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-        </Popover>
-      )}
-      <FormControl
+      <FormSelect
         size={isMultiple ? 12 : undefined}
         {...props.property.fieldAttributes}
-        {...props.field}
+        {...field}
+        className={'autoform-select'}
         onChange={handleChange}
-        onBlur={handleChange}
-        data-testid={toValidHtmlId(props.field.name)}
-        disabled={props.form.isSubmitting || props.property.disabled}
-        componentClass="select"
+        onBlur={handleBlur}
+        data-testid={id}
+        id={id}
+        aria-label={props.property.displayName || props.field.name}
+        isDisabled={props.form.isSubmitting || props.property.disabled}
         title={props.property.controlHint}
         value={updatedValue}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
-          <option key={`${index}-${opt.label}`} value={opt.value}>
-            {opt.label}
-          </option>
+          <FormSelectOption
+            key={`${index}-${opt.label}`}
+            value={opt.value}
+            label={opt.label}
+          />
         ))}
-      </FormControl>
-      <AutoFormHelpBlock
-        error={props.form.errors[props.field.name] as string}
-        description={props.property.description}
-      />
+      </FormSelect>
     </FormGroup>
   );
 };

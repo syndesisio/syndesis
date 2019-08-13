@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import * as React from 'react';
 import { Container } from '../../Layout';
 
@@ -27,7 +28,11 @@ export const SqlClientForm: React.FunctionComponent<
           <div className="row row-cards-pf">
             <div className="card-pf">
               <div className="card-pf-body">
-                <Container>{props.children}</Container>
+                <Container>
+                  <Form isHorizontal={true} onSubmit={props.handleSubmit}>
+                    {props.children}
+                  </Form>
+                </Container>
               </div>
             </div>
           </div>

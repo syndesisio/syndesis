@@ -1,49 +1,57 @@
-import { Popover } from '@patternfly/react-core';
+import { FormGroup, Popover, TextArea } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
-import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
-import { AutoFormHelpBlock } from './AutoFormHelpBlock';
 import { getValidationState, toValidHtmlId } from './helpers';
 
 export const FormTextAreaComponent: React.FunctionComponent<
   IFormControlProps
-> = props => (
-  <FormGroup
-    {...props.property.formGroupAttributes}
-    controlId={toValidHtmlId(props.field.name)}
-    validationState={getValidationState(props)}
-  >
-    {props.property.displayName && (
-      <ControlLabel
-        className={
-          props.property.required && !props.allFieldsRequired
-            ? 'required-pf'
-            : ''
-        }
-      >
-        {props.property.displayName}
-      </ControlLabel>
-    )}
-    {props.property.labelHint && (
-      <Popover
-        aria-label={props.property.labelHint}
-        bodyContent={props.property.labelHint}
-      >
-        <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-      </Popover>
-    )}
-    <FormControl
-      {...props.property.fieldAttributes}
-      {...props.field}
-      data-testid={toValidHtmlId(props.field.name)}
-      disabled={props.form.isSubmitting || props.property.disabled}
-      componentClass="textarea"
-      title={props.property.controlHint}
-    />
-    <AutoFormHelpBlock
-      error={props.form.errors[props.field.name] as string}
-      description={props.property.description}
-    />
-  </FormGroup>
-);
+> = props => {
+  const { value, onChange, ...field } = props.field;
+  const id = toValidHtmlId(field.name);
+  const handleChange = (
+    _: string,
+    event: React.FormEvent<HTMLInputElement>
+  ) => {
+    onChange(event);
+  };
+  return (
+    <FormGroup
+      label={
+        props.property.displayName ? (
+          <>
+            {props.property.displayName || ''}
+            {props.property.labelHint && (
+              <Popover
+                aria-label={props.property.labelHint}
+                bodyContent={props.property.labelHint}
+              >
+                <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+              </Popover>
+            )}
+          </>
+        ) : (
+          undefined
+        )
+      }
+      {...props.property.formGroupAttributes}
+      fieldId={id}
+      isRequired={props.property.required}
+      isValid={getValidationState(props)}
+      helperText={props.property.description}
+      helperTextInvalid={props.form.errors[props.field.name]}
+    >
+      <TextArea
+        {...props.property.fieldAttributes}
+        {...props.field}
+        defaultValue={value}
+        data-testid={id}
+        id={id}
+        aria-label={props.property.displayName || field.name}
+        disabled={props.form.isSubmitting || props.property.disabled}
+        onChange={handleChange}
+        title={props.property.controlHint}
+      />
+    </FormGroup>
+  );
+};

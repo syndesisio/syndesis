@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { object, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -166,9 +167,6 @@ export const initialValue = {
 };
 
 stories.add('Kitchen Sink', () => {
-  const onSave = v => {
-    alert('Got value: ' + JSON.stringify(v, undefined, 2));
-  };
   const validate = v => {
     const errors: any = {};
     if (v.clientID === 'foo') {
@@ -187,7 +185,10 @@ stories.add('Kitchen Sink', () => {
         )}
         validate={validate}
         validateInitial={validate}
-        onSave={onSave}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />

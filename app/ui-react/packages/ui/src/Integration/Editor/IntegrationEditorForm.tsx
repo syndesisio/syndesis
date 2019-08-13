@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
@@ -37,57 +38,53 @@ export class IntegrationEditorForm extends React.Component<
     return (
       <PageSection>
         <Container>
-          <form
-            className="form-horizontal required-pf"
-            role="form"
-            onSubmit={this.props.handleSubmit}
-          >
-            <div className="row row-cards-pf">
-              <div className="card-pf">
-                {this.props.i18nFormTitle && (
-                  <div className="card-pf-title">
-                    {this.props.i18nFormTitle}
-                  </div>
+          <div className="row row-cards-pf">
+            <div className="card-pf">
+              {this.props.i18nFormTitle && (
+                <div className="card-pf-title">{this.props.i18nFormTitle}</div>
+              )}
+              {this.props.error ? (
+                <Alert type={'warning'}>
+                  <span>{this.props.error}</span>
+                </Alert>
+              ) : null}
+              <div className="card-pf-body">
+                <Container>
+                  <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
+                    {this.props.children}
+                  </Form>
+                </Container>
+              </div>
+              <div className="card-pf-footer">
+                {this.props.backActionHref && (
+                  <>
+                    <ButtonLink
+                      id={'integration-editor-form-back-button'}
+                      href={this.props.backActionHref}
+                    >
+                      <i className={'fa fa-chevron-left'} />{' '}
+                      {this.props.i18nBackAction}
+                    </ButtonLink>
+                    &nbsp;
+                  </>
                 )}
-                {this.props.error ? (
-                  <Alert type={'warning'}>
-                    <span>{this.props.error}</span>
-                  </Alert>
-                ) : null}
-                <div className="card-pf-body">
-                  <Container>{this.props.children}</Container>
-                </div>
-                <div className="card-pf-footer">
-                  {this.props.backActionHref && (
+                <ButtonLink
+                  id={'integration-editor-form-next-button'}
+                  onClick={this.props.submitForm}
+                  disabled={!this.props.isValid || this.props.isLoading}
+                  as={'primary'}
+                >
+                  {this.props.i18nNext}
+                  {this.props.isLoading ? (
                     <>
-                      <ButtonLink
-                        id={'integration-editor-form-back-button'}
-                        href={this.props.backActionHref}
-                      >
-                        <i className={'fa fa-chevron-left'} />{' '}
-                        {this.props.i18nBackAction}
-                      </ButtonLink>
-                      &nbsp;
+                      &nbsp;&nbsp;
+                      <Loader inline={true} size={'xs'} />
                     </>
-                  )}
-                  <ButtonLink
-                    id={'integration-editor-form-next-button'}
-                    onClick={this.props.submitForm}
-                    disabled={!this.props.isValid || this.props.isLoading}
-                    as={'primary'}
-                  >
-                    {this.props.i18nNext}
-                    {this.props.isLoading ? (
-                      <>
-                        &nbsp;&nbsp;
-                        <Loader inline={true} size={'xs'} />
-                      </>
-                    ) : null}
-                  </ButtonLink>
-                </div>
+                  ) : null}
+                </ButtonLink>
               </div>
             </div>
-          </form>
+          </div>
         </Container>
       </PageSection>
     );

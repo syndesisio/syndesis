@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { FormBuilder } from '../FormBuilder';
 import { IFormArrayControlProps, IFormArrayDefinitionOptions } from '../models';
+import { useFormBuilder } from '../useFormBuilder';
 import { getNewArrayRow } from '../utils';
 import { toValidHtmlId } from './helpers';
 import { TextButton } from './TextButton';
@@ -21,6 +21,7 @@ export const FormArrayComponent: React.FunctionComponent<
       </div>
     );
   }
+  const { getField, getPropertiesArray, getInitialValues } = useFormBuilder();
   const definition = props.property.arrayDefinition;
   const options =
     props.property.arrayDefinitionOptions ||
@@ -38,87 +39,77 @@ export const FormArrayComponent: React.FunctionComponent<
     <div id={myId} data-testid={myId}>
       {values.map((value: any, index: number) => {
         const fieldName = `${props.name}[${index}]`;
+        const rowValue = getInitialValues(definition, value);
+        const propertiesArray = getPropertiesArray(definition);
+        const titleKey = `${fieldName}-title`;
+        const controlGroupName = `${fieldName}-array-controls`;
         return (
-          <FormBuilder
-            key={fieldName}
-            definition={definition}
-            initialValue={value}
-            customComponents={props.customComponents}
-            i18nRequiredProperty={''}
-          >
-            {({ initialValue: rowValue, propertiesArray, getField }) => {
-              const titleKey = `${fieldName}-title`;
-              const controlGroupName = `${fieldName}-array-controls`;
-              return (
-                <fieldset>
-                  <div className="form-array-fields">
-                    {options.rowTitle && (
-                      <div key={titleKey} {...arrayRowTitleAttributes}>
-                        <h5 className="form-array-control__row-title">
-                          <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
-                        </h5>
-                      </div>
+          <fieldset key={fieldName}>
+            <div className="form-array-fields">
+              {options.rowTitle && (
+                <div key={titleKey} {...arrayRowTitleAttributes}>
+                  <h5 className="form-array-control__row-title">
+                    <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
+                  </h5>
+                </div>
+              )}
+              {propertiesArray.map(property =>
+                getField({
+                  allFieldsRequired: props.allFieldsRequired || false,
+                  key: `${fieldName}.${property.name}`,
+                  name: `${fieldName}.${property.name}`,
+                  property: {
+                    controlLabelAttributes,
+                    fieldAttributes,
+                    formGroupAttributes,
+                    ...property,
+                  },
+                  value: rowValue[property.name],
+                })
+              )}
+              <div
+                key={controlGroupName}
+                {...formGroupAttributes}
+                {...arrayControlAttributes}
+              >
+                <label
+                  htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
+                  className="control-label"
+                  {...controlLabelAttributes}
+                />
+                <div id={toValidHtmlId(`${controlGroupName}-control`)}>
+                  <div className="form-array-control__array-controls">
+                    {options.showSortControls && (
+                      <>
+                        <TextButton
+                          onClick={() => {
+                            props.move(index, index - 1);
+                          }}
+                          enable={index > 0}
+                        >
+                          <i className="fa fa-arrow-circle-o-up" />
+                        </TextButton>
+                        <TextButton
+                          onClick={() => {
+                            props.move(index, index + 1);
+                          }}
+                          enable={index < values.length - 1}
+                        >
+                          <i className="fa fa-arrow-circle-o-down" />
+                        </TextButton>
+                      </>
                     )}
-                    {propertiesArray.map(property =>
-                      getField({
-                        allFieldsRequired: props.allFieldsRequired || false,
-                        key: `${fieldName}.${property.name}`,
-                        name: `${fieldName}.${property.name}`,
-                        property: {
-                          controlLabelAttributes,
-                          fieldAttributes,
-                          formGroupAttributes,
-                          ...property,
-                        },
-                        value: rowValue[property.name],
-                      })
-                    )}
-                    <div
-                      key={controlGroupName}
-                      {...formGroupAttributes}
-                      {...arrayControlAttributes}
+                    <TextButton
+                      onClick={() => props.remove(index)}
+                      enable={values.length > minElements}
                     >
-                      <label
-                        htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
-                        className="control-label"
-                        {...controlLabelAttributes}
-                      />
-                      <div id={toValidHtmlId(`${controlGroupName}-control`)}>
-                        <div className="form-array-control__array-controls">
-                          {options.showSortControls && (
-                            <>
-                              <TextButton
-                                onClick={() => {
-                                  props.move(index, index - 1);
-                                }}
-                                enable={index > 0}
-                              >
-                                <i className="fa fa-arrow-circle-o-up" />
-                              </TextButton>
-                              <TextButton
-                                onClick={() => {
-                                  props.move(index, index + 1);
-                                }}
-                                enable={index < values.length - 1}
-                              >
-                                <i className="fa fa-arrow-circle-o-down" />
-                              </TextButton>
-                            </>
-                          )}
-                          <TextButton
-                            onClick={() => props.remove(index)}
-                            enable={values.length > minElements}
-                          >
-                            <i className="fa fa-trash-o" />
-                          </TextButton>
-                        </div>
-                      </div>
-                    </div>
+                      <i className="fa fa-trash-o" />
+                    </TextButton>
                   </div>
-                </fieldset>
-              );
-            }}
-          </FormBuilder>
+                </div>
+              </div>
+            </div>
+          </fieldset>
         );
       })}
       <TextButton onClick={() => props.push(getNewArrayRow(definition))}>

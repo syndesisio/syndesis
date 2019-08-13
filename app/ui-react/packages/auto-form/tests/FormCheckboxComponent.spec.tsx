@@ -40,6 +40,6 @@ export default describe('FormCheckboxComponent', () => {
     const { getByTestId } = render(form);
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("true");
+    ).toEqual("on"); // pf4 react checkbox sets this to 'on'
   });
 });

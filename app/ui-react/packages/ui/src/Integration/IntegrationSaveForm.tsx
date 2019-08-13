@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Container, Loader, PageSection } from '../Layout';
 
@@ -46,9 +47,8 @@ export const IntegrationSaveForm: React.FunctionComponent<
 }) => {
   return (
     <PageSection>
-      <form
-        className="form-horizontal required-pf"
-        role="form"
+      <Form
+        isHorizontal={true}
         onSubmit={handleSubmit}
         style={{
           margin: 'auto',
@@ -84,7 +84,7 @@ export const IntegrationSaveForm: React.FunctionComponent<
             </div>
           </div>
         </div>
-      </form>
+      </Form>
     </PageSection>
   );
 };

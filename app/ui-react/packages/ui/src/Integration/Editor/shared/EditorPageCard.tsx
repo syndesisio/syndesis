@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 
@@ -19,7 +20,9 @@ export class EditorPageCard extends React.Component<IEditorPageCardProps> {
                 <div className="card-pf-header">{this.props.header}</div>
               )}
               <div className="card-pf-body">
-                <Container>{this.props.children}</Container>
+                <Container>
+                  <Form isHorizontal={true}>{this.props.children}</Form>
+                </Container>
               </div>
               <div className="card-pf-footer">
                 <ButtonLink

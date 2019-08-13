@@ -1,6 +1,8 @@
+import { ActionGroup, Button, Form } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IFormWrapperProps {
+  isHorizontal?: boolean;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   fields: JSX.Element;
 }
@@ -8,18 +10,22 @@ export interface IFormWrapperProps {
 export class FormWrapper extends React.Component<IFormWrapperProps> {
   public render() {
     return (
-      <form onSubmit={this.props.onSubmit}>
-        <div className="container-fluid">
-          <p className="fields-status-pf">
-            The fields marked with <span className="required-pf">*</span> are
-            required.
-          </p>
-          {this.props.fields}
-        </div>
-        <button type="submit" className="btn btn-primary">
-          Submit
-        </button>
-      </form>
+      <Form
+        isHorizontal={
+          typeof this.props.isHorizontal === 'boolean'
+            ? this.props.isHorizontal
+            : true
+        }
+        onSubmit={this.props.onSubmit}
+      >
+        {this.props.fields}
+        <ActionGroup>
+          <Button type={'submit'} variant={'primary'}>
+            Submit
+          </Button>
+          <Button variant={'secondary'}>Cancel</Button>
+        </ActionGroup>
+      </Form>
     );
   }
 }

@@ -52,9 +52,14 @@ stories.add('Minimal Form Definition', () => {
           SomeTextField: 'Some Value',
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
-        {({ fields, handleSubmit }) => <>{fields}</>}
+        {({ fields, handleSubmit }) => (
+          <FormWrapper onSubmit={handleSubmit} fields={fields} />
+        )}
       </AutoForm>
     </StoryWrapper>
   );
@@ -63,6 +68,13 @@ stories.add('Minimal Form Definition', () => {
 stories.add('Text', () => {
   const definition = {
     SomeTextField: {
+      displayName: text('Display Name', 'The Label'),
+      labelHint: 'This is shown for the label hint text',
+      placeholder: 'This is the placeholder text',
+      type: 'string',
+    },
+    SomeTextFieldDataList: {
+      dataList: ['Some thing', 'Something else', 'Stuff'],
       displayName: text('Display Name', 'The Label'),
       labelHint: 'This is shown for the label hint text',
       placeholder: 'This is the placeholder text',
@@ -81,7 +93,10 @@ stories.add('Text', () => {
           SomeTextField: 'Some Value',
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -111,7 +126,10 @@ stories.add('Number', () => {
           SomeNumberField: 55,
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -129,12 +147,12 @@ stories.add('Checkbox', () => {
       type: 'boolean',
     },
     SomeOtherBooleanField: {
-      displayName: 'String containing "false"',
+      displayName: `String containing "false"`,
       labelHint: 'This is shown for the label hint text',
       type: 'boolean',
     },
     SomeThirdBooleanField: {
-      displayName: 'String containing "true"',
+      displayName: `String containing "true"`,
       labelHint: 'This is shown for the label hint text',
       type: 'boolean',
     },
@@ -153,7 +171,10 @@ stories.add('Checkbox', () => {
           SomeThirdBooleanField: 'True',
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -189,7 +210,10 @@ stories.add('Textarea', () => {
             'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin dolor purus, id pharetra augue maximus efficitur. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus elementum tortor sem, ut vulputate sapien tristique in. Curabitur venenatis mauris nunc, ut varius libero tincidunt sed. Aliquam porttitor viverra faucibus. Curabitur sodales nisi sem, id pulvinar ante luctus eget. Cras vitae ligula pretium felis varius pulvinar. Phasellus vel sem gravida diam venenatis cursus quis sed nisi. Cras a erat eget nibh consequat feugiat nec et enim. Sed finibus tristique diam, non sodales nulla elementum vel. Curabitur cursus lacus vel vestibulum scelerisque. Curabitur tellus sapien, pretium in metus non, fringilla consequat neque.',
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -265,7 +289,10 @@ stories.add('Select', () => {
           SomeField: 'three',
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
@@ -308,7 +335,10 @@ stories.add('Duration', () => {
           duration3: number('Duration 3', 2 * 1000 * 60),
         })}
         validate={action('validate')}
-        onSave={action('onSave')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
       >
         {({ fields, handleSubmit }) => (
           <FormWrapper onSubmit={handleSubmit} fields={fields} />
