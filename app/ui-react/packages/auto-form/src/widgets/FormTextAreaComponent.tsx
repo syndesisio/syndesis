@@ -10,6 +10,7 @@ export const FormTextAreaComponent: React.FunctionComponent<
   const { value, onChange, ...field } = props.field;
   const id = toValidHtmlId(field.name);
   const handleChange = (
+    // tslint:disable-next-line:no-shadowed-variable
     value: string,
     event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
