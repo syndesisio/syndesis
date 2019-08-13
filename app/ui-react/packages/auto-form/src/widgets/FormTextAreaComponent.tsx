@@ -10,8 +10,8 @@ export const FormTextAreaComponent: React.FunctionComponent<
   const { value, onChange, ...field } = props.field;
   const id = toValidHtmlId(field.name);
   const handleChange = (
-    _: string,
-    event: React.FormEvent<HTMLInputElement>
+    value: string,
+    event: React.ChangeEvent<HTMLTextAreaElement>
   ) => {
     onChange(event);
   };

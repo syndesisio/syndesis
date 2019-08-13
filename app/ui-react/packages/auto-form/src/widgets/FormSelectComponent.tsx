@@ -25,8 +25,8 @@ export const FormSelectComponent: React.FunctionComponent<
   const updatedValue =
     isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
   const handleChange = (
-    _: string,
-    event: React.ChangeEvent<HTMLSelectElement>
+    value: string,
+    event: React.FormEvent<HTMLSelectElement>
   ) => {
     if (isMultiple) {
       const newValue = getSelectedValues(event.currentTarget);
@@ -35,7 +35,7 @@ export const FormSelectComponent: React.FunctionComponent<
       onChange(event);
     }
   };
-  const handleBlur = (event: React.ChangeEvent<HTMLSelectElement>) =>
+  const handleBlur = (event: React.FormEvent<HTMLSelectElement>) =>
     handleChange('', event);
   return (
     <FormGroup

@@ -1,6 +1,6 @@
 .form-array-control__row-title {
-  text-align: right;
-  margin-top: 4px;
+  /* text-align: right;
+  margin-top: 4px; */
 }
 .form-array-control__array-controls {
   white-space: nowrap ;
@@ -8,4 +8,9 @@
 
 .form-array-control__array-controls .fa {
   font-size: 20px;
+}
+
+.form-array-layout {
+  display: grid;
+  grid-gap: var(--pf-c-form--GridGap);
 }

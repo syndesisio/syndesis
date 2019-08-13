@@ -36,7 +36,7 @@ export const FormArrayComponent: React.FunctionComponent<
     props.form.values[props.name] || props.property.defaultValue || [];
   const myId = toValidHtmlId(props.name);
   return (
-    <div id={myId} data-testid={myId}>
+    <div id={myId} data-testid={myId} className="form-array-layout">
       {values.map((value: any, index: number) => {
         const fieldName = `${props.name}[${index}]`;
         const rowValue = getInitialValues(definition, value);
@@ -44,15 +44,15 @@ export const FormArrayComponent: React.FunctionComponent<
         const titleKey = `${fieldName}-title`;
         const controlGroupName = `${fieldName}-array-controls`;
         return (
-          <fieldset key={fieldName}>
-            <div className="form-array-fields">
-              {options.rowTitle && (
-                <div key={titleKey} {...arrayRowTitleAttributes}>
-                  <h5 className="form-array-control__row-title">
-                    <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
-                  </h5>
-                </div>
-              )}
+          <section key={fieldName} className="form-array-layout">
+            {options.rowTitle && (
+              <div key={titleKey} {...arrayRowTitleAttributes}>
+                <h5 className="form-array-control__row-title pf-c-title">
+                  <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
+                </h5>
+              </div>
+            )}
+            <div className="form-array-fields form-array-layout">
               {propertiesArray.map(property =>
                 getField({
                   allFieldsRequired: props.allFieldsRequired || false,
@@ -67,7 +67,8 @@ export const FormArrayComponent: React.FunctionComponent<
                   value: rowValue[property.name],
                 })
               )}
-              <div
+            </div>
+            <div
                 key={controlGroupName}
                 {...formGroupAttributes}
                 {...arrayControlAttributes}
@@ -108,8 +109,7 @@ export const FormArrayComponent: React.FunctionComponent<
                   </div>
                 </div>
               </div>
-            </div>
-          </fieldset>
+          </section>
         );
       })}
       <TextButton onClick={() => props.push(getNewArrayRow(definition))}>
