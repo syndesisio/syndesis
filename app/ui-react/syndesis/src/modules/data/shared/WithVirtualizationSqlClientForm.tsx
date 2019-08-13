@@ -1,7 +1,7 @@
 import { useVirtualizationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition, IFormValue } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { QueryResults, ViewDefinition } from '@syndesis/models';
+import { QueryResults, ViewDefinition, ViewDefinitionDescriptor } from '@syndesis/models';
 import { SqlClientContent, SqlClientForm } from '@syndesis/ui';
 import { useContext } from 'react';
 import * as React from 'react';
@@ -32,7 +32,7 @@ export interface IWithVirtualizationSqlClientFormChildrenProps {
 }
 
 export interface IWithVirtualizationSqlClientFormProps {
-  views: ViewDefinition[];
+  views: ViewDefinitionDescriptor[];
 
   targetVdb: string;
 
@@ -66,7 +66,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
 
   const { t } = useTranslation(['data', 'shared']);
   const { pushNotification } = useContext(UIContext);
-  const { queryVirtualization } = useVirtualizationHelpers();
+  const { getViewDefinition, queryVirtualization } = useVirtualizationHelpers();
 
   const queryResultsEmpty: QueryResults = {
     columns: [],
@@ -77,7 +77,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
   const buildViews = () => {
     const enums = [];
     for (const view of props.views) {
-      enums.push({ label: view.viewName, value: view.viewName });
+      enums.push({ label: view.name, value: view.name });
     }
     return enums;
   }
@@ -109,7 +109,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
   }
 
   const getInitialView = () => {
-    return props.views.length > 0 ? props.views[0].viewName : '';
+    return props.views.length > 0 ? props.views[0].name : '';
   }
 
   const formDefinition = {
@@ -188,12 +188,13 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
       ? value.view
       : getInitialView();
     const viewDefn = props.views.find(
-      view => view.viewName === selectedViewName
+      view => view.name === selectedViewName
     );
     try {
       let sqlStatement = '';
       if (viewDefn) {
-        sqlStatement = getPreviewSql(viewDefn);
+        const viewDefinition: ViewDefinition = await getViewDefinition(viewDefn.id);
+        sqlStatement = getPreviewSql(viewDefinition);
       }
       const results: QueryResults = await queryVirtualization(
         props.targetVdb,
@@ -246,7 +247,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
               </SqlClientForm>
             }
             viewNames={props.views.map(
-              (viewDefn: ViewDefinition) => viewDefn.viewName
+              (viewDefn: ViewDefinitionDescriptor) => viewDefn.name
             )}
             queryResultRows={buildRows(
               queryResults

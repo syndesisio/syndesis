@@ -1,8 +1,8 @@
+import { useViewDefinition, useVirtualization } from '@syndesis/api';
 import { useVirtualizationHelpers } from '@syndesis/api';
 import {
   RestDataService,
   ViewDefinition,
-  ViewEditorState,
 } from '@syndesis/models';
 import { TableColumns } from '@syndesis/models';
 import {
@@ -10,26 +10,35 @@ import {
   DdlEditor,
   IViewEditValidationResult,
 } from '@syndesis/ui';
-import { ExpandablePreview, PageSection } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { ExpandablePreview, PageLoader, PageSection } from '@syndesis/ui';
+import { useRouteData, WithLoader } from '@syndesis/utils';
 import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../../app';
+import { ApiError } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import {
   ViewEditorNavBar
 } from '../../shared';
 
 /**
- * @param virtualization - the Virtualization
+ * @param virtualizationId - the ID of the virtualization that the view belongs to
+ * @param viewDefinitionId - the name of the view being edited
+ */
+export interface IViewEditorSqlRouteParams {
+  virtualizationId: string;
+  viewDefinitionId: string;
+}
+
+/**
+ * @param previewExpanded - expanded state of the preview area
  * @param viewDefinition - the ViewDefinition
  */
 export interface IViewEditorSqlRouteState {
-  virtualization: RestDataService;
-  viewDefinition: ViewDefinition;
   previewExpanded: boolean;
+  viewDefinition?: ViewDefinition;
 }
 
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
@@ -40,8 +49,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { state, history } = useRouteData<null, IViewEditorSqlRouteState>();
+  const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
   const { refreshVirtualizationViews, validateViewDefinition } = useVirtualizationHelpers();
+  const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
+  const { resource: virtualization } = useVirtualization(params.virtualizationId);
+  const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
 
   const handleValidationStarted = async (): Promise<void> => {
     setIsValidating(true);
@@ -69,39 +81,34 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const handleSaveView = async (ddlValue: string) => {
     setIsSaving(true);
     // View Definition
-    const viewDefn: ViewDefinition = {
-      compositions: state.viewDefinition.compositions,
+    const view: ViewDefinition = {
+      compositions: viewDefn.compositions,
+      dataVirtualizationName: viewDefn.dataVirtualizationName,
       ddl: ddlValue,
-      isComplete: state.viewDefinition.isComplete,
+      id: viewDefn.id,
+      isComplete: viewDefn.isComplete,
       isUserDefined: true,
-      keng__description: state.viewDefinition.keng__description,
-      projectedColumns: state.viewDefinition.projectedColumns,
-      sourcePaths: state.viewDefinition.sourcePaths,
-      viewName: state.viewDefinition.viewName,
+      keng__description: viewDefn.keng__description,
+      name: viewDefn.name,
+      projectedColumns: viewDefn.projectedColumns,
+      sourcePaths: viewDefn.sourcePaths,
     };
 
-    const viewEditorState: ViewEditorState = {
-      id:
-        state.virtualization.serviceVdbName +
-        '.' +
-        state.viewDefinition.viewName,
-      viewDefinition: viewDefn,
-    };
     try {
       await refreshVirtualizationViews(
-        state.virtualization.keng__id,
-        [viewEditorState]
+        virtualization.keng__id,
+        view
       );
       setIsSaving(false);
       pushNotification(
         t(
           'virtualization.saveViewSuccess',
-          { name: state.viewDefinition.viewName }
-        ),
+          { name: viewDefn.name,
+        }),
         'success'
       );
       // redirect to views page on success
-      handleSelectVirtualization(state.virtualization);
+      handleSelectVirtualization(virtualization);
     } catch (error) {
       const details = error.message
         ? error.message
@@ -110,7 +117,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
         pushNotification(
         t('virtualization.saveViewFailed', {
           details,
-          name: state.viewDefinition.viewName,
+          name: viewDefn.name,
         }),
         'error'
       );
@@ -122,19 +129,21 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     handleValidationStarted();
 
     // View Definition
-    const viewDefn: ViewDefinition = {
-      compositions: state.viewDefinition.compositions,
+    const view: ViewDefinition = {
+      compositions: viewDefn.compositions,
+      dataVirtualizationName: viewDefn.dataVirtualizationName,
       ddl: ddlValue,
-      isComplete: state.viewDefinition.isComplete,
-      isUserDefined: state.viewDefinition.isUserDefined,
-      keng__description: state.viewDefinition.keng__description,
-      projectedColumns: state.viewDefinition.projectedColumns,
-      sourcePaths: state.viewDefinition.sourcePaths,
-      viewName: state.viewDefinition.viewName,
+      id: viewDefn.id,
+      isComplete: viewDefn.isComplete,
+      isUserDefined: true,
+      keng__description: viewDefn.keng__description,
+      name: viewDefn.name,
+      projectedColumns: viewDefn.projectedColumns,
+      sourcePaths: viewDefn.sourcePaths,
     };
 
     const validationResponse = await validateViewDefinition(
-      viewDefn
+      view
     );
     if (validationResponse.status === 'SUCCESS') {
       const validationResult = {
@@ -153,11 +162,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const handleCancel = () => {
     // redirect to views page
-    handleSelectVirtualization(state.virtualization);
+    handleSelectVirtualization(virtualization);
   };
-
-  const initialView = state.viewDefinition.ddl ? state.viewDefinition.ddl : '';
-  const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
 
   const getSourceTableInfos = (): TableColumns[] => {
     // TODO: replace this hardcoded data with server call (or table-column info on the virtualization)
@@ -178,52 +184,66 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   };
 
   return (
-    <>
-      <Breadcrumb>
-        <Link to={resolvers.dashboard.root()}>
-          {t('shared:Home')}
-        </Link>
-        <Link to={resolvers.data.root()}>
-          {t('shared:DataVirtualizations')}
-        </Link>
-        <Link
-          to={resolvers.data.virtualizations.views.root(
-            {
-              virtualization:state.virtualization,
+    <WithLoader
+      loading={loading}
+      loaderChildren={<PageLoader />}
+      error={error !== false}
+      errorChildren={<ApiError error={error as Error} />}
+    >
+      {() => (
+        <>
+          <Breadcrumb>
+            <Link to={resolvers.dashboard.root()}>
+              {t('shared:Home')}
+            </Link>
+            <Link to={resolvers.data.root()}>
+              {t('shared:DataVirtualizations')}
+            </Link>
+            <Link
+              to={resolvers.data.virtualizations.views.root(
+                {
+                  virtualization,
+                }
+              )}
+            >
+              {virtualization.keng__id}
+            </Link>
+            <span>{viewDefn.name}</span>
+          </Breadcrumb>
+          <PageSection variant={'light'} noPadding={true}>
+            <ViewEditorNavBar
+              virtualization={virtualization}
+              viewDefinitionId={params.viewDefinitionId}
+              viewDefinition={viewDefn}
+              previewExpanded={previewExpanded}
+            />
+          </PageSection>
+          <DdlEditor
+            viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+            i18nCancelLabel={t('shared:Cancel')}
+            i18nSaveLabel={t('shared:Save')}
+            i18nValidateLabel={t('shared:Validate')}
+            isValid={viewValid}
+            isSaving={isSaving}
+            isValidating={isValidating}
+            sourceTableInfos={getSourceTableInfos()}
+            onCancel={handleCancel}
+            onValidate={handleValidateView}
+            onSave={handleSaveView}
+            validationResults={
+              validationResults
             }
-          )}
-        >
-          {state.virtualization.keng__id}
-        </Link>
-        <span>{state.viewDefinition.viewName}</span>
-      </Breadcrumb>
-      <PageSection variant={'light'} noPadding={true}>
-        <ViewEditorNavBar virtualization={state.virtualization} viewDefinition={state.viewDefinition} previewExpanded={previewExpanded} />
-      </PageSection>
-        <DdlEditor
-          viewDdl={initialView}
-          i18nCancelLabel={t('shared:Cancel')}
-          i18nSaveLabel={t('shared:Save')}
-          i18nValidateLabel={t('shared:Validate')}
-          isValid={viewValid}
-          isSaving={isSaving}
-          isValidating={isValidating}
-          sourceTableInfos={getSourceTableInfos()}
-          onCancel={handleCancel}
-          onValidate={handleValidateView}
-          onSave={handleSaveView}
-          validationResults={
-            validationResults
-          }
-        />
-      <PageSection variant={'light'} noPadding={true}>
-        <ExpandablePreview
-          i18nHidePreview={t('data:virtualization.preview.hidePreview')}
-          i18nShowPreview={t('data:virtualization.preview.showPreview')}
-          initialExpanded={previewExpanded}
-          onPreviewExpandedChanged={handlePreviewExpandedChanged}
-        />
-      </PageSection>
-    </>
+          />
+          <PageSection variant={'light'} noPadding={true}>
+            <ExpandablePreview
+              i18nHidePreview={t('data:virtualization.preview.hidePreview')}
+              i18nShowPreview={t('data:virtualization.preview.showPreview')}
+              initialExpanded={previewExpanded}
+              onPreviewExpandedChanged={handlePreviewExpandedChanged}
+            />
+          </PageSection>
+        </>
+      )}
+    </WithLoader>
   );
 }

@@ -30,27 +30,6 @@ export interface RestDataService {
   tko__description: string;
 }
 
-export interface RestViewDefinition {
-  keng__baseUri: string;
-  keng__id: string;
-  keng__dataPath: string;
-  keng__kType: string;
-  keng__hasChildren: boolean;
-  keng___links: [];
-}
-
-export interface RestVdbModel {
-  keng__baseUri: string;
-  keng__id: string;
-  keng__dataPath: string;
-  keng__kType: string;
-  keng__hasChildren: boolean;
-  mmcore__modelType: string;
-  vdb__visible: boolean;
-  vdb__metadataType: string;
-  keng__ddl: string;
-}
-
 export interface SchemaNode {
   name: string;
   type: string;
@@ -93,20 +72,23 @@ export interface ProjectedColumn {
   selected: boolean;
 }
 
+export interface ViewDefinitionDescriptor {
+  id: string;
+  name: string;
+  description: string;
+}
+
 export interface ViewDefinition {
+  id?: string;
+  name: string;
+  dataVirtualizationName: string;
+  keng__description: string;
   isComplete: boolean;
   isUserDefined: boolean;
-  viewName: string;
-  keng__description: string;
   sourcePaths: string[];
   compositions: string[];
   projectedColumns: ProjectedColumn[];
   ddl?: string;
-}
-
-export interface ViewEditorState {
-  id: string;
-  viewDefinition: ViewDefinition;
 }
 
 export interface ColumnData {
@@ -132,6 +114,14 @@ export interface TableColumns {
 export interface ViewDefinitionStatus {
   status: string;
   message: string;
+}
+
+export interface ImportSourcesStatus {
+  Title: string;
+}
+
+export interface ImportSources {
+  tables: string[];
 }
 
 export interface VirtualizationPublishingDetails {

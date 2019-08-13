@@ -1,5 +1,5 @@
-import { useViewEditorStates, useVirtualizationHelpers } from '@syndesis/api';
-import { ViewDefinition, ViewEditorState } from '@syndesis/models';
+import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
+import { ViewDefinitionDescriptor } from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
@@ -48,26 +48,26 @@ export interface IVirtualizationViewsPageRouteState {
 }
 
 function getFilteredAndSortedViewDefns(
-  viewDefinitions: ViewDefinition[],
+  viewDefinitionDescriptors: ViewDefinitionDescriptor[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
 ) {
-  let filteredAndSorted = viewDefinitions;
+  let filteredAndSorted = viewDefinitionDescriptors;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSorted = filteredAndSorted.filter((view: ViewDefinition) =>
-      view.viewName.toLowerCase().includes(valueToLower)
+    filteredAndSorted = filteredAndSorted.filter((view: ViewDefinitionDescriptor) =>
+      view.name.toLowerCase().includes(valueToLower)
     );
   });
 
   filteredAndSorted = filteredAndSorted.sort((thisView, thatView) => {
     if (isSortAscending) {
-      return thisView.viewName.localeCompare(thatView.viewName);
+      return thisView.name.localeCompare(thatView.name);
     }
 
     // sort descending
-    return thatView.viewName.localeCompare(thisView.viewName);
+    return thatView.name.localeCompare(thisView.name);
   });
 
   return filteredAndSorted;
@@ -108,16 +108,16 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
 
-  const filterUndefinedId = (view: ViewDefinition): boolean => {
-    return view.viewName !== undefined;
+  const filterUndefinedId = (view: ViewDefinitionDescriptor): boolean => {
+    return view.name !== undefined;
   };
 
   const {
-    resource: editorStates,
-    hasData: hasEditorStates,
-    error: editorStatesError,
+    resource: viewDefinitionDescriptors,
+    hasData: hasViewDefinitionDescriptors,
+    error: viewDefinitionDescriptorsError,
     read,
-  } = useViewEditorStates(params.virtualizationId);
+  } = useViewDefinitionDescriptors(params.virtualizationId);
 
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
@@ -149,25 +149,40 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     return true;
   };
 
-  const handleDeleteView = async (viewName: string) => {
+  const handleDeleteView = async (
+    viewId: string,
+    viewName: string
+  ) => {
+    // Delete the view
     try {
-      await deleteView(state.virtualization, viewName);
+      await deleteView(
+        params.virtualizationId,
+        viewId
+      );
 
       pushNotification(
-        t('virtualization.deleteViewSuccess', {
-          name: viewName,
-        }),
+        t(
+          'virtualization.deleteViewSuccess',
+          {
+            name: viewName,
+          }
+        ),
         'success'
       );
 
       await read();
     } catch (error) {
-      const details = error.message ? error.message : '';
+      const details = error.message
+        ? error.message
+        : '';
       pushNotification(
-        t('virtualization.deleteViewFailed', {
-          details,
-          name: viewName,
-        }),
+        t(
+          'virtualization.deleteViewFailed',
+          {
+            details,
+            name: viewName,
+          }
+        ),
         'error'
       );
     }
@@ -179,11 +194,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       defaultSortType={sortByName}
     >
       {helpers => {
-        const viewDefns = editorStates.map(
-          (editorState: ViewEditorState) => editorState.viewDefinition
-        ) as ViewDefinition[];
         const filteredAndSorted = getFilteredAndSortedViewDefns(
-          viewDefns,
+          viewDefinitionDescriptors,
           helpers.activeFilters,
           helpers.currentSortType,
           helpers.isSortAscending
@@ -226,7 +238,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 onUnpublish={doUnpublish}
                 onPublish={doPublish}
                 serviceVdbName={state.virtualization.serviceVdbName}
-                hasViews={viewDefns.length > 0}
+                hasViews={viewDefinitionDescriptors.length > 0}
               />
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
@@ -261,8 +273,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
               <WithLoader
-                error={editorStatesError !== false}
-                loading={!hasEditorStates}
+                error={viewDefinitionDescriptorsError !== false}
+                loading={!hasViewDefinitionDescriptors}
                 loaderChildren={
                   <ViewListSkeleton
                     width={800}
@@ -272,7 +284,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     }}
                   />
                 }
-                errorChildren={<ApiError error={editorStatesError as Error} />}
+                errorChildren={<ApiError error={viewDefinitionDescriptorsError as Error} />}
               >
                 {() => (
                   <ViewList
@@ -312,23 +324,25 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                         virtualization: state.virtualization,
                       }
                     )}
-                    hasListData={editorStates.length > 0}
+                    hasListData={viewDefinitionDescriptors.length > 0}
                   >
                     {filteredAndSorted
-                      .filter((viewDefinition: ViewDefinition) =>
-                        filterUndefinedId(viewDefinition)
+                      .filter((viewDefinitionDescriptor: ViewDefinitionDescriptor) =>
+                        filterUndefinedId(viewDefinitionDescriptor)
                       )
-                      .map((viewDefinition: ViewDefinition, index: number) => (
+                      .map((viewDefinitionDescriptor: ViewDefinitionDescriptor, index: number) => (
                         <ViewListItem
                           key={index}
-                          viewName={viewDefinition.viewName}
-                          viewDescription={viewDefinition.keng__description}
+                          viewId={viewDefinitionDescriptor.id}
+                          viewName={viewDefinitionDescriptor.name}
+                          viewDescription={viewDefinitionDescriptor.description}
                           viewEditPageLink={resolvers.data.virtualizations.views.edit.sql(
                             {
                               virtualization: state.virtualization,
                               // tslint:disable-next-line: object-literal-sort-keys
-                              viewDefinition,
-                              previewExpanded: true,
+                              viewDefinitionId: viewDefinitionDescriptor.id,
+                              viewDefinition: undefined,
+                              previewExpanded:true,
                             }
                           )}
                           i18nCancelText={t('shared:Cancel')}
@@ -336,7 +350,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                           i18nDeleteModalMessage={t(
                             'virtualization.deleteViewModalMessage',
                             {
-                              name: viewDefinition.viewName,
+                              name: viewDefinitionDescriptor.name,
                             }
                           )}
                           i18nDeleteModalTitle={t(
