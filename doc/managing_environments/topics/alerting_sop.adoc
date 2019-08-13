@@ -142,3 +142,30 @@ oc logs syndesis-server-9-kxt2g > syndesis-server.log
 ----
 oc delete pod syndesis-server-9-kxt2g
 ----
+
+== Syndesis Integrations
+
+=== IntegrationExchangesHighFailureRate
+
+*Alert name*
+
+IntegrationExchangesHighFailureRate
+
+*Description*
+
+Fires when an integration experiences a high rate of failed exchanges.
+
+**Process steps**
+
+1) Log in to cluster.
+
+2) Switch to project namespace identified in the alert message.
+
+3) The alert message contains the name of the pod that triggered the alerting event. Use this pod name to check the logs.
+
+[source,bash,options="nowrap"]
+----
+oc logs <pod-name>
+----
+
+4) Check the Grafana dashboards. The metrics can be useful for identifying errors and performance bottlenecks.
