@@ -7,10 +7,11 @@ call_maven() {
     local args=$1
     local maven_modules=$2
     check_error $maven_modules
-    cd $(appdir)
     if [ -z "${maven_modules}" ]; then
       return
     fi
+
+    pushd "$(appdir)" > /dev/null
 
     if [ "EVERYTHING" == "${maven_modules}" ]; then
         echo "=============================================================================="
@@ -40,4 +41,6 @@ call_maven() {
         fi
       done
     fi
+
+    popd >/dev/null
 }

@@ -42,35 +42,70 @@ EOT
 }
 
 build::run() {
+
     # Maven helper funcs
     source "$(basedir)/commands/util/maven_funcs"
 
     # For OpenShift based builds
     source "$(basedir)/commands/util/openshift_funcs"
 
-    local modules="$(extract_modules)"
+    # For operator building
+    source "$(basedir)/commands/util/operator_funcs"
 
+    # For camel-k building
+    source "$(basedir)/commands/util/camel_k_funcs"
+
+    local modules="$(extract_modules)"
     local top_dir="$(appdir .)"
 
     # All Maven modules (all modules minus operator, camel-k, upgrade)
     local maven_modules=$(pick_module "$MAVEN_MODULES" "$modules")
+
+    # All individual Maven submodules defined with [groupId]:artifactId (e.g. :connector-sql)
+    local submodules=$(pick_submodule "$ALL_MODULES" "$modules")
+
+    #
+    # Check environments of modules to determine
+    # if requirements are met
+    #
+
+    if $(should_build "operator" "$modules"); then
+        local canbuildop=$(check_operator_requirements)
+        if [ "$canbuildop" != "OK" ]; then
+            echo
+            echo "$canbuildop"
+            echo
+        fi
+    fi
+
+    if $(should_build "camel-k" "$modules"); then
+        local canbuildcamelk=$(check_camel_k_requirements)
+        if [ "$canbuildcamelk" != "OK" ]; then
+            echo
+            echo "$canbuildcamelk"
+            echo
+        fi
+    fi
+
+    #
+    # Actually now do the build
+    #
+
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
         call_maven "$(maven_args)" "$maven_modules"
     fi
 
-    # All individual Maven submodules defined with [groupId]:artifactId (e.g. :connector-sql)
-    local submodules=$(pick_submodule "$ALL_MODULES" "$modules")
     if [ -n "$modules" ] && [ -n "$submodules" ]; then
         call_maven "$(maven_args)" "$submodules"
     fi
 
     # Build operator if requested
-    if $(should_build "operator" "$modules"); then
+    if $(should_build "operator" "$modules") && [ "$canbuildop" = "OK" ]; then
         do_operator $top_dir
     fi
 
     # Build operator if requested
-    if $(should_build "camel-k" "$modules"); then
+    if $(should_build "camel-k" "$modules") && [ "$canbuildcamelk" = "OK" ]; then
         do_camel_k $top_dir
     fi
 
@@ -166,7 +201,7 @@ do_operator() {
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    pushd "$top_dir/install/operator"
+    pushd "$top_dir/install/operator" > /dev/null
     if [ $(hasflag -i --image --docker) ]; then
         ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}:$tag"
     else
@@ -180,23 +215,34 @@ do_camel_k() {
     echo "=============================================================================="
     echo "Building camel-k"
     echo "=============================================================================="
+    export GO111MODULE=on
 
-    set +u
-    if [ -z "$GOPATH" ]; then
-        echo "ERROR: \$GOPATH has to be set for camel-k build"
-        exit 1
+    local camelReqOK=$(check_camel_k_requirements)
+    if [ "$camelReqOK" != "OK" ]; then
+      echo "$camelReqOK"
+      exit 1
     fi
-    set -u
 
     local camel_k_root=$GOPATH/src/github.com/apache/camel-k
     if [ ! -e $camel_k_root ]; then
-        echo "ERROR: Can't find $camel_k_root. camel-k image can be build only locally (--local is implied) for camel-k builds)."
-        exit 1
-    fi
+        echo "WARN: Can't find $camel_k_root. camel-k image can only be built locally (--local is implied) for camel-k builds)."
+        echo
+        echo "Can try to download the camel-k source ..."
 
-    if ! operator-sdk --help 2>&1 >/dev/null; then
-        echo "ERROR: operator-sdk needs to be installed locally for building camel-k"
-        exit 1
+        set +e
+        which git &>/dev/null
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Cannot download camel-k source as 'git' command is not available."
+            exit 1
+        fi
+
+        set -e
+        # Clone the camel-k repo
+        git clone https://github.com/apache/camel-k.git $camel_k_root
+        if [ ! -d $camel_k_root ]; then
+            echo "ERROR: Failed to download the camel-k source. Cannot continue with camel-k build."
+            exit 1
+        fi
     fi
 
     pushd $camel_k_root >/dev/null

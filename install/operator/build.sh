@@ -3,18 +3,22 @@
 # Builds the operator, using operator-sdk for developers that have it
 # installed locally, or using docker if they don't have it installed.
 #
+
 set -e
 cd $(dirname "${BASH_SOURCE[0]}")
+
+source "$(pwd)/../../tools/bin/commands/util/common_funcs"
+source "$(pwd)/../../tools/bin/commands/util/operator_funcs"
+source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
 source "./.lib.sh"
 
-OPERATOR_GO_PACKAGE="github.com/syndesisio/syndesis/install/operator"
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator:latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
 GO_BUILD_OPTIONS="$(readopt    --go-options         '')"
 
-if [[ -n "$(readopt --help)" ]] ; then 
+if [[ -n "$(readopt --help)" ]] ; then
 	cat <<ENDHELP
 
 usage: ./build.sh [options]
@@ -37,7 +41,7 @@ fi
 cp "../../app/integration/project-generator/src/main/resources/io/syndesis/integration/project/generator/templates/prometheus-config.yml" "./pkg/generator/assets"
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE "$OPERATOR_GO_PACKAGE" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME" $GO_BUILD_OPTIONS
+  build_operator $OPERATOR_BUILD_MODE -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then
