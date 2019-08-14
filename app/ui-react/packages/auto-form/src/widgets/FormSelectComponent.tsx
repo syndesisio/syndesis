@@ -25,8 +25,7 @@ export const FormSelectComponent: React.FunctionComponent<
   const updatedValue =
     isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
   const handleChange = (
-    // tslint:disable-next-line:no-shadowed-variable
-    value: string,
+    eventValue: string,
     event: React.FormEvent<HTMLSelectElement>
   ) => {
     if (isMultiple) {
