@@ -49,3 +49,5 @@ So at a minimum you should have one of those of tools installed.
       --image-name <name>                docker image name (default: syndesis/syndesis-operator)
       --s2i-stream-name <name>           s2i image stream name (default: syndesis-operator)
 
+## Testing
+Integration tests are located undet `tests/e2e/` with some instructions on how to run.
