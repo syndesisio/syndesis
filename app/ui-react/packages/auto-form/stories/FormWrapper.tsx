@@ -19,7 +19,7 @@ export class FormWrapper extends React.Component<IFormWrapperProps> {
         onSubmit={this.props.onSubmit}
       >
         {this.props.fields}
-        <ActionGroup>
+        <ActionGroup className="form-array-action">
           <Button type={'submit'} variant={'primary'}>
             Submit
           </Button>

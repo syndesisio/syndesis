@@ -62,7 +62,7 @@ export const FormDurationComponent: React.FunctionComponent<
   };
   const handleClick = (
     selectedDuration: IDuration,
-    event: React.SyntheticEvent
+    event: MouseEvent | React.MouseEvent<any, MouseEvent> | React.KeyboardEvent<Element>
   ) => {
     event.preventDefault();
     setIsOpen(false);

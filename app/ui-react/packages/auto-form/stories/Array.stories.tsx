@@ -30,10 +30,10 @@ stories.add('General Example', () => {
       },
       arrayDefinitionOptions: {
         arrayControlAttributes: {
-          className: 'col-md-1',
+          className: 'form-array-section__action',
         },
         arrayRowTitleAttributes: {
-          className: 'col-md-2',
+          className: 'form-array-section__header',
         },
         formGroupAttributes: {
           className: 'col-md-3',

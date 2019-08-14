@@ -4,7 +4,6 @@ import {
   DataListItem,
   DataListItemCells,
   DataListItemRow,
-  Form,
   FormGroup,
   Popover,
   Text,
@@ -100,7 +99,7 @@ export const FormMapsetComponent: React.FunctionComponent<
                           </Text>
                         </DataListCell>,
                         <DataListCell key={'secondary'}>
-                          <Form isHorizontal={false}>
+                          <div className="pf-c-form">
                             {getField({
                               allFieldsRequired: false,
                               property: {
@@ -109,7 +108,7 @@ export const FormMapsetComponent: React.FunctionComponent<
                               },
                               value: value[mapsetKey.name],
                             })}
-                          </Form>
+                          </div>
                         </DataListCell>,
                       ]}
                     />
