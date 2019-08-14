@@ -29,8 +29,8 @@ var assets = func() http.FileSystem {
 			name:    "komodo",
 			modTime: time.Time{},
 		},
-		"/addons/komodo/addon-komodo-server.yml.tmpl": &vfsgen۰CompressedFileInfo{
-			name:             "addon-komodo-server.yml.tmpl",
+		"/addons/komodo/addon-syndesis-dv.yml.tmpl": &vfsgen۰CompressedFileInfo{
+			name:             "addon-syndesis-dv.yml.tmpl",
 			modTime:          time.Time{},
 			uncompressedSize: 4870,
 
@@ -309,7 +309,7 @@ var assets = func() http.FileSystem {
 		fs["/addons/todo"].(os.FileInfo),
 	}
 	fs["/addons/komodo"].(*vfsgen۰DirInfo).entries = []os.FileInfo{
-		fs["/addons/komodo/addon-komodo-server.yml.tmpl"].(os.FileInfo),
+		fs["/addons/komodo/addon-syndesis-dv.yml.tmpl"].(os.FileInfo),
 	}
 	fs["/addons/legacyui"].(*vfsgen۰DirInfo).entries = []os.FileInfo{
 		fs["/addons/legacyui/addon-legacyui.yml"].(os.FileInfo),

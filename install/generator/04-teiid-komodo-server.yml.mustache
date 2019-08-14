@@ -6,8 +6,8 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: komodo-server
-    name: komodo-server
+      syndesis.io/component: syndesis-dv
+    name: syndesis-dv
   spec:
     ports:
     - port: 80
@@ -16,7 +16,7 @@
     selector:
       app: syndesis
       syndesis.io/app: syndesis
-      syndesis.io/component: komodo-server
+      syndesis.io/component: syndesis-dv
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -24,14 +24,14 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: komodo-server
-    name: komodo-server
+      syndesis.io/component: syndesis-dv
+    name: syndesis-dv
   spec:
     replicas: {{=(( ))=}}${{DATAVIRT_ENABLED}}((={{ }}=))
     selector:
       app: syndesis
       syndesis.io/app: syndesis
-      syndesis.io/component: komodo-server
+      syndesis.io/component: syndesis-dv
     strategy:
       resources:
         limits:
@@ -45,11 +45,11 @@
           app: syndesis
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
-          syndesis.io/component: komodo-server
+          syndesis.io/component: syndesis-dv
       spec:
         serviceAccountName: syndesis-server
         containers:
-        - name: komodo-server
+        - name: syndesis-dv
           env:
           - name: JAVA_APP_DIR
             value: /deployments
@@ -129,7 +129,7 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - komodo-server
+        - syndesis-dv
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
