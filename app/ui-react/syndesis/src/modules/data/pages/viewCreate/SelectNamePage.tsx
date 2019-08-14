@@ -39,13 +39,13 @@ export interface ISelectNameRouteState {
 
 export const SelectNamePage: React.FunctionComponent = () => {
   const { t } = useTranslation(['data', 'shared']);
-  const { state, history } = useRouteData<
+  const { params, state, history } = useRouteData<
     ISelectNameRouteParams,
     ISelectNameRouteState
   >();
   const { pushNotification } = useContext(UIContext);
   const {
-    refreshVirtualizationViews,
+    saveViewDefinition,
     validateViewName,
   } = useVirtualizationHelpers();
 
@@ -55,8 +55,6 @@ export const SelectNamePage: React.FunctionComponent = () => {
     }
     return '';
   };
-
-  const virtualization = state.virtualization;
 
   /**
    * Backend name validation only occurs when attempting to create
@@ -69,7 +67,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
     }
 
     const response: IDvNameValidationResult = await validateViewName(
-      virtualization.serviceVdbName,
+      state.virtualization.serviceVdbName,
       'views',
       proposedName
     );
@@ -92,14 +90,12 @@ export const SelectNamePage: React.FunctionComponent = () => {
       // ViewDefinition for the source
       const viewDefinition = generateViewDefinition(
         state.schemaNodeInfo,
-        state.virtualization.keng__id,
+        params.virtualizationId,
         value.name,
         value.description
       );
       try {
-        await refreshVirtualizationViews(state.virtualization.keng__id,
-          viewDefinition
-        );
+        await saveViewDefinition(viewDefinition);
         pushNotification(
           t('virtualization.createViewSuccess', {
             name: viewDefinition.name,
@@ -117,7 +113,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
       }
       history.push(
         resolvers.data.virtualizations.views.root({
-          virtualization,
+          virtualization: state.virtualization,
         })
       );
     } else {
@@ -175,10 +171,10 @@ export const SelectNamePage: React.FunctionComponent = () => {
             </>
           }
           cancelHref={resolvers.data.virtualizations.views.root({
-            virtualization,
+            virtualization: state.virtualization,
           })}
           backHref={resolvers.data.virtualizations.views.createView.selectSources(
-            { virtualization }
+            { virtualization: state.virtualization }
           )}
           onNext={submitForm}
           isNextDisabled={!isValid}

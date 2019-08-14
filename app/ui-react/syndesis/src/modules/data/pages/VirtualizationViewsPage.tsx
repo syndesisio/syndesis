@@ -99,7 +99,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     IVirtualizationViewsPageRouteState
   >();
   const {
-    deleteView,
+    deleteViewDefinition,
     updateVirtualizationDescription,
   } = useVirtualizationHelpers();
   const {
@@ -155,8 +155,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   ) => {
     // Delete the view
     try {
-      await deleteView(
-        params.virtualizationId,
+      await deleteViewDefinition(
         viewId
       );
 

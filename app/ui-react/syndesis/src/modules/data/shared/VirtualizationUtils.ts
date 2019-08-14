@@ -1,6 +1,5 @@
 import {
   Connection,
-  ProjectedColumn,
   RestDataService,
   SchemaNode,
   SchemaNodeInfo,
@@ -12,9 +11,6 @@ import {
 
 const PREVIEW_VDB_NAME = 'PreviewVdb';
 const SCHEMA_MODEL_SUFFIX = 'schemamodel';
-const PROJECTED_COLS_ALL = [
-  { name: 'ALL', selected: true, type: 'ALL' } as ProjectedColumn,
-];
 
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
@@ -154,7 +150,6 @@ export function generateViewDefinition(
   return getViewDefinition(
     vwName,
     dataVirtName,
-    PROJECTED_COLS_ALL,
     srcPaths,
     false,
     vwDescription
@@ -178,7 +173,6 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
  * Generate a ViewDefinition for the supplied values.
  * @param name the view name
  * @param dataVirtName the name of the virtualization
- * @param projectedCols projected columns for the view
  * @param srcPaths paths for the sources used in the view
  * @param userDefined specifies if the ddl has been altered from defaults
  * @param description the (optional) view description
@@ -187,7 +181,6 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
 function getViewDefinition(
   name: string,
   dataVirtName: string,
-  projectedCols: ProjectedColumn[],
   srcPaths: string[],
   userDefined: boolean,
   description?: string,
@@ -195,14 +188,12 @@ function getViewDefinition(
 ) {
   // View Definition
   const viewDefn: ViewDefinition = {
-    compositions: [],
     dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
     name,
-    projectedColumns: projectedCols,
     sourcePaths: srcPaths,
   };
 

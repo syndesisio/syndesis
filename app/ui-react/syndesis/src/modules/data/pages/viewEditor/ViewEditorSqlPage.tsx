@@ -50,7 +50,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
-  const { refreshVirtualizationViews, validateViewDefinition } = useVirtualizationHelpers();
+  const { saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
@@ -82,7 +82,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     setIsSaving(true);
     // View Definition
     const view: ViewDefinition = {
-      compositions: viewDefn.compositions,
       dataVirtualizationName: viewDefn.dataVirtualizationName,
       ddl: ddlValue,
       id: viewDefn.id,
@@ -90,15 +89,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       isUserDefined: true,
       keng__description: viewDefn.keng__description,
       name: viewDefn.name,
-      projectedColumns: viewDefn.projectedColumns,
       sourcePaths: viewDefn.sourcePaths,
     };
 
     try {
-      await refreshVirtualizationViews(
-        virtualization.keng__id,
-        view
-      );
+      await saveViewDefinition(view);
       setIsSaving(false);
       pushNotification(
         t(
@@ -130,7 +125,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
     // View Definition
     const view: ViewDefinition = {
-      compositions: viewDefn.compositions,
       dataVirtualizationName: viewDefn.dataVirtualizationName,
       ddl: ddlValue,
       id: viewDefn.id,
@@ -138,7 +132,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       isUserDefined: true,
       keng__description: viewDefn.keng__description,
       name: viewDefn.name,
-      projectedColumns: viewDefn.projectedColumns,
       sourcePaths: viewDefn.sourcePaths,
     };
 
