@@ -6,13 +6,11 @@ export const useViewDefinition = (
 ) => {
   return useApiResource<ViewDefinition>({
     defaultValue: {
-      compositions: [],
       dataVirtualizationName: '',
       isComplete: false,
       isUserDefined: false,
       keng__description: '',
       name: '',
-      projectedColumns: [],
       sourcePaths: [],
     },
     initialValue: initialDefn,

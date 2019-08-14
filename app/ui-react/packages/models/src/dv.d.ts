@@ -66,12 +66,6 @@ export interface VirtualizationSourceStatus {
   schemaModelName?: string;
 }
 
-export interface ProjectedColumn {
-  name: string;
-  type: string;
-  selected: boolean;
-}
-
 export interface ViewDefinitionDescriptor {
   id: string;
   name: string;
@@ -86,8 +80,6 @@ export interface ViewDefinition {
   isComplete: boolean;
   isUserDefined: boolean;
   sourcePaths: string[];
-  compositions: string[];
-  projectedColumns: ProjectedColumn[];
   ddl?: string;
 }
 

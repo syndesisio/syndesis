@@ -83,32 +83,6 @@ export const useVirtualizationHelpers = () => {
   }
 
   /**
-   * Deletes the specified virtualization view.
-   * @param virtualizationName the virtualization name
-   * @param viewId the id of the view being deleted
-   */
-  const deleteView = async (
-    virtualizationName: string,
-    viewId: string
-  ): Promise<void> => {
-    // Delete view definition and refresh views
-    await deleteViewDefinition(viewId);
-    const response = await callFetch({
-      headers: {},
-      method: 'POST',
-      url: `${apiContext.dvApiUri}workspace/dataservices/refreshViews/${
-        virtualizationName
-      }`,
-    });
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return Promise.resolve();
-  }
-
-  /**
    * Deletes the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being deleted
    */
@@ -351,12 +325,12 @@ export const useVirtualizationHelpers = () => {
 
     return Promise.resolve();
   }
-
+  
   /**
-   * Saves ViewDefinition in the komodo user profile
+   * Saves the ViewDefinition
    * @param viewDefinition the view definition
    */
-  const updateViewDefinitions = async (
+  const saveViewDefinition = async (
     viewDefinition: ViewDefinition
   ): Promise<void> => {
     const response = await callFetch({
@@ -365,47 +339,21 @@ export const useVirtualizationHelpers = () => {
       method: 'PUT',
       url: `${apiContext.dvApiUri}service/userProfile/viewEditorState`,
     });
-
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-
     return Promise.resolve();
   }
-
-  /**
-   * Saves ViewDefinition in the komodo user profile, then updates the virtualizations
-   * @param viewDefinition the view definition
-   */
-  const refreshVirtualizationViews = async (
-    virtualizationName: string,
-    viewDefinition: ViewDefinition
-  ): Promise<void> => {
-    // Updates the view editor states
-    await updateViewDefinitions(viewDefinition);
-    const response = await callFetch({
-      headers: {},
-      method: 'POST',
-      url: `${
-        apiContext.dvApiUri
-      }workspace/dataservices/refreshViews/${virtualizationName}`,
-    });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return Promise.resolve();
-  }
-
+  
   return {
     createVirtualization,
-    deleteView,
+    deleteViewDefinition,
     deleteVirtualization,
     getViewDefinition,
     importSource,
     publishVirtualization,
     queryVirtualization,
-    refreshVirtualizationViews,
+    saveViewDefinition,
     unpublishServiceVdb,
     updateVirtualizationDescription,
     validateViewDefinition,
