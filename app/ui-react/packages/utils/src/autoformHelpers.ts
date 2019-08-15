@@ -34,6 +34,7 @@ export function toFormDefinition(properties: IConfigurationProperties) {
 export function toFormDefinitionProperty(property: IConfigurationProperty) {
   const {
     cols,
+    extendedProperties,
     max,
     min,
     multiple,
@@ -46,6 +47,7 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
   } = property as any; // needed, ConfigurationProperty is a lie
   return {
     ...formDefinitionProperty,
+    ...(extendedProperties || {}),
     controlHint: controlHint || controlTooltip,
     fieldAttributes: {
       cols,
