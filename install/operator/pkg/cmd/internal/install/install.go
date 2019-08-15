@@ -108,7 +108,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	}
 
 	if len(args) > 0 {
-		return fmt.Errorf("Unexpected argument: %s", args[0])
+		return fmt.Errorf("unexpected argument: %s", args[0])
 	}
 
 	if o.eject != "" {
@@ -149,10 +149,10 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-	Image     string
-	Namespace string
-	DevImages bool
-	//     Global      bool
+    Image     string
+    Namespace string
+    DevImages bool
+    Role      string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -190,10 +190,11 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 }
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
-	resources, err := generator.Render(fromFile, RenderScope{
-		Namespace: o.Namespace,
-		Image:     o.image,
-		DevImages: o.devImages,
-	})
-	return resources, err
+    resources, err := generator.Render(fromFile, RenderScope{
+        Namespace: o.Namespace,
+        Image:     o.image,
+        DevImages: o.devImages,
+        Role:      "syndesis-operator",
+    })
+    return resources, err
 }
