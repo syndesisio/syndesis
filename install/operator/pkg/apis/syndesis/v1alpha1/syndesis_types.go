@@ -23,8 +23,8 @@ type SyndesisSpec struct {
 	OpenShiftConsoleUrl string         `json:"openShiftConsoleUrl,omitempty"`
 	SarNamespace        string         `json:"sarNamespace,omitempty"`
 	Addons              AddonsSpec     `json:"addons,omitempty"`
-	// if true, then the image streams are changed to used local development builds
-	DevImages bool `json:"devImages,omitempty"`
+	// if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled
+	DevSupport bool `json:"devSupport,omitempty"`
 
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
