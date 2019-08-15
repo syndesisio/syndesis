@@ -25,31 +25,24 @@ export const SqlClientContentSkeleton: React.FunctionComponent<{}> = props => {
       secondaryColor="#ecebeb"
       {...props}
     >
-      <rect key={0} x={xPos} y={yPos} width={50} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={50} height={rectHeight} />
       {(yPos = yPos + spacing)}
-      <rect key={1} x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
       {(yPos = yPos + spacing)}
-      <rect key={2} x={xPos} y={yPos} width={60} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={60} height={rectHeight} />
       {(yPos = yPos + spacing)}
-      <rect key={3} x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
       {(yPos = yPos + spacing)}
-      <rect key={4} x={xPos} y={yPos} width={40} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={40} height={rectHeight} />
       {(yPos = yPos + spacing)}
-      <rect key={5} x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
+      <rect x={xPos} y={yPos} width={inputWidth} height={rectHeight} />
       {(yPos = yPos + spacing)}
       // border left
-      <rect key={6} x={xPos - 5} y={startY} width={1} height={yPos - startY} />
+      <rect x={xPos - 5} y={startY} width={1} height={yPos - startY} />
       // border bottom
-      <rect
-        key={7}
-        x={xPos - 5}
-        y={yPos}
-        width={5 + inputWidth + 5}
-        height={1}
-      />
+      <rect x={xPos - 5} y={yPos} width={5 + inputWidth + 5} height={1} />
       // border right
       <rect
-        key={8}
         x={inputWidth + xPos + 5}
         y={startY}
         width={1}
@@ -57,7 +50,7 @@ export const SqlClientContentSkeleton: React.FunctionComponent<{}> = props => {
       />
       // button
       {(yPos = yPos + 10)}
-      <rect key={9} x={xPos + 10} y={yPos} width={40} height={20} />
+      <rect x={xPos + 10} y={yPos} width={40} height={20} />
       // table
       {[
         tableY,
@@ -71,11 +64,11 @@ export const SqlClientContentSkeleton: React.FunctionComponent<{}> = props => {
       ].map((y: number) => {
         return (
           // create columns for each row
-          <>
+          <React.Fragment key={y}>
             {[0, 1, 2, 3, 4, 5].map((colNum: number) => {
               return (
                 <rect
-                  key={colNum}
+                  key={y + ':' + colNum}
                   x={tableX + colNum * (colWidth + gap)}
                   y={y}
                   width={colWidth}
@@ -83,7 +76,7 @@ export const SqlClientContentSkeleton: React.FunctionComponent<{}> = props => {
                 />
               );
             })}
-          </>
+          </React.Fragment>
         );
       })}
     </ContentLoader>

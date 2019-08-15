@@ -1,11 +1,15 @@
-import { useVirtualization, useVirtualizationHelpers } from '@syndesis/api';
+import { useVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
-import { Breadcrumb, PageSection, VirtualizationDetailsHeader } from '@syndesis/ui';
+import {
+  Breadcrumb,
+  PageSection,
+  VirtualizationDetailsHeader,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../../../app';
+import { AppContext, UIContext } from '../../../app';
 import resolvers from '../../resolvers';
 import { VirtualizationNavBar } from '../shared';
 import {
@@ -30,29 +34,44 @@ export interface IVirtualizationMetricsPageRouteState {
 }
 
 export const VirtualizationMetricsPage: React.FunctionComponent = () => {
-
   const { t } = useTranslation(['data', 'shared']);
-  const { params } = useRouteData<
+  const { params, state } = useRouteData<
     IVirtualizationMetricsPageRouteParams,
     IVirtualizationMetricsPageRouteState
   >();
+  const [description, setDescription] = React.useState(
+    state.virtualization.tko__description
+  );
   const appContext = React.useContext(AppContext);
+  const { pushNotification } = React.useContext(UIContext);
   const { updateVirtualizationDescription } = useVirtualizationHelpers();
-  const { resource: virtualization } = useVirtualization(params.virtualizationId);
 
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
-    virtualization
+    state.virtualization
   );
 
   const doSetDescription = async (newDescription: string) => {
-    await updateVirtualizationDescription(
-      appContext.user.username || 'developer',
-      params.virtualizationId,
-      newDescription
-    );
-    virtualization.tko__description = newDescription;
-    return true;
+    const previous = description;
+    setDescription(newDescription); // this sets InlineTextEdit component to new value
+    try {
+      await updateVirtualizationDescription(
+        appContext.user.username || 'developer',
+        params.virtualizationId,
+        newDescription
+      );
+      state.virtualization.tko__description = newDescription;
+      return true;
+    } catch {
+      pushNotification(
+        t('virtualization.errorUpdatingDescription', {
+          name: state.virtualization.keng__id,
+        }),
+        'error'
+      );
+      setDescription(previous); // save failed so set InlineTextEdit back to old value
+      return false;
+    }
   };
 
   return (
@@ -65,9 +84,7 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
           {t('shared:Home')}
         </Link>
         <Link
-          data-testid={
-            'virtualization-metrics-page-virtualizations-link'
-          }
+          data-testid={'virtualization-metrics-page-virtualizations-link'}
           to={resolvers.data.root()}
         >
           {t('shared:DataVirtualizations')}
@@ -81,33 +98,27 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
         i18nDescriptionPlaceholder={t('virtualization.descriptionPlaceholder')}
         i18nDraft={t('shared:Draft')}
         i18nError={t('shared:Error')}
-        i18nPublished={t(
-          'virtualization.publishedDataVirtualization'
-        )}
-        i18nPublishInProgress={t(
-          'virtualization.publishInProgress'
-        )}
-        i18nUnpublishInProgress={t(
-          'virtualization.unpublishInProgress'
-        )}
+        i18nPublished={t('virtualization.publishedDataVirtualization')}
+        i18nPublishInProgress={t('virtualization.publishInProgress')}
+        i18nUnpublishInProgress={t('virtualization.unpublishInProgress')}
         i18nPublishLogUrlText={t('shared:viewLogs')}
-        odataUrl={getOdataUrl(virtualization)}
+        odataUrl={getOdataUrl(state.virtualization)}
         publishedState={publishingDetails.state}
         publishingCurrentStep={publishingDetails.stepNumber}
         publishingLogUrl={publishingDetails.logUrl}
         publishingTotalSteps={publishingDetails.stepTotal}
         publishingStepText={publishingDetails.stepText}
-        virtualizationDescription={virtualization.tko__description}
-        virtualizationName={virtualization.keng__id}
+        virtualizationDescription={description}
+        virtualizationName={state.virtualization.keng__id}
         isWorking={false}
         onChangeDescription={doSetDescription}
       />
       <PageSection variant={'light'} noPadding={true}>
-        <VirtualizationNavBar virtualization={virtualization} />
+        <VirtualizationNavBar virtualization={state.virtualization} />
       </PageSection>
       <PageSection>
         <h2>Metrics are not yet implemented</h2>
       </PageSection>
     </>
   );
-}
+};
