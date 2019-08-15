@@ -1,6 +1,6 @@
 import { Form } from '@patternfly/react-core';
 import * as React from 'react';
-import { ButtonLink, Container, Loader, PageSection } from '../Layout';
+import { ButtonLink, Loader, PageSection } from '../Layout';
 
 export interface IIntegrationSaveFormProps {
   /**
@@ -47,44 +47,45 @@ export const IntegrationSaveForm: React.FunctionComponent<
 }) => {
   return (
     <PageSection>
-      <Form
-        isHorizontal={true}
-        onSubmit={handleSubmit}
-        style={{
-          margin: 'auto',
-          maxWidth: 600,
-        }}
-      >
-        <div className="row row-cards-pf">
-          <div className="card-pf">
-            {i18nFormTitle && (
-              <div className="card-pf-title">{i18nFormTitle}</div>
-            )}
-            <div className="card-pf-body">
-              <Container>{children}</Container>
-            </div>
-            <div className="card-pf-footer">
-              <ButtonLink
-                id={'integration-editor-save-button'}
-                onClick={onSave}
-                disabled={isSaveLoading || isSaveDisabled}
-              >
-                {isSaveLoading ? <Loader size={'xs'} inline={true} /> : null}
-                {i18nSave}
-              </ButtonLink>
-              &nbsp;
-              <ButtonLink
-                id={'integration-editor-publish-button'}
-                onClick={onPublish}
-                as={'primary'}
-                disabled={isPublishLoading || isPublishDisabled}
-              >
-                {i18nSaveAndPublish}
-              </ButtonLink>
-            </div>
+      <div className="row row-cards-pf">
+        <div className="card-pf"
+             style={{
+               margin: 'auto',
+               maxWidth: 600,
+             }}
+        >
+          {i18nFormTitle && (
+            <div className="card-pf-title">{i18nFormTitle}</div>
+          )}
+          <div className="card-pf-body">
+            <Form
+              isHorizontal={true}
+              onSubmit={handleSubmit}
+            >
+              {children}
+            </Form>
+          </div>
+          <div className="card-pf-footer">
+            <ButtonLink
+              id={'integration-editor-save-button'}
+              onClick={onSave}
+              disabled={isSaveLoading || isSaveDisabled}
+            >
+              {isSaveLoading ? <Loader size={'xs'} inline={true} /> : null}
+              {i18nSave}
+            </ButtonLink>
+            &nbsp;
+            <ButtonLink
+              id={'integration-editor-publish-button'}
+              onClick={onPublish}
+              as={'primary'}
+              disabled={isPublishLoading || isPublishDisabled}
+            >
+              {i18nSaveAndPublish}
+            </ButtonLink>
           </div>
         </div>
-      </Form>
+      </div>
     </PageSection>
   );
 };
