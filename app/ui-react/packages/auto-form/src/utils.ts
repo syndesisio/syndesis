@@ -29,7 +29,7 @@ export function applyInitialValues<T>(
  */
 export function sanitizeValues<T>(
   definition: IFormDefinition,
-  initialValue: any
+  initialValue: any = {}
 ): T {
   return Object.keys(definition).reduce((result, key): any => {
     const prop = definition[key];
