@@ -30,7 +30,7 @@ require (
 	github.com/mcuadros/go-version v0.0.0-20190308113854-92cdf37c5b75
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/openshift/api v3.9.0+incompatible
-	github.com/operator-framework/operator-sdk v0.8.1-0.20190528183636-a9ee17ecae3d
+	github.com/operator-framework/operator-sdk v0.10.0
 	github.com/pborman/uuid v0.0.0-20180906182336-adf5a7427709 // indirect
 	github.com/peterbourgon/diskv v2.0.1+incompatible // indirect
 	github.com/pkg/errors v0.8.1
