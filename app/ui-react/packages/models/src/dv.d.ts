@@ -32,8 +32,8 @@ export interface RestDataService {
 
 export interface SchemaNode {
   name: string;
+  teiidName: string;
   type: string;
-  path: string;
   connectionName: string;
   queryable: boolean;
   children: SchemaNode[];
@@ -51,8 +51,9 @@ export interface ViewInfo {
 
 export interface SchemaNodeInfo {
   connectionName: string;
-  sourceName: string;
-  sourcePath: string;
+  name: string;
+  nodePath: string[];
+  teiidName: string;
 }
 
 export interface VirtualizationSourceStatus {

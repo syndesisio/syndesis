@@ -28,8 +28,8 @@ function getSchemaNodeInfos(schemaNodes: SchemaNode[], connName: string) {
 }
 
 export interface IConnectionSchemaContentProps {
-  onNodeSelected: (connectionName: string, nodePath: string) => void;
-  onNodeDeselected: (connectionName: string, nodePath: string) => void;
+  onNodeSelected: (connectionName: string, name: string, teiidName: string, nodePath: string[]) => void;
+  onNodeDeselected: (connectionName: string, teiidName: string) => void;
 }
 
 export const ConnectionSchemaContent: React.FunctionComponent<
@@ -39,13 +39,15 @@ export const ConnectionSchemaContent: React.FunctionComponent<
 
   const handleSourceSelectionChange = async (
     connectionName: string,
-    nodePath: string,
-    selected: boolean
+    name: string,
+    teiidName: string,
+    nodePath: string[],
+    selected: boolean,
   ) => {
     if (selected) {
-      props.onNodeSelected(connectionName, nodePath);
+      props.onNodeSelected(connectionName, name, teiidName, nodePath);
     } else {
-      props.onNodeDeselected(connectionName, nodePath);
+      props.onNodeDeselected(connectionName, teiidName);
     }
   };
 
@@ -91,9 +93,10 @@ export const ConnectionSchemaContent: React.FunctionComponent<
                 children={srcInfos.map((info, index) => (
                   <SchemaNodeListItem
                     key={index}
-                    name={info.sourceName}
+                    name={info.name}
+                    teiidName={info.teiidName}
                     connectionName={info.connectionName}
-                    schemaPath={info.sourcePath}
+                    nodePath={info.nodePath}
                     selected={false}
                     onSelectionChanged={handleSourceSelectionChange}
                   />

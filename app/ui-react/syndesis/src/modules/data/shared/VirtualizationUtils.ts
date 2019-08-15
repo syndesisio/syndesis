@@ -34,7 +34,7 @@ export function getPreviewVdbName(): string {
  * into an array of ViewInfos
  * @param viewInfos the array of ViewInfos
  * @param schemaNode the SchemaNode from which the ViewInfo is generated
- * @param nodePath path for current SchemaNode
+ * @param nodePath path for current SchemaNode eg ['name0', 'name1', 'name2']
  * @param selectedViewNames names of views which are selected
  * @param existingViewNames names of views which exist (marked as update)
  */
@@ -98,7 +98,7 @@ export function generateViewInfos(
  * into an array of SchemaNodeInfos
  * @param schemaNodeInfos the array of SchemaNodeInfos
  * @param schemaNode the SchemaNode from which the SchemaNodeInfo is generated
- * @param nodePath path for current SchemaNode
+ * @param nodePath path for current SchemaNode eg ['sName', 'tName']
  */
 export function generateSchemaNodeInfos(
   schemaNodeInfos: SchemaNodeInfo[],
@@ -117,13 +117,16 @@ export function generateSchemaNodeInfos(
       // Create SchemaNodeInfo
       const view: SchemaNodeInfo = {
         connectionName: schemaNode.connectionName,
-        sourceName: schemaNode.name,
-        sourcePath: schemaNode.path,
+        name: schemaNode.name,
+        nodePath: sourcePath,
+        teiidName: schemaNode.teiidName
       };
       schemaNodeInfos.push(view);
     }
     // Update path for next level
-    sourcePath.push(schemaNode.name);
+    if(schemaNode.type !== 'root') {
+      sourcePath.push(schemaNode.name);
+    }
     // Process this nodes children
     if (schemaNode.children && schemaNode.children.length > 0) {
       for (const childNode of schemaNode.children) {
@@ -162,8 +165,7 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
   let index = 0;
   schemaNodeInfo.map(
     item =>
-      (srcPaths[index++] =
-        'connection=' + item.connectionName + '/' + item.sourcePath)
+      (srcPaths[index++] = 'schema=' + item.connectionName + '/table=' + item.teiidName)
   );
 
   return srcPaths;
@@ -190,6 +192,7 @@ function getViewDefinition(
   const viewDefn: ViewDefinition = {
     dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
+    id: '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
@@ -373,34 +376,14 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
 }
 
 /**
- * Generates the table name for the preview query, given the source path.
- * Example sourcePath: (connection=pgConn/schema=public/table=account)
- * @param sourcePath the path for the view source
+ * Get the table name for the preview query, given the source path.
+ * Example sourcePath: (schema=pgConn/table=account)
+ * @param sourcePath the path for the source
  */
 function getPreviewTableName(sourcePath: string): string {
-  // Assemble the name, utilizing the schema model suffix
-  return `"${getConnectionName(
-    sourcePath
-  ).toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${getNodeName(sourcePath)}"`;
-}
-
-/**
- * Get the connection name from the supplied source path.  connection is always the first segment.
- * Example sourcePath: 'connection=pgConn/schema=public/table=account'
- * @param sourcePath the view definition sourcePath
- */
-function getConnectionName(sourcePath: string): string {
-  // Connection name is the value of the first segment
-  return sourcePath.split('/')[0].split('=')[1];
-}
-
-/**
- * Get the node name from the supplied source path.
- * Example sourcePath: 'connection=pgConn/schema=public/table=account'
- * @param sourcePath the view definition sourcePath
- */
-export function getNodeName(sourcePath: string): string {
   const segments = sourcePath.split('/');
-  // Node name is the value of the last segment
-  return segments[segments.length - 1].split('=')[1];
+  const connectionName = segments[0].split('=')[1];
+  const tableName = segments[1].split('=')[1];
+  // Assemble the name, utilizing the schema model suffix
+  return `"${connectionName.toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${tableName}"`;
 }
