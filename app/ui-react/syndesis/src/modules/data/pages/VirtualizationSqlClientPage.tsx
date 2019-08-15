@@ -1,4 +1,7 @@
-import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
+import {
+  useViewDefinitionDescriptors,
+  useVirtualizationHelpers,
+} from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
@@ -9,7 +12,7 @@ import {
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext } from '../../../app';
+import { AppContext, UIContext } from '../../../app';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
@@ -47,7 +50,11 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     IVirtualizationSqlClientPageRouteParams,
     IVirtualizationSqlClientPageRouteState
   >();
+  const [description, setDescription] = React.useState(
+    state.virtualization.tko__description
+  );
   const appContext = React.useContext(AppContext);
+  const { pushNotification } = React.useContext(UIContext);
   const { updateVirtualizationDescription } = useVirtualizationHelpers();
   const {
     handleDeleteVirtualization,
@@ -55,9 +62,11 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
 
-  const { resource: viewDefinitionDescriptors, error, loading } = useViewDefinitionDescriptors(
-    params.virtualizationId
-  );
+  const {
+    resource: viewDefinitionDescriptors,
+    error,
+    loading,
+  } = useViewDefinitionDescriptors(params.virtualizationId);
 
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
@@ -89,13 +98,26 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   };
 
   const doSetDescription = async (newDescription: string) => {
-    await updateVirtualizationDescription(
-      appContext.user.username || 'developer',
-      params.virtualizationId,
-      newDescription
-    );
-    state.virtualization.tko__description = newDescription;
-    return true;
+    const previous = description;
+    setDescription(newDescription); // this sets InlineTextEdit component to new value
+    try {
+      await updateVirtualizationDescription(
+        appContext.user.username || 'developer',
+        params.virtualizationId,
+        newDescription
+      );
+      state.virtualization.tko__description = newDescription;
+      return true;
+    } catch {
+      pushNotification(
+        t('virtualization.errorUpdatingDescription', {
+          name: state.virtualization.keng__id,
+        }),
+        'error'
+      );
+      setDescription(previous); // save failed so set InlineTextEdit back to old value
+      return false;
+    }
   };
 
   return (
@@ -149,7 +171,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           publishingLogUrl={publishingDetails.logUrl}
           publishingTotalSteps={publishingDetails.stepTotal}
           publishingStepText={publishingDetails.stepText}
-          virtualizationDescription={state.virtualization.tko__description}
+          virtualizationDescription={description}
           virtualizationName={state.virtualization.keng__id}
           isWorking={false}
           onChangeDescription={doSetDescription}
