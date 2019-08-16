@@ -11,14 +11,16 @@ const stories = storiesOf(
 );
 
 const nodeName = 'Customers';
+const teiidName = 'Customers';
 const selectionChangedActionText = 'Selection changed for ' + nodeName;
 
 stories.add('sample schema node item', () => (
   <SchemaNodeListItem
     key="nodeListItem2"
     name={text('name', nodeName)}
+    teiidName={text('teiidName', teiidName)}
     connectionName={'connection1'}
-    schemaPath={'schema=public/table=customers'}
+    nodePath={['public','customers']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
   />
