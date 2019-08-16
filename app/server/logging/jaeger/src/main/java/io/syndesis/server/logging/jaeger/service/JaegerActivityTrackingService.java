@@ -15,33 +15,27 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implements a dblogging service for the Activity JAXRS service.
  */
 @Component
-@ConditionalOnProperty(value = "endpoints.dblogging.enabled", havingValue = "true", matchIfMissing = true)
+@ConditionalOnProperty(value = "endpoints.jaeger-activity-tracing.enabled", havingValue = "true", matchIfMissing = true)
 public class JaegerActivityTrackingService implements ActivityTrackingService {
     private static final Logger LOG = LoggerFactory.getLogger(JaegerActivityTrackingService.class);
 
     private final JaegerQueryAPI jaegerQueryApi;
-
-    public JaegerActivityTrackingService(@Value("jaeger.query.api.url") String jaegerQueryAPIURL) {
-        this(new JaegerQueryAPI(jaegerQueryAPIURL));
-    }
 
     public JaegerActivityTrackingService(JaegerQueryAPI jaegerQueryApi) {
         this.jaegerQueryApi = jaegerQueryApi;
@@ -71,10 +65,10 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
             Activity activity = null;
             ArrayList<ActivityStep> steps = new ArrayList<>();
 
-            if (trace.data != null && trace.data.size() >= 1) {
+            if (trace.spans != null && trace.spans.size() >= 1) {
 
 
-                for (JaegerQueryAPI.Span span : trace.data) {
+                for (JaegerQueryAPI.Span span : trace.spans) {
                     switch (span.findTag("kind", String.class)) {
                         case "activity": {
                             activity = new Activity();
@@ -127,11 +121,4 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
         return rc;
     }
 
-
-    public static void main(String[] args) throws IOException {
-        JaegerActivityTrackingService service = new JaegerActivityTrackingService("http://localhost:16686/api");
-        List<Activity> activities = service.getActivities("io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest", null, 10);
-        LOG.debug("activities: {}", activities);
-
-    }
 }
