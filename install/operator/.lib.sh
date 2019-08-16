@@ -139,6 +139,7 @@ EODockerfile
         for GOARCH in amd64 ; do
           for GOOS in linux darwin windows ; do
             echo extracting executable to ./dist/${GOOS}-${GOARCH}/operator
+            mkdir -p ./dist/${GOOS}-${GOARCH}
             docker run "${BUILDER_IMAGE_NAME}" cat /dist/${GOOS}-${GOARCH}/operator > ./dist/${GOOS}-${GOARCH}/operator
           done
         done
