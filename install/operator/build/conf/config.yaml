@@ -15,7 +15,7 @@ Images:
     Postgresql: postgresql
     Prometheus: prometheus
   Syndesis:
-    Komodo: komodo-server
+    Komodo: syndesis-dv
     Rest: syndesis-server
     S2i: syndesis-s2i
     Ui: syndesis-ui
