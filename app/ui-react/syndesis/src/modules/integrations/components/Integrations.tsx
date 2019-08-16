@@ -1,11 +1,17 @@
-import { getLastStep, getStartStep } from '@syndesis/api';
+import {
+  getLastStep,
+  getStartStep,
+  isIntegrationApiProvider,
+} from '@syndesis/api';
 import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
+  ApiProviderIcon,
   IntegrationActions,
   IntegrationsList,
   IntegrationsListItem,
   IntegrationsListItemUnreadable,
   IntegrationsListSkeleton,
+  MultiFlowIcon,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -40,6 +46,9 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                     this.props.integrations.map(
                       (mi: IntegrationWithMonitoring) => {
                         try {
+                          const isApiProvider = isIntegrationApiProvider(
+                            mi.integration
+                          );
                           const startStep = getStartStep(
                             mi.integration,
                             mi.integration.flows![0].id!
@@ -47,6 +56,30 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                           const endStep = getLastStep(
                             mi.integration,
                             mi.integration.flows![0].id!
+                          );
+                          const startIcon = isApiProvider ? (
+                            <ApiProviderIcon
+                              alt={t('APIProvider')}
+                              className={'integration-icon__icon'}
+                            />
+                          ) : (
+                            <EntityIcon
+                              entity={startStep}
+                              alt={startStep!.name || 'Step'}
+                              className={'integration-icon__icon'}
+                            />
+                          );
+                          const endIcon = isApiProvider ? (
+                            <MultiFlowIcon
+                              alt={t('MultipleFlows')}
+                              className={'integration-icon__icon'}
+                            />
+                          ) : (
+                            <EntityIcon
+                              entity={endStep}
+                              alt={endStep!.name || 'Step'}
+                              className={'integration-icon__icon'}
+                            />
                           );
                           return (
                             <WithIntegrationActions
@@ -81,20 +114,8 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                     mi.monitoring.detailedState.totalSteps
                                   }
                                   monitoringLogUrl={getPodLogUrl(mi.monitoring)}
-                                  startConnectionIcon={
-                                    <EntityIcon
-                                      entity={startStep}
-                                      alt={startStep!.name || 'Step'}
-                                      className={'integration-icon__icon'}
-                                    />
-                                  }
-                                  finishConnectionIcon={
-                                    <EntityIcon
-                                      entity={endStep}
-                                      alt={endStep!.name || 'Step'}
-                                      className={'integration-icon__icon'}
-                                    />
-                                  }
+                                  startConnectionIcon={startIcon}
+                                  finishConnectionIcon={endIcon}
                                   actions={
                                     <IntegrationActions
                                       integrationId={mi.integration!.id!}
