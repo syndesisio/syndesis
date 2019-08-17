@@ -29,7 +29,7 @@ import (
 const (
 	// test constants describing an app operator project
 	appProjectName = "app-operator"
-	appRepo        = "github.com" + filePathSep + "example-inc" + filePathSep + appProjectName
+	appRepo        = "github.com/example-inc/" + appProjectName
 	appApiVersion  = "app.example.com/v1alpha1"
 	appKind        = "AppService"
 )
@@ -47,7 +47,7 @@ func mustGetImportPath() string {
 	if err != nil {
 		log.Fatalf("Failed to get working directory: (%v)", err)
 	}
-	return filepath.Join(wd, appRepo)
+	return filepath.Join(wd, filepath.FromSlash(appRepo))
 }
 
 func setupScaffoldAndWriter() (*Scaffold, *bytes.Buffer) {
@@ -67,10 +67,10 @@ func setupTestFrameworkConfig() (*input.Config, error) {
 	absPath = absPath[:strings.Index(absPath, "internal/pkg")]
 	tfDir := filepath.Join(absPath, "test", "test-framework")
 
-	// Set the project and repo paths to {abs}/test/test-framework, which
+	// Set the project and repo path suffixes to test/test-framework, which
 	// contains pkg/apis for the memcached-operator.
 	return &input.Config{
-		Repo:           tfDir[strings.Index(absPath, "github.com"):],
+		Repo:           "github.com/operator-framework/operator-sdk/test/test-framework",
 		AbsProjectPath: tfDir,
 		ProjectName:    filepath.Base(tfDir),
 	}, nil
