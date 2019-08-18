@@ -3,7 +3,8 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+    "github.com/pkg/errors"
+    "io/ioutil"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"strings"
 
@@ -159,7 +160,7 @@ func ToUnstructured(obj runtime.Object) (*unstructured.Unstructured, error) {
 	// Convert it..
 	fields, err := runtime.DefaultUnstructuredConverter.ToUnstructured(obj)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	return &unstructured.Unstructured{fields}, nil
 }
