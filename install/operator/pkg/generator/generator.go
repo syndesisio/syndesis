@@ -4,7 +4,7 @@ package generator
 
 import (
 	"bytes"
-	"errors"
+	"github.com/pkg/errors"
 	"fmt"
 	"github.com/hoisie/mustache"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
@@ -138,7 +138,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 	response := []unstructured.Unstructured{}
 
 	// We can load plain yml files..
-	if strings.HasSuffix(filePath, ".yml") {
+	if strings.HasSuffix(filePath, ".yml") || strings.HasSuffix(filePath, ".yaml") {
 		fileData, err := AssetAsBytes(filePath)
 		if err != nil {
 			return nil, err
@@ -146,12 +146,12 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 
 		err = util.UnmarshalYaml(fileData, &obj)
 		if err != nil {
-			return nil, fmt.Errorf("%s:\n%s\n", err, string(fileData))
+			return nil, errors.Errorf("%s:\n%s\n", err, string(fileData))
 		}
 	}
 
 	// We can process go lang templates.
-	if strings.HasSuffix(filePath, ".yml.tmpl") {
+	if strings.HasSuffix(filePath, ".yml.tmpl") || strings.HasSuffix(filePath, ".yaml.tmpl") {
 		fileData, err := AssetAsBytes(filePath)
 		if err != nil {
 			return nil, err
@@ -171,12 +171,12 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 
 		err = util.UnmarshalYaml(rawYaml, &obj)
 		if err != nil {
-			return nil, fmt.Errorf("%s:\n%s\n", err, string(rawYaml))
+			return nil, errors.Errorf("%s: %s: \n%s\n", filePath, err, string(rawYaml))
 		}
 	}
 
 	// We can process mustache templates.
-	if strings.HasSuffix(filePath, ".yml.mustache") {
+	if strings.HasSuffix(filePath, ".yml.mustache") || strings.HasSuffix(filePath, ".yaml.mustache") {
 		fileData, err := AssetAsBytes(filePath)
 		if err != nil {
 			return nil, err
