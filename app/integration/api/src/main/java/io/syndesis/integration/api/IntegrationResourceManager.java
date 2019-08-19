@@ -98,11 +98,16 @@ public interface IntegrationResourceManager {
         return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
     }
 
+
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     default Integration sanitize(Integration integration) {
+        // Always sanitize the integration name
+        String sanitizeIntegrationName = sanitize(integration.getName());
+
         if (integration.getFlows().isEmpty()) {
-            return integration;
+            return new Integration.Builder().createFrom(integration)
+                .name(sanitizeIntegrationName).build();
         }
 
         final List<Flow> replacementFlows = new ArrayList<>(integration.getFlows());
@@ -202,8 +207,18 @@ public interface IntegrationResourceManager {
         }
 
         return new Integration.Builder().createFrom(integration)
+            .name(sanitizeIntegrationName)
             .flows(replacementFlows)
             .build();
+    }
+
+    /**
+     * Sanitize an integration name according a specific set of characters
+     * @param name the name to sanitize
+     * @return a sanitized name replacing illegal characters
+     */
+    default String sanitize(String name){
+        return name.replaceAll("[^A-Za-z0-9]+","_");
     }
 
     /**

@@ -17,30 +17,18 @@ package io.syndesis.common.model.integration;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.common.model.validation.UniquenessRequired;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 
-import io.syndesis.common.util.json.StringTrimmingConverter;
 import org.immutables.value.Value;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
 @Value.Immutable
 @JsonDeserialize(builder = Integration.Builder.class)
 @NoDuplicateIntegration(groups = UniquenessRequired.class)
 @SuppressWarnings("immutables")
 public interface Integration extends WithId<Integration>, IntegrationBase {
-
-    @Override
-    @JsonDeserialize(converter = StringTrimmingConverter.class)
-    @NotNull(groups = AllValidations.class)
-    @Pattern(regexp = "^[^[a-zA-Z0-9_\\.\\- \t]*$]+$", message = "Integration name can only " +
-        "contain letters, numbers, spaces, tabs and special characters: -_.")
-    String getName();
 
     @Override
     default Kind getKind() {

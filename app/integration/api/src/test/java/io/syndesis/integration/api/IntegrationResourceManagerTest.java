@@ -50,8 +50,6 @@ public class IntegrationResourceManagerTest {
 
     @Test
     public void testSanitizeConnectors() {
-
-
         Integration source = newIntegration(
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
@@ -73,6 +71,37 @@ public class IntegrationResourceManagerTest {
         assertThat(sanitizedConnection.isPresent()).isTrue();
         assertThat(sanitizedConnection.get().getConnector().isPresent()).isTrue();
         assertThat(sanitizedConnection.get().getConnector().get()).isEqualTo(getTimerConnector());
+    }
+
+    @Test
+    public void testSanitizeEmptyFlowIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .name("_Test-Integration, with a l0t of ?¿ str@nge {hars`!")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("_Test_Integration_with_a_l0t_of_str_nge_hars_");
+    }
+
+    @Test
+    public void testSanitizeFullFlowIntegrationName() {
+        Integration source = newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("timer-connection")
+                    .connectorId(getTimerConnector().getId().get())
+                    .build())
+                .putConfiguredProperty("period", "5000")
+                .action(getPeriodicTimerAction())
+                .build());
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("Test_Integration");
     }
 
     private String getSyndesisVersion() {
