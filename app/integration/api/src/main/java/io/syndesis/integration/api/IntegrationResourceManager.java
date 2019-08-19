@@ -15,18 +15,6 @@
  */
 package io.syndesis.integration.api;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.WithDependencies;
@@ -40,8 +28,21 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public interface IntegrationResourceManager {
 
@@ -218,7 +219,7 @@ public interface IntegrationResourceManager {
      * @return a sanitized name replacing illegal characters
      */
     default String sanitize(String name){
-        return name.replaceAll("[^A-Za-z0-9]+","_");
+        return name == null ? null : Names.sanitize(name);
     }
 
     /**

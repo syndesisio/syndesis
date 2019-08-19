@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 public class IntegrationResourceManagerTest {
 
@@ -83,7 +84,33 @@ public class IntegrationResourceManagerTest {
 
         Integration sanitized = resourceManager.sanitize(source);
 
-        assertThat(sanitized.getName()).isEqualTo("_Test_Integration_with_a_l0t_of_str_nge_hars_");
+        assertThat(sanitized.getName()).isEqualTo("test-integration-with-a-l0t-of-strnge-hars");
+    }
+
+    @Test
+    public void testSanitizeEmptyIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertNull(sanitized.getName());
+    }
+
+    @Test
+    public void testSanitizeVeryLongIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .name("This is a test integration name that wants to exceed sixtyfour character lenghts... " +
+                "not even sure where it will be truncated at, but it will somewhere...")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("this-is-a-test-integration-name-that-wants-to-exceed-sixtyfour0");
     }
 
     @Test
@@ -101,7 +128,7 @@ public class IntegrationResourceManagerTest {
 
         Integration sanitized = resourceManager.sanitize(source);
 
-        assertThat(sanitized.getName()).isEqualTo("Test_Integration");
+        assertThat(sanitized.getName()).isEqualTo("test-integration");
     }
 
     private String getSyndesisVersion() {
