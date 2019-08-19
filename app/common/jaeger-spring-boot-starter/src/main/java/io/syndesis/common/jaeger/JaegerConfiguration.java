@@ -38,10 +38,7 @@ public class JaegerConfiguration {
     @Primary
     @Bean
     public io.opentracing.Tracer jaegerTracer() {
-        return new io.jaegertracing.Configuration(serviceName)
-            .withSampler(io.jaegertracing.Configuration.SamplerConfiguration.fromEnv())
-            .withReporter(io.jaegertracing.Configuration.ReporterConfiguration.fromEnv())
-            .getTracer();
+        return io.jaegertracing.Configuration.fromEnv(serviceName).getTracer();
     }
 
 }

@@ -1,161 +1,161 @@
 [ {
   "id" : "41c21bbc3e4fb7bf",
-  "at" : 1566230446055000,
+  "at" : 1566230446055,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230446055000,
-    "duration" : 138
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230446056000,
-    "duration" : 2880,
+    "at" : 1566230446056,
+    "duration" : 2880000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmeazzbCw1KS3JR4FVSz, firedTime=Mon Aug 19 16:00:46 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=41c21bbc3e4fb7bf:da10ebafdb5f12da:41c21bbc3e4fb7bf:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230446055,
+    "duration" : 138000
   } ]
 }, {
   "id" : "3d73f53c9dffbcc1",
-  "at" : 1566230456056000,
+  "at" : 1566230456056,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230456056000,
-    "duration" : 179
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230456061000,
-    "duration" : 5363,
+    "at" : 1566230456061,
+    "duration" : 5363000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lmeb1QrCw1KS3JR4FVUz, firedTime=Mon Aug 19 16:00:56 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=3d73f53c9dffbcc1:4e083a5b6f6899b9:3d73f53c9dffbcc1:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230456056,
+    "duration" : 179000
   } ]
 }, {
   "id" : "b93098e321641f85",
-  "at" : 1566230475143000,
+  "at" : 1566230475143,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230475149000,
-    "duration" : 301
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230475210000,
-    "duration" : 111770,
+    "at" : 1566230475210,
+    "duration" : 111770000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lmeb64XCw1KS3JR4FVWz, firedTime=Mon Aug 19 16:01:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=b93098e321641f85:f0279868307a4354:b93098e321641f85:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230475149,
+    "duration" : 301000
   } ]
 }, {
   "id" : "f1813a73717e6f1c",
-  "at" : 1566230484891000,
+  "at" : 1566230484891,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230484891000,
-    "duration" : 99
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230484892000,
-    "duration" : 2939,
+    "at" : 1566230484892,
+    "duration" : 2939000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lmeb8TQCw1KS3JR4FVYz, firedTime=Mon Aug 19 16:01:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f1813a73717e6f1c:ab8090d181d1886b:f1813a73717e6f1c:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230484891,
+    "duration" : 99000
   } ]
 }, {
   "id" : "f509a044c63b76bd",
-  "at" : 1566230494891000,
+  "at" : 1566230494891,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230494891000,
-    "duration" : 118
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230494892000,
-    "duration" : 5849,
+    "at" : 1566230494892,
+    "duration" : 5849000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebAufCw1KS3JR4FV_z, firedTime=Mon Aug 19 16:01:34 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f509a044c63b76bd:92ea7de702f51949:f509a044c63b76bd:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230494891,
+    "duration" : 118000
   } ]
 }, {
   "id" : "514f18fc5e8e3055",
-  "at" : 1566230504895000,
+  "at" : 1566230504895,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230504895000,
-    "duration" : 151
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230504896000,
-    "duration" : 10403,
+    "at" : 1566230504896,
+    "duration" : 10403000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebDLzCw1KS3JR4FVbz, firedTime=Mon Aug 19 16:01:44 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=514f18fc5e8e3055:5fd2844c5e30cb45:514f18fc5e8e3055:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230504895,
+    "duration" : 151000
   } ]
 }, {
   "id" : "86ed2cc547f5513a",
-  "at" : 1566230514895000,
+  "at" : 1566230514895,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230514895000,
-    "duration" : 112
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230514896000,
-    "duration" : 4081,
+    "at" : 1566230514896,
+    "duration" : 4081000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebFnECw1KS3JR4FVdz, firedTime=Mon Aug 19 16:01:54 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=86ed2cc547f5513a:d77cd3c5965d0862:86ed2cc547f5513a:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230514895,
+    "duration" : 112000
   } ]
 }, {
   "id" : "11bfc1865d518738",
-  "at" : 1566230524895000,
+  "at" : 1566230524895,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230524896000,
-    "duration" : 103
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230524896000,
-    "duration" : 5718,
+    "at" : 1566230524896,
+    "duration" : 5718000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebIEUCw1KS3JR4FVfz, firedTime=Mon Aug 19 16:02:04 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=11bfc1865d518738:129eb720bdffba8c:11bfc1865d518738:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230524896,
+    "duration" : 103000
   } ]
 }, {
   "id" : "810ddb52e8012d24",
-  "at" : 1566230534895000,
+  "at" : 1566230534895,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230534895000,
-    "duration" : 123
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230534896000,
-    "duration" : 4487,
+    "at" : 1566230534896,
+    "duration" : 4487000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebKfjCw1KS3JR4FVhz, firedTime=Mon Aug 19 16:02:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=810ddb52e8012d24:ba99dd61f7ecc3ec:810ddb52e8012d24:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230534895,
+    "duration" : 123000
   } ]
 }, {
   "id" : "10a6654d0994ff70",
-  "at" : 1566230544895000,
+  "at" : 1566230544895,
   "pod" : "i-test1-11-nsss5",
   "status" : "done",
   "failed" : true,
   "steps" : [ {
-    "id" : "-Lme60t4Yh7X42QGsmPW",
-    "at" : 1566230544895000,
-    "duration" : 175
-  }, {
     "id" : "-Lme62dbYh7X42QGsmPW",
-    "at" : 1566230544902000,
-    "duration" : 3246,
+    "at" : 1566230544902,
+    "duration" : 3246000,
     "messages" : [ "Message Context: [{breadcrumbId=i-LmebN6zCw1KS3JR4FVjz, firedTime=Mon Aug 19 16:02:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=10a6654d0994ff70:c12b89afd8e99872:10a6654d0994ff70:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!" ]
+  }, {
+    "id" : "-Lme60t4Yh7X42QGsmPW",
+    "at" : 1566230544895,
+    "duration" : 175000
   } ]
 } ]

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,12 +76,12 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                             activity.setId(trace.traceID);
                             // activity.setVer();
                             JaegerQueryAPI.JaegerProcess process = trace.processes.get(span.processID);
-                            String version = process.findTag("version", String.class);
+                            String version = process.findTag("integration.version", String.class);
                             activity.setVer(version);
                             String hostname = process.findTag("hostname", String.class);
                             activity.setPod(hostname);
                             activity.setStatus("done");
-                            activity.setAt(span.startTime);
+                            activity.setAt(span.startTime/1000);
                             Boolean failed = span.findTag("failed", Boolean.class);
                             if (failed != null) {
                                 activity.setFailed(failed);
@@ -90,8 +91,8 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                         case "step": {
                             ActivityStep step = new ActivityStep();
                             step.setId(span.operationName);
-                            step.setAt(span.startTime);
-                            step.setDuration(span.duration);
+                            step.setAt(span.startTime/1000);
+                            step.setDuration(span.duration*1000);
 
                             List<String> messages = span.findLogs("event");
                             step.setMessages(messages);
@@ -111,6 +112,7 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
             }
 
             if (activity != null) {
+                Collections.reverse(steps);
                 activity.setSteps(steps);
                 rc.add(activity);
             }
