@@ -121,6 +121,22 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		os.Exit(1)
 	}
 
+	// Update the syndesis resource so that the user see all the default configuration
+	// that is being applied.
+	_, c, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
+	if c != controllerutil.OperationResultNone {
+
+		a.log.Info("Updated CRD ", "name", syndesis.Name)
+		// load it back to make sure we've got the latest...
+		err = a.client.Get(ctx, client.ObjectKey{
+			Name:      syndesis.GetName(),
+			Namespace: syndesis.GetNamespace(),
+		}, syndesis)
+		if err != nil {
+			return err
+		}
+	}
+
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", renderContext)
 	if err != nil {
@@ -251,21 +267,18 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
+		util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
 		a.log.Info("Syndesis resource installed", "name", target.Name)
-	}
-	_, c, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
-	if c != controllerutil.OperationResultNone {
-		a.log.Info("Updated CRD ", "name", syndesis.Name)
 	}
 	return err
 }
 
-// Checks that the tags from syndesis components is valid beetween the supported versions
+// Checks that the tags from syndesis components is valid between the supported versions
 func checkTags(context *generator.Context) error {
 	c := version.NewConstrainGroupFromString(fmt.Sprintf(">=%s,<%s", context.TagMinor, context.TagMajor))
 	var images = []struct {
-		name  string
-		tag   string
+		name string
+		tag  string
 	}{
 		{"server", context.Syndesis.Spec.Components.Server.Tag},
 		{"meta", context.Syndesis.Spec.Components.Meta.Tag},
