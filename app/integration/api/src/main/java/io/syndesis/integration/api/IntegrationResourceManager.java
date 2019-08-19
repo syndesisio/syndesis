@@ -40,6 +40,7 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SuppressFBWarnings;
 import org.apache.commons.lang3.StringUtils;
 
@@ -82,7 +83,7 @@ public interface IntegrationResourceManager {
     Optional<InputStream> loadExtensionBLOB(String id);
 
     /**
-     *  Load an OpenApi definition from the underlying storage by id.
+     * Load an OpenApi definition from the underlying storage by id.
      */
     Optional<OpenApi> loadOpenApiDefinition(String id);
 
@@ -214,11 +215,12 @@ public interface IntegrationResourceManager {
 
     /**
      * Sanitize an integration name according a specific set of characters
+     *
      * @param name the name to sanitize
      * @return a sanitized name replacing illegal characters
      */
-    default String sanitize(String name){
-        return name.replaceAll("[^A-Za-z0-9]+","_");
+    default String sanitize(String name) {
+        return name == null ? null : Names.sanitize(name);
     }
 
     /**

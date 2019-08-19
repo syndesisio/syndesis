@@ -7,7 +7,7 @@
   <groupId>io.syndesis.integrations</groupId>
   <artifactId>project</artifactId>
   <version>0.1-SNAPSHOT</version>
-  <name>Syndesis Integrations :: Test_Integration</name>
+  <name>Syndesis Integrations :: test-integration</name>
   <description>This is a test integration!</description>
   <packaging>jar</packaging>
 
