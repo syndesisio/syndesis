@@ -1,37 +1,39 @@
-.with-rule-filter-form,
-.with-rule-filter-form .pf-c-page__main-section {
+.with-rule-filter-form {
+  display: flex;
   flex-grow: 1;
 }
 
-.with-rule-filter-form {
-  display: flex;
+.with-rule-filter-form .pf-c-form {
+  max-width: 600px;
 }
 
-.with-rule-filter-form .form-array-fields {
-  margin-bottom: 40px;
-  display: grid;
-  grid-template-columns: 1fr auto;
-  grid-template-rows: repeat(3, auto);
+.with-rule-filter-form .pf-c-form > .pf-c-form__group {
+  position: sticky;
+  top: 0;
+  background: white;
+  padding: 20px 0;
+  z-index: 1;
 }
 
-.with-rule-filter-form fieldset:first-of-type .form-array-fields {
-  margin-top: 40px;
+.with-rule-filter-form .pf-c-form .form-array-section {
+  border: 1px solid #d1d1d1;
+  padding: 20px;
 }
 
-.with-rule-filter-form__group {
-  grid-column: 1 / 2;
+.with-rule-filter-form .pf-c-form .with-rule-filter-form__action {
+  order: -1;
+  margin: 0;
+  text-align: right;
 }
 
-.with-rule-filter-form__action {
-  align-self: center;
-  grid-column: 2 / 3;
-  grid-row: 1 / -1;
-  border-left: 1px solid var(--pf-global--BorderColor--100);
-  padding-top: 30px;
-  padding-bottom: 30px;
-  padding-left: 25px;
-  display: flex;
-  align-items: center;
-  margin-bottom: 0;
-  margin-left: 31px;
+.with-rule-filter-form .pf-c-form .with-rule-filter-form__action .control-label {
+  display: none;
+}
+
+.form-array-container > :last-child {
+  justify-self: start;
+}
+
+.form-array-section > :last-child {
+  justify-self: end;
 }
