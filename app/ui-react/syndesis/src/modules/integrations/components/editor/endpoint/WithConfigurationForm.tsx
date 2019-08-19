@@ -13,6 +13,9 @@ import { ApiError } from '../../../../../shared';
 import { ConfigurationForm } from './ConfigurationForm';
 import { NothingToConfigure } from './NothingToConfigure';
 
+// Special action IDs
+export const API_PROVIDER_END_ACTION_ID = 'io.syndesis:api-provider-end';
+
 export interface IOnUpdatedIntegrationProps {
   /**
    * the action object that has been configured.
@@ -82,10 +85,24 @@ export const WithConfigurationForm: React.FunctionComponent<
     getConnectorActions(getConnectionConnector(props.connection)),
     props.actionId
   );
+  // For the API provider end action, the descriptor stored in the integration is the source of truth
+  if (props.actionId === API_PROVIDER_END_ACTION_ID) {
+    return (
+      <ConfigurationForm action={action} descriptor={action.descriptor!} {...props}>
+        <NothingToConfigure
+          action={action}
+          descriptor={action.descriptor!}
+          {...props}
+        />
+      </ConfigurationForm>
+    );
+  }
+  // For all other actions, the descriptor is fetched from the meta service
   return (
     <WithActionDescriptor
       connectionId={props.connection.id!}
       actionId={action.id!}
+      initialValue={action.descriptor}
       configuredProperties={props.initialValue || {}}
     >
       {({ data, hasData, error, errorMessage }) => (
