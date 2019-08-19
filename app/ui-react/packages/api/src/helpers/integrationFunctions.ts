@@ -1437,7 +1437,7 @@ export function createConditionalFlowStart(
     name: 'Flow start',
     properties: {},
   } as StepKind;
-  return adaptOutputShape(thisStep, step);
+  return step;
 }
 
 /**
@@ -1466,26 +1466,6 @@ function getConnectorAction(id: string, connection: Connection): Action {
   return connection!.connector!.actions!.find(
     action => action.id === id
   ) as Action;
-}
-
-/**
- * Helper function to ensure a conditional flow step assumes the correct
- * output shape that reflects the required input shape it's being inserted
- * in front of.
- * @param thisStep
- * @param step
- */
-function adaptOutputShape(thisStep: StepKind, step: StepKind) {
-  if (
-    thisStep &&
-    thisStep.action &&
-    thisStep.action.descriptor &&
-    thisStep.action.descriptor.inputDataShape
-  ) {
-    step.action!.descriptor!.outputDataShape =
-      thisStep.action.descriptor.inputDataShape;
-  }
-  return step;
 }
 
 /**
