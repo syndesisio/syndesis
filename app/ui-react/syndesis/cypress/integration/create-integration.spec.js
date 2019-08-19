@@ -150,7 +150,6 @@ describe('Create an Integration', () => {
      * Use connection created earlier
      */
     cy.get('[data-testid|=connection-card-' + connectionSlug + ']')
-      .eq(0)
       .should('be.visible')
       .click();
 
