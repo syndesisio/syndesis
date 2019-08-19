@@ -38,9 +38,9 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
     @Override
     public void onExchangeBegin(Route route, Exchange exchange) {
         String activityId = ActivityTracker.getActivityId(exchange);
-
         if (ObjectHelper.isEmpty(activityId)) {
             ActivityTracker.initializeTracking(exchange);
+            activityId = ActivityTracker.getActivityId(exchange);
         }
 
         Span span = tracer

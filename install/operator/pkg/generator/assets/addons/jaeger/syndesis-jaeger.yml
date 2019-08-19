@@ -1,0 +1,39 @@
+- apiVersion: jaegertracing.io/v1
+  kind: Jaeger
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: jaeger
+    name: syndesis-jaeger
+  spec:
+    strategy: allInOne
+    allInOne:
+      options:
+        memory:
+          max-traces: 100000
+      ingress:
+        enabled: false
+#
+# This is service is here as a hack to more easily access the query api from syndesis, bypassing
+# the oauth proxy..
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: jaeger
+    name: noauth-syndesis-jaeger-query
+  spec:
+    ports:
+      - name: query
+        port: 443
+        protocol: TCP
+        targetPort: 16686
+    selector:
+      app: jaeger
+      app.kubernetes.io/component: all-in-one
+      app.kubernetes.io/name: syndesis-jaeger

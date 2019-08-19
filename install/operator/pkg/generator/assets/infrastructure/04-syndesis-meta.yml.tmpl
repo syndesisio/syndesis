@@ -76,10 +76,16 @@
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-{{if .Debug}}
-          - name: JAVA_DEBUG
-            value: "true"
+{{if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+          - name: JAEGER_ENDPOINT
+            value: "http://syndesis-jaeger-collector:14268/api/traces"
+          - name: JAEGER_SAMPLER_TYPE
+            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_TYPE "const"}}"
+          - name: JAEGER_SAMPLER_PARAM
+            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_PARAM "0"}}"
 {{end}}
+          - name: JAVA_DEBUG
+            value: "{{.Debug}}"
           image: ' '
           imagePullPolicy: IfNotPresent
           readinessProbe:

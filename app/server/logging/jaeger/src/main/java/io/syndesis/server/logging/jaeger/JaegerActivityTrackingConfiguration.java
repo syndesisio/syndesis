@@ -15,9 +15,13 @@
  */
 package io.syndesis.server.logging.jaeger;
 
+import io.syndesis.server.logging.jaeger.service.JaegerQueryAPI;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 
 /**
  * Configured in spring.factories so that this configuration is automatically picked
@@ -27,5 +31,14 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @ConditionalOnProperty(value = "features.jaeger-activity-tracing.enabled", havingValue = "true")
 public class JaegerActivityTrackingConfiguration {
+
+    @Value("${jaeger.query.api.url:https://syndesis-jaeger-query:443/api}")
+    String jaegerQueryAPIURL;
+
+    @Lazy
+    @Bean
+    public JaegerQueryAPI api() {
+        return new JaegerQueryAPI(jaegerQueryAPIURL);
+    }
 
 }

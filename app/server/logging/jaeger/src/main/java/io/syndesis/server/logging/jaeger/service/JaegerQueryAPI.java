@@ -15,11 +15,10 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.SuppressFBWarnings;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -28,18 +27,15 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.SuppressFBWarnings;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * Interface to Jaeger's Query API
  */
-@Component
 public class JaegerQueryAPI {
 
     private final WebTarget api;
@@ -56,20 +52,24 @@ public class JaegerQueryAPI {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Traces extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public ArrayList<Trace> data;
+
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Trace extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String traceID;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
-        public ArrayList<Span> data;
+        public ArrayList<Span> spans;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public HashMap<String, JaegerProcess> processes;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Span extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String traceID;
@@ -109,6 +109,7 @@ public class JaegerQueryAPI {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Reference extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String refType;
@@ -118,6 +119,7 @@ public class JaegerQueryAPI {
         public String spanID;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Tag extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String key;
@@ -127,6 +129,7 @@ public class JaegerQueryAPI {
         public Object value;
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class Log extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public long timestamp;
@@ -142,6 +145,7 @@ public class JaegerQueryAPI {
         }
     }
 
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public static final class JaegerProcess extends JsonBase {
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String serviceName;
@@ -195,6 +199,17 @@ public class JaegerQueryAPI {
                 throw new WebApplicationException("Got unexpected content type: " + contentType + " with body: " + response.readEntity(String.class));
             }
             return response.readEntity(Traces.class).data;
+// Use the following commented code instead if you want to peek at what the query API is returning...
+//            byte[] bytes = response.readEntity(byte[].class);
+//            String data = new String(bytes);
+//            System.out.println(data);
+//            Traces o = null;
+//            try {
+//                o = Json.reader().forType(Traces.class).readValue(data);
+//            } catch (IOException e) {
+//                throw new WebApplicationException(e);
+//            }
+//            return o.data;
         }
         return new ArrayList<>();
     }

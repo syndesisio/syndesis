@@ -363,6 +363,7 @@ public class OpenShiftServiceImplTest {
                             .addToEnv(new EnvVarBuilder().withName("LOADER_HOME").withValue(config.getIntegrationDataPath()).build())
                             .addToEnv(new EnvVarBuilder().withName("AB_JMX_EXPORTER_CONFIG").withValue("/tmp/src/prometheus-config.yml").build())
                             .addToEnv(new EnvVarBuilder().withName("JAEGER_ENDPOINT").withValue("http://syndesis-jaeger-collector:14268/api/traces").build())
+                            .addToEnv(new EnvVarBuilder().withName("JAEGER_TAGS").withValue("integration.version="+deploymentData.getVersion()).build())
                             .addToEnv(new EnvVarBuilder().withName("JAEGER_SAMPLER_TYPE").withValue("const").build())
                             .addToEnv(new EnvVarBuilder().withName("JAEGER_SAMPLER_PARAM").withValue("1").build())
                             .addNewPort()

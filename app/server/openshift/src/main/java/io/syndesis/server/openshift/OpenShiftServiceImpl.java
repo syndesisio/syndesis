@@ -258,6 +258,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
                             new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
                             new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
+                            new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                             new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
                             new EnvVar("JAEGER_SAMPLER_PARAM", "1", null))
                         .addNewPort()
