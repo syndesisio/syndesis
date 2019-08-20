@@ -34,3 +34,7 @@ Cypress.on('window:before:load', win => {
     return originalFetch(url, options);
   };
 });
+
+Cypress.Screenshot.defaults({
+  screenshotOnRunFailure: false,
+});
