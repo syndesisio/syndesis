@@ -20,6 +20,10 @@
     "template" : [ {
       "displayValue" : "template",
       "value" : "DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, OUT INTEGER C)"
+    } ],
+    "procedureName" : [ {
+      "displayValue" : "DEMO_OUT",
+      "value" : "DEMO_OUT"
     } ]
   }
 }
