@@ -86,13 +86,13 @@ public class MongoConfiguration {
 
     public String getMongoClientURI() {
         return String.format("mongodb://%s:%s@%s:%d/%s", this.user, this.password, this.host,
-                this.port, this.adminDB);
+            this.port, this.adminDB);
     }
 
     @Override
     public String toString() {
         return "MongoConfiguration [host=" + host + ", user=" + user + ", password=***, port=" + port + ", adminDB="
-                + adminDB + "]";
+            + adminDB + "]";
     }
 
 }

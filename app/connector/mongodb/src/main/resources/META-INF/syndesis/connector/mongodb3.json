@@ -1,8 +1,11 @@
 {
-  "version": 3,
+  "version": 4,
   "actions": [
     {
       "actionType": "connector",
+      "connectorCustomizers": [
+        "io.syndesis.connector.mongo.MongoProducerCustomizer"
+      ],
       "description": "Mongo DB producer",
       "descriptor": {
         "componentScheme": "mongodb3",
@@ -24,6 +27,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "Database name",
+                "order": "1",
                 "placeholder": "database",
                 "required": true,
                 "secret": false,
@@ -36,6 +40,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "Collection name",
+                "order": "2",
                 "placeholder": "collection",
                 "required": true,
                 "secret": false,
@@ -44,24 +49,54 @@
               "operation": {
                 "deprecated": false,
                 "displayName": "Operation to perform",
+                "enum": [
+                  {
+                    "label": "Find by id",
+                    "value": "findById"
+                  },
+                  {
+                    "label": "Find all",
+                    "value": "findAll"
+                  },
+                  {
+                    "label": "Insert",
+                    "value": "insert"
+                  },
+                  {
+                    "label": "Save",
+                    "value": "save"
+                  },
+                  {
+                    "label": "Update",
+                    "value": "update"
+                  },
+                  {
+                    "label": "Remove",
+                    "value": "remove"
+                  },
+                  {
+                    "label": "Count",
+                    "value": "count"
+                  }
+                ],
                 "group": "common",
                 "javaType": "java.lang.String",
-                "kind": "path",
+                "kind": "property",
                 "labelHint": "Operation name",
-                "placeholder": "operation",
+                "order": "3",
                 "required": true,
                 "secret": false,
                 "type": "string"
               }
             }
-		}
+          }
         ]
       },
       "id": "io.syndesis.connector:connector-mongodb-producer",
       "name": "Mongo producer",
       "pattern": "To"
     },
-	{
+    {
       "actionType": "connector",
       "description": "Mongo DB consumer",
       "descriptor": {
@@ -84,6 +119,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "Database name",
+                "order": "1",
                 "placeholder": "database",
                 "required": true,
                 "secret": false,
@@ -96,6 +132,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "Collection name",
+                "order": "2",
                 "placeholder": "collection",
                 "required": true,
                 "secret": false,
@@ -108,6 +145,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "tailTrackIncreasingField",
+                "order": "3",
                 "placeholder": "_id",
                 "required": true,
                 "secret": false,
@@ -120,6 +158,7 @@
                 "javaType": "boolean",
                 "kind": "path",
                 "labelHint": "persistentTailTracking",
+                "order": "4",
                 "placeholder": "false",
                 "required": false,
                 "secret": false,
@@ -132,6 +171,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "persistentId",
+                "order": "5",
                 "placeholder": "idTracker",
                 "required": false,
                 "secret": false,
@@ -144,6 +184,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "tailTrackDb",
+                "order": "6",
                 "placeholder": "tailTrackDb",
                 "required": false,
                 "secret": false,
@@ -156,6 +197,7 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "tailTrackCollection",
+                "order": "7",
                 "placeholder": "tailTrackCollection",
                 "required": false,
                 "secret": false,
@@ -168,13 +210,14 @@
                 "javaType": "java.lang.String",
                 "kind": "path",
                 "labelHint": "tailTrackField",
+                "order": "8",
                 "placeholder": "tailTrackField",
                 "required": false,
                 "secret": false,
                 "type": "string"
               }
             }
-		}
+          }
         ]
       },
       "id": "io.syndesis.connector:connector-mongodb-consumer",

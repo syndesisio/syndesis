@@ -22,7 +22,9 @@ import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
@@ -38,7 +40,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-                "findAll");
+            "findAll");
     }
 
     // **************************
@@ -54,10 +56,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", PASSWORD);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.OK, result.getStatus());
@@ -72,10 +74,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", PASSWORD);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
@@ -89,10 +91,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("user", USER);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.ERROR, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
@@ -107,10 +109,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("password", "wrongPassword");
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
@@ -127,10 +129,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("adminDB", "someAdminDB");
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
@@ -147,10 +149,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("port", 12343);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
-                CONNECTOR_ID, params);
+            CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
-                .resolveComponentVerifierExtension(this.context, SCHEME)
-                .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());

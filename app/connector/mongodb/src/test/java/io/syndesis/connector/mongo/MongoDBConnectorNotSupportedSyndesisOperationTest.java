@@ -15,45 +15,29 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.util.List;
-
+import io.syndesis.common.model.integration.Step;
 import org.junit.Before;
 import org.junit.Test;
 
-import io.syndesis.common.model.integration.Step;
+import java.util.List;
 
-@SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert" })
-public class MongoDBConnectorNotSupportedOperationTest extends MongoDBConnectorTestSupport {
-
-    // **************************
-    // Set up
-    // **************************
-
-    @Override
-    @Before
-    public void setUp() {
-        try {
-            super.setUp();
-            fail("Setup should have thrown an exception!");
-        } catch (Exception e) {
-            // We do expect a failure cause the operation provided is not
-            // supported
-        }
-    }
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
+public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE,
-                COLLECTION, "somethingNotSupported");
+            COLLECTION, "aggregate");
     }
 
     // **************************
     // Tests
     // **************************
 
-    @Test
+    @Test(expected = Exception.class)
     public void mongoTest() {
-        assertTrue(true);
+        template().sendBody("direct:start","Anything....");
+        fail("Aggregate operation is not allowed, should thrown an exception!");
     }
 
 }

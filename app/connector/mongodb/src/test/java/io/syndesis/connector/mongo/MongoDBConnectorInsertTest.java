@@ -15,18 +15,17 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
 import org.bson.Document;
 import org.junit.Test;
 
-import com.mongodb.client.model.Filters;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
-import io.syndesis.common.model.integration.Step;
-
-@SuppressWarnings({ "PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert" })
+@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
 
     // **************************
@@ -36,7 +35,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-                "insert");
+            "insert");
     }
 
     // **************************
@@ -46,13 +45,52 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
     @Test
     public void mongoInsertTest() {
         // When
-        // Given
         String uniqueId = UUID.randomUUID().toString();
         String message = String.format("{\"test\":\"unit\",\"uniqueId\":\"%s\"}", uniqueId);
+        // Given
         template().sendBody("direct:start", message);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
     }
+
+    @Test
+    public void mongoInsertMultipleDocuments() {
+        // When
+        int iteration = 10;
+        int batchId = 432;
+        List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
+        // Given
+        template().sendBody("direct:start", batchMessage);
+        // Then
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
+        assertEquals(iteration, docsFound.size());
+    }
+
+    private List<Document> formatBatchMessageDocument(int nDocs, int batchNo) {
+        List<Document> list = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            Document next = new Document();
+            next.put("test", "test" + i);
+            next.put("batchNo", batchNo);
+            list.add(next);
+        }
+        return list;
+    }
+
+    @Test
+    public void mongoInsertMultipleJsonTexts() {
+        // When
+        int iteration = 10;
+        int batchId = 654;
+        List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
+        List<String> jsonStrings = batchMessage.stream().map(Document::toJson).collect(Collectors.toList());
+        // Given
+        template().sendBody("direct:start", jsonStrings);
+        // Then
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
+        assertEquals(iteration, docsFound.size());
+    }
+
 
 }
