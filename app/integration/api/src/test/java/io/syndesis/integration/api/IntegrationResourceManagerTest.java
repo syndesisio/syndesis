@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNull;
 
 public class IntegrationResourceManagerTest {
 
@@ -50,8 +51,6 @@ public class IntegrationResourceManagerTest {
 
     @Test
     public void testSanitizeConnectors() {
-
-
         Integration source = newIntegration(
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
@@ -73,6 +72,63 @@ public class IntegrationResourceManagerTest {
         assertThat(sanitizedConnection.isPresent()).isTrue();
         assertThat(sanitizedConnection.get().getConnector().isPresent()).isTrue();
         assertThat(sanitizedConnection.get().getConnector().get()).isEqualTo(getTimerConnector());
+    }
+
+    @Test
+    public void testSanitizeEmptyFlowIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .name("_Test-Integration, with a l0t of ?¿ str@nge {hars`!")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("test-integration-with-a-l0t-of-strnge-hars");
+    }
+
+    @Test
+    public void testSanitizeNullIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertNull(sanitized.getName());
+    }
+
+    @Test
+    public void testSanitizeVeryLongIntegrationName() {
+        Integration source = new Integration.Builder()
+            .id("test-integration")
+            .name("This is a test integration name that wants to exceed sixtyfour character lenghts... " +
+                "not even sure where it will be truncated at, but it will somewhere...")
+            .description("This is a test integration!")
+            .build();
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("this-is-a-test-integration-name-that-wants-to-exceed-sixtyfour0");
+    }
+
+    @Test
+    public void testSanitizeFullFlowIntegrationName() {
+        Integration source = newIntegration(
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
+                    .id("timer-connection")
+                    .connectorId(getTimerConnector().getId().get())
+                    .build())
+                .putConfiguredProperty("period", "5000")
+                .action(getPeriodicTimerAction())
+                .build());
+
+        Integration sanitized = resourceManager.sanitize(source);
+
+        assertThat(sanitized.getName()).isEqualTo("test-integration");
     }
 
     private String getSyndesisVersion() {
