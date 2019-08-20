@@ -46,6 +46,9 @@ export interface IWithConfigurationFormProps {
    */
   actionId: string;
 
+  /**
+   * the action configuration that had been previously configured on the step
+   */
   oldAction?: Action;
   /**
    * for actions whose configuration must be performed in multiple steps,
@@ -81,7 +84,7 @@ export interface IWithConfigurationFormProps {
 export const WithConfigurationForm: React.FunctionComponent<
   IWithConfigurationFormProps
 > = props => {
-  const action = getActionById(
+  const action = props.oldAction || getActionById(
     getConnectorActions(getConnectionConnector(props.connection)),
     props.actionId
   );
