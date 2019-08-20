@@ -96,6 +96,7 @@
     "createViewFailed": "Create view failed. Details: {{details}}",
     "saveViewSuccess": "Saved view : {{name}}.",
     "saveViewFailed": "Save view {{name}} failed. Details: {{details}}",
+    "validationResultsTitle": "DDL Validation",
     "validateViewRequired": "Please re-validate view {{name}} and re-try",
     "activeConnectionsEmptyStateTitle": "No Active Connections",
     "activeConnectionsEmptyStateInfo": "There are no active connections available. Try again."
