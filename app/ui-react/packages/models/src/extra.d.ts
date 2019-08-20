@@ -11,6 +11,7 @@ import {
   IntegrationOverview,
   Step,
 } from './models';
+import { ActionDescriptor } from './models-internal';
 
 /**
  * Extra interfaces and overrides for the swagger generated models
@@ -137,4 +138,13 @@ export interface StringMap<T> {
 export interface IndexedStep {
   step: Step;
   index: number;
+}
+
+export interface ErrorKey {
+  displayName: string;
+  name: string;
+}
+
+export interface ExtendedActionDescriptor extends ActionDescriptor {
+  standardizedErrors?: ErrorKey[];
 }

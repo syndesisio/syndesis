@@ -47,7 +47,9 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
   } = property as any; // needed, ConfigurationProperty is a lie
   return {
     ...formDefinitionProperty,
-    ...(extendedProperties || {}),
+    ...((typeof extendedProperties === 'string'
+      ? JSON.parse(extendedProperties)
+      : extendedProperties) || {}),
     controlHint: controlHint || controlTooltip,
     fieldAttributes: {
       cols,
@@ -198,4 +200,19 @@ export function validateRequiredProperties<T>(
       return { ...acc, ...result };
     }, {});
   return { ...validationResults, ...arrayValidationResults };
+}
+
+/**
+ * Stringifies non-complex types in a property map
+ * @param values
+ */
+export function coerceFormValues(values: any) {
+  const updated = {};
+  Object.keys(values).forEach(key => {
+    updated[key] =
+      typeof values[key] === 'object'
+        ? JSON.stringify(values[key])
+        : values[key];
+  });
+  return updated;
 }
