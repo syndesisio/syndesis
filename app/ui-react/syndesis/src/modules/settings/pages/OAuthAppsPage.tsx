@@ -324,7 +324,7 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                                       'shared:Save'
                                                     )}
                                                   >
-                                                    <form>{fields}</form>
+                                                    {fields}
                                                   </OAuthAppExpanderBody>
                                                 )}
                                               </AutoForm>

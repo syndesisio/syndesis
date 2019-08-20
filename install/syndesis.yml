@@ -266,17 +266,17 @@ objects:
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: komodo-server
+    name: syndesis-dv
     labels:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: komodo-server
+      syndesis.io/component: syndesis-dv
   spec:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/teiid/komodo-server:latest
+        name: ${SYNDESIS_REGISTRY}/teiid/syndesis-dv:latest
       importPolicy:
         scheduled: true
       name: "latest"
@@ -1087,7 +1087,7 @@ objects:
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
-            - --upstream=http://komodo-server/vdb-builder/
+            - --upstream=http://syndesis-dv/vdb-builder/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)
@@ -2033,8 +2033,8 @@ objects:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: komodo-server
-    name: komodo-server
+      syndesis.io/component: syndesis-dv
+    name: syndesis-dv
   spec:
     ports:
     - port: 80
@@ -2043,7 +2043,7 @@ objects:
     selector:
       app: syndesis
       syndesis.io/app: syndesis
-      syndesis.io/component: komodo-server
+      syndesis.io/component: syndesis-dv
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -2051,14 +2051,14 @@ objects:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-      syndesis.io/component: komodo-server
-    name: komodo-server
+      syndesis.io/component: syndesis-dv
+    name: syndesis-dv
   spec:
     replicas: ${{DATAVIRT_ENABLED}}
     selector:
       app: syndesis
       syndesis.io/app: syndesis
-      syndesis.io/component: komodo-server
+      syndesis.io/component: syndesis-dv
     strategy:
       resources:
         limits:
@@ -2072,11 +2072,11 @@ objects:
           app: syndesis
           syndesis.io/app: syndesis
           syndesis.io/type: infrastructure
-          syndesis.io/component: komodo-server
+          syndesis.io/component: syndesis-dv
       spec:
         serviceAccountName: syndesis-server
         containers:
-        - name: komodo-server
+        - name: syndesis-dv
           env:
           - name: JAVA_APP_DIR
             value: /deployments
@@ -2149,10 +2149,10 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - komodo-server
+        - syndesis-dv
         from:
           kind: ImageStreamTag
-          name: komodo-server:latest
+          name: syndesis-dv:latest
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 

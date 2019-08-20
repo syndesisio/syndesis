@@ -1,9 +1,10 @@
 import {
+  ImportSources,
+  ImportSourcesStatus,
   QueryResults,
   RestDataService,
   ViewDefinition,
   ViewDefinitionStatus,
-  ViewEditorState,
 } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
@@ -74,34 +75,6 @@ export const useVirtualizationHelpers = () => {
       method: 'PUT',
       url: `${apiContext.dvApiUri}workspace/dataservices/${virtName}`,
     });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return Promise.resolve();
-  }
-
-  /**
-   * Deletes the specified virtualization view.
-   * @param virtualization the virtualization
-   * @param viewName the name of the view being deleted
-   */
-  const deleteView = async (
-    virtualization: RestDataService,
-    viewName: string
-  ): Promise<void> => {
-    const vdbName = virtualization.serviceVdbName;
-    const editorStateId = vdbName + '.' + viewName;
-    // Delete viewEditorState and refresh views
-    await deleteViewEditorState(editorStateId);
-    const response = await callFetch({
-      headers: {},
-      method: 'POST',
-      url: `${apiContext.dvApiUri}workspace/dataservices/refreshViews/${
-        virtualization.keng__id
-      }`,
-    });
-
     if (!response.ok) {
       throw new Error(response.statusText);
     }
@@ -185,6 +158,51 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as QueryResults;
+  }
+
+  /**
+   * Get ViewDefinition for the supplied id
+   * @param viewDefinitionId the id of the view definition
+   */
+  const getViewDefinition = async (
+    viewDefinitionId: string
+  ): Promise<ViewDefinition> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${apiContext.dvApiUri}service/userProfile/viewEditorState/${viewDefinitionId}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return (await response.json()) as ViewDefinition;
+  }
+
+  /**
+   * Import tables from the specified connection source
+   * @param virtualizationName the name of the virtualization
+   * @param sourceName the name of the source
+   * @param importSources the sources for import
+   */
+  const importSource = async (
+    virtualizationName: string,
+    sourceName: string,
+    importSources: ImportSources,
+  ): Promise<ImportSourcesStatus> => {
+    const response = await callFetch({
+      body: importSources,
+      headers: {},
+      method: 'PUT',
+      url: `${apiContext.dvApiUri}workspace/dataservices/${virtualizationName}/import/${sourceName}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return (await response.json()) as ImportSourcesStatus;
   }
 
   /**
@@ -289,16 +307,16 @@ export const useVirtualizationHelpers = () => {
   }
 
   /**
-   * Delete the specified ViewEditorState in the komodo user profile
-   * @param viewEditorState the view editor state
+   * Delete the specified ViewDefinition
+   * @param viewDefinitionId the view definition
    */
-  const deleteViewEditorState = async (viewEditorStateId: string): Promise<void> => {
+  const deleteViewDefinition = async (viewDefinitionId: string): Promise<void> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
       url: `${
         apiContext.dvApiUri
-      }service/userProfile/viewEditorState/${viewEditorStateId}`,
+      }service/userProfile/viewEditorState/${viewDefinitionId}`,
     });
 
     if (!response.ok) {
@@ -307,59 +325,35 @@ export const useVirtualizationHelpers = () => {
 
     return Promise.resolve();
   }
-
+  
   /**
-   * Saves ViewEditorStates in the komodo user profile
-   * @param viewEditorStates the array of view editor states
+   * Saves the ViewDefinition
+   * @param viewDefinition the view definition
    */
-  const updateViewEditorStates = async (
-    viewEditorStates: ViewEditorState[]
+  const saveViewDefinition = async (
+    viewDefinition: ViewDefinition
   ): Promise<void> => {
     const response = await callFetch({
-      body: viewEditorStates,
+      body: viewDefinition,
       headers: {},
       method: 'PUT',
-      url: `${apiContext.dvApiUri}service/userProfile/viewEditorStates`,
-    });
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return Promise.resolve();
-  }
-
-  /**
-   * Saves ViewEditorStates in the komodo user profile, then updates the virtualizations
-   * @param viewEditorStates the array of view editor states
-   */
-  const refreshVirtualizationViews = async (
-    virtualizationName: string,
-    viewEditorStates: ViewEditorState[]
-  ): Promise<void> => {
-    // Updates the view editor states
-    await updateViewEditorStates(viewEditorStates);
-    const response = await callFetch({
-      headers: {},
-      method: 'POST',
-      url: `${
-        apiContext.dvApiUri
-      }workspace/dataservices/refreshViews/${virtualizationName}`,
+      url: `${apiContext.dvApiUri}service/userProfile/viewEditorState`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-
     return Promise.resolve();
   }
-
+  
   return {
     createVirtualization,
-    deleteView,
+    deleteViewDefinition,
     deleteVirtualization,
+    getViewDefinition,
+    importSource,
     publishVirtualization,
     queryVirtualization,
-    refreshVirtualizationViews,
+    saveViewDefinition,
     unpublishServiceVdb,
     updateVirtualizationDescription,
     validateViewDefinition,

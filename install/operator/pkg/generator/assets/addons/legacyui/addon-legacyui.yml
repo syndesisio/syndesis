@@ -249,7 +249,7 @@
               - --upstream=http://syndesis-server/api/
               - --upstream=http://syndesis-server/mapper/
               - --upstream=http://syndesis-ui-legacy/
-              - --upstream=http://komodo-server/vdb-builder/
+              - --upstream=http://syndesis-dv/vdb-builder/
               - --tls-cert=/etc/tls/private/tls.crt
               - --tls-key=/etc/tls/private/tls.key
               - --cookie-secret=$(OAUTH_COOKIE_SECRET)

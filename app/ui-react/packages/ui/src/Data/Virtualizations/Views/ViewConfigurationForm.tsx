@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../../../Layout';
@@ -40,27 +41,25 @@ export class ViewConfigurationForm extends React.Component<
   public render() {
     return (
       <Container>
-        <form
-          className="form-horizontal required-pf"
-          role="form"
-          onSubmit={this.props.handleSubmit}
-        >
-          <div className="row row-cards-pf">
-            <div className="card-pf">
-              {this.props.i18nFormTitle && (
-                <div className="card-pf-title">{this.props.i18nFormTitle}</div>
-              )}
-              <div className="card-pf-body">
-                {this.props.validationResults!.map((e, idx) => (
-                  <Alert key={idx} type={e.type}>
-                    {e.message}
-                  </Alert>
-                ))}
-                <Container>{this.props.children}</Container>
-              </div>
+        <div className="row row-cards-pf">
+          <div className="card-pf">
+            {this.props.i18nFormTitle && (
+              <div className="card-pf-title">{this.props.i18nFormTitle}</div>
+            )}
+            <div className="card-pf-body">
+              {this.props.validationResults!.map((e, idx) => (
+                <Alert key={idx} type={e.type}>
+                  {e.message}
+                </Alert>
+              ))}
+              <Container>
+                <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
+                  {this.props.children}
+                </Form>
+              </Container>
             </div>
           </div>
-        </form>
+        </div>
       </Container>
     );
   }

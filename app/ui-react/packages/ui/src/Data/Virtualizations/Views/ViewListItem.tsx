@@ -19,6 +19,7 @@ import {
 export interface IViewListItemProps {
   viewDescription: string;
   viewIcon?: string;
+  viewId: string;
   viewName: string;
   viewEditPageLink: H.LocationDescriptor;
   i18nCancelText: string;
@@ -28,7 +29,7 @@ export interface IViewListItemProps {
   i18nDeleteModalTitle: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  onDelete: (viewName: string) => void;
+  onDelete: (viewId: string, viewName: string) => void;
 }
 
 export const ViewListItem: React.FunctionComponent<
@@ -44,7 +45,7 @@ export const ViewListItem: React.FunctionComponent<
     setShowDeleteDialog(false);
 
     // TODO: disable components while delete is processing
-    props.onDelete(props.viewName);
+    props.onDelete(props.viewId, props.viewName);
   }
 
   const getDeleteTooltip = (): JSX.Element => {

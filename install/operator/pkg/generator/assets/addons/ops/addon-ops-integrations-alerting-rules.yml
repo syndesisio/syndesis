@@ -1,0 +1,27 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    prometheus: application-monitoring
+    role: alert-rules
+    monitoring-key: middleware
+    application-monitoring: "true"
+  name: syndesis-integrations-alerting-rules
+spec:
+  groups:
+    - name: syndesis-integrations-alerting-rules
+      rules:
+        # Alert for any integration with a high rate of failed exchanges
+        - alert: IntegrationExchangesHighFailureRate
+          annotations:
+            message: "Integration {{$labels.context}} in pod {{$labels.pod}}, namespace {{$labels.namespace}}, has a high rate of failed exchanges: {{$value}}"
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#integrationexchangeshighfailurerate
+          expr: >
+            (rate(org_apache_camel_ExchangesFailed{job="syndesis-integrations", type="context"}[5m]) /
+            rate(org_apache_camel_ExchangesTotal{job="syndesis-integrations", type="context"}[5m])) > 0.5
+          for: 5m
+          labels:
+            severity: warning

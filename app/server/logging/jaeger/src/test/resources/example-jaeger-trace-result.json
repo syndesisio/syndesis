@@ -1,21 +1,92 @@
 {
   "data": [
     {
-      "traceID": "b959b72de489c892",
-      "data": [
+      "traceID": "41c21bbc3e4fb7bf",
+      "spans": [
         {
-          "traceID": "b959b72de489c892",
-          "spanID": "b959b72de489c892",
+          "traceID": "41c21bbc3e4fb7bf",
+          "spanID": "33eadc4fc4eef799",
           "flags": 1,
-          "operationName": "i-LXQ28wrYwToP6mMs7Vaz",
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "41c21bbc3e4fb7bf",
+              "spanID": "41c21bbc3e4fb7bf"
+            }
+          ],
+          "startTime": 1566230446055000,
+          "duration": 138,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "41c21bbc3e4fb7bf",
+          "spanID": "da10ebafdb5f12da",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "41c21bbc3e4fb7bf",
+              "spanID": "41c21bbc3e4fb7bf"
+            }
+          ],
+          "startTime": 1566230446056000,
+          "duration": 2880,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230446058000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmeazzbCw1KS3JR4FVSz, firedTime=Mon Aug 19 16:00:46 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=41c21bbc3e4fb7bf:da10ebafdb5f12da:41c21bbc3e4fb7bf:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "41c21bbc3e4fb7bf",
+          "spanID": "41c21bbc3e4fb7bf",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
           "references": [],
-          "startTime": 1548789523494000,
-          "duration": 28140,
+          "startTime": 1566230446055000,
+          "duration": 3652,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "i-LXQ29FYYwToP6mMs7Vbz"
+              "value": "null"
             },
             {
               "key": "failed",
@@ -36,67 +107,11 @@
               "key": "sampler.param",
               "type": "bool",
               "value": true
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b959b72de489c892",
-          "spanID": "d791ed589e590f8d",
-          "flags": 1,
-          "operationName": "step-1",
-          "references": [
+            },
             {
-              "refType": "CHILD_OF",
-              "traceID": "b959b72de489c892",
-              "spanID": "b959b72de489c892"
-            }
-          ],
-          "startTime": 1548789523510000,
-          "duration": 3737,
-          "tags": [
-            {
-              "key": "kind",
+              "key": "internal.span.format",
               "type": "string",
-              "value": "step"
-            }
-          ],
-          "logs": [
-            {
-              "timestamp": 1548789523513000,
-              "fields": [
-                {
-                  "key": "event",
-                  "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LXQ29FYYwToP6mMs7Vbz, Syndesis.FLOW_ID=i-LXQ28wrYwToP6mMs7Vaz, Syndesis.STEP_ID=step-1, Syndesis.STEP_SPAN=b959b72de489c892:d791ed589e590f8d:b959b72de489c892:1 - step-1}] Log me baby one more time"
-                }
-              ]
-            }
-          ],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b959b72de489c892",
-          "spanID": "f164f527f5ea5f46",
-          "flags": 1,
-          "operationName": "step-2",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "b959b72de489c892",
-              "spanID": "b959b72de489c892"
-            }
-          ],
-          "startTime": 1548789523514000,
-          "duration": 7814,
-          "tags": [
-            {
-              "key": "kind",
-              "type": "string",
-              "value": "step"
+              "value": "jaeger"
             }
           ],
           "logs": [],
@@ -106,17 +121,17 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest",
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "chirino-mbp.local"
+              "value": "i-test1-11-nsss5"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "10.193.21.76"
+              "value": "172.17.0.19"
             },
             {
               "key": "jaeger.version",
@@ -129,26 +144,26 @@
       "warnings": null
     },
     {
-      "traceID": "b56dd31b1dea7ea3",
-      "data": [
+      "traceID": "3d73f53c9dffbcc1",
+      "spans": [
         {
-          "traceID": "b56dd31b1dea7ea3",
-          "spanID": "b56dd31b1dea7ea3",
+          "traceID": "3d73f53c9dffbcc1",
+          "spanID": "3d73f53c9dffbcc1",
           "flags": 1,
-          "operationName": "i-LXQ29GaYwToP6mMs7Vfz",
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
           "references": [],
-          "startTime": 1548789523835000,
-          "duration": 2943,
+          "startTime": 1566230456056000,
+          "duration": 11083,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "i-LXQ29KvYwToP6mMs7Vgz"
+              "value": "null"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": false
+              "value": true
             },
             {
               "key": "kind",
@@ -164,6 +179,11 @@
               "key": "sampler.param",
               "type": "bool",
               "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
             }
           ],
           "logs": [],
@@ -171,34 +191,454 @@
           "warnings": null
         },
         {
-          "traceID": "b56dd31b1dea7ea3",
-          "spanID": "2dbae319a5f95027",
+          "traceID": "3d73f53c9dffbcc1",
+          "spanID": "8c12abc786901cc9",
           "flags": 1,
-          "operationName": "step-1",
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "b56dd31b1dea7ea3",
-              "spanID": "b56dd31b1dea7ea3"
+              "traceID": "3d73f53c9dffbcc1",
+              "spanID": "3d73f53c9dffbcc1"
             }
           ],
-          "startTime": 1548789523835000,
-          "duration": 526,
+          "startTime": 1566230456056000,
+          "duration": 179,
           "tags": [
             {
               "key": "kind",
               "type": "string",
               "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "3d73f53c9dffbcc1",
+          "spanID": "4e083a5b6f6899b9",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "3d73f53c9dffbcc1",
+              "spanID": "3d73f53c9dffbcc1"
+            }
+          ],
+          "startTime": 1566230456061000,
+          "duration": 5363,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
             }
           ],
           "logs": [
             {
-              "timestamp": 1548789523836000,
+              "timestamp": 1566230456065000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LXQ29KvYwToP6mMs7Vgz, Syndesis.FLOW_ID=i-LXQ29GaYwToP6mMs7Vfz, Syndesis.STEP_ID=step-1, Syndesis.STEP_SPAN=b56dd31b1dea7ea3:2dbae319a5f95027:b56dd31b1dea7ea3:1 - step-1}] Log me baby one more time"
+                  "value": "Message Context: [{breadcrumbId=i-Lmeb1QrCw1KS3JR4FVUz, firedTime=Mon Aug 19 16:00:56 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=3d73f53c9dffbcc1:4e083a5b6f6899b9:3d73f53c9dffbcc1:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "b93098e321641f85",
+      "spans": [
+        {
+          "traceID": "b93098e321641f85",
+          "spanID": "b93098e321641f85",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230475143000,
+          "duration": 179377,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b93098e321641f85",
+          "spanID": "ca08184df77d2577",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b93098e321641f85",
+              "spanID": "b93098e321641f85"
+            }
+          ],
+          "startTime": 1566230475149000,
+          "duration": 301,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b93098e321641f85",
+          "spanID": "f0279868307a4354",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b93098e321641f85",
+              "spanID": "b93098e321641f85"
+            }
+          ],
+          "startTime": 1566230475210000,
+          "duration": 111770,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230475261000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-Lmeb64XCw1KS3JR4FVWz, firedTime=Mon Aug 19 16:01:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=b93098e321641f85:f0279868307a4354:b93098e321641f85:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "f1813a73717e6f1c",
+      "spans": [
+        {
+          "traceID": "f1813a73717e6f1c",
+          "spanID": "b556a8bdf4c6752f",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "f1813a73717e6f1c",
+              "spanID": "f1813a73717e6f1c"
+            }
+          ],
+          "startTime": 1566230484891000,
+          "duration": 99,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "f1813a73717e6f1c",
+          "spanID": "f1813a73717e6f1c",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230484891000,
+          "duration": 3417,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "f1813a73717e6f1c",
+          "spanID": "ab8090d181d1886b",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "f1813a73717e6f1c",
+              "spanID": "f1813a73717e6f1c"
+            }
+          ],
+          "startTime": 1566230484892000,
+          "duration": 2939,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230484893000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-Lmeb8TQCw1KS3JR4FVYz, firedTime=Mon Aug 19 16:01:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f1813a73717e6f1c:ab8090d181d1886b:f1813a73717e6f1c:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "f509a044c63b76bd",
+      "spans": [
+        {
+          "traceID": "f509a044c63b76bd",
+          "spanID": "dcc1c499cf77af9d",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "f509a044c63b76bd",
+              "spanID": "f509a044c63b76bd"
+            }
+          ],
+          "startTime": 1566230494891000,
+          "duration": 118,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "f509a044c63b76bd",
+          "spanID": "92ea7de702f51949",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "f509a044c63b76bd",
+              "spanID": "f509a044c63b76bd"
+            }
+          ],
+          "startTime": 1566230494892000,
+          "duration": 5849,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230494895000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebAufCw1KS3JR4FV_z, firedTime=Mon Aug 19 16:01:34 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f509a044c63b76bd:92ea7de702f51949:f509a044c63b76bd:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
                 }
               ]
             }
@@ -207,85 +647,43 @@
           "warnings": null
         },
         {
-          "traceID": "b56dd31b1dea7ea3",
-          "spanID": "f04e8ad4c1d3c40d",
+          "traceID": "f509a044c63b76bd",
+          "spanID": "f509a044c63b76bd",
           "flags": 1,
-          "operationName": "step-2",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "b56dd31b1dea7ea3",
-              "spanID": "b56dd31b1dea7ea3"
-            }
-          ],
-          "startTime": 1548789523836000,
-          "duration": 480,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230494891000,
+          "duration": 6929,
           "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
             {
               "key": "kind",
               "type": "string",
-              "value": "step"
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b56dd31b1dea7ea3",
-          "spanID": "19c9e027dd10e053",
-          "flags": 1,
-          "operationName": "step-3",
-          "references": [
+              "value": "activity"
+            },
             {
-              "refType": "CHILD_OF",
-              "traceID": "b56dd31b1dea7ea3",
-              "spanID": "b56dd31b1dea7ea3"
-            }
-          ],
-          "startTime": 1548789523836000,
-          "duration": 499,
-          "tags": [
-            {
-              "key": "kind",
+              "key": "sampler.type",
               "type": "string",
-              "value": "step"
-            }
-          ],
-          "logs": [
+              "value": "const"
+            },
             {
-              "timestamp": 1548789523837000,
-              "fields": [
-                {
-                  "key": "event",
-                  "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LXQ29KvYwToP6mMs7Vgz, Syndesis.FLOW_ID=i-LXQ29GaYwToP6mMs7Vfz, Syndesis.STEP_ID=step-3, Syndesis.STEP_SPAN=b56dd31b1dea7ea3:19c9e027dd10e053:b56dd31b1dea7ea3:1 - step-3}] Log me baby one more time"
-                }
-              ]
-            }
-          ],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b56dd31b1dea7ea3",
-          "spanID": "30b50b214305c633",
-          "flags": 1,
-          "operationName": "step-4",
-          "references": [
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
             {
-              "refType": "CHILD_OF",
-              "traceID": "b56dd31b1dea7ea3",
-              "spanID": "b56dd31b1dea7ea3"
-            }
-          ],
-          "startTime": 1548789523837000,
-          "duration": 327,
-          "tags": [
-            {
-              "key": "kind",
+              "key": "internal.span.format",
               "type": "string",
-              "value": "step"
+              "value": "jaeger"
             }
           ],
           "logs": [],
@@ -295,17 +693,732 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest",
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "chirino-mbp.local"
+              "value": "i-test1-11-nsss5"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "10.193.21.76"
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "514f18fc5e8e3055",
+      "spans": [
+        {
+          "traceID": "514f18fc5e8e3055",
+          "spanID": "be79aaa1222c893b",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "514f18fc5e8e3055",
+              "spanID": "514f18fc5e8e3055"
+            }
+          ],
+          "startTime": 1566230504895000,
+          "duration": 151,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "514f18fc5e8e3055",
+          "spanID": "5fd2844c5e30cb45",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "514f18fc5e8e3055",
+              "spanID": "514f18fc5e8e3055"
+            }
+          ],
+          "startTime": 1566230504896000,
+          "duration": 10403,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230504905000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebDLzCw1KS3JR4FVbz, firedTime=Mon Aug 19 16:01:44 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=514f18fc5e8e3055:5fd2844c5e30cb45:514f18fc5e8e3055:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "514f18fc5e8e3055",
+          "spanID": "514f18fc5e8e3055",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230504895000,
+          "duration": 11042,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "86ed2cc547f5513a",
+      "spans": [
+        {
+          "traceID": "86ed2cc547f5513a",
+          "spanID": "768374408040a873",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "86ed2cc547f5513a",
+              "spanID": "86ed2cc547f5513a"
+            }
+          ],
+          "startTime": 1566230514895000,
+          "duration": 112,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "86ed2cc547f5513a",
+          "spanID": "d77cd3c5965d0862",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "86ed2cc547f5513a",
+              "spanID": "86ed2cc547f5513a"
+            }
+          ],
+          "startTime": 1566230514896000,
+          "duration": 4081,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230514897000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebFnECw1KS3JR4FVdz, firedTime=Mon Aug 19 16:01:54 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=86ed2cc547f5513a:d77cd3c5965d0862:86ed2cc547f5513a:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "86ed2cc547f5513a",
+          "spanID": "86ed2cc547f5513a",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230514895000,
+          "duration": 4625,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "11bfc1865d518738",
+      "spans": [
+        {
+          "traceID": "11bfc1865d518738",
+          "spanID": "11bfc1865d518738",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230524895000,
+          "duration": 6203,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "11bfc1865d518738",
+          "spanID": "cb7283250b5d2a43",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "11bfc1865d518738",
+              "spanID": "11bfc1865d518738"
+            }
+          ],
+          "startTime": 1566230524896000,
+          "duration": 103,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "11bfc1865d518738",
+          "spanID": "129eb720bdffba8c",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "11bfc1865d518738",
+              "spanID": "11bfc1865d518738"
+            }
+          ],
+          "startTime": 1566230524896000,
+          "duration": 5718,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230524901000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebIEUCw1KS3JR4FVfz, firedTime=Mon Aug 19 16:02:04 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=11bfc1865d518738:129eb720bdffba8c:11bfc1865d518738:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "810ddb52e8012d24",
+      "spans": [
+        {
+          "traceID": "810ddb52e8012d24",
+          "spanID": "810ddb52e8012d24",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230534895000,
+          "duration": 4960,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "810ddb52e8012d24",
+          "spanID": "547bd3013d08a811",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "810ddb52e8012d24",
+              "spanID": "810ddb52e8012d24"
+            }
+          ],
+          "startTime": 1566230534895000,
+          "duration": 123,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "810ddb52e8012d24",
+          "spanID": "ba99dd61f7ecc3ec",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "810ddb52e8012d24",
+              "spanID": "810ddb52e8012d24"
+            }
+          ],
+          "startTime": 1566230534896000,
+          "duration": 4487,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230534897000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebKfjCw1KS3JR4FVhz, firedTime=Mon Aug 19 16:02:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=810ddb52e8012d24:ba99dd61f7ecc3ec:810ddb52e8012d24:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "10a6654d0994ff70",
+      "spans": [
+        {
+          "traceID": "10a6654d0994ff70",
+          "spanID": "359f31bb9d6d2270",
+          "flags": 1,
+          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "10a6654d0994ff70",
+              "spanID": "10a6654d0994ff70"
+            }
+          ],
+          "startTime": 1566230544895000,
+          "duration": 175,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "10a6654d0994ff70",
+          "spanID": "10a6654d0994ff70",
+          "flags": 1,
+          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "references": [],
+          "startTime": 1566230544895000,
+          "duration": 10494,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "null"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "10a6654d0994ff70",
+          "spanID": "c12b89afd8e99872",
+          "flags": 1,
+          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "10a6654d0994ff70",
+              "spanID": "10a6654d0994ff70"
+            }
+          ],
+          "startTime": 1566230544902000,
+          "duration": 3246,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1566230544905000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LmebN6zCw1KS3JR4FVjz, firedTime=Mon Aug 19 16:02:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=10a6654d0994ff70:c12b89afd8e99872:10a6654d0994ff70:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "i-test1-11-nsss5"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "172.17.0.19"
             },
             {
               "key": "jaeger.version",

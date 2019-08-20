@@ -24,6 +24,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import io.syndesis.common.model.validation.AllValidations;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
 import org.junit.Test;
@@ -79,6 +80,14 @@ public class IntegrationTest {
             UniquenessRequired.class);
 
         assertThat(violations).isEmpty();
+    }
+
+    @Test
+    public void shouldNotifyOfNullNameViolation() {
+        final Set<ConstraintViolation<Integration>> violations = validator.validate(new Integration.Builder().build(),
+            AllValidations.class);
+
+        assertThat(violations).hasSize(1);
     }
 
 }

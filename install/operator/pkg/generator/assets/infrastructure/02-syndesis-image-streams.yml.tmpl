@@ -127,8 +127,12 @@
   spec:
     tags:
     - from:
+      {{if .Syndesis.Spec.DevImages}}
+        kind: ImageStreamTag
+        name: '{{ .Images.Syndesis.S2i }}:latest'
+      {{else}}
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
+      {{end}}

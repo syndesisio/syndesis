@@ -1,5 +1,5 @@
-import { useViewEditorStates, useVirtualizationHelpers } from '@syndesis/api';
-import { RestDataService, ViewEditorState, ViewInfo } from '@syndesis/models';
+import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
+import { ImportSources, RestDataService, ViewDefinitionDescriptor, ViewInfo } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
 import { ViewInfosContent, ViewsImportSteps } from '../../shared';
-import { generateViewEditorStates } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard.
@@ -27,7 +26,7 @@ export interface ISelectViewsRouteState {
 }
 
 export const SelectViewsPage: React.FunctionComponent = () => {
-  const { state, history } = useRouteData<
+  const { params, state, history } = useRouteData<
     ISelectViewsRouteParams,
     ISelectViewsRouteState
   >();
@@ -36,12 +35,12 @@ export const SelectViewsPage: React.FunctionComponent = () => {
   const [hasSelectedViews, setHasSelectedViews] = React.useState(false);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { refreshVirtualizationViews } = useVirtualizationHelpers();
+  const { importSource } = useVirtualizationHelpers();
 
-  const getExistingViewNames = (viewEditorStates: ViewEditorState[]) => {
+  const getExistingViewNames = (defnDescriptors: ViewDefinitionDescriptor[]) => {
     const viewNames: string[] = [];
-    for (const editorState of viewEditorStates) {
-      viewNames.push(editorState.viewDefinition.viewName);
+    for (const descriptor of defnDescriptors) {
+      viewNames.push(descriptor.name);
     }
     return viewNames;
   };
@@ -69,21 +68,20 @@ export const SelectViewsPage: React.FunctionComponent = () => {
   };
 
   const virtualization = state.virtualization;
-  const { resource: editorStates } = useViewEditorStates(
+  const { resource: viewDefinitionDescriptors } = useViewDefinitionDescriptors(
     virtualization.keng__id
   );
 
   const handleCreateViews = async () => {
     setInProgress(true);
-    const viewEditorStates = generateViewEditorStates(
-      virtualization.serviceVdbName,
-      selectedViews
-    );
+    const viewNames = selectedViews.map(selectedView => selectedView.viewName);
+    const connName = selectedViews[0].connectionName;
+    const importSources: ImportSources = {
+      tables: viewNames,
+    };
+
     try {
-      await refreshVirtualizationViews(
-        virtualization.keng__id,
-        viewEditorStates
-      );
+      await importSource(params.virtualizationId, connName, importSources);
       pushNotification(
         t('virtualization.importViewsSuccess', {
           name: virtualization.serviceVdbName,
@@ -114,7 +112,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
       content={
         <ViewInfosContent
           connectionName={state.connectionId}
-          existingViewNames={getExistingViewNames(editorStates)}
+          existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
           onViewSelected={handleAddView}
           onViewDeselected={handleRemoveView}
         />

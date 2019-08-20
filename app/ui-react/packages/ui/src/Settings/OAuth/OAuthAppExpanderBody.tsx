@@ -1,3 +1,4 @@
+import { Form } from '@patternfly/react-core';
 import { Alert, Button, Col, Row } from 'patternfly-react';
 import * as React from 'react';
 
@@ -35,7 +36,7 @@ export class OAuthAppExpanderBody extends React.Component<
         )}
         <Row>
           <Col xs={12} md={8}>
-            {this.props.children}
+            <Form isHorizontal={true}>{this.props.children}</Form>
           </Col>
         </Row>
         <Row>

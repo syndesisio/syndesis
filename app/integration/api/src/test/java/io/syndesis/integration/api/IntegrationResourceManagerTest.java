@@ -88,7 +88,7 @@ public class IntegrationResourceManagerTest {
     }
 
     @Test
-    public void testSanitizeEmptyIntegrationName() {
+    public void testSanitizeNullIntegrationName() {
         Integration source = new Integration.Builder()
             .id("test-integration")
             .description("This is a test integration!")

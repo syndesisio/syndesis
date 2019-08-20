@@ -1,12 +1,9 @@
 import {
   Connection,
-  ProjectedColumn,
   RestDataService,
-  RestVdbModel,
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
-  ViewEditorState,
   ViewInfo,
   VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
@@ -14,9 +11,6 @@ import {
 
 const PREVIEW_VDB_NAME = 'PreviewVdb';
 const SCHEMA_MODEL_SUFFIX = 'schemamodel';
-const PROJECTED_COLS_ALL = [
-  { name: 'ALL', selected: true, type: 'ALL' } as ProjectedColumn,
-];
 
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
@@ -36,27 +30,11 @@ export function getPreviewVdbName(): string {
 }
 
 /**
- * Get the DDL for the specified model view
- */
-export function getViewDdl(vdbModel: RestVdbModel, viewName: string): string {
-  const views = vdbModel.keng__ddl.split('CREATE VIEW ');
-  if (views.length > 0) {
-    const viewDdl = views.find(
-      view => view.startsWith(viewName) || view.startsWith('"' + viewName)
-    );
-    if (viewDdl) {
-      return 'CREATE VIEW ' + viewDdl;
-    }
-  }
-  return 'CREATE VIEW';
-}
-
-/**
  * Recursively flattens the tree structure of SchemaNodes,
  * into an array of ViewInfos
  * @param viewInfos the array of ViewInfos
  * @param schemaNode the SchemaNode from which the ViewInfo is generated
- * @param nodePath path for current SchemaNode
+ * @param nodePath path for current SchemaNode eg ['name0', 'name1', 'name2']
  * @param selectedViewNames names of views which are selected
  * @param existingViewNames names of views which exist (marked as update)
  */
@@ -76,7 +54,7 @@ export function generateViewInfos(
 
     // Creates ViewInfo if the SchemaNode is queryable
     if (schemaNode.queryable === true) {
-      const vwName = schemaNode.connectionName + '_' + schemaNode.name;
+      const vwName = schemaNode.name;
       // Determine whether ViewInfo should be selected
       const selectedState =
         selectedViewNames.findIndex(viewName => viewName === vwName) === -1
@@ -120,7 +98,7 @@ export function generateViewInfos(
  * into an array of SchemaNodeInfos
  * @param schemaNodeInfos the array of SchemaNodeInfos
  * @param schemaNode the SchemaNode from which the SchemaNodeInfo is generated
- * @param nodePath path for current SchemaNode
+ * @param nodePath path for current SchemaNode eg ['sName', 'tName']
  */
 export function generateSchemaNodeInfos(
   schemaNodeInfos: SchemaNodeInfo[],
@@ -139,13 +117,16 @@ export function generateSchemaNodeInfos(
       // Create SchemaNodeInfo
       const view: SchemaNodeInfo = {
         connectionName: schemaNode.connectionName,
-        sourceName: schemaNode.name,
-        sourcePath: schemaNode.path,
+        name: schemaNode.name,
+        nodePath: sourcePath,
+        teiidName: schemaNode.teiidName
       };
       schemaNodeInfos.push(view);
     }
     // Update path for next level
-    sourcePath.push(schemaNode.name);
+    if(schemaNode.type !== 'root') {
+      sourcePath.push(schemaNode.name);
+    }
     // Process this nodes children
     if (schemaNode.children && schemaNode.children.length > 0) {
       for (const childNode of schemaNode.children) {
@@ -156,23 +137,22 @@ export function generateSchemaNodeInfos(
 }
 
 /**
- * Generate a ViewEditorState for the supplied info
- * @param serviceVdbName the name of the virtualization vdb
+ * Generate a ViewDefinition for the supplied info
  * @param schemaNodeInfo the SchemaNodeInfo for the view
+ * @param dataVirtName the name of the virtualization
  * @param vwName the name for the view
  * @param vwDescription the (optional) description for the view
  */
-export function generateViewEditorState(
-  serviceVdbName: string,
+export function generateViewDefinition(
   schemaNodeInfo: SchemaNodeInfo[],
+  dataVirtName: string,
   vwName: string,
   vwDescription?: string
-): ViewEditorState {
+): ViewDefinition {
   const srcPaths: string[] = loadPaths(schemaNodeInfo);
-  return getViewEditorState(
-    serviceVdbName,
+  return getViewDefinition(
     vwName,
-    PROJECTED_COLS_ALL,
+    dataVirtName,
     srcPaths,
     false,
     vwDescription
@@ -185,59 +165,24 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
   let index = 0;
   schemaNodeInfo.map(
     item =>
-      (srcPaths[index++] =
-        'connection=' + item.connectionName + '/' + item.sourcePath)
+      (srcPaths[index++] = 'schema=' + item.connectionName + '/table=' + item.teiidName)
   );
 
   return srcPaths;
 }
 
 /**
- * Generates ViewEditorStates for the supplied ViewInfos
- * @param serviceVdbName the name of the virtualization vdb
- * @param viewInfos the array of ViewInfos
- */
-export function generateViewEditorStates(
-  serviceVdbName: string,
-  viewInfos: ViewInfo[]
-): ViewEditorState[] {
-  const editorStates: ViewEditorState[] = [];
-  for (const viewInfo of viewInfos) {
-    const path =
-      'connection=' +
-      viewInfo.connectionName +
-      '/' +
-      viewInfo.viewSourceNode.path;
-    const srcPaths: string[] = [path];
-
-    editorStates.push(
-      getViewEditorState(
-        serviceVdbName,
-        viewInfo.viewName,
-        PROJECTED_COLS_ALL,
-        srcPaths,
-        false
-      )
-    );
-  }
-
-  return editorStates;
-}
-
-/**
- * Generate a ViewEditorState for the supplied values.
- * @param serviceVdbName the name of the virtualization vdb
+ * Generate a ViewDefinition for the supplied values.
  * @param name the view name
- * @param projectedCols projected columns for the view
+ * @param dataVirtName the name of the virtualization
  * @param srcPaths paths for the sources used in the view
  * @param userDefined specifies if the ddl has been altered from defaults
  * @param description the (optional) view description
  * @param viewDdl the (optional) view DDL
  */
-function getViewEditorState(
-  serviceVdbName: string,
+function getViewDefinition(
   name: string,
-  projectedCols: ProjectedColumn[],
+  dataVirtName: string,
   srcPaths: string[],
   userDefined: boolean,
   description?: string,
@@ -245,21 +190,17 @@ function getViewEditorState(
 ) {
   // View Definition
   const viewDefn: ViewDefinition = {
-    compositions: [],
+    dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
+    id: '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
-    projectedColumns: projectedCols,
+    name,
     sourcePaths: srcPaths,
-    viewName: name,
   };
 
-  const editorState: ViewEditorState = {
-    id: serviceVdbName + '.' + name,
-    viewDefinition: viewDefn,
-  };
-  return editorState;
+  return viewDefn;
 }
 
 /**
@@ -435,34 +376,14 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
 }
 
 /**
- * Generates the table name for the preview query, given the source path.
- * Example sourcePath: (connection=pgConn/schema=public/table=account)
- * @param sourcePath the path for the view source
+ * Get the table name for the preview query, given the source path.
+ * Example sourcePath: (schema=pgConn/table=account)
+ * @param sourcePath the path for the source
  */
 function getPreviewTableName(sourcePath: string): string {
-  // Assemble the name, utilizing the schema model suffix
-  return `"${getConnectionName(
-    sourcePath
-  ).toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${getNodeName(sourcePath)}"`;
-}
-
-/**
- * Get the connection name from the supplied source path.  connection is always the first segment.
- * Example sourcePath: 'connection=pgConn/schema=public/table=account'
- * @param sourcePath the view definition sourcePath
- */
-function getConnectionName(sourcePath: string): string {
-  // Connection name is the value of the first segment
-  return sourcePath.split('/')[0].split('=')[1];
-}
-
-/**
- * Get the node name from the supplied source path.
- * Example sourcePath: 'connection=pgConn/schema=public/table=account'
- * @param sourcePath the view definition sourcePath
- */
-export function getNodeName(sourcePath: string): string {
   const segments = sourcePath.split('/');
-  // Node name is the value of the last segment
-  return segments[segments.length - 1].split('=')[1];
+  const connectionName = segments[0].split('=')[1];
+  const tableName = segments[1].split('=')[1];
+  // Assemble the name, utilizing the schema model suffix
+  return `"${connectionName.toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${tableName}"`;
 }

@@ -6,14 +6,16 @@ import resolvers from '../resolvers';
 
 /**
  * @param virtualizationId - the virtualization id for the view
- * @param viewDefinition - the view definition
+ * @param viewDefinitionId - the view definition id
  * @param previewExpanded - 'true' if the preview are is to be expanded
+ * @param viewDefinition - the view definition (optional)
  */
 
 export interface IViewEditorNavBarProps {
   virtualization: RestDataService;
-  viewDefinition: ViewDefinition;
+  viewDefinitionId: string;
   previewExpanded: boolean;
+  viewDefinition?: ViewDefinition;
 }
 
 /**
@@ -35,6 +37,7 @@ export const ViewEditorNavBar: React.FunctionComponent<
   const virtualization = props.virtualization;
   const viewDefinition = props.viewDefinition;
   const previewExpanded = props.previewExpanded;
+  const viewDefinitionId = props.viewDefinitionId;
 
   return (
     <Container
@@ -48,8 +51,9 @@ export const ViewEditorNavBar: React.FunctionComponent<
           to={resolvers.virtualizations.views.edit.viewOutput({
             virtualization,
             // tslint:disable-next-line: object-literal-sort-keys
-            viewDefinition,
+            viewDefinitionId,
             previewExpanded,
+            viewDefinition
           })}
         />
         <TabBarItem
@@ -57,8 +61,9 @@ export const ViewEditorNavBar: React.FunctionComponent<
           to={resolvers.virtualizations.views.edit.sql({
             virtualization,
             // tslint:disable-next-line: object-literal-sort-keys
-            viewDefinition,
+            viewDefinitionId,
             previewExpanded,
+            viewDefinition
           })}
         />
       </TabBar>

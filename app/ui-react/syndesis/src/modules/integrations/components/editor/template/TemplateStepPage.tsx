@@ -117,7 +117,6 @@ export const TemplateStepPage: React.FunctionComponent<
   );
 
   const { getRootProps, getInputProps } = useDropzone({
-    accept: 'text/*',
     disabled: false,
     maxSize: 1024 * 1000,
     multiple: false,

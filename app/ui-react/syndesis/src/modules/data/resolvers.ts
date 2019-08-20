@@ -56,37 +56,39 @@ export default {
       edit: {
         sql: makeResolver<{
           virtualization: RestDataService;
-          viewDefinition: ViewDefinition;
+          viewDefinitionId: string;
           previewExpanded: boolean;
+          viewDefinition?: ViewDefinition;
         }>(
           routes.virtualizations.virtualization.views.edit.sql,
-          ({ virtualization, viewDefinition, previewExpanded }) => ({
+          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded }) => ({
             params: {
               virtualizationId: virtualization.keng__id,
-              viewDefinitionId: viewDefinition.viewName,
+              viewDefinitionId,
             },
             state: {
               virtualization,
-              viewDefinition,
               previewExpanded,
+              viewDefinition,
             },
           })
         ),
         viewOutput: makeResolver<{
           virtualization: RestDataService;
-          viewDefinition: ViewDefinition;
+          viewDefinitionId: string;
           previewExpanded: boolean;
+          viewDefinition?: ViewDefinition;
         }>(
           routes.virtualizations.virtualization.views.edit.viewOutput,
-          ({ virtualization, viewDefinition, previewExpanded }) => ({
+          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded }) => ({
             params: {
               virtualizationId: virtualization.keng__id,
-              viewDefinitionId: viewDefinition.viewName,
+              viewDefinitionId,
             },
             state: {
               virtualization,
+              previewExpanded,
               viewDefinition,
-              previewExpanded
             },
           })
         ),

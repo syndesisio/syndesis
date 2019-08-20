@@ -58,3 +58,35 @@ get_camel_k_bin() {
   [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
   echo $kamel_command
 }
+
+check_camel_k_requirements() {
+    local hasgo=$(go_is_available)
+    local hasdocker=$(docker_is_available)
+
+    if [ "$hasgo" != "OK" ]; then
+        printf "ERROR: Cannot build camel-k ..... \n\t\t$hasgo"
+        return
+    fi
+
+    set +u
+    if [ -z "$GOPATH" ]; then
+        printf "ERROR: Cannot build camel-k ..... \$GOPATH has to be set."
+        return
+    fi
+    set -u
+
+    set +e
+    which operator-sdk &>/dev/null
+    if [ $? -ne 0 ]; then
+        set -e
+        printf "ERROR: Cannot build camel-k ..... operator-sdk needs to be installed locally for building camel-k"
+        return
+    fi
+
+    if [ "$hasdocker" != "OK" ]; then
+        printf "ERROR: Cannot build camel-k ..... \n\t\t$hasdocker"
+        return
+    fi
+
+    echo "OK"
+}

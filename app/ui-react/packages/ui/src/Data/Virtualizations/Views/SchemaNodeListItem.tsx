@@ -9,11 +9,14 @@ import './SchemaNodeListItem.css';
 export interface ISchemaNodeListItemProps {
   name: string;
   connectionName: string;
-  schemaPath: string;
+  teiidName: string;
+  nodePath: string[];
   selected: boolean;
   onSelectionChanged: (
     connectionName: string,
-    nodePath: string,
+    name: string,
+    teiidName: string,
+    nodePath: string[],
     selected: boolean
   ) => void;
 }
@@ -24,26 +27,26 @@ export const SchemaNodeListItem: React.FunctionComponent<
 
   const [itemSelected, setItemSelected] = React.useState(props.selected);
 
-  const doToggleCheckbox = (connectionName: string, nodePath: string) => (
+  const doToggleCheckbox = (connectionName: string, name: string, teiidName: string, nodePath: string[]) => (
     event: any
   ) => {
     setItemSelected(!itemSelected);
 
     props.onSelectionChanged(
       connectionName,
+      name,
+      teiidName,
       nodePath,
       !itemSelected
     );
   };
 
-  const schemaDisplayPath = (schemaPath: string) => {
+  const schemaDisplayPath = (nodePath: string[]) => {
     let result = '';
-    schemaPath
-      .split('/')
-      .map(segment => (result += '/' + segment.split('=')[1]));
+    nodePath.map(segment => (result += '/' + segment));
     return result;
   }
-
+  
   return (
     <ListViewItem
       data-testid={`schema-node-list-item-${toValidHtmlId(
@@ -51,7 +54,7 @@ export const SchemaNodeListItem: React.FunctionComponent<
       )}-list-item`}
       heading={props.name}
       className={'schema-node-list-item'}
-      description={schemaDisplayPath(props.schemaPath)}
+      description={schemaDisplayPath(props.nodePath)}
       checkboxInput={
         <input
           data-testid={'schema-node-list-item-selected-input'}
@@ -60,7 +63,9 @@ export const SchemaNodeListItem: React.FunctionComponent<
           defaultChecked={props.selected}
           onChange={doToggleCheckbox(
             props.connectionName,
-            props.schemaPath
+            props.name,
+            props.teiidName,
+            props.nodePath
           )}
         />
       }

@@ -4,7 +4,6 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import resolvers from '../../../resolvers';
 import { ConnectionSchemaContent, ViewCreateSteps } from '../../shared';
-import { getNodeName } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -29,12 +28,13 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
   const [selectedSchemaNodes, setSelectedSchemaNodes] = React.useState<SchemaNodeInfo[]>([]);
   const [hasSelectedNodes, setHasSelectedNodes] = React.useState(false);
 
-  const handleNodeSelected = async (connName: string, nodePath: string) => {
+  const handleNodeSelected = async (connName: string, name: string, teiidName: string, nodePath: string[]) => {
     const srcInfo = {
       connectionName: connName,
-      sourceName: getNodeName(nodePath),
-      sourcePath: nodePath,
-    } as SchemaNodeInfo;
+      name,
+      nodePath,
+      teiidName,
+     } as SchemaNodeInfo;
 
     const currentNodes = selectedSchemaNodes;
     currentNodes.push(srcInfo);
@@ -42,9 +42,9 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
     setHasSelectedNodes(currentNodes.length>0);
   }
 
-  const handleNodeDeselected = async (connectionName: string, nodePath: string) => {
+  const handleNodeDeselected = async (connectionName: string, teiidName: string) => {
     const tempArray = selectedSchemaNodes;
-    const index = getIndex(nodePath, tempArray, 'sourcePath');
+    const index = getIndex(teiidName, tempArray, 'teiidName');
     tempArray.splice(index, 1);
     setSelectedSchemaNodes(tempArray);
     setHasSelectedNodes(tempArray.length>0);

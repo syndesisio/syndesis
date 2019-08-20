@@ -27,16 +27,18 @@ const conn2NodeItems = [
   <SchemaNodeListItem
     key="conn2Item1"
     name={'Customer'}
+    teiidName={'Customer'}
     connectionName={connectionName2}
-    schemaPath={'schema=public/table=Customer'}
+    nodePath={['public','Customer']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
   />,
   <SchemaNodeListItem
     key="conn2Item2"
     name={'Account'}
+    teiidName={'Account'}
     connectionName={connectionName2}
-    schemaPath={'schema=public/table=Account'}
+    nodePath={['public','Account']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
   />,
@@ -45,16 +47,18 @@ const conn3NodeItems = [
   <SchemaNodeListItem
     key="conn3Item1"
     name={'Holdings'}
+    teiidName={'Holdings'}
     connectionName={connectionName3}
-    schemaPath={'schema=public/table=Holdings'}
+    nodePath={['public','Holdings']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
   />,
   <SchemaNodeListItem
     key="conn3Item2"
     name={'Product'}
+    teiidName={'Product'}
     connectionName={connectionName3}
-    schemaPath={'schema=public/table=Product'}
+    nodePath={['public','Product']}
     selected={false}
     onSelectionChanged={action(selectionChangedActionText)}
   />,

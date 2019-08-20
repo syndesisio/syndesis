@@ -44,6 +44,7 @@ stories.add(
   'sample view item',
   withNotes(sampleViewNotes)(() => (
     <ViewListItem
+      viewId="viewListItem1"
       viewName={text('viewName', viewName)}
       viewDescription={text('viewDescription', viewDescription)}
       viewEditPageLink={''}

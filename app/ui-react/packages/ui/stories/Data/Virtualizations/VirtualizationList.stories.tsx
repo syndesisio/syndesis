@@ -55,6 +55,7 @@ const currentStatusBuilding = 'BUILDING';
 const viewItems = [
   <ViewListItem
     key="viewListItem1"
+    viewId="viewListItem1"
     viewName={viewName1}
     viewDescription={viewDescription1}
     viewEditPageLink={''}
@@ -69,6 +70,7 @@ const viewItems = [
   />,
   <ViewListItem
     key="viewListItem2"
+    viewId="viewListItem2"
     viewName={viewName2}
     viewDescription={viewDescription2}
     viewEditPageLink={''}
