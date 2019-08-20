@@ -1,4 +1,9 @@
-import { ENDPOINT, getSteps, HIDE_FROM_CONNECTION_PAGES } from '@syndesis/api';
+import {
+  ENDPOINT,
+  getSteps,
+  HIDE_FROM_CONNECTION_PAGES,
+  isIntegrationApiProvider,
+} from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
@@ -16,17 +21,35 @@ export interface IIntegrationDetailStepsProps {
   integration: Integration;
 }
 
-export class IntegrationDetailSteps extends React.Component<
+export const IntegrationDetailSteps: React.FunctionComponent<
   IIntegrationDetailStepsProps
-> {
-  public render() {
-    const flowId = this.props.integration.flows![0].id!;
-    const steps = getSteps(this.props.integration, flowId);
+> = props => {
+  const isApiProvider = isIntegrationApiProvider(props.integration);
+  const flowId = props.integration.flows![0].id!;
+  const steps = getSteps(props.integration, flowId);
 
-    return (
-      <PageSection className="integration-detail-steps">
-        <IntegrationStepsHorizontalView>
-          {toUIStepCollection(steps).map((s: IUIStep, idx: number) => {
+  return (
+    <PageSection className="integration-detail-steps">
+      <IntegrationStepsHorizontalView>
+        {isApiProvider ? (
+          <>
+            <IntegrationStepsHorizontalItem
+              key={'start'}
+              name={'API Provider'}
+              title={'API Provider'}
+              icon={<p>TODO</p>}
+              isLast={false}
+            />
+            <IntegrationStepsHorizontalItem
+              key={'end'}
+              name={'3 Flows'}
+              title={'3 Flows'}
+              icon={<p>TODO</p>}
+              isLast={true}
+            />
+          </>
+        ) : (
+          toUIStepCollection(steps).map((s: IUIStep, idx: number) => {
             const isLast = idx === steps.length - 1;
             const stepUri =
               s.stepKind === ENDPOINT && !s.metadata[HIDE_FROM_CONNECTION_PAGES]
@@ -45,9 +68,9 @@ export class IntegrationDetailSteps extends React.Component<
                 />
               </React.Fragment>
             );
-          })}
-        </IntegrationStepsHorizontalView>
-      </PageSection>
-    );
-  }
-}
+          })
+        )}
+      </IntegrationStepsHorizontalView>
+    </PageSection>
+  );
+};

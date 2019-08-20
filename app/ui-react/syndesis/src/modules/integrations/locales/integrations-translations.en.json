@@ -1,4 +1,5 @@
 {
+  "APIProvider": "API Provider",
   "integrationListDescription": "The following integrations are defined in this environment. View an integration to learn about its steps, execution history, log entries, and metrics.",
   "publishIntegrationModal": "Are you sure you want to start the \"{{name}}\" integration?",
   "publishIntegrationModalTitle": "Confirm Start?",
@@ -8,6 +9,7 @@
   "deleteIntegrationModalTitle": "Confirm Delete?",
   "ConfigurationRequired": "Configuration Required",
   "filterByConnectionPlaceholder": "Filter by Connection",
+  "flowCount": "{{flowCount}} Flows",
   "progressStarting": "Starting...",
   "progressStopping": "Stopping...",
   "ASSEMBLING": "Assembling",
