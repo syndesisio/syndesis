@@ -157,12 +157,17 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
 
+        // list of stored procedures in the database
+        @SuppressWarnings("unchecked")
+        final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
+        if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(ConnectorOptions.extractOption(properties, PATTERN))) {
+            enrichedProperties.put(PROCEDURE_NAME, obtainFromProcedureList(procedureMap));
+        } else {
+            enrichedProperties.put(PROCEDURE_NAME, obtainToProcedureList(procedureMap));
+        }
+        // metadata for the named procedure
         if (isPresentAndNonNull(properties, PROCEDURE_NAME)) {
-            // fetch metadata for the named procedure
             final List<PropertyPair> ppList = new ArrayList<>();
-            @SuppressWarnings("unchecked")
-            final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata
-                .getPayload();
             final String procedureName = ConnectorOptions.extractOption(properties, PROCEDURE_NAME);
             final StoredProcedureMetadata storedProcedure = procedureMap.get(procedureName);
             ppList.add(new PropertyPair(storedProcedure.getTemplate(), PROCEDURE_TEMPLATE));
@@ -216,14 +221,6 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
             }
         }
 
-        // return list of stored procedures in the database
-        @SuppressWarnings("unchecked")
-        final Map<String, StoredProcedureMetadata> procedureMap = (Map<String, StoredProcedureMetadata>) metadata.getPayload();
-        if (isPresentAndNonNull(properties, PATTERN) && FROM_PATTERN.equalsIgnoreCase(ConnectorOptions.extractOption(properties, PATTERN))) {
-            enrichedProperties.put(PROCEDURE_NAME, obtainFromProcedureList(procedureMap));
-        } else {
-            enrichedProperties.put(PROCEDURE_NAME, obtainToProcedureList(procedureMap));
-        }
         return new SyndesisMetadata(enrichedProperties, null, null);
     }
     /**
