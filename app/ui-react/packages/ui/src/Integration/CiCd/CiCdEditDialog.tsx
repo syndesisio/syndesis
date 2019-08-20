@@ -46,7 +46,7 @@ export class CiCdEditDialog extends React.Component<
     return (
       <Dialog
         body={
-          <TextContent>
+          <TextContent data-testid={'cicd-edit-dialog'}>
             <form className="form-horizontal">
               <Text component={TextVariants.p}>
                 {this.props.i18nDescription}
@@ -67,6 +67,7 @@ export class CiCdEditDialog extends React.Component<
                 <div className="col-sm-9">
                   <input
                     id="tagNameInput"
+                    data-testid={'cicd-edit-dialog-tag-name'}
                     className="form-control"
                     type="text"
                     defaultValue={this.props.tagName}

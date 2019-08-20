@@ -1,0 +1,56 @@
+{
+    meta: {
+        createdAt: '2019-08-19T14:31:24.504Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/vdb-builder/v1/workspace/dataservices/E2E_0',
+        method: 'POST',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '5',
+            'syndesis-mock-session': 'data-virtualization.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: 'eyJrZW5nX19kYXRhUGF0aCI6Ii90a286a29tb2RvL3Rrbzp3b3Jrc3BhY2Uva2FoYm9vbS9FMkVfMCIsImtlbmdfX2lkIjoiRTJFXzAiLCJzZXJ2aWNlVmRiTmFtZSI6ImUyZV8wdmRiIiwidGtvX19kZXNjcmlwdGlvbiI6IlRoaXMgaXMgYSB0ZXN0LiJ9',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'access-control-allow-credentials': [
+                'true',
+            ],
+            'access-control-allow-origin': [
+                'http://localhost:3000',
+            ],
+            'content-length': [
+                '144',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Mon, 19 Aug 2019 14:31:24 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'komodo-server',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            Title: 'Create Status',
+            Information: {
+                E2E_0: 'Successfully created',
+                id: 'd84e19ec-b59e-42a7-ba32-72d8ed922957',
+            },
+        },
+    },
+}

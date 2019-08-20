@@ -26,7 +26,7 @@ export class ImportPageUI extends React.Component<IImportPageUIProps> {
         />
         <PageSection>
           <Card>
-            <CardBody>
+            <CardBody data-testid={'import-page'}>
               <DndFileChooser
                 allowMultiple={true}
                 fileExtensions={'.zip'}

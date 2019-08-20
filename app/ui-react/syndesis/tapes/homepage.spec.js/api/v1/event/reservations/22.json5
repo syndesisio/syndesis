@@ -1,0 +1,39 @@
+{
+    meta: {
+        createdAt: '2019-07-17T08:08:03.359Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+    },
+    req: {
+        url: '/api/v1/event/reservations',
+        method: 'POST',
+        headers: {
+            'syndesis-mock-request': '14',
+            'syndesis-mock-session': 'homepage.spec.js',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: 'IiI=',
+    },
+    res: {
+        status: 302,
+        headers: {
+            location: [
+                'https://api.rh-idev.openshift.com/oauth/authorize?approval_prompt=force&client_id=system%3Aserviceaccount%3Asyndesis-staging%3Asyndesis-oauth-client&redirect_uri=https%3A%2F%2Fsyndesis-staging.b6ff.rh-idev.openshiftapps.com%2Foauth%2Fcallback&response_type=code&scope=user%3Ainfo+user%3Acheck-access&state=183199ba208d18cd35c4f2313c00ce12%3A%2Fapi%2Fv1%2Fevent%2Freservations',
+            ],
+            'set-cookie': [
+                '_oauth_proxy_csrf=183199ba208d18cd35c4f2313c00ce12; Path=/; Domain=syndesis-staging.b6ff.rh-idev.openshiftapps.com; Expires=Wed, 24 Jul 2019 08:08:03 GMT; HttpOnly; Secure',
+                '20193db1ad48e42e7489dd29548270ca=586f6e266da2831d70534a026a8dedd5; path=/; HttpOnly; Secure',
+            ],
+            date: [
+                'Wed, 17 Jul 2019 08:08:03 GMT',
+            ],
+            'content-length': [
+                '0',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: '',
+    },
+}

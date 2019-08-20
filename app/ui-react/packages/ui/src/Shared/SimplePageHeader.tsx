@@ -46,32 +46,40 @@ export const SimplePageHeader: React.FunctionComponent<
       {...rest}
     >
       <TextContent>
-          <Title size={titleSize}
-            headingLevel={TitleLevel[titleHeadingLevel]}
-            className={'simple-page-header__title ' + (isTechPreview ? 'simple-page-header__title_tech-preview' : '')}
-          >
-            <span className="simple-page-header__title-text">
-              {i18nTitle}
+        <Title
+          size={titleSize}
+          headingLevel={TitleLevel[titleHeadingLevel]}
+          className={
+            'simple-page-header__title ' +
+            (isTechPreview ? 'simple-page-header__title_tech-preview' : '')
+          }
+          data-testid={'simple-page-header-title'}
+        >
+          <span className="simple-page-header__title-text">{i18nTitle}</span>
+          {isTechPreview && (
+            <span className="simple-page-header__tech-preview-text">
+              {i18nTechPreview}
+              <Popover
+                bodyContent={
+                  <React.Fragment>{techPreviewPopoverHtml}</React.Fragment>
+                }
+                aria-label={i18nTechPreview}
+                position={'bottom'}
+              >
+                <Icon
+                  type={'pf'}
+                  name={'info'}
+                  className="simple-page-header__tech-preview-icon"
+                />
+              </Popover>
             </span>
-            {isTechPreview && (
-              <span className="simple-page-header__tech-preview-text">
-                {i18nTechPreview}
-                <Popover
-                  bodyContent={
-                    <React.Fragment>
-                      {techPreviewPopoverHtml}
-                    </React.Fragment>
-                  }
-                  aria-label={i18nTechPreview}
-                  position={'bottom'}
-                >
-                  <Icon type={'pf'} name={'info'} className="simple-page-header__tech-preview-icon" />
-                </Popover>
-              </span>
-            )}
-          </Title>
+          )}
+        </Title>
         {i18nDescription && (
-          <Text className={'simple-page-header__description'} dangerouslySetInnerHTML={{ __html: i18nDescription }} />
+          <Text
+            className={'simple-page-header__description'}
+            dangerouslySetInnerHTML={{ __html: i18nDescription }}
+          />
         )}
       </TextContent>
     </PageSection>

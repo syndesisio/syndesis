@@ -1,0 +1,40 @@
+{
+    meta: {
+        createdAt: '2019-08-19T14:31:24.114Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+    },
+    req: {
+        url: '/vdb-builder/v1/workspace/dataservices/nameValidation/E2E_0',
+        method: 'GET',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '4',
+            'syndesis-mock-session': 'data-virtualization.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'content-length': [
+                '0',
+            ],
+            date: [
+                'Mon, 19 Aug 2019 14:31:24 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'komodo-server',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: '',
+    },
+}

@@ -1,0 +1,80 @@
+{
+    meta: {
+        createdAt: '2019-08-19T14:32:26.219Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/public/integrations/i-LmeHDxeHdpg6ZYZNwxWz/tags',
+        method: 'PUT',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '8',
+            'syndesis-mock-session': 'integration.cicd.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: 'WyJFMkUgVGVzdCBFbnYgNTIiXQ==',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'access-control-allow-credentials': [
+                'true',
+            ],
+            'access-control-allow-origin': [
+                'http://localhost:3000',
+            ],
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '113',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Mon, 19 Aug 2019 14:32:27 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            vary: [
+                'Origin',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            'E2E Test Env 52': {
+                name: 'E2E Test Env 52',
+                releaseTag: 'i-LmeHmHGHdpg6ZYZNwx_z',
+                lastTaggedAt: 1566225147025,
+            },
+        },
+    },
+}

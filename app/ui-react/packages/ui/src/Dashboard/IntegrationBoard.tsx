@@ -42,7 +42,7 @@ export class IntegrationBoard extends React.PureComponent<
     };
 
     return (
-      <Card>
+      <Card data-testid={'dashboard-integration-board'}>
         <CardHeader>
           <Title size={'md'}>{this.props.i18nTitle}</Title>
         </CardHeader>
