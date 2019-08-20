@@ -1,5 +1,6 @@
 import {
   Connection,
+  QueryResults,
   RestDataService,
   SchemaNode,
   SchemaNodeInfo,
@@ -9,8 +10,10 @@ import {
   VirtualizationSourceStatus,
 } from '@syndesis/models';
 
-const PREVIEW_VDB_NAME = 'PreviewVdb';
-const SCHEMA_MODEL_SUFFIX = 'schemamodel';
+interface IColumn {
+  id: string;
+  label: string;
+}
 
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
@@ -20,13 +23,6 @@ export enum DvConnectionStatus {
 export enum DvConnectionSelection {
   SELECTED = 'SELECTED',
   NOTSELECTED = 'NOTSELECTED',
-}
-
-/**
- * Get the name of the preview VDB used for preview queries
- */
-export function getPreviewVdbName(): string {
-  return PREVIEW_VDB_NAME;
 }
 
 /**
@@ -350,40 +346,39 @@ export function getPublishingDetails(
  * @param viewDefinition the ViewDefinition
  */
 export function getPreviewSql(viewDefinition: ViewDefinition): string {
-  if (viewDefinition.ddl) {
-    // Remove extra whitespaces, tabs and line feeds
-    const trimmedSql: string = viewDefinition.ddl
-      .replace(/\s+/g, ' ')
-      .replace(/^\s|\s$/g, '');
-    // Split the DDL string by the AS SELECT segment
-    const ddlFragments = trimmedSql.split('AS SELECT ');
-    // If the string array is > 1 prepend the remaining SQL statement to the SELECT
-    if (ddlFragments.length > 1) {
-      return 'SELECT ' + ddlFragments[1];
-    }
-    // TODO: More complex SQL may contain inner joins and SELECT statements, so we'll
-    // need to expand this to more complicated cases.
-  }
-
-  // If no DDL is found then we assume a simple single source view
-  // and use the select * from sourceTableName
-  // TODO:  address multiple source tables
-  const sourcePath = viewDefinition.sourcePaths[0];
-  if (sourcePath) {
-    return 'SELECT * FROM ' + getPreviewTableName(sourcePath) + ';';
-  }
-  return '';
+  return 'SELECT * FROM views.' + viewDefinition.name;
 }
 
 /**
- * Get the table name for the preview query, given the source path.
- * Example sourcePath: (schema=pgConn/table=account)
- * @param sourcePath the path for the source
+ * Get rows from the query results
+ * @param qResults the query results
  */
-function getPreviewTableName(sourcePath: string): string {
-  const segments = sourcePath.split('/');
-  const connectionName = segments[0].split('=')[1];
-  const tableName = segments[1].split('=')[1];
-  // Assemble the name, utilizing the schema model suffix
-  return `"${connectionName.toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${tableName}"`;
+export function getQueryRows(qResults: QueryResults): Array<{}> {
+  const allRows = qResults.rows ? qResults.rows : [];
+  return allRows
+    .map(row => row.row)
+    .map(row =>
+      row.reduce(
+        // tslint:disable-next-line: no-shadowed-variable
+        (row, r, idx) => ({
+          ...row,
+          [qResults.columns[idx].name]: r,
+        }),
+        {}
+      )
+    );
+}
+
+/**
+ * Get columns from the query results
+ * @param qResults the query results
+ */
+export function getQueryColumns(qResults: QueryResults): IColumn[] {
+  const columns = [];
+  if (qResults.columns) {
+    for (const col of qResults.columns) {
+      columns.push({ id: col.name, label: col.label });
+    }
+  }
+  return columns;
 }

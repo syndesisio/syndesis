@@ -1,5 +1,5 @@
-import { RestDataService, ViewDefinition } from '@syndesis/models/src';
-import { Container, TabBar, TabBarItem } from '@syndesis/ui';
+import { QueryResults, RestDataService, ViewDefinition } from '@syndesis/models/src';
+import { Container, PreviewButtonSelection, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import resolvers from '../resolvers';
@@ -9,6 +9,8 @@ import resolvers from '../resolvers';
  * @param viewDefinitionId - the view definition id
  * @param previewExpanded - 'true' if the preview are is to be expanded
  * @param viewDefinition - the view definition (optional)
+ * @param previewButtonSelection - the preview button selection 
+ * @param queryResults - current query results
  */
 
 export interface IViewEditorNavBarProps {
@@ -16,6 +18,9 @@ export interface IViewEditorNavBarProps {
   viewDefinitionId: string;
   previewExpanded: boolean;
   viewDefinition?: ViewDefinition;
+  previewButtonSelection: PreviewButtonSelection;
+  queryResults: QueryResults;
+  onEditFinished: () => void;
 }
 
 /**
@@ -38,6 +43,12 @@ export const ViewEditorNavBar: React.FunctionComponent<
   const viewDefinition = props.viewDefinition;
   const previewExpanded = props.previewExpanded;
   const viewDefinitionId = props.viewDefinitionId;
+  const previewButtonSelection = props.previewButtonSelection;
+  const queryResults = props.queryResults;
+
+  const handleEditFinished = async () => {
+    props.onEditFinished();
+  };
 
   return (
     <Container
@@ -53,7 +64,9 @@ export const ViewEditorNavBar: React.FunctionComponent<
             // tslint:disable-next-line: object-literal-sort-keys
             viewDefinitionId,
             previewExpanded,
-            viewDefinition
+            viewDefinition,
+            previewButtonSelection,
+            queryResults,
           })}
         />
         <TabBarItem
@@ -63,10 +76,22 @@ export const ViewEditorNavBar: React.FunctionComponent<
             // tslint:disable-next-line: object-literal-sort-keys
             viewDefinitionId,
             previewExpanded,
-            viewDefinition
+            viewDefinition,
+            previewButtonSelection,
+            queryResults,
           })}
         />
       </TabBar>
+      <button
+        data-testid={
+          'view-editor-navbar-done-button'
+        }
+        className="btn btn-default"
+        disabled={false}
+        onClick={handleEditFinished}
+      >
+        Done
+      </button>
     </Container>
   );
 }

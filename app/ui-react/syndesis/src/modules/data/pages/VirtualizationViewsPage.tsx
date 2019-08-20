@@ -2,10 +2,11 @@ import {
   useViewDefinitionDescriptors,
   useVirtualizationHelpers,
 } from '@syndesis/api';
-import { ViewDefinitionDescriptor } from '@syndesis/models';
+import { QueryResults, ViewDefinitionDescriptor } from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
+  PreviewButtonSelection,
   ViewHeaderBreadcrumb,
   VirtualizationDetailsHeader,
 } from '@syndesis/ui';
@@ -113,6 +114,11 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     handlePublishVirtualization,
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
+
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
+  };
 
   const filterUndefinedId = (view: ViewDefinitionDescriptor): boolean => {
     return view.name !== undefined;
@@ -354,7 +360,9 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                                 // tslint:disable-next-line: object-literal-sort-keys
                                 viewDefinitionId: viewDefinitionDescriptor.id,
                                 viewDefinition: undefined,
-                                previewExpanded: true,
+                                previewExpanded:true,
+                                previewButtonSelection:PreviewButtonSelection.PREVIEW,
+                                queryResults:queryResultsEmpty
                               }
                             )}
                             i18nCancelText={t('shared:Cancel')}

@@ -3,6 +3,7 @@
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
     "createDataVirtualizationTip": "Create a data virtualization",
     "createDataVirtualizationTitle": "Create New $t(shared:DataVirtualization)",
+    "ddlValidationSuccess": "The DDL validation was successful",
     "deleteModalMessage": "This will permanently delete Virtualization \"{{name}}\".  Proceed with the delete?",
     "deleteModalTitle": "Delete Virtualization",
     "deleteViewModalMessage": "Are you sure you want to delete the \"{{name}}\" view?",
@@ -39,7 +40,11 @@
     "importDataSourceWizardStep2": "Select Views",
     "preview": {
       "hidePreview": "Hide Preview",
-      "showPreview": "Show Preview"
+      "showPreview": "Show Preview",
+      "selectSql": "SQL",
+      "selectPreview": "Preview",
+      "resultsTableEmptyStateTitle": "NO DATA AVAILABLE",
+      "resultsTableEmptyStateInfo": "Click 'refresh' button to refresh the preview results"
     },
     "unpublishModalMessage": "This Virtualization has been published.  Please unpublish Virtualization \"{{name}}\" first.",
     "unpublishModalTitle": "Unpublish Virtualization",

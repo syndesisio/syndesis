@@ -1,0 +1,11 @@
+.expandable-preview__button.pf-c-button {
+  --pf-c-button--active--BorderWidth: 1px;
+  --pf-c-button--m-secondary--active--Color: #fff;
+  --pf-c-button--m-secondary--active--BackgroundColor: #06c;
+  --pf-c-button--m-secondary--focus--Color: #fff;
+  --pf-c-button--m-secondary--focus--BackgroundColor: #06c;
+}
+
+.expandable-preview__content {
+  margin-top: 15px;
+}

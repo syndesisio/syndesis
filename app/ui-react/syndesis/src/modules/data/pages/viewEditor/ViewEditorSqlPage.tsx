@@ -1,6 +1,7 @@
 import { useViewDefinition, useVirtualization } from '@syndesis/api';
 import { useVirtualizationHelpers } from '@syndesis/api';
 import {
+  QueryResults,
   RestDataService,
   ViewDefinition,
 } from '@syndesis/models';
@@ -10,7 +11,7 @@ import {
   DdlEditor,
   IViewEditValidationResult,
 } from '@syndesis/ui';
-import { ExpandablePreview, PageLoader, PageSection } from '@syndesis/ui';
+import { ExpandablePreview, PageLoader, PageSection, PreviewButtonSelection } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import { useContext } from 'react';
 import * as React from 'react';
@@ -22,6 +23,7 @@ import resolvers from '../../../resolvers';
 import {
   ViewEditorNavBar
 } from '../../shared';
+import { getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization that the view belongs to
@@ -33,12 +35,18 @@ export interface IViewEditorSqlRouteParams {
 }
 
 /**
- * @param previewExpanded - expanded state of the preview area
+ * @param virtualization - the Virtualization
  * @param viewDefinition - the ViewDefinition
+ * @param previewExpanded - the state of preview component expansion
+ * @param previewButtonSelection - the button selection state in the preview component
+ * @param queryResults - the current query results in the preview component
  */
 export interface IViewEditorSqlRouteState {
+  virtualization: RestDataService;
+  viewDefinition: ViewDefinition;
   previewExpanded: boolean;
-  viewDefinition?: ViewDefinition;
+  previewButtonSelection: PreviewButtonSelection;
+  queryResults: QueryResults;
 }
 
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
@@ -50,8 +58,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
-  const { saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
+  const { queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
+  const [queryResults, setQueryResults] = React.useState(state.queryResults);
+  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
 
@@ -65,16 +75,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     setIsValidating(false);
     setValidationResults([validation]);
     setViewValid(validation.type === 'success');
-  };
-
-  // tslint:disable-next-line: no-shadowed-variable
-  const handleSelectVirtualization = (virtualization: RestDataService) => {
-    // redirect to virtualization views page
-    history.push(
-      resolvers.data.virtualizations.views.root({
-        virtualization,
-      })
-    );
   };
 
   // Save the View with new DDL and description
@@ -102,8 +102,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
         }),
         'success'
       );
-      // redirect to views page on success
-      handleSelectVirtualization(virtualization);
     } catch (error) {
       const details = error.message
         ? error.message
@@ -147,15 +145,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     } else {
       const validationResult = {
         message: validationResponse.message,
-        type: 'error',
+        type: 'danger',
       } as IViewEditValidationResult;
+
       handleValidationComplete(validationResult);
     }
-  };
-
-  const handleCancel = () => {
-    // redirect to views page
-    handleSelectVirtualization(virtualization);
   };
 
   const getSourceTableInfos = (): TableColumns[] => {
@@ -174,6 +168,49 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     expanded: boolean
   ) => {
     setPreviewExpanded(expanded);
+  };
+
+  const handlePreviewButtonSelectionChanged = (
+    selection: PreviewButtonSelection
+  ) => {
+    setPreviewButtonSelection(selection);
+  };
+
+  const handleEditFinished = () => {
+    history.push(
+      resolvers.data.virtualizations.views.root({
+        virtualization: state.virtualization,
+      })
+    );
+  };
+
+  const handleRefreshResults = async () => {
+    try {
+      const sqlStatement = getPreviewSql(viewDefn);
+
+      const results: QueryResults = await queryVirtualization(
+        params.virtualizationId,
+        sqlStatement,
+        15,
+        0
+      );
+      pushNotification(
+        t('virtualization.queryViewSuccess', {
+          name: viewDefn.name,
+        }),
+        'success'
+      );
+      setQueryResults(results);
+    } catch (error) {
+      const details = error.message ? error.message : '';
+      pushNotification(
+        t('virtualization.queryViewFailed', {
+          details,
+          name: viewDefn.name,
+        }),
+        'error'
+      );
+    }
   };
 
   return (
@@ -209,18 +246,18 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               viewDefinitionId={params.viewDefinitionId}
               viewDefinition={viewDefn}
               previewExpanded={previewExpanded}
-            />
+              previewButtonSelection={previewButtonSelection} 
+              queryResults={queryResults}
+              onEditFinished={handleEditFinished}            />
           </PageSection>
           <DdlEditor
             viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-            i18nCancelLabel={t('shared:Cancel')}
             i18nSaveLabel={t('shared:Save')}
             i18nValidateLabel={t('shared:Validate')}
             isValid={viewValid}
             isSaving={isSaving}
             isValidating={isValidating}
             sourceTableInfos={getSourceTableInfos()}
-            onCancel={handleCancel}
             onValidate={handleValidateView}
             onSave={handleSaveView}
             validationResults={
@@ -229,10 +266,28 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
           />
           <PageSection variant={'light'} noPadding={true}>
             <ExpandablePreview
+              i18nEmptyResultsTitle={t(
+                'data:virtualization.preview.resultsTableEmptyStateTitle'
+              )}
+              i18nEmptyResultsMsg={t(
+                'data:virtualization.preview.resultsTableEmptyStateInfo'
+              )}
               i18nHidePreview={t('data:virtualization.preview.hidePreview')}
               i18nShowPreview={t('data:virtualization.preview.showPreview')}
+              i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
+              i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
               initialExpanded={previewExpanded}
+              initialPreviewButtonSelection={previewButtonSelection}
               onPreviewExpandedChanged={handlePreviewExpandedChanged}
+              onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
+              onRefreshResults={handleRefreshResults}
+              viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+              queryResultRows={getQueryRows(
+                queryResults
+              )}
+              queryResultCols={getQueryColumns(
+                queryResults
+              )}
             />
           </PageSection>
         </>

@@ -20,14 +20,12 @@ stories.add('render', () => {
   return (
     <DdlEditor
       viewDdl={viewDdl}
-      i18nCancelLabel={'Cancel'}
       i18nSaveLabel={'Save'}
       i18nValidateLabel={'Validate'}
       isValid={true}
       isSaving={false}
       isValidating={false}
       sourceTableInfos={sourceTables}
-      onCancel={action('cancel')}
       onValidate={action('validate')}
       onSave={action('save')}
     />
