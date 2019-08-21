@@ -116,6 +116,12 @@
       "fieldRequired": "{{field}} is required"
     }
   },
+  "errorKeys": {
+    "SqlEntityNotFoundError": "SQL Entity Not Found",
+    "SqlDataAccessError": "SQL Data Access Error",
+    "SqlConnectorError": "SQL Connector Error",
+    "ServerError": "Server Error"
+  },
   "apiProvider": {
     "editSpecification": {
       "title": "Provide API Definition",

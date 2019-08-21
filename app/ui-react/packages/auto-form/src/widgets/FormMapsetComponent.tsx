@@ -25,6 +25,7 @@ export const FormMapsetComponent: React.FunctionComponent<
 > = props => {
   const { getField } = useFormBuilder();
   const { value, onChange, onBlur, ...field } = props.field;
+  const mapsetValue = typeof value === 'string' ? JSON.parse(value) : value;
   const id = toValidHtmlId(field.name);
   const mapsetOptions = props.property.mapsetOptions || ({} as IMapsetOptions);
   const mapsetValueDefinition = {
@@ -106,7 +107,7 @@ export const FormMapsetComponent: React.FunctionComponent<
                                 ...mapsetValueDefinition,
                                 name: `${field.name}.${mapsetKey.name}`,
                               },
-                              value: value[mapsetKey.name],
+                              value: mapsetValue[mapsetKey.name],
                             })}
                           </div>
                         </DataListCell>,

@@ -5,10 +5,15 @@ import {
   getActionSteps,
 } from '@syndesis/api';
 import { AutoForm, IFormValue } from '@syndesis/auto-form';
-import { Action, ActionDescriptor } from '@syndesis/models';
+import {
+  Action,
+  ActionDescriptor,
+  IConfigurationProperties,
+} from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import {
   allFieldsRequired,
+  coerceFormValues,
   getRequiredStatusText,
   toFormDefinition,
   validateRequiredProperties,
@@ -26,6 +31,7 @@ export interface IConfigurationFormProps
     Pick<IWithConfigurationFormProps, 'chooseActionHref'> {
   action: Action;
   descriptor: ActionDescriptor;
+  definitionOverride?: IConfigurationProperties;
   children: any;
 }
 
@@ -35,6 +41,7 @@ export const ConfigurationForm: React.FunctionComponent<
   action,
   configurationPage,
   descriptor,
+  definitionOverride,
   initialValue,
   oldAction,
   chooseActionHref,
@@ -46,7 +53,7 @@ export const ConfigurationForm: React.FunctionComponent<
   try {
     const steps = getActionSteps(descriptor);
     const step = getActionStep(steps, configurationPage);
-    const definition = getActionStepDefinition(step);
+    const definition = definitionOverride || getActionStepDefinition(step);
     const moreConfigurationSteps = configurationPage < steps.length - 1;
     const onSave = async (
       values: { [key: string]: string },
@@ -63,7 +70,7 @@ export const ConfigurationForm: React.FunctionComponent<
         await onUpdatedIntegration({
           action,
           moreConfigurationSteps,
-          values,
+          values: coerceFormValues(values),
         });
       } catch (e) {
         setError(e.message);

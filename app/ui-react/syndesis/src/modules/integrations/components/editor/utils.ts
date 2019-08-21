@@ -26,11 +26,15 @@ import {
   ConnectionOverview,
   ConnectorAction,
   DataShape,
+  ErrorKey,
+  ExtendedActionDescriptor,
   Extension,
+  Flow,
   IConnectionOverview,
   Step,
   StepKind,
 } from '@syndesis/models';
+import i18n from '../../../../i18n';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -452,4 +456,49 @@ export function visibleStepsByPosition(
     }
     return true;
   });
+}
+
+/**
+ * Builds an array of error keys for a flow using all steps before the supplied position
+ * @param flow
+ * @param position
+ */
+export function collectErrorKeys(flow: Flow, position: number) {
+  // We want all previous steps and this step
+  const previousSteps = getPreviousSteps(flow.steps!, position + 1);
+  // Gather up all possible standardized errors in the flow
+  const collectedErrors = previousSteps
+    .filter(s => typeof s.action !== 'undefined')
+    .filter(s => s.action!.descriptor !== 'undefined')
+    .filter(
+      s =>
+        typeof (s.action!.descriptor! as ExtendedActionDescriptor)
+          .standardizedErrors !== 'undefined'
+    )
+    .map(
+      s =>
+        (s.action!.descriptor! as ExtendedActionDescriptor).standardizedErrors!
+    );
+  const standardizedErrorsWithDuplicates = [].concat(
+    ...(collectedErrors as any)
+  ) as ErrorKey[];
+  const uniqueErrors = Array.from(
+    new Set(standardizedErrorsWithDuplicates.map(err => err.name))
+  );
+  return uniqueErrors
+    .map(uniqueError =>
+      standardizedErrorsWithDuplicates.find(err => err.name === uniqueError!)
+    )
+    .map(err => localizeErrorKey(err!));
+}
+
+/**
+ * Creates a new error key with the display name localized
+ * @param key
+ */
+export function localizeErrorKey(key: ErrorKey) {
+  return {
+    displayName: i18n.t(`integrations:errorKeys:${key.displayName}`),
+    name: key.name,
+  };
 }

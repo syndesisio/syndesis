@@ -1,4 +1,5 @@
 import {
+  getFlow,
   getStep,
   getSteps,
   isEndStep,
@@ -22,7 +23,7 @@ import {
   IDescribeDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
-import { toUIStep, toUIStepCollection } from '../utils';
+import { collectErrorKeys, toUIStep, toUIStepCollection } from '../utils';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -82,6 +83,13 @@ export class ConfigureActionPage extends React.Component<
               const oldStepConfig = getStep(
                 state.updatedIntegration || state.integration,
                 params.flowId,
+                positionAsNumber
+              );
+              const errorKeys = collectErrorKeys(
+                getFlow(
+                  state.updatedIntegration || state.integration,
+                  params.flowId
+                )!,
                 positionAsNumber
               );
               /**
@@ -240,13 +248,14 @@ export class ConfigureActionPage extends React.Component<
                         key={`${positionAsNumber}:${pageAsNumber}`}
                         connection={state.connection}
                         actionId={params.actionId}
+                        configurationPage={pageAsNumber}
+                        errorKeys={errorKeys}
+                        initialValue={configuredProperties}
                         oldAction={
                           useOldStepConfig && oldStepConfig!.action
                             ? oldStepConfig!.action!
                             : undefined
                         }
-                        configurationPage={pageAsNumber}
-                        initialValue={configuredProperties}
                         onUpdatedIntegration={onUpdatedIntegration}
                         chooseActionHref={this.props.backHref(params, state)}
                       />
