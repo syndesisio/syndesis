@@ -47,7 +47,7 @@ yaml-templates:
     persist_to_workspace:
       root: .
       paths:
-        - dist
+        - install/operator/dist
 
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
@@ -737,30 +737,30 @@ workflows:
           <<: *release_filters
       # - operator-build-darwin-386:
       #     <<: *release_filters
-      # - operator-build-darwin-amd64:
-      #     <<: *release_filters
+      - operator-build-darwin-amd64:
+          <<: *release_filters
       # - operator-build-windows-386:
       #     <<: *release_filters
-      # - operator-build-windows-amd64:
-      #     <<: *release_filters
+      - operator-build-windows-amd64:
+          <<: *release_filters
       # - operator-build-linux-arm:
       #     <<: *release_filters
       # - operator-build-linux-arm64:
       #     <<: *release_filters
-      # - operator-test:
-      #     <<: *release_filters
+      - operator-test:
+          <<: *release_filters
       - operator-publish-github-release:
           <<: *release_filters
           requires:
           #  - operator-build-linux-386
             - operator-build-linux-amd64
           #  - operator-build-darwin-386
-          #  - operator-build-darwin-amd64
+            - operator-build-darwin-amd64
           #  - operator-build-windows-386
-          #  - operator-build-windows-amd64
+            - operator-build-windows-amd64
           #  - operator-build-linux-arm
           #  - operator-build-linux-arm64
-          #  - operator-test
+            - operator-test
 
   syndesis:
     jobs:
