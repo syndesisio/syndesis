@@ -25,14 +25,13 @@ import (
     "github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
     "github.com/syndesisio/syndesis/install/operator/pkg/generator"
     "github.com/syndesisio/syndesis/install/operator/pkg/util"
-    "os/exec"
 )
 
 type Grant struct {
     *internal.Options
     Role    string
     cluster bool
-    user    string
+    User    string
 }
 
 func New(parent *internal.Options) *cobra.Command {
@@ -46,7 +45,7 @@ func New(parent *internal.Options) *cobra.Command {
     }
 
     cmd.PersistentFlags().BoolVarP(&o.cluster, "cluster", "", false, "add the permission for all projects in the cluster(requires cluster admin privileges)")
-    cmd.PersistentFlags().StringVarP(&o.user, "user", "u", pkg.DefaultOperatorImage, "add permissions for the given user")
+    cmd.PersistentFlags().StringVarP(&o.User, "user", "u", pkg.DefaultOperatorImage, "add permissions for the given User")
     cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
     cmd.MarkFlagRequired("user")
 
@@ -54,36 +53,34 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Grant) grant() error {
-    if util.CommandExists("oc") {
-        o.Role = fmt.Sprintf("syndesis-operator-%s", o.user)
+    o.Role = "syndesis-installer"
 
-        role, err := generator.Render("./install/role.yml.tmpl", o)
-        if err != nil {
-            return err
-        }
-
-        client, err := o.NewClient()
-        for _, res := range role {
-            res.SetNamespace(o.Namespace)
-
-            _, _, err := util.CreateOrUpdate(o.Context, client, &res)
-            if err != nil {
-                return errors.Wrap(err, util.Dump(res))
-            }
-        }
-
-        cmd := exec.Command("oc", "policy", "add-role-to-user", o.Role, o.user)
-        if o.cluster != false {
-            cmd = exec.Command("oc", "adm", "policy", "add-cluster-role-to-user", o.Role, o.user)
-        }
-
-        err = cmd.Run()
-        if err != nil {
-            return err
-        }
-        fmt.Println("role", o.Role, "granted to", o.user)
-    } else {
-        return fmt.Errorf("extra permissions for user %s not granted, oc command is missing", o.user)
+    resources, err := generator.Render("./install/role.yml.tmpl", o)
+    if err != nil {
+        return err
     }
+
+    grp := "./install/grant_cluster_role.yml.tmpl"
+    if o.cluster == false {
+        grp = "./install/grant_role.yml.tmpl"
+    }
+    gr, err := generator.Render(grp, o)
+    if err != nil {
+        return err
+    }
+
+    resources = append(resources, gr...)
+    client, err := o.NewClient()
+    for _, res := range resources {
+        res.SetNamespace(o.Namespace)
+
+        _, _, err := util.CreateOrUpdate(o.Context, client, &res)
+        if err != nil {
+            return errors.Wrap(err, util.Dump(res))
+        }
+    }
+
+    fmt.Println("role", o.Role, "granted to", o.User)
+
     return nil
 }
