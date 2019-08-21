@@ -22,7 +22,7 @@ yaml-templates:
       branches:
         ignore: /.*/
       tags:
-        only: /v.*/
+        only: /.*/
 
   test_go_executable: &test_go_executable
     run:
@@ -31,7 +31,7 @@ yaml-templates:
         cd install/operator
         VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
         export GO111MODULE=on
-        go test -mod=vendor ./...
+        go test -mod=vendor ./pkg/...
 
   compile_go_executable: &compile_go_executable
     run:
