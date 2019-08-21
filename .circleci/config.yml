@@ -23,6 +23,16 @@ yaml-templates:
         ignore: /.*/
       tags:
         only: /v.*/
+
+  test_go_executable: &test_go_executable
+    run:
+      name: Compile Go Executable
+      command: |
+        cd install/operator
+        VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
+        export GO111MODULE=on
+        go -mod=vendor test ./...
+
   compile_go_executable: &compile_go_executable
     run:
       name: Compile Go Executable
@@ -32,6 +42,7 @@ yaml-templates:
         export GO111MODULE=on
         echo go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:$VERSION" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
         go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:latest" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
+
   store_dist: &store_dist
     persist_to_workspace:
       root: .
@@ -687,6 +698,35 @@ jobs:
       GOARCH: arm64
       PLATFORM: linux-arm64bit
 
+  operator-test:
+    <<: *go_build
+    steps:
+      - checkout
+      - <<: *test_go_executable
+
+  operator-publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: "Create a Draft Release on GitHub"
+          command: |
+            set -x
+            VERSION="$CIRCLE_TAG"
+            BASEDIR=`pwd`
+            mkdir "${BASEDIR}/archives"
+            for p in `ls dist` ; do
+              cd "$BASEDIR/dist/$p"
+              if [[ $p == windows* ]] ; then
+                zip -q "${BASEDIR}/archives/uc-${VERSION}-$p.zip" *
+              else
+                tar -zcf "${BASEDIR}/archives/uc-${VERSION}-$p.tgz" *
+              fi
+            done
+            cd ${BASEDIR}
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace -prerelease -draft ${VERSION} "${BASEDIR}/archives"
 workflows:
 
   operator-release:
