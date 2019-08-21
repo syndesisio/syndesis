@@ -75,7 +75,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                       >
                         {() => {
                           return (
-                            <ConnectionsGrid>
+                            <ConnectionsGrid data-testid={'connections'}>
                               {this.props.connections.map((c, index) => {
                                 const handleDelete = (): void => {
                                   doDelete(c.id!, c.name); // must have an ID if deleting

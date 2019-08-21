@@ -115,6 +115,11 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.ejectedResources = []unstructured.Unstructured{}
 	}
 
+    // The default operator image is not valid /w dev mode since it can't have a repository in the image name.
+    if o.devImages && o.image == pkg.DefaultOperatorImage {
+        o.image = "syndesis-operator"
+    }
+
 	return
 }
 

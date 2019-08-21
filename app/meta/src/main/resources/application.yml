@@ -45,6 +45,8 @@ spring:
     exclude:
       - org.springframework.boot.autoconfigure.jms.activemq.ActiveMQAutoConfiguration
       - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 io:
   syndesis:
     connector:

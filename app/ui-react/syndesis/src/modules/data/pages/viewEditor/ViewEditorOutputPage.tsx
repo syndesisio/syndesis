@@ -1,5 +1,7 @@
-import { useViewDefinition, useVirtualization } from '@syndesis/api';
+import { useViewDefinition, useVirtualization, useVirtualizationHelpers} from '@syndesis/api';
 import {
+  QueryResults,
+  RestDataService,
   ViewDefinition,
 } from '@syndesis/models';
 import {
@@ -7,15 +9,19 @@ import {
   ExpandablePreview,
   PageLoader,
   PageSection,
+  PreviewButtonSelection,
   ViewOutputToolbar,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { UIContext } from '../../../../app';
 import { ApiError } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { ViewEditorNavBar } from '../../shared';
+import { getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization that the view belongs to
@@ -29,15 +35,22 @@ export interface IViewEditorOutputRouteParams {
 /**
  * @param previewExpanded - expanded state of the preview area
  * @param viewDefinition - the ViewDefinition
+ * @param previewExpanded - the state of preview component expansion
+ * @param previewButtonSelection - the button selection state in the preview component
+ * @param queryResults - the current query results in the preview component
  */
 export interface IViewEditorOutputRouteState {
+  virtualization: RestDataService;
   previewExpanded: boolean;
-  viewDefinition?: ViewDefinition;
+  viewDefinition: ViewDefinition;
+  previewButtonSelection: PreviewButtonSelection;
+  queryResults: QueryResults;
 }
 
 export const ViewEditorOutputPage: React.FunctionComponent = () => {
+  const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { params, state } = useRouteData<IViewEditorOutputRouteParams, IViewEditorOutputRouteState>();
+  const { params, state, history } = useRouteData<IViewEditorOutputRouteParams, IViewEditorOutputRouteState>();
 
   const [activeFilter, setActiveFilter] = React.useState();
   const [columnsToDelete] = React.useState();
@@ -49,6 +62,10 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
   const [previewExpanded, setPreviewExpanded] = React.useState(
     state.previewExpanded
   );
+  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
+  // const [viewDdl, setViewDdl] = React.useState(state.viewDefinition.ddl);
+  const [queryResults, setQueryResults] = React.useState(state.queryResults);
+  const { queryVirtualization } = useVirtualizationHelpers();
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
 
@@ -90,6 +107,51 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
     // TODO: implement save
   };
 
+  const handlePreviewButtonSelectionChanged = (
+    selection: PreviewButtonSelection
+  ) => {
+    setPreviewButtonSelection(selection);
+  };
+  
+  const handleEditFinished = () => {
+    history.push(
+      resolvers.data.virtualizations.views.root({
+        virtualization: state.virtualization,
+      })
+    );
+  }
+  
+  const handleRefreshResults = async () => {
+    try {
+      let sqlStatement = '';
+      if (state.viewDefinition) {
+        sqlStatement = getPreviewSql(state.viewDefinition);
+      }
+      const results: QueryResults = await queryVirtualization(
+        params.virtualizationId,
+        sqlStatement,
+        15,
+        0
+      );
+      pushNotification(
+        t('virtualization.queryViewSuccess', {
+          name: state.viewDefinition.name,
+        }),
+        'success'
+      );
+      setQueryResults(results);
+    } catch (error) {
+      const details = error.message ? error.message : '';
+      pushNotification(
+        t('virtualization.queryViewFailed', {
+          details,
+          name: state.viewDefinition.name,
+        }),
+        'error'
+      );
+    }
+  };
+  
   return (
     <WithLoader
       loading={loading}
@@ -123,7 +185,9 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
               viewDefinitionId={params.viewDefinitionId}
               viewDefinition={viewDefn}
               previewExpanded={previewExpanded}
-            />
+              previewButtonSelection={previewButtonSelection} 
+              queryResults={queryResults}
+              onEditFinished={handleEditFinished}            />
           </PageSection>
           <PageSection>
             <ViewOutputToolbar
@@ -170,10 +234,28 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
           </PageSection>
           <PageSection variant={'light'} noPadding={true}>
             <ExpandablePreview
+              i18nEmptyResultsTitle={t(
+                'data:virtualization.preview.resultsTableEmptyStateTitle'
+              )}
+              i18nEmptyResultsMsg={t(
+                'data:virtualization.preview.resultsTableEmptyStateInfo'
+              )}
               i18nHidePreview={t('data:virtualization.preview.hidePreview')}
               i18nShowPreview={t('data:virtualization.preview.showPreview')}
+              i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
+              i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
               initialExpanded={previewExpanded}
+              initialPreviewButtonSelection={previewButtonSelection}
               onPreviewExpandedChanged={handlePreviewExpandedChanged}
+              onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
+              onRefreshResults={handleRefreshResults}
+              viewDdl={state.viewDefinition.ddl}
+              queryResultRows={getQueryRows(
+                queryResults
+              )}
+              queryResultCols={getQueryColumns(
+                queryResults
+              )}
             />
           </PageSection>
         </>

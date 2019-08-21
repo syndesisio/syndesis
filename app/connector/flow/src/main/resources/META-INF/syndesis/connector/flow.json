@@ -7,9 +7,11 @@
         "componentScheme": "direct",
         "connectorCustomizers": [],
         "inputDataShape": {
+          "name": "No shape",
           "kind": "none"
         },
         "outputDataShape": {
+          "name": "Any shape",
           "kind": "any"
         },
         "propertyDefinitionSteps": [

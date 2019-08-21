@@ -31,8 +31,8 @@ import io.syndesis.common.model.integration.Step;
  */
 final class StepMetadataHelper {
 
-    static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).build();
-    static final DataShape NO_SHAPE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
+    static final DataShape ANY_SHAPE = new DataShape.Builder().kind(DataShapeKinds.ANY).name("Any shape").build();
+    static final DataShape NO_SHAPE = new DataShape.Builder().kind(DataShapeKinds.NONE).name("No shape").build();
 
     /**
      * Prevent instantiation of utility class.

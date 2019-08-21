@@ -18,7 +18,11 @@ export const OAuthAppHeader: React.FunctionComponent<IOAuthAppHeaderProps> = ({
 }) => (
   <PageSection variant={'light'}>
     <TextContent>
-      <Title size={'2xl'} headingLevel={TitleLevel.h1}>
+      <Title
+        size={'2xl'}
+        headingLevel={TitleLevel.h1}
+        data-testid={'oauth-title'}
+      >
         {i18nPageTitle}
       </Title>
       <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />

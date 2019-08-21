@@ -1,0 +1,44 @@
+{
+    meta: {
+        createdAt: '2019-08-16T15:05:26.991Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/vdb-builder/v1/service/userProfile/viewListings?virtualization=E2E_58',
+        method: 'GET',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '6',
+            'syndesis-mock-session': 'data-virtualization.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'content-length': [
+                '3',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 16 Aug 2019 15:05:27 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'komodo-server',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: [],
+    },
+}

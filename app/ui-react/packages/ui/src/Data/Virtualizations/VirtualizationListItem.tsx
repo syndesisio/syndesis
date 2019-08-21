@@ -41,7 +41,7 @@ export interface IVirtualizationListItemProps {
   i18nError: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  /* TD-636: Commented out for TP 
+  /* TD-636: Commented out for TP
   i18nExport: string; */
   i18nPublish: string;
   i18nPublished: string;
@@ -54,7 +54,7 @@ export interface IVirtualizationListItemProps {
   icon?: string;
   odataUrl?: string;
   onDelete: (virtualizationName: string) => void;
-  /* TD-636: Commented out for TP 
+  /* TD-636: Commented out for TP
   onExport: (virtualizationName: string) => void; */
   onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
@@ -71,7 +71,9 @@ export interface IVirtualizationListItemProps {
 export const VirtualizationListItem: React.FunctionComponent<
   IVirtualizationListItemProps
 > = props => {
-  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(false);
+  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(
+    false
+  );
 
   const doCancel = () => {
     setShowConfirmationDialog(false);
@@ -83,7 +85,7 @@ export const VirtualizationListItem: React.FunctionComponent<
         {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
       </Tooltip>
     );
-  }
+  };
 
   const doDelete = () => {
     setShowConfirmationDialog(false);
@@ -99,7 +101,7 @@ export const VirtualizationListItem: React.FunctionComponent<
         props.virtualizationViewNames.length > 0
       );
     }
-  }
+  };
 
   const doUnpublish = () => {
     setShowConfirmationDialog(false);
@@ -107,20 +109,19 @@ export const VirtualizationListItem: React.FunctionComponent<
     if (props.serviceVdbName) {
       props.onUnpublish(props.serviceVdbName);
     }
-  }
+  };
 
   const showConfirmDialog = () => {
     setShowConfirmationDialog(true);
-  }
+  };
 
   // Determine published state
-  const isPublished =
-    props.currentPublishedState === RUNNING ? true : false;
+  const isPublished = props.currentPublishedState === RUNNING ? true : false;
 
   const publishInProgress =
     props.currentPublishedState === BUILDING ||
-      props.currentPublishedState === CONFIGURING ||
-      props.currentPublishedState === DEPLOYING
+    props.currentPublishedState === CONFIGURING ||
+    props.currentPublishedState === DEPLOYING
       ? true
       : false;
 
@@ -161,7 +162,7 @@ export const VirtualizationListItem: React.FunctionComponent<
         )}-list-item`}
         actions={
           <div className="form-group">
-            <PublishStatusWithProgress 
+            <PublishStatusWithProgress
               publishedState={props.currentPublishedState}
               i18nError={props.i18nError}
               i18nPublished={props.i18nPublished}
@@ -184,23 +185,27 @@ export const VirtualizationListItem: React.FunctionComponent<
               </ButtonLink>
             </OverlayTrigger>
             <DropdownKebab
-              id={`virtualization-${
-                props.virtualizationName
-                }-action-menu`}
+              id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}
+              data-testid={`virtualization-list-item-${
+                props.virtualizationName
+              }-dropdown-kebab`}
             >
-              <MenuItem onClick={showConfirmDialog}>
+              <MenuItem
+                onClick={showConfirmDialog}
+                data-testid={`virtualization-list-item-${
+                  props.virtualizationName
+                }-delete`}
+              >
                 {props.i18nDelete}
               </MenuItem>
-              {/* TD-636: Commented out for TP 
+              {/* TD-636: Commented out for TP
                 <MenuItem onClick={handleExport}>
                   {props.i18nExport}
                 </MenuItem> */}
               <MenuItem
                 onClick={
-                  isPublished || publishInProgress
-                    ? doUnpublish
-                    : doPublish
+                  isPublished || publishInProgress ? doUnpublish : doPublish
                 }
               >
                 {isPublished || publishInProgress
@@ -212,9 +217,7 @@ export const VirtualizationListItem: React.FunctionComponent<
         }
         heading={props.virtualizationName}
         description={
-          props.virtualizationDescription
-            ? props.virtualizationDescription
-            : ''
+          props.virtualizationDescription ? props.virtualizationDescription : ''
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
@@ -239,22 +242,16 @@ export const VirtualizationListItem: React.FunctionComponent<
         leftContent={
           props.icon ? (
             <div className="blank-slate-pf-icon">
-              <img
-                src={props.icon}
-                alt={props.virtualizationName}
-                width={46}
-              />
+              <img src={props.icon} alt={props.virtualizationName} width={46} />
             </div>
           ) : (
-              <ListViewIcon name={'cube'} />
-            )
+            <ListViewIcon name={'cube'} />
+          )
         }
         stacked={true}
       >
-        {props.children ? (
-          <ListView>{props.children}</ListView>
-        ) : null}
+        {props.children ? <ListView>{props.children}</ListView> : null}
       </ListViewItem>
     </>
   );
-}
+};

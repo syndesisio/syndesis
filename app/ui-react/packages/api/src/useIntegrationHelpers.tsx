@@ -13,7 +13,11 @@ import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-import { PUBLISHED, UNPUBLISHED } from './constants';
+import {
+  API_PROVIDER_END_ACTION_ID,
+  PUBLISHED,
+  UNPUBLISHED,
+} from './constants';
 import {
   createStep,
   getStep,
@@ -337,11 +341,16 @@ export const useIntegrationHelpers = () => {
   ): Promise<Integration> => {
     return produce(integration, async () => {
       const originalStep = getStep(integration, flowId, position);
-      const actionDescriptor = await getActionDescriptor(
-        connection.id!,
-        action.id!,
-        configuredProperties
-      );
+      // the API provider end action needs to maintain the descriptor
+      // as stored on the step
+      const actionDescriptor =
+        action.id !== API_PROVIDER_END_ACTION_ID
+          ? await getActionDescriptor(
+              connection.id!,
+              action.id!,
+              configuredProperties
+            )
+          : originalStep!.action!.descriptor!;
       const step: Step = setDescriptorOnStep(
         {
           action,

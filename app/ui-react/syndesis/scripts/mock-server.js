@@ -45,7 +45,7 @@ const server = async argv => {
   await server.start();
   console.log(
     argv.record
-      ? `Mock recording started, proxing against ${
+      ? `Mock recording started, proxying against ${
           argv.host
         }, recording session "${argv.session}"`
       : `Replaying sessions`

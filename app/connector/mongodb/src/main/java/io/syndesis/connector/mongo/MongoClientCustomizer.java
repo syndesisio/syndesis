@@ -17,16 +17,14 @@ package io.syndesis.connector.mongo;
 
 import java.util.Map;
 
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientCustomizer.class);
@@ -34,17 +32,18 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
     private CamelContext camelContext;
 
     @Override
-    public void setCamelContext(CamelContext camelContext) {
-        this.camelContext = camelContext;
-    }
-
-    @Override
     public CamelContext getCamelContext() {
         return this.camelContext;
     }
 
     @Override
+    public void setCamelContext(CamelContext camelContext) {
+        this.camelContext = camelContext;
+    }
+
+    @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
                 try {
@@ -58,16 +57,16 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                     MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
                     MongoClient mongoClient = new MongoClient(mongoClientURI);
                     options.put("mongoConnection", mongoClient);
-                    if(!options.containsKey("connectionBean")) {
+                    if (!options.containsKey("connectionBean")) {
                         //We safely put a default name instead of leaving null
-                        options.put("connectionBean", String.format("%s-%s",mongoConf.getHost(),mongoConf.getUser()));
+                        options.put("connectionBean", String.format("%s-%s", mongoConf.getHost(), mongoConf.getUser()));
                     }
                 } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
                     throw new IllegalArgumentException(e);
                 }
             } else {
                 LOGGER.warn(
-                        "Not enough information provided to set-up the MongoDB client. Required host, user and password.");
+                    "Not enough information provided to set-up the MongoDB client. Required at least host, user and password.");
             }
         }
     }

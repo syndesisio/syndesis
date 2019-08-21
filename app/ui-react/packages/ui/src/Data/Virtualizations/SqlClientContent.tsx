@@ -17,10 +17,6 @@ export interface ISqlClientContentProps {
    */
   viewNames: string[];
   /**
-   * TargetVdb to run query
-   */
-  targetVdb: string;
-  /**
    * Array of column info for the query results.  (The column id and display label)
    * Example:
    * [ { id: 'fName', label: 'First Name'},

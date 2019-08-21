@@ -213,7 +213,7 @@ public class StepActionHandlerTest {
 
         final StepDescriptor descriptor = meta.getValue();
         assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).contains(StepMetadataHelper.ANY_SHAPE);
     }
 
     @Test

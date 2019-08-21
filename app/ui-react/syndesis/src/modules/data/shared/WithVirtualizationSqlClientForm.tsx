@@ -8,7 +8,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { getPreviewSql } from './VirtualizationUtils';
+import { getPreviewSql, getQueryColumns, getQueryRows } from './VirtualizationUtils';
 
 export interface IWithVirtualizationSqlClientFormChildrenProps {
   /**
@@ -34,7 +34,7 @@ export interface IWithVirtualizationSqlClientFormChildrenProps {
 export interface IWithVirtualizationSqlClientFormProps {
   views: ViewDefinitionDescriptor[];
 
-  targetVdb: string;
+  virtualizationId: string;
 
   linkCreateView: H.LocationDescriptor;
   linkImportViews: H.LocationDescriptor;
@@ -50,11 +50,6 @@ export interface IWithVirtualizationSqlClientFormProps {
    */
   // tslint:disable-next-line: react-unused-props-and-state
   children(props: IWithVirtualizationSqlClientFormChildrenProps): any;
-}
-
-interface IColumn {
-  id: string;
-  label: string;
 }
 
 /**
@@ -80,32 +75,6 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
       enums.push({ label: view.name, value: view.name });
     }
     return enums;
-  }
-
-  const buildRows = (qResults: QueryResults): Array<{}> => {
-    const allRows = qResults.rows ? qResults.rows : [];
-    return allRows
-      .map(row => row.row)
-      .map(row =>
-        row.reduce(
-          // tslint:disable-next-line: no-shadowed-variable
-          (row, r, idx) => ({
-            ...row,
-            [qResults.columns[idx].name]: r,
-          }),
-          {}
-        )
-      );
-  }
-
-  const buildColumns = (qResults: QueryResults): IColumn[] => {
-    const columns = [];
-    if (qResults.columns) {
-      for (const col of qResults.columns) {
-        columns.push({ id: col.name, label: col.label });
-      }
-    }
-    return columns;
   }
 
   const getInitialView = () => {
@@ -197,7 +166,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
         sqlStatement = getPreviewSql(viewDefinition);
       }
       const results: QueryResults = await queryVirtualization(
-        props.targetVdb,
+        props.virtualizationId,
         sqlStatement,
         value.rowLimit,
         value.rowOffset
@@ -249,13 +218,12 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
             viewNames={props.views.map(
               (viewDefn: ViewDefinitionDescriptor) => viewDefn.name
             )}
-            queryResultRows={buildRows(
+            queryResultRows={getQueryRows(
               queryResults
             )}
-            queryResultCols={buildColumns(
+            queryResultCols={getQueryColumns(
               queryResults
             )}
-            targetVdb={'test'}
             i18nResultsTitle={i18n.t(
               'data:virtualization.queryResultsTitle'
             )}

@@ -1,0 +1,75 @@
+{
+    meta: {
+        createdAt: '2019-08-16T15:05:32.951Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/vdb-builder/v1/workspace/dataservices',
+        method: 'GET',
+        headers: {
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '5',
+            'syndesis-mock-session': 'data-virtualization.spec.js',
+            referrerpolicy: 'no-referrer',
+            'sec-fetch-mode': 'cors',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'content-length': [
+                '802',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Fri, 16 Aug 2019 15:05:33 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'komodo-server',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: [
+            {
+                id: '320c1809-6511-4581-a9da-169f04467021',
+                serviceViewModel: 'views',
+                serviceVdbName: 'stubvdb',
+                publishedState: 'NOTFOUND',
+                podNamespace: 'syndesis-staging',
+                empty: true,
+                keng__id: 'Stub',
+                tko__description: '',
+            },
+            {
+                id: '3610b985-fb2e-4251-8f45-609bc9c2b543',
+                serviceViewModel: 'views',
+                serviceVdbName: 'stub2vdb',
+                publishedState: 'NOTFOUND',
+                podNamespace: 'syndesis-staging',
+                empty: true,
+                keng__id: 'Stub2',
+                tko__description: '',
+            },
+            {
+                id: 'd782a9f9-ab28-4f38-acdb-5f412b6a8f14',
+                serviceViewModel: 'views',
+                serviceVdbName: 'testvirtvdb',
+                publishedState: 'NOTFOUND',
+                podNamespace: 'syndesis-staging',
+                empty: true,
+                keng__id: 'testVirt',
+                tko__description: 'test virtualization',
+            },
+        ],
+    },
+}

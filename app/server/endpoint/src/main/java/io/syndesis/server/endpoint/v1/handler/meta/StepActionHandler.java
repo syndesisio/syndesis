@@ -146,7 +146,7 @@ public class StepActionHandler extends BaseHandler {
         if (shouldEnrichDataShape(output)) {
             enriched.outputDataShape(adaptDataShape(output));
         } else {
-            enriched.outputDataShape(StepMetadataHelper.NO_SHAPE);
+            enriched.outputDataShape(StepMetadataHelper.ANY_SHAPE);
         }
 
         return enriched.build();

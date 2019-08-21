@@ -1,13 +1,16 @@
-import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
-import { ViewDefinitionDescriptor } from '@syndesis/models';
+import {
+  useViewDefinitionDescriptors,
+  useVirtualizationHelpers,
+} from '@syndesis/api';
+import { QueryResults, ViewDefinitionDescriptor } from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
+  PreviewButtonSelection,
   ViewHeaderBreadcrumb,
   VirtualizationDetailsHeader,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
-import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -56,8 +59,9 @@ function getFilteredAndSortedViewDefns(
   let filteredAndSorted = viewDefinitionDescriptors;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSorted = filteredAndSorted.filter((view: ViewDefinitionDescriptor) =>
-      view.name.toLowerCase().includes(valueToLower)
+    filteredAndSorted = filteredAndSorted.filter(
+      (view: ViewDefinitionDescriptor) =>
+        view.name.toLowerCase().includes(valueToLower)
     );
   });
 
@@ -92,12 +96,15 @@ const sortTypes: ISortType[] = [sortByName];
 
 export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
-  const { pushNotification } = useContext(UIContext);
+  const { pushNotification } = React.useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<
     IVirtualizationViewsPageRouteParams,
     IVirtualizationViewsPageRouteState
   >();
+  const [description, setDescription] = React.useState(
+    state.virtualization.tko__description
+  );
   const {
     deleteViewDefinition,
     updateVirtualizationDescription,
@@ -107,6 +114,11 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     handlePublishVirtualization,
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
+
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
+  };
 
   const filterUndefinedId = (view: ViewDefinitionDescriptor): boolean => {
     return view.name !== undefined;
@@ -140,48 +152,48 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   };
 
   const doSetDescription = async (newDescription: string) => {
-    await updateVirtualizationDescription(
-      appContext.user.username || 'developer',
-      params.virtualizationId,
-      newDescription
-    );
-    state.virtualization.tko__description = newDescription;
-    return true;
+    const previous = description;
+    setDescription(newDescription); // this sets InlineTextEdit component to new value
+    try {
+      await updateVirtualizationDescription(
+        appContext.user.username || 'developer',
+        params.virtualizationId,
+        newDescription
+      );
+      state.virtualization.tko__description = newDescription;
+      return true;
+    } catch {
+      pushNotification(
+        t('virtualization.errorUpdatingDescription', {
+          name: state.virtualization.keng__id,
+        }),
+        'error'
+      );
+      setDescription(previous); // save failed so set InlineTextEdit back to old value
+      return false;
+    }
   };
 
-  const handleDeleteView = async (
-    viewId: string,
-    viewName: string
-  ) => {
+  const handleDeleteView = async (viewId: string, viewName: string) => {
     // Delete the view
     try {
-      await deleteViewDefinition(
-        viewId
-      );
+      await deleteViewDefinition(viewId);
 
       pushNotification(
-        t(
-          'virtualization.deleteViewSuccess',
-          {
-            name: viewName,
-          }
-        ),
+        t('virtualization.deleteViewSuccess', {
+          name: viewName,
+        }),
         'success'
       );
 
       await read();
     } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
+      const details = error.message ? error.message : '';
       pushNotification(
-        t(
-          'virtualization.deleteViewFailed',
-          {
-            details,
-            name: viewName,
-          }
-        ),
+        t('virtualization.deleteViewFailed', {
+          details,
+          name: viewName,
+        }),
         'error'
       );
     }
@@ -259,9 +271,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 publishingLogUrl={publishingDetails.logUrl}
                 publishingTotalSteps={publishingDetails.stepTotal}
                 publishingStepText={publishingDetails.stepText}
-                virtualizationDescription={
-                  state.virtualization.tko__description
-                }
+                virtualizationDescription={description}
                 virtualizationName={state.virtualization.keng__id}
                 isWorking={false}
                 onChangeDescription={doSetDescription}
@@ -283,7 +293,9 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     }}
                   />
                 }
-                errorChildren={<ApiError error={viewDefinitionDescriptorsError as Error} />}
+                errorChildren={
+                  <ApiError error={viewDefinitionDescriptorsError as Error} />
+                }
               >
                 {() => (
                   <ViewList
@@ -326,40 +338,50 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     hasListData={viewDefinitionDescriptors.length > 0}
                   >
                     {filteredAndSorted
-                      .filter((viewDefinitionDescriptor: ViewDefinitionDescriptor) =>
-                        filterUndefinedId(viewDefinitionDescriptor)
+                      .filter(
+                        (viewDefinitionDescriptor: ViewDefinitionDescriptor) =>
+                          filterUndefinedId(viewDefinitionDescriptor)
                       )
-                      .map((viewDefinitionDescriptor: ViewDefinitionDescriptor, index: number) => (
-                        <ViewListItem
-                          key={index}
-                          viewId={viewDefinitionDescriptor.id}
-                          viewName={viewDefinitionDescriptor.name}
-                          viewDescription={viewDefinitionDescriptor.description}
-                          viewEditPageLink={resolvers.data.virtualizations.views.edit.sql(
-                            {
-                              virtualization: state.virtualization,
-                              // tslint:disable-next-line: object-literal-sort-keys
-                              viewDefinitionId: viewDefinitionDescriptor.id,
-                              viewDefinition: undefined,
-                              previewExpanded:true,
+                      .map(
+                        (
+                          viewDefinitionDescriptor: ViewDefinitionDescriptor,
+                          index: number
+                        ) => (
+                          <ViewListItem
+                            key={index}
+                            viewId={viewDefinitionDescriptor.id}
+                            viewName={viewDefinitionDescriptor.name}
+                            viewDescription={
+                              viewDefinitionDescriptor.description
                             }
-                          )}
-                          i18nCancelText={t('shared:Cancel')}
-                          i18nDelete={t('shared:Delete')}
-                          i18nDeleteModalMessage={t(
-                            'virtualization.deleteViewModalMessage',
-                            {
-                              name: viewDefinitionDescriptor.name,
-                            }
-                          )}
-                          i18nDeleteModalTitle={t(
-                            'virtualization.deleteModalTitle'
-                          )}
-                          i18nEdit={t('shared:Edit')}
-                          i18nEditTip={t('view.editViewTip')}
-                          onDelete={handleDeleteView}
-                        />
-                      ))}
+                            viewEditPageLink={resolvers.data.virtualizations.views.edit.sql(
+                              {
+                                virtualization: state.virtualization,
+                                // tslint:disable-next-line: object-literal-sort-keys
+                                viewDefinitionId: viewDefinitionDescriptor.id,
+                                viewDefinition: undefined,
+                                previewExpanded:true,
+                                previewButtonSelection:PreviewButtonSelection.PREVIEW,
+                                queryResults:queryResultsEmpty
+                              }
+                            )}
+                            i18nCancelText={t('shared:Cancel')}
+                            i18nDelete={t('shared:Delete')}
+                            i18nDeleteModalMessage={t(
+                              'virtualization.deleteViewModalMessage',
+                              {
+                                name: viewDefinitionDescriptor.name,
+                              }
+                            )}
+                            i18nDeleteModalTitle={t(
+                              'virtualization.deleteModalTitle'
+                            )}
+                            i18nEdit={t('shared:Edit')}
+                            i18nEditTip={t('view.editViewTip')}
+                            onDelete={handleDeleteView}
+                          />
+                        )
+                      )}
                   </ViewList>
                 )}
               </WithLoader>

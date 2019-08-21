@@ -1,11 +1,18 @@
 import {
+  API_PROVIDER_END_ACTION_ID,
   getActionById,
   getConnectionConnector,
   getConnectorActions,
   WithActionDescriptor,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Action, IConnectionOverview } from '@syndesis/models';
+import {
+  Action,
+  ErrorKey,
+  IConfigurationProperties,
+  IConfigurationProperty,
+  IConnectionOverview,
+} from '@syndesis/models';
 import { PageSectionLoader } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -43,7 +50,14 @@ export interface IWithConfigurationFormProps {
    */
   actionId: string;
 
+  /**
+   * the action configuration that had been previously configured on the step
+   */
   oldAction?: Action;
+  /**
+   * a list of possible error keys for steps that need to worry about error handling
+   */
+  errorKeys?: ErrorKey[];
   /**
    * for actions whose configuration must be performed in multiple steps,
    * indicates the current step.
@@ -69,6 +83,29 @@ export interface IWithConfigurationFormProps {
 }
 
 /**
+ * A really specific helper function to apply collected error keys to
+ * an error mapping form
+ * @param action
+ * @param errorKeys
+ */
+function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
+  const definition = {
+    ...action.descriptor!.propertyDefinitionSteps![0],
+  } as any;
+  const errorResponseCodes = definition!.properties!
+    .errorResponseCodes as IConfigurationProperty;
+  const extProperties =
+    typeof errorResponseCodes.extendedProperties === 'string'
+      ? JSON.parse(errorResponseCodes.extendedProperties)
+      : { ...errorResponseCodes.extendedProperties };
+  errorResponseCodes.extendedProperties = JSON.stringify({
+    ...extProperties,
+    mapsetKeys: errorKeys,
+  });
+  return definition.properties as IConfigurationProperties;
+}
+
+/**
  * A component to generate a configuration form for a given action and values.
  *
  * @see [action]{@link IWithConfigurationFormProps#action}
@@ -78,14 +115,37 @@ export interface IWithConfigurationFormProps {
 export const WithConfigurationForm: React.FunctionComponent<
   IWithConfigurationFormProps
 > = props => {
-  const action = getActionById(
-    getConnectorActions(getConnectionConnector(props.connection)),
-    props.actionId
-  );
+  // Use the action configuration that was set on the step, otherwise find it in the connection definition
+  const action =
+    props.oldAction ||
+    getActionById(
+      getConnectorActions(getConnectionConnector(props.connection)),
+      props.actionId
+    );
+  // The API provider end action gets some special treatment
+  if (props.actionId === API_PROVIDER_END_ACTION_ID) {
+    const definitionOverride = applyErrorKeysToForm(action, props.errorKeys!);
+    return (
+      <ConfigurationForm
+        action={action}
+        descriptor={action.descriptor!}
+        definitionOverride={definitionOverride}
+        {...props}
+      >
+        <NothingToConfigure
+          action={action}
+          descriptor={action.descriptor!}
+          {...props}
+        />
+      </ConfigurationForm>
+    );
+  }
+  // For all other actions, the descriptor is fetched from the meta service
   return (
     <WithActionDescriptor
       connectionId={props.connection.id!}
       actionId={action.id!}
+      initialValue={action.descriptor}
       configuredProperties={props.initialValue || {}}
     >
       {({ data, hasData, error, errorMessage }) => (

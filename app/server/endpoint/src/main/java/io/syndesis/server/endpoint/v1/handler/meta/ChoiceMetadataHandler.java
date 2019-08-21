@@ -42,7 +42,7 @@ class ChoiceMetadataHandler implements StepMetadataHandler {
         return new DynamicActionMetadata.Builder()
                         .inputShape(outputShape)
                         .outputShape(step.outputDataShape()
-                                         .orElse(StepMetadataHelper.NO_SHAPE))
+                                         .orElse(StepMetadataHelper.ANY_SHAPE))
                         .build();
     }
 }
