@@ -6,11 +6,16 @@ import (
 )
 
 func (o *Install) installOperatorResources() error {
-
-	resources, err := o.render("./install/operator.yml.tmpl")
+	resources, err := o.render("./install/role.yml.tmpl")
 	if err != nil {
 		return err
 	}
+
+	operator, err := o.render("./install/operator.yml.tmpl")
+	if err != nil {
+		return err
+	}
+	resources = append(resources, operator...)
 
 	if o.ejectedResources != nil {
 		o.ejectedResources = append(o.ejectedResources, resources...)

@@ -21,6 +21,7 @@ import (
 	"flag"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
+	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/grant"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/install"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/run"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -54,9 +55,8 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.PersistentFlags().StringVarP(&options.Namespace, "namespace", "n", namespace, "namespace to run against")
 
 	cmd.AddCommand(install.New(&options))
+	cmd.AddCommand(grant.New(&options))
 	cmd.AddCommand(run.New(&options))
-	if false {
-	}
 
 	return &cmd, nil
 }
