@@ -15,6 +15,29 @@
 #
 version: 2.1
 
+yaml-templates:
+
+  release_filters: &release_filters
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /v.*/
+  compile_go_executable: &compile_go_executable
+    run:
+      name: Compile Go Executable
+      command: |
+        cd install/operator
+        VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
+        export GO111MODULE=on
+        echo go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:$VERSION" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
+        go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:latest" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
+  store_dist: &store_dist
+    persist_to_workspace:
+      root: .
+      paths:
+        - dist
+
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
   DOCKER_VERSION: 18.06.1-ce
@@ -601,7 +624,104 @@ jobs:
             git config --global user.name "CircleCI"
             ./tools/bin/syndesis doc --local --html --pdf --gh-pages
 
+  operator-build-linux-amd64: &go_build
+    docker:
+      - image: circleci/golang:1.12
+    environment:
+      GOOS: linux
+      GOARCH: amd64
+      PLATFORM: linux-64bit
+    steps:
+      - checkout
+      - <<: *compile_go_executable
+      - <<: *store_dist
+
+  operator-build-linux-386:
+    <<: *go_build
+    environment:
+      GOOS: linux
+      GOARCH: "386"
+      PLATFORM: linux-32bit
+
+  operator-build-windows-386:
+    <<: *go_build
+    environment:
+      GOOS: windows
+      GOARCH: "386"
+      PLATFORM: windows-32bit
+      EXESUFFIX: ".exe"
+
+  operator-build-windows-amd64:
+    <<: *go_build
+    environment:
+      GOOS: windows
+      GOARCH: amd64
+      PLATFORM: windows-64bit
+      EXESUFFIX: ".exe"
+
+  operator-build-darwin-386:
+    <<: *go_build
+    environment:
+      GOOS: darwin
+      GOARCH: "386"
+      PLATFORM: mac-32bit
+
+  operator-build-darwin-amd64:
+    <<: *go_build
+    environment:
+      GOOS: darwin
+      GOARCH: amd64
+      PLATFORM: mac-64bit
+
+  operator-build-linux-arm:
+    <<: *go_build
+    environment:
+      GOOS: linux
+      GOARCH: arm
+      PLATFORM: linux-arm32bit
+
+  operator-build-linux-arm64:
+    <<: *go_build
+    environment:
+      GOOS: linux
+      GOARCH: arm64
+      PLATFORM: linux-arm64bit
+
 workflows:
+
+  operator-release:
+    jobs:
+      - operator-build-linux-386:
+          <<: *release_filters
+      - operator-build-linux-amd64:
+          <<: *release_filters
+      - operator-build-darwin-386:
+          <<: *release_filters
+      - operator-build-darwin-amd64:
+          <<: *release_filters
+      - operator-build-windows-386:
+          <<: *release_filters
+      - operator-build-windows-amd64:
+          <<: *release_filters
+      - operator-build-linux-arm:
+          <<: *release_filters
+      - operator-build-linux-arm64:
+          <<: *release_filters
+      - operator-test:
+          <<: *release_filters
+      - operator-publish-github-release:
+          <<: *release_filters
+          requires:
+            - operator-build-linux-386
+            - operator-build-linux-amd64
+            - operator-build-darwin-386
+            - operator-build-darwin-amd64
+            - operator-build-windows-386
+            - operator-build-windows-amd64
+            - operator-build-linux-arm
+            - operator-build-linux-arm64
+            - operator-test
+
   syndesis:
     jobs:
       - system-test:
