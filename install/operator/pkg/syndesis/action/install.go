@@ -282,7 +282,7 @@ func checkTags(context *generator.Context) error {
 	}{
 		{"server", context.Syndesis.Spec.Components.Server.Tag},
 		{"meta", context.Syndesis.Spec.Components.Meta.Tag},
-		{"s2i", context.Syndesis.Spec.Components.UI.Tag},
+		{"ui", context.Syndesis.Spec.Components.UI.Tag},
 		{"s2i", context.Syndesis.Spec.Components.S2I.Tag},
 	}
 	for _, image := range images {
