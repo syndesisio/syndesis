@@ -7,12 +7,12 @@ build::description() {
 build::usage() {
     cat <<EOT
 -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-    --all-images               Build all modules with images: ui-angular, ui-react, server, meta, s2i, operator, upgrade, camel-k
+    --all-images               Build all modules with images: ui-angular, ui-react, server, meta, s2i, operator, upgrade
     --app-images               Build only application modules with Docker images (ui-angular, ui-react, server, meta, s2i)
                                and create images
-    --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
+    --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
 -m  --module <m1>,<m2>, ..     Build modules
-                               Modules: ui-angular, ui-react, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                               Modules: ui-angular, ui-react, server, connector, s2i, meta, integration, extension, common, operator, upgrade
                                Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
 -d  --dependencies             Build also all project the specified module depends on
     --skip-tests               Skip unit, integration and system test execution
@@ -52,13 +52,10 @@ build::run() {
     # For operator building
     source "$(basedir)/commands/util/operator_funcs"
 
-    # For camel-k building
-    source "$(basedir)/commands/util/camel_k_funcs"
-
     local modules="$(extract_modules)"
     local top_dir="$(appdir .)"
 
-    # All Maven modules (all modules minus operator, camel-k, upgrade)
+    # All Maven modules (all modules minus operator, upgrade)
     local maven_modules=$(pick_module "$MAVEN_MODULES" "$modules")
 
     # All individual Maven submodules defined with [groupId]:artifactId (e.g. :connector-sql)
@@ -78,15 +75,6 @@ build::run() {
         fi
     fi
 
-    if $(should_build "camel-k" "$modules"); then
-        local canbuildcamelk=$(check_camel_k_requirements)
-        if [ "$canbuildcamelk" != "OK" ]; then
-            echo
-            echo "$canbuildcamelk"
-            echo
-        fi
-    fi
-
     #
     # Actually now do the build
     #
@@ -102,11 +90,6 @@ build::run() {
     # Build operator if requested
     if $(should_build "operator" "$modules") && [ "$canbuildop" = "OK" ]; then
         do_operator $top_dir
-    fi
-
-    # Build operator if requested
-    if $(should_build "camel-k" "$modules") && [ "$canbuildcamelk" = "OK" ]; then
-        do_camel_k $top_dir
     fi
 
     # Build image for upgrade pod if requested
@@ -210,74 +193,6 @@ do_operator() {
     popd >/dev/null
 }
 
-do_camel_k() {
-    local top_dir=$1
-    echo "=============================================================================="
-    echo "Building camel-k"
-    echo "=============================================================================="
-    export GO111MODULE=on
-
-    local camelReqOK=$(check_camel_k_requirements)
-    if [ "$camelReqOK" != "OK" ]; then
-      echo "$camelReqOK"
-      exit 1
-    fi
-
-    local camel_k_root=$GOPATH/src/github.com/apache/camel-k
-    if [ ! -e $camel_k_root ]; then
-        echo "WARN: Can't find $camel_k_root. camel-k image can only be built locally (--local is implied) for camel-k builds)."
-        echo
-        echo "Can try to download the camel-k source ..."
-
-        set +e
-        which git &>/dev/null
-        if [ $? -ne 0 ]; then
-            echo "ERROR: Cannot download camel-k source as 'git' command is not available."
-            exit 1
-        fi
-
-        set -e
-        # Clone the camel-k repo
-        git clone https://github.com/apache/camel-k.git $camel_k_root
-        if [ ! -d $camel_k_root ]; then
-            echo "ERROR: Failed to download the camel-k source. Cannot continue with camel-k build."
-            exit 1
-        fi
-    fi
-
-    pushd $camel_k_root >/dev/null
-
-    local version=$(grep -e "^VERSION[ :]" Makefile | tr "=" " " | awk '{print $(NF)}')
-
-    local kamel_dir=~/.syndesis/bin
-    echo "Building $kamel_dir/kamel-$version"
-    [ -d $kamel_dir ] || mkdir -p $kamel_dir
-    go build -o $kamel_dir/kamel-$version ./cmd/kamel/*.go
-    if [ $? != 0 ]; then
-       echo "ERROR: Can't build kamel-$version"
-       exit 1
-    fi
-    [ -f $kamel_dir/kamel-latest ] && rm $kamel_dir/kamel-latest
-
-    echo "Linking $kamel_dir/kamel-$version --> $kamel_dir/kamel-latest"
-    ln -sf $kamel_dir/kamel-$version $kamel_dir/kamel-latest
-
-    go build -o $camel_k_root/build/_output/bin/builder ./cmd/builder/*.go
-    if [ $? != 0 ]; then
-       echo "ERROR: Can't build camel k builder"
-       exit 1
-    fi
-
-    local camel_k_image="docker.io/apache/camel-k"
-    echo "Building image $camel_k_image:$version"
-    mkdir -p $camel_k_root/build/_maven_output
-    operator-sdk build $camel_k_image:$version
-
-    echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
-    docker tag $camel_k_image:$version $camel_k_image:latest
-    popd >/dev/null
-}
-
 do_upgrade_pod() {
     local top_dir=$1
     echo "=============================================================================="
@@ -340,15 +255,14 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui-angular ui-react test operator camel-k upgrade"
+ALL_MODULES="common extension integration connector meta server s2i ui-angular ui-react test operator upgrade"
 MAVEN_MODULES="common extension integration connector meta server s2i ui-angular ui-react test"
 APP_IMAGES="ui-angular ui-react server meta s2i"
-INFRA_IMAGES="operator camel-k upgrade"
+INFRA_IMAGES="operator upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "upgrade:server common extension integration connector"
   "operator"
-  "camel-k"
   "ui-angular"
   "ui-react"
   "common"
@@ -382,7 +296,7 @@ extract_modules() {
     fi
 
     if [ "$(hasflag --all-images)" ]; then
-        modules="$modules ui-angular ui-react server meta s2i operator camel-k"
+        modules="$modules ui-angular ui-react server meta s2i operator"
     fi
 
     if [ "$(hasflag --app-images)" ]; then
