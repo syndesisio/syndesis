@@ -270,9 +270,7 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${
-        apiContext.dvApiUri
-      }workspace/vdbs/${vdbName}/Models/${modelName}/Views/nameValidation/${encodedName}`,
+      url: `${apiContext.dvApiUri}workspace/${vdbName}/views/nameValidation/${encodedName}`,
     });
 
     if (!response.ok) {
