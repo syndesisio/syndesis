@@ -17,6 +17,7 @@ type Options struct {
 
 	Context context.Context
 	Command *cobra.Command
+	Client *client.Client
 }
 
 func (o *Options) GetClientConfig() *rest.Config {
@@ -25,8 +26,15 @@ func (o *Options) GetClientConfig() *rest.Config {
 	return c
 }
 
-func (o *Options) NewClient() (c client.Client, err error) {
-	return client.New(o.GetClientConfig(), client.Options{})
+func (o *Options) GetClient() (c client.Client, err error) {
+	if o.Client == nil {
+		cl, err := client.New(o.GetClientConfig(), client.Options{})
+		if err != nil {
+			return nil, err
+		}
+		o.Client = &cl
+	}
+	return *o.Client, nil
 }
 
 func (o *Options) NewDynamicClient() (c dynamic.Interface, err error) {
