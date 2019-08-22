@@ -48,7 +48,7 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.PersistentFlags().AddGoFlag(&f)
 
 	f = *flag.CommandLine.Lookup("master")
-	f.Usage = "The address of the cluster API server."
+	f.Usage = "the address of the cluster API server."
 	cmd.PersistentFlags().AddGoFlag(&f)
 
 	// cmd.PersistentFlags().StringVar(&options.KubeConfig, "config", , "path to the config file to connect to the cluster")

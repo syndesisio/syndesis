@@ -70,7 +70,7 @@ func (o *Grant) grant() error {
     }
 
     resources = append(resources, gr...)
-    client, err := o.NewClient()
+    client, err := o.GetClient()
     for _, res := range resources {
         res.SetNamespace(o.Namespace)
 

@@ -163,7 +163,7 @@ type RenderScope struct {
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
 	updateCounter := 0
 	createCounter := 0
-	client, err := o.NewClient()
+	client, err := o.GetClient()
 	if err != nil {
 		return err
 	}
