@@ -144,6 +144,7 @@ github.com/openshift/api/pkg/serialization
 github.com/openshift/api/image/docker10
 github.com/openshift/api/image/dockerpre012
 # github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
+github.com/operator-framework/operator-sdk/pkg/log/zap
 github.com/operator-framework/operator-sdk/pkg/k8sutil
 github.com/operator-framework/operator-sdk/pkg/leader
 github.com/operator-framework/operator-sdk/pkg/metrics

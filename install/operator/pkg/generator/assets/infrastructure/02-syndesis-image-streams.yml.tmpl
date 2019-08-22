@@ -126,7 +126,8 @@
       syndesis.io/component: s2i-java
   spec:
     tags:
-    - from:
+    - name: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
+      from:
       {{if .Syndesis.Spec.DevImages}}
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.S2i }}:latest'
