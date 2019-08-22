@@ -720,9 +720,9 @@ jobs:
             for p in `ls dist` ; do
               cd "$BASEDIR/dist/$p"
               if [[ $p == windows* ]] ; then
-                zip -q "${BASEDIR}/archives/uc-${VERSION}-$p.zip" *
+                zip -q "${BASEDIR}/archives/syndesis-${VERSION}-$p.zip" *
               else
-                tar -zcf "${BASEDIR}/archives/uc-${VERSION}-$p.tgz" *
+                tar -zcf "${BASEDIR}/archives/syndesis-${VERSION}-$p.tgz" *
               fi
             done
             cd ${BASEDIR}
