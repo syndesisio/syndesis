@@ -112,6 +112,9 @@ release::run() {
     create_upgrade_docker_image "$topdir" "$release_version"
 
     # Create the operator image
+    if [ $(hasflag --snapshot-release) ]; then
+        update_image_versions "$topdir" "$release_version" "$moving_tag"
+    fi
     "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator:$release_version"
 
     # For a test run, we are done
@@ -222,6 +225,26 @@ update_pom_versions() {
         popd
       fi
     done
+}
+
+update_image_versions() {
+    local topdir="$1"
+    local version="$2"
+    local moving_tag="$3"
+    local next_version="$(get_next_version $moving_tag)"
+
+    echo "==== Updating image versions to $version"
+    sed "s/Syndesis: latest/Syndesis: $version/" -i $topdir/install/operator/build/conf/config.yaml
+    sed "s/TagMinor: .*$/TagMinor: \"$moving_tag\"/" -i $topdir/install/operator/build/conf/config.yaml
+    sed "s/TagMajor: .*$/TagMajor: \"$next_version\"/" -i $topdir/install/operator/build/conf/config.yaml
+}
+
+get_next_version() {
+    local version="$1"
+    local prefix="${version%.*}"
+    local suffix="${version##*.}"
+
+    echo "$prefix"."$((suffix+1))"
 }
 
 mvn_clean_install() {
