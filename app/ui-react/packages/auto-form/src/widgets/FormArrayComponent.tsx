@@ -34,9 +34,15 @@ export const FormArrayComponent: React.FunctionComponent<
   const minElements = options.minElements || 0;
   const values =
     props.form.values[props.name] || props.property.defaultValue || [];
+  const key = JSON.stringify(values);
   const myId = toValidHtmlId(props.name);
   return (
-    <div id={myId} data-testid={myId} className="form-array-layout form-array-container">
+    <div
+      key={key}
+      id={myId}
+      data-testid={myId}
+      className="form-array-layout form-array-container"
+    >
       {values.map((value: any, index: number) => {
         const fieldName = `${props.name}[${index}]`;
         const rowValue = getInitialValues(definition, value);
@@ -44,7 +50,10 @@ export const FormArrayComponent: React.FunctionComponent<
         const titleKey = `${fieldName}-title`;
         const controlGroupName = `${fieldName}-array-controls`;
         return (
-          <section key={fieldName} className="form-array-layout form-array-section">
+          <section
+            key={fieldName}
+            className="form-array-layout form-array-section"
+          >
             {options.rowTitle && (
               <div key={titleKey} {...arrayRowTitleAttributes}>
                 <h5 className="form-array-section__title pf-c-title">
@@ -69,46 +78,46 @@ export const FormArrayComponent: React.FunctionComponent<
               )}
             </div>
             <div
-                key={controlGroupName}
-                {...formGroupAttributes}
-                {...arrayControlAttributes}
-              >
-                <label
-                  htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
-                  className="control-label"
-                  {...controlLabelAttributes}
-                />
-                <div id={toValidHtmlId(`${controlGroupName}-control`)}>
-                  <div className="form-array-control__array-controls">
-                    {options.showSortControls && (
-                      <>
-                        <TextButton
-                          onClick={() => {
-                            props.move(index, index - 1);
-                          }}
-                          enable={index > 0}
-                        >
-                          <i className="fa fa-arrow-circle-o-up" />
-                        </TextButton>
-                        <TextButton
-                          onClick={() => {
-                            props.move(index, index + 1);
-                          }}
-                          enable={index < values.length - 1}
-                        >
-                          <i className="fa fa-arrow-circle-o-down" />
-                        </TextButton>
-                      </>
-                    )}
-                    <TextButton
-                      onClick={() => props.remove(index)}
-                      enable={values.length > minElements}
-                    >
-                      <i className="fa fa-trash-o" />
-                    </TextButton>
-                  </div>
+              key={controlGroupName}
+              {...formGroupAttributes}
+              {...arrayControlAttributes}
+            >
+              <label
+                htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
+                className="control-label"
+                {...controlLabelAttributes}
+              />
+              <div id={toValidHtmlId(`${controlGroupName}-control`)}>
+                <div className="form-array-control__array-controls">
+                  {options.showSortControls && (
+                    <>
+                      <TextButton
+                        onClick={() => {
+                          props.move(index, index - 1);
+                        }}
+                        enable={index > 0}
+                      >
+                        <i className="fa fa-arrow-circle-o-up" />
+                      </TextButton>
+                      <TextButton
+                        onClick={() => {
+                          props.move(index, index + 1);
+                        }}
+                        enable={index < values.length - 1}
+                      >
+                        <i className="fa fa-arrow-circle-o-down" />
+                      </TextButton>
+                    </>
+                  )}
+                  <TextButton
+                    onClick={() => props.remove(index)}
+                    enable={values.length > minElements}
+                  >
+                    <i className="fa fa-trash-o" />
+                  </TextButton>
                 </div>
               </div>
+            </div>
           </section>
         );
       })}
