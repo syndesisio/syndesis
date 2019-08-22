@@ -727,41 +727,41 @@ jobs:
               fi
             done
             cd ${BASEDIR}
-            ghr -t ${GITHUB_TOKEN} -u chirino -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace -prerelease -draft ${VERSION} "${BASEDIR}/archives"
+            ghr -u ${GITHUB_USER} -t ${GITHUB_TOKEN} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace -prerelease -draft ${VERSION} "${BASEDIR}/archives"
 workflows:
   version: 2
   release:
     jobs:
       - operator-build-linux-386:
           <<: *release_filters
-      - operator-build-linux-amd64:
-          <<: *release_filters
-      - operator-build-darwin-386:
-          <<: *release_filters
-      - operator-build-darwin-amd64:
-          <<: *release_filters
-      - operator-build-windows-386:
-          <<: *release_filters
-      - operator-build-windows-amd64:
-          <<: *release_filters
-      - operator-build-linux-arm:
-          <<: *release_filters
-      - operator-build-linux-arm64:
-          <<: *release_filters
-      - operator-test:
-          <<: *release_filters
+      # - operator-build-linux-amd64:
+      #     <<: *release_filters
+      # - operator-build-darwin-386:
+      #     <<: *release_filters
+      # - operator-build-darwin-amd64:
+      #     <<: *release_filters
+      # - operator-build-windows-386:
+      #     <<: *release_filters
+      # - operator-build-windows-amd64:
+      #     <<: *release_filters
+      # - operator-build-linux-arm:
+      #     <<: *release_filters
+      # - operator-build-linux-arm64:
+      #     <<: *release_filters
+      # - operator-test:
+      #     <<: *release_filters
       - operator-publish-github-release:
           <<: *release_filters
           requires:
             - operator-build-linux-386
-            - operator-build-linux-amd64
-            - operator-build-darwin-386
-            - operator-build-darwin-amd64
-            - operator-build-windows-386
-            - operator-build-windows-amd64
-            - operator-build-linux-arm
-            - operator-build-linux-arm64
-            - operator-test
+            # - operator-build-linux-amd64
+            # - operator-build-darwin-386
+            # - operator-build-darwin-amd64
+            # - operator-build-windows-386
+            # - operator-build-windows-amd64
+            # - operator-build-linux-arm
+            # - operator-build-linux-arm64
+            # - operator-test
 
   syndesis:
     jobs:
