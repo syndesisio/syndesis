@@ -37,17 +37,18 @@ yaml-templates:
     run:
       name: Compile Go Executable
       command: |
+        basedir=`pwd`
         cd install/operator
         VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
         export GO111MODULE=on
-        echo go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:$VERSION" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
-        go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:latest" -o dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
+        echo go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:$VERSION" -o ${basedir}/dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
+        go build -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=docker.io/syndesis/syndesis-operator:latest" -o ${basedir}/dist/${PLATFORM:-${GOOS}-${GOARCH}}/syndesis${EXESUFFIX} ./cmd/manager
 
   store_dist: &store_dist
     persist_to_workspace:
       root: .
       paths:
-        - install/operator/dist
+        - dist
 
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
