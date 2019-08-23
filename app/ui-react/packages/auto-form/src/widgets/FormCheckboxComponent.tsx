@@ -30,7 +30,7 @@ export const FormCheckboxComponent: React.FunctionComponent<
         {...field}
         onChange={handleChange}
         aria-label={props.property.displayName || ''}
-        label={props.property.displayName}
+        label={<>&nbsp;{ /*TODO <<< workaround */ props.property.displayName}</>}
         className="pf-u-display-inline-block"
         isChecked={value}
         id={id}

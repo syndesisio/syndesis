@@ -38,7 +38,7 @@ stories.add('General Example', () => {
         formGroupAttributes: {
           className: 'col-md-3',
         },
-        i18nAddElementText: '+ Add another Thing',
+        i18nAddElementText: 'Add another Thing',
         minElements: 2,
         rowTitle: 'Thingy',
         showSortControls: true,

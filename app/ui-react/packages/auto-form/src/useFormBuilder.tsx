@@ -27,15 +27,8 @@ export function useFormBuilder() {
             {...props as IFormArrayControlProps}
             key={props.property.name}
             name={props.property.name}
-          >
-            {fieldArrayProps => (
-              <FormArrayComponent
-                {...props}
-                {...fieldArrayProps}
-                customComponents={componentTypemaps}
-              />
-            )}
-          </FieldArray>
+            render={helpers => <FormArrayComponent {...props} {...helpers} />}
+          />
         );
       default:
         return (
@@ -54,7 +47,10 @@ export function useFormBuilder() {
     return enrichAndOrderProperties(definition);
   };
 
-  const getInitialValues = (definition: IFormDefinition, initialValues: any) => {
+  const getInitialValues = (
+    definition: IFormDefinition,
+    initialValues: any
+  ) => {
     return sanitizeValues(definition, initialValues);
   };
 
