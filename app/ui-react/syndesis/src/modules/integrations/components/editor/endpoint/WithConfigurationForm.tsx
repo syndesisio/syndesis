@@ -94,6 +94,10 @@ function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
   } as any;
   const errorResponseCodes = definition!.properties!
     .errorResponseCodes as IConfigurationProperty;
+  // TODO compatibility, remove when this property is defined
+  if (!errorResponseCodes) {
+    return definition.properties;
+  }
   const extProperties =
     typeof errorResponseCodes.extendedProperties === 'string'
       ? JSON.parse(errorResponseCodes.extendedProperties)
