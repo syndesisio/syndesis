@@ -16,7 +16,6 @@
 version: 2.1
 
 yaml-templates:
-
   release_filters: &release_filters
     filters:
       branches:
@@ -49,6 +48,47 @@ yaml-templates:
       root: .
       paths:
         - dist
+
+  checkout_git_mvn_repo: &checkout_git_mvn_repo
+    run:
+      name: Check out Github based Maven Repo
+      command: |
+        if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+          cd /tmp
+          git clone "$SYNDESIS_GIT_MVN_REPO" syndesis-maven-repo
+        else
+          mkdir /tmp/syndesis-maven-repo
+        fi
+
+  checkin_git_mvn_repo: &checkin_git_mvn_repo
+    run:
+      name: Check in Github based Maven Repo
+      command: |
+        if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+          cd /tmp/syndesis-maven-repo
+          if [[ $(echo $(git status --short | wc -l )) != "0" ]] ; then
+            git add .
+            git config --global user.email "ipaas-dev@redhat.com"
+            git config --global user.name "Syndesis CI"
+            git commit -am "CircleCI -> branch: ${CIRCLE_BRANCH}, job: ${CIRCLE_JOB}, build num: ${CIRCLE_BUILD_NUM}"
+            git push
+          fi
+        fi
+
+  scrub_m2_cache: &scrub_m2_cache
+    run:
+      name: Scrub Maven 2 Cache of CI built artifacts
+      command: rm -rf ~/.m2/repository/io/syndesis
+
+  attach_m2_workspace: &attach_m2_workspace
+    attach_workspace:
+      at: ~/.m2
+
+  persist_m2_workspace: &persist_m2_workspace
+    persist_to_workspace:
+      root: ~/.m2
+      paths:
+        - repository/io/syndesis
 
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
@@ -97,16 +137,6 @@ push_images: &push_images
         done
       fi
 
-load_m2: &load_m2
-  attach_workspace:
-    at: ~/.m2
-
-save_m2: &save_m2
-  persist_to_workspace:
-    root: ~/.m2
-    paths:
-      - repository/io/syndesis
-
 save_junit: &save_junit
   run:
     name: Collect junit reports
@@ -126,6 +156,7 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - <<: *checkout_git_mvn_repo
       - restore_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui-react/pom.xml" }}
       - restore_cache:
@@ -139,7 +170,10 @@ jobs:
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
             apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            ./tools/bin/syndesis build --batch-mode --module ui-react --docker | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module ui-react --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -151,6 +185,7 @@ jobs:
             - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui-react/pom.xml" }}
           paths:
@@ -166,6 +201,7 @@ jobs:
     steps:
       - setup_remote_docker
       - checkout
+      - <<: *checkout_git_mvn_repo
       - restore_cache:
           key: syndesis-mvn-ui-legacy-{{ checksum "app/ui-angular/pom.xml" }}
       - restore_cache:
@@ -179,7 +215,10 @@ jobs:
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
             apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            ./tools/bin/syndesis build --batch-mode --module ui-angular --docker | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module ui-angular --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -191,6 +230,7 @@ jobs:
             - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-ui-legacy{{ checksum "app/ui-angular/pom.xml" }}
           paths:
@@ -206,21 +246,27 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --batch-mode --module connector | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module connector | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
           paths:
             - ~/.m2
-      - <<: *save_m2
 
   # Connector support depends on integration, mount workspace .m2
   connector-support:
@@ -231,21 +277,27 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Connector Support
           command: |
-            ./tools/bin/syndesis build --batch-mode --module :connector-parent,:connector-support-util,:connector-support-verifier,:connector-support-maven-plugin,:connector-support-processor,:connector-support-test | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module :connector-parent,:connector-support-util,:connector-support-verifier,:connector-support-maven-plugin,:connector-support-processor,:connector-support-test | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
           paths:
             - ~/.m2
-      - <<: *save_m2
 
   # Connector support catalog depends on integration, mount workspace .m2
   connector-catalog:
@@ -256,24 +308,32 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-connector-support-catalog-{{ checksum "app/connector/support/catalog/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Connector Support
           command: |
-            ./tools/bin/syndesis build --batch-mode --module :connector-support-catalog | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module :connector-support-catalog | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-connector-support-catalog-{{ checksum "app/connector/support/catalog/pom.xml" }}
-          paths:
-            - ~/.m2
+
       - persist_to_workspace:
           root: ~/.m2
           paths:
             - repository/io/syndesis/connector/connector-support-catalog
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
+
+      - save_cache:
+          key: syndesis-mvn-connector-support-catalog-{{ checksum "app/connector/support/catalog/pom.xml" }}
+          paths:
+            - ~/.m2
 
   # Connector parameterized depends on connector-support, mount workspace .m2
   connector:
@@ -287,24 +347,30 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-connector-<< parameters.module >>-{{ checksum "app/connector/<< parameters.module >>/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Connector connector-<< parameters.module >>
           command: |
-            ./tools/bin/syndesis build --batch-mode --module :connector-<< parameters.module >> | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module :connector-<< parameters.module >> | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-connector-<< parameters.module >>-{{ checksum "app/connector/<< parameters.module >>/pom.xml" }}
-          paths:
-            - ~/.m2
       - persist_to_workspace:
           root: ~/.m2
           paths:
             - repository/io/syndesis/connector/connector-<< parameters.module >>
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
+      - save_cache:
+          key: syndesis-mvn-connector-<< parameters.module >>-{{ checksum "app/connector/<< parameters.module >>/pom.xml" }}
+          paths:
+            - ~/.m2
 
   # Meta depends on connectors, mount workspace .m2
   meta:
@@ -317,18 +383,24 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Meta
           command: |
-            ./tools/bin/syndesis build --batch-mode --module meta --docker | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module meta --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
-      - <<: *save_m2
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
           paths:
@@ -343,17 +415,23 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Common
           command: |
-            ./tools/bin/syndesis build --batch-mode --module common | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module common | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - <<: *save_m2
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
           paths:
@@ -368,23 +446,29 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Extension
           command: |
-            ./tools/bin/syndesis build --batch-mode --module extension | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module extension | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
-      - <<: *save_m2
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
           paths:
             - ~/.m2
 
-  # integration dependes on extension, mount workspace .m2
+  # integration depends on extension, mount workspace .m2
   integration:
     <<: *job_defaults
     environment:
@@ -393,21 +477,27 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --batch-mode --module integration | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module integration | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
           paths:
             - ~/.m2
-      - <<: *save_m2
 
   # S2I image
   s2i:
@@ -420,15 +510,21 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build S2I Builder image
           command: |
-            ./tools/bin/syndesis build --batch-mode --module s2i --docker | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module s2i --docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
-      - <<: *save_m2
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
           paths:
@@ -445,11 +541,15 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Server
           command: |
-            ./tools/bin/syndesis build --batch-mode --module server --docker | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module server --docker | tee build_log.txt
       - run:
           name: Collect API docs
           command: |
@@ -467,7 +567,9 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
-      - <<: *save_m2
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
           paths:
@@ -485,7 +587,10 @@ jobs:
       - run:
           name: Build Operator
           command: |
-            ./tools/bin/syndesis build --module operator --image --docker --ensure | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --module operator --image --docker --ensure | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -500,7 +605,8 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Install Docker
           command: |
@@ -510,11 +616,17 @@ jobs:
       - run:
           name: Build CLI jar
           command: |
-            ./tools/bin/syndesis build --batch-mode --flash --module server
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --flash --module server
       - run:
           name: Build upgrade image
           command: |
-            ./tools/bin/syndesis build --batch-mode --module upgrade --docker
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module upgrade --docker
       - <<: *push_images
 
   # Test support depends on integration, server, mount workspace .m2
@@ -526,21 +638,27 @@ jobs:
       - checkout
       - restore_cache:
           key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Build Test Support
           command: |
-            ./tools/bin/syndesis build --batch-mode --module :test-parent,:test-support | tee build_log.txt
+            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
+              GOAL_ARGS="-g deploy"
+            fi
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module :test-parent,:test-support | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - <<: *persist_m2_workspace
+      - <<: *checkin_git_mvn_repo
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
           paths:
             - ~/.m2
-      - <<: *save_m2
 
   # Integration test depends on test-support
   integration-test:
@@ -550,7 +668,8 @@ jobs:
       image: ubuntu-1604:201903-01
     steps:
       - checkout
-      - <<: *load_m2
+      - <<: *checkout_git_mvn_repo
+      - <<: *attach_m2_workspace
       - run:
           name: Run integration tests
           command: |
@@ -569,6 +688,7 @@ jobs:
       <<: *common_env
     steps:
       - checkout
+      - <<: *checkout_git_mvn_repo
       - run:
           name: Prep for Maven cache load
           command: |
@@ -594,6 +714,7 @@ jobs:
             fi
       - store_artifacts:
           path: test_log.txt
+      - <<: *scrub_m2_cache
       - save_cache:
           key: syndesis-mvn-tests-{{ checksum "all-poms" }}
           paths:
