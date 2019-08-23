@@ -39,7 +39,6 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.server.endpoint.v1.handler.external.PublicApiHandler;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 
@@ -88,7 +87,6 @@ public class IntegrationHandlerTest {
         encryptionSupport = mock(EncryptionComponent.class);
         handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
                 apiGenerator, mock(IntegrationOverviewHelper.class));
-        handler.setPublicApiHandler(mock(PublicApiHandler.class));
     }
 
     @Test

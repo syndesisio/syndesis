@@ -82,8 +82,10 @@ public class DefaultMigrator implements Migrator {
             }
 
         } catch (IOException | ScriptException e) {
-            throw new SyndesisServerException(
-                "Unable to perform database migration to version " + toVersion + ", using migration script at: " + scriptFileName, e);
+            final String message = "Unable to perform database migration to version " + toVersion + ", using " +
+                    "migration script at: " + scriptFileName;
+            LOG.error(message, e);
+            throw new SyndesisServerException(message, e);
         }
     }
 

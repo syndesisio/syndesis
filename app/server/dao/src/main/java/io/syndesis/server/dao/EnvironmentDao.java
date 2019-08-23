@@ -13,12 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
+package io.syndesis.server.dao;
 
-/**
- * This class is used to track the current model schema version.
- */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final int VERSION = 32;
+
+import io.syndesis.common.model.environment.Environment;
+import io.syndesis.server.dao.manager.DataAccessObject;
+
+public interface EnvironmentDao extends DataAccessObject<Environment> {
+
+    @Override
+    default Class<Environment> getType() {
+        return Environment.class;
+    }
+
 }

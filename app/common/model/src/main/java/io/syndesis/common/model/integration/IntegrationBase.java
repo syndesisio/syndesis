@@ -25,6 +25,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.immutables.value.Value;
+
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithModificationTimestamps;
@@ -39,9 +41,6 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
-
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -83,7 +82,7 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
     Optional<String> getDescription();
 
     /**
-     * Map of target environment names and continuous delivery states.
+     * Map of target environment ids and continuous delivery states.
      * Names are created/deleted on the fly in the UI (since it's just a string).
      * Managed by release tag service and used by CD export and import service.
      * @return

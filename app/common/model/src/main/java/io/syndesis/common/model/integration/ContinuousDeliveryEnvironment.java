@@ -21,23 +21,22 @@ import java.util.Optional;
 
 import org.immutables.value.Value;
 
-import io.syndesis.common.model.WithName;
 import io.syndesis.common.util.KeyGenerator;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ContinuousDeliveryEnvironment.Builder.class)
 @SuppressWarnings("immutables")
-public interface ContinuousDeliveryEnvironment extends WithName, Serializable {
+public interface ContinuousDeliveryEnvironment extends Serializable {
 
     class Builder extends ImmutableContinuousDeliveryEnvironment.Builder {
         // allow access to ImmutableIntegration.Builder
 
-        public static ContinuousDeliveryEnvironment createFrom(String environment, Date lastTaggedAt) {
+        public static ContinuousDeliveryEnvironment createFrom(String environmentId, Date lastTaggedAt) {
             // generate new tag and timestamp
             // do we need to create Git style tag??
             return new ContinuousDeliveryEnvironment.Builder()
-                    .name(environment)
+                    .environmentId(environmentId)
                     .releaseTag(KeyGenerator.createKey())
                     .lastTaggedAt(lastTaggedAt)
                     .build();
@@ -53,6 +52,12 @@ public interface ContinuousDeliveryEnvironment extends WithName, Serializable {
                     .build();
         }
     }
+
+    /**
+     * Associated {@link io.syndesis.common.model.environment.Environment}.
+     * @return
+     */
+    String getEnvironmentId();
 
     /**
      * Tag ID updated by release tag service. Used to compare tagged 'version' in destination environment.

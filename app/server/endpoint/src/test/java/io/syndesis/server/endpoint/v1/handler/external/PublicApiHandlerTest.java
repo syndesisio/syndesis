@@ -19,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ import org.junit.Test;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.environment.Environment;
 import io.syndesis.common.model.integration.ContinuousDeliveryEnvironment;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -46,6 +48,7 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.monitoring.MonitoringProvider;
 import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
+import io.syndesis.server.endpoint.v1.handler.environment.EnvironmentHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
@@ -72,10 +75,12 @@ public class PublicApiHandlerTest {
     private static final String INTEGRATION_ID = "integration-id";
     private static final String INTEGRATION_NAME = "integration-name";
     private static final String ENVIRONMENT = "environment";
+    private static final String ENVIRONMENT_ID = ENVIRONMENT + "-id";
     private static final String ENVIRONMENT2 = "new-" + ENVIRONMENT;
+    private static final String ENVIRONMENT2_ID = ENVIRONMENT2 + "-id";
     private static final String NAME_PROPERTY = "name";
     private static final String INTEGRATION_ID_PROPERTY = "integrationId";
-    public static final String RENAMED_SUFFIX = "-renamed";
+    private static final String RENAMED_SUFFIX = "-renamed";
 
     private final DataManager dataManager = mock(DataManager.class);
     private final IntegrationSupportHandler supportHandler = mock(IntegrationSupportHandler.class);
@@ -89,18 +94,50 @@ public class PublicApiHandlerTest {
     private PublicApiHandler handler;
     private Integration integration;
     private IntegrationDeploymentState targetState;
+    private EnvironmentHandler environmentHandler;
+    private List<Environment> environments;
 
     @Before
     public void setUp() throws Exception {
         // prime mock objects
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>();
-        deliveryState.put(ENVIRONMENT, ContinuousDeliveryEnvironment.Builder.createFrom(ENVIRONMENT, new Date()));
+        deliveryState.put(ENVIRONMENT_ID, ContinuousDeliveryEnvironment.Builder.createFrom(ENVIRONMENT_ID, new Date()));
         integration = new Integration.Builder()
                 .id(INTEGRATION_ID)
                 .name(INTEGRATION_NAME)
                 .continuousDeliveryState(deliveryState)
                 .build();
 
+        // handle dataManager calls for environments
+        environments = new ArrayList<>();
+        environments.add(new Environment.Builder().id(ENVIRONMENT_ID).name(ENVIRONMENT).build());
+        doAnswer(invocation -> ListResult.of(environments)).when(dataManager).fetchAll(Environment.class);
+        doAnswer(invocation -> {
+            final Environment env = invocation.getArgument(0);
+            environments.removeIf(e -> e.getId().get().equals(env.getId().get()));
+            environments.add(env);
+            return env;
+        }).when(dataManager).update(any(Environment.class));
+        doAnswer(invocation -> {
+            final String id = invocation.getArgument(1);
+            return environments.stream().filter(e -> e.getId().get().equals(id)).findFirst().get();
+        }).when(dataManager).fetch(eq(Environment.class), any());
+        doAnswer(invocation -> {
+            final String name = invocation.getArgument(2);
+            return environments.stream().filter(e -> e.getName().equals(name)).findFirst();
+        }).when(dataManager).fetchByPropertyValue(eq(Environment.class), eq(NAME_PROPERTY), any());
+        doAnswer(invocation -> {
+            final Environment env = invocation.getArgument(0);
+            final Environment newEnv = new Environment.Builder().createFrom(env).id(ENVIRONMENT2_ID).build();
+            environments.add(newEnv);
+            return newEnv;
+        }).when(dataManager).create(any(Environment.class));
+        doAnswer(invocation -> {
+            final String id = invocation.getArgument(1);
+            return environments.removeIf(e -> e.getId().get().equals(id));
+        }).when(dataManager).delete(eq(Environment.class), any());
+
+        // handle dataManager calls for integrations
         doAnswer(invocation -> integration).when(dataManager).fetch(Integration.class, INTEGRATION_ID);
         doAnswer(invocation -> Optional.of(integration)).when(dataManager).fetchByPropertyValue(Integration.class,
                 NAME_PROPERTY, INTEGRATION_NAME);
@@ -138,10 +175,9 @@ public class PublicApiHandlerTest {
         doAnswer(invocation -> deploymentBuilder.targetState(targetState = IntegrationDeploymentState.Published).build())
                 .when(deploymentHandler).update(any(), any());
 
+        environmentHandler = new EnvironmentHandler(dataManager);
         handler = new PublicApiHandler(dataManager, encryptionComponent, deploymentHandler, connectionHandler,
-                monitoringProvider);
-        handler.setIntegrationHandler(integrationHandler);
-        handler.setIntegrationSupportHandler(supportHandler);
+                monitoringProvider, environmentHandler, supportHandler, integrationHandler);
     }
 
 
@@ -152,7 +188,7 @@ public class PublicApiHandlerTest {
         assertThat(environments, is(notNullValue()));
         assertThat(environments, hasItem(ENVIRONMENT));
 
-        verify(dataManager).fetchAll(eq(Integration.class));
+        verify(dataManager).fetchAll(eq(Environment.class));
     }
 
     @Test
@@ -163,7 +199,8 @@ public class PublicApiHandlerTest {
         assertThat(environments, is(notNullValue()));
         assertThat(environments, hasItem(ENVIRONMENT2));
 
-        verify(dataManager, times(2)).fetchAll(eq(Integration.class));
+        verify(dataManager).fetchAll(eq(Environment.class));
+        verify(dataManager).create(any(Environment.class));
     }
 
     @Test
@@ -190,6 +227,9 @@ public class PublicApiHandlerTest {
         final Date now = new Date();
         // delay to avoid false positives in Date::after
         Thread.sleep(10);
+
+        // add new environment first
+        handler.addNewEnvironment(ENVIRONMENT2);
 
         final Map<String, ContinuousDeliveryEnvironment> continuousDeliveryEnvironment = handler.patchTagsForRelease(INTEGRATION_ID,
                 Collections.singletonList(ENVIRONMENT2));
@@ -294,6 +334,12 @@ public class PublicApiHandlerTest {
         assertThat(environments, hasItem(ENVIRONMENT2 + RENAMED_SUFFIX));
     }
 
+    @Test(expected = ClientErrorException.class)
+    public void testDuplicateRenameEnvironment() {
+        handler.addNewEnvironment(ENVIRONMENT2);
+        handler.renameEnvironment(ENVIRONMENT, ENVIRONMENT2);
+    }
+
     @Test
     @SuppressWarnings("unchecked")
     public void exportResources() throws Exception {
@@ -334,6 +380,9 @@ public class PublicApiHandlerTest {
         // export integration
         final Response response = handler.exportResources(ENVIRONMENT, false);
 
+        handler.deleteEnvironment(ENVIRONMENT);
+        handler.addNewEnvironment(ENVIRONMENT2);
+
         // import it back
         final SecurityContext security = getSecurityContext();
 
@@ -349,12 +398,12 @@ public class PublicApiHandlerTest {
 
         // validate that new environment tag was created
         final Integration integration = dataManager.fetch(Integration.class, INTEGRATION_ID);
-        assertThat(integration.getContinuousDeliveryState().containsKey(ENVIRONMENT2), is(true));
+        assertThat(integration.getContinuousDeliveryState().containsKey(ENVIRONMENT_ID), is(true));
+        assertThat(integration.getContinuousDeliveryState().containsKey(ENVIRONMENT2_ID), is(true));
 
         // assert that integration was recreated
         verify(dataManager).fetchAll(eq(Integration.class), any());
-        verify(dataManager, times(2)).update(any(Integration.class));
-
+        verify(dataManager, times(3)).update(any(Integration.class));
     }
 
     private SecurityContext getSecurityContext() {
