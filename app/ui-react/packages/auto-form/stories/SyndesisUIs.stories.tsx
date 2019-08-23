@@ -339,16 +339,31 @@ stories.add('Conditional Flow', () => {
   const initialValue = {
     flowConditions: [
       {
-        condition: "${in.body.type} == male",
+        condition: '${in.body.type} == male',
         flowId: '-LlIzP2k_dR0uDy9VSrt',
       },
       {
-        condition: "${in.body.type} == female",
+        condition: '${in.body.type} == female',
         flowId: '-LlIzP2k_dR0uDy9VSrw',
       },
     ],
     routingScheme: 'direct',
     useDefaultFlow: true,
+  };
+
+  const validateAction = action('validate');
+
+  const handleValidate = values => {
+    const errors = {};
+
+    values.flowConditions.forEach((value: any, index: number) => {
+      if (!value.condition || value.condition === '') {
+        errors[`flowConditions[${index}].condition`] = 'Condition is required';
+      }
+    });
+
+    validateAction(values, errors);
+    return errors;
   };
 
   return (
@@ -360,7 +375,7 @@ stories.add('Conditional Flow', () => {
           'i18nRequiredProperty',
           'This property is required'
         )}
-        validate={action('validate')}
+        validate={handleValidate}
         validateInitial={action('validateInitial')}
         onSave={(val, bag) => {
           bag.setSubmitting(false);

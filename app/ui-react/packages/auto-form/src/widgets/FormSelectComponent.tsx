@@ -7,7 +7,7 @@ import {
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
-import { getValidationState, toValidHtmlId } from './helpers';
+import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
 import './FormSelectComponent.css';
 
@@ -37,6 +37,11 @@ export const FormSelectComponent: React.FunctionComponent<
   };
   const handleBlur = (event: React.FormEvent<HTMLSelectElement>) =>
     handleChange('', event);
+  const { helperText, helperTextInvalid } = getHelperText(
+    props.field.name,
+    props.property.description,
+    props.form.errors
+  );
   return (
     <FormGroup
       label={
@@ -60,8 +65,8 @@ export const FormSelectComponent: React.FunctionComponent<
       fieldId={id}
       isRequired={props.property.required}
       isValid={getValidationState(props)}
-      helperText={props.property.description}
-      helperTextInvalid={props.form.errors[props.field.name]}
+      helperText={helperText}
+      helperTextInvalid={helperTextInvalid}
     >
       <FormSelect
         size={isMultiple ? 12 : undefined}

@@ -2,7 +2,7 @@ import { FormGroup, Popover, TextInput } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
-import { getValidationState, toValidHtmlId } from './helpers';
+import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
 export const FormInputComponent: React.FunctionComponent<
   IFormControlProps
@@ -15,6 +15,11 @@ export const FormInputComponent: React.FunctionComponent<
   ) => {
     onChange(event);
   };
+  const { helperText, helperTextInvalid } = getHelperText(
+    props.field.name,
+    props.property.description,
+    props.form.errors
+  );
   return (
     <FormGroup
       label={
@@ -38,8 +43,8 @@ export const FormInputComponent: React.FunctionComponent<
       fieldId={id}
       isRequired={props.property.required}
       isValid={getValidationState(props)}
-      helperText={props.property.description}
-      helperTextInvalid={props.form.errors[props.field.name]}
+      helperText={helperText}
+      helperTextInvalid={helperTextInvalid}
     >
       <TextInput
         {...props.property.fieldAttributes}
