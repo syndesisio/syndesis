@@ -10,7 +10,7 @@ require (
 	github.com/NYTimes/gziphandler v1.0.1 // indirect
 	github.com/chirino/hawtgo v0.0.0-20190728030238-0d67973a5907
 	github.com/go-logr/logr v0.1.0
-	github.com/go-openapi/spec v0.19.0
+	github.com/go-openapi/spec v0.19.2
 	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69
 	github.com/mcuadros/go-version v0.0.0-20190308113854-92cdf37c5b75
 	github.com/openshift/api v3.9.0+incompatible
@@ -19,7 +19,7 @@ require (
 	github.com/shurcooL/httpfs v0.0.0-20190527155220-6a4d4a70508b
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
 	github.com/spf13/cobra v0.0.3
-	github.com/stretchr/testify v1.3.0
+	github.com/stretchr/testify v1.4.0
 	golang.org/x/tools v0.0.0-20190726230722-1bd56024c620 // indirect
 	k8s.io/api v0.0.0-20190612125737-db0771252981
 	k8s.io/apimachinery v0.0.0-20190612125636-6a5db36e93ad
