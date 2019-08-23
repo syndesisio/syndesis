@@ -316,7 +316,7 @@ stories.add('Conditional Flow', () => {
         formGroupAttributes: {
           className: 'col-md-8',
         },
-        i18nAddElementText: '+ Add another condition',
+        i18nAddElementText: 'Add another condition',
         minElements: 1,
         rowTitle: 'When',
         showSortControls: true,

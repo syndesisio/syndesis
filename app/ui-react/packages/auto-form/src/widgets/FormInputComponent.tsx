@@ -44,7 +44,7 @@ export const FormInputComponent: React.FunctionComponent<
       <TextInput
         {...props.property.fieldAttributes}
         {...field}
-        defaultValue={value}
+        value={value}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || field.name}

@@ -194,7 +194,6 @@ export interface IFormControlProps<T = any> extends FieldProps {
 
 export interface IFormArrayControlProps<T = any> extends FieldArrayRenderProps {
   name: string;
-  customComponents: { [type: string]: any };
   allFieldsRequired: boolean;
   property: INamedConfigurationProperty;
   value: T;

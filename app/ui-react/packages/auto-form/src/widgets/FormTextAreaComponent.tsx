@@ -44,7 +44,7 @@ export const FormTextAreaComponent: React.FunctionComponent<
       <TextArea
         {...props.property.fieldAttributes}
         {...props.field}
-        defaultValue={value}
+        value={value}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || field.name}

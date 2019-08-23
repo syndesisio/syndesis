@@ -7,12 +7,8 @@ import { TextButton } from './TextButton';
 
 import './FormArrayComponent.css';
 
-export interface IFormArrayComponentProps extends IFormArrayControlProps {
-  customComponents: { [key: string]: any };
-}
-
 export const FormArrayComponent: React.FunctionComponent<
-  IFormArrayComponentProps | any /* todo type coercion */
+  IFormArrayControlProps
 > = props => {
   if (typeof props.property.arrayDefinition === 'undefined') {
     return (
@@ -34,11 +30,9 @@ export const FormArrayComponent: React.FunctionComponent<
   const minElements = options.minElements || 0;
   const values =
     props.form.values[props.name] || props.property.defaultValue || [];
-  const key = JSON.stringify(values);
   const myId = toValidHtmlId(props.name);
   return (
     <div
-      key={key}
       id={myId}
       data-testid={myId}
       className="form-array-layout form-array-container"
@@ -47,83 +41,83 @@ export const FormArrayComponent: React.FunctionComponent<
         const fieldName = `${props.name}[${index}]`;
         const rowValue = getInitialValues(definition, value);
         const propertiesArray = getPropertiesArray(definition);
-        const titleKey = `${fieldName}-title`;
         const controlGroupName = `${fieldName}-array-controls`;
+        const controlGroupId = toValidHtmlId(`${controlGroupName}-control`);
         return (
           <section
             key={fieldName}
             className="form-array-layout form-array-section"
           >
             {options.rowTitle && (
-              <div key={titleKey} {...arrayRowTitleAttributes}>
+              <div {...arrayRowTitleAttributes}>
                 <h5 className="form-array-section__title pf-c-title">
                   <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
                 </h5>
               </div>
             )}
             <div className="form-array-section__fields form-array-layout">
-              {propertiesArray.map(property =>
-                getField({
+              {propertiesArray.map(property => {
+                const propertyFieldName = `${fieldName}.${property.name}`;
+
+                return getField({
                   allFieldsRequired: props.allFieldsRequired || false,
-                  key: `${fieldName}.${property.name}`,
-                  name: `${fieldName}.${property.name}`,
                   property: {
                     controlLabelAttributes,
                     fieldAttributes,
                     formGroupAttributes,
                     ...property,
+                    key: propertyFieldName,
+                    name: propertyFieldName,
                   },
                   value: rowValue[property.name],
-                })
-              )}
+                });
+              })}
             </div>
-            <div
-              key={controlGroupName}
-              {...formGroupAttributes}
-              {...arrayControlAttributes}
-            >
-              <label
-                htmlFor={toValidHtmlId(`${controlGroupName}-control`)}
-                className="control-label"
-                {...controlLabelAttributes}
-              />
-              <div id={toValidHtmlId(`${controlGroupName}-control`)}>
-                <div className="form-array-control__array-controls">
-                  {options.showSortControls && (
-                    <>
-                      <TextButton
-                        onClick={() => {
-                          props.move(index, index - 1);
-                        }}
-                        enable={index > 0}
-                      >
-                        <i className="fa fa-arrow-circle-o-up" />
-                      </TextButton>
-                      <TextButton
-                        onClick={() => {
-                          props.move(index, index + 1);
-                        }}
-                        enable={index < values.length - 1}
-                      >
-                        <i className="fa fa-arrow-circle-o-down" />
-                      </TextButton>
-                    </>
-                  )}
-                  <TextButton
-                    onClick={() => props.remove(index)}
-                    enable={values.length > minElements}
-                  >
-                    <i className="fa fa-trash-o" />
-                  </TextButton>
-                </div>
+            <div key={controlGroupName} {...arrayControlAttributes}>
+              <div
+                id={controlGroupId}
+                className={'form-array-control__array-controls'}
+              >
+                {options.showSortControls && (
+                  <>
+                    <TextButton
+                      onClick={() => {
+                        props.move(index, index - 1);
+                      }}
+                      enable={index > 0}
+                    >
+                      <i className="fa fa-arrow-circle-o-up" />
+                    </TextButton>
+                    <TextButton
+                      onClick={() => {
+                        props.move(index, index + 1);
+                      }}
+                      enable={index < values.length - 1}
+                    >
+                      <i className="fa fa-arrow-circle-o-down" />
+                    </TextButton>
+                  </>
+                )}
+                <TextButton
+                  onClick={() => props.remove(index)}
+                  enable={values.length > minElements}
+                >
+                  <i className="fa fa-trash-o" />
+                </TextButton>
               </div>
             </div>
           </section>
         );
       })}
-      <TextButton onClick={() => props.push(getNewArrayRow(definition))}>
-        {options.i18nAddElementText || '+ Add Another'}
-      </TextButton>
+      <div className={'form-array-control__array-add'}>
+        <TextButton onClick={() => props.push(getNewArrayRow(definition))}>
+          <>
+            <i className="fa fa-plus-circle" />
+            &nbsp;
+            {options.i18nAddElementText || 'Add Another'}
+          </>
+        </TextButton>
+      </div>
     </div>
   );
 };

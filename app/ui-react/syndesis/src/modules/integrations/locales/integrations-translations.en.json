@@ -94,7 +94,7 @@
       "conditionDescription": "Provide a condition that you want to evaluate (for example, ${in.header.type} == 'note' or ${in.body.title} contains 'Important').",
       "conditionName": "Condition",
       "conditionPlaceholder": "Simple language expression",
-      "addCondition": "+ Add another condition",
+      "addCondition": "Add another condition",
       "addConditionTitle": "When",
       "useDefaultFlowDescription": "Execute this flow when no other condition matches.",
       "useDefaultFlowTitle": "Use a default flow",
@@ -112,7 +112,7 @@
       "keywordsDescription": "For this value",
       "keywordsDisplay": "Keywords",
       "keywordsPlaceholder": "Keywords",
-      "addRule": "+ Add another rule",
+      "addRule": "Add another rule",
       "fieldRequired": "{{field}} is required"
     }
   },
