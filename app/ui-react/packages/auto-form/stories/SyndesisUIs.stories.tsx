@@ -276,3 +276,101 @@ stories.add('Editor Basic Filter', () => {
     </StoryWrapper>
   );
 });
+
+stories.add('Conditional Flow', () => {
+  const definition = {
+    defaultFlowId: {
+      type: 'hidden',
+    },
+    flowConditions: {
+      arrayDefinition: {
+        condition: {
+          defaultValue: '',
+          description:
+            "Provide a condition that you want to evaluate (for example, ${in.header.type} == 'note' or ${in.body.title} contains 'Important').",
+          displayName: 'Condition',
+          placeholder: 'Simple language expression',
+          required: true,
+          type: 'text',
+        },
+        flowId: {
+          defaultValue: '',
+          formGroupAttributes: {
+            style: {
+              display: 'none',
+            },
+          },
+          type: 'hidden',
+        },
+      },
+      arrayDefinitionOptions: {
+        arrayControlAttributes: {
+          className: 'col-md-2 form-group',
+        },
+        arrayRowTitleAttributes: {
+          className: 'col-md-2',
+        },
+        controlLabelAttributes: {
+          style: { display: 'none' },
+        },
+        formGroupAttributes: {
+          className: 'col-md-8',
+        },
+        i18nAddElementText: '+ Add another condition',
+        minElements: 1,
+        rowTitle: 'When',
+        showSortControls: true,
+      },
+      required: true,
+      type: 'array',
+    },
+    routingScheme: {
+      defaultValue: 'direct',
+      type: 'hidden',
+    },
+    useDefaultFlow: {
+      defaultValue: 'false',
+      description: 'Execute this flow when no other condition matches.',
+      displayName: 'Use a default flow',
+      type: 'boolean',
+    },
+  } as IFormDefinition;
+
+  const initialValue = {
+    flowConditions: [
+      {
+        condition: "${in.body.type} == male",
+        flowId: '-LlIzP2k_dR0uDy9VSrt',
+      },
+      {
+        condition: "${in.body.type} == female",
+        flowId: '-LlIzP2k_dR0uDy9VSrw',
+      },
+    ],
+    routingScheme: 'direct',
+    useDefaultFlow: true,
+  };
+
+  return (
+    <StoryWrapper definition={definition}>
+      <AutoForm
+        definition={object('Definition', definition)}
+        initialValue={object('Initial Value', initialValue)}
+        i18nRequiredProperty={text(
+          'i18nRequiredProperty',
+          'This property is required'
+        )}
+        validate={action('validate')}
+        validateInitial={action('validateInitial')}
+        onSave={(val, bag) => {
+          bag.setSubmitting(false);
+          action('onSave')(val);
+        }}
+      >
+        {({ fields, handleSubmit }) => (
+          <FormWrapper onSubmit={handleSubmit} fields={fields} />
+        )}
+      </AutoForm>
+    </StoryWrapper>
+  );
+});
