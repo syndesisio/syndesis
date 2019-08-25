@@ -24,6 +24,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/grant"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/install"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/run"
+	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/uninstall"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
@@ -47,7 +48,7 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.PersistentFlags().AddGoFlag(&f)
 
 	f = *flag.CommandLine.Lookup("master")
-	f.Usage = "The address of the cluster API server."
+	f.Usage = "the address of the cluster API server."
 	cmd.PersistentFlags().AddGoFlag(&f)
 
 	// cmd.PersistentFlags().StringVar(&options.KubeConfig, "config", , "path to the config file to connect to the cluster")
@@ -57,6 +58,7 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.AddCommand(install.New(&options))
 	cmd.AddCommand(grant.New(&options))
 	cmd.AddCommand(run.New(&options))
+	cmd.AddCommand(uninstall.New(&options))
 
 	return &cmd, nil
 }
