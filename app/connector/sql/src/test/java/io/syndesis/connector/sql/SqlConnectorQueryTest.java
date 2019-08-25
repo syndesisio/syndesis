@@ -18,14 +18,18 @@ package io.syndesis.connector.sql;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.ErrorCategory;
+import io.syndesis.common.util.SyndesisConnectorException;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +70,8 @@ public class SqlConnectorQueryTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-connector",
-                builder -> builder.putConfiguredProperty("query", sqlQuery)),
+                builder -> builder.putConfiguredProperty("query", sqlQuery)
+                                  .putConfiguredProperty("raiseErrorOnNotFound", "true")),
             newSimpleEndpointStep(
                 "log",
                 builder -> builder.putConfiguredProperty("loggerName", "test"))
@@ -80,12 +85,52 @@ public class SqlConnectorQueryTest extends SqlConnectorTestSupport {
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "SELECT * FROM ADDRESS", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "100", "75", "14" }),
-                        Collections.singletonMap("STREET", new String[] { "East Davie Street", "Am Treptower Park", "Werner-von-Siemens-Ring" })), Collections.emptyMap()},
-                { "SELECT * FROM ADDRESS WHERE number = 14", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "14" }),
-                        Collections.singletonMap("STREET", new String[] { "Werner-von-Siemens-Ring" })), Collections.emptyMap()},
-                { "SELECT street FROM ADDRESS WHERE number = :#number", Collections.singletonList(Collections.singletonMap("STREET", new String[]{ "East Davie Street" })), Collections.singletonMap("number", "100")},
-                { "SELECT * FROM ADDRESS WHERE number = 0", Collections.emptyList(), Collections.emptyMap()}
+                { "SELECT * FROM ADDRESS", 
+                		Arrays.asList(
+                				Collections.singletonMap("NUMBER", new String[] { "100", "75", "14" }),
+                				Collections.singletonMap("STREET", new String[] { "East Davie Street", "Am Treptower Park", "Werner-von-Siemens-Ring" })), 
+                		Collections.emptyMap()},
+                { "SELECT * FROM ADDRESS WHERE number = 14", 
+                        Arrays.asList(
+                        		Collections.singletonMap("NUMBER", new String[] { "14" }),
+                        		Collections.singletonMap("STREET", new String[] { "Werner-von-Siemens-Ring" })), 
+                        Collections.emptyMap()},
+                { "SELECT street FROM ADDRESS WHERE number = :#number", 
+                        Collections.singletonList(Collections.singletonMap("STREET", new String[]{ "East Davie Street" })), 
+                        Collections.singletonMap("number", "100")},
+                // Causes a SyndesisConnectorException since no such record exists and 
+                // isRaiseErrorOnNotFound is set to true
+                { "SELECT * FROM ADDRESS WHERE number = 0",
+                        Arrays.asList(
+                        		new HashMap<String,String>() {
+									private static final long serialVersionUID = 1L;
+									{
+                        				put("EXCEPTION_MESSAGE", "SQL SELECT did not SELECT any records" );
+                        				put("EXCEPTION_CATEGORY", "SQL_ENTITY_NOT_FOUND_ERROR");
+                        			}
+                        		}
+                        	),
+        		        Collections.emptyMap()
+                },
+                // Causes a runtime exception for bad SQL grammar not caught by Camel, 
+                // for now best we can do is to classify it as a SERVER_ERROR, so let's check 
+                // this happens.
+                { "INSERT INTO ADDRESS VALUES (4, 'angerloseweg', '11')",
+                		Arrays.asList(
+                    		new HashMap<String,String>() {
+								private static final long serialVersionUID = 1L;
+								{
+                    				put("EXCEPTION_MESSAGE", "PreparedStatementCallback; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: The number of values assigned is not the same as the number of specified or implied columns." );
+                    				put("EXCEPTION_CATEGORY", ErrorCategory.SERVER_ERROR);
+                    			}
+                    		}
+                    	),
+                		Collections.emptyMap()
+                },
+                { "DELETE FROM ADDRESS WHERE number = 14",
+                	    null,
+	    		        Collections.emptyMap()
+                }
         });
     }
 
@@ -102,18 +147,36 @@ public class SqlConnectorQueryTest extends SqlConnectorTestSupport {
             body = JSONBeanUtil.toJSONBean(parameters);
         }
 
-        List<?> results = template.requestBody("direct:start", body, List.class);
+        List<?> results = null;
 
-        List<Properties> jsonBeans = results.stream()
-                .map(Object::toString)
-                .map(JSONBeanUtil::parsePropertiesFromJSONBean)
-                .collect(Collectors.toList());
+        try {
 
-        Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+	        results = template.requestBody("direct:start", body, List.class);
 
-        for (Map<String, String[]> result : expectedResults) {
-            for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
-                validateProperty(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+        } catch (Throwable e) {
+
+            //check if this was an expected error
+            SyndesisConnectorException sce = 
+                    SyndesisConnectorException.from(e);
+            Assert.assertEquals(expectedResults.get(0).get("EXCEPTION_MESSAGE"),  sce.getMessage());
+            Assert.assertEquals(expectedResults.get(0).get("EXCEPTION_CATEGORY"), sce.getCategory());
+            return;
+        }
+
+        if (expectedResults == null) {
+        	Assert.assertNull(results);
+        } else {
+            List<Properties> jsonBeans = results.stream()
+                    .map(Object::toString)
+                    .map(JSONBeanUtil::parsePropertiesFromJSONBean)
+                    .collect(Collectors.toList());
+    
+            Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+    
+            for (Map<String, String[]> result : expectedResults) {
+                for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
+                    validateProperty(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
+                }
             }
         }
     }

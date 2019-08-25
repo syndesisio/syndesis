@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class SqlStatementMetaData {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementMetaData.class);
 
-    private Enum<StatementType> statementType;
+    private StatementType statementType;
     private List<SqlParam> inParams = new ArrayList<>();
     private List<SqlParam> outParams = new ArrayList<>();
     private List<String> tableNames = new ArrayList<>();

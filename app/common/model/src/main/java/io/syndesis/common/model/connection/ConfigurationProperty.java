@@ -118,6 +118,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
 
     Boolean getMultiple();
 
+    String getExtendedProperties();
+
     default boolean raw() {
         final Boolean value = getRaw();
         if (value != null) {

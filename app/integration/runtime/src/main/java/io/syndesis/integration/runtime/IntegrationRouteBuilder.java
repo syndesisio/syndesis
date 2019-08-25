@@ -33,20 +33,25 @@ import java.util.function.BiFunction;
 
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Flow.FlowType;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Properties;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.DefaultErrorHandlerBuilder;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.LogDefinition;
 import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -299,6 +304,24 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 }
             }
             rd.getInputs().get(0).id(stepId);
+
+            //Adding an errorHandler on API-Provider integrations
+            if (FlowType.API_PROVIDER.equals(flow.getType())) {
+                final OnExceptionDefinition onException = new OnExceptionDefinition(Throwable.class)
+                        .handled(true)
+                        .maximumRedeliveries(0);
+
+                final Processor errorHandler = (Processor) mandatoryLoadResource(
+                        this.getContext(), "class:io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler");
+                final Step endStep = flow.getSteps().get(flow.getSteps().size()-1);
+                ((Properties) errorHandler).setProperties(endStep.getConfiguredProperties());
+
+                final DefaultErrorHandlerBuilder builder = new DefaultErrorHandlerBuilder();
+                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onException);
+                builder.setOnExceptionOccurred(errorHandler);
+
+                rd.setErrorHandlerBuilder(builder);
+            }
         }
 
         return definition;

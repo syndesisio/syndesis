@@ -9,6 +9,9 @@
           "delay": "30000",
           "timelineType": "MENTIONS"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.twitter.TwitterCustomizer"
+        ],
         "inputDataShape": {
           "kind": "none"
         },
@@ -30,6 +33,9 @@
       "descriptor": {
         "componentScheme": "twitter-search",
         "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.twitter.TwitterCustomizer"
+        ],
         "inputDataShape": {
           "kind": "none"
         },
@@ -104,7 +110,8 @@
           "delay": "30000"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.twitter.RetrieveDirectMessageCustomizer"
+          "io.syndesis.connector.twitter.RetrieveDirectMessageCustomizer",
+          "io.syndesis.connector.twitter.TwitterCustomizer"
         ],
         "inputDataShape": {
           "kind": "none"
@@ -179,7 +186,8 @@
         "componentScheme": "twitter-directmessage",
         "configuredProperties": {},
         "connectorCustomizers": [
-          "io.syndesis.connector.twitter.SendDirectMessageCustomizer"
+          "io.syndesis.connector.twitter.SendDirectMessageCustomizer",
+          "io.syndesis.connector.twitter.TwitterCustomizer"
         ],
         "inputDataShape": {
           "kind": "java",

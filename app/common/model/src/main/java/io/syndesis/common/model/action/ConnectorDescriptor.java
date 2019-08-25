@@ -135,6 +135,27 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
         return Collections.emptyList();
     }
 
+    @Value.Default
+    default List<StandardizedError> getStandardizedErrors() {
+        return Collections.emptyList();
+    }
+
+    @Value.Immutable
+    @JsonDeserialize(builder = ConnectorDescriptor.StandardizedError.Builder.class)
+    interface StandardizedError {
+
+        @SuppressWarnings("PMD.UseUtilityClass")
+        final class Builder extends ImmutableStandardizedError.Builder {
+            public static ConnectorDescriptor.StandardizedError of(final String name, final String displayName) {
+                return new ConnectorDescriptor.StandardizedError.Builder().name(name).displayName(displayName).build();
+            }
+        }
+
+        String displayName();
+
+        String name();
+    }
+
     default ConnectorDescriptor.Builder builder() {
         return new Builder().createFrom(this);
     }
