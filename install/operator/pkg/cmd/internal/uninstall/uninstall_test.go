@@ -23,6 +23,7 @@ import (
     "k8s.io/apimachinery/pkg/apis/meta/v1"
     "k8s.io/apimachinery/pkg/runtime"
     "k8s.io/client-go/kubernetes/scheme"
+    "os"
     "sigs.k8s.io/controller-runtime/pkg/client"
     "sigs.k8s.io/controller-runtime/pkg/client/fake"
     "testing"
@@ -35,7 +36,11 @@ const (
     failed  = "\u2717"
 )
 
-func testUninstall(t *testing.T) {
+func TestUninstall(t *testing.T) {
+    if os.Getenv("CI") != "" {
+        t.Skip("skipping testing in CI environment")
+    }
+
     ctx := context.TODO()
     s := v1alpha1.Syndesis{ObjectMeta: v1.ObjectMeta{Name: s, Namespace: ns}}
     sl := v1alpha1.SyndesisList{}
