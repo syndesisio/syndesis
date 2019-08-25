@@ -35,7 +35,7 @@ const (
     failed  = "\u2717"
 )
 
-func TestUninstall(t *testing.T) {
+func testUninstall(t *testing.T) {
     ctx := context.TODO()
     s := v1alpha1.Syndesis{ObjectMeta: v1.ObjectMeta{Name: s, Namespace: ns}}
     sl := v1alpha1.SyndesisList{}
