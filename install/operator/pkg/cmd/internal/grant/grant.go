@@ -27,11 +27,14 @@ import (
     "github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
+const RoleName = "syndesis-installer"
+
 type Grant struct {
     *internal.Options
     Role    string
-    cluster bool
+    Kind    string
     User    string
+    cluster bool
 }
 
 func New(parent *internal.Options) *cobra.Command {
@@ -53,17 +56,20 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Grant) grant() error {
-    o.Role = "syndesis-installer"
+    o.Role = RoleName
+
+    grp := "./install/grant_cluster_role.yml.tmpl"
+    o.Kind = "ClusterRole"
+    if o.cluster == false {
+        grp = "./install/grant_role.yml.tmpl"
+        o.Kind = "Role"
+    }
 
     resources, err := generator.Render("./install/role.yml.tmpl", o)
     if err != nil {
         return err
     }
 
-    grp := "./install/grant_cluster_role.yml.tmpl"
-    if o.cluster == false {
-        grp = "./install/grant_role.yml.tmpl"
-    }
     gr, err := generator.Render(grp, o)
     if err != nil {
         return err
