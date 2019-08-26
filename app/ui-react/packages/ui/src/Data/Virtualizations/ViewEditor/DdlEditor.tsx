@@ -28,6 +28,11 @@ export interface IDdlEditorProps {
   i18nValidateLabel: string;
 
   /**
+   * The localized text for the validate results alert title
+   */
+  i18nValidationResultsTitle: string;
+
+  /**
    * `true` if all form fields have valid values.
    */
   isValid: boolean;
@@ -65,59 +70,32 @@ export interface IDdlEditorProps {
   onValidate: (ddl: string) => void;
 }
 
-interface IDdlEditorState {
-  ddlValue: string;
-  initialDdlValue: string;
-  needsValidation: boolean;
-  validationAlertVisible: boolean;
-}
+export const DdlEditor: React.FunctionComponent<
+IDdlEditorProps
+> = props => {
 
-export class DdlEditor extends React.Component<
-  IDdlEditorProps,
-  IDdlEditorState
-> {
-  public static defaultProps = {
-    validationResults: [],
+  const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
+  const [initialDdlValue] = React.useState(props.viewDdl);
+  const [needsValidation, setNeedsValidation] = React.useState(false);
+  const [validationAlertVisible, setValidationAlertVisible] = React.useState(false);
+
+  const handleDdlValidation = () => {
+    props.onValidate(ddlValue);
+    setNeedsValidation(false);
+    setValidationAlertVisible(true);
   };
 
-  constructor(props: IDdlEditorProps) {
-    super(props);
-    this.state = {
-      ddlValue: this.props.viewDdl,
-      initialDdlValue: this.props.viewDdl,
-      needsValidation: false,
-      validationAlertVisible: false
-    };
-    this.handleDdlChange = this.handleDdlChange.bind(this);
-    this.handleDdlValidation = this.handleDdlValidation.bind(this);
-    this.handleSave = this.handleSave.bind(this);
-    this.hideValidationAlert = this.hideValidationAlert.bind(this);
+  const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
+    setDdlValue(value);
+    setNeedsValidation(true);
   }
 
-  public handleDdlValidation = () => {
-    this.props.onValidate(this.state.ddlValue);
-    this.setState({
-      needsValidation: false,
-      validationAlertVisible: true
-    });
+  const handleSave = () => {
+    props.onSave(ddlValue);
   };
 
-  public handleDdlChange(editor: ITextEditor, data: any, value: string) {
-    this.setState({
-      ddlValue: value,
-      needsValidation: true,
-    });
-  }
-
-  public handleSave = () => (event: any) => {
-    const currentDdl = this.state.ddlValue;
-    this.props.onSave(currentDdl);
-  };
-
-  public hideValidationAlert = () => {
-    this.setState({
-      validationAlertVisible: false,
-    });
+  const hideValidationAlert = () => {
+    setValidationAlertVisible(false);
   };
 
   /**
@@ -129,7 +107,7 @@ export class DdlEditor extends React.Component<
    *   }
    * @param tableInfos the table infos
    */
-  public getHintOptions(tableInfos: ITableInfo[]) {
+  const getHintOptions = (tableInfos: ITableInfo[]) => {
     const result = {tables: {}};
 
     for (const tableInfo of tableInfos) {
@@ -138,70 +116,68 @@ export class DdlEditor extends React.Component<
     return result;
   }
 
-  public render() {
-    const { validationAlertVisible } = this.state;
+  const editorOptions = {
+    autofocus: true,
+    extraKeys: { 'Ctrl-Space': 'autocomplete' },
+    gutters: ['CodeMirror-lint-markers'],
+    hintOptions: getHintOptions(props.sourceTableInfos),
+    lineNumbers: true,
+    lineWrapping: true,
+    matchBrackets: true,
+    mode: 'text/x-mysql',
+    readOnly: false,
+    showCursorWhenSelecting: true,
+    styleActiveLine: true,
+    tabSize: 2,
+  };
 
-    const editorOptions = {
-      autofocus: true,
-      extraKeys: { 'Ctrl-Space': 'autocomplete' },
-      gutters: ['CodeMirror-lint-markers'],
-      hintOptions: this.getHintOptions(this.props.sourceTableInfos),
-      lineNumbers: true,
-      lineWrapping: true,
-      matchBrackets: true,
-      mode: 'text/x-mysql',
-      readOnly: false,
-      showCursorWhenSelecting: true,
-      styleActiveLine: true,
-      tabSize: 2,
-    };
-    return (
-      <PageSection>
-        <Card>
-          <CardBody>
-            {validationAlertVisible ? this.props.validationResults.map((e, idx) => (
-              <Alert key={idx}
-                variant={e.type}
-                title="DDL Validation"
-                action={<AlertActionCloseButton onClose={this.hideValidationAlert} />}
-              >{e.message}
-              </Alert>
-            )) : null}
-            <TextEditor
-              value={this.state.initialDdlValue}
-              options={editorOptions}
-              onChange={this.handleDdlChange}
-            />
-          </CardBody>
-          <CardFooter>
-            <Button
-              variant="secondary" 
-              className="ddl-editor__button"
-              isDisabled={this.props.isValidating || !this.state.needsValidation}
-              onClick={this.handleDdlValidation}
-            >
-              {this.props.isValidating ? (
-                <Loader size={'sm'} inline={true} />
-              ) : null}
-              {this.props.i18nValidateLabel}
-            </Button>
-            <Button
-              variant="primary"
-              className="ddl-editor__button"
-              isDisabled={
-                this.props.isSaving ||
-                this.props.isValidating ||
-                !this.props.isValid ||
-                this.state.needsValidation
-              }
-              onClick={this.handleSave()}
-            >
-              {this.props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
-              {this.props.i18nSaveLabel}
-            </Button>
-          </CardFooter>
-        </Card>
-      </PageSection>
-    );
-  }
+  return (
+    <PageSection>
+      <Card>
+        <CardBody>
+          {validationAlertVisible ? props.validationResults.map((e, idx) => (
+            <Alert key={idx}
+              variant={e.type}
+              title={props.i18nValidationResultsTitle}
+              action={<AlertActionCloseButton onClose={hideValidationAlert} />}
+            >{e.message}
+            </Alert>
+          )) : null}
+          <TextEditor
+            value={initialDdlValue}
+            options={editorOptions}
+            onChange={handleDdlChange}
+          />
+        </CardBody>
+        <CardFooter>
+          <Button
+            variant="secondary"
+            className="ddl-editor__button"
+            isDisabled={props.isValidating || !needsValidation}
+            onClick={handleDdlValidation}
+          >
+            {props.isValidating ? (
+              <Loader size={'sm'} inline={true} />
+            ) : null}
+            {props.i18nValidateLabel}
+          </Button>
+          <Button
+            variant="primary"
+            className="ddl-editor__button"
+            isDisabled={
+              props.isSaving ||
+              props.isValidating ||
+              !props.isValid ||
+              needsValidation
+            }
+            onClick={handleSave}
+          >
+            {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
+            {props.i18nSaveLabel}
+          </Button>
+        </CardFooter>
+      </Card>
+    </PageSection>
+  );
+
 }

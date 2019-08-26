@@ -28,7 +28,7 @@ export interface IPreviewResultsProps {
   i18nEmptyResultsMsg: string;
 }
 
-interface IColumn {
+export interface IColumn {
   id: string;
   label: string;
 }

@@ -22,10 +22,12 @@ stories.add('render', () => {
       viewDdl={viewDdl}
       i18nSaveLabel={'Save'}
       i18nValidateLabel={'Validate'}
+      i18nValidationResultsTitle={'DDL Validation'}
       isValid={true}
       isSaving={false}
       isValidating={false}
       sourceTableInfos={sourceTables}
+      validationResults={[]}
       onValidate={action('validate')}
       onSave={action('save')}
     />

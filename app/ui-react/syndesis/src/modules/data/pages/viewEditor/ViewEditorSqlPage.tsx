@@ -254,6 +254,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
             i18nSaveLabel={t('shared:Save')}
             i18nValidateLabel={t('shared:Validate')}
+            i18nValidationResultsTitle={t('data:virtualization.validationResultsTitle')}
             isValid={viewValid}
             isSaving={isSaving}
             isValidating={isValidating}

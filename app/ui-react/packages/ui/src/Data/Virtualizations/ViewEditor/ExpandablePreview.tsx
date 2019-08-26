@@ -5,7 +5,7 @@ import { SyncIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { TextEditor } from '../../../Shared';
 import './ExpandablePreview.css';
-import { PreviewResults } from './PreviewResults';
+import { IColumn, PreviewResults } from './PreviewResults';
 
 /**
  * @param i18nHidePreview - text for hide preview toggle control
@@ -49,11 +49,6 @@ export interface IExpandablePreviewProps {
    */
   queryResultRows: Array<{}>;
   viewDdl?: string;
-}
-
-interface IColumn {
-  id: string;
-  label: string;
 }
 
 /**
