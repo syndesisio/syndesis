@@ -126,4 +126,4 @@ extension and creating its `.jar` file, which you upload to
 {prodname}, see:
 
 * link:{LinkToolingUserGuide}#FuseOnlineExtension[{NameOfToolingUserGuide}, how to use Fuse tooling to develop extensions]
-* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_extensions[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]
+* link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_custom[{NameOfFuseOnlineIntegrationGuide}, how to code extensions]
