@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Namespace }}
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: {{ .Role }}
 subjects:
 - apiGroup: rbac.authorization.k8s.io

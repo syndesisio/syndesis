@@ -31,6 +31,8 @@ import (
 	"sigs.k8s.io/yaml"
 )
 
+const RoleName = "syndesis-operator"
+
 type Install struct {
 	// cli parsed config
 	*internal.Options
@@ -154,10 +156,11 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-    Image     string
-    Namespace string
-    DevImages bool
-    Role      string
+	Image     string
+	Namespace string
+	DevImages bool
+	Role      string
+	Kind      string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -196,10 +199,11 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
     resources, err := generator.Render(fromFile, RenderScope{
-        Namespace: o.Namespace,
-        Image:     o.image,
-        DevImages: o.devImages,
-        Role:      "syndesis-operator",
+		Namespace: o.Namespace,
+		Image:     o.image,
+		DevImages: o.devImages,
+		Role:      RoleName,
+		Kind:      "Role",
     })
     return resources, err
 }
