@@ -18,6 +18,7 @@ package io.syndesis.connector.box.customizer;
 import java.io.File;
 import java.util.Map;
 
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -27,16 +28,22 @@ import org.apache.camel.component.file.GenericFile;
 
 public class BoxUploadCustomizer implements ComponentProxyCustomizer {
 
+    private String filename;
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        filename = ConnectorOptions.extractOption(options, "fileName");
         component.setBeforeProducer(this::beforeProducer);
     }
 
     @SuppressWarnings("unchecked")
     private void beforeProducer(Exchange exchange) throws InvalidPayloadException {
         Message in = exchange.getIn();
-        GenericFile<File> genericFile = in.getMandatoryBody(GenericFile.class);
-        in.setHeader("CamelBox.fileName", genericFile.getFileName());
+        if (filename == null) {
+            GenericFile<File> genericFile = in.getMandatoryBody(GenericFile.class);
+            filename = genericFile.getFileName();
+        }
+        in.setHeader("CamelBox.fileName", filename);
     }
 
 }

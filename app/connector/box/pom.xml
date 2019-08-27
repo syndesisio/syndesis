@@ -15,135 +15,115 @@
    limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>io.syndesis.connector</groupId>
-    <artifactId>connector-parent</artifactId>
-    <version>1.8-SNAPSHOT</version>
-    <relativePath>../pom.xml</relativePath>
-  </parent>
-
-  <artifactId>connector-box</artifactId>
-  <name>Connector :: Box</name>
-
-  <properties>
-    <box-java-sdk-version>2.32.0</box-java-sdk-version>
-  </properties>
-
-  <dependencies>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-support-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>connector-support-verifier</artifactId>
-      <version>${project.version}</version>
-      <optional>true</optional>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.common</groupId>
-      <artifactId>common-model</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.common</groupId>
-      <artifactId>common-util</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-component-proxy</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-box</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.box</groupId>
-      <artifactId>box-java-sdk</artifactId>
-      <version>${box-java-sdk-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-
-    <!-- test -->
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>ch.qos.logback</groupId>
-      <artifactId>logback-classic</artifactId>
-      <scope>test</scope>
-    </dependency>
-  </dependencies>
-
-  <build>
-    <resources>
-      <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-      </resource>
-    </resources>
-
-    <plugins>
-      <plugin>
-        <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <delimiters>
-            <delimiter>@</delimiter>
-          </delimiters>
-        </configuration>
-      </plugin>
-
-      <plugin>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <groupId>io.syndesis.connector</groupId>
-        <artifactId>connector-support-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>inspections</id>
-            <phase>process-classes</phase>
-            <goals>
-              <goal>generate-connector-inspections</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+        <artifactId>connector-parent</artifactId>
+        <version>1.8-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>connector-box</artifactId>
+    <name>Connector :: Box</name>
+
+    <properties>
+        <box-java-sdk-version>2.32.0</box-java-sdk-version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-support-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>connector-support-verifier</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.syndesis.common</groupId>
+            <artifactId>common-model</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.syndesis.common</groupId>
+            <artifactId>common-util</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.syndesis.integration</groupId>
+            <artifactId>integration-component-proxy</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-box</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.box</groupId>
+            <artifactId>box-java-sdk</artifactId>
+            <version>${box-java-sdk-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <!-- test -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <configuration>
+                    <delimiters>
+                        <delimiter>@</delimiter>
+                    </delimiters>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.syndesis.connector</groupId>
+                <artifactId>connector-support-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>inspections</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>generate-connector-inspections</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

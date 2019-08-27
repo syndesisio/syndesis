@@ -36,6 +36,18 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "fileName": {
+                "deprecated": false,
+                "displayName": "File name",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "labelHint": "Set the target file name on box, if not specified then, the default is the incoming file name from the previous step.",
+                "kind": "parameter",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
               }
             }
           }
