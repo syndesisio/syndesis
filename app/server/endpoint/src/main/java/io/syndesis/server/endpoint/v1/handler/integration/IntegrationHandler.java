@@ -65,8 +65,6 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
 
-import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationOverviewHelper.toCurrentIntegrationOverview;
-
 @Path("/integrations")
 @Api(value = "integrations")
 @Component
@@ -74,11 +72,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     Creator<Integration>, Deleter<Integration>, Updater<Integration>, Validating<Integration> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationHandler.class);
-
     final APIGenerator apiGenerator;
     private final EncryptionComponent encryptionSupport;
     private final Inspectors inspectors;
     private final OpenShiftService openShiftService;
+    private final IntegrationOverviewHelper integrationOverviewHelper;
+
 
     private final Validator validator;
 
@@ -87,13 +86,15 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     public IntegrationHandler(final DataManager dataMgr, final OpenShiftService openShiftService,
                               final Validator validator, final Inspectors inspectors,
-                              final EncryptionComponent encryptionSupport, final APIGenerator apiGenerator) {
+                              final EncryptionComponent encryptionSupport, final APIGenerator apiGenerator,
+                              final IntegrationOverviewHelper integrationOverviewHelper){
         super(dataMgr);
         this.openShiftService = openShiftService;
         this.validator = validator;
         this.inspectors = inspectors;
         this.encryptionSupport = encryptionSupport;
         this.apiGenerator = apiGenerator;
+        this.integrationOverviewHelper = integrationOverviewHelper;
     }
 
     @Override
@@ -155,7 +156,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             throw new EntityNotFoundException(String.format("Integration %s has been deleted", integration.getId()));
         }
 
-        return toCurrentIntegrationOverview(integration, getDataManager());
+        return integrationOverviewHelper.toCurrentIntegrationOverview(integration);
     }
 
     @POST
@@ -207,7 +208,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
 
-        return ListResult.of(integrations.getItems().stream().map(i -> toCurrentIntegrationOverview(i, dataManager))
+        return ListResult.of(integrations.getItems().stream().map(i -> integrationOverviewHelper.toCurrentIntegrationOverview(i))
             .collect(Collectors.toList()));
     }
 

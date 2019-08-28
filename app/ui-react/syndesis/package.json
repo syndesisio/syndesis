@@ -11,6 +11,7 @@
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "@craco/craco": "^5.0.2",
+    "@patternfly/react-core": "^3.32.9",
     "@syndesis/api": "*",
     "@syndesis/apicurio-adapter": "*",
     "@syndesis/atlasmap-adapter": "*",
@@ -24,6 +25,7 @@
     "i18next-browser-languagedetector": "^3.0.1",
     "immer": "^3.1.1",
     "named-urls": "^1.4.0",
+    "patternfly-react": "^2.29.2",
     "react": "^16.8.3",
     "react-content-loader": "^4.0.1",
     "react-dom": "^16.8.3",

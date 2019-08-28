@@ -3520,6 +3520,9 @@
         "url": {
           "type": "string"
         },
+        "managementUrl": {
+          "type": "string"
+        },
         "board": {
           "$ref": "#/definitions/IntegrationBulletinBoard"
         },
@@ -3615,6 +3618,18 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/ResourceIdentifier"
+          }
+        },
+        "exposure": {
+          "type": "string",
+          "enum": ["ROUTE", "_3SCALE"]
+        },
+        "exposureMeans": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": ["ROUTE", "_3SCALE"]
           }
         }
       }

@@ -170,11 +170,10 @@ parameters:
   name: UPGRADE_VOLUME_CAPACITY
   required: true
   value: 1Gi
-- description: How to expose services, via OpenShift Route (false) or via 3scale (true)
+- description: Url to 3scale
   displayName: Expose services via 3scale
-  name: CONTROLLERS_EXPOSE_VIA3SCALE
-  required: true
-  value: 'false'
+  name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
+  required: false
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -1265,8 +1264,8 @@ objects:
             value: "1"
           - name: INTEGRATION_STATE_CHECK_INTERVAL
             value: ${INTEGRATION_STATE_CHECK_INTERVAL}
-          - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: ${CONTROLLERS_EXPOSE_VIA3SCALE}
+          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
+            value: ${OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -2096,8 +2095,8 @@ objects:
             value: ${POSTGRESQL_USER}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
-          - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: ${CONTROLLERS_EXPOSE_VIA3SCALE}
+          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
+            value: ${OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}
           image: ' '
 
           imagePullPolicy: IfNotPresent

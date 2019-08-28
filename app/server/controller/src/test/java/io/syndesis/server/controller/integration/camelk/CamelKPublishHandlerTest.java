@@ -34,6 +34,8 @@ import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
+import io.syndesis.server.openshift.ExposureHelper;
+import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.server.openshift.OpenShiftServiceNoOp;
 import org.junit.Test;
 
@@ -106,7 +108,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             Collections.emptyList(),
-            new ControllersConfigurationProperties());
+            new ControllersConfigurationProperties(),
+            new ExposureHelper(new OpenShiftConfigurationProperties()));
 
         Secret secret = handler.createIntegrationSecret(deployment);
 
@@ -152,7 +155,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             Collections.emptyList(),
-            new ControllersConfigurationProperties());
+            new ControllersConfigurationProperties(),
+            new ExposureHelper(new OpenShiftConfigurationProperties()));
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 
@@ -176,7 +180,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             Collections.emptyList(),
-            new ControllersConfigurationProperties());
+            new ControllersConfigurationProperties(),
+            new ExposureHelper(new OpenShiftConfigurationProperties()));
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 
@@ -206,7 +211,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             Collections.emptyList(),
-            properties);
+            properties,
+            new ExposureHelper(new OpenShiftConfigurationProperties()));
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 

@@ -162,6 +162,19 @@
       "title": "Give this integration a name"
     }
   },
+  "exposeVia": {
+    "3scale": "Expose via 3scale",
+    "3scaleConfirm": "Are you sure you would like to expose your API via 3scale",
+    "3scaleDescription": "Enables analytics and fine-grained access control for your API. It requires additional configuration in 3scale once published.",
+    "not3scale": "Do not expose via 3scale",
+    "not3scaleDescription": "Disables analytics and fine-grained access control for your API.",
+    "not3scaleConfirm": "Are you sure you would like to stop exposing your API via 3scale",
+    "manageIn3scale": "Manage in 3scale",
+    "manageIn3scalePendingDescription": "The integration will be exposed via 3scale and will require additional configuration in 3scale once published.",
+    "manageIn3scaleDescription": "The integration is exposed via 3scale, where you can manage access and view analytics.",
+    "republish": "and republish your integration",
+    "no3scaleConfigured": "The integration has been explicitly configured to be exposed via 3scale, which is no longer available. Do not expose via 3scale or contact administrator to configure 3scale integration."
+  },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
   "ReplaceDraftMOdalTitle": "Replace Draft?",

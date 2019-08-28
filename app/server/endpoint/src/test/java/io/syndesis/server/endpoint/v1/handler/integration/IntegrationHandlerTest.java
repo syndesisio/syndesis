@@ -87,7 +87,7 @@ public class IntegrationHandlerTest {
         when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
         encryptionSupport = mock(EncryptionComponent.class);
         handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
-                apiGenerator);
+                apiGenerator, mock(IntegrationOverviewHelper.class));
         handler.setPublicApiHandler(mock(PublicApiHandler.class));
     }
 

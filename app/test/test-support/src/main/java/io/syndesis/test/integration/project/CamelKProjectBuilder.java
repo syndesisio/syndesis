@@ -54,6 +54,8 @@ import io.syndesis.server.controller.integration.camelk.customizer.TemplatingCus
 import io.syndesis.server.controller.integration.camelk.customizer.WebhookCustomizer;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.Exposure;
+import io.syndesis.server.openshift.ExposureHelper;
+import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.integration.source.IntegrationSource;
 import org.apache.camel.util.ObjectHelper;
@@ -147,9 +149,10 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
                 .collect(Collectors.toCollection(TreeSet::new));
 
         ControllersConfigurationProperties configurationProperties = new ControllersConfigurationProperties();
+        ExposureHelper exposureHelper = new ExposureHelper(new OpenShiftConfigurationProperties());
         IntegrationResourceManager integrationResourceManager = new StaticIntegrationResourceManager(() -> integration);
         IntegrationDeployment integrationDeployment = new IntegrationDeployment.Builder().spec(integration).build();
-        EnumSet<Exposure> exposures = CamelKSupport.determineExposure(configurationProperties, integrationDeployment);
+        EnumSet<Exposure> exposures = CamelKSupport.determineExposure(exposureHelper, integrationDeployment);
 
         List<CamelKIntegrationCustomizer> customizers = Arrays.asList(
                 new TemplatingCustomizer(),

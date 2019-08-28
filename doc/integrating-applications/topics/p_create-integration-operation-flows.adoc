@@ -123,8 +123,8 @@ link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[t
 
 When an API provider integration is running in {prodname} on 
 OpenShift Container Platform, an administrator might have set the 
-`CONTROLLERS_EXPOSE_VIA3SCALE` environment variable to true, which makes 
-the integration’s API discoverable in Red Hat 3scale.  When this environment 
-variable is set to true, {prodname} does not provide an external URL for 
-an API provider integration. 
-To test the integration, ask a 3scale administrator for guidance. 
+`OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment variable, which makes
+the integration’s API discoverable in Red Hat 3scale by default.  When this environment
+variable is set, {prodname} does not provide an external URL for
+an API provider integration unless 3scale is explicitly disabled for a particular integration.
+To test the integration, open up 3scale dashboard.

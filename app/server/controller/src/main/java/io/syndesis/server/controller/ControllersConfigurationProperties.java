@@ -33,7 +33,6 @@ public class ControllersConfigurationProperties {
     private int maxIntegrationsPerUser = 1;
     private int maxDeploymentsPerUser = 1;
     private int integrationStateCheckInterval = 60;
-    private boolean exposeVia3scale;
 
     @NestedConfigurationProperty
     private CamelK camelk = new CamelK();
@@ -60,14 +59,6 @@ public class ControllersConfigurationProperties {
 
     public int getIntegrationStateCheckInterval() {
         return integrationStateCheckInterval;
-    }
-
-    public void setExposeVia3scale(final boolean exposeVia3scale) {
-        this.exposeVia3scale = exposeVia3scale;
-    }
-
-    public boolean isExposeVia3scale() {
-        return exposeVia3scale;
     }
 
     public CamelK getCamelk() {

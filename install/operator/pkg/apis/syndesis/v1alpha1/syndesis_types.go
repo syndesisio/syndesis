@@ -134,7 +134,7 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	ExposeVia3Scale *bool `json:"exposeVia3Scale,omitempty"`
+	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
 type AddonsSpec map[string]Parameters

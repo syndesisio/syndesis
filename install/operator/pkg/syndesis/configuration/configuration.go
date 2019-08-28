@@ -57,7 +57,7 @@ const (
 
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
-	EnvExposeVia3Scale       SyndesisEnvVar = "CONTROLLERS_EXPOSE_VIA3SCALE"
+	EnvManagementUrlFor3scale   SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -78,7 +78,7 @@ var (
 		envDemoDataEnabled,
 		envMaxIntegrationsPerUser,
 		envIntegrationStateCheckInterval,
-		envExposeVia3Scale,
+		envManagementUrlFor3scale,
 
 		envControllersIntegrationsEnabled,
 		envTestSupport,
@@ -120,7 +120,7 @@ var (
 		demoDataEnabledFromEnv,
 		maxIntegrationsPerUserFromEnv,
 		integrationStateCheckInterval,
-		exposeVia3Scale,
+		managementUrlFor3scale,
 
 		controllersIntegrationsEnabledFromEnv,
 		testSupportFromEnv,
@@ -649,22 +649,19 @@ func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.S
 	}
 }
 
-func envExposeVia3Scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	v := false
-	if syndesis.Spec.Components.Server.Features.ExposeVia3Scale != nil {
-		v = *syndesis.Spec.Components.Server.Features.ExposeVia3Scale
-	}
-	return &SyndesisEnvVarConfig{
-		Var:   EnvExposeVia3Scale,
-		Value: strconv.FormatBool(v),
-	}
+func envManagementUrlFor3scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+    if url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale; url != "" {
+        return &SyndesisEnvVarConfig{
+            Var:   EnvManagementUrlFor3scale,
+            Value: url,
+        }
+    }
+	return nil
 }
 
-func exposeVia3Scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvExposeVia3Scale); ok && syndesis.Spec.Components.Server.Features.ExposeVia3Scale == nil {
-		if b, err := strconv.ParseBool(v); err != nil {
-			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = &b
-		}
+func managementUrlFor3scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvManagementUrlFor3scale); ok {
+		syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale = v
 	}
 }
 

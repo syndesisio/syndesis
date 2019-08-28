@@ -46,4 +46,9 @@ public class OpenShiftConfiguration {
         return new OpenShiftServiceNoOp();
     }
 
+    @Bean
+    public ExposureHelper exposureHelper(OpenShiftConfigurationProperties openShiftConfigurationProperties) {
+        return new ExposureHelper(openShiftConfigurationProperties);
+    }
+
 }
