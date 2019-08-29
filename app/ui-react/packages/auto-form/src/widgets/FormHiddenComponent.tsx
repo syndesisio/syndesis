@@ -5,7 +5,7 @@ import { toValidHtmlId } from './helpers';
 export const FormHiddenComponent: React.FunctionComponent<
   IFormControlProps
 > = props => (
-  <div {...props.property.formGroupAttributes}>
+  <div {...props.property.formGroupAttributes} style={{ display: 'none' }}>
     <input
       {...props.property.fieldAttributes}
       {...props.field}

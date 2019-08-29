@@ -96,8 +96,9 @@
       "conditionPlaceholder": "Simple language expression",
       "addCondition": "Add another condition",
       "addConditionTitle": "When",
-      "useDefaultFlowDescription": "Execute this flow when no other condition matches.",
-      "useDefaultFlowTitle": "Use a default flow",
+      "forAllIncomingData": "For all incoming data",
+      "otherwise": "If incoming data does not match all of the above conditions",
+      "useDefaultFlowTitle": "Execute default flow",
       "fieldRequired": "{{field}} is required"
     },
     "ruleForm": {

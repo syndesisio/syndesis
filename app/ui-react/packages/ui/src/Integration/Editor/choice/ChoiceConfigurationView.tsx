@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { Icon, ListView, ListViewItem } from 'patternfly-react';
+import { ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ButtonLink } from '../../../Layout';
@@ -48,10 +48,10 @@ export class ChoiceConfigurationView extends React.Component<
             additionalInfo={[]}
           />
         ))}
-        <ListViewItem
-          key={'otherwise'}
-          actions={
-            this.props.useDefaultFlow && (
+        {this.props.useDefaultFlow && (
+          <ListViewItem
+            key={'otherwise'}
+            actions={
               <ButtonLink
                 data-testid="choice-view-mode-view-default-flow-button"
                 href={this.props.defaultFlowHref}
@@ -59,18 +59,11 @@ export class ChoiceConfigurationView extends React.Component<
               >
                 {this.props.i18nOpenFlow}
               </ButtonLink>
-            )
-          }
-          description={
-            <>
-              {this.props.useDefaultFlow && <Icon name="check" />}
-              {!this.props.useDefaultFlow && <Icon name="ban" />}
-              &nbsp;
-              {this.props.i18nUseDefaultFlow}
-            </>
-          }
-          heading={<strong>{this.props.i18nOtherwise}</strong>}
-        />
+            }
+            description={this.props.i18nUseDefaultFlow}
+            heading={<strong>{this.props.i18nOtherwise}</strong>}
+          />
+        )}
       </ListView>
     );
   }

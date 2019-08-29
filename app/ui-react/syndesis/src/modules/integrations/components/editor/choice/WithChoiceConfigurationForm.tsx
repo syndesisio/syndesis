@@ -26,14 +26,16 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
 
   const definition = {
     defaultFlowId: {
+      order: 6,
       type: 'hidden',
     },
+
     flowConditions: {
       arrayDefinition: {
         condition: {
           defaultValue: '',
           description: t('integrations:editor:choiceForm:conditionDescription'),
-          displayName: t('integrations:editor:choiceForm:conditionName'),
+          displayName: '',
           placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
           required: true,
           type: 'text',
@@ -50,35 +52,45 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
       },
       arrayDefinitionOptions: {
         arrayControlAttributes: {
-          className: 'col-md-2 form-group',
+          className: 'conditional-flow__controls',
         },
         arrayRowTitleAttributes: {
-          className: 'col-md-2',
+          className: 'conditional-flow__title',
         },
         controlLabelAttributes: {
           style: { display: 'none' },
         },
         formGroupAttributes: {
-          className: 'col-md-8',
+          className: 'conditional-flow__form-group',
         },
         i18nAddElementText: t('integrations:editor:choiceForm:addCondition'),
         minElements: 1,
         rowTitle: t('integrations:editor:choiceForm:addConditionTitle'),
         showSortControls: true,
       },
+      order: 1,
       required: true,
       type: 'array',
     },
+    forAllIncomingData: {
+      displayName: t('integrations:editor:choiceForm:forAllIncomingData'),
+      order: 0,
+      type: 'legend',
+    },
+    otherwise: {
+      displayName: t('integrations:editor:choiceForm:otherwise'),
+      order: 2,
+      type: 'legend'
+    },
     routingScheme: {
       defaultValue: 'direct',
+      order: 5,
       type: 'hidden',
     },
     useDefaultFlow: {
       defaultValue: 'false',
-      description: t(
-        'integrations:editor:choiceForm:useDefaultFlowDescription'
-      ),
       displayName: t('integrations:editor:choiceForm:useDefaultFlowTitle'),
+      order: 3,
       type: 'boolean',
     },
   } as IFormDefinition;

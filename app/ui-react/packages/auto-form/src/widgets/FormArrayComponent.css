@@ -2,8 +2,16 @@
   white-space: nowrap ;
 }
 
+.form-array-section__title {
+  white-space: nowrap;
+}
+
 .form-array-control__array-controls .fa {
   font-size: 20px;
+}
+
+.form-array-control__array-add .btn {
+  font-size: inherit;
 }
 
 .form-array-layout {

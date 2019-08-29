@@ -1,0 +1,35 @@
+.conditional-flow__form {
+  margin-bottom: 2em;
+}
+.conditional-flow__form .auto-form-legend h5 {
+  font-weight: 600 !important;
+}
+.conditional-flow__form section {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  margin-left: 7em;
+}
+.conditional-flow__form-group {
+  padding: 0 15px 0 15px;
+}
+.conditional-flow__controls {
+  padding-top: 4px;
+}
+.conditional-flow__form .conditional-flow__form-group .pf-c-form__group {
+  /* undo the grid layout specifically for this form */
+  display: inherit !important;
+}
+.conditional-flow__title {
+  padding-top: 10px;
+}
+.conditional-flow__title h5 strong {
+  font-weight: 600;
+}
+.conditional-flow__form .form-array-control__array-add {
+  display: block;
+  padding-left: 6.5em;
+}
+.conditional-flow__form .form-array-control__array-add .btn {
+
+}
