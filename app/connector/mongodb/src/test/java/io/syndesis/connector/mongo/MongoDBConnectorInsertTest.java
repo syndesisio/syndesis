@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.Matchers.containsInAnyOrder;
+
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
 
@@ -47,11 +49,16 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         // When
         String uniqueId = UUID.randomUUID().toString();
         String message = String.format("{\"test\":\"unit\",\"uniqueId\":\"%s\"}", uniqueId);
+        Document doc = Document.parse(message);
         // Given
-        template().sendBody("direct:start", message);
+        Document result = Document.parse(template.requestBody("direct:start", message, String.class));
         // Then
+        assertEquals(doc.getString("test"), result.getString("test"));
+        assertEquals(doc.getString("uniqueId"), result.getString("uniqueId"));
+
         List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
+        assertEquals(result, docsFound.get(0));
     }
 
     @Test
@@ -61,10 +68,13 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         int batchId = 432;
         List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
         // Given
-        template().sendBody("direct:start", batchMessage);
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
+        List<Document> result = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
         assertEquals(iteration, docsFound.size());
+        assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
 
     private List<Document> formatBatchMessageDocument(int nDocs, int batchNo) {
@@ -86,11 +96,12 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
         List<String> jsonStrings = batchMessage.stream().map(Document::toJson).collect(Collectors.toList());
         // Given
-        template().sendBody("direct:start", jsonStrings);
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsString = template.requestBody("direct:start", jsonStrings, List.class);
+        List<Document> result = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
         assertEquals(iteration, docsFound.size());
+        assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
-
-
 }

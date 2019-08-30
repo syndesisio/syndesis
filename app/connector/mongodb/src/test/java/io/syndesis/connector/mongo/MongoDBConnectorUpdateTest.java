@@ -50,11 +50,12 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // Given
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"_id\":11},{$set: {\"test\":\"updated!\"}}]";
-        template().sendBody("direct:start", updateArguments);
+        Document result = Document.parse(template.requestBody("direct:start", updateArguments, String.class));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
         assertEquals("updated!", docsFound.get(0).getString("test"));
+        assertEquals(Integer.valueOf(1), result.getInteger("count"));
     }
 
     @Test
@@ -68,11 +69,12 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
         // Need the header to enable multiple updates!
-        template().sendBodyAndHeader("direct:start", updateArguments, "CamelMongoDbMultiUpdate", "true");
+        Document result = Document.parse(template.requestBodyAndHeader("direct:start", updateArguments, "CamelMongoDbMultiUpdate", "true", String.class));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
         assertEquals(2, docsFound.size());
         docsFound.forEach(document -> assertEquals("updated!", document.getString("test")));
+        assertEquals(Integer.valueOf(2), result.getInteger("count"));
     }
 
 }
