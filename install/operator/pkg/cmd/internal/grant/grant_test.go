@@ -22,7 +22,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/runtime"
-	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 	"testing"
@@ -37,10 +36,6 @@ const (
 
 // test grant without --cluster options
 func TestGrant(t *testing.T) {
-	if os.Getenv("CI") != "" {
-		t.Skip("skipping testing in CI environment")
-	}
-
 	ctx := context.TODO()
 	g := &Grant{Role: RoleName, User: user, Options: &internal.Options{Namespace: ns, Context: ctx}}
 
@@ -92,10 +87,6 @@ func TestGrant(t *testing.T) {
 
 // test grant with --cluster options
 func TestGrantCluster(t *testing.T) {
-	if os.Getenv("CI") != "" {
-		t.Skip("skipping testing in CI environment")
-	}
-
 	ctx := context.TODO()
 	g := &Grant{Role: RoleName, User: user, cluster: true, Options: &internal.Options{Namespace: ns, Context: ctx}}
 
