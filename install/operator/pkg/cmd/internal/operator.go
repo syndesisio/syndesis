@@ -17,7 +17,7 @@ type Options struct {
 
 	Context context.Context
 	Command *cobra.Command
-	Client *client.Client
+	Client  *client.Client
 }
 
 func (o *Options) GetClientConfig() *rest.Config {

@@ -1,16 +1,16 @@
 package template
 
 import (
-    "encoding/json"
-    "fmt"
-    "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-    "github.com/syndesisio/syndesis/install/operator/pkg/generator"
-    "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-    "github.com/syndesisio/syndesis/install/operator/pkg/util"
-    "k8s.io/apimachinery/pkg/runtime"
-    "math/rand"
-    logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-    "time"
+	"encoding/json"
+	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/runtime"
+	"math/rand"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	"time"
 )
 
 var log = logf.Log.WithName("template")
@@ -81,42 +81,42 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
-func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) (error) {
+func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) error {
 
-    // Lets fill in all the addons we know about...
-    if syndesis.Spec.Addons == nil {
-        syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
-    }
-    addonFiles, err := generator.GetAssetsFS().Open("./addons/")
-    if err != nil {
-        return err
-    }
-    defer addonFiles.Close()
-    addonFileInfos, err := addonFiles.Readdir(-1)
-    if err != nil {
-        return err
-    }
-    for _, f := range addonFileInfos {
-        if !f.IsDir() {
-            continue
-        }
+	// Lets fill in all the addons we know about...
+	if syndesis.Spec.Addons == nil {
+		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
+	}
+	addonFiles, err := generator.GetAssetsFS().Open("./addons/")
+	if err != nil {
+		return err
+	}
+	defer addonFiles.Close()
+	addonFileInfos, err := addonFiles.Readdir(-1)
+	if err != nil {
+		return err
+	}
+	for _, f := range addonFileInfos {
+		if !f.IsDir() {
+			continue
+		}
 
-        if syndesis.Spec.Addons[f.Name()] == nil {
-            syndesis.Spec.Addons[f.Name()] = v1alpha1.Parameters{}
-        }
+		if syndesis.Spec.Addons[f.Name()] == nil {
+			syndesis.Spec.Addons[f.Name()] = v1alpha1.Parameters{}
+		}
 
-        params := syndesis.Spec.Addons[f.Name()]
-        if params["enabled"] != "" {
-            continue
-        }
+		params := syndesis.Spec.Addons[f.Name()]
+		if params["enabled"] != "" {
+			continue
+		}
 
-        switch f.Name() {
-        case "todo":
-            params["enabled"] = "true"
-        default:
-            params["enabled"] = "false"
-        }
-    }
+		switch f.Name() {
+		case "todo":
+			params["enabled"] = "true"
+		default:
+			params["enabled"] = "false"
+		}
+	}
 
 	// Setup the config..
 	config := make(map[string]string)
@@ -141,7 +141,6 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(config, configuration.EnvPostgresqlVolumeCapacity, "1Gi")
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
-
 
 	ifMissingSet(config, configuration.EnvSyndesisMetaTag, renderContext.Tags.Syndesis)
 	ifMissingSet(config, configuration.EnvSyndesisServerTag, renderContext.Tags.Syndesis)

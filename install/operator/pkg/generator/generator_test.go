@@ -34,7 +34,7 @@ func TestGenerator(t *testing.T) {
 	}
 	gen.Syndesis = syndesis
 
-	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{} )
+	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{})
 	require.NoError(t, err)
 
 	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
@@ -48,7 +48,7 @@ func TestGenerator(t *testing.T) {
 	assert.True(t, len(resources) > 0)
 }
 
-func TestConfigYAML(t *testing.T)  {
+func TestConfigYAML(t *testing.T) {
 	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
 	require.NoError(t, err)
 
