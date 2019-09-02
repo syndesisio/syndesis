@@ -87,7 +87,7 @@ build_operator()
         go generate ./pkg/...
 
         echo building executable
-        go test -mod=vendor ./cmd/... ./pkg/...
+        go test -test.short -mod=vendor ./cmd/... ./pkg/...
 
         for GOARCH in amd64 ; do
           for GOOS in linux darwin windows ; do
@@ -125,7 +125,7 @@ FROM golang:1.12.0
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
 COPY . .
-RUN go test -mod=vendor ./cmd/... ./pkg/...
+RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
 RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=windows GOARCH=amd64 go build $OPTS -o /dist/windows-amd64/operator  -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
