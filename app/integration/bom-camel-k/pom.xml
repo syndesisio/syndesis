@@ -29,7 +29,7 @@
   <properties>
     <camel.version>2.21.0.fuse-740038</camel.version>
     <atlasmap.version>1.39.5</atlasmap.version>
-    <jackson.version>2.8.11</jackson.version>
+    <jackson.version>2.10.0.pr2</jackson.version>
     <jackson.databind.version>2.8.11.3</jackson.databind.version>
     <jackson-module-jaxb-annotations.version>2.8.11</jackson-module-jaxb-annotations.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
