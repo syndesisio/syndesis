@@ -15,8 +15,10 @@
  */
 package io.syndesis.connector.mongo;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
+import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.bson.Document;
 import org.junit.AfterClass;
@@ -25,6 +27,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,6 +77,17 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.expectedMessageCount(3);
+        mock.expectedMessagesMatches((Exchange e) -> {
+            try {
+                // We just want to validate the output is coming as json well format
+                String doc = e.getMessage().getBody(String.class);
+                JsonNode jsonNode = MAPPER.readTree(doc);
+            } catch (IOException ex) {
+                log.error("Test failed because: ",ex);
+                return false;
+            }
+            return true;
+        });
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");

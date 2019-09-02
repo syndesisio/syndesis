@@ -65,12 +65,13 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
         mock.expectedMessageCount(1);
         mock.expectedMessagesMatches((Exchange e) -> {
             try {
-                Document doc = e.getMessage().getBody(Document.class);
-                JsonNode jsonNode = MAPPER.readTree(doc.toJson());
+                String doc = e.getMessage().getBody(String.class);
+                JsonNode jsonNode = MAPPER.readTree(doc);
                 int id = jsonNode.get("id").asInt();
                 String value = jsonNode.get("someKey").asText();
                 return id <= ID && "someValue".equals(value);
             } catch (IOException ex) {
+                log.error("Test failed because: ",ex);
                 return false;
             }
         });

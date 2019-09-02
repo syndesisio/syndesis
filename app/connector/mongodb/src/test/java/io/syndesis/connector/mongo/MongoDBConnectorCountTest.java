@@ -48,9 +48,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json2));
         // Given
         String countArguments = "{\"test\":\"single\"}";
-        long count = (long) template().sendBody("direct:start", ExchangePattern.InOut, countArguments);
+        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
         // Then
-        assertEquals(1, count);
+        assertEquals(Integer.valueOf(1), result.getInteger("count"));
     }
 
     @Test
@@ -64,11 +64,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json3));
         // Given
         String countArguments = "{\"batchNo\":33}";
-        template().sendBody("direct:start", countArguments);
+        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
         // Then
-        long count = (long) template().sendBody("direct:start", ExchangePattern.InOut, countArguments);
-        // Then
-        assertEquals(2, count);
+        assertEquals(Integer.valueOf(2), result.getInteger("count"));
     }
 
 }

@@ -15,19 +15,28 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.List;
 import java.util.Map;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static java.util.stream.Collectors.toList;
+
 public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientCustomizer.class);
+    private static final String JSON_COUNT_RESULT = "{\"count\": %d}";
 
     private CamelContext camelContext;
 
@@ -43,6 +52,9 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        // We ensure to convert input/ouput to json text
+        component.setBeforeConsumer(this::convertToJson);
+        component.setAfterProducer(this::convertToJson);
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
@@ -68,6 +80,29 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                 LOGGER.warn(
                     "Not enough information provided to set-up the MongoDB client. Required at least host, user and password.");
             }
+        }
+    }
+
+    public void convertToJson(Exchange exchange) {
+        Message in = exchange.getIn();
+        if (in.getBody() instanceof Document) {
+            in.setBody(in.getBody(Document.class).toJson());
+        } else if (in.getBody() instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<Document> list = in.getBody(List.class);
+            List<String> convertedToJson = list.stream().map(Document::toJson).collect(toList());
+            in.setBody(convertedToJson);
+        } else if (in.getBody() instanceof DeleteResult) {
+            String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(DeleteResult.class).getDeletedCount());
+            in.setBody(jsonResult);
+        } else if (in.getBody() instanceof UpdateResult) {
+            String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(UpdateResult.class).getModifiedCount());
+            in.setBody(jsonResult);
+        } else if (in.getBody() instanceof Long) {
+            String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(Long.class));
+            in.setBody(jsonResult);
+        } else {
+            LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
         }
     }
 }

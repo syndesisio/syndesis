@@ -53,8 +53,8 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         doc2.append("unique", uniqueId2);
         collection.insertOne(doc2);
         // Given
-        Document result = template.requestBody("direct:start", 1, Document.class);
-        Document result2 = template.requestBody("direct:start", 2, Document.class);
+        Document result = Document.parse(template.requestBody("direct:start", 1, String.class));
+        Document result2 = Document.parse(template.requestBody("direct:start", 2, String.class));
         // Then
         assertEquals(uniqueId, result.get("unique"));
         assertEquals(uniqueId2, result2.get("unique"));

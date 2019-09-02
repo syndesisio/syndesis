@@ -10,7 +10,7 @@
       "descriptor": {
         "componentScheme": "mongodb3",
         "inputDataShape": {
-          "kind": "json-schema"
+          "kind": "any"
         },
         "outputDataShape": {
           "kind": "json-schema"
@@ -102,7 +102,7 @@
       "descriptor": {
         "componentScheme": "mongodb3",
         "inputDataShape": {
-          "kind": "json-schema"
+          "kind": "none"
         },
         "outputDataShape": {
           "kind": "json-schema"

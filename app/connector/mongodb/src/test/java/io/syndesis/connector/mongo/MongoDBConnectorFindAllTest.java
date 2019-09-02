@@ -22,6 +22,7 @@ import org.junit.Test;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
@@ -54,7 +55,8 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         collection.insertOne(doc2);
         // Given
         @SuppressWarnings("unchecked")
-        List<Document> results = template.requestBody("direct:start", null, List.class);
+        List<String> resultsAsString = template.requestBody("direct:start", null, List.class);
+        List<Document> results = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
         // Then
         assertEquals(2, results.size());
         results.forEach(document -> assertTrue(
@@ -78,7 +80,8 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         collection.insertOne(doc2);
         // Given
         @SuppressWarnings("unchecked")
-        List<Document> results = template.requestBody("direct:start", "{\"color\": \"red\"}", List.class);
+        List<String> resultsAsString = template.requestBody("direct:start", "{\"color\": \"red\"}", List.class);
+        List<Document> results = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
         // Then
         assertEquals(1, results.size());
         assertEquals(uniqueId2, results.get(0).getString("unique"));

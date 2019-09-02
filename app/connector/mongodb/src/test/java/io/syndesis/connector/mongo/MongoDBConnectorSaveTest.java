@@ -45,11 +45,12 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         // When
         // Given
         String saveArguments = "{\"_id\":11,\"test\":\"new\"}]";
-        template().sendBody("direct:start", saveArguments);
+        Document result = Document.parse(template.requestBody("direct:start", saveArguments, String.class));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
         assertEquals("new", docsFound.get(0).getString("test"));
+        assertEquals(Integer.valueOf(0), result.getInteger("count"));
     }
 
     @Test
@@ -58,13 +59,14 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         String saveArguments = "{\"_id\":32,\"test\":\"new\"}]";
         template().sendBody("direct:start", saveArguments);
         // Given
-        String updateArguments = "{\"_id\":32,\"test\":\"save\",\"newField\":true}]";
-        template().sendBody("direct:start", updateArguments);
+        String saveArguments2 = "{\"_id\":32,\"test\":\"save\",\"newField\":true}]";
+        Document result = Document.parse(template.requestBody("direct:start", saveArguments2, String.class));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 32)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
         assertEquals("save", docsFound.get(0).getString("test"));
         assertEquals(true, docsFound.get(0).get("newField"));
+        assertEquals(Integer.valueOf(1), result.getInteger("count"));
     }
 
 }
