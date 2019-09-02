@@ -280,6 +280,7 @@ stories.add('Editor Basic Filter', () => {
 stories.add('Conditional Flow', () => {
   const definition = {
     defaultFlowId: {
+      order: 6,
       type: 'hidden',
     },
     flowConditions: {
@@ -288,7 +289,7 @@ stories.add('Conditional Flow', () => {
           defaultValue: '',
           description:
             "Provide a condition that you want to evaluate (for example, ${in.header.type} == 'note' or ${in.body.title} contains 'Important').",
-          displayName: 'Condition',
+          displayName: '',
           placeholder: 'Simple language expression',
           required: true,
           type: 'text',
@@ -305,33 +306,45 @@ stories.add('Conditional Flow', () => {
       },
       arrayDefinitionOptions: {
         arrayControlAttributes: {
-          className: 'col-md-2 form-group',
+          className: 'conditional-flow__controls',
         },
         arrayRowTitleAttributes: {
-          className: 'col-md-2',
+          className: 'conditional-flow__title',
         },
         controlLabelAttributes: {
           style: { display: 'none' },
         },
         formGroupAttributes: {
-          className: 'col-md-8',
+          className: 'conditional-flow__form-group',
         },
         i18nAddElementText: 'Add another condition',
         minElements: 1,
         rowTitle: 'When',
         showSortControls: true,
       },
+      order: 1,
       required: true,
       type: 'array',
     },
+    forAllIncomingData: {
+      displayName: 'For all incoming data',
+      order: 0,
+      type: 'legend',
+    },
+    otherwise: {
+      displayName: 'If incoming data does not match all of the above conditions',
+      order: 2,
+      type: 'legend'
+    },
     routingScheme: {
       defaultValue: 'direct',
+      order: 5,
       type: 'hidden',
     },
     useDefaultFlow: {
       defaultValue: 'false',
-      description: 'Execute this flow when no other condition matches.',
-      displayName: 'Use a default flow',
+      displayName: 'Execute default flow',
+      order: 3,
       type: 'boolean',
     },
   } as IFormDefinition;
@@ -368,6 +381,33 @@ stories.add('Conditional Flow', () => {
 
   return (
     <StoryWrapper definition={definition}>
+      <style dangerouslySetInnerHTML={{__html: `
+        .conditional-flow__form section {
+          display: flex;
+          flex-wrap: nowrap;
+          flex-direction: row;
+          margin-left: 7em;
+        }
+        .conditional-flow__form-group {
+          padding: 0 15px 0 15px;
+        }
+        .conditional-flow__controls {
+          padding-top: 4px;
+        }
+        .conditional-flow__form .conditional-flow__form-group .pf-c-form__group {
+          display: inherit !important;
+        }
+        .conditional-flow__title {
+          padding-top: 10px;
+        }
+        .conditional-flow__form .form-array-control__array-add {
+          display: block;
+          padding-left: 6.5em;
+        }
+        .conditional-flow__form .form-array-control__array-add .btn {
+        
+        }
+      `}}/>
       <AutoForm
         definition={object('Definition', definition)}
         initialValue={object('Initial Value', initialValue)}
@@ -383,7 +423,7 @@ stories.add('Conditional Flow', () => {
         }}
       >
         {({ fields, handleSubmit }) => (
-          <FormWrapper onSubmit={handleSubmit} fields={fields} />
+          <FormWrapper className={'conditional-flow__form'} onSubmit={handleSubmit} fields={fields} />
         )}
       </AutoForm>
     </StoryWrapper>

@@ -12,7 +12,7 @@ import * as H from '@syndesis/history';
 import { Integration, StringMap } from '@syndesis/models';
 import {
   ChoiceCardHeader,
-  EditorPageCard,
+  ChoicePageCard,
   IntegrationEditorLayout,
   PageLoader,
   PageSection,
@@ -241,7 +241,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 stepId={step.id!}
                               >
                                 {({ fields, isValid, submitForm }) => (
-                                  <EditorPageCard
+                                  <ChoicePageCard
                                     header={
                                       <ChoiceCardHeader
                                         i18nConditions={'Conditions'}
@@ -252,7 +252,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                     submitForm={submitForm}
                                   >
                                       {fields}
-                                  </EditorPageCard>
+                                  </ChoicePageCard>
                                 )}
                               </WithChoiceConfigurationForm>
                             )}

@@ -6,6 +6,6 @@ export const FormLegendComponent: React.FunctionComponent<
   IFormControlProps
 > = props => (
   <TextContent className={'pf-c-form__group auto-form-legend'}>
-    <Text component={TextVariants.h4}>{props.property.displayName}</Text>
+    <Text component={TextVariants.h5}>{props.property.displayName}</Text>
   </TextContent>
 );

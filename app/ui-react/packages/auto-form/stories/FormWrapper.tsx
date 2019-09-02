@@ -3,6 +3,7 @@ import * as React from 'react';
 
 export interface IFormWrapperProps {
   isHorizontal?: boolean;
+  className?: string;
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
   fields: JSX.Element;
 }
@@ -16,6 +17,7 @@ export class FormWrapper extends React.Component<IFormWrapperProps> {
             ? this.props.isHorizontal
             : true
         }
+        className={this.props.className || ''}
         onSubmit={this.props.onSubmit}
       >
         {this.props.fields}

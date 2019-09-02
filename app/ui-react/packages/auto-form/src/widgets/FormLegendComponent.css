@@ -1,6 +1,8 @@
 .auto-form-legend {
+  white-space: nowrap;
   margin-top: 1em;
 }
-.auto-form-legend h4 {
+.auto-form-legend h5 {
   margin-bottom: 0;
+  font-weight: 600;
 }

@@ -55,7 +55,7 @@ export const FormArrayComponent: React.FunctionComponent<
                 </h5>
               </div>
             )}
-            <div className="form-array-section__fields form-array-layout">
+            <div className="form-array-section__fields form-array-layout" {...formGroupAttributes}>
               {propertiesArray.map(property => {
                 const propertyFieldName = `${fieldName}.${property.name}`;
 
