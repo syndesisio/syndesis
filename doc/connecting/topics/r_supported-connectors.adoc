@@ -22,8 +22,8 @@
 |Retrieve data from an Amazon S3 bucket or copy data into a bucket.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_connectors[AMQ]
-|Obtain messages from a Red Hat AMQ (ApacheMQ) broker or publish messages to
-a Red Hat AMQ (ApacheMQ) broker.
+|Obtain messages from a Red Hat AMQ (Apache ActiveMQ) broker or publish messages to
+a Red Hat AMQ (Apache ActiveMQ) broker.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amqp_connectors[AMQP]
 |Obtain messages from an Advanced Message Queue Protocol broker or
