@@ -1,7 +1,7 @@
 package v1alpha1
 
 import (
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -24,7 +24,7 @@ type SyndesisSpec struct {
 	SarNamespace        string         `json:"sarNamespace,omitempty"`
 	Addons              AddonsSpec     `json:"addons,omitempty"`
 	// if true, then the image streams are changed to used local development builds
-	DevImages *bool `json:"devImages,omitempty"`
+	DevImages bool `json:"devImages,omitempty"`
 
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
