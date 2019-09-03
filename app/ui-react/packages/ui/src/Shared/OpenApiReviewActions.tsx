@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardBody,
   Text,
   TextContent,
   TextList,
@@ -8,7 +10,7 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { Card, Label } from 'patternfly-react';
+import { Label } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
 
@@ -36,7 +38,7 @@ export class OpenApiReviewActions extends React.Component<
   public render() {
     return (
       <Card className={'open-api-review-actions'}>
-        <Card.Body>
+        <CardBody>
           {this.props.i18nValidationFallbackMessage ? (
             <h5 className={'review-actions__validationFallbackMessage'}>
               {this.props.i18nValidationFallbackMessage}
@@ -147,7 +149,7 @@ export class OpenApiReviewActions extends React.Component<
               </Container>
             </TextContent>
           )}
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }

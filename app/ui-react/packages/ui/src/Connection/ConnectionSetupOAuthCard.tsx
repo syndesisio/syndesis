@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { Card } from 'patternfly-react';
+import { Card, CardHeader, CardBody, CardFooter, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
 
@@ -26,15 +26,15 @@ export const ConnectionSetupOAuthCard: React.FunctionComponent<
       maxWidth: 600,
     }}
   >
-    <Card.Heading>
-      <Card.Title>
+    <CardHeader>
+      <Title size="lg">
         <div>{i18nTitle}</div>
-      </Card.Title>
-    </Card.Heading>
-    <Card.Body>
+      </Title>
+    </CardHeader>
+    <CardBody>
       <p>{i18nDescription}</p>
-    </Card.Body>
-    <Card.Footer>
+    </CardBody>
+    <CardFooter>
       <ButtonLink
         data-testid={'connection-creator-back-button'}
         href={backHref}
@@ -50,6 +50,6 @@ export const ConnectionSetupOAuthCard: React.FunctionComponent<
       >
         {i18nOAuthSettingsButton}
       </ButtonLink>
-    </Card.Footer>
+    </CardFooter>
   </Card>
 );

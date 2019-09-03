@@ -1,4 +1,4 @@
-import { Card } from 'patternfly-react';
+import { Card, CardHeader, CardBody, CardFooter, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';
 
@@ -25,19 +25,19 @@ export const ConnectorAuthorization: React.FunctionComponent<
       maxWidth: 600,
     }}
   >
-    <Card.Heading>
-      <Card.Title className="metrics-uptime__header">
+    <CardHeader>
+      <Title size="lg" className="metrics-uptime__header">
         <div>{i18nTitle}</div>
-      </Card.Title>
-    </Card.Heading>
-    <Card.Body>
+      </Title>
+    </CardHeader>
+    <CardBody>
       <p>{i18nDescription}</p>
-    </Card.Body>
-    <Card.Footer>
+    </CardBody>
+    <CardFooter>
       <ButtonLink onClick={onConnect} disabled={isConnecting} as={'primary'}>
         {i18nConnectButton}{' '}
         {isConnecting && <Loader size={'xs'} inline={true} />}
       </ButtonLink>
-    </Card.Footer>
+    </CardFooter>
   </Card>
 );

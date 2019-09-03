@@ -1,4 +1,4 @@
-import { Card } from 'patternfly-react';
+import { Card, CardHeader, CardBody, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { DndFileChooser } from '../../../Shared';
 
@@ -70,10 +70,10 @@ export class ApiClientConnectorCreateUpload extends React.Component<
        * keep this is as a list of options: Upload or Use a URL
        */
       <Card>
-        <Card.Heading>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
-        </Card.Heading>
-        <Card.Body>
+        <CardHeader>
+          <Title size="lg">{this.props.i18nTitle}</Title>
+        </CardHeader>
+        <CardBody>
           <DndFileChooser
             disableDropzone={this.props.dndDisabled}
             fileExtensions={'.json'}
@@ -86,7 +86,7 @@ export class ApiClientConnectorCreateUpload extends React.Component<
             onUploadAccepted={this.props.onDndUploadAccepted}
             onUploadRejected={this.props.onDndUploadRejected}
           />
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }
