@@ -45,19 +45,19 @@ const (
 	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
 	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
 
-	EnvSyndesisServerTag              SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
-	EnvSyndesisUITag              	  SyndesisEnvVar = "SYNDESIS_UI_TAG"
-	EnvSyndesisS2ITag              	  SyndesisEnvVar = "SYNDESIS_S2I_TAG"
-	EnvSyndesisMetaTag                SyndesisEnvVar = "SYNDESIS_META_TAG"
-	EnvPostgresTag              	  SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
-	EnvPostgresExporterTag            SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
-	EnvKomodoTag                      SyndesisEnvVar = "KOMODO_TAG"
-	EnvPrometheusTag              	  SyndesisEnvVar = "PROMETHEUS_TAG"
-	EnvOauthProxyTag              	  SyndesisEnvVar = "OAUTH_PROXY_TAG"
+	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
+	EnvSyndesisUITag       SyndesisEnvVar = "SYNDESIS_UI_TAG"
+	EnvSyndesisS2ITag      SyndesisEnvVar = "SYNDESIS_S2I_TAG"
+	EnvSyndesisMetaTag     SyndesisEnvVar = "SYNDESIS_META_TAG"
+	EnvPostgresTag         SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
+	EnvPostgresExporterTag SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
+	EnvKomodoTag           SyndesisEnvVar = "KOMODO_TAG"
+	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
+	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
 
-	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
-	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
-	EnvManagementUrlFor3scale   SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
+	EnvUpgradeRegistry        SyndesisEnvVar = "UPGRADE_REGISTRY"
+	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
+	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -650,12 +650,12 @@ func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.S
 }
 
 func envManagementUrlFor3scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-    if url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale; url != "" {
-        return &SyndesisEnvVarConfig{
-            Var:   EnvManagementUrlFor3scale,
-            Value: url,
-        }
-    }
+	if url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale; url != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvManagementUrlFor3scale,
+			Value: url,
+		}
+	}
 	return nil
 }
 

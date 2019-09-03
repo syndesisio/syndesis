@@ -18,7 +18,6 @@ package install
 
 import (
 	"context"
-	"os"
 	"testing"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
@@ -35,12 +34,12 @@ const (
 )
 
 func TestInstallOperator(t *testing.T) {
-	if os.Getenv("CI") != "" {
-		t.Skip("skipping testing in CI environment")
+	if testing.Short() {
+		t.Skip("skipping operator install tests in short mode")
 	}
 
 	ctx := context.TODO()
-	i := &Install{Options: &internal.Options{Namespace: ns, Context: ctx}, tag: "latest"}
+	i := &Install{Options: &internal.Options{Namespace: ns, Context: ctx}}
 
 	// Create a fake client to mock API calls and pass it to the cmd
 	objs := []runtime.Object{}

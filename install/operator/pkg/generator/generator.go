@@ -4,9 +4,9 @@ package generator
 
 import (
 	"bytes"
-	"github.com/pkg/errors"
 	"fmt"
 	"github.com/hoisie/mustache"
+	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"io/ioutil"
