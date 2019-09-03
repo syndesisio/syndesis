@@ -66,9 +66,11 @@ right of the rule entry.
 
 .Additional resources
 
-* For details about the operators and examples of specifying text
+* For details about the operators and for examples of specifying text
 to evaluate, see 
 link:https://camel.apache.org/manual/latest/simple-language.html#_operator_support[Camel Simple Language operators]. 
+Note that the basic filter step *matches* operator corresponds to the Simple Language
+*regex* operator. 
 
 * If you cannot define the filter you need in a basic filter step,
 see link:{LinkFuseOnlineIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].
