@@ -24,6 +24,13 @@ of registration, you provide the {prodname} callback URL.
 The details for doing this are described in
 link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Registering with REST APIs].
 
+For a REST API that uses OAuth, {prodname} supports only the 
+*Authorization Code* grant type for obtaining authorization from a 
+client. Consequently, in the OpenAPI document that you upload to 
+create the connector, in the OAuth `securityDefinition` object, 
+you must set the `flow` attribute to `accessCode`. You must not set 
+`flow` to `implicit`, `password`, or `application`.
+
 The OpenAPI schema for a REST API client connector cannot have cyclic schema 
 references. For example, a JSON schema that specifies a request or 
 response body cannot reference itself as a whole nor reference any 
