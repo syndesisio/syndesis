@@ -16,8 +16,7 @@ import {
   ExpandablePreview, 
   PageLoader, 
   PageSection, 
-  PreviewButtonSelection, 
-  ViewEditorNavBar 
+  PreviewButtonSelection,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import { useContext } from 'react';
@@ -63,11 +62,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
+  const { params, state } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
   const { getSourceInfoForView, queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
   const [queryResults, setQueryResults] = React.useState(state.queryResults);
-  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
+  // const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
 
@@ -171,19 +170,19 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     setPreviewExpanded(expanded);
   };
 
-  const handlePreviewButtonSelectionChanged = (
-    selection: PreviewButtonSelection
-  ) => {
-    setPreviewButtonSelection(selection);
-  };
+  // const handlePreviewButtonSelectionChanged = (
+  //   selection: PreviewButtonSelection
+  // ) => {
+  //   setPreviewButtonSelection(selection);
+  // };
 
-  const handleEditFinished = () => {
-    history.push(
-      resolvers.data.virtualizations.views.root({
-        virtualization: state.virtualization,
-      })
-    );
-  };
+  // const handleEditFinished = () => {
+  //   history.push(
+  //     resolvers.data.virtualizations.views.root({
+  //       virtualization: state.virtualization,
+  //     })
+  //   );
+  // };
 
   const handleRefreshResults = async () => {
     try {
@@ -261,7 +260,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             </Link>
             <span>{viewDefn.name}</span>
           </Breadcrumb>
-          <PageSection variant={'light'} noPadding={true}>
+          {/* <PageSection variant={'light'} noPadding={true}>
             <ViewEditorNavBar
               i18nFinishButton={t('data:virtualization.viewEditor.Done')}
               i18nViewOutputTab={t('data:virtualization.viewEditor.viewOutputTab')}
@@ -286,7 +285,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               })}
               onEditFinished={handleEditFinished}            
             />
-          </PageSection>
+          </PageSection> */}
           <DdlEditor
             viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
             i18nSaveLabel={t('shared:Save')}
@@ -312,12 +311,12 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               )}
               i18nHidePreview={t('data:virtualization.preview.hidePreview')}
               i18nShowPreview={t('data:virtualization.preview.showPreview')}
-              i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
-              i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
+              // i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
+              // i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
               initialExpanded={previewExpanded}
-              initialPreviewButtonSelection={previewButtonSelection}
+              // initialPreviewButtonSelection={previewButtonSelection}
               onPreviewExpandedChanged={handlePreviewExpandedChanged}
-              onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
+              // onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
               onRefreshResults={handleRefreshResults}
               viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
               queryResultRows={getQueryRows(

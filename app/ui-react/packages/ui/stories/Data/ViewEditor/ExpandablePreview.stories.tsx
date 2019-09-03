@@ -36,11 +36,11 @@ stories.add('collapsed', () => {
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
       i18nShowPreview={'Show Preview'}
-      i18nSelectSqlText={'SQL'}
-      i18nSelectPreviewText={'Preview'}
+      // i18nSelectSqlText={'SQL'}
+      // i18nSelectPreviewText={'Preview'}
       initialExpanded={false}
       onPreviewExpandedChanged={action('expanded changed')}
-      onPreviewButtonSelectionChanged={action('selection changed')}
+      // onPreviewButtonSelectionChanged={action('selection changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={resultCols}
       queryResultRows={resultRows}
@@ -56,12 +56,12 @@ stories.add('collapsed', () => {
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
       i18nShowPreview={'Show Preview'}
-      i18nSelectSqlText={'SQL'}
-      i18nSelectPreviewText={'Preview'}
+      // i18nSelectSqlText={'SQL'}
+      // i18nSelectPreviewText={'Preview'}
       initialExpanded={true}
-      initialPreviewButtonSelection={PreviewButtonSelection.PREVIEW}
+      // initialPreviewButtonSelection={PreviewButtonSelection.PREVIEW}
       onPreviewExpandedChanged={action('expanded changed')}
-      onPreviewButtonSelectionChanged={action('selection changed')}
+      // onPreviewButtonSelectionChanged={action('selection changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={resultCols}
       queryResultRows={resultRows}
@@ -77,33 +77,12 @@ stories.add('collapsed', () => {
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
       i18nShowPreview={'Show Preview'}
-      i18nSelectSqlText={'SQL'}
-      i18nSelectPreviewText={'Preview'}
+      // i18nSelectSqlText={'SQL'}
+      // i18nSelectPreviewText={'Preview'}
       initialExpanded={true}
-      initialPreviewButtonSelection={PreviewButtonSelection.PREVIEW}
+      // initialPreviewButtonSelection={PreviewButtonSelection.PREVIEW}
       onPreviewExpandedChanged={action('expanded changed')}
-      onPreviewButtonSelectionChanged={action('selection changed')}
-      onRefreshResults={action('refresh results')}
-      queryResultCols={[]}
-      queryResultRows={[]}
-      viewDdl={viewDdl}
-    />
-  );
-})
-
-.add('expanded, SQL', () => {
-  return (
-    <ExpandablePreview
-      i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
-      i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
-      i18nHidePreview={'Hide Preview'}
-      i18nShowPreview={'Show Preview'}
-      i18nSelectSqlText={'SQL'}
-      i18nSelectPreviewText={'Preview'}
-      initialExpanded={true}
-      initialPreviewButtonSelection={PreviewButtonSelection.SQL}
-      onPreviewExpandedChanged={action('expanded changed')}
-      onPreviewButtonSelectionChanged={action('selection changed')}
+      // onPreviewButtonSelectionChanged={action('selection changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={[]}
       queryResultRows={[]}
@@ -111,3 +90,24 @@ stories.add('collapsed', () => {
     />
   );
 });
+
+// .add('expanded, SQL', () => {
+//   return (
+//     <ExpandablePreview
+//       i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
+//       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
+//       i18nHidePreview={'Hide Preview'}
+//       i18nShowPreview={'Show Preview'}
+//       i18nSelectSqlText={'SQL'}
+//       i18nSelectPreviewText={'Preview'}
+//       initialExpanded={true}
+//       initialPreviewButtonSelection={PreviewButtonSelection.SQL}
+//       onPreviewExpandedChanged={action('expanded changed')}
+//       onPreviewButtonSelectionChanged={action('selection changed')}
+//       onRefreshResults={action('refresh results')}
+//       queryResultCols={[]}
+//       queryResultRows={[]}
+//       viewDdl={viewDdl}
+//     />
+//   );
+// });

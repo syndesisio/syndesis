@@ -18,16 +18,16 @@ export interface IExpandablePreviewProps {
   i18nEmptyResultsMsg: string;
   i18nHidePreview: string;
   i18nShowPreview: string;
-  i18nSelectSqlText: string;
-  i18nSelectPreviewText: string;
+  // i18nSelectSqlText: string;
+  // i18nSelectPreviewText: string;
   initialExpanded?: boolean;
-  initialPreviewButtonSelection?: PreviewButtonSelection;
+  // initialPreviewButtonSelection?: PreviewButtonSelection;
   onPreviewExpandedChanged: (
     previewExpanded: boolean
   ) => void;
-  onPreviewButtonSelectionChanged: (
-    previewButtonSelection: PreviewButtonSelection
-  ) => void;
+  // onPreviewButtonSelectionChanged: (
+  //   previewButtonSelection: PreviewButtonSelection
+  // ) => void;
   onRefreshResults: () => void;
   /**
    * Array of column info for the query results.  (The column id and display label)
@@ -69,12 +69,12 @@ export const ExpandablePreview: React.FunctionComponent<
   i18nEmptyResultsMsg,
   i18nHidePreview,
   i18nShowPreview,
-  i18nSelectSqlText,
-  i18nSelectPreviewText,
+  // i18nSelectSqlText,
+  // i18nSelectPreviewText,
   initialExpanded = true,
-  initialPreviewButtonSelection = PreviewButtonSelection.PREVIEW,
+  // initialPreviewButtonSelection = PreviewButtonSelection.PREVIEW,
   onPreviewExpandedChanged,
-  onPreviewButtonSelectionChanged,
+  // onPreviewButtonSelectionChanged,
   onRefreshResults,
   queryResultCols,
   queryResultRows,
@@ -82,29 +82,31 @@ export const ExpandablePreview: React.FunctionComponent<
 }: IExpandablePreviewProps) => {
 
   const [expanded, setExpanded] = React.useState(initialExpanded);
-  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(initialPreviewButtonSelection); 
-  const [refreshDisabled, setRefreshDisabled] = React.useState(initialPreviewButtonSelection === PreviewButtonSelection.SQL); 
+  // const [previewButtonSelection, setPreviewButtonSelection] = React.useState(initialPreviewButtonSelection); 
+  // const [refreshDisabled, setRefreshDisabled] = React.useState(initialPreviewButtonSelection === PreviewButtonSelection.SQL); 
+  const previewButtonSelection = PreviewButtonSelection.PREVIEW;
+  const refreshDisabled = false;
 
   const toggleExpanded = () => {
     setExpanded(!expanded);
     onPreviewExpandedChanged(!expanded);
   };
 
-  const handleShowSql = () => {
-    if(previewButtonSelection === PreviewButtonSelection.PREVIEW) {
-      setPreviewButtonSelection(PreviewButtonSelection.SQL);
-      setRefreshDisabled(true);
-      onPreviewButtonSelectionChanged(PreviewButtonSelection.SQL);
-    }
-  };
+  // const handleShowSql = () => {
+  //   if(previewButtonSelection === PreviewButtonSelection.PREVIEW) {
+  //     setPreviewButtonSelection(PreviewButtonSelection.SQL);
+  //     setRefreshDisabled(true);
+  //     onPreviewButtonSelectionChanged(PreviewButtonSelection.SQL);
+  //   }
+  // };
 
-  const handleShowPreview = () => {
-    if(previewButtonSelection === PreviewButtonSelection.SQL) {
-      setPreviewButtonSelection(PreviewButtonSelection.PREVIEW);
-      setRefreshDisabled(false);
-      onPreviewButtonSelectionChanged(PreviewButtonSelection.PREVIEW);
-    }
-  };
+  // const handleShowPreview = () => {
+  //   if(previewButtonSelection === PreviewButtonSelection.SQL) {
+  //     setPreviewButtonSelection(PreviewButtonSelection.PREVIEW);
+  //     setRefreshDisabled(false);
+  //     onPreviewButtonSelectionChanged(PreviewButtonSelection.PREVIEW);
+  //   }
+  // };
 
   const editorOptions = {
     autofocus: true,
@@ -122,7 +124,7 @@ export const ExpandablePreview: React.FunctionComponent<
 
   return (
     <Expandable toggleText={expanded ? i18nHidePreview : i18nShowPreview} onToggle={toggleExpanded} isExpanded={expanded}>
-      <Button 
+      {/* <Button 
         variant="secondary" 
         className="expandable-preview__button" 
         onClick={handleShowSql} 
@@ -135,7 +137,7 @@ export const ExpandablePreview: React.FunctionComponent<
         onClick={handleShowPreview} 
         isActive={previewButtonSelection === PreviewButtonSelection.PREVIEW}>
         {i18nSelectPreviewText}
-      </Button>
+      </Button> */}
       <Button 
         variant="plain" 
         aria-label="Action" 
