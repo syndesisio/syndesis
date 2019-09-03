@@ -101,6 +101,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                         integrationName={si.name}
                         checkboxComponent={
                           <input
+                            aria-label={`${si.name}`}
                             data-testid={
                               'selective-integration-list-integrations-input'
                             }

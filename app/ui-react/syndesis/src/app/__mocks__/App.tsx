@@ -16,7 +16,7 @@ export class App extends React.Component<IAppBaseProps> {
               value={{
                 config: config!,
                 getPodLogUrl: () => '',
-                user: { username: 'nobody' },
+                user: { username: 'Unknown user' },
               }}
             >
               <ApiContext.Provider
