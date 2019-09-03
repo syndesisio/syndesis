@@ -91,15 +91,21 @@
       "saveAndPublish": "Save and publish"
     },
     "choiceForm": {
-      "conditionDescription": "Provide a condition that you want to evaluate (for example, ${in.header.type} == 'note' or ${in.body.title} contains 'Important').",
+      "conditionDescription": "Provide a condition that you want to evaluate (for example, ${header.type} == 'note' or ${body.title} contains 'Important').",
       "conditionName": "Condition",
-      "conditionPlaceholder": "Simple language expression",
+      "conditionPlaceholder": "Condition expression",
       "addCondition": "Add another condition",
       "addConditionTitle": "When",
       "forAllIncomingData": "For all incoming data",
-      "otherwise": "If incoming data does not match all of the above conditions",
+      "otherwise": "When none of the above conditions matches to the incoming data",
       "useDefaultFlowTitle": "Execute default flow",
-      "fieldRequired": "{{field}} is required"
+      "fieldRequired": "{{field}} is required",
+      "operatorDescription": "Must meet this condition",
+      "pathDisplay": "Build a condition expression from ...",
+      "pathDescription": "The property you want to evaluate",
+      "pathPlaceholder": "Property name",
+      "keywordsDescription": "For this value",
+      "keywordsPlaceholder": "Keywords"
     },
     "ruleForm": {
       "predicateDescription": "Continue only if incoming data match ",

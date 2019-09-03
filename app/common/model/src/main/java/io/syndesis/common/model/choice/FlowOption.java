@@ -48,7 +48,7 @@ public interface FlowOption extends RuleBase {
      * simple expression from given path, operator and value.
      */
     default String getConditionExpression() {
-        if (getCondition() != null) {
+        if (getCondition() != null && getCondition().trim().length() > 0) {
             return getCondition();
         }
 

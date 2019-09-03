@@ -1,15 +1,16 @@
 import {
   createConditionalFlow,
   FlowKind,
-  getFlow,
+  getFlow, getPreviousIntegrationStepWithDataShape,
   getStep,
   getSteps,
   reconcileConditionalFlows,
   WithConnection,
+  WithFilterOptions,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, StringMap } from '@syndesis/models';
+import {DataShape, Integration, StringMap} from '@syndesis/models';
 import {
   ChoiceCardHeader,
   ChoicePageCard,
@@ -28,7 +29,7 @@ import {
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import { IChoiceFormConfiguration } from './interfaces';
-import { createChoiceConfiguration } from './utils';
+import { createChoiceConfiguration, getFlowDescription } from './utils';
 import { WithChoiceConfigurationForm } from './WithChoiceConfigurationForm';
 
 const NEW_CONDITIONAL_FLOW_NAME = 'Conditional';
@@ -59,6 +60,19 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
               <WithRouteData<IChoiceStepRouteParams, IChoiceStepRouteState>>
                 {(params, state, { history }) => {
                   const positionAsNumber = parseInt(params.position, 10);
+                  let dataShape = {} as DataShape;
+                  try {
+                    const prevStep = getPreviousIntegrationStepWithDataShape(
+                      state.integration,
+                      params.flowId,
+                      positionAsNumber
+                    );
+                    dataShape =
+                      prevStep!.action!.descriptor!.outputDataShape ||
+                      ({} as DataShape);
+                  } catch (err) {
+                    // ignore
+                  }
                   const step = state.step;
                   // parse the configured properties
                   const configuration = createChoiceConfiguration(
@@ -70,9 +84,12 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       ? configuration.defaultFlow!
                       : '',
                     flowConditions: configuration.flows.map(
-                      ({ condition, flow }) => ({
+                      ({ condition, flow, op, path, value }) => ({
                         condition,
                         flowId: flow,
+                        op,
+                        path,
+                        value,
                       })
                     ),
                     routingScheme: configuration.routingScheme,
@@ -110,7 +127,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                           typeof flowCondition.flowId === 'undefined'
                             ? createConditionalFlow(
                                 NEW_CONDITIONAL_FLOW_NAME,
-                                flowCondition.condition,
+                                getFlowDescription(flowCondition),
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
@@ -122,7 +139,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                               ) ||
                               createConditionalFlow(
                                 NEW_CONDITIONAL_FLOW_NAME,
-                                flowCondition.condition,
+                                getFlowDescription(flowCondition),
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
@@ -130,11 +147,14 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 flowCondition.flowId
                               )!;
                         // update the description
-                        flow.description = flowCondition.condition;
+                        flow.description = getFlowDescription(flowCondition);
                         return {
                           condition: flowCondition.condition,
                           flow,
                           flowId: flow.id,
+                          op: flowCondition.op,
+                          path: flowCondition.path,
+                          value: flowCondition.value,
                         };
                       }
                     );
@@ -158,6 +178,9 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         flowCollection.map(f => ({
                           condition: f.condition,
                           flow: f.flowId,
+                          op: f.op,
+                          path: f.path,
+                          value: f.value,
                         }))
                       ),
                       routingScheme: values.routingScheme,
@@ -224,39 +247,44 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                           ),
                         })}
                         content={
-                          <WithLoader
-                            error={error}
-                            loading={!hasData}
-                            loaderChildren={<PageLoader />}
-                            errorChildren={
-                              <PageSection>
-                                <ApiError error={errorMessage!} />
-                              </PageSection>
-                            }
-                          >
-                            {() => (
-                              <WithChoiceConfigurationForm
-                                initialValue={initialFormValue}
-                                onUpdatedIntegration={onUpdatedIntegration}
-                                stepId={step.id!}
+                          <WithFilterOptions dataShape={dataShape}>
+                            {({ data: options, error: optionsError, errorMessage: optionsErrorMessage, hasData: hasOptions }) => (
+                              <WithLoader
+                                error={optionsError}
+                                loading={!hasOptions}
+                                loaderChildren={<PageLoader />}
+                                errorChildren={
+                                  <PageSection>
+                                    <ApiError error={optionsErrorMessage!} />
+                                  </PageSection>
+                                }
                               >
-                                {({ fields, isValid, submitForm }) => (
-                                  <ChoicePageCard
-                                    header={
-                                      <ChoiceCardHeader
-                                        i18nConditions={'Conditions'}
-                                      />
-                                    }
-                                    i18nDone={'Done'}
-                                    isValid={isValid}
-                                    submitForm={submitForm}
+                                {() => (
+                                  <WithChoiceConfigurationForm
+                                    initialValue={initialFormValue}
+                                    filterOptions={options}
+                                    onUpdatedIntegration={onUpdatedIntegration}
+                                    stepId={step.id!}
                                   >
-                                      {fields}
-                                  </ChoicePageCard>
+                                    {({ fields, isValid, submitForm }) => (
+                                      <ChoicePageCard
+                                        header={
+                                          <ChoiceCardHeader
+                                            i18nConditions={'Conditions'}
+                                          />
+                                        }
+                                        i18nDone={'Done'}
+                                        isValid={isValid}
+                                        submitForm={submitForm}
+                                      >
+                                          {fields}
+                                      </ChoicePageCard>
+                                    )}
+                                  </WithChoiceConfigurationForm>
                                 )}
-                              </WithChoiceConfigurationForm>
+                              </WithLoader>
                             )}
-                          </WithLoader>
+                          </WithFilterOptions>
                         }
                         cancelHref={this.props.cancelHref(params, state)}
                       />

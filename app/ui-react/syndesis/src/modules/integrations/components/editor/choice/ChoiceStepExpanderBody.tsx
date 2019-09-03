@@ -2,7 +2,7 @@ import * as H from '@syndesis/history';
 import { ChoiceConfigurationView } from '@syndesis/ui';
 import * as React from 'react';
 import { IUIStep } from '../interfaces';
-import { createChoiceConfiguration } from './utils';
+import { createChoiceConfiguration, getConditionExpression } from './utils';
 
 export interface IChoiceStepExpanderBodyProps {
   step: IUIStep;
@@ -16,9 +16,9 @@ export const ChoiceStepExpanderBody: React.FunctionComponent<
     step.configuredProperties || {}
   );
   // create links
-  const flowItems = configuration.flows.map(({ condition, flow }) => ({
-    condition,
-    href: getFlowHref(flow),
+  const flowItems = configuration.flows.map(flowOption => ({
+    condition: getConditionExpression(flowOption),
+    href: getFlowHref(flowOption.flow),
   }));
   const defaultFlowHref = configuration.defaultFlowEnabled
     ? getFlowHref(configuration.defaultFlow!)

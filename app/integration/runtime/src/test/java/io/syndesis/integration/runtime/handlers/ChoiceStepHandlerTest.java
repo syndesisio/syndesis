@@ -273,8 +273,8 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                             .stepKind(StepKind.choice)
                             .putConfiguredProperty("routingScheme", "mock")
                             .putConfiguredProperty("flows", "[" +
-                                        "{\"path\": \"text\", \"op\": \"contains\", \"value\": \"Hello\", \"flow\": \"hello-flow\"}," +
-                                        "{\"path\": \"text\", \"op\": \"contains\", \"value\": \"Bye\", \"flow\": \"bye-flow\"}" +
+                                        "{\"condition\": \"\", \"path\": \"text\", \"op\": \"contains\", \"value\": \"Hello\", \"flow\": \"hello-flow\"}," +
+                                        "{\"condition\": \"\", \"path\": \"text\", \"op\": \"contains\", \"value\": \"Bye\", \"flow\": \"bye-flow\"}" +
                                     "]")
                             .build(),
                     new Step.Builder()
