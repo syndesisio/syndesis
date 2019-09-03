@@ -10,6 +10,8 @@ import {
   ENDPOINT,
   EXTENSION,
   FLOW,
+  FLOW_END_ACTION_ID,
+  FLOW_START_ACTION_ID,
   getNextAggregateStep,
   getPreviousSteps,
   getPreviousStepWithDataShape,
@@ -164,7 +166,6 @@ export function toUIIntegrationStepCollection(
     let previousStepShouldDefineDataShapePosition: number | undefined;
     let shouldAddDataMapper = false;
     let restrictedDelete = false;
-
     if (
       step.connection &&
       (step.connection!.connectorId! === FLOW ||
@@ -172,6 +173,10 @@ export function toUIIntegrationStepCollection(
     ) {
       restrictedDelete = true;
     }
+    const notConfigurable =
+      (step.action || false) &&
+      (step.action!.id === FLOW_START_ACTION_ID ||
+        step.action!.id === FLOW_END_ACTION_ID);
     const isUnclosedSplit =
       step.stepKind === SPLIT &&
       getNextAggregateStep(steps, position) === undefined;
@@ -213,6 +218,7 @@ export function toUIIntegrationStepCollection(
     return {
       ...step,
       isUnclosedSplit,
+      notConfigurable,
       previousStepShouldDefineDataShape,
       previousStepShouldDefineDataShapePosition,
       restrictedDelete,

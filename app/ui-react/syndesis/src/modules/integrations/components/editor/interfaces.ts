@@ -46,6 +46,7 @@ export interface IUIIntegrationStep extends IUIStep {
   shouldAddDataMapper: boolean;
   isUnclosedSplit: boolean;
   restrictedDelete: boolean;
+  notConfigurable: boolean;
 }
 
 /*********************************/
