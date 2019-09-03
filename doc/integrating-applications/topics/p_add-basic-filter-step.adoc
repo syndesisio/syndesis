@@ -31,37 +31,44 @@ one rule must be satisfied.
 
 . Define the filter rule:
 
-.. *The data you want to evaluate*: Enter the name of the field that contains the
+.. In the *Property Name* field, enter or select the name of the field that contains the
 content you want the filter to evaluate. For example, suppose the data
 coming in to the step consists of tweets that mention your Twitter handle.
 You want to continue execution only when the tweet contains
 certain content. The tweet is in a field named `text` so you enter or
-select `text` as the value in the first field.
+select `text` as the value in the property name field.
 +
-You can define the field value in the following ways:
+You can define the property name in the following ways:
 +
-*** Start typing. The data name field has a typeahead feature that
+*** Start typing. The field has a typeahead feature that
 provides a list of possible completions for you in a pop-up box.
 Select the correct one from the box.
 *** Click in the field. A dropdown box appears with a list of
-available fields. Select the field of interest from the list.
+available properties. Select the property of interest from the list.
 
-.. *Must meet this condition*: Select a condition from the dropdown box.
+.. In the *Operator* field, select an operator from the dropdown box.
 The setting defaults to *Contains*. For execution to continue,
-the condition that you select in this field must be
-true for the value that you enter in the third field.
+the condition that you select in this field must evaluate to 
+true for the value that you enter in the *Keywords* field.
 
-.. *For this value*: Enter a value to filter on. For example,
-if you want to operate on mentions of a certain product from the
-Twitter feed, you would enter the product name here.
+.. In the *Keywords* field, enter a value to filter on. For example,
+suppose that you accept the default *Contains* operator and
+you want to continue integration execution only when the 
+incoming text mentions a certain product.
+You would enter the product name here.
 
 . Optionally, click *+ Add another rule* and define another rule.
 +
-You can delete a rule by clicking the trash can icon next to the entry.
+You can delete a rule by clicking the trash can icon in the top
+right of the rule entry.
 
 . When the filter step is complete, click *Done* to add it to the flow.
 
-.Additional resource
+.Additional resources
 
-If you cannot define the filter you need in a basic filter step,
+* For details about the operators and examples of specifying text
+to evaluate, see 
+link:https://camel.apache.org/manual/latest/simple-language.html#_operator_support[Camel Simple Language operators]. 
+
+* If you cannot define the filter you need in a basic filter step,
 see link:{LinkFuseOnlineIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].
