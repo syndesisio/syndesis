@@ -10,6 +10,7 @@ import {
   PageLoader,
   PageSection,
   PreviewButtonSelection,
+  ViewEditorNavBar,
   ViewOutputToolbar,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -20,7 +21,6 @@ import { Link } from 'react-router-dom';
 import { UIContext } from '../../../../app';
 import { ApiError } from '../../../../shared';
 import resolvers from '../../../resolvers';
-import { ViewEditorNavBar } from '../../shared';
 import { getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
 
 /**
@@ -181,13 +181,29 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
           </Breadcrumb>
           <PageSection variant={'light'} noPadding={true}>
             <ViewEditorNavBar
-              virtualization={virtualization}
-              viewDefinitionId={params.viewDefinitionId}
-              viewDefinition={viewDefn}
-              previewExpanded={previewExpanded}
-              previewButtonSelection={previewButtonSelection} 
-              queryResults={queryResults}
-              onEditFinished={handleEditFinished}            />
+              i18nFinishButton={t('data:virtualization.viewEditor.Done')}
+              i18nViewOutputTab={t('data:virtualization.viewEditor.viewOutputTab')}
+              i18nViewSqlTab={t('data:virtualization.viewEditor.sqlTab')}
+              viewOutputHref={resolvers.data.virtualizations.views.edit.viewOutput({
+                virtualization,
+                // tslint:disable-next-line: object-literal-sort-keys
+                viewDefinitionId: params.viewDefinitionId,
+                previewExpanded,
+                viewDefinition: viewDefn,
+                previewButtonSelection,
+                queryResults,
+              })}
+              viewSqlHref={resolvers.data.virtualizations.views.edit.sql({
+                virtualization,
+                // tslint:disable-next-line: object-literal-sort-keys
+                viewDefinitionId: params.viewDefinitionId,
+                previewExpanded,
+                viewDefinition: viewDefn,
+                previewButtonSelection,
+                queryResults,
+              })}
+              onEditFinished={handleEditFinished}
+            />
           </PageSection>
           <PageSection>
             <ViewOutputToolbar
