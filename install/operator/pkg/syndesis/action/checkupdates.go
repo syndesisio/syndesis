@@ -2,12 +2,12 @@ package action
 
 import (
 	"context"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 
 	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -32,19 +32,14 @@ func (a checkUpdatesAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := template.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := template.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
 		if err != nil {
 			return err
 		}
 		a.operatorVersion = operatorVersion
 	}
 
-	namespaceVersion, err := configuration.GetSyndesisVersionFromNamespace(ctx, a.client, syndesis.Namespace)
-	if err != nil {
-		return err
-	}
-
-	if namespaceVersion == a.operatorVersion {
+	if syndesis.Status.Version == a.operatorVersion {
 		// Everything fine
 		return nil
 	} else {
@@ -53,12 +48,12 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		target.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
 		target.Status.TargetVersion = a.operatorVersion
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = "Upgrading from " + namespaceVersion + " to " + a.operatorVersion
+		target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
 		target.Status.LastUpgradeFailure = nil
 		target.Status.UpgradeAttempts = 0
 		target.Status.ForceUpgrade = false
 
-		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", a.operatorVersion, "type", "checkUpdate")
+		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", a.operatorVersion, "type", "checkUpdate")
 		return a.client.Update(ctx, target)
 	}
 }

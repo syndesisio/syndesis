@@ -1,19 +1,23 @@
 package template
 
 import (
-    "encoding/json"
-    "fmt"
-    "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-    "github.com/syndesisio/syndesis/install/operator/pkg/generator"
-    "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-    "github.com/syndesisio/syndesis/install/operator/pkg/util"
-    "k8s.io/apimachinery/pkg/runtime"
-    "math/rand"
-    logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-    "time"
+	"context"
+	"encoding/json"
+	"fmt"
+	"math/rand"
+	"time"
+
+	v1 "github.com/openshift/api/image/v1"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/runtime"
 )
 
-var log = logf.Log.WithName("template")
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 type ResourceParams struct {
@@ -81,42 +85,57 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
-func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) (error) {
+func GetSyndesisVersionFromOperator(ctx context.Context, c client.Client, syndesis *v1alpha1.Syndesis) (string, error) {
+	is := &v1.ImageStream{}
+	err := c.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-operator"}, is)
+	if err != nil {
+		return "", err
+	}
 
-    // Lets fill in all the addons we know about...
-    if syndesis.Spec.Addons == nil {
-        syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
-    }
-    addonFiles, err := generator.GetAssetsFS().Open("./addons/")
-    if err != nil {
-        return err
-    }
-    defer addonFiles.Close()
-    addonFileInfos, err := addonFiles.Readdir(-1)
-    if err != nil {
-        return err
-    }
-    for _, f := range addonFileInfos {
-        if !f.IsDir() {
-            continue
-        }
+	if len(is.Spec.Tags) == 1 {
+		return is.Spec.Tags[0].Name, nil
+	} else {
+		return "", fmt.Errorf("more than one tag found, unable to find the version")
+	}
+}
 
-        if syndesis.Spec.Addons[f.Name()] == nil {
-            syndesis.Spec.Addons[f.Name()] = v1alpha1.Parameters{}
-        }
+func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) error {
 
-        params := syndesis.Spec.Addons[f.Name()]
-        if params["enabled"] != "" {
-            continue
-        }
+	// Lets fill in all the addons we know about...
+	if syndesis.Spec.Addons == nil {
+		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
+	}
 
-        switch f.Name() {
-        case "todo":
-            params["enabled"] = "true"
-        default:
-            params["enabled"] = "false"
-        }
-    }
+	addonFiles, err := generator.GetAssetsFS().Open("./addons/")
+	if err != nil {
+		return err
+	}
+	defer addonFiles.Close()
+	addonFileInfos, err := addonFiles.Readdir(-1)
+	if err != nil {
+		return err
+	}
+	for _, f := range addonFileInfos {
+		if !f.IsDir() {
+			continue
+		}
+
+		if syndesis.Spec.Addons[f.Name()] == nil {
+			syndesis.Spec.Addons[f.Name()] = v1alpha1.Parameters{}
+		}
+
+		params := syndesis.Spec.Addons[f.Name()]
+		if params["enabled"] != "" {
+			continue
+		}
+
+		switch f.Name() {
+		case "todo":
+			params["enabled"] = "true"
+		default:
+			params["enabled"] = "false"
+		}
+	}
 
 	// Setup the config..
 	config := make(map[string]string)
@@ -141,7 +160,6 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(config, configuration.EnvPostgresqlVolumeCapacity, "1Gi")
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
-
 
 	ifMissingSet(config, configuration.EnvSyndesisMetaTag, renderContext.Tags.Syndesis)
 	ifMissingSet(config, configuration.EnvSyndesisServerTag, renderContext.Tags.Syndesis)

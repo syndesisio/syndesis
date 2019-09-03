@@ -34,9 +34,9 @@
     name: syndesis-operator
   spec:
     tags:
-    - name: 'latest'
+    - name: {{.Tag}}
       from:
-        name: {{.Image}}
+        name: {{.Image}}:{{.Tag}}
       {{if .DevImages}}
         kind: ImageStreamTag
       {{else}}
@@ -94,7 +94,6 @@
         - syndesis-operator
         from:
           kind: ImageStreamTag
-          # Keep tag 'latest' here, its used as an anchor in the release script
-          name: syndesis-operator:latest
+          name: syndesis-operator:{{.Tag}}
       type: ImageChange
     - type: ConfigChange

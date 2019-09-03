@@ -1,11 +1,8 @@
 package template
 
 import (
-	"errors"
-	templatev1 "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 )
@@ -32,19 +29,4 @@ func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	}
 
 	return res, nil
-}
-
-func findUpgradeTemplate(scheme *runtime.Scheme, list []runtime.RawExtension) (*templatev1.Template, error) {
-	for _, object := range list {
-		res, err := util.LoadResourceFromYaml(scheme, object.Raw)
-		if err != nil {
-			return nil, err
-		}
-		if upgradeTemplate, ok := res.(*templatev1.Template); ok {
-			if upgradeTemplate.Name == SyndesisUpgrateTemplateName {
-				return upgradeTemplate, nil
-			}
-		}
-	}
-	return nil, errors.New("upgrade template not found")
 }

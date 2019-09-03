@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -46,7 +47,7 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Synde
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
 		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
-		syndesisVersion, err := template.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		syndesisVersion, err := template.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
 		if err != nil {
 			return err
 		}

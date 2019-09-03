@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/mcuadros/go-version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -15,14 +18,12 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
-	"os"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-	"time"
 
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/openshift/api/route/v1"
+	v1 "github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
@@ -84,6 +85,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
 	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
+	if err != nil {
+		return err
+	}
 
 	// Detect if the route should be auto-generated
 	autoGenerateRoute := syndesis.Spec.RouteHostname == ""
@@ -101,6 +105,11 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	renderContext, err := syndesistemplate.GetTemplateContext()
+	if err != nil {
+		return err
+	}
+
+	renderContext.Tags.Syndesis, err = syndesistemplate.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
 	if err != nil {
 		return err
 	}
@@ -286,7 +295,8 @@ func checkTags(context *generator.Context) error {
 		{"s2i", context.Syndesis.Spec.Components.S2I.Tag},
 	}
 	for _, image := range images {
-		if c.Match(version.Normalize(image.tag)) == false {
+
+		if image.tag != "latest" && c.Match(version.Normalize(image.tag)) == false {
 			return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
 				image.name,
 				image.tag,

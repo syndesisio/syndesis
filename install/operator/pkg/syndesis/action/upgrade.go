@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	"k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -16,9 +16,8 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	stemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -46,17 +45,13 @@ func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := stemplate.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := template.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
 		if err != nil {
 			return err
 		}
 		a.operatorVersion = operatorVersion
 	}
 
-	namespaceVersion, err := configuration.GetSyndesisVersionFromNamespace(ctx, a.client, syndesis.Namespace)
-	if err != nil {
-		return err
-	}
 	targetVersion := a.operatorVersion
 
 	resources, err := a.getUpgradeResources(a.scheme, syndesis)
@@ -77,8 +72,8 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if syndesis.Status.ForceUpgrade || k8serrors.IsNotFound(err) {
 		// Upgrade pod not found or upgrade forced
 
-		if namespaceVersion != targetVersion {
-			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", namespaceVersion, "targetVersion", targetVersion)
+		if syndesis.Status.Version != targetVersion {
+			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
 
 			for _, res := range resources {
 				operation.SetNamespaceAndOwnerReference(res, syndesis)
@@ -98,7 +93,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			target.Status.ForceUpgrade = false
 			// Set to avoid stale information in case of operator version change
 			target.Status.TargetVersion = targetVersion
-			target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
+			target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + targetVersion + currentAttemptDescr
 
 			return a.client.Update(ctx, target)
 		} else {
@@ -111,17 +106,11 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if upgradePod.Status.Phase == v1.PodSucceeded {
 			// Upgrade finished (correctly)
 
-			// Getting the namespace version again for double check
-			newNamespaceVersion, err := configuration.GetSyndesisVersionFromNamespace(ctx, a.client, syndesis.Namespace)
-			if err != nil {
-				return err
-			}
-
-			if newNamespaceVersion == targetVersion {
+			if syndesis.Status.Version == targetVersion {
 				a.log.Info("Syndesis resource upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
 				return a.completeUpgrade(ctx, syndesis, targetVersion)
 			} else {
-				a.log.Info("Upgrade pod terminated successfully but Syndesis version does not reflect target version. Forcing upgrade", "newVersion", newNamespaceVersion, "targetVersion", targetVersion, "name", syndesis.Name)
+				a.log.Info("Upgrade pod terminated successfully but Syndesis version does not reflect target version. Forcing upgrade", "newVersion", syndesis.Status.Version, "targetVersion", targetVersion, "name", syndesis.Name)
 
 				var currentAttemptDescr string
 				if syndesis.Status.UpgradeAttempts > 0 {
@@ -131,7 +120,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 				target := syndesis.DeepCopy()
 				target.Status.ForceUpgrade = true
 				target.Status.TargetVersion = targetVersion
-				target.Status.Description = "Upgrading from " + namespaceVersion + " to " + targetVersion + currentAttemptDescr
+				target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + targetVersion + currentAttemptDescr
 
 				return a.client.Update(ctx, target)
 			}
@@ -142,7 +131,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			target := syndesis.DeepCopy()
 			target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailureBackoff
 			target.Status.Reason = v1alpha1.SyndesisStatusReasonUpgradePodFailed
-			target.Status.Description = "Syndesis upgrade from " + namespaceVersion + " to " + targetVersion + " failed (it will be retried again)"
+			target.Status.Description = "Syndesis upgrade from " + syndesis.Status.Version + " to " + targetVersion + " failed (it will be retried again)"
 			target.Status.LastUpgradeFailure = &metav1.Time{
 				Time: time.Now(),
 			}
@@ -180,9 +169,9 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
 
-	c, err := stemplate.GetTemplateContext()
+	c, err := template.GetTemplateContext()
 
-	unstructured, err := stemplate.GetUpgradeResources(scheme, syndesis, stemplate.ResourceParams{
+	unstructured, err := template.GetUpgradeResources(scheme, syndesis, template.ResourceParams{
 		OAuthClientSecret: "-",
 		UpgradeRegistry:   c.Registry,
 	})
