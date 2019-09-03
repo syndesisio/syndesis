@@ -69,23 +69,23 @@ type ComponentsSpec struct {
 }
 
 type OauthConfiguration struct {
-	Tag		string	`json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type PostgresExporterConfiguration struct {
-	Tag		string	`json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type KomodoConfiguration struct {
-	Tag		string	`json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type S2IConfiguration struct {
-	Tag		string	`json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type UIConfiguration struct {
-	Tag		string	`json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type DbConfiguration struct {

@@ -3,8 +3,8 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-    "github.com/pkg/errors"
-    "io/ioutil"
+	"github.com/pkg/errors"
+	"io/ioutil"
 	"k8s.io/apimachinery/pkg/api/meta"
 	"strings"
 

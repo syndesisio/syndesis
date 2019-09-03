@@ -117,10 +117,10 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.ejectedResources = []unstructured.Unstructured{}
 	}
 
-    // The default operator image is not valid /w dev mode since it can't have a repository in the image name.
-    if o.devImages && o.image == pkg.DefaultOperatorImage {
-        o.image = "syndesis-operator"
-    }
+	// The default operator image is not valid /w dev mode since it can't have a repository in the image name.
+	if o.devImages && o.image == pkg.DefaultOperatorImage {
+		o.image = "syndesis-operator"
+	}
 
 	return
 }
@@ -198,12 +198,12 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 }
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
-    resources, err := generator.Render(fromFile, RenderScope{
+	resources, err := generator.Render(fromFile, RenderScope{
 		Namespace: o.Namespace,
 		Image:     o.image,
 		DevImages: o.devImages,
 		Role:      RoleName,
 		Kind:      "Role",
-    })
-    return resources, err
+	})
+	return resources, err
 }
