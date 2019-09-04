@@ -76,6 +76,7 @@
     "@patternfly/react-core": "^3.95.4",
     "@patternfly/react-icons": "^3.9.2",
     "@patternfly/react-styles": "^3.2.0",
+    "@patternfly/react-table": "^2.19.16",
     "@patternfly/react-tokens": "^2.5.3",
     "@syndesis/history": "*",
     "classnames": "^2.2.6",

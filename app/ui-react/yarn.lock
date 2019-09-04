@@ -2614,7 +2614,7 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@patternfly/patternfly@1.0.250", "@patternfly/patternfly@2.6.6", "@patternfly/patternfly@^2.23.2":
+"@patternfly/patternfly@1.0.250", "@patternfly/patternfly@2.29.0", "@patternfly/patternfly@2.6.6", "@patternfly/patternfly@^2.23.2":
   version "2.6.6"
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.6.6.tgz#d4ba153f0b1470fbc91ea308c8c7260c9bcb0d28"
   integrity sha512-lKbsTE/VlU1BiVzeo0BhfDe/qeqIqheejBz0qAm3CYuHyfUXd4+Uu+/9lfEB2EMb+wXpK4Np74OHtYCC82fP0Q==
@@ -2623,6 +2623,19 @@
   version "3.95.5"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.95.5.tgz#9af2c7401494b401898bd14523958654835b41e4"
   integrity sha512-J00HzEbeTC2AlQ8J/MFElYND68qOvIy/3sLhbCtgXHSnRYf3fZB5iabn5Tdd0CR9ydX+dWImSCXhPUgN8xDg2Q==
+  dependencies:
+    "@patternfly/react-icons" "^3.12.3"
+    "@patternfly/react-styles" "^3.5.18"
+    "@patternfly/react-tokens" "^2.6.22"
+    emotion "^9.2.9"
+    exenv "^1.2.2"
+    focus-trap-react "^4.0.1"
+    tippy.js "3.4.1"
+
+"@patternfly/react-core@^3.95.6":
+  version "3.95.6"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.95.6.tgz#ac250689251f5da19649fad20b9f509011f50c74"
+  integrity sha512-XYHasjjAInnSz0JLfFf005cgoy8VyAIJR07zjWKvQukQr5jfuZQHKalP+Bi4DI7xBzvtVhzDgwLTQ/3ATGXcpw==
   dependencies:
     "@patternfly/react-icons" "^3.12.3"
     "@patternfly/react-styles" "^3.5.18"
@@ -2708,6 +2721,20 @@
     relative "^3.0.2"
     resolve-from "^4.0.0"
     typescript "3.4.5"
+
+"@patternfly/react-table@^2.19.16":
+  version "2.19.16"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-table/-/react-table-2.19.16.tgz#44b3ff9d0ac524ac0a833885ec3ca3c3790f62f6"
+  integrity sha512-NpNG3SqbhybYVpnCIBMuEEsDx+JLjH/QV+k5gLnL9GP98O0yMrqdDPKkDQZwRWDSnnQ2OLWFwS4Yf44UWlVb4g==
+  dependencies:
+    "@patternfly/patternfly" "2.29.0"
+    "@patternfly/react-core" "^3.95.6"
+    "@patternfly/react-icons" "^3.12.3"
+    "@patternfly/react-styles" "^3.5.18"
+    "@patternfly/react-tokens" "^2.6.22"
+    classnames "^2.2.5"
+    exenv "^1.2.2"
+    lodash "^4.2.1"
 
 "@patternfly/react-tokens@^2.5.3":
   version "2.5.3"
