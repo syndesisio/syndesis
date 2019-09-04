@@ -1,5 +1,5 @@
 {
-  "commment": "This config should for running against a localy running Syndesis server on port 8080.",
+  "commment": "This config should for running against a locally running Syndesis server on port 8080.",
   "apiBase": "http://localhost:3000",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
