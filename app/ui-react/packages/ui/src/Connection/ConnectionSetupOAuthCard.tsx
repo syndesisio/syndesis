@@ -1,5 +1,5 @@
+import { Card, CardBody, CardFooter, CardHeader, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Card, CardHeader, CardBody, CardFooter, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
 

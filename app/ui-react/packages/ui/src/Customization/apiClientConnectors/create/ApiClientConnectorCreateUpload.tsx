@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { DndFileChooser } from '../../../Shared';
 
