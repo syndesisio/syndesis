@@ -58,6 +58,7 @@
       "AddColumn": "Aggiungi Colonna",
       "applyColumnFilter": "Applica filtro colonna",
       "columnFilterSearchString": "Stringa di ricerca del filtro di colonna",
+      "Done": "Finito",
       "RemoveColumn": "Rimuovi Colonna",
       "i18nRemoveColumnDialogConfirmMessage": "Sei sicuro di voler rimuovere queste colonne di output?",
       "removeColumnDialogHeader": "Rimuovere le Colonne?",
