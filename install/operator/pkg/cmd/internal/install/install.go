@@ -192,11 +192,17 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 		}
 	}
 	if createCounter == 0 && updateCounter == 0 {
-		o.Println(action + " previously installed")
+		if _, err := o.Println(action + " previously installed"); err != nil {
+			return err
+		}
 	} else if updateCounter != 0 {
-		o.Println(action + " updated successfully")
+		if _, err := o.Println(action + " updated successfully"); err != nil {
+			return err
+		}
 	} else {
-		o.Println(action + " installed successfully")
+		if _, err := o.Println(action + " installed successfully"); err != nil {
+			return err
+		}
 	}
 	return nil
 }
