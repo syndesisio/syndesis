@@ -160,17 +160,21 @@ export class IntegrationEditorStepAdder extends React.Component<
                               <i className="fa fa-trash" />
                             </ButtonLink>
                           )}
-                          <ButtonLink
-                            data-testid={
-                              'integration-editor-step-adder-configure-button'
-                            }
-                            href={this.props.configureStepHref(
-                              idx,
-                              this.props.steps[idx]
-                            )}
-                          >
-                            {t('shared:Configure')}
-                          </ButtonLink>
+                          {s.notConfigurable ? (
+                            <>&nbsp;</>
+                          ) : (
+                            <ButtonLink
+                              data-testid={
+                                'integration-editor-step-adder-configure-button'
+                              }
+                              href={this.props.configureStepHref(
+                                idx,
+                                this.props.steps[idx]
+                              )}
+                            >
+                              {t('shared:Configure')}
+                            </ButtonLink>
+                          )}
                         </>
                       }
                     />
