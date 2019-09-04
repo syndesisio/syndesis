@@ -523,7 +523,7 @@ k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/sets
 k8s.io/kube-openapi/pkg/util/proto
-# sigs.k8s.io/controller-runtime v0.1.12 => sigs.k8s.io/controller-runtime v0.1.12
+# sigs.k8s.io/controller-runtime v0.2.0 => sigs.k8s.io/controller-runtime v0.1.12
 sigs.k8s.io/controller-runtime/pkg/runtime/scheme
 sigs.k8s.io/controller-runtime/pkg/client
 sigs.k8s.io/controller-runtime/pkg/client/config

@@ -8,6 +8,7 @@ Images:
   OAuthProxyImagePrefix: quay.io/openshift
   PostgresExporterImagePrefix: wrouesnel
   PrometheusImagePrefix: prom
+  CamelKBaseImagePrefix: fabric8/s2i-java
   Support:
     OAuthProxy: oauth-proxy
     OAuthProxyImage: origin-oauth-proxy
@@ -38,4 +39,8 @@ Tags:
   Prometheus: v2.1.0
   Syndesis: latest
   Upgrade: latest
+  CamelKBase: 3.0-java8
 WithDockerImages: false
+Versions:
+  Camel: "2.21.0.fuse-750007"
+  CamelKRuntime: "0.3.4.fuse-740008"

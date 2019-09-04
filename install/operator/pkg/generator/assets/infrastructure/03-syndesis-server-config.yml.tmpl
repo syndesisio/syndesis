@@ -1,0 +1,99 @@
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    annotations:
+      io.syndesis/upgrade-mode: keep
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+    name: syndesis-server-config
+  data:
+    application.yml: |-
+      deployment:
+        load-demo-data: '{{.Env.DEMO_DATA_ENABLED}}'
+      cors:
+{{- if (not .AllowLocalHost)}}
+        allowedOrigins: https://{{.Env.ROUTE_HOSTNAME}}
+{{- else}}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://.Env.ROUTE_HOSTNAME}}
+{{- end}}
+      cache:
+        cluster:
+          name: SyndesisCluster
+        max:
+          entries: 100
+      encrypt:
+        key: '{{.Env.SYNDESIS_ENCRYPT_KEY}}'
+      spring:
+        zipkin:
+          enabled: false
+        datasource:
+          url: jdbc:postgresql://syndesis-db:5432/syndesis?sslmode=disable
+          username: '{{.Env.POSTGRESQL_USER}}'
+          password: '{{.Env.POSTGRESQL_PASSWORD}}'
+          driver-class-name: org.postgresql.Driver
+      security:
+        basic:
+          enabled: false
+      management:
+        port: 8181
+        security:
+          enabled: true
+      endpoints:
+        health:
+          sensitive: false
+        jsondb:
+          enabled: true
+      monitoring:
+        kind: default
+      features:
+        monitoring:
+          enabled: true
+        public-api:
+          enabled: true
+        knative:
+          enabled: false
+{{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+        dblogging:
+          enabled: false
+        jaeger-activity-tracing:
+          enabled: true
+      jaeger:
+        query.api.url: http://noauth-syndesis-jaeger-query:443/api
+        service.name: syndesis-server
+{{- end}}
+{{- if .Productized}}
+      maven:
+        repositories:
+          central: https://repo.maven.apache.org/maven2/
+{{- if .EarlyAccess}}
+          redhat-ea: https://maven.repository.redhat.com/earlyaccess/all/
+          jboss-ea: https://repository.jboss.org/nexus/content/groups/ea/
+{{- else}}
+          redhat-ga: https://maven.repository.redhat.com/ga/
+          jboss-ga: https://repository.jboss.org/
+{{- end}}
+{{- end}}
+      openshift:
+        apiBaseUrl: '{{.Env.OPENSHIFT_MASTER}}/oapi/v1'
+        namespace: '{{.Env.OPENSHIFT_PROJECT}}'
+        imageStreamNamespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
+        builderImageStreamTag: {{ .Images.Syndesis.S2i }}:{{ .Tags.Syndesis }}
+        deploymentMemoryRequestMi: 200
+        deploymentMemoryLimitMi: 512
+        mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
+      dao:
+        kind: jsondb
+      controllers:
+{{- if (eq (or .Syndesis.Spec.Addons.camelk.enabled "false") "true") }}
+        integration: camel-k
+{{- end}}
+        maxIntegrationsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'
+        maxDeploymentsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'
+        integrationStateCheckInterval: '{{.Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
+{{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+      generator:
+        activityTracing: true
+{{- end}}
