@@ -24,6 +24,18 @@
   --pf-global--gutter--md: 1.5rem;
 }
 
+.pf-c-page__main-breadcrumb {
+  --pf-c-page__main-breadcrumb--PaddingTop: var(--pf-global--spacer--sm);
+  --pf-c-page__main-breadcrumb--PaddingBottom: var(--pf-global--spacer--sm);
+}
+
+@media screen and (min-width: 768px) {
+  .pf-c-page__main-breadcrumb {
+    --pf-c-page__main-breadcrumb--PaddingBottom: 0;
+    --pf-c-page__main-breadcrumb--PaddingTop: var(--pf-global--spacer--md);
+  }
+}
+
 .pf-c-page__header-brand-link .pf-c-brand {
   --pf-c-page__header-brand-link--c-brand--MaxHeight: 40px;
   height: 40px;

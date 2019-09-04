@@ -72,6 +72,8 @@ a.connection-card__content:focus {
   font-weight: 300;
   margin-top: 15px;
   text-decoration: none;
+  overflow: hidden;
+  max-height: var(--pf-global--spacer--3xl);
 }
 
 .pf-c-card__footer.connection-card__footer--config-required {

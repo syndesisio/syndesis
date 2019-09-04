@@ -235,6 +235,7 @@ export class ConnectionCard extends React.PureComponent<
               <div className={'connection-card__body'}>
                 <div className="connection-card__icon">{this.props.icon}</div>
                 <Title
+                  headingLevel="h2"
                   size="lg"
                   className="connection-card__title h2"
                   data-testid={'connection-card-title'}

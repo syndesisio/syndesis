@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardBody,
   Stack,
   TextContent,
   TextList,
@@ -8,7 +10,7 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Button, Card, CardBody, Grid } from 'patternfly-react';
+import { Button, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
 import './ExtensionImportReview.css';
