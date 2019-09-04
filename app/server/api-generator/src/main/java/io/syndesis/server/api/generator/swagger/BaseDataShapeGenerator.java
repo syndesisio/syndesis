@@ -22,6 +22,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Response;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
+
 import org.apache.commons.lang3.tuple.Pair;
 
 abstract class BaseDataShapeGenerator implements DataShapeGenerator {
@@ -34,16 +35,15 @@ abstract class BaseDataShapeGenerator implements DataShapeGenerator {
     }
 
     static Optional<Response> findResponse(final Operation operation) {
-        return findResponseCodeValue(operation).map(Pair::getValue);
+        return findResponseCodeAndSchema(operation).map(Pair::getValue);
     }
 
-    static Optional<Pair<String, Response>> findResponseCodeValue(final Operation operation) {
+    static Optional<Pair<String, Response>> findResponseCodeAndSchema(final Operation operation) {
         // Return the Response object related to the first 2xx return code found
         Optional<Pair<String, Response>> responseOk = operation.getResponses().entrySet().stream()
             .map(e -> Pair.of(e.getKey(), e.getValue()))
             .filter(p -> p.getKey().startsWith("2"))
-            .filter(p -> p.getValue().getResponseSchema() != null)
-            .findFirst();
+            .filter(p -> p.getValue().getResponseSchema() != null).findFirst();
 
         if (responseOk.isPresent()) {
             return responseOk;
@@ -51,6 +51,11 @@ abstract class BaseDataShapeGenerator implements DataShapeGenerator {
 
         return operation.getResponses().entrySet().stream()
             .map(e -> Pair.of(e.getKey(), e.getValue()))
-            .filter(p -> p.getValue().getResponseSchema() != null).findFirst();
+            .filter(p -> p.getValue().getResponseSchema() != null)
+            .findFirst();
+    }
+
+    static String getResponseSpecification(final Operation operation) {
+        return findResponseCodeAndSchema(operation).get().getKey();
     }
 }

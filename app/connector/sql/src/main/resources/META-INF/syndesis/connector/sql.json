@@ -5,6 +5,20 @@
       "description": "Invoke SQL to obtain, store, update, or delete data.",
       "descriptor": {
         "componentScheme": "sql",
+        "standardizedErrors": [
+          {
+            "name": "SQL_DATA_ACCESS_ERROR",
+            "displayName": "SqlDataAccessError"
+          },
+          {
+            "name": "SQL_ENTITY_NOT_FOUND_ERROR",
+            "displayName": "SqlEntityNotFoundError"
+          },
+          {
+            "name": "SQL_CONNECTOR_ERROR",
+            "displayName": "SqlConnectorError"
+          }
+        ],
         "connectorCustomizers": [
           "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
         ],
@@ -36,24 +50,27 @@
                 "defaultValue": false,
                 "deprecated": false,
                 "displayName": "Batch update",
-                "enum": [
-                  {
-                    "label": "No",
-                    "value": "false"
-                  },
-                  {
-                    "label": "Yes",
-                    "value": "true"
-                  }
-                ],
                 "group": "common",
-                "javaType": "java.lang.String",
+                "javaType": "java.lang.Boolean",
                 "kind": "property",
                 "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
                 "order": 2,
-                "required": true,
+                "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "boolean"
+              },
+                "raiseErrorOnNotFound": {
+                "defaultValue": false,
+                "deprecated": false,
+                "displayName": "Raise error when record not found",
+                "group": "common",
+                "javaType": "java.lang.Boolean",
+                "kind": "property",
+                "labelHint": "Error when no records are selected, updated or deleted",
+                "order": 3,
+                "required": false,
+                "secret": false,
+                "type": "boolean"
               }
             }
           }
@@ -109,6 +126,18 @@
                 "required": false,
                 "secret": false,
                 "type": "duration"
+              },
+              "isRaiseErrorOnNotFound": {
+                "deprecated": false,
+                "displayName": "Raise NotFoundError",
+                "group": "consumer",
+                "javaType": "java.lang.Boolean",
+                "kind": "parameter",
+                "labelHint": "Raise NotFoundError if no records are inserted, updated, selected or deleted",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
               }
             }
           }

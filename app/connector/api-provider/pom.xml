@@ -29,6 +29,7 @@
   <packaging>jar</packaging>
 
   <dependencies>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
@@ -46,6 +47,10 @@
     </dependency>
 
     <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-util</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
@@ -60,6 +65,14 @@
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <dependency>

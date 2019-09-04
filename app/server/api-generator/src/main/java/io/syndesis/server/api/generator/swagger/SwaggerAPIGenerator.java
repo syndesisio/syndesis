@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.swagger;
 
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -27,6 +28,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import com.google.common.base.Strings;
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
@@ -47,6 +49,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIGenerator;
@@ -54,11 +57,8 @@ import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
-
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.google.common.base.Strings;
 
 import static java.util.Optional.ofNullable;
 
@@ -66,8 +66,9 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
     private static final String EXCERPT_METADATA_KEY = "excerpt";
-
-    private static final String HTTP_RESPONSE_CODE_METADATA_KEY = "httpResponseCode";
+    private static final String HTTP_RESPONSE_CODE_PROPERTY = "httpResponseCode";
+    private static final String ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
+    private static final String ERROR_RESPONSE_BODY = "returnBody";
 
     private final DataShapeGenerator dataShapeGenerator;
 
@@ -78,6 +79,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     @Override
     @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     public APIIntegration generateIntegration(final String specification, final ProvidedApiTemplate template) {
+
         final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
         final Swagger swagger = info.getModel();
 
@@ -142,6 +144,10 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .descriptor(new ConnectorDescriptor.Builder()
                         .createFrom(endAction.getDescriptor())
                         .inputDataShape(endDataShape)
+                        .replaceConfigurationProperty(ERROR_RESPONSE_CODES_PROPERTY,
+                            builder -> builder.extendedProperties(extendedPropertiesMapSet(operation)))
+                        .replaceConfigurationProperty(HTTP_RESPONSE_CODE_PROPERTY,
+                            builder -> builder.addAllEnum(httpStatusList(operation)))
                         .build())
                     .build();
                 final Step endStep = new Step.Builder()
@@ -149,7 +155,9 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .action(modifiedEndAction)
                     .connection(template.getConnection())
                     .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty(HTTP_RESPONSE_CODE_METADATA_KEY, "501")
+                    .putConfiguredProperty(HTTP_RESPONSE_CODE_PROPERTY, getResponseCode(operation))
+                    .putConfiguredProperty(ERROR_RESPONSE_BODY, "false")
+                    .putConfiguredProperty(ERROR_RESPONSE_CODES_PROPERTY, "{}")
                     .putMetadata("configured", "true")
                     .build();
 
@@ -161,7 +169,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                 }
 
                 String defaultCode = "200";
-                final Optional<Pair<String, Response>> defaultResponse = BaseDataShapeGenerator.findResponseCodeValue(operation);
+                final Optional<Pair<String, Response>> defaultResponse = findResponseCode(operation);
                 if (defaultResponse.isPresent() && NumberUtils.isDigits(defaultResponse.get().getKey())) {
                     defaultCode = defaultResponse.get().getKey();
                 }
@@ -268,7 +276,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             return code;
         }
         final Optional<String> httpCodeDescription = lastAction
-            .flatMap(a -> ofNullable(a.getProperties().get(HTTP_RESPONSE_CODE_METADATA_KEY)))
+            .flatMap(a -> ofNullable(a.getProperties().get(HTTP_RESPONSE_CODE_PROPERTY)))
             .flatMap(prop -> prop.getEnum().stream()
                 .filter(e -> code.equals(e.getValue()))
                 .map(ConfigurationProperty.PropertyValue::getLabel)
@@ -283,8 +291,8 @@ public class SwaggerAPIGenerator implements APIGenerator {
         }
 
         final Step last = steps.get(steps.size() - 1);
-        if (last.getConfiguredProperties().containsKey(HTTP_RESPONSE_CODE_METADATA_KEY)) {
-            final String responseCode = last.getConfiguredProperties().get(HTTP_RESPONSE_CODE_METADATA_KEY);
+        if (last.getConfiguredProperties().containsKey(HTTP_RESPONSE_CODE_PROPERTY)) {
+            final String responseCode = last.getConfiguredProperties().get(HTTP_RESPONSE_CODE_PROPERTY);
             final String responseDesc = decodeHttpReturnCode(steps, responseCode);
             return new Flow.Builder()
                 .createFrom(flow)
@@ -338,5 +346,70 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .totalActions(total.intValue())//
             .actionCountByTags(tagCounts)//
             .build();
+    }
+
+    static String extendedPropertiesMapSet(final Operation operation) {
+        List<ConfigurationProperty.PropertyValue> statusList = httpStatusList(operation);
+        String enumJson = "[]";
+        if (! statusList.isEmpty()) {
+            enumJson = Json.toString(statusList);
+        }
+        String mapsetJsonTemplate =
+            "{ "
+          + "\"mapsetValueDefinition\": {"
+          + "    \"enum\" : @enum@,"
+          + "    \"type\" : \"select\" },"
+          + "\"mapsetOptions\": {"
+          + "    \"i18nKeyColumnTitle\": \"When the error message is\","
+          + "    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }"
+          + "}";
+        return mapsetJsonTemplate.replace("@enum@", enumJson);
+    }
+
+    Optional<Pair<String, Response>> findResponseCode(final Operation operation) {
+        // Return the Response object related to the first 2xx return code found
+        Optional<Pair<String, Response>> responseOk = operation.getResponses().entrySet().stream()
+            .map(e -> Pair.of(e.getKey(), e.getValue()))
+            .filter(p -> p.getKey().startsWith("2"))
+            .findFirst();
+
+        if (responseOk.isPresent()) {
+            return responseOk;
+        }
+
+        return operation.getResponses().entrySet().stream()
+            .map(e -> Pair.of(e.getKey(), e.getValue()))
+            .findFirst();
+    }
+
+    String getResponseCode(final Operation operation) {
+        return findResponseCode(operation).get().getKey();
+    }
+
+    static List<ConfigurationProperty.PropertyValue> httpStatusList(final Operation operation) {
+        List<ConfigurationProperty.PropertyValue> httpStatusList = new ArrayList<>();
+        operation.getResponses()
+        .keySet()
+        .stream()
+        .filter(NumberUtils::isDigits)
+        .forEach(statusCode -> httpStatusList.add(
+                ConfigurationProperty.PropertyValue.Builder.of(statusCode, getMessage(operation, statusCode))));
+        return httpStatusList;
+    }
+
+    /**
+     * Obtains the description for this statusCode set in the Swagger API, or defaults
+     * to the HttpStatus description if not set.
+     * @param operation Swagger fragment
+     * @param statusCode for which we want the message
+     * @return HttpStatus message
+     */
+    private static String getMessage(final Operation operation, String statusCode) {
+        Response response = operation.getResponses().get(statusCode);
+        if (response!=null && response.getDescription()!=null && !response.getDescription().isEmpty()) {
+            return statusCode + " " + response.getDescription();
+        } else {
+            return HttpStatus.message(Integer.valueOf(statusCode));
+        }
     }
 }
