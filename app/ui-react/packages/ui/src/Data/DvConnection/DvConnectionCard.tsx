@@ -1,7 +1,13 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
-import { Text } from '@patternfly/react-core';
-import { Card, Label } from 'patternfly-react';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Label,
+  Text,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import './DvConnectionCard.css';
@@ -23,9 +29,7 @@ export interface IDvConnectionCardProps {
 export const DvConnectionCard: React.FunctionComponent<
   IDvConnectionCardProps
 > = props => {
-
   const [isSelected, setIsSelected] = React.useState(props.selected);
-
 
   const doToggleSelected = (connName: string) => (event: any) => {
     // User can only select active connections
@@ -36,43 +40,37 @@ export const DvConnectionCard: React.FunctionComponent<
   };
 
   return (
-    <div
-      className={'dv-connection-card'}
+    <Card
+      className={
+        props.selected ? 'dv-connection-card--accented' : 'dv-connection-card'
+      }
+      data-testid={`dv-connection-card-${toValidHtmlId(props.name)}-card`}
       onClick={doToggleSelected(props.name)}
     >
-      <Card
-        data-testid={`dv-connection-card-${toValidHtmlId(
-          props.name
-        )}-card`}
-        matchHeight={true}
-        accented={props.selected}
-      >
-        <Card.Body>
-          <div className="dv-connection-card__status">
-            <Label
-              type={
-                props.dvStatus === ConnectionStatus.ACTIVE
-                  ? 'success'
-                  : 'danger'
-              }
-            >
-              {props.dvStatus}
-            </Label>
-          </div>
-          <div className={'dv-connection-card__content'}>
-            <div className="dv-connection-card__icon">{props.icon}</div>
-            <div
-              className="dv-connection-card__title h2"
-              data-testid={'dv-connection-card--title'}
-            >
-              {props.name}
-            </div>
-            <Text className="dv-connection-card__description">
-              {props.description}
-            </Text>
-          </div>
-        </Card.Body>
-      </Card>
-    </div>
+      <CardHeader>
+        <Label
+          className="dv-connection-card__status"
+          type={
+            props.dvStatus === ConnectionStatus.ACTIVE ? 'success' : 'danger'
+          }
+        >
+          {props.dvStatus}
+        </Label>
+      </CardHeader>
+      <CardBody className="dv-connection-card__content">
+        <div className="dv-connection-card__icon">{props.icon}</div>
+        <Title
+          className="dv-connection-card__title"
+          data-testid={'dv-connection-card--title'}
+          headingLevel="h2"
+          size="lg"
+        >
+          {props.name}
+        </Title>
+        <Text className="dv-connection-card__description">
+          {props.description}
+        </Text>
+      </CardBody>
+    </Card>
   );
-}
+};

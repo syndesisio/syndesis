@@ -1,8 +1,8 @@
-import { Text, TextContent } from '@patternfly/react-core';
+import { Split, SplitItem, Text, TextContent } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState, Grid, Table } from 'patternfly-react';
+import { EmptyState, Table } from 'patternfly-react';
 import * as React from 'react';
-import { Container, PageSection } from '../../../src/Layout';
+import { PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
 import './SqlClientContent.css';
@@ -68,79 +68,71 @@ const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
 export const SqlClientContent: React.FunctionComponent<
   ISqlClientContentProps
 > = props => {
-
   return (
     <PageSection>
       {props.viewNames.length > 0 ? (
-        <Grid.Row>
-          <Grid.Col md={4}>
-            <Container>{props.formContent}</Container>
-          </Grid.Col>
-          <Grid.Col md={8}>
-            <>
-              {props.queryResultCols.length > 0 ? (
-                <>
-                  <TextContent>
-                    <Text>{props.i18nResultsTitle}</Text>
-                  </TextContent>
-                  <TextContent>
-                    <Text>
-                      <small>
-                        <i>
-                          {props.i18nResultsRowCountMsg}
-                          {props.queryResultRows.length}
-                        </i>
-                      </small>
-                    </Text>
-                  </TextContent>
-                  <div className="generic-table_content">
-                    <GenericTable
-                      columns={props.queryResultCols.map(col => ({
-                        cell: {
-                          formatters: [defaultCellFormat],
-                        },
-                        header: {
-                          formatters: [defaultHeaderFormat],
-                          label: col.label,
-                        },
-                        property: col.id,
-                      }))}
-                      rows={props.queryResultRows}
-                      rowKey={
-                        props.queryResultCols.length > 0
-                          ? props.queryResultCols[0].id
-                          : ''
-                      }
-                      {...props}
-                    />
-                  </div>
-                </>
-              ) : (
-                  <EmptyState>
-                    <EmptyState.Title>
-                      {props.i18nEmptyResultsTitle}
-                    </EmptyState.Title>
-                    <EmptyState.Info>
-                      {props.i18nEmptyResultsMsg}
-                    </EmptyState.Info>
-                  </EmptyState>
-                )}
-            </>
-          </Grid.Col>
-        </Grid.Row>
+        <Split gutter="md">
+          <SplitItem isFilled={false}>{props.formContent}</SplitItem>
+          <SplitItem isFilled={true}>
+            {props.queryResultCols.length > 0 ? (
+              <>
+                <TextContent>
+                  <Text>{props.i18nResultsTitle}</Text>
+                </TextContent>
+                <TextContent>
+                  <Text>
+                    <small>
+                      <i>
+                        {props.i18nResultsRowCountMsg}
+                        {props.queryResultRows.length}
+                      </i>
+                    </small>
+                  </Text>
+                </TextContent>
+                <div className="generic-table_content">
+                  <GenericTable
+                    columns={props.queryResultCols.map(col => ({
+                      cell: {
+                        formatters: [defaultCellFormat],
+                      },
+                      header: {
+                        formatters: [defaultHeaderFormat],
+                        label: col.label,
+                      },
+                      property: col.id,
+                    }))}
+                    rows={props.queryResultRows}
+                    rowKey={
+                      props.queryResultCols.length > 0
+                        ? props.queryResultCols[0].id
+                        : ''
+                    }
+                    {...props}
+                  />
+                </div>
+              </>
+            ) : (
+              <EmptyState>
+                <EmptyState.Title>
+                  {props.i18nEmptyResultsTitle}
+                </EmptyState.Title>
+                <EmptyState.Info>{props.i18nEmptyResultsMsg}</EmptyState.Info>
+              </EmptyState>
+            )}
+          </SplitItem>
+        </Split>
       ) : (
-          <EmptyViewsState
-            i18nEmptyStateTitle={props.i18nEmptyStateTitle}
-            i18nEmptyStateInfo={props.i18nEmptyStateInfo}
-            i18nCreateView={props.i18nCreateView}
-            i18nCreateViewTip={props.i18nCreateViewTip}
-            i18nImportViews={props.i18nImportViews}
-            i18nImportViewsTip={props.i18nImportViewsTip}
-            linkCreateViewHRef={props.linkCreateViewHRef}
-            linkImportViewsHRef={props.linkImportViewsHRef}
-          />
-        )}
+        <EmptyViewsState
+          i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+          i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+          i18nCreateView={props.i18nCreateView}
+          i18nCreateViewTip={props.i18nCreateViewTip}
+          i18nImportViews={props.i18nImportViews}
+          i18nImportViewsTip={props.i18nImportViewsTip}
+          linkCreateViewHRef={props.linkCreateViewHRef}
+          linkImportViewsHRef={props.linkImportViewsHRef}
+        />
+      )}
     </PageSection>
   );
-
-}
+};
