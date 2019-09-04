@@ -1,5 +1,6 @@
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { IAutoFormActions } from '@syndesis/auto-form/src';
+import { FilterOptions } from "@syndesis/models";
 import { validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,6 +14,7 @@ export interface IWithChoiceConfigurationFormChildrenProps {
 }
 
 export interface IWithChoiceConfigurationFormProps {
+  filterOptions: FilterOptions;
   initialValue: IChoiceFormConfiguration;
   stepId: string;
   onUpdatedIntegration(props: IChoiceFormConfiguration): Promise<void>;
@@ -21,7 +23,7 @@ export interface IWithChoiceConfigurationFormProps {
 
 export const WithChoiceConfigurationForm: React.FunctionComponent<
   IWithChoiceConfigurationFormProps
-> = ({ onUpdatedIntegration, stepId, initialValue, children }) => {
+> = ({ onUpdatedIntegration, filterOptions, stepId, initialValue, children }) => {
   const { t } = useTranslation(['integrations', 'shared']);
 
   const definition = {
@@ -29,15 +31,15 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
       order: 6,
       type: 'hidden',
     },
-
     flowConditions: {
       arrayDefinition: {
         condition: {
           defaultValue: '',
           description: t('integrations:editor:choiceForm:conditionDescription'),
           displayName: '',
+          order: 0,
           placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
-          required: true,
+          required: false,
           type: 'text',
         },
         flowId: {
@@ -48,6 +50,32 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
             },
           },
           type: 'hidden',
+        },
+        op: {
+          defaultValue: 'contains',
+          description: t('integrations:editor:choiceForm:operatorDescription'),
+          displayName: '',
+          enum: filterOptions.ops,
+          order: 2,
+          required: false,
+          type: 'text',
+        },
+        path: {
+          dataList: filterOptions.paths,
+          description: t('integrations:editor:choiceForm:pathDescription'),
+          displayName: t('integrations:editor:choiceForm:pathDisplay'),
+          order: 1,
+          placeholder: t('integrations:editor:choiceForm:pathPlaceholder'),
+          required: false,
+          type: 'text',
+        },
+        value: {
+          description: t('integrations:editor:choiceForm:keywordsDescription'),
+          displayName: '',
+          order: 3,
+          placeholder: t('integrations:editor:choiceForm:keywordsPlaceholder'),
+          required: false,
+          type: 'text',
         },
       },
       arrayDefinitionOptions: {

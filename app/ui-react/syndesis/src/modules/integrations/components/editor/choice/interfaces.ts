@@ -11,7 +11,10 @@ export interface IChoiceConfiguration {
 export interface IFlowOption {
   name?: string;
   flow: string;
-  condition: string;
+  condition?: string;
+  path?: string;
+  op?: string;
+  value?: string;
 }
 
 /**
@@ -26,5 +29,8 @@ export interface IChoiceFormConfiguration {
 
 export interface IFlowFormOption {
   flowId: string;
-  condition: string;
+  condition?: string;
+  path?: string;
+  op?: string;
+  value?: string;
 }

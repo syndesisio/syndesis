@@ -59,6 +59,7 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
 
             for (FlowOption flowOption : flows) {
                 choice.when(getPredicate(flowOption.getConditionExpression(), builder.getContext()))
+                        .description(flowOption.getConditionExpression())
                         .process(new EnrichActivityIdHeader())
                         .to(getEndpointUri(routingScheme, flowOption.getFlow()))
                         .end();
