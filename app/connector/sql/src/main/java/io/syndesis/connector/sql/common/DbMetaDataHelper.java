@@ -68,7 +68,7 @@ public final class DbMetaDataHelper {
                 catalog,
                 adapt(schemaPattern),
                 adapt(tableNamePattern),
-                new String[] { "TABLE" });) {
+                new String[] { "TABLE", "VIEW" });) {
             while (rs.next()) {
                 tablesInSchema.add(rs.getString(3).toUpperCase(Locale.US));
             }
