@@ -25,11 +25,21 @@ The details for doing this are described in
 link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Registering with REST APIs].
 
 For a REST API that uses OAuth, {prodname} supports only the 
-*Authorization Code* grant type for obtaining authorization from a 
-client. Consequently, in the OpenAPI document that you upload to 
-create the connector, in the OAuth `securityDefinition` object, 
-you must set the `flow` attribute to `accessCode`. You must not set 
-`flow` to `implicit`, `password`, or `application`.
+*Authorization Code* grant flow for obtaining authorization. 
+In the OpenAPI document that you upload to 
+create the connector, in the OAuth `securityDefinitions` object, 
+you must set the `flow` attribute to `accessCode`, for example:
+
+----
+securityDefinitions:
+  OauthSecurity:
+    type: oauth2
+    flow: accessCode
+    authorizationUrl: 'https://oauth.simple.api/authorization'
+    tokenUrl: 'https://oauth.simple.api/token'
+----
+You must not set 
+`flow` to `implicit`, `password`, or `application`. 
 
 The OpenAPI schema for a REST API client connector cannot have cyclic schema 
 references. For example, a JSON schema that specifies a request or 
