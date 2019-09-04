@@ -157,7 +157,6 @@ quay_transfer: &quay_transfer
       curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
 
 jobs:
-  # UI has no dependencies, just load cache
   ui:
     <<: *job_defaults
     environment:
@@ -171,7 +170,7 @@ jobs:
       - restore_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui-react/pom.xml" }}
       - restore_cache:
-          key: syndesis-yarn-{{ checksum "app/ui-react/yarn.lock" }}
+          key: syndesis-yarn-ui-v2-{{ checksum "app/ui-react/yarn.lock" }}
       - run:
           name: Build UI
           command: |
@@ -185,13 +184,10 @@ jobs:
               GOAL_ARGS="-g deploy"
             fi
             ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module ui-react --docker | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
       - save_cache:
-          key: syndesis-yarn-{{ checksum "app/ui-react/yarn.lock" }}
+          key: syndesis-yarn-ui-v2-{{ checksum "app/ui-react/yarn.lock" }}
           paths:
-            - /usr/local/share/.cache/yarn/v1
+            - /usr/local/share/.cache/yarn
       - store_artifacts:
           path: build_log.txt
       - <<: *scrub_m2_cache
@@ -204,6 +200,37 @@ jobs:
           path: syndesis-ui.tar.gz
           destination: /images/syndesis-ui.tar.gz
       - <<: *quay_transfer
+
+  ui-doc:
+    working_directory: ~/src/app/ui-react
+    docker:
+      - image: circleci/node:10.15-browsers
+    environment:
+      <<: *common_env
+    steps:
+    - checkout:
+        path: ~/src
+    - restore_cache:
+        key: syndesis-yarn-ui-doc-{{ checksum "yarn.lock" }}
+    - run:
+        name: Run Install
+        command: yarn install --frozen-lockfile
+    - run:
+        name: Build Circle CI App
+        command: |
+          # 105563335 is GH project id, but it's not exposed as an env variable.
+          PUBLIC_URL="https://$CIRCLE_BUILD_NUM-105563335-gh.circle-artifacts.com/0/home/circleci/src/app/ui-react/doc/app" yarn build
+          cp -a syndesis/build doc/app
+          cp syndesis/config.staging.json doc/app/config.json
+    - run:
+        name: Build Docs
+        command: yarn build-storybook
+    - save_cache:
+        key: syndesis-yarn-ui-doc-{{ checksum "yarn.lock" }}
+        paths:
+          - ~/.cache/yarn
+    - store_artifacts:
+        path: doc
 
   # All connectors job depends on integration, mount workspace .m2
   connectors:
@@ -883,6 +910,7 @@ workflows:
             branches:
               only: master
       - license-check
+      - ui-doc
       - ui
       - common
       - operator
