@@ -25,12 +25,35 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 /**
+ * RESET DB
+ */
+Cypress.Commands.add('resetDb', () => {
+  cy.request('GET', 'api/v1/test-support/reset-db');
+});
+
+/**
+ * SNAPSHOT OF DB
+ * Returns JSON
+ */
+Cypress.Commands.add('snapshotDb', () => {
+  cy.request('GET', 'api/v1/test-support/snapshot-db');
+});
+
+/**
+ * RESTORE DB
+ * Expects JSON
+ */
+Cypress.Commands.add('restoreDb', snapshot => {
+  cy.request('POST', 'api/v1/test-support/restore-db', snapshot);
+});
+
+/**
  * CREATE CONNECTION
  */
 Cypress.Commands.add('createConnection', cnx => {
   /**
    * Create To Do Connection
-   * NOTE: This will break if a Connection with the same name already exists.
+   * TODO: This will break if a Connection with the same name already exists.
    */
   cy.visit('/');
 
