@@ -112,7 +112,13 @@ export class IntegrationsPage extends React.Component {
       <WithConnections debounceWait={500}>
         {({ data: connectionsData }) => (
           <WithMonitoredIntegrations>
-            {({ data: integrationsData, hasData, error, errorMessage }) => (
+            {({
+              data: integrationsData,
+              hasData,
+              error,
+              errorMessage,
+              loading,
+            }) => (
               <Translation ns={['integrations', 'shared']}>
                 {t => (
                   <WithListViewToolbarHelpers
@@ -160,16 +166,12 @@ export class IntegrationsPage extends React.Component {
                               'integrationsEmptyState.title'
                             )}
                           >
-                            {filteredAndSortedIntegrations.length > 0 ? (
-                              <Integrations
-                                error={error}
-                                errorMessage={errorMessage}
-                                loading={!hasData}
-                                integrations={filteredAndSortedIntegrations}
-                              />
-                            ) : (
-                              undefined
-                            )}
+                            <Integrations
+                              error={error}
+                              errorMessage={errorMessage}
+                              loading={loading && !hasData}
+                              integrations={filteredAndSortedIntegrations}
+                            />
                           </IntegrationsListView>
                         </>
                       );
