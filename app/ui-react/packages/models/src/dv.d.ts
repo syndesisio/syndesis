@@ -99,6 +99,26 @@ export interface QueryResults {
   rows: RowData[];
 }
 
+export interface ViewSourceInfo {
+  schemas: SourceSchema[];
+  viewName: string;
+}
+
+export interface SourceSchema {
+  name: string;
+  tables: SourceTable[];
+}
+
+export interface SourceTable {
+  name: string;
+  columns: SourceColumn[];
+}
+
+export interface SourceColumn {
+  name: string;
+  datatype: string;
+}
+
 export interface TableColumns {
   name: string;
   columnNames: string[];

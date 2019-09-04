@@ -4,6 +4,7 @@ import {
   QueryResults,
   RestDataService,
   ViewDefinition,
+  ViewSourceInfo,
 } from '@syndesis/models';
 import { TableColumns } from '@syndesis/models';
 import {
@@ -26,7 +27,7 @@ import { Link } from 'react-router-dom';
 import { UIContext } from '../../../../app';
 import { ApiError } from '../../../../shared';
 import resolvers from '../../../resolvers';
-import { getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
+import { generateTableColumns, getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization that the view belongs to
@@ -55,18 +56,27 @@ export interface IViewEditorSqlRouteState {
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isMetadataLoaded, setMetadataLoaded] = React.useState(false);
   const [isValidating, setIsValidating] = React.useState(false);
+  const [sourceTableColumns, setSourceTableColumns ] = React.useState<TableColumns[]>([]);
   const [viewValid, setViewValid] = React.useState(true);
   const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
-  const { queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
+  const { getSourceInfoForView, queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
   const [queryResults, setQueryResults] = React.useState(state.queryResults);
   const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
+
+  const handleMetadataLoaded = async (): Promise<void> => {
+    if( sourceTableColumns != null && sourceTableColumns.length > 0 ) {
+      setMetadataLoaded(true);
+    }
+
+  };
 
   const handleValidationStarted = async (): Promise<void> => {
     setIsValidating(true);
@@ -155,18 +165,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     }
   };
 
-  const getSourceTableInfos = (): TableColumns[] => {
-    // TODO: replace this hardcoded data with server call (or table-column info on the virtualization)
-    const sourceTables = [
-      { 'columnNames': ['name', 'population', 'size'], // column names
-        'name': 'countries' },                         // table name
-      { 'columnNames': ['name','score', 'birthDate'],  
-        'name': 'users' 
-      }
-    ];
-    return sourceTables;
-  };
-
   const handlePreviewExpandedChanged = (
     expanded: boolean
   ) => {
@@ -216,6 +214,26 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     }
   };
 
+    // load source table/column information
+    React.useEffect(() =>  {
+      if( ! isMetadataLoaded && virtualization !== null && (virtualization as RestDataService).keng__id !== null
+        && (virtualization as RestDataService).keng__id.length > 0) {
+        // load source table/column info by retrieving the view source info from
+        // the server and converting to TableColumn objects
+        const loadSourceTableInfo = async () => {
+          try {
+            const results : ViewSourceInfo =  await getSourceInfoForView(virtualization);
+            setSourceTableColumns(generateTableColumns(results as ViewSourceInfo));
+          } catch (error) {
+            pushNotification(error.message, 'error');
+          }
+        }
+        loadSourceTableInfo();
+        handleMetadataLoaded();
+      }
+      // eslint-disable-next-line
+    }, [virtualization as RestDataService]);
+  
   return (
     <WithLoader
       loading={loading}
@@ -277,7 +295,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             isValid={viewValid}
             isSaving={isSaving}
             isValidating={isValidating}
-            sourceTableInfos={getSourceTableInfos()}
+            sourceTableInfos={sourceTableColumns}
             onValidate={handleValidateView}
             onSave={handleSaveView}
             validationResults={

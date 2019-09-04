@@ -9,7 +9,7 @@ export interface IViewEditValidationResult {
   type: 'danger' | 'success';
 }
 
-interface ITableInfo {
+export interface ITableInfo {
   name: string;
   columnNames: string[];
 }
