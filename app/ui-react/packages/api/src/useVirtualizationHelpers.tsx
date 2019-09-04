@@ -350,17 +350,17 @@ export const useVirtualizationHelpers = () => {
    */
   const getSourceInfoForView = async (
     virtualization: RestDataService
-    ): Promise<ViewSourceInfo> => {
-      const response = await callFetch({
-        headers: {},
-        method: 'GET',
-        url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${virtualization.keng__id}`,
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return (await response.json()) as ViewSourceInfo;
+  ): Promise<ViewSourceInfo> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${virtualization.keng__id}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
+    return (await response.json()) as ViewSourceInfo;
+  }
   
   return {
     createVirtualization,

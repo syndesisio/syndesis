@@ -24,7 +24,6 @@ export default include('/data', {
           properties: 'properties',
           root: '',
           sql: 'sql',
-          viewOutput: 'viewOutput',
         }),
         importSource: include('importSource', {
           root: '',

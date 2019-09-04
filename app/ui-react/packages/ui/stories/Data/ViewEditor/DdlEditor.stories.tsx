@@ -20,15 +20,16 @@ stories.add('render', () => {
   return (
     <DdlEditor
       viewDdl={viewDdl}
+      i18nDoneLabel={'Done'}
       i18nSaveLabel={'Save'}
-      i18nValidateLabel={'Validate'}
+      i18nTitle={'View Editor'}
       i18nValidationResultsTitle={'DDL Validation'}
-      isValid={true}
+      showValidationMessage={true}
       isSaving={false}
-      isValidating={false}
       sourceTableInfos={sourceTables}
       validationResults={[]}
-      onValidate={action('validate')}
+      onCloseValidationMessage={action('ddlChange')}
+      onFinish={action('done')}
       onSave={action('save')}
     />
   );
