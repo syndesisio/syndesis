@@ -34,6 +34,7 @@ When a collection contains more
 than one kind of primitive type or when it contains at least one complex 
 type then the data mapper displays the collection’s child fields. 
 You can map from/to each field.
+However, you cannot map from or to a nested collection. 
 
 When {prodname} executes the flow, it iterates over the source 
 collection elements to populate the target collection elements.
