@@ -1182,6 +1182,36 @@ export function getPreviousIntegrationStepsWithDataShape(
   const steps = getSteps(integration, flowId);
   return getPreviousStepsWithDataShape(steps || [], position);
 }
+
+/**
+ * Finds previous step with data shape according to given position in integration flow and returns
+ * that output data shape.
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function getOutputDataShapeFromPreviousStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+): DataShape {
+  let dataShape = {} as DataShape;
+  try {
+    const prevStep = getPreviousIntegrationStepWithDataShape(
+      integration,
+      flowId,
+      position
+    );
+    dataShape =
+      prevStep!.action!.descriptor!.outputDataShape ||
+      ({} as DataShape);
+  } catch (err) {
+    // ignore
+  }
+
+  return dataShape;
+}
+
 /**
  * Return all steps before the given position that have a data shape
  * @param steps

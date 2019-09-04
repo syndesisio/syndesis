@@ -97,7 +97,7 @@
       "addCondition": "Add another condition",
       "addConditionTitle": "When",
       "forAllIncomingData": "For all incoming data",
-      "otherwise": "When none of the above conditions matches to the incoming data",
+      "otherwise": "When none of the above conditions match the incoming data",
       "useDefaultFlowTitle": "Execute default flow",
       "fieldRequired": "{{field}} is required",
       "operatorDescription": "Must meet this condition",

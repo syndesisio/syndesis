@@ -22,32 +22,35 @@ export function createChoiceConfiguration(configuredProperties: {
 }
 
 /**
- * Builds a sane flow form option description from either condition expression or path, op, value properties
+ * Builds a sane flow form option description from either condition expression directly or from path, op, value properties
  * @param option
  */
 export function getFlowDescription(option: IFlowFormOption) {
-  if (option.condition) {
-    return option.condition;
-  }
-
-  if (option.path) {
-    return '${body.' + option.path + '} ' + option.op + " '" + option.value + "'";
-  }
-
-  return "";
+  return buildConditionExpression(option.condition, option.path, option.op, option.value);
 }
 
 /**
- * Builds a sane flow option condition expression from either given condition expression or path, op, value properties
+ * Builds a sane flow option description from either condition expression directly or from path, op, value properties
  * @param option
  */
 export function getConditionExpression(option: IFlowOption) {
-  if (option.condition) {
-    return option.condition;
+  return buildConditionExpression(option.condition, option.path, option.op, option.value);
+}
+
+/**
+ * Builds a sane flow form option description from either condition expression or path, op, value properties
+ * @param condition
+ * @param path
+ * @param op
+ * @param value
+ */
+function buildConditionExpression(condition: string | undefined, path: string | undefined, op: string | undefined, value: string | undefined) {
+  if (condition) {
+    return condition;
   }
 
-  if (option.path) {
-    return '${body.' + option.path + '} ' + option.op + " '" + option.value + "'";
+  if (path) {
+    return `\${body.${path}} ${op} '${value}'`;
   }
 
   return "";

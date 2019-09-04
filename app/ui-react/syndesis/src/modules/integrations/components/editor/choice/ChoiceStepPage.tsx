@@ -1,7 +1,8 @@
 import {
   createConditionalFlow,
   FlowKind,
-  getFlow, getPreviousIntegrationStepWithDataShape,
+  getFlow,
+  getOutputDataShapeFromPreviousStep,
   getStep,
   getSteps,
   reconcileConditionalFlows,
@@ -10,7 +11,7 @@ import {
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import {DataShape, Integration, StringMap} from '@syndesis/models';
+import { Integration, StringMap } from '@syndesis/models';
 import {
   ChoiceCardHeader,
   ChoicePageCard,
@@ -60,19 +61,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
               <WithRouteData<IChoiceStepRouteParams, IChoiceStepRouteState>>
                 {(params, state, { history }) => {
                   const positionAsNumber = parseInt(params.position, 10);
-                  let dataShape = {} as DataShape;
-                  try {
-                    const prevStep = getPreviousIntegrationStepWithDataShape(
-                      state.integration,
-                      params.flowId,
-                      positionAsNumber
-                    );
-                    dataShape =
-                      prevStep!.action!.descriptor!.outputDataShape ||
-                      ({} as DataShape);
-                  } catch (err) {
-                    // ignore
-                  }
+                  const dataShape = getOutputDataShapeFromPreviousStep(state.integration, params.flowId, positionAsNumber);
                   const step = state.step;
                   // parse the configured properties
                   const configuration = createChoiceConfiguration(

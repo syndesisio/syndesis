@@ -1,11 +1,11 @@
 import {
-  getPreviousIntegrationStepWithDataShape,
+  getOutputDataShapeFromPreviousStep,
   getSteps,
   WithFilterOptions,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { DataShape, Integration } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 import {
   EditorPageCard,
   IntegrationEditorLayout,
@@ -57,19 +57,7 @@ export class RuleFilterStepPage extends React.Component<
             >>
               {(params, state, { history }) => {
                 const positionAsNumber = parseInt(params.position, 10);
-                let dataShape = {} as DataShape;
-                try {
-                  const prevStep = getPreviousIntegrationStepWithDataShape(
-                    state.integration,
-                    params.flowId,
-                    positionAsNumber
-                  );
-                  dataShape =
-                    prevStep!.action!.descriptor!.outputDataShape ||
-                    ({} as DataShape);
-                } catch (err) {
-                  // ignore
-                }
+                const dataShape = getOutputDataShapeFromPreviousStep(state.integration, params.flowId, positionAsNumber);
                 const handleSubmitForm = async ({
                   values,
                 }: IOnUpdatedIntegrationProps) => {
