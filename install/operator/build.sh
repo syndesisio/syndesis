@@ -12,7 +12,7 @@ source "$(pwd)/../../tools/bin/commands/util/operator_funcs"
 source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
 source "./.lib.sh"
 
-OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator:latest)"
+OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"

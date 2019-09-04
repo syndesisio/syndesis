@@ -1,19 +1,23 @@
 package template
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
+
+	"math/rand"
+	"time"
+
+	v1 "github.com/openshift/api/image/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
-	"math/rand"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-	"time"
+	"k8s.io/apimachinery/pkg/types"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
-var log = logf.Log.WithName("template")
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 type ResourceParams struct {
@@ -81,12 +85,27 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
+func GetSyndesisVersionFromOperator(ctx context.Context, c client.Client, syndesis *v1alpha1.Syndesis) (string, error) {
+	is := &v1.ImageStream{}
+	err := c.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-operator"}, is)
+	if err != nil {
+		return "", err
+	}
+
+	if len(is.Spec.Tags) == 1 {
+		return is.Spec.Tags[0].Name, nil
+	} else {
+		return "", fmt.Errorf("more than one tag found, unable to find the version")
+	}
+}
+
 func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) error {
 
 	// Lets fill in all the addons we know about...
 	if syndesis.Spec.Addons == nil {
 		syndesis.Spec.Addons = v1alpha1.AddonsSpec{}
 	}
+
 	addonFiles, err := generator.GetAssetsFS().Open("./addons/")
 	if err != nil {
 		return err

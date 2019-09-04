@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+
 	"github.com/go-logr/logr"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
@@ -72,10 +73,6 @@ func syndesisPhaseIs(syndesis *v1alpha1.Syndesis, statuses ...v1alpha1.SyndesisP
 		}
 	}
 	return false
-}
-
-func createOrReplace(ctx context.Context, client client.Client, res runtime.Object) error {
-	return createOrReplaceForce(ctx, client, res, false)
 }
 
 func createOrReplaceForce(ctx context.Context, client client.Client, res runtime.Object, force bool) error {

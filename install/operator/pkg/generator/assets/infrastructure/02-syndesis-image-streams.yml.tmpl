@@ -9,12 +9,14 @@
       syndesis.io/component: syndesis-server
   spec:
     tags:
-    - name: "{{ .Syndesis.Spec.Components.Server.Tag }}"
-      from:
       {{if .Syndesis.Spec.DevImages}}
+    - name: "latest"
+      from:
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Rest }}:latest'
       {{else}}
+    - name: "{{ .Syndesis.Spec.Components.Server.Tag }}"
+      from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
       importPolicy:
@@ -31,12 +33,14 @@
       syndesis.io/component: syndesis-ui
   spec:
     tags:
-    - name: "{{ .Syndesis.Spec.Components.UI.Tag }}"
-      from:
       {{if .Syndesis.Spec.DevImages}}
+    - name: "latest"
+      from:
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Ui }}:latest'
       {{else}}
+    - name: "{{ .Syndesis.Spec.Components.UI.Tag }}"
+      from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
       importPolicy:
@@ -53,12 +57,14 @@
       syndesis.io/component: syndesis-meta
   spec:
     tags:
-    - name: "{{ .Syndesis.Spec.Components.Meta.Tag }}"
-      from:
       {{if .Syndesis.Spec.DevImages}}
+    - name: "latest"
+      from:
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.Verifier }}:latest'
       {{else}}
+    - name: "{{ .Syndesis.Spec.Components.Meta.Tag }}"
+      from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}'
       importPolicy:
@@ -126,12 +132,14 @@
       syndesis.io/component: s2i-java
   spec:
     tags:
-    - name: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
-      from:
       {{if .Syndesis.Spec.DevImages}}
+    - name: "latest"
+      from:
         kind: ImageStreamTag
         name: '{{ .Images.Syndesis.S2i }}:latest'
       {{else}}
+    - name: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
+      from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}'
       importPolicy:
