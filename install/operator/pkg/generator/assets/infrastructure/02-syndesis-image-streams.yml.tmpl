@@ -19,8 +19,10 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
+      {{if .Syndesis.Spec.Components.Server.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       {{end}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -43,8 +45,10 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
+      {{if .Syndesis.Spec.Components.UI.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       {{end}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -67,8 +71,10 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}'
+      {{if .Syndesis.Spec.Components.Meta.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       {{end}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -142,6 +148,8 @@
       from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}'
+      {{if .Syndesis.Spec.Components.S2I.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       {{end}}

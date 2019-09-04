@@ -81,11 +81,13 @@ type KomodoConfiguration struct {
 }
 
 type S2IConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Scheduled bool   `json:"scheduled,omitempty"`
+	Tag       string `json:"tag,omitempty"`
 }
 
 type UIConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Scheduled bool   `json:"scheduled,omitempty"`
+	Tag       string `json:"tag,omitempty"`
 }
 
 type DbConfiguration struct {
@@ -106,12 +108,14 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
+	Scheduled bool           `json:"scheduled,omitempty"`
 	Tag       string         `json:"tag,omitempty"`
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
+	Scheduled bool                `json:"scheduled,omitempty"`
 	Tag       string              `json:"tag,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }

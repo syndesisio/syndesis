@@ -37,10 +37,14 @@ spec:
                     memory: 512Mi
                 volumeCapacity: 10Gi
         server:
+            scheduled: true
             resources:
                 limits:
                     memory: 800Mi
+        s2i:
+            scheduled: false
         meta:
+            scheduled: true
             tag: latest
             resources:
                 limits:

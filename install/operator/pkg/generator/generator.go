@@ -5,18 +5,19 @@ package generator
 import (
 	"bytes"
 	"fmt"
+	"io/ioutil"
+	"net/http"
+	"reflect"
+	"sort"
+	"strings"
+	"text/template"
+
 	"github.com/hoisie/mustache"
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"io/ioutil"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"net/http"
-	"reflect"
 	"sigs.k8s.io/yaml"
-	"sort"
-	"strings"
-	"text/template"
 )
 
 type supportImages struct {
@@ -94,6 +95,7 @@ func RenderDir(directory string, context interface{}) ([]unstructured.Unstructur
 }
 
 var templateFunctions = template.FuncMap{
+	"deref": func(b *bool) bool { return *b },
 	"mapHasKey": func(item reflect.Value, key reflect.Value) (bool, error) {
 		if item.Kind() != reflect.Map {
 			return false, fmt.Errorf("mapHasKey requires a map type")
