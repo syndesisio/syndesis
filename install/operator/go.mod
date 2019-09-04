@@ -28,7 +28,7 @@ require (
 	k8s.io/gengo v0.0.0-20190327210449-e17681d19d3a
 	k8s.io/kube-openapi v0.0.0-20190603182131-db7b694dc208
 	sigs.k8s.io/controller-runtime v0.2.0
-	sigs.k8s.io/controller-tools v0.1.12
+	sigs.k8s.io/controller-tools v0.2.0
 	sigs.k8s.io/yaml v1.1.0
 )
 
