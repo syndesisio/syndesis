@@ -250,14 +250,12 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             query = "status=" + Extension.Status.Installed;
         }
 
-        ListResult<Extension> extensions = getDataManager().fetchAll(
+        return getDataManager().fetchAll(
             Extension.class,
             new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
             new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
-
-        return extensions;
     }
 
     // ===============================================================
