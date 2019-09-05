@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router';
 import { IEditSpecificationPageProps } from './apiProvider/EditSpecificationPage';
 import { IReviewActionsPageProps } from './apiProvider/ReviewActionsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { DescribeChoiceDataShapePage } from "./choice/DescribeChoiceDataShapePage";
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
@@ -112,6 +113,8 @@ export const BasicFilterApp: React.FunctionComponent<
 export interface IChoiceAppProps {
   choicePath: string;
   choiceChildren: React.ReactElement<IChoiceAppProps>;
+  describeDataPath: string;
+  describeDataChildren: React.ReactElement<DescribeChoiceDataShapePage>;
 }
 export const ChoiceApp: React.FunctionComponent<IChoiceAppProps> = props => {
   return (
@@ -120,6 +123,11 @@ export const ChoiceApp: React.FunctionComponent<IChoiceAppProps> = props => {
         path={props.choicePath}
         exact={true}
         children={props.choiceChildren}
+      />
+      <Route
+        path={props.describeDataPath}
+        exact={true}
+        children={props.describeDataChildren}
       />
     </Switch>
   );
@@ -245,6 +253,8 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
         <ChoiceApp
           choicePath={props.choice.choicePath}
           choiceChildren={props.choice.choiceChildren}
+          describeDataPath={props.choice.describeDataPath}
+          describeDataChildren={props.choice.describeDataChildren}
         />
       </Route>
       <Route path={props.step.configurePath}>
