@@ -130,7 +130,7 @@ class IntegrationOverviewHelper {
             builder.currentState(exposedDeployment.getCurrentState());
 
             if (exposedDeployment.getId().isPresent()) {
-                builder.managementUrl(exposureHelper.getManagementUrl(integration.getExposure()));
+                builder.managementUrl(Optional.ofNullable(exposureHelper.getManagementUrl(integration.getExposure())));
 
                 final IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class,
                     exposedDeployment.getId().get());
