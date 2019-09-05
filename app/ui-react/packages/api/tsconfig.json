@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "module": "esnext",
     "target": "esnext",
     "lib": ["es6", "dom"],
@@ -22,7 +23,6 @@
     "resolveJsonModule": true,
     "noEmit": true
   },
-  "baseUrl": "./",
   "include": ["src/**/*", "../.jest/**/*"],
   "exclude": [".storybook", "node_modules", "dist", "stories"]
 }
