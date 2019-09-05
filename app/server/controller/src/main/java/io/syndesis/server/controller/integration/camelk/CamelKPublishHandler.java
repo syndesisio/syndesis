@@ -16,7 +16,6 @@
 package io.syndesis.server.controller.integration.camelk;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumSet;
