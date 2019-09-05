@@ -2556,6 +2556,12 @@
         </exclusions>
       </dependency>
 
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>DynamoDBLocal</artifactId>
+        <version>${aws-dynamodb-local.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

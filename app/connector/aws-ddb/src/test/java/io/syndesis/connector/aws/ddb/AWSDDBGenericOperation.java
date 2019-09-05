@@ -31,7 +31,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
     abstract String getConnectorId();

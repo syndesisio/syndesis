@@ -17,6 +17,7 @@ package io.syndesis.connector.aws.ddb.customizer;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -38,6 +39,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
     private Map<String, Object> options;
 
     private static final Logger LOG = LoggerFactory.getLogger(DDBConnectorCustomizer.class);
+    public static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -88,7 +90,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
      * @param options
      */
     abstract void customize(Exchange exchange, Map<String,
-            Object> options);
+    Object> options);
 
 
     /**
@@ -99,40 +101,35 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
      * @return
      */
     protected Map<String, AttributeValue> getAttributeValueMap(
-            final String parameterName, Map<String, Object> options) {
+    final String parameterName, Map<String, Object> options) {
         final Map<String, AttributeValue> attributeMap = new HashMap<String, AttributeValue>();
 
-        if (options.containsKey(parameterName)) {
 
-            String element = options.get(parameterName).toString();
+        String element = ConnectorOptions.extractOption(options, parameterName, "");
 
-            if (!element.isEmpty()) {
-                try {
-                    ObjectMapper mapper = new ObjectMapper();
+        if (!element.isEmpty()) {
+            try {
 
-                    @SuppressWarnings("unchecked")
-                    Map<String, Object> attributes = mapper.readValue(element, Map.class);
+                @SuppressWarnings("unchecked")
+                Map<String, Object> attributes = MAPPER.readValue(element, Map.class);
 
-                    if (attributes.isEmpty() && LOG.isWarnEnabled()) {
-                        LOG.warn("The parameter " + parameterName + " is an empty map.");
-                    }
-
-                    for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
-                        attributeMap.put(attribute.getKey(),
-                                new AttributeValue(attribute.getValue().toString()));
-                        if(LOG.isTraceEnabled()) {
-                            LOG.trace("Parameter adding '" + attribute.getKey() + "'->'" + attribute.getValue() + "'");
-                        }
-                    }
-                } catch (IOException e) {
-                    LOG.warn("Error trying to parse the json: " + element, e);
+                if (attributes.isEmpty() && LOG.isWarnEnabled()) {
+                    LOG.warn("The parameter {} is an empty map.", parameterName);
                 }
-            } else {
-                LOG.warn("The parameter " + parameterName + " is empty.");
+
+                for (Map.Entry<String, Object> attribute : attributes.entrySet()) {
+                    attributeMap.put(attribute.getKey(),
+                    new AttributeValue(attribute.getValue().toString()));
+                    LOG.trace("Parameter adding '" + attribute.getKey() + "'->'" + attribute.getValue() + "'");
+
+                }
+            } catch (IOException e) {
+                LOG.warn("Error trying to parse the json: {}", element, e);
             }
         } else {
-            LOG.warn("The parameter " + parameterName + " does not exist.");
+            LOG.warn("The parameter {} is empty.", parameterName);
         }
+
         return attributeMap;
     }
 

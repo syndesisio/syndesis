@@ -123,8 +123,12 @@
       <artifactId>connector-support-test</artifactId>
       <scope>test</scope>
     </dependency>
-  </dependencies>
 
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-util</artifactId>
+    </dependency>
+  </dependencies>
   <build>
     <resources>
       <resource>
@@ -158,4 +162,5 @@
       </plugin>
     </plugins>
   </build>
+
 </project>
