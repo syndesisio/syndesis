@@ -28,14 +28,14 @@ Oso: false
 Productized: false
 PrometheusRules: ""
 Registry: docker.io
-TagMinor: "1.8.0"
-TagMajor: "1.9.0"
+TagMinor: "1.8"
+TagMajor: "1.9"
 Tags:
   Komodo: latest
   OAuthProxy: v4.0.0
   PostgresExporter: v0.4.7
   Postgresql: "9.5"
   Prometheus: v2.1.0
-  Syndesis: latest
+  Syndesis: 1.8.1-20190905
   Upgrade: latest
 WithDockerImages: false
