@@ -109,11 +109,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	renderContext.Tags.Syndesis, err = syndesistemplate.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
-	if err != nil {
-		return err
-	}
-
 	err = syndesistemplate.SetupRenderContext(renderContext, syndesis, params, config)
 	if err != nil {
 		return err
@@ -295,13 +290,14 @@ func checkTags(context *generator.Context) error {
 		{"s2i", context.Syndesis.Spec.Components.S2I.Tag},
 	}
 	for _, image := range images {
-
-		if image.tag != "latest" && c.Match(version.Normalize(image.tag)) == false {
-			return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
-				image.name,
-				image.tag,
-				context.TagMinor,
-				context.TagMajor)
+		if image.tag != "latest" {
+			if c.Match(version.Normalize(image.tag)) == false {
+				return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
+					image.name,
+					image.tag,
+					context.TagMinor,
+					context.TagMajor)
+			}
 		}
 	}
 
