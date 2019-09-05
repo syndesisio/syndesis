@@ -70,8 +70,6 @@ import org.springframework.stereotype.Component;
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKPublishHandler extends BaseCamelKHandler implements StateChangeHandler {
-    static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
-
     private final IntegrationResourceManager resourceManager;
     private final IntegrationProjectGenerator projectGenerator;
     private final List<CamelKIntegrationCustomizer> customizers;
@@ -248,10 +246,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
         ImmutableIntegrationSpec.Builder integrationSpecBuilder = new IntegrationSpec.Builder();
 
-        Collection<String> customizers = DEFAULT_CUSTOMIZERS;
-        if (!configuration.getCamelk().getCustomizers().isEmpty()) {
-            customizers = configuration.getCamelk().getCustomizers();
-        }
+        Collection<String> customizers = configuration.getCamelk().getCustomizers();
 
         integrationSpecBuilder.addResources(new ResourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()

@@ -22,11 +22,13 @@ import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import io.opentracing.Tracer;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.tracing.TracingActivityTrackingPolicyFactory;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.k.RoutesLoader;
 import org.apache.camel.k.Runtime;
@@ -40,13 +42,15 @@ public class IntegrationRouteLoader implements RoutesLoader {
 
     private ActivityTracker activityTracker;
     private Set<IntegrationStepHandler> integrationStepHandlers;
+    private Tracer tracer;
 
     public IntegrationRouteLoader() {
     }
 
-    public IntegrationRouteLoader(ActivityTracker activityTracker, Set<IntegrationStepHandler> integrationStepHandlers) {
+    public IntegrationRouteLoader(ActivityTracker activityTracker, Set<IntegrationStepHandler> integrationStepHandlers, Tracer tracer) {
         this.activityTracker = activityTracker;
         this.integrationStepHandlers = integrationStepHandlers;
+        this.tracer = tracer;
     }
 
     @Override
@@ -72,11 +76,22 @@ public class IntegrationRouteLoader implements RoutesLoader {
             LOGGER.info("{} IntegrationStepHandlers loaded.", integrationStepHandlers.size());
         }
 
+        if (tracer == null) {
+            LOGGER.info("Loading tracer from Camel RuntimeRegistry.");
+            tracer = runtimeRegistry.lookup("tracer", Tracer.class);
+            if (tracer != null) {
+                LOGGER.info("Tracer {} loaded.", tracer);
+            } else {
+                LOGGER.info("No tracer found.");
+            }
+        }
+
         return new IntegrationRouteBuilder(
             ctx -> URIResolver.resolve(ctx, source),
             integrationStepHandlers,
             Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
-                          new FlowActivityTrackingPolicyFactory(activityTracker))
+                new FlowActivityTrackingPolicyFactory(activityTracker),
+                new TracingActivityTrackingPolicyFactory(tracer))
         );
     }
 }

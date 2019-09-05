@@ -82,6 +82,13 @@
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
+    <!-- Jaeger -->
+    <dependency>
+      <groupId>io.jaegertracing</groupId>
+      <artifactId>jaeger-thrift</artifactId>
+      <version>0.32.0</version>
+    </dependency>
+
     <!-- test -->
     <dependency>
       <groupId>org.apache.camel</groupId>
