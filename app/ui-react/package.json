@@ -21,6 +21,7 @@
     "lint": "lerna run --parallel --no-bail lint",
     "test:angular": "lerna run test:ci",
     "e2e": "lerna run --scope @syndesis/syndesis e2e",
+    "e2e:setup": "lerna run --scope @syndesis/syndesis e2e:setup",
     "e2e:terminal": "lerna run --scope @syndesis/syndesis e2e:terminal",
     "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
     "test": "npm-run-all -s test:*",
