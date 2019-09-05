@@ -672,9 +672,6 @@
   <rule ref="category/java/performance.xml/ConsecutiveAppendsShouldReuse">
     <priority>3</priority>
   </rule>
-  <rule ref="category/java/errorprone.xml/LoggerIsNotStaticFinal">
-    <priority>4</priority>
-  </rule>
   <rule ref="category/java/multithreading.xml/AvoidSynchronizedAtMethodLevel">
     <priority>3</priority>
   </rule>
