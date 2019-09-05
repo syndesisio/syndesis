@@ -138,7 +138,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                         })
                       }
                       choiceHref={(step, p, s) =>
-                        resolvers.integration.edit.editStep.choice({
+                        resolvers.integration.edit.editStep.choice.configure({
                           step,
                           ...p,
                           ...s,

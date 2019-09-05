@@ -23,8 +23,8 @@ import {
   IDescribeDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
+import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
 import { toUIStep, toUIStepCollection } from '../utils';
-import { WithDescribeDataShapeForm } from './WithDescribeDataShapeForm';
 
 export interface IDescribeDataShapePageProps extends IPageWithEditorBreadcrumb {
   backHref: (
