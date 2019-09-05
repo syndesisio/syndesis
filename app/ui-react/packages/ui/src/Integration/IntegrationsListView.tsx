@@ -6,7 +6,6 @@ import {
   ListViewToolbar,
   SimplePageHeader,
 } from '../Shared';
-import { IntegrationsEmptyState } from './IntegrationsEmptyState';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   linkToManageCiCd: H.LocationDescriptor;
@@ -16,10 +15,8 @@ export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   i18nDescription: string;
   i18nManageCiCd: string;
   i18nImport: string;
-  i18nLinkCreateConnection: string;
+  i18nLinkCreateIntegration: string;
   i18nLinkCreateIntegrationTip?: string;
-  i18nEmptyStateInfo: string;
-  i18nEmptyStateTitle: string;
 }
 
 export class IntegrationsListView extends React.Component<
@@ -52,21 +49,11 @@ export class IntegrationsListView extends React.Component<
                 href={this.props.linkToIntegrationCreation}
                 as={'primary'}
               >
-                {this.props.i18nLinkCreateConnection}
+                {this.props.i18nLinkCreateIntegration}
               </ButtonLink>
             </div>
           </ListViewToolbar>
-          {this.props.children ? (
-            this.props.children
-          ) : (
-            <IntegrationsEmptyState
-              i18nCreateIntegration={this.props.i18nLinkCreateConnection}
-              i18nCreateIntegrationTip={this.props.i18nLinkCreateIntegrationTip}
-              i18nEmptyStateInfo={this.props.i18nEmptyStateInfo}
-              i18nEmptyStateTitle={this.props.i18nEmptyStateTitle}
-              linkCreateIntegration={this.props.linkToIntegrationCreation}
-            />
-          )}
+          {this.props.children}
         </PageSection>
       </>
     );
