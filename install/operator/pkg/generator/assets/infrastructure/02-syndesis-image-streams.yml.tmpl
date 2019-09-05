@@ -19,7 +19,7 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
-      {{if .Syndesis.Spec.Components.Server.Scheduled}}
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
       {{end}}
@@ -45,7 +45,7 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
-      {{if .Syndesis.Spec.Components.UI.Scheduled}}
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
       {{end}}
@@ -71,7 +71,7 @@
       from:
         kind: DockerImage
         name: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}'
-      {{if .Syndesis.Spec.Components.Meta.Scheduled}}
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
       {{end}}
@@ -107,8 +107,10 @@
     - from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}'
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       name: "{{ .Syndesis.Spec.Components.Prometheus.Tag }}"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -124,8 +126,10 @@
     - from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{.Images.PostgresExporterImagePrefix}}/{{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}'
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
+      {{end}}
       name: "{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
@@ -148,7 +152,7 @@
       from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}'
-      {{if .Syndesis.Spec.Components.S2I.Scheduled}}
+      {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
       {{end}}

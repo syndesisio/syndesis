@@ -95,7 +95,6 @@ func RenderDir(directory string, context interface{}) ([]unstructured.Unstructur
 }
 
 var templateFunctions = template.FuncMap{
-	"deref": func(b *bool) bool { return *b },
 	"mapHasKey": func(item reflect.Value, key reflect.Value) (bool, error) {
 		if item.Kind() != reflect.Map {
 			return false, fmt.Errorf("mapHasKey requires a map type")

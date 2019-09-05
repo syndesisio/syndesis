@@ -55,6 +55,7 @@ type IntegrationSpec struct {
 }
 
 type ComponentsSpec struct {
+	Scheduled        bool                          `json:"scheduled,omitempty"`
 	Server           ServerConfiguration           `json:"server,omitempty"`
 	Meta             MetaConfiguration             `json:"meta,omitempty"`
 	UI               UIConfiguration               `json:"ui,omitempty"`
@@ -81,13 +82,11 @@ type KomodoConfiguration struct {
 }
 
 type S2IConfiguration struct {
-	Scheduled bool   `json:"scheduled,omitempty"`
-	Tag       string `json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type UIConfiguration struct {
-	Scheduled bool   `json:"scheduled,omitempty"`
-	Tag       string `json:"tag,omitempty"`
+	Tag string `json:"tag,omitempty"`
 }
 
 type DbConfiguration struct {
@@ -108,14 +107,12 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Scheduled bool           `json:"scheduled,omitempty"`
 	Tag       string         `json:"tag,omitempty"`
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
-	Scheduled bool                `json:"scheduled,omitempty"`
 	Tag       string              `json:"tag,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
