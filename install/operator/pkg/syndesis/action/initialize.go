@@ -47,7 +47,7 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Synde
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
 		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
-		syndesisVersion, err := template.GetSyndesisVersionFromOperator(ctx, a.client, syndesis)
+		syndesisVersion, err := template.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}

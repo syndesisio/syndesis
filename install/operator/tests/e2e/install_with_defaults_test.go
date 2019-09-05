@@ -18,13 +18,25 @@ package e2e
 
 import (
 	goctx "context"
+	"testing"
+	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
+
+	"golang.org/x/net/context"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	imagev1 "github.com/openshift/api/image/v1"
+
 	framework "github.com/operator-framework/operator-sdk/pkg/test"
 	"github.com/operator-framework/operator-sdk/pkg/test/e2eutil"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
-	"testing"
-	"time"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -34,6 +46,7 @@ var (
 	installingPhaseTimeout = time.Second * 500
 	cleanupRetryInterval   = time.Second * 1
 	cleanupTimeout         = time.Second * 5
+	configLocation         = "build/conf/config.yaml"
 )
 
 func TestSyndesis(t *testing.T) {
@@ -50,8 +63,7 @@ func TestSyndesis(t *testing.T) {
 
 	// run subtests
 	t.Run("e2e", func(t *testing.T) {
-		t.Run("install-default", installWithDefaultsTest)
-		t.Run("install-full", installTest)
+		t.Run("install-empty-cr", installWithDefaultsTest)
 	})
 }
 
@@ -63,6 +75,10 @@ func installWithDefaultsTest(t *testing.T) {
 	defer ctx.Cleanup()
 
 	namespace, err := ctx.GetNamespace()
+	if err != nil {
+		t.Fatal(err)
+	}
+
 	cr := "syndesis-test"
 
 	co := framework.CleanupOptions{
@@ -93,7 +109,11 @@ func installWithDefaultsTest(t *testing.T) {
 
 	syndesis := CreateEmpyCR(cr, namespace)
 
-	t.Logf("creating empty syndesis cr")
+	configuration.TemplateConfig = configLocation
+	renderContext, err := template.GetTemplateContext()
+	if err != nil {
+		t.Fatalf("unable to render config content: %v", err)
+	}
 
 	if err := f.Client.Create(goctx.TODO(), syndesis, &co); err != nil {
 		t.Fatal(err)
@@ -111,61 +131,44 @@ func installWithDefaultsTest(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+
+	installWithDefaultsImageStreamsTest(t, f, renderContext, namespace)
+
 }
 
-// Install syndesis with a fully CR, verify some of the generated values
-func installTest(t *testing.T) {
-	t.Parallel()
-	ctx := framework.NewTestCtx(t)
-	defer ctx.Cleanup()
+func installWithDefaultsImageStreamsTest(t *testing.T, f *framework.Framework, config *generator.Context, namespace string) {
+	t.Log("checking ImageStreams for syndesis components")
 
-	namespace, err := ctx.GetNamespace()
-	cr := "syndesis-test"
-
-	co := framework.CleanupOptions{
-		TestContext:   ctx,
-		Timeout:       cleanupTimeout,
-		RetryInterval: cleanupRetryInterval,
+	is := &imagev1.ImageStream{}
+	if err := framework.AddToFrameworkScheme(imagev1.AddToScheme, is); err != nil {
+		t.Fatalf("could not add scheme to framework scheme: %v", err)
 	}
 
-	// Initialize cluster resources from yaml, including operator deployment
-	// and needed roles / rbac
-	if err := ctx.InitializeClusterResources(&co); err != nil {
-		t.Fatalf("failed to initialize cluster resources: %v", err)
-	}
-	t.Log("initialized cluster resources from yaml")
-
-	n, err := ctx.GetNamespace()
-	if err != nil {
-		t.Fatal(err)
+	var flagtests = []struct {
+		name      string
+		imageName string
+	}{
+		{"Server", "syndesis-server"},
+		{"Meta", "syndesis-meta"},
+		{"S2I", "syndesis-s2i"},
+		{"UI", "syndesis-ui"},
 	}
 
-	// get global framework variables
-	f := framework.Global
+	for _, tt := range flagtests {
+		t.Logf("checking imagestream for %s", tt.name)
+		if err := f.Client.Get(context.TODO(), client.ObjectKey{Name: tt.imageName, Namespace: namespace}, is); err != nil {
+			t.Fatalf("an imagestream named [%s] should be created, but got an error [%v]", tt.imageName, err)
+		}
 
-	// wait for syndesis-operator to be ready
-	if err := e2eutil.WaitForOperatorDeployment(t, f.KubeClient, n, "syndesis-operator", 1, retryInterval, operatorTimeout); err != nil {
-		t.Fatal(err)
-	}
+		if l := len(is.Spec.Tags); l != 1 {
+			t.Fatalf("the imagestream should have only one tag, but got %d", l)
+		} else {
+			t.Logf("the imagestream has only one tag")
 
-	syndesis := CreateCR(cr, namespace)
-
-	t.Logf("creating syndesis cr")
-
-	if err := f.Client.Create(goctx.TODO(), syndesis, &co); err != nil {
-		t.Fatal(err)
-	}
-
-	// wait for syndesis operator to reach 1 replicas
-	t.Logf("waiting syndesis to be initialized")
-	err = WaitForSyndesisPhase(t, f, namespace, cr, v1alpha1.SyndesisPhaseInstalling, retryInterval, startingPhaseTimeout)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Logf("waiting syndesis to be installed")
-	err = WaitForSyndesisPhase(t, f, namespace, cr, v1alpha1.SyndesisPhaseInstalled, retryInterval, installingPhaseTimeout)
-	if err != nil {
-		t.Fatal(err)
+			if is.Spec.Tags[0].Name != config.Tags.Syndesis {
+				t.Fatalf("the imagestream tag should be named [%s], but got %s", config.Tags.Syndesis, is.Spec.Tags[0].Name)
+			}
+			t.Logf("the imagestream tag is named [%s]", config.Tags.Syndesis)
+		}
 	}
 }
