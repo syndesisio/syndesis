@@ -1,4 +1,3 @@
-import { TextContent } from '@patternfly/react-core';
 import { IntegrationOverview } from "@syndesis/models";
 import { ButtonLink, PageSection } from '@syndesis/ui';
 import { MessageDialog } from 'patternfly-react';
@@ -46,75 +45,75 @@ export const IntegrationExposeVia: React.FunctionComponent<
   if (exposureMeans.indexOf('_3SCALE') !== -1) {
     return (
       <>
-      { integration.exposure && integration.exposure !== '_3SCALE' ? (
-        <PageSection>
-          <TextContent>
-            <MessageDialog
-              show={showDialog}
-              title={t('integrations:exposeVia:3scale')} primaryContent={
-              <p className="lead">{t('integrations:exposeVia:3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
-              }
-              primaryActionButtonContent={t('shared:Yes')}
-              primaryAction={doEnable3scale}
-              secondaryActionButtonContent={t('shared:No')}
-              secondaryAction={doHideDialog}
-              onHide={doHideDialog}
-              onCancel={doHideDialog}
-            />
-            <div className="pf-l-split pf-m-gutter">
-              <div><ButtonLink children={t('integrations:exposeVia:3scale')} onClick={doShowDialog} disabled={pending} /></div>
-              <div>{t('integrations:exposeVia:3scaleDescription')}</div>
-            </div>
-          </TextContent>
-        </PageSection>
-      ) : (
-        <>
+        {integration.exposure && integration.exposure !== '_3SCALE' ? (
           <PageSection>
-            <TextContent>
-              <div className="pf-l-split pf-m-gutter">
-                <div><ButtonLink children={t('integrations:exposeVia:manageIn3scale')} onClick={doManageIn3scale} disabled={pending || unpublished} /></div>
-                {(pending || unpublished) ? (
-                  <div>{t('integrations:exposeVia:manageIn3scalePendingDescription')}</div>
-                ) : (
-                  <div>{t('integrations:exposeVia:manageIn3scaleDescription')}</div>
-                )
-                }
-              </div>
-            </TextContent>
-          </PageSection>
-          <PageSection>
-            <TextContent>
+            <div className="pf-c-content">
               <MessageDialog
                 show={showDialog}
-                title={t('integrations:exposeVia:not3scale')} primaryContent={
-                <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
-              }
+                title={t('integrations:exposeVia:3scale')} primaryContent={
+                  <p className="lead">{t('integrations:exposeVia:3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
+                }
                 primaryActionButtonContent={t('shared:Yes')}
-                primaryAction={doDisable3scale}
+                primaryAction={doEnable3scale}
                 secondaryActionButtonContent={t('shared:No')}
                 secondaryAction={doHideDialog}
                 onHide={doHideDialog}
                 onCancel={doHideDialog}
               />
               <div className="pf-l-split pf-m-gutter">
-                <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending}/></div>
-                <div>{t('integrations:exposeVia:not3scaleDescription')}</div>
+                <div><ButtonLink children={t('integrations:exposeVia:3scale')} onClick={doShowDialog} disabled={pending} /></div>
+                <div>{t('integrations:exposeVia:3scaleDescription')}</div>
               </div>
-            </TextContent>
+            </div>
           </PageSection>
-        </>
-      )}
+        ) : (
+            <>
+              <PageSection>
+                <div className="pf-c-content">
+                  <div className="pf-l-split pf-m-gutter">
+                    <div><ButtonLink children={t('integrations:exposeVia:manageIn3scale')} onClick={doManageIn3scale} disabled={pending || unpublished} /></div>
+                    {(pending || unpublished) ? (
+                      <div>{t('integrations:exposeVia:manageIn3scalePendingDescription')}</div>
+                    ) : (
+                        <div>{t('integrations:exposeVia:manageIn3scaleDescription')}</div>
+                      )
+                    }
+                  </div>
+                </div>
+              </PageSection>
+              <PageSection>
+                <div className="pf-c-content">
+                  <MessageDialog
+                    show={showDialog}
+                    title={t('integrations:exposeVia:not3scale')} primaryContent={
+                      <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
+                    }
+                    primaryActionButtonContent={t('shared:Yes')}
+                    primaryAction={doDisable3scale}
+                    secondaryActionButtonContent={t('shared:No')}
+                    secondaryAction={doHideDialog}
+                    onHide={doHideDialog}
+                    onCancel={doHideDialog}
+                  />
+                  <div className="pf-l-split pf-m-gutter">
+                    <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending} /></div>
+                    <div>{t('integrations:exposeVia:not3scaleDescription')}</div>
+                  </div>
+                </div>
+              </PageSection>
+            </>
+          )}
       </>
     );
   } else {
     return (integration.exposure && integration.exposure === '_3SCALE') ? (
       <PageSection>
-        <TextContent>
+        <div className="pf-c-content">
           <MessageDialog
             show={showDialog}
             title={t('integrations:exposeVia:not3scale')} primaryContent={
-            <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
-          }
+              <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
+            }
             primaryActionButtonContent={t('shared:Yes')}
             primaryAction={doDisable3scale}
             secondaryActionButtonContent={t('shared:No')}
@@ -123,10 +122,10 @@ export const IntegrationExposeVia: React.FunctionComponent<
             onCancel={doHideDialog}
           />
           <div className="pf-l-split pf-m-gutter">
-            <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending}/></div>
+            <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending} /></div>
             <div>{t('integrations:exposeVia:no3scaleConfigured')}</div>
           </div>
-        </TextContent>
+        </div>
       </PageSection>
     ) : null;
   }

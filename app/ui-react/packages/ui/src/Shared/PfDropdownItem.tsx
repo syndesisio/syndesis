@@ -4,7 +4,7 @@ import * as React from 'react';
 export interface IPfDropdownItem {
   children: React.ReactNode;
   disabled?: boolean;
-  onClick?(event?: React.MouseEvent): void;
+  onClick?(event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent): void;
 }
 class PfDropdownItem extends React.Component<IPfDropdownItem> {
   public render() {
