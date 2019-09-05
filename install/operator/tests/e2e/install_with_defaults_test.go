@@ -49,7 +49,7 @@ var (
 	configLocation         = "build/conf/config.yaml"
 )
 
-func TestSyndesis1(t *testing.T) {
+func TestSyndesis(t *testing.T) {
 	syndesis := &v1alpha1.SyndesisList{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "Syndesis",
