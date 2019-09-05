@@ -186,7 +186,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		addonDir := "./addons/" + addon + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			a.log.Info("unsuported addon configured", "addon", addon)
+			a.log.Info("unsuported addon configured", "addon", addon, "error", err)
 			continue
 		}
 		f.Close()
