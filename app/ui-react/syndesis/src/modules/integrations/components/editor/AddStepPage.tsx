@@ -1,7 +1,12 @@
 import {
   getFirstPosition,
+  getFlow,
   getLastPosition,
+  getMetadataValue,
   getSteps,
+  isDefaultFlow,
+  isIntegrationApiProvider,
+  isPrimaryFlow,
   useIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -130,6 +135,16 @@ export const AddStepPage: React.FunctionComponent<
     openDeleteDialog();
   };
 
+  const isApiProvider = isIntegrationApiProvider(state.integration);
+  const currentFlow = getFlow(state.integration, params.flowId);
+  const isPrimary = isPrimaryFlow(currentFlow!);
+  const primaryFlow = isPrimary
+    ? currentFlow
+    : getFlow(
+      state.integration,
+      getMetadataValue<string>('primaryFlowId', currentFlow!.metadata)!
+    );
+
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
@@ -189,7 +204,10 @@ export const AddStepPage: React.FunctionComponent<
           )}
           <PageTitle title={t('integrations:editor:saveOrAddStep')} />
           <IntegrationEditorLayout
-            title={t('integrations:editor:addToIntegration')}
+            title={isPrimary
+              ? t('integrations:editor:addToIntegration')
+              : currentFlow!.description || ''
+            }
             description={t('integrations:editor:addStepDescription')}
             toolbar={getBreadcrumb(
               t('integrations:editor:addToIntegration'),
@@ -232,6 +250,10 @@ export const AddStepPage: React.FunctionComponent<
             cancelHref={cancelHref(params, state)}
             saveHref={saveHref(params, state)}
             publishHref={saveHref(params, state)}
+            isApiProvider={isApiProvider}
+            isAlternateFlow={!isPrimary}
+            isDefaultFlow={isDefaultFlow(currentFlow!)}
+            primaryFlowHref={getFlowHref(primaryFlow!.id!, params, state)}
           />
         </React.Fragment>
       )}
