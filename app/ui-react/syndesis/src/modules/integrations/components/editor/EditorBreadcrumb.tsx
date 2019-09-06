@@ -203,6 +203,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
                   key={`${group.id} ${f.id}`}
                   name={getFlowName(f)}
                   description={f.description!}
+                  isCurrent={f.id === currentFlow.id}
                   condition={isDefaultFlow(f) ? 'OTHERWISE' : 'WHEN'}
                   link={getFlowHref(f.id!)}
                 />

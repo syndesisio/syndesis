@@ -708,7 +708,7 @@ export function reconcileConditionalFlows(
     );
     const updatedFlow = applyUpdatedStep(flow, startFlowStep, 0);
 
-    const endStepPosition = flow.steps!.length-1;
+    const endStepPosition = getStepsLastPosition(flow.steps!);
     const endFlowStep = setDataShapeOnStep(
       { ...flow.steps![endStepPosition] },
       flowEndDataShape,
