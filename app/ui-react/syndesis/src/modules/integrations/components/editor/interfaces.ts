@@ -44,6 +44,7 @@ export interface IUIIntegrationStep extends IUIStep {
   previousStepShouldDefineDataShape: boolean;
   previousStepShouldDefineDataShapePosition?: number;
   shouldAddDataMapper: boolean;
+  shouldAddDefaultFlow: boolean;
   isUnclosedSplit: boolean;
   restrictedDelete: boolean;
   notConfigurable: boolean;

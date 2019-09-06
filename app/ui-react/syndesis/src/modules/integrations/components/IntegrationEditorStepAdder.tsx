@@ -13,7 +13,7 @@ import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { EntityIcon } from '../../../shared';
 import { ChoiceStepExpanderBody } from './editor/choice/ChoiceStepExpanderBody';
-import { IUIStep } from './editor/interfaces';
+import { IUIIntegrationStep, IUIStep } from './editor/interfaces';
 import {
   toUIIntegrationStepCollection,
   toUIStepCollection,
@@ -73,6 +73,82 @@ function getStepChildren(
   }
 }
 
+function getWarningTitle(
+  step: IUIIntegrationStep,
+) {
+  if (step.previousStepShouldDefineDataShape
+    || step.shouldAddDataMapper) {
+    return 'Data Type Mismatch';
+  }
+
+  if (step.shouldAddDefaultFlow) {
+    return 'Missing default flow';
+  }
+
+  return '';
+}
+
+function getWarningMessage(
+  step: IUIIntegrationStep,
+  idx: number,
+  props: IIntegrationEditorStepAdderProps,
+) {
+  if (step.previousStepShouldDefineDataShape) {
+    return (
+      <>
+        <Link
+          data-testid={
+            'integration-editor-step-adder-define-data-type-link'
+          }
+          to={props.gotoDescribeDataHref(
+            step.previousStepShouldDefineDataShapePosition!
+          )}
+        >
+          Define the data type
+        </Link>{' '}
+        for the previous step to resolve this warning.
+      </>
+    );
+  }
+
+  if (step.shouldAddDataMapper) {
+    return (
+      <>
+        <Link
+          data-testid={
+            'integration-editor-step-adder-add-step-before-connection-link'
+          }
+          to={props.addDataMapperStepHref(idx)}
+        >
+          Add a data mapping step
+        </Link>{' '}
+        before this connection to resolve the difference.
+      </>
+    );
+  }
+
+  if (step.shouldAddDefaultFlow) {
+    return (
+      <>
+        <Link
+          data-testid={
+            'integration-editor-step-adder-add-default-flow-link'
+          }
+          to={props.configureStepHref(
+            idx,
+            props.steps[idx]
+          )}
+        >
+          Default flow required
+        </Link>{' '}
+        to match the output data type of the step.
+      </>
+    );
+  }
+
+  return <></>;
+}
+
 /**
  * A component to render the steps of an integration with the required action
  * buttons to add a new step, edit an existing one, etc.
@@ -115,38 +191,15 @@ export class IntegrationEditorStepAdder extends React.Component<
                       }
                       showWarning={
                         s.shouldAddDataMapper ||
+                        s.shouldAddDefaultFlow ||
                         s.previousStepShouldDefineDataShape
                       }
-                      i18nWarningTitle={'Data Type Mismatch'}
-                      i18nWarningMessage={
-                        s.previousStepShouldDefineDataShape ? (
-                          <>
-                            <Link
-                              data-testid={
-                                'integration-editor-step-adder-define-data-type-link'
-                              }
-                              to={this.props.gotoDescribeDataHref(
-                                s.previousStepShouldDefineDataShapePosition!
-                              )}
-                            >
-                              Define the data type
-                            </Link>{' '}
-                            for the previous step to resolve this warning.
-                          </>
-                        ) : (
-                          <>
-                            <Link
-                              data-testid={
-                                'integration-editor-step-adder-add-step-before-connection-link'
-                              }
-                              to={this.props.addDataMapperStepHref(idx)}
-                            >
-                              Add a data mapping step
-                            </Link>{' '}
-                            before this connection to resolve the difference.
-                          </>
-                        )
-                      }
+                      i18nWarningTitle={getWarningTitle(s)}
+                      i18nWarningMessage={getWarningMessage(
+                        s,
+                        idx,
+                        this.props
+                      )}
                       actions={
                         <>
                           {!s.restrictedDelete && (
