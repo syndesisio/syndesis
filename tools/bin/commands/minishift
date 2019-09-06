@@ -45,7 +45,7 @@ minishift::usage() {
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --deploy-latest           Deploy latest tags from dockerhub.
-    --nodev                   Do not set the devImages flag in CR (deploys all images)
+    --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT
 }
 
