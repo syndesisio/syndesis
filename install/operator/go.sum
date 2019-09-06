@@ -46,8 +46,8 @@ github.com/bradfitz/go-smtpd v0.0.0-20170404230938-deb6d6237625/go.mod h1:HYsPBT
 github.com/census-instrumentation/opencensus-proto v0.2.0 h1:LzQXZOgg4CQfE6bFvXGM30YZL1WW/M337pXml+GrcZ4=
 github.com/census-instrumentation/opencensus-proto v0.2.0/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chai2010/gettext-go v0.0.0-20170215093142-bf70f2a70fb1/go.mod h1:/iP1qXHoty45bqomnu2LM+VVyAEdWN+vtSHGlQgyxbw=
-github.com/chirino/hawtgo v0.0.0-20190728030238-0d67973a5907 h1:L3mSPb0HIM7U61J/Ges1vO5TiKXB+xjJfv+Cex+/U0E=
-github.com/chirino/hawtgo v0.0.0-20190728030238-0d67973a5907/go.mod h1:dBjLrMrxLZHJ3iB47gQ9kEftlBlPefp34AU6wA4rAg4=
+github.com/chirino/hawtgo v0.0.1 h1:BwUkArpv32ZDK5QFnG1RysagrKe82TsagXxi2Ys2flA=
+github.com/chirino/hawtgo v0.0.1/go.mod h1:dBjLrMrxLZHJ3iB47gQ9kEftlBlPefp34AU6wA4rAg4=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/coreos/bbolt v1.3.0/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/bbolt v1.3.3/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
