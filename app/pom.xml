@@ -78,7 +78,7 @@
     <arquillian.version>1.4.0.Final</arquillian.version>
     <arquillian.cube.version>1.18.2</arquillian.cube.version>
 
-    <maven.version>3.5.4</maven.version>
+    <maven.version>3.6.2</maven.version>
 
     <errorprone.version>2.3.4</errorprone.version>
     <commons.compress.version>1.18</commons.compress.version>
