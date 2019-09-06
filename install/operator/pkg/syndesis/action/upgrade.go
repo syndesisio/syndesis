@@ -170,6 +170,9 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
 
 	c, err := template.GetTemplateContext()
+	if err != nil {
+		return nil, err
+	}
 
 	unstructured, err := template.GetUpgradeResources(scheme, syndesis, template.ResourceParams{
 		OAuthClientSecret: "-",
@@ -179,7 +182,7 @@ func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1
 		return nil, err
 	}
 
-	structured := []runtime.Object{}
+	var structured []runtime.Object
 	structured, unstructured = util.SeperateStructuredAndUnstructured(a.scheme, unstructured)
 
 	if len(unstructured) > 0 {

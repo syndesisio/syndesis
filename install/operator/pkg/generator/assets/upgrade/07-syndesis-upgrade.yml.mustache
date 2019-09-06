@@ -22,6 +22,8 @@
     - name: upgrade
       image: '{{Env.UPGRADE_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Upgrade }}:{{ Tags.Upgrade }}'
       env:
+        - name: ENV_S2I_TARGET_TAG
+          value: "{{ Syndesis.Spec.Components.S2I.Tag }}"
         - name: SYNDESIS_UPGRADE_PROJECT
           valueFrom:
               fieldRef:
@@ -30,6 +32,8 @@
       args:
         - "--backup"
         - "/opt/backup"
+        - "--tag"
+        - "{{ Syndesis.Status.TargetVersion }}"
       volumeMounts:
       - mountPath: /opt/backup
         name: backup-dir

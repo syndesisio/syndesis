@@ -32,7 +32,6 @@ RUN yum clean all \
 RUN mkdir -p /opt/ipaas/licenses
 COPY licenses /opt/ipaas/licenses
 
-COPY syndesis.yml /opt/template/
 COPY upgrade.sh common.sh syndesis-cli.jar /opt/
 COPY steps /opt/steps
 COPY migration /opt/migration
@@ -40,6 +39,5 @@ COPY migration /opt/migration
 ENTRYPOINT [ \
   "/bin/bash", \
   "/opt/upgrade.sh", \
-  "--template", "/opt/template/syndesis.yml", \
   "--migration", "/opt/migration" \
 ]
