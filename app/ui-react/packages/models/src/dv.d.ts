@@ -82,6 +82,9 @@ export interface ViewDefinition {
   isUserDefined: boolean;
   sourcePaths: string[];
   ddl?: string;
+  createdAt?: number;
+  modifiedAt?: number;
+  version?: number;
 }
 
 export interface ColumnData {

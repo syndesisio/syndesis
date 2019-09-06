@@ -5,7 +5,6 @@ import {
   SchemaNodeInfo,
   ViewDefinition,
 } from '@syndesis/models';
-import { PreviewButtonSelection } from '@syndesis/ui';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
 
@@ -61,11 +60,10 @@ export default {
           viewDefinitionId: string;
           previewExpanded: boolean;
           viewDefinition?: ViewDefinition;
-          previewButtonSelection: PreviewButtonSelection;
           queryResults: QueryResults;
         }>(
           routes.virtualizations.virtualization.views.edit.sql,
-          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded, previewButtonSelection, queryResults }) => ({
+          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded, queryResults }) => ({
             params: {
               virtualizationId: virtualization.keng__id,
               viewDefinitionId,
@@ -74,30 +72,6 @@ export default {
               virtualization,
               previewExpanded,
               viewDefinition,
-              previewButtonSelection,
-              queryResults
-            },
-          })
-        ),
-        viewOutput: makeResolver<{
-          virtualization: RestDataService;
-          viewDefinitionId: string;
-          previewExpanded: boolean;
-          viewDefinition?: ViewDefinition;
-          previewButtonSelection: PreviewButtonSelection;
-          queryResults: QueryResults;
-        }>(
-          routes.virtualizations.virtualization.views.edit.viewOutput,
-          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded, previewButtonSelection, queryResults }) => ({
-            params: {
-              virtualizationId: virtualization.keng__id,
-              viewDefinitionId,
-            },
-            state: {
-              virtualization,
-              previewExpanded,
-              viewDefinition,
-              previewButtonSelection,
               queryResults
             },
           })
