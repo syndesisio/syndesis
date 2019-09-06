@@ -45,8 +45,11 @@
       "showPreview": "Show Preview",
       "selectSql": "SQL",
       "selectPreview": "Preview",
-      "resultsTableEmptyStateTitle": "NO DATA AVAILABLE",
-      "resultsTableEmptyStateInfo": "Click 'refresh' button to refresh the preview results"
+      "resultsTableInvalidEmptyTitle": "CURRENT VIEW INVALID",
+      "resultsTableInvalidEmptyInfo": "The current view is invalid - no results to show",
+      "resultsTableValidEmptyTitle": "NO DATA AVAILABLE",
+      "resultsTableValidEmptyInfo": "Click 'refresh' button to refresh the preview results",
+      "title": "Preview Results"
     },
     "unpublishModalMessage": "This Virtualization has been published.  Please unpublish Virtualization \"{{name}}\" first.",
     "unpublishModalTitle": "Unpublish Virtualization",
@@ -68,6 +71,7 @@
       "reorderColumnDown": "Riordina colonna verso il basso",
       "reorderColumnUp": "Riordina colonna in alto",
       "sqlTab": "SQL",
+      "title": "View Editor",
       "viewOutputTab": "Visualizza Produzione"
     },
     "viewNameDisplay": "View Name",
@@ -82,6 +86,7 @@
     "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE",
     "queryResultsTitle": "Query Results",
     "queryResultsRowCountMsg": "Number of Rows: ",
+    "queryResultsRefreshed": "The view preview results were refreshed for {{name}}",
     "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
     "createVirtualizationSuccess": "{{name}} virtualization created.",
     "publishVirtualizationSuccess": "Virtualization {{name}} was submitted for publishing.",

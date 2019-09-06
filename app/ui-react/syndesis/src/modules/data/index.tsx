@@ -8,10 +8,7 @@ import {
   VirtualizationSqlClientPage,
   VirtualizationViewsPage,
 } from './pages';
-import {
-  ViewEditorOutputPage,
-  ViewEditorSqlPage
-} from './pages/viewEditor';
+import { ViewEditorSqlPage } from './pages/viewEditor';
 import routes from './routes';
 import { ViewCreateApp } from './ViewCreateApp';
 import { ViewsImportApp } from './ViewsImportApp';
@@ -38,11 +35,6 @@ export class DataModule extends React.Component {
             path={routes.virtualizations.virtualization.views.edit.sql}
             exact={true}
             component={ViewEditorSqlPage}
-          />
-          <Route
-            path={routes.virtualizations.virtualization.views.edit.viewOutput}
-            exact={true}
-            component={ViewEditorOutputPage}
           />
           <Route
             path={routes.virtualizations.create}
