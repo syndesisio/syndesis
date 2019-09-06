@@ -192,51 +192,6 @@ jobs:
             - ~/.m2
       - <<: *push_images
 
-  ui-legacy:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-ui-legacy
-      CHROME_BIN: "/usr/bin/google-chrome"
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - <<: *checkout_git_mvn_repo
-      - restore_cache:
-          key: syndesis-mvn-ui-legacy-{{ checksum "app/ui-angular/pom.xml" }}
-      - restore_cache:
-          key: syndesis-yarn-legacy-{{ checksum "app/ui-angular/yarn.lock" }}
-      - run:
-          name: Build UI
-          command: |
-            apt-get update -y
-            apt-get install -y --force-yes libxss1 patch apt-transport-https
-            echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-            curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-            apt-get update -y
-            apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
-              GOAL_ARGS="-g deploy"
-            fi
-            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module ui-angular --docker | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: ./build_ui_log.txt
-      - save_cache:
-          key: syndesis-yarn-legacy-{{ checksum "app/ui-angular/yarn.lock" }}
-          paths:
-            - /usr/local/share/.cache/yarn/v1
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *scrub_m2_cache
-      - save_cache:
-          key: syndesis-mvn-ui-legacy{{ checksum "app/ui-angular/pom.xml" }}
-          paths:
-            - ~/.m2
-      - <<: *push_images
-
   # All connectors job depends on integration, mount workspace .m2
   connectors:
     <<: *job_defaults
@@ -895,7 +850,6 @@ workflows:
               only: master
       - license-check
       - ui
-      - ui-legacy
       - common
       - operator
       - extension:
