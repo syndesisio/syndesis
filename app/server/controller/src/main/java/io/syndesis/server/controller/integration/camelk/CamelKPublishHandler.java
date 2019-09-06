@@ -195,14 +195,12 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         Properties applicationProperties = projectGenerator.generateApplicationProperties(integration);
 
         //TODO: maybe add owner reference
-        Secret secret = new SecretBuilder()
+        return new SecretBuilder()
             .withNewMetadata()
                 .withName(CamelKSupport.integrationName(integration.getName()))
             .endMetadata()
             .addToStringData("application.properties", CamelKSupport.propsToString(applicationProperties))
             .build();
-
-        return secret;
     }
 
     protected io.syndesis.server.controller.integration.camelk.crd.Integration applyCustomizers(IntegrationDeployment integrationDeployment, io.syndesis.server.controller.integration.camelk.crd.Integration integration) {
