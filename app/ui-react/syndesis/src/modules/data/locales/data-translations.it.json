@@ -71,7 +71,7 @@
       "reorderColumnDown": "Riordina colonna verso il basso",
       "reorderColumnUp": "Riordina colonna in alto",
       "sqlTab": "SQL",
-      "title": "View Editor",
+      "title": "{{name}} - (version: {{version}})",
       "viewOutputTab": "Visualizza Produzione"
     },
     "viewNameDisplay": "View Name",

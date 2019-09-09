@@ -91,6 +91,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
       const viewDefinition = generateViewDefinition(
         state.schemaNodeInfo,
         params.virtualizationId,
+        1,
         value.name,
         value.description
       );

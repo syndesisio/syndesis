@@ -84,7 +84,7 @@ export interface ViewDefinition {
   ddl?: string;
   createdAt?: number;
   modifiedAt?: number;
-  version?: number;
+  version: number;
 }
 
 export interface ColumnData {

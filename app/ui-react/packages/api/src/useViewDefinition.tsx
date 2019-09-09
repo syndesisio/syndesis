@@ -12,6 +12,7 @@ export const useViewDefinition = (
       keng__description: '',
       name: '',
       sourcePaths: [],
+      version: 1
     },
     initialValue: initialDefn,
     url: `service/userProfile/viewEditorState/${viewDefinitionId}`,

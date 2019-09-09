@@ -71,7 +71,7 @@
       "reorderColumnDown": "Reorder column down",
       "reorderColumnUp": "Reorder column up",
       "sqlTab": "SQL",
-      "title": "View Editor",
+      "title": "{{name}} - (version: {{version}})",
       "viewOutputTab": "View Output"
     },
     "viewNameDisplay": "View Name",

@@ -138,12 +138,14 @@ export function generateSchemaNodeInfos(
  * Generate a ViewDefinition for the supplied info
  * @param schemaNodeInfo the SchemaNodeInfo for the view
  * @param dataVirtName the name of the virtualization
+ * @param versn the version for the view
  * @param vwName the name for the view
  * @param vwDescription the (optional) description for the view
  */
 export function generateViewDefinition(
   schemaNodeInfo: SchemaNodeInfo[],
   dataVirtName: string,
+  versn: number,
   vwName: string,
   vwDescription?: string
 ): ViewDefinition {
@@ -153,6 +155,7 @@ export function generateViewDefinition(
     dataVirtName,
     srcPaths,
     false,
+    versn,
     vwDescription
   );
 }
@@ -175,6 +178,7 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
  * @param dataVirtName the name of the virtualization
  * @param srcPaths paths for the sources used in the view
  * @param userDefined specifies if the ddl has been altered from defaults
+ * @param versn the version for the view definition
  * @param description the (optional) view description
  * @param viewDdl the (optional) view DDL
  */
@@ -183,6 +187,7 @@ function getViewDefinition(
   dataVirtName: string,
   srcPaths: string[],
   userDefined: boolean,
+  versn: number,
   description?: string,
   viewDdl?: string
 ) {
@@ -195,6 +200,7 @@ function getViewDefinition(
     keng__description: description ? description : '',
     name,
     sourcePaths: srcPaths,
+    version: versn
   };
 
   return viewDefn;

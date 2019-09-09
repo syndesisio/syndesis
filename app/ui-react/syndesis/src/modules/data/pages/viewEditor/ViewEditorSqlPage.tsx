@@ -59,13 +59,14 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
-  const { getSourceInfoForView, queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
+  const { getSourceInfoForView, getViewDefinition, queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
   const [queryResults, setQueryResults] = React.useState(state.queryResults);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
   const [noResultsTitle, setNoResultsTitle] = React.useState(t('data:virtualization.preview.resultsTableValidEmptyTitle'));
   const [noResultsMessage, setNoResultsMessage] = React.useState(t('data:virtualization.preview.resultsTableValidEmptyInfo'));
+  const [viewVersion, setViewVersion] = React.useState(0);
 
   const queryResultsEmpty: QueryResults = {
     columns: [],
@@ -123,6 +124,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     setViewValid(isValid);
   }
 
+  const getViewVersion = (): number => {
+    return (viewVersion > 0) ? viewVersion : viewDefn.version;
+  }
+
   /**
    * Saves View with the new DDL value.  The View is also validated, and preview results updated
    */
@@ -138,11 +143,19 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       keng__description: viewDefn.keng__description,
       name: viewDefn.name,
       sourcePaths: viewDefn.sourcePaths,
+      version: getViewVersion()
     };
 
     try {
       // Save the View
       await saveViewDefinition(view);
+
+      // After Save of the View, fetch it - version etc will be updated
+      // TODO - The Save ViewDefinition should return the new ViewDefinition
+      const updatedView = await getViewDefinition(viewDefn.id!);
+      setViewVersion(updatedView.version);
+
+      // TODO - Eliminate this service call when validation status is included on the view
       // Validate the View
       await handleValidateView(view);
 
@@ -277,7 +290,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
             i18nDoneLabel={t('shared:Done')}
             i18nSaveLabel={t('shared:Save')}
-            i18nTitle={t('data:virtualization.viewEditor.title')}
+            i18nTitle={t('data:virtualization.viewEditor.title', {
+              name: viewDefn.name,
+              version: getViewVersion(),
+            })}
             i18nValidationResultsTitle={t('data:virtualization.validationResultsTitle')}
             showValidationMessage={validationMessageVisible}
             isSaving={isSaving}
