@@ -17,6 +17,7 @@ import { IColumn, PreviewResults } from './PreviewResults';
  * @param i18nEmptyResultsTitle - text for empty results title
  * @param i18nEmptyResultsMsg - text for empty results message
  * @param i18nHidePreview - text for hide preview toggle control
+ * @param i18nLoadingQueryResults - text for spinner when query results are loading
  * @param i18nShowPreview - text for show preview toggle control
  * @param i18nTitle - title for the component
  * @param initialExpanded - 'true' if preview is to be expanded initially
@@ -29,9 +30,11 @@ export interface IExpandablePreviewProps {
   i18nEmptyResultsTitle: string;
   i18nEmptyResultsMsg: string;
   i18nHidePreview: string;
+  i18nLoadingQueryResults: string;
   i18nShowPreview: string;
   i18nTitle: string;
   initialExpanded?: boolean;
+  isLoadingPreview: boolean
   onPreviewExpandedChanged: (
     previewExpanded: boolean
   ) => void;
@@ -66,9 +69,11 @@ export const ExpandablePreview: React.FunctionComponent<
   i18nEmptyResultsTitle,
   i18nEmptyResultsMsg,
   i18nHidePreview,
+  i18nLoadingQueryResults,
   i18nShowPreview,
   i18nTitle,
   initialExpanded = true,
+  isLoadingPreview = false,
   onPreviewExpandedChanged,
   onRefreshResults,
   queryResultCols,
@@ -106,7 +111,8 @@ export const ExpandablePreview: React.FunctionComponent<
           queryResultCols={queryResultCols}
           i18nEmptyResultsTitle={i18nEmptyResultsTitle}
           i18nEmptyResultsMsg={i18nEmptyResultsMsg}
-        />
+          i18nLoadingQueryResults={i18nLoadingQueryResults}
+          isLoadingPreview={isLoadingPreview}/>
       </Expandable>
     </PageSection>
     );

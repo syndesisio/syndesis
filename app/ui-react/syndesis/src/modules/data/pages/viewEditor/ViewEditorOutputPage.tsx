@@ -213,9 +213,11 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
                 'data:virtualization.preview.resultsTableEmptyStateInfo'
               )}
               i18nHidePreview={t('data:virtualization.preview.hidePreview')}
+              i18nLoadingQueryResults={t('data:virtualization.preview.loadingQueryResults')}
               i18nShowPreview={t('data:virtualization.preview.showPreview')}
               i18nTitle={t('data:virtualization.preview.title')}
               initialExpanded={previewExpanded}
+              isLoadingPreview={false}
               onPreviewExpandedChanged={handlePreviewExpandedChanged}
               onRefreshResults={handleRefreshResults}
               queryResultRows={getQueryRows(

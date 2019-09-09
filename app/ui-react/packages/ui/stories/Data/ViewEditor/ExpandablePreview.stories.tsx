@@ -32,9 +32,31 @@ stories.add('collapsed', () => {
       i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nShowPreview={'Show Preview'}
       i18nTitle={'Preview Results'}
       initialExpanded={false}
+      isLoadingPreview={false}
+      onPreviewExpandedChanged={action('expanded changed')}
+      onRefreshResults={action('refresh results')}
+      queryResultCols={resultCols}
+      queryResultRows={resultRows}
+    />
+  );
+})
+
+
+.add('expanded, Preview with results loading', () => {
+  return (
+    <ExpandablePreview
+      i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
+      i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
+      i18nHidePreview={'Hide Preview'}
+      i18nLoadingQueryResults={'Loading query results...'}
+      i18nShowPreview={'Show Preview'}
+      i18nTitle={'Preview Results'}
+      initialExpanded={true}
+      isLoadingPreview={true}
       onPreviewExpandedChanged={action('expanded changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={resultCols}
@@ -49,9 +71,11 @@ stories.add('collapsed', () => {
       i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nShowPreview={'Show Preview'}
       i18nTitle={'Preview Results'}
       initialExpanded={true}
+      isLoadingPreview={false}
       onPreviewExpandedChanged={action('expanded changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={resultCols}
@@ -66,9 +90,11 @@ stories.add('collapsed', () => {
       i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
       i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
       i18nHidePreview={'Hide Preview'}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nShowPreview={'Show Preview'}
       i18nTitle={'Preview Results'}
       initialExpanded={true}
+      isLoadingPreview={false}
       onPreviewExpandedChanged={action('expanded changed')}
       onRefreshResults={action('refresh results')}
       queryResultCols={[]}
