@@ -170,10 +170,11 @@ parameters:
   name: UPGRADE_VOLUME_CAPACITY
   required: true
   value: 1Gi
-- description: Url to 3scale
+- description: Url to 3scale for exposing services
   displayName: Expose services via 3scale
   name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
   required: false
+  value: ""
 message: |-
   Syndesis is deployed to ${ROUTE_HOSTNAME}.
 objects:
@@ -2095,8 +2096,6 @@ objects:
             value: ${POSTGRESQL_USER}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
-          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: ${OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}
           image: ' '
 
           imagePullPolicy: IfNotPresent

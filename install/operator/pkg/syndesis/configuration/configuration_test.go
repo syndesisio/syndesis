@@ -18,10 +18,11 @@ func TestStandardConfig(t *testing.T) {
 
 	config := GetEnvVars(&syndesis)
 
-	assert.Len(t, config, 3)
+	assert.Len(t, config, 4)
 	assert.Contains(t, config, string(EnvOpenshiftProject))
 	assert.Contains(t, config, string(EnvSarNamespace))
 	assert.Contains(t, config, string(EnvDatavirtEnabled))
+    assert.Equal(t, "", config[string(EnvManagementUrlFor3scale)])
 }
 
 func TestSpecificConfig(t *testing.T) {

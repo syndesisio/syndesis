@@ -650,17 +650,15 @@ func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.S
 }
 
 func envManagementUrlFor3scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	if url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale; url != "" {
-		return &SyndesisEnvVarConfig{
-			Var:   EnvManagementUrlFor3scale,
-			Value: url,
-		}
-	}
-	return nil
+    url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale
+    return &SyndesisEnvVarConfig{
+        Var:   EnvManagementUrlFor3scale,
+        Value: url,
+    }
 }
 
 func managementUrlFor3scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvManagementUrlFor3scale); ok {
+	if v, ok := getString(config, EnvManagementUrlFor3scale); ok && syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale == "" {
 		syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale = v
 	}
 }

@@ -68,8 +68,6 @@
             value: {{.Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_DATABASE
             value: {{.Env.POSTGRESQL_DATABASE}}
-          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: '{{.Env.OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}}'
 {{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
