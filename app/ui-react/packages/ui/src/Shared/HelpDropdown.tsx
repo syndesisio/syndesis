@@ -131,6 +131,7 @@ export class HelpDropdown extends React.Component<
             isTabletView ? (
               <KebabToggle
                 id={dropdownId}
+                aria-label="Global dropdown"
                 data-testid={dropdownId}
                 className={classNames('', this.props.className)}
                 onToggle={this.onToggle}
@@ -138,6 +139,7 @@ export class HelpDropdown extends React.Component<
             ) : (
               <DropdownToggle
                 id={dropdownId}
+                aria-label="Help dropdown"
                 data-testid={dropdownId}
                 className={classNames('', this.props.className)}
                 onToggle={this.onToggle}

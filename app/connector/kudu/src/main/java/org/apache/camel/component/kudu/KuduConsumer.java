@@ -73,10 +73,8 @@ public class KuduConsumer extends ScheduledPollConsumer {
             projectColumns.add(columns.next().getName());
         }
 
-        KuduScanner scanner = connection.newScannerBuilder(table)
+        return connection.newScannerBuilder(table)
                 .setProjectedColumnNames(projectColumns)
                 .build();
-
-        return scanner;
     }
 }

@@ -11,7 +11,7 @@ import {
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, StringMap } from '@syndesis/models';
+import { Integration, StepKind, StringMap } from '@syndesis/models';
 import {
   ChoiceCardHeader,
   ChoicePageCard,
@@ -24,8 +24,11 @@ import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  DataShapeDirection,
   IChoiceStepRouteParams,
   IChoiceStepRouteState,
+  IDescribeStepDataShapeRouteParams,
+  IDescribeStepDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
@@ -46,8 +49,8 @@ export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
   ) => H.LocationDescriptor;
   postConfigureHref: (
     integration: Integration,
-    p: IChoiceStepRouteParams,
-    s: IChoiceStepRouteState
+    p: IDescribeStepDataShapeRouteParams,
+    s: IDescribeStepDataShapeRouteState
   ) => H.LocationDescriptorObject;
 }
 
@@ -193,22 +196,28 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       updatedIntegration,
                       params.flowId,
                       positionAsNumber
-                    )!;
+                    )! as StepKind;
                     const reconciledIntegration = reconcileConditionalFlows(
                       updatedIntegration,
                       updatedFlows,
                       stepWithUpdatedDescriptor.id!,
                       stepWithUpdatedDescriptor.action!.descriptor!
-                        .inputDataShape!
+                        .inputDataShape!,
+                      stepWithUpdatedDescriptor.action!.descriptor!
+                        .outputDataShape!
                     );
                     history.push(
                       this.props.postConfigureHref(
                         reconciledIntegration,
-                        params,
+                        {
+                          ...params,
+                          direction: DataShapeDirection.OUTPUT,
+                        } as IDescribeStepDataShapeRouteParams,
                         {
                           ...state,
-                          updatedIntegration: reconciledIntegration,
-                        }
+                          step: stepWithUpdatedDescriptor,
+                          updatedIntegration: reconciledIntegration
+                        } as IDescribeStepDataShapeRouteState
                       )
                     );
                   };
@@ -262,7 +271,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                             i18nConditions={'Conditions'}
                                           />
                                         }
-                                        i18nDone={'Done'}
+                                        i18nDone={'Next'}
                                         isValid={isValid}
                                         submitForm={submitForm}
                                       >

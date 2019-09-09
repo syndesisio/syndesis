@@ -44,6 +44,7 @@ export interface IUIIntegrationStep extends IUIStep {
   previousStepShouldDefineDataShape: boolean;
   previousStepShouldDefineDataShapePosition?: number;
   shouldAddDataMapper: boolean;
+  shouldAddDefaultFlow: boolean;
   isUnclosedSplit: boolean;
   restrictedDelete: boolean;
   notConfigurable: boolean;
@@ -129,6 +130,16 @@ export interface IDescribeDataShapeRouteState extends IBaseRouteState {
   updatedIntegration?: Integration;
 }
 
+export interface IDescribeStepDataShapeRouteParams extends IBaseFlowRouteParams {
+  position: string;
+  direction: DataShapeDirection;
+}
+
+export interface IDescribeStepDataShapeRouteState extends IBaseRouteState {
+  step: StepKind;
+  updatedIntegration?: Integration;
+}
+
 /**
  * @param connectionId - the ID of the connection selected in the previous step
  * @param position - the zero-based position for the new step in the integration
@@ -199,12 +210,16 @@ export const stepRoutes = {
   // if selected step kind is basic filter
   basicFilter: 'filter',
   // if selected step kind is choice
-  choice: 'choice',
+  choice: include('choice', {
+    configure: '',
+    // if 'any' data shape
+    describeData: 'describe-data/:position/:direction',
+  }),
   // if selected step kind is template
   template: 'template',
   // if selected step kind is step
   step: 'step',
-  // if selected step kind is step
+  // if selected step kind is extension
   extension: 'extension',
   // if selected step kind is endpoint
   connection: include('connection/:connectionId', {

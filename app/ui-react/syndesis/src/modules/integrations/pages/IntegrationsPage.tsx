@@ -112,7 +112,13 @@ export class IntegrationsPage extends React.Component {
       <WithConnections debounceWait={500}>
         {({ data: connectionsData }) => (
           <WithMonitoredIntegrations>
-            {({ data: integrationsData, hasData, error, errorMessage }) => (
+            {({
+              data: integrationsData,
+              hasData,
+              error,
+              errorMessage,
+              loading,
+            }) => (
               <Translation ns={['integrations', 'shared']}>
                 {t => (
                   <WithListViewToolbarHelpers
@@ -144,7 +150,7 @@ export class IntegrationsPage extends React.Component {
                             i18nDescription={t('integrationListDescription')}
                             i18nImport={t('shared:Import')}
                             i18nManageCiCd={t('ManageCiCd')}
-                            i18nLinkCreateConnection={t(
+                            i18nLinkCreateIntegration={t(
                               'shared:linkCreateIntegration'
                             )}
                             i18nLinkCreateIntegrationTip={t(
@@ -153,23 +159,13 @@ export class IntegrationsPage extends React.Component {
                             i18nResultsCount={t('shared:resultsCount', {
                               count: filteredAndSortedIntegrations.length,
                             })}
-                            i18nEmptyStateInfo={t(
-                              'integrationsEmptyState.info'
-                            )}
-                            i18nEmptyStateTitle={t(
-                              'integrationsEmptyState.title'
-                            )}
                           >
-                            {filteredAndSortedIntegrations.length > 0 ? (
-                              <Integrations
-                                error={error}
-                                errorMessage={errorMessage}
-                                loading={!hasData}
-                                integrations={filteredAndSortedIntegrations}
-                              />
-                            ) : (
-                              undefined
-                            )}
+                            <Integrations
+                              error={error}
+                              errorMessage={errorMessage}
+                              loading={loading && !hasData}
+                              integrations={filteredAndSortedIntegrations}
+                            />
                           </IntegrationsListView>
                         </>
                       );

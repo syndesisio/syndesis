@@ -1,5 +1,5 @@
 import { Text } from '@patternfly/react-core';
-import { Card, CardBody } from 'patternfly-react';
+import { Card, CardBody } from '@patternfly/react-core';
 import * as React from 'react';
 import './ApiConnectorDetailCard.css';
 

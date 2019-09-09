@@ -1,0 +1,193 @@
+apiVersion: v1
+data:
+  settings.xml: |-
+    <?xml version="1.0" encoding="UTF-8"?>
+    <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <localRepository></localRepository>
+      <profiles>
+        <profile>
+          <id>maven-settings</id>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+          </activation>
+
+          <!-- Config: Productized={{.Productized}}, EarlyAccess={{.EarlyAccess}} -->
+
+          {{- if .Productized}}
+
+          <repositories>
+
+            {{- if .EarlyAccess}}
+
+            <repository>
+              <id>redhat-ea</id>
+              <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </repository>
+
+            <repository>
+              <id>jboss-ea</id>
+              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </repository>
+
+            {{- else}}
+
+            <repository>
+              <id>redhat-ga</id>
+              <url>https://maven.repository.redhat.com/ga/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </repository>
+
+            <repository>
+              <id>jboss-ga</id>
+              <url>https://repository.jboss.org/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </repository>
+
+            {{- end}}
+
+            <repository>
+              <id>central</id>
+              <url>https://repo.maven.apache.org/maven2/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </repository>
+
+          </repositories>
+          <pluginRepositories>
+
+            {{- if .EarlyAccess}}
+
+            <pluginRepository>
+              <id>redhat-ea</id>
+              <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </pluginRepository>
+
+            <pluginRepository>
+              <id>jboss-ea</id>
+              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </pluginRepository>
+
+            {{- else}}
+
+            <pluginRepository>
+              <id>redhat-ga</id>
+              <url>https://maven.repository.redhat.com/ga/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </pluginRepository>
+
+            <pluginRepository>
+              <id>jboss-ga</id>
+              <url>https://repository.jboss.org/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </pluginRepository>
+
+            {{- end}}
+
+            <pluginRepository>
+              <id>central</id>
+              <url>https://repo.maven.apache.org/maven2/</url>
+              <snapshots>
+                <enabled>false</enabled>
+              </snapshots>
+              <releases>
+                <enabled>true</enabled>
+              </releases>
+            </pluginRepository>
+
+          </pluginRepositories>
+
+          {{- else}}
+
+          <repositories>
+            <repository>
+              <id>central</id>
+              <name>Maven Central</name>
+              <url>https://repo.maven.apache.org/maven2/</url>
+            </repository>
+            <repository>
+              <id>jboss-ea</id>
+              <name>JBoss Early Access</name>
+              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+            </repository>
+            <repository>
+              <id>redhat-ga</id>
+              <name>Red Hat General Availability Repository</name>
+              <url>https://maven.repository.redhat.com/ga/</url>
+            </repository>
+          </repositories>
+
+          <pluginRepositories>
+            <pluginRepository>
+              <id>central</id>
+              <name>Maven Central</name>
+              <url>https://repo.maven.apache.org/maven2/</url>
+            </pluginRepository>
+            <pluginRepository>
+              <id>jboss-ea</id>
+              <name>JBoss Early Access</name>
+              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+            </pluginRepository>
+            <pluginRepository>
+              <id>redhat-ga</id>
+              <name>Red Hat General Availability Repository</name>
+              <url>https://maven.repository.redhat.com/ga/</url>
+            </pluginRepository>
+          </pluginRepositories>
+          {{- end}}
+
+        </profile>
+      </profiles>
+    </settings>
+kind: ConfigMap
+metadata:
+  labels:
+    app: camel-k
+  name: camel-k-maven-settings

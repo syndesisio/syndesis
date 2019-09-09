@@ -1,10 +1,10 @@
-import { Card } from 'patternfly-react';
+import { Card, CardBody } from '@patternfly/react-core';
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 
 export const DvConnectionSkeleton = (props: any) => (
-  <Card matchHeight={true}>
-    <Card.Body>
+  <Card>
+    <CardBody>
       <ContentLoader
         height={150}
         width={150}
@@ -18,6 +18,6 @@ export const DvConnectionSkeleton = (props: any) => (
         <rect x="25" y="100" width="100" height="20" />
         <rect x="15" y="130" width="120" height="15" />
       </ContentLoader>
-    </Card.Body>
+    </CardBody>
   </Card>
 );

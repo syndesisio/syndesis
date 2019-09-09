@@ -124,6 +124,8 @@
                 value: sampledb
               - name: TODO_DB_PASS
                 value: {{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
+              - name: TODO_DB_SCHEMA
+                value: sampledb
             imagePullPolicy: Always
             name: todo
             image: ' '

@@ -6,9 +6,11 @@ import {
   SchemaNodeInfo,
   ViewDefinition,
   ViewInfo,
+  ViewSourceInfo,
   VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
 } from '@syndesis/models';
+import { ITableInfo } from '@syndesis/ui';
 
 interface IColumn {
   id: string;
@@ -188,7 +190,6 @@ function getViewDefinition(
   const viewDefn: ViewDefinition = {
     dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
-    id: '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
@@ -381,4 +382,24 @@ export function getQueryColumns(qResults: QueryResults): IColumn[] {
     }
   }
   return columns;
+}
+
+/**
+ * convert ViewSourceInfo respone into TableColumn array
+ * @param sourceInfo the view's source info
+ */
+export function generateTableColumns(sourceInfo: ViewSourceInfo): ITableInfo[] {
+  const tblColumns: ITableInfo[] = [];
+  // For each schema, create a TableColumns object for each table and add to array
+  sourceInfo.schemas.map(schema => {
+    return schema.tables.map(table => {
+      const ti = {
+        columnNames: table.columns.map(p => p.name),
+        name: table.name
+      } as ITableInfo;
+      tblColumns.push(ti);
+      return ti;
+    });
+  });
+  return tblColumns;
 }

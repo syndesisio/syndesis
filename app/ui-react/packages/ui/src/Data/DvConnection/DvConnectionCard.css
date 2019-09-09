@@ -1,8 +1,13 @@
 .dv-connection-card,
+.dv-connection-card--accented,
 .dv-connection-card:hover {
   color: inherit;
   text-decoration: none;
   cursor: pointer;
+}
+
+.dv-connection-card:hover {
+  box-shadow: 0 1px 6px rgba(3,3,3,.35);
 }
 
 .dv-connection-card__content {
@@ -12,11 +17,24 @@
   text-align: center;
 }
 
+.dv-connection-card__description {
+  color: initial;
+  font-size: small;
+  font-weight: 300;
+  margin-top: 15px;
+  text-decoration: none;
+}
+
 .dv-connection-card__status {
   margin-bottom: 10px;
 }
 
-.dv-connection-card .card-pf.card-pf-accented {
+.dv-connection-card__title {
+  color: initial;
+  text-decoration: none;
+}
+
+.dv-connection-card--accented {
   border-width: 2px;
   border-style: solid;
   border-color: #39a5dc;

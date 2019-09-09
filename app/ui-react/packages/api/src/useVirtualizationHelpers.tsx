@@ -5,6 +5,7 @@ import {
   RestDataService,
   ViewDefinition,
   ViewDefinitionStatus,
+  ViewSourceInfo,
 } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
@@ -342,11 +343,30 @@ export const useVirtualizationHelpers = () => {
     }
     return Promise.resolve();
   }
+
+  /**
+   * Get the Source info for a Virtualization
+   * @param virtualalization the virtualization
+   */
+  const getSourceInfoForView = async (
+    virtualization: RestDataService
+  ): Promise<ViewSourceInfo> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${virtualization.keng__id}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return (await response.json()) as ViewSourceInfo;
+  }
   
   return {
     createVirtualization,
     deleteViewDefinition,
     deleteVirtualization,
+    getSourceInfoForView,
     getViewDefinition,
     importSource,
     publishVirtualization,

@@ -682,29 +682,40 @@ export async function setFlow(
 }
 
 /**
- * Returns a new integration object containing the supplied conditional flows for the given step ID
+ * Returns a new integration object containing the supplied conditional flows for the given step ID. This reconcile step
+ * includes setting of flow start and end data shapes according to the conditional flow input and output data shape.
  * @param integration
  * @param newFlows
  * @param stepId
- * @param updatedDataShape the input data shape of the conditional flow step to apply as an output data shape to flows
+ * @param flowStartDataShape the input data shape of the conditional flow step to apply as an output data shape to flow start steps
+ * @param flowEndDataShape the output data shape of the conditional flow step to apply as an input data shape to flow end steps
  */
 export function reconcileConditionalFlows(
   integration: Integration,
   newFlows: Flow[],
   stepId: string,
-  updatedDataShape: DataShape
+  flowStartDataShape: DataShape,
+  flowEndDataShape: DataShape
 ) {
   const flowsWithoutStepId = getFlowsWithoutLinkedStepId(
     integration.flows!,
     stepId
   );
   const updatedFlows = newFlows.map(flow => {
-    const newStep = setDataShapeOnStep(
+    const startFlowStep = setDataShapeOnStep(
       { ...flow.steps![0] },
-      updatedDataShape,
+      flowStartDataShape,
       false
     );
-    return applyUpdatedStep(flow, newStep, 0);
+    const updatedFlow = applyUpdatedStep(flow, startFlowStep, 0);
+
+    const endStepPosition = getStepsLastPosition(flow.steps!);
+    const endFlowStep = setDataShapeOnStep(
+      { ...flow.steps![endStepPosition] },
+      flowEndDataShape,
+      true
+    );
+    return applyUpdatedStep(updatedFlow, endFlowStep, endStepPosition);
   });
   return { ...integration, flows: [...flowsWithoutStepId, ...updatedFlows] };
 }

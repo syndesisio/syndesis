@@ -1,21 +1,16 @@
 package template
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
-
 	"math/rand"
 	"time"
 
-	v1 "github.com/openshift/api/image/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
-	"k8s.io/apimachinery/pkg/types"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 )
 
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -83,20 +78,6 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 		return "", err
 	}
 	return ctx.Tags.Syndesis, nil
-}
-
-func GetSyndesisVersionFromOperator(ctx context.Context, c client.Client, syndesis *v1alpha1.Syndesis) (string, error) {
-	is := &v1.ImageStream{}
-	err := c.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-operator"}, is)
-	if err != nil {
-		return "", err
-	}
-
-	if len(is.Spec.Tags) == 1 {
-		return is.Spec.Tags[0].Name, nil
-	} else {
-		return "", fmt.Errorf("more than one tag found, unable to find the version")
-	}
 }
 
 func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) error {
@@ -195,6 +176,14 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	if config[string(configuration.EnvSarNamespace)] == "" {
 		return fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
+
+	//
+	// Apply DevSupport flag value to Debug
+	//
+	// If using dev images then doing development so
+	// useful to have JAVA_DEBUG set to allow for image debugging
+	//
+	renderContext.Debug = syndesis.Spec.DevSupport
 
 	renderContext.Syndesis = syndesis
 	renderContext.Env = config

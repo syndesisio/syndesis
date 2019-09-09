@@ -7,6 +7,7 @@ import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
 import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
 import { ChoiceStepPage } from './choice/ChoiceStepPage';
+import { DescribeChoiceDataShapePage } from './choice/DescribeChoiceDataShapePage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -16,10 +17,14 @@ import { SelectActionPage } from './endpoint/SelectActionPage';
 import {
   IBaseFlowRouteParams,
   IBaseRouteState,
+  IChoiceStepRouteParams,
+  IChoiceStepRouteState,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
+  IDescribeStepDataShapeRouteParams,
+  IDescribeStepDataShapeRouteState,
   IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -79,7 +84,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         })
       }
       choiceHref={(step, params, state) =>
-        appResolvers.choice({
+        appResolvers.choice.configure({
           step,
           ...params,
           ...state,
@@ -198,6 +203,24 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const describeChoiceDataShapePage = (
+    <DescribeChoiceDataShapePage
+      cancelHref={cancelHref}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={false} />
+      )}
+      backHref={(p, s) => {
+        return appResolvers.choice.configure({
+          ...(p as IChoiceStepRouteParams),
+          ...(s as IChoiceStepRouteState),
+        });
+      }
+      }
+      postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
+    />
+  );
+
   const templateStepPage = (
     <TemplateStepPage
       mode={mode}
@@ -253,7 +276,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
-      postConfigureHref={postConfigureHref}
+      postConfigureHref={(integration, p, s) => {
+        return appResolvers.choice.describeData({
+          integration,
+          ...(p as IDescribeStepDataShapeRouteParams),
+          ...(s as IDescribeStepDataShapeRouteState),
+        });
+      }}
       getBreadcrumb={getBreadcrumb}
     />
   );
@@ -351,8 +380,10 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         basicFilterChildren: basicFilterPage,
       }}
       choice={{
-        choicePath: appStepRoutes.choice,
+        choicePath: appStepRoutes.choice.configure,
         choiceChildren: choicePage,
+        describeDataPath: appStepRoutes.choice.describeData,
+        describeDataChildren: describeChoiceDataShapePage,
       }}
       step={{
         configurePath: appStepRoutes.step,

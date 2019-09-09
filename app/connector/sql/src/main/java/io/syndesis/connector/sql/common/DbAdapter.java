@@ -24,6 +24,7 @@ import io.syndesis.connector.sql.db.DbMysql;
 import io.syndesis.connector.sql.db.DbOracle;
 import io.syndesis.connector.sql.db.DbPostgresql;
 import io.syndesis.connector.sql.db.DbStandard;
+import io.syndesis.connector.sql.db.DbTeiid;
 
 public class DbAdapter {
 
@@ -49,6 +50,8 @@ public class DbAdapter {
             return new DbOracle();
         case POSTGRESQL:
             return new DbPostgresql();
+        case TEIID_SERVER:
+        	return new DbTeiid();
         default:
             return new DbStandard();
         }

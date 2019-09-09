@@ -31,6 +31,7 @@ public enum DbEnum {
     ORACLE("ORACLE"),
     POSTGRESQL("POSTGRESQL"),
     MYSQL("MYSQL"),
+    TEIID_SERVER("TEIID SERVER"),
     STANDARD("STANDARD");
 
     private final String name;

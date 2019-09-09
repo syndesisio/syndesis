@@ -1,4 +1,12 @@
-import { Alert, AlertActionCloseButton, Button, Card, CardBody, CardFooter } from '@patternfly/react-core';
+import { 
+  Alert, 
+  AlertActionCloseButton, 
+  Button, 
+  Card, 
+  CardBody, 
+  CardFooter, 
+  Title 
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
@@ -9,7 +17,7 @@ export interface IViewEditValidationResult {
   type: 'danger' | 'success';
 }
 
-interface ITableInfo {
+export interface ITableInfo {
   name: string;
   columnNames: string[];
 }
@@ -18,34 +26,34 @@ export interface IDdlEditorProps {
   viewDdl: string;
 
   /**
+   * The localized text for the done button.
+   */
+  i18nDoneLabel: string;
+
+  /**
    * The localized text for the save button.
    */
   i18nSaveLabel: string;
 
   /**
-   * The localized text for the validate button.
+   * The localized text for the title
    */
-  i18nValidateLabel: string;
+  i18nTitle: string;
 
   /**
-   * The localized text for the validate results alert title
+   * The localized text for the validate results message title
    */
   i18nValidationResultsTitle: string;
 
   /**
-   * `true` if all form fields have valid values.
+   * `true` if the validation message is to be shown
    */
-  isValid: boolean;
+  showValidationMessage: boolean;
 
   /**
    * `true` if save is in progress.
    */
   isSaving: boolean;
-
-  /**
-   * `true` if validation is in progress.
-   */
-  isValidating: boolean;
 
   /**
    * View validationResults
@@ -58,16 +66,20 @@ export interface IDdlEditorProps {
   sourceTableInfos: ITableInfo[];
 
   /**
+   * The callback for closing the validation message
+   */
+  onCloseValidationMessage: () => void;
+
+  /**
+   * The callback for when the done button is clicked
+   */
+  onFinish: () => void;
+
+  /**
    * The callback for when the save button is clicked
    * @param ddl the text area ddl
    */
   onSave: (ddl: string) => void;
-
-  /**
-   * The callback for when the validate button is clicked.
-   * @param ddl the ddl
-   */
-  onValidate: (ddl: string) => void;
 }
 
 export const DdlEditor: React.FunctionComponent<
@@ -76,26 +88,22 @@ IDdlEditorProps
 
   const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
   const [initialDdlValue] = React.useState(props.viewDdl);
-  const [needsValidation, setNeedsValidation] = React.useState(false);
-  const [validationAlertVisible, setValidationAlertVisible] = React.useState(false);
 
-  const handleDdlValidation = () => {
-    props.onValidate(ddlValue);
-    setNeedsValidation(false);
-    setValidationAlertVisible(true);
-  };
+  const handleCloseValidationMessage = () => {
+    props.onCloseValidationMessage();
+  }
 
   const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
     setDdlValue(value);
-    setNeedsValidation(true);
+    handleCloseValidationMessage();
   }
+
+  const handleFinish = () => {
+    props.onFinish();
+  };
 
   const handleSave = () => {
     props.onSave(ddlValue);
-  };
-
-  const hideValidationAlert = () => {
-    setValidationAlertVisible(false);
   };
 
   /**
@@ -132,14 +140,17 @@ IDdlEditorProps
   };
 
   return (
-    <PageSection>
+    <PageSection variant={'light'}>
+      <Title headingLevel="h5" size="lg">
+        {props.i18nTitle}
+      </Title>
       <Card>
         <CardBody>
-          {validationAlertVisible ? props.validationResults.map((e, idx) => (
+          {props.showValidationMessage ? props.validationResults.map((e, idx) => (
             <Alert key={idx}
               variant={e.type}
               title={props.i18nValidationResultsTitle}
-              action={<AlertActionCloseButton onClose={hideValidationAlert} />}
+              action={<AlertActionCloseButton onClose={handleCloseValidationMessage} />}
             >{e.message}
             </Alert>
           )) : null}
@@ -150,26 +161,20 @@ IDdlEditorProps
           />
         </CardBody>
         <CardFooter>
-          <Button
+        <Button
+            data-testid={'ddl-editor-done-button'}
             variant="secondary"
             className="ddl-editor__button"
-            isDisabled={props.isValidating || !needsValidation}
-            onClick={handleDdlValidation}
+            isDisabled={false}
+            onClick={handleFinish}
           >
-            {props.isValidating ? (
-              <Loader size={'sm'} inline={true} />
-            ) : null}
-            {props.i18nValidateLabel}
+            {props.i18nDoneLabel}
           </Button>
           <Button
+            data-testid={'ddl-editor-save-button'}
             variant="primary"
             className="ddl-editor__button"
-            isDisabled={
-              props.isSaving ||
-              props.isValidating ||
-              !props.isValid ||
-              needsValidation
-            }
+            isDisabled={props.isSaving}
             onClick={handleSave}
           >
             {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}

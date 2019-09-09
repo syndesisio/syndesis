@@ -9,8 +9,6 @@ import {
   ExpandablePreview,
   PageLoader,
   PageSection,
-  PreviewButtonSelection,
-  ViewEditorNavBar,
   ViewOutputToolbar,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -36,21 +34,19 @@ export interface IViewEditorOutputRouteParams {
  * @param previewExpanded - expanded state of the preview area
  * @param viewDefinition - the ViewDefinition
  * @param previewExpanded - the state of preview component expansion
- * @param previewButtonSelection - the button selection state in the preview component
  * @param queryResults - the current query results in the preview component
  */
 export interface IViewEditorOutputRouteState {
   virtualization: RestDataService;
   previewExpanded: boolean;
   viewDefinition: ViewDefinition;
-  previewButtonSelection: PreviewButtonSelection;
   queryResults: QueryResults;
 }
 
 export const ViewEditorOutputPage: React.FunctionComponent = () => {
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { params, state, history } = useRouteData<IViewEditorOutputRouteParams, IViewEditorOutputRouteState>();
+  const { params, state } = useRouteData<IViewEditorOutputRouteParams, IViewEditorOutputRouteState>();
 
   const [activeFilter, setActiveFilter] = React.useState();
   const [columnsToDelete] = React.useState();
@@ -62,8 +58,6 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
   const [previewExpanded, setPreviewExpanded] = React.useState(
     state.previewExpanded
   );
-  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
-  // const [viewDdl, setViewDdl] = React.useState(state.viewDefinition.ddl);
   const [queryResults, setQueryResults] = React.useState(state.queryResults);
   const { queryVirtualization } = useVirtualizationHelpers();
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
@@ -107,19 +101,13 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
     // TODO: implement save
   };
 
-  const handlePreviewButtonSelectionChanged = (
-    selection: PreviewButtonSelection
-  ) => {
-    setPreviewButtonSelection(selection);
-  };
-  
-  const handleEditFinished = () => {
-    history.push(
-      resolvers.data.virtualizations.views.root({
-        virtualization: state.virtualization,
-      })
-    );
-  }
+  // const handleEditFinished = () => {
+  //   history.push(
+  //     resolvers.data.virtualizations.views.root({
+  //       virtualization: state.virtualization,
+  //     })
+  //   );
+  // }
   
   const handleRefreshResults = async () => {
     try {
@@ -132,12 +120,6 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
         sqlStatement,
         15,
         0
-      );
-      pushNotification(
-        t('virtualization.queryViewSuccess', {
-          name: state.viewDefinition.name,
-        }),
-        'success'
       );
       setQueryResults(results);
     } catch (error) {
@@ -179,32 +161,6 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
             </Link>
             <span>{viewDefn.name}</span>
           </Breadcrumb>
-          <PageSection variant={'light'} noPadding={true}>
-            <ViewEditorNavBar
-              i18nFinishButton={t('data:virtualization.viewEditor.Done')}
-              i18nViewOutputTab={t('data:virtualization.viewEditor.viewOutputTab')}
-              i18nViewSqlTab={t('data:virtualization.viewEditor.sqlTab')}
-              viewOutputHref={resolvers.data.virtualizations.views.edit.viewOutput({
-                virtualization,
-                // tslint:disable-next-line: object-literal-sort-keys
-                viewDefinitionId: params.viewDefinitionId,
-                previewExpanded,
-                viewDefinition: viewDefn,
-                previewButtonSelection,
-                queryResults,
-              })}
-              viewSqlHref={resolvers.data.virtualizations.views.edit.sql({
-                virtualization,
-                // tslint:disable-next-line: object-literal-sort-keys
-                viewDefinitionId: params.viewDefinitionId,
-                previewExpanded,
-                viewDefinition: viewDefn,
-                previewButtonSelection,
-                queryResults,
-              })}
-              onEditFinished={handleEditFinished}
-            />
-          </PageSection>
           <PageSection>
             <ViewOutputToolbar
               a11yFilterColumns={t('virtualization.viewEditor.applyColumnFilter')}
@@ -248,7 +204,7 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
               onSave={handleSave}
             />
           </PageSection>
-          <PageSection variant={'light'} noPadding={true}>
+          <PageSection variant={'light'}>
             <ExpandablePreview
               i18nEmptyResultsTitle={t(
                 'data:virtualization.preview.resultsTableEmptyStateTitle'
@@ -258,14 +214,10 @@ export const ViewEditorOutputPage: React.FunctionComponent = () => {
               )}
               i18nHidePreview={t('data:virtualization.preview.hidePreview')}
               i18nShowPreview={t('data:virtualization.preview.showPreview')}
-              i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
-              i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
+              i18nTitle={t('data:virtualization.preview.title')}
               initialExpanded={previewExpanded}
-              initialPreviewButtonSelection={previewButtonSelection}
               onPreviewExpandedChanged={handlePreviewExpandedChanged}
-              onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
               onRefreshResults={handleRefreshResults}
-              viewDdl={state.viewDefinition.ddl}
               queryResultRows={getQueryRows(
                 queryResults
               )}

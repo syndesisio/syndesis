@@ -1,14 +1,21 @@
 import { useVirtualizationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition, IFormValue } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { QueryResults, ViewDefinition, ViewDefinitionDescriptor } from '@syndesis/models';
+import {
+  QueryResults,
+  ViewDefinition,
+  ViewDefinitionDescriptor,
+} from '@syndesis/models';
 import { SqlClientContent, SqlClientForm } from '@syndesis/ui';
 import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
-import i18n from '../../../i18n';
-import { getPreviewSql, getQueryColumns, getQueryRows } from './VirtualizationUtils';
+import {
+  getPreviewSql,
+  getQueryColumns,
+  getQueryRows,
+} from './VirtualizationUtils';
 
 export interface IWithVirtualizationSqlClientFormChildrenProps {
   /**
@@ -58,7 +65,6 @@ export interface IWithVirtualizationSqlClientFormProps {
 export const WithVirtualizationSqlClientForm: React.FunctionComponent<
   IWithVirtualizationSqlClientFormProps
 > = props => {
-
   const { t } = useTranslation(['data', 'shared']);
   const { pushNotification } = useContext(UIContext);
   const { getViewDefinition, queryVirtualization } = useVirtualizationHelpers();
@@ -75,20 +81,18 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
       enums.push({ label: view.name, value: view.name });
     }
     return enums;
-  }
+  };
 
   const getInitialView = () => {
     return props.views.length > 0 ? props.views[0].name : '';
-  }
+  };
 
   const formDefinition = {
     rowLimit: {
       componentProperty: true,
       deprecated: false,
-      description: i18n.t(
-        'data:virtualization.viewSqlFormRowLimitDescription'
-      ),
-      displayName: i18n.t('data:virtualization.viewSqlFormRowLimit'),
+      description: t('data:virtualization.viewSqlFormRowLimitDescription'),
+      displayName: t('data:virtualization.viewSqlFormRowLimit'),
       javaType: 'java.lang.Integer',
       kind: 'property',
       order: 2,
@@ -99,10 +103,8 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
     rowOffset: {
       componentProperty: true,
       deprecated: false,
-      description: i18n.t(
-        'data:virtualization.viewSqlFormRowOffsetDescription'
-      ),
-      displayName: i18n.t('data:virtualization.viewSqlFormRowOffset'),
+      description: t('data:virtualization.viewSqlFormRowOffsetDescription'),
+      displayName: t('data:virtualization.viewSqlFormRowOffset'),
       javaType: 'java.lang.Integer',
       kind: 'property',
       order: 3,
@@ -111,8 +113,8 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
       type: 'number',
     },
     view: {
-      description: 'The View to Query',
-      displayName: 'View',
+      description: t('virtualization.viewSqlFormViewDescription'),
+      displayName: t('virtualization.View'),
       enum: buildViews(),
       kind: 'parameter',
       order: 1,
@@ -153,16 +155,14 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
   };
 
   const doSubmit = async (value: any) => {
-    const selectedViewName = value.view
-      ? value.view
-      : getInitialView();
-    const viewDefn = props.views.find(
-      view => view.name === selectedViewName
-    );
+    const selectedViewName = value.view ? value.view : getInitialView();
+    const viewDefn = props.views.find(view => view.name === selectedViewName);
     try {
       let sqlStatement = '';
       if (viewDefn) {
-        const viewDefinition: ViewDefinition = await getViewDefinition(viewDefn.id);
+        const viewDefinition: ViewDefinition = await getViewDefinition(
+          viewDefn.id
+        );
         sqlStatement = getPreviewSql(viewDefinition);
       }
       const results: QueryResults = await queryVirtualization(
@@ -170,12 +170,6 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
         sqlStatement,
         value.rowLimit,
         value.rowOffset
-      );
-      pushNotification(
-        t('virtualization.queryViewSuccess', {
-          name: value.viewName,
-        }),
-        'success'
       );
       setQueryResults(results);
     } catch (error) {
@@ -202,62 +196,38 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
         });
       }}
     >
-      {({
-        fields,
-        handleSubmit,
-        isSubmitting,
-        isValid,
-        submitForm,
-      }) => (
-          <SqlClientContent
-            formContent={
-              <SqlClientForm handleSubmit={handleSubmit}>
-                {fields}
-              </SqlClientForm>
-            }
-            viewNames={props.views.map(
-              (viewDefn: ViewDefinitionDescriptor) => viewDefn.name
-            )}
-            queryResultRows={getQueryRows(
-              queryResults
-            )}
-            queryResultCols={getQueryColumns(
-              queryResults
-            )}
-            i18nResultsTitle={i18n.t(
-              'data:virtualization.queryResultsTitle'
-            )}
-            i18nResultsRowCountMsg={i18n.t(
-              'data:virtualization.queryResultsRowCountMsg'
-            )}
-            i18nEmptyStateInfo={i18n.t(
-              'data:virtualization.viewEmptyStateInfo'
-            )}
-            i18nEmptyStateTitle={i18n.t(
-              'data:virtualization.viewEmptyStateTitle'
-            )}
-            i18nImportViews={i18n.t(
-              'data:virtualization.importDataSource'
-            )}
-            i18nImportViewsTip={i18n.t(
-              'data:virtualization.importDataSourceTip'
-            )}
-            i18nCreateView={i18n.t(
-              'data:virtualization.createView'
-            )}
-            i18nCreateViewTip={i18n.t(
-              'data:virtualization.createViewTip'
-            )}
-            linkCreateViewHRef={props.linkCreateView}
-            linkImportViewsHRef={props.linkImportViews}
-            i18nEmptyResultsTitle={i18n.t(
-              'data:virtualization.queryResultsTableEmptyStateTitle'
-            )}
-            i18nEmptyResultsMsg={i18n.t(
-              'data:virtualization.queryResultsTableEmptyStateInfo'
-            )}
-          />
-        )}
+      {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) => (
+        <SqlClientContent
+          formContent={
+            <SqlClientForm handleSubmit={handleSubmit} i18nSubmit={t('Submit')}>
+              {fields}
+            </SqlClientForm>
+          }
+          viewNames={props.views.map(
+            (viewDefn: ViewDefinitionDescriptor) => viewDefn.name
+          )}
+          queryResultRows={getQueryRows(queryResults)}
+          queryResultCols={getQueryColumns(queryResults)}
+          i18nResultsTitle={t('data:virtualization.queryResultsTitle')}
+          i18nResultsRowCountMsg={t(
+            'data:virtualization.queryResultsRowCountMsg'
+          )}
+          i18nEmptyStateInfo={t('data:virtualization.viewEmptyStateInfo')}
+          i18nEmptyStateTitle={t('data:virtualization.viewEmptyStateTitle')}
+          i18nImportViews={t('data:virtualization.importDataSource')}
+          i18nImportViewsTip={t('data:virtualization.importDataSourceTip')}
+          i18nCreateView={t('data:virtualization.createView')}
+          i18nCreateViewTip={t('data:virtualization.createViewTip')}
+          linkCreateViewHRef={props.linkCreateView}
+          linkImportViewsHRef={props.linkImportViews}
+          i18nEmptyResultsTitle={t(
+            'data:virtualization.queryResultsTableEmptyStateTitle'
+          )}
+          i18nEmptyResultsMsg={t(
+            'data:virtualization.queryResultsTableEmptyStateInfo'
+          )}
+        />
+      )}
     </AutoForm>
   );
-}
+};

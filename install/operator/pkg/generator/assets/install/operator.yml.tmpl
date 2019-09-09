@@ -37,7 +37,7 @@
     - name: {{.Tag}}
       from:
         name: {{.Image}}:{{.Tag}}
-      {{if .DevImages}}
+      {{if .DevSupport}}
         kind: ImageStreamTag
       {{else}}
         kind: DockerImage

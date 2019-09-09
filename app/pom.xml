@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
-    <version>28</version>
+    <version>29</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -128,6 +128,7 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.2.0</micrometer.version>
+    <teiid.version>12.2.1</teiid.version>
   </properties>
 
   <modules>
@@ -138,7 +139,6 @@
     <module>server</module>
     <module>s2i</module>
     <module>meta</module>
-    <module>ui-angular</module>
     <module>ui-react</module>
     <module>../doc</module>
     <module>test</module>
@@ -164,7 +164,6 @@
       <modules>
         <module>server</module>
         <module>meta</module>
-        <module>ui-angular</module>
         <module>ui-react</module>
       </modules>
 
@@ -1814,7 +1813,7 @@
       <dependency>
         <groupId>org.codehaus.woodstox</groupId>
         <artifactId>stax2-api</artifactId>
-        <version>4.1</version>
+        <version>4.2</version>
         <scope>provided</scope>
       </dependency>
 
@@ -1859,6 +1858,13 @@
         <artifactId>reflections</artifactId>
         <version>0.9.11</version>
       </dependency>
+      
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid</artifactId>
+        <classifier>jdbc</classifier>
+        <version>${teiid.version}</version>
+      </dependency>       
 
       <!-- ActiveMQ deps to override Spring Boot imported pom -->
       <dependency>

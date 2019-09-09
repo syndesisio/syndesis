@@ -9,7 +9,7 @@
       syndesis.io/component: syndesis-server
   spec:
     tags:
-      {{if .Syndesis.Spec.DevImages}}
+      {{if .Syndesis.Spec.DevSupport}}
     - name: "latest"
       from:
         kind: ImageStreamTag
@@ -35,7 +35,7 @@
       syndesis.io/component: syndesis-ui
   spec:
     tags:
-      {{if .Syndesis.Spec.DevImages}}
+      {{if .Syndesis.Spec.DevSupport}}
     - name: "latest"
       from:
         kind: ImageStreamTag
@@ -61,7 +61,7 @@
       syndesis.io/component: syndesis-meta
   spec:
     tags:
-      {{if .Syndesis.Spec.DevImages}}
+      {{if .Syndesis.Spec.DevSupport}}
     - name: "latest"
       from:
         kind: ImageStreamTag
@@ -142,7 +142,7 @@
       syndesis.io/component: s2i-java
   spec:
     tags:
-      {{if .Syndesis.Spec.DevImages}}
+      {{if .Syndesis.Spec.DevSupport}}
     - name: "latest"
       from:
         kind: ImageStreamTag

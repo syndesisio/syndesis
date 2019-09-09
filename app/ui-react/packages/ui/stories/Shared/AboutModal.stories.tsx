@@ -9,7 +9,7 @@ stories.addDecorator(withKnobs);
 const modalToggleLogger = action('logging modal toggle');
 stories.add(
   'AboutModal',
-  withState({ isOpen: true })(({ store }) => {
+  withState({ isOpen: false })(({ store }) => {
     function handleModalToggle() {
       store.set({ isOpen: !store.state.isOpen });
       modalToggleLogger();

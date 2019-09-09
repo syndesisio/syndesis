@@ -106,15 +106,17 @@ export default () => (
       hasData: hasIntegrations,
       error: integrationsError,
       errorMessage: integrationsErrorMessage,
+      loading: integrationsLoading,
     }) => (
       <WithIntegrationsMetrics>
-        {({ data: metricsData }) => (
+        {({ data: metricsData, loading: metricsLoading }) => (
           <WithConnections>
             {({
               data: connectionsData,
               hasData: hasConnections,
               error: connectionsError,
               errorMessage: connectionsErrorMessage,
+              loading: connectionsLoading,
             }) => {
               const integrationStatesCount = getIntegrationsCountsByState(
                 integrationsData.items
@@ -210,16 +212,15 @@ export default () => (
                           })}
                           linkCreateIntegration={resolvers.integrations.create.start.selectStep()}
                         >
-                          {/* TODO attempting to introduce minimal change here, this forces the empty state to show up */
-                          integrationsData.totalCount > 0 ? (
-                            <Integrations
-                              error={integrationsError}
-                              loading={!hasIntegrations}
-                              integrations={topIntegrations}
-                            />
-                          ) : (
-                            undefined
-                          )}
+                          <Integrations
+                            error={integrationsError}
+                            loading={
+                              integrationsLoading &&
+                              metricsLoading &&
+                              !hasIntegrations
+                            }
+                            integrations={topIntegrations}
+                          />
                         </TopIntegrationsCard>
                       }
                       integrationBoard={
@@ -249,7 +250,11 @@ export default () => (
                         >
                           <WithLoader
                             error={integrationsError}
-                            loading={!hasIntegrations}
+                            loading={
+                              integrationsLoading &&
+                              metricsLoading &&
+                              !hasIntegrations
+                            }
                             loaderChildren={<RecentUpdatesSkeleton />}
                             errorChildren={
                               <ApiError error={integrationsErrorMessage!} />
@@ -278,7 +283,7 @@ export default () => (
                           error={connectionsError}
                           errorMessage={connectionsErrorMessage}
                           includeConnectionMenu={false}
-                          loading={!hasConnections}
+                          loading={connectionsLoading && !hasConnections}
                           connections={dashboardConnections}
                           getConnectionHref={connection =>
                             resolvers.connections.connection.details({

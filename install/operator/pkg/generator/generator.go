@@ -46,6 +46,7 @@ type images struct {
 	PrometheusImagePrefix       string
 	PostgresExporterImagePrefix string
 	KomodoImagesPrefix          string
+	CamelKBaseImagePrefix       string
 }
 
 type tags struct {
@@ -56,6 +57,7 @@ type tags struct {
 	Upgrade          string
 	PostgresExporter string
 	Komodo           string
+	CamelKBase       string
 }
 
 type Context struct {
@@ -75,6 +77,7 @@ type Context struct {
 	Env              map[string]string
 	Syndesis         *v1alpha1.Syndesis
 	ImagePullSecrets []string
+	Versions         map[string]string
 }
 
 func AssetAsBytes(path string) ([]byte, error) {

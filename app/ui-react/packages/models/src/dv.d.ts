@@ -82,6 +82,9 @@ export interface ViewDefinition {
   isUserDefined: boolean;
   sourcePaths: string[];
   ddl?: string;
+  createdAt?: number;
+  modifiedAt?: number;
+  version?: number;
 }
 
 export interface ColumnData {
@@ -97,6 +100,26 @@ export interface RowData {
 export interface QueryResults {
   columns: ColumnData[];
   rows: RowData[];
+}
+
+export interface ViewSourceInfo {
+  schemas: SourceSchema[];
+  viewName: string;
+}
+
+export interface SourceSchema {
+  name: string;
+  tables: SourceTable[];
+}
+
+export interface SourceTable {
+  name: string;
+  columns: SourceColumn[];
+}
+
+export interface SourceColumn {
+  name: string;
+  datatype: string;
 }
 
 export interface TableColumns {

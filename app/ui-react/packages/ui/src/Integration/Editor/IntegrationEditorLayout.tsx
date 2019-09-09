@@ -49,6 +49,10 @@ export interface IIntegrationEditorLayoutProps {
   saveHref?: H.LocationDescriptor;
   cancelHref?: H.LocationDescriptor;
   publishHref?: H.LocationDescriptor;
+  primaryFlowHref?: H.LocationDescriptor;
+  isApiProvider?: boolean;
+  isAlternateFlow?: boolean;
+  isDefaultFlow?: boolean;
   isSaveDisabled?: boolean;
   isSaveLoading?: boolean;
   isPublishDisabled?: boolean;
@@ -81,69 +85,107 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   saveHref,
   cancelHref,
   publishHref,
+  primaryFlowHref,
+  isApiProvider,
+  isAlternateFlow,
+  isDefaultFlow,
   isSaveLoading,
   isSaveDisabled,
   isPublishLoading,
   isPublishDisabled,
   extraActions,
 }: IIntegrationEditorLayoutProps) => {
+  const condition = isDefaultFlow ? 'OTHERWISE' : 'WHEN';
+
   return (
     <div className={'integration-editor-layout'}>
       <div className={'integration-editor-layout__header'}>
         <PageSection variant={'light'}>
           {toolbar}
           <Level gutter={'sm'}>
-            <LevelItem>
-              <TextContent>
-                <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-                  {title}
-                </Title>
-                <Text>{description}</Text>
-              </TextContent>
-            </LevelItem>
-            <LevelItem>
-              {(cancelHref || onCancel) && (
-                <>
-                  <ButtonLink
-                    id={'integration-editor-cancel-button'}
-                    onClick={onCancel}
-                    href={cancelHref}
-                  >
-                    Cancel
-                  </ButtonLink>
-                  &nbsp;&nbsp;&nbsp;
-                </>
-              )}
-              {(saveHref || onSave) && (
-                <>
-                  <ButtonLink
-                    id={'integration-editor-save-button'}
-                    onClick={onSave}
-                    href={saveHref}
-                    disabled={isSaveLoading || isSaveDisabled}
-                    as={publishHref || onPublish ? 'default' : 'primary'}
-                  >
-                    {isSaveLoading ? (
-                      <Loader size={'xs'} inline={true} />
-                    ) : null}
-                    Save
-                  </ButtonLink>
-                  &nbsp;
-                </>
-              )}
-              {(publishHref || onPublish) && (
+            {isAlternateFlow ? (
+            <>
+              <LevelItem>
+                <TextContent>
+                  <Title size={'2xl'} headingLevel={TitleLevel.h1}>
+                    <strong
+                      className="integration-editor-condition"
+                      data-verb={condition}
+                    >
+                      {condition}
+                    </strong>
+                    &nbsp;{title}
+                  </Title>
+                  <Text>{description}</Text>
+                </TextContent>
+              </LevelItem>
+              <LevelItem>
                 <ButtonLink
-                  id={'integration-editor-publish-button'}
-                  onClick={onPublish}
-                  href={publishHref}
-                  as={'primary'}
-                  disabled={isPublishLoading || isPublishDisabled}
+                  id={'integration-editor-back-button'}
+                  href={primaryFlowHref}
                 >
-                  Publish
+                  {isApiProvider ?
+                    'Go to Operation Flow' :
+                    'Go to Primary Flow'
+                  }
                 </ButtonLink>
-              )}
-              {extraActions}
-            </LevelItem>
+              </LevelItem>
+            </>
+            ) : (
+            <>
+              <LevelItem>
+                <TextContent>
+                  <Title size={'2xl'} headingLevel={TitleLevel.h1}>
+                    {title}
+                  </Title>
+                  <Text>{description}</Text>
+                </TextContent>
+              </LevelItem>
+              <LevelItem>
+                {(cancelHref || onCancel) && (
+                  <>
+                    <ButtonLink
+                      id={'integration-editor-cancel-button'}
+                      onClick={onCancel}
+                      href={cancelHref}
+                    >
+                      Cancel
+                    </ButtonLink>
+                    &nbsp;&nbsp;&nbsp;
+                  </>
+                )}
+                {(saveHref || onSave) && (
+                  <>
+                    <ButtonLink
+                      id={'integration-editor-save-button'}
+                      onClick={onSave}
+                      href={saveHref}
+                      disabled={isSaveLoading || isSaveDisabled}
+                      as={publishHref || onPublish ? 'default' : 'primary'}
+                    >
+                      {isSaveLoading ? (
+                        <Loader size={'xs'} inline={true} />
+                      ) : null}
+                      Save
+                    </ButtonLink>
+                    &nbsp;
+                  </>
+                )}
+                {(publishHref || onPublish) && (
+                  <ButtonLink
+                    id={'integration-editor-publish-button'}
+                    onClick={onPublish}
+                    href={publishHref}
+                    as={'primary'}
+                    disabled={isPublishLoading || isPublishDisabled}
+                  >
+                    Publish
+                  </ButtonLink>
+                )}
+                {extraActions}
+              </LevelItem>
+            </>
+            )}
           </Level>
         </PageSection>
       </div>

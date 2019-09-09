@@ -4,6 +4,7 @@ import {
   QueryResults,
   RestDataService,
   ViewDefinition,
+  ViewSourceInfo,
 } from '@syndesis/models';
 import { TableColumns } from '@syndesis/models';
 import {
@@ -14,9 +15,6 @@ import {
 import { 
   ExpandablePreview, 
   PageLoader, 
-  PageSection, 
-  PreviewButtonSelection, 
-  ViewEditorNavBar 
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import { useContext } from 'react';
@@ -26,7 +24,7 @@ import { Link } from 'react-router-dom';
 import { UIContext } from '../../../../app';
 import { ApiError } from '../../../../shared';
 import resolvers from '../../../resolvers';
-import { getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
+import { generateTableColumns, getPreviewSql, getQueryColumns, getQueryRows } from '../../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization that the view belongs to
@@ -41,46 +39,93 @@ export interface IViewEditorSqlRouteParams {
  * @param virtualization - the Virtualization
  * @param viewDefinition - the ViewDefinition
  * @param previewExpanded - the state of preview component expansion
- * @param previewButtonSelection - the button selection state in the preview component
  * @param queryResults - the current query results in the preview component
  */
 export interface IViewEditorSqlRouteState {
   virtualization: RestDataService;
   viewDefinition: ViewDefinition;
   previewExpanded: boolean;
-  previewButtonSelection: PreviewButtonSelection;
   queryResults: QueryResults;
 }
 
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const [isSaving, setIsSaving] = React.useState(false);
-  const [isValidating, setIsValidating] = React.useState(false);
+  const [isMetadataLoaded, setMetadataLoaded] = React.useState(false);
+  const [sourceTableColumns, setSourceTableColumns] = React.useState<TableColumns[]>([]);
   const [viewValid, setViewValid] = React.useState(true);
+  const [validationMessageVisible, setValidationMessageVisible] = React.useState(false);
   const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { params, state, history } = useRouteData<IViewEditorSqlRouteParams, IViewEditorSqlRouteState>();
-  const { queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
+  const { getSourceInfoForView, queryVirtualization, saveViewDefinition, validateViewDefinition } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(state.previewExpanded);
   const [queryResults, setQueryResults] = React.useState(state.queryResults);
-  const [previewButtonSelection, setPreviewButtonSelection] = React.useState(state.previewButtonSelection);
   const { resource: virtualization } = useVirtualization(params.virtualizationId);
   const { resource: viewDefn, loading, error } = useViewDefinition(params.viewDefinitionId, state.viewDefinition);
+  const [noResultsTitle, setNoResultsTitle] = React.useState(t('data:virtualization.preview.resultsTableValidEmptyTitle'));
+  const [noResultsMessage, setNoResultsMessage] = React.useState(t('data:virtualization.preview.resultsTableValidEmptyInfo'));
 
-  const handleValidationStarted = async (): Promise<void> => {
-    setIsValidating(true);
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
   };
 
-  const handleValidationComplete = async (
-    validation: IViewEditValidationResult
-  ): Promise<void> => {
-    setIsValidating(false);
-    setValidationResults([validation]);
-    setViewValid(validation.type === 'success');
+  const handleMetadataLoaded = async (): Promise<void> => {
+    if( sourceTableColumns != null && sourceTableColumns.length > 0 ) {
+      setMetadataLoaded(true);
+    }
   };
 
-  // Save the View with new DDL and description
+  /**
+   * Validate the view and update preview results
+   * @param view the view definiton
+   */
+  const handleValidateView = async (view: ViewDefinition) => {
+    // Validate the View
+    const validationResponse = await validateViewDefinition(
+      view
+    );
+    let validationResult = null;
+    if (validationResponse.status === 'SUCCESS') {
+      validationResult = {
+        message: 'Validation successful',
+        type: 'success',
+      } as IViewEditValidationResult;
+    } else {
+      validationResult = {
+        message: validationResponse.message,
+        type: 'danger',
+      } as IViewEditValidationResult;
+    }
+    const isValid = validationResult.type === 'success';
+    setQueryResultEmptyContent(isValid);
+    setDdlValidationInfo(validationResult, isValid);
+    updateQueryResults(isValid);
+  }
+
+  // Preview result empty content changes if view is invalid
+  const setQueryResultEmptyContent = (isValid: boolean) => {
+    if(isValid) {
+      setNoResultsTitle(t('data:virtualization.preview.resultsTableValidEmptyTitle'));
+      setNoResultsMessage(t('data:virtualization.preview.resultsTableValidEmptyInfo'));
+    } else {
+      setNoResultsTitle(t('data:virtualization.preview.resultsTableInvalidEmptyTitle'));
+      setNoResultsMessage(t('data:virtualization.preview.resultsTableInvalidEmptyInfo'));
+    }
+  }
+
+  // Update info for the DDL editor
+  const setDdlValidationInfo = (validationResult: IViewEditValidationResult, isValid: boolean) => {
+    setValidationResults([validationResult]);
+    setValidationMessageVisible(!isValid);
+    setViewValid(isValid);
+  }
+
+  /**
+   * Saves View with the new DDL value.  The View is also validated, and preview results updated
+   */
   const handleSaveView = async (ddlValue: string) => {
     setIsSaving(true);
     // View Definition
@@ -96,15 +141,12 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     };
 
     try {
+      // Save the View
       await saveViewDefinition(view);
+      // Validate the View
+      await handleValidateView(view);
+
       setIsSaving(false);
-      pushNotification(
-        t(
-          'virtualization.saveViewSuccess',
-          { name: viewDefn.name,
-        }),
-        'success'
-      );
     } catch (error) {
       const details = error.message
         ? error.message
@@ -120,63 +162,14 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     }
   };
 
-  // Validate the View using the new DDL
-  const handleValidateView = async (ddlValue: string) => {
-    handleValidationStarted();
-
-    // View Definition
-    const view: ViewDefinition = {
-      dataVirtualizationName: viewDefn.dataVirtualizationName,
-      ddl: ddlValue,
-      id: viewDefn.id,
-      isComplete: viewDefn.isComplete,
-      isUserDefined: true,
-      keng__description: viewDefn.keng__description,
-      name: viewDefn.name,
-      sourcePaths: viewDefn.sourcePaths,
-    };
-
-    const validationResponse = await validateViewDefinition(
-      view
-    );
-    if (validationResponse.status === 'SUCCESS') {
-      const validationResult = {
-        message: 'Validation successful',
-        type: 'success',
-      } as IViewEditValidationResult;
-      handleValidationComplete(validationResult);
-    } else {
-      const validationResult = {
-        message: validationResponse.message,
-        type: 'danger',
-      } as IViewEditValidationResult;
-
-      handleValidationComplete(validationResult);
-    }
-  };
-
-  const getSourceTableInfos = (): TableColumns[] => {
-    // TODO: replace this hardcoded data with server call (or table-column info on the virtualization)
-    const sourceTables = [
-      { 'columnNames': ['name', 'population', 'size'], // column names
-        'name': 'countries' },                         // table name
-      { 'columnNames': ['name','score', 'birthDate'],  
-        'name': 'users' 
-      }
-    ];
-    return sourceTables;
-  };
-
   const handlePreviewExpandedChanged = (
     expanded: boolean
   ) => {
     setPreviewExpanded(expanded);
   };
 
-  const handlePreviewButtonSelectionChanged = (
-    selection: PreviewButtonSelection
-  ) => {
-    setPreviewButtonSelection(selection);
+  const handleHideValidationMessage = () => {
+    setValidationMessageVisible(false);
   };
 
   const handleEditFinished = () => {
@@ -188,34 +181,71 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   };
 
   const handleRefreshResults = async () => {
+    updateQueryResults(viewValid, true);
+  }
+  
+  /**
+   * Update the preview query results
+   * @param isValid 'true' if the view definition is valid
+   * @param refreshClick 'true' if update is initiated by the preview refresh button
+   */
+  const updateQueryResults = async (isValid: boolean, refreshClick: boolean = false) => {
+    let queryResult = queryResultsEmpty;
     try {
-      const sqlStatement = getPreviewSql(viewDefn);
-
-      const results: QueryResults = await queryVirtualization(
-        params.virtualizationId,
-        sqlStatement,
-        15,
-        0
-      );
-      pushNotification(
-        t('virtualization.queryViewSuccess', {
-          name: viewDefn.name,
-        }),
-        'success'
-      );
-      setQueryResults(results);
+      // Valid view - run the preview query 
+      if (isValid) {
+        queryResult = await queryVirtualization(
+          params.virtualizationId,
+          getPreviewSql(viewDefn),
+          15,
+          0
+        );
+      }
+      setQueryResults(queryResult);
+      // Show toast for refresh click
+      if (refreshClick) {
+        pushNotification(
+          t('virtualization.queryResultsRefreshed', {
+            name: viewDefn.name,
+          }),
+          'success'
+        );
+      }
     } catch (error) {
-      const details = error.message ? error.message : '';
-      pushNotification(
-        t('virtualization.queryViewFailed', {
-          details,
-          name: viewDefn.name,
-        }),
-        'error'
-      );
+      setQueryResults(queryResult);
+      if (refreshClick) {
+        const details = error.message ? error.message : '';
+        pushNotification(
+          t('virtualization.queryViewFailed', {
+            details,
+            name: viewDefn.name,
+          }),
+          'error'
+        );
+      }
     }
   };
 
+  // load source table/column information
+  React.useEffect(() => {
+    if (!isMetadataLoaded && virtualization !== null && (virtualization as RestDataService).keng__id !== null
+      && (virtualization as RestDataService).keng__id.length > 0) {
+      // load source table/column info by retrieving the view source info from
+      // the server and converting to TableColumn objects
+      const loadSourceTableInfo = async () => {
+        try {
+          const results: ViewSourceInfo = await getSourceInfoForView(virtualization);
+          setSourceTableColumns(generateTableColumns(results as ViewSourceInfo));
+        } catch (error) {
+          pushNotification(error.message, 'error');
+        }
+      }
+      loadSourceTableInfo();
+      handleMetadataLoaded();
+    }
+    // eslint-disable-next-line
+  }, [virtualization as RestDataService]);
+  
   return (
     <WithLoader
       loading={loading}
@@ -243,73 +273,38 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             </Link>
             <span>{viewDefn.name}</span>
           </Breadcrumb>
-          <PageSection variant={'light'} noPadding={true}>
-            <ViewEditorNavBar
-              i18nFinishButton={t('data:virtualization.viewEditor.Done')}
-              i18nViewOutputTab={t('data:virtualization.viewEditor.viewOutputTab')}
-              i18nViewSqlTab={t('data:virtualization.viewEditor.sqlTab')}
-              viewOutputHref={resolvers.data.virtualizations.views.edit.viewOutput({
-                virtualization,
-                // tslint:disable-next-line: object-literal-sort-keys
-                viewDefinitionId: params.viewDefinitionId,
-                previewExpanded,
-                viewDefinition: viewDefn,
-                previewButtonSelection,
-                queryResults,
-              })}
-              viewSqlHref={resolvers.data.virtualizations.views.edit.sql({
-                virtualization,
-                // tslint:disable-next-line: object-literal-sort-keys
-                viewDefinitionId: params.viewDefinitionId,
-                previewExpanded,
-                viewDefinition: viewDefn,
-                previewButtonSelection,
-                queryResults,
-              })}
-              onEditFinished={handleEditFinished}            
-            />
-          </PageSection>
           <DdlEditor
             viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+            i18nDoneLabel={t('shared:Done')}
             i18nSaveLabel={t('shared:Save')}
-            i18nValidateLabel={t('shared:Validate')}
+            i18nTitle={t('data:virtualization.viewEditor.title')}
             i18nValidationResultsTitle={t('data:virtualization.validationResultsTitle')}
-            isValid={viewValid}
+            showValidationMessage={validationMessageVisible}
             isSaving={isSaving}
-            isValidating={isValidating}
-            sourceTableInfos={getSourceTableInfos()}
-            onValidate={handleValidateView}
+            sourceTableInfos={sourceTableColumns}
+            onCloseValidationMessage={handleHideValidationMessage}
+            onFinish={handleEditFinished}
             onSave={handleSaveView}
             validationResults={
               validationResults
             }
           />
-          <PageSection variant={'light'} noPadding={true}>
-            <ExpandablePreview
-              i18nEmptyResultsTitle={t(
-                'data:virtualization.preview.resultsTableEmptyStateTitle'
-              )}
-              i18nEmptyResultsMsg={t(
-                'data:virtualization.preview.resultsTableEmptyStateInfo'
-              )}
-              i18nHidePreview={t('data:virtualization.preview.hidePreview')}
-              i18nShowPreview={t('data:virtualization.preview.showPreview')}
-              i18nSelectSqlText={t('data:virtualization.preview.selectSql')}
-              i18nSelectPreviewText={t('data:virtualization.preview.selectPreview')}
-              initialExpanded={previewExpanded}
-              initialPreviewButtonSelection={previewButtonSelection}
-              onPreviewExpandedChanged={handlePreviewExpandedChanged}
-              onPreviewButtonSelectionChanged={handlePreviewButtonSelectionChanged}
-              onRefreshResults={handleRefreshResults}
-              viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-              queryResultRows={getQueryRows(
-                queryResults
-              )}
-              queryResultCols={getQueryColumns(
-                queryResults
-              )}
-            />
-          </PageSection>
+          <ExpandablePreview
+            i18nEmptyResultsTitle={noResultsTitle}
+            i18nEmptyResultsMsg={noResultsMessage}
+            i18nHidePreview={t('data:virtualization.preview.hidePreview')}
+            i18nShowPreview={t('data:virtualization.preview.showPreview')}
+            i18nTitle={t('data:virtualization.preview.title')}
+            initialExpanded={previewExpanded}
+            onPreviewExpandedChanged={handlePreviewExpandedChanged}
+            onRefreshResults={handleRefreshResults}
+            queryResultRows={getQueryRows(
+              queryResults
+            )}
+            queryResultCols={getQueryColumns(
+              queryResults
+            )}
+          />
         </>
       )}
     </WithLoader>
