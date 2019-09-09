@@ -185,12 +185,9 @@ public class CamelKPublishHandlerTest {
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 
-        for (String customizerId: CamelKPublishHandler.DEFAULT_CUSTOMIZERS) {
-            assertThat(i.getSpec().getConfiguration()).anyMatch(r -> {
-                return Objects.equals("property", r.getType())
-                    && Objects.equals("customizer." + customizerId + ".enabled=true", r.getValue());
-            });
-        }
+        assertThat(i.getSpec().getConfiguration()).noneMatch(r ->
+            Objects.equals("property", r.getType())
+                && r.getValue() != null && r.getValue().matches("customizer\\.[^.]+\\.enabled=true"));
     }
 
     @Test
@@ -216,7 +213,7 @@ public class CamelKPublishHandlerTest {
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 
-        for (String customizerId: properties.getCamelk().getCustomizers()) {
+        for (String customizerId : properties.getCamelk().getCustomizers()) {
             assertThat(i.getSpec().getConfiguration()).anyMatch(r -> {
                 return Objects.equals("property", r.getType())
                     && Objects.equals("customizer." + customizerId + ".enabled=true", r.getValue());
