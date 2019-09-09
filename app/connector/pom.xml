@@ -42,6 +42,7 @@
     <module>activemq</module>
     <module>api-provider</module>
     <module>amqp</module>
+    <module>aws-ddb</module>
     <module>aws-s3</module>
     <module>aws-sqs</module>
     <module>aws-sns</module>

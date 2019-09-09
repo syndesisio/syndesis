@@ -129,6 +129,7 @@
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.2.0</micrometer.version>
     <teiid.version>12.2.1</teiid.version>
+    <aws-java-sdk-core.version>1.11.269</aws-java-sdk-core.version>
   </properties>
 
   <modules>
@@ -1012,7 +1013,6 @@
           <version>${maven-download.version}</version>
         </plugin>
 
-
       </plugins>
     </pluginManagement>
 
@@ -1406,6 +1406,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-aws-ddb</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-aws-s3</artifactId>
@@ -2522,6 +2528,38 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <!-- AWS -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-aws</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>aws-java-sdk-core</artifactId>
+        <version>${aws-java-sdk-core.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>com.amazonaws</groupId>
+        <artifactId>DynamoDBLocal</artifactId>
+        <version>${aws-dynamodb-local.version}</version>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

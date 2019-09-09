@@ -877,6 +877,11 @@ workflows:
           requires:
             - connector-support
       - connector:
+          name: connector-aws-ddb
+          module: aws-ddb
+          requires:
+            - connector-support
+      - connector:
           name: connector-aws-s3
           module: aws-s3
           requires:
@@ -1046,6 +1051,7 @@ workflows:
             - connector-activemq
             - connector-api-provider
             - connector-amqp
+            - connector-aws-ddb
             - connector-aws-s3
             - connector-aws-sqs
             - connector-aws-sns
