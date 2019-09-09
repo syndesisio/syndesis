@@ -1,7 +1,0 @@
-@import 'syndesis-sass';
-
-.api-connector-list {
-  ::ng-deep .toolbar-pf {
-    @include toolbar($border-bottom: 0);
-  }
-}

@@ -37,11 +37,11 @@ const RoleName = "syndesis-operator"
 type Install struct {
 	// cli parsed config
 	*internal.Options
-	wait      bool
-	eject     string
-	image     string
-	tag       string
-	devImages bool
+	wait       bool
+	eject      string
+	image      string
+	tag        string
+	devSupport bool
 
 	// processing state
 	ejectedResources []unstructured.Unstructured
@@ -98,7 +98,7 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.image, "image", "", pkg.DefaultOperatorImage, "sets operator image that gets installed")
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
-	cmd.PersistentFlags().BoolVarP(&o.devImages, "dev", "", false, "enable development mode by loading images from image stream tags.")
+	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
 
 	return &cmd
 }
@@ -121,7 +121,7 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	}
 
 	// The default operator image is not valid /w dev mode since it can't have a repository in the image name.
-	if o.devImages && o.image == pkg.DefaultOperatorImage {
+	if o.devSupport && o.image == pkg.DefaultOperatorImage {
 		o.image = "syndesis-operator"
 	}
 
@@ -159,12 +159,12 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-	Image     string
-	Tag       string
-	Namespace string
-	DevImages bool
-	Role      string
-	Kind      string
+	Image      string
+	Tag        string
+	Namespace  string
+	DevSupport bool
+	Role       string
+	Kind       string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -209,12 +209,12 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 	resources, err := generator.Render(fromFile, RenderScope{
-		Namespace: o.Namespace,
-		Image:     o.image,
-		Tag:       o.tag,
-		DevImages: o.devImages,
-		Role:      RoleName,
-		Kind:      "Role",
+		Namespace:  o.Namespace,
+		Image:      o.image,
+		Tag:        o.tag,
+		DevSupport: o.devSupport,
+		Role:       RoleName,
+		Kind:       "Role",
 	})
 	return resources, err
 }

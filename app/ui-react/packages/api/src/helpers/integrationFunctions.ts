@@ -682,7 +682,8 @@ export async function setFlow(
 }
 
 /**
- * Returns a new integration object containing the supplied conditional flows for the given step ID
+ * Returns a new integration object containing the supplied conditional flows for the given step ID. This reconcile step
+ * includes setting of flow start and end data shapes according to the conditional flow input and output data shape.
  * @param integration
  * @param newFlows
  * @param stepId

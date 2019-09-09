@@ -17,11 +17,10 @@ ui::usage() {
     --watch-tests       Run the tests and watch for changes
     --serve             Serve the UI (defaults to staging, use --minishift or --local to change this) and watch for changes
     --local             When serving, run against a local Syndesis server
-    --angular           Use the angular codebase instead of the react codebase
     --minishift         Involve minishift as needed
 -p  --project           Use the specified openshift project
     --nuke-everything   Use with --minishift, start or reset the minishift VM
-    --verbose           Enable verbose logging    
+    --verbose           Enable verbose logging
 EOT
 }
 
@@ -34,11 +33,7 @@ ui::run() {
 }
 
 cd_to_ui_dir() {
-  if [ $(hasflag --angular) ]; then
-    pushd $(appdir)/ui-angular > /dev/null 2>&1
-  else
-    pushd $(appdir)/ui-react > /dev/null 2>&1
-  fi
+  pushd $(appdir)/ui-react > /dev/null 2>&1
   echo "note: changing directory to $(pwd)"
 }
 
@@ -55,11 +50,7 @@ killall() {
     wait
     if [ $(hasflag --minishift) ]; then
       if [ $(hasflag --serve) ]; then
-        if [ $(hasflag --angular) ]; then
-          yarn restore:minishift
-        else
-          yarn watch:app:minishift:restore
-        fi
+        yarn watch:app:minishift:restore
       fi
     fi
     cd_back
@@ -72,7 +63,7 @@ do_things() {
     UI_VERBOSE_LEARNA="--loglevel verbose"
   fi
 
-  # in here we assume we're in the 'ui-angular' directory
+  # in here we assume we're in the 'ui-react' directory
   local project=$(readopt --project -p)
   local result=''
 
@@ -101,19 +92,11 @@ do_things() {
   fi
 
   if [ $(hasflag --build) ]; then
-    if [ $(hasflag --angular) ]; then
-      yarn build:ci $UI_VERBOSE_YARN
-    else
-      yarn build $UI_VERBOSE_LEARNA
-    fi
+    yarn build $UI_VERBOSE_LEARNA
   fi
 
   if [ $(hasflag --run-tests) ]; then
-    if [ $(hasflag --angular) ]; then
-      yarn test:ci $UI_VERBOSE_YARN
-    else
-      yarn test $UI_VERBOSE_LEARNA
-    fi
+    yarn test $UI_VERBOSE_LEARNA
     if [ $? -ne 0 ]; then
       check_error "Error running tests"
       return 1
@@ -122,11 +105,7 @@ do_things() {
 
   if [ $(hasflag --watch-tests) ]; then
     trap 'killall' INT
-    if [ $(hasflag --angular) ]; then
-      yarn test  $UI_VERBOSE_YARN &
-    else
-      yarn test --watch $UI_VERBOSE_LEARNA &
-    fi
+    yarn test --watch $UI_VERBOSE_LEARNA &
     cat
     return 0
   fi
@@ -169,21 +148,13 @@ do_things() {
       yarn start:local $UI_VERBOSE &
     elif [ $(hasflag --minishift) ]; then
       echo -e "\nRunning against minishift"
-      if [ $(hasflag --angular) ]; then
-        yarn start:minishift $UI_VERBOSE_YARN &
-      else
-        yarn watch:app:minishift $UI_VERBOSE_LEARNA &
-      fi
+      yarn watch:app:minishift $UI_VERBOSE_LEARNA &
     else
       echo -e "\nRunning against the staging environment"
       if [ -z ${BACKEND+x} ]; then
         export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
       fi
-      if [ $(hasflag --angular) ]; then
-        yarn start:staging $UI_VERBOSE_YARN &
-      else
-        yarn watch:app:proxy $UI_VERBOSE_LEARNA &
-      fi
+      yarn watch:app:proxy $UI_VERBOSE_LEARNA &
     fi
     # block
     cat

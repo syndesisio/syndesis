@@ -4,10 +4,10 @@
 JAVA_IMAGE_MODULES="server meta s2i"
 
 # UI Maven modules wich create Docker images
-UI_IMAGE_MODULES="ui-angular ui-react"
+UI_IMAGE_MODULES="ui-react"
 
 # All modules which create images
-ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui-legacy ui operator"
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES ui operator"
 
 release::description() {
     echo "Perform a release"
@@ -102,7 +102,7 @@ release::run() {
     generate_versioned_files "$topdir" "$release_version"
 
     # Build and stage artefacts to Sonatype
-    build_and_stage_artefacts "$topdir" "$maven_opts -pl !ui-angular,!ui-react"
+    build_and_stage_artefacts "$topdir" "$maven_opts -pl !ui-react"
 
     # Build all Docker Images
     docker_login

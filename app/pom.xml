@@ -139,7 +139,6 @@
     <module>server</module>
     <module>s2i</module>
     <module>meta</module>
-    <module>ui-angular</module>
     <module>ui-react</module>
     <module>../doc</module>
     <module>test</module>
@@ -165,7 +164,6 @@
       <modules>
         <module>server</module>
         <module>meta</module>
-        <module>ui-angular</module>
         <module>ui-react</module>
       </modules>
 

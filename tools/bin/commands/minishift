@@ -45,7 +45,7 @@ minishift::usage() {
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --deploy-latest           Deploy latest tags from dockerhub.
-    --nodev                   Do not set the devImages flag in CR (deploys all images)
+    --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT
 }
 
@@ -256,7 +256,7 @@ start_minishift() {
 }
 
 deploy_latest() {
-    DOCKER_IMAGES="syndesis-meta syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy"
+    DOCKER_IMAGES="syndesis-meta syndesis-s2i syndesis-server syndesis-ui"
     eval $(minishift docker-env)
     docker login -u $(oc whoami) -p $(oc whoami -t) $(minishift openshift registry) >/dev/null 2>&1
     for image in ${DOCKER_IMAGES}; do

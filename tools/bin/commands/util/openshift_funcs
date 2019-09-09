@@ -309,7 +309,7 @@ EOT
     if [ $(hasflag --dev) ] || [ -n "$force_dev" ]; then
         extra=$(cat <<EOT
 
-  devImages: true
+  devSupport: true
 EOT
 )
 
