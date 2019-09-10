@@ -106,24 +106,8 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if upgradePod.Status.Phase == v1.PodSucceeded {
 			// Upgrade finished (correctly)
 
-			if syndesis.Status.Version == targetVersion {
-				a.log.Info("Syndesis resource upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
-				return a.completeUpgrade(ctx, syndesis, targetVersion)
-			} else {
-				a.log.Info("Upgrade pod terminated successfully but Syndesis version does not reflect target version. Forcing upgrade", "newVersion", syndesis.Status.Version, "targetVersion", targetVersion, "name", syndesis.Name)
-
-				var currentAttemptDescr string
-				if syndesis.Status.UpgradeAttempts > 0 {
-					currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
-				}
-
-				target := syndesis.DeepCopy()
-				target.Status.ForceUpgrade = true
-				target.Status.TargetVersion = targetVersion
-				target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + targetVersion + currentAttemptDescr
-
-				return a.client.Update(ctx, target)
-			}
+			a.log.Info("Syndesis resource upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
+			return a.completeUpgrade(ctx, syndesis, targetVersion)
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
 			a.log.Error(nil, "Failure while upgrading Syndesis resource: upgrade pod failure", "name", syndesis.Name, "targetVersion", targetVersion)
@@ -143,17 +127,10 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			a.log.Info("Syndesis resource is currently being upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
 			return nil
 		}
-
 	}
-
 }
 
 func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.Syndesis, newVersion string) error {
-	// After upgrade, pods may be detached
-	if err := operation.AttachSyndesisToResource(ctx, a.scheme, a.client, syndesis); err != nil {
-		return err
-	}
-
 	target := syndesis.DeepCopy()
 	target.Status.Phase = v1alpha1.SyndesisPhaseInstalled
 	target.Status.TargetVersion = ""
