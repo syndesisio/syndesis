@@ -17,12 +17,11 @@
 package restore
 
 import (
-	"github.com/chirino/hawtgo/sh"
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
-	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/client-go/tools/remotecommand"
 	"os"
 	"path/filepath"
 )
@@ -52,7 +51,7 @@ func (o *Backup) Run() error {
 		return err
 	}
 
-	podName, err := backup.GetPostgresPodName(api, o.Namespace)
+	pod, err := util.GetPodWithLabelSelector(api, o.Namespace, "syndesis.io/component=syndesis-db")
 	if err != nil {
 		return err
 	}
@@ -62,7 +61,14 @@ func (o *Backup) Run() error {
 		return err
 	}
 	defer backupfile.Close()
-	sh.New().LineArgs(`oc`, `rsh`, `--container=postgresql`, podName, `bash`, `-c`, `
+
+	return util.Exec(util.ExecOptions{
+		Config:    o.GetClientConfig(),
+		Api:       api,
+		Namespace: o.Namespace,
+		Pod:       pod.Name,
+		Container: "postgresql",
+		Command: []string{`bash`, `-c`, `
 set -e;
 base64 -d -i > /var/lib/pgsql/data/syndesis.dmp;
 psql -c 'DROP database if exists syndesis_restore'
@@ -72,9 +78,12 @@ psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 
 psql -c 'DROP database if exists syndesis'
 psql -c 'ALTER database syndesis_restore rename to syndesis'
 rm /var/lib/pgsql/data/syndesis.dmp;
-`).
-		Stdin(backupfile).
-		MustZeroExit()
+`},
+		StreamOptions: remotecommand.StreamOptions{
+			Stdin:  backupfile,
+			Stdout: os.Stdout,
+			Stderr: os.Stderr,
+		},
+	})
 
-	return nil
 }
