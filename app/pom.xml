@@ -2337,7 +2337,7 @@
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>mockwebserver</artifactId>
-        <version>0.1.0</version>
+        <version>0.1.3</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
