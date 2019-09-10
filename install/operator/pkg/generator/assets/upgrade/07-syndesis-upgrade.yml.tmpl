@@ -20,7 +20,7 @@
     serviceAccountName: syndesis-operator
     containers:
     - name: upgrade
-      image: '{{Env.UPGRADE_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Upgrade }}:{{ Tags.Upgrade }}'
+      image: '{{ .Env.UPGRADE_REGISTRY }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Upgrade }}:{{ .Tags.Upgrade }}'
       env:
         - name: SYNDESIS_VERSION
           value: {{ .Tags.Syndesis }}
