@@ -147,10 +147,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           onUnpublish={doUnpublish}
           onPublish={doPublish}
           serviceVdbName={state.virtualization.serviceVdbName}
-          hasViews={
-            state.virtualization.serviceViewDefinitions &&
-            state.virtualization.serviceViewDefinitions.length > 0
-          }
+          hasViews={!state.virtualization.empty}
         />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>

@@ -1,13 +1,8 @@
 // TODO remove when these values are advertised by the swagger
 export interface RestDataService {
-  connections: number;
-  drivers: number;
-  keng___links: [];
-  keng__baseUri: string;
-  keng__dataPath: string;
-  keng__hasChildren: boolean;
+  empty: boolean;
+  id : string;
   keng__id: string;
-  keng__kType: string;
   odataHostName?: string;
   podNamespace?: string;
   publishPodName?: string;
@@ -24,11 +19,24 @@ export interface RestDataService {
     | 'RUNNING'
     | 'SUBMITTED';
   serviceVdbName: string;
-  serviceVdbVersion: string;
-  serviceViewDefinitions: string[];
   serviceViewModel: string;
   tko__description: string;
 }
+
+/*
+RestDataVirtualization{
+empty	boolean
+id	string
+keng__id	string
+odataHostName	string
+podNamespace	string
+publishPodName	string
+publishedState	string
+serviceVdbName	string
+serviceViewModel	string
+tko__description	string
+}
+*/
 
 export interface SchemaNode {
   name: string;
