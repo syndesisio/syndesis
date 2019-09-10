@@ -7,14 +7,14 @@
  */
 
 describe('Create Snapshot', () => {
-  it('writes to a file', () => {
+  it.skip('writes to a file', () => {
     cy.task('storeSnapshot', 'snap').then(content => {
       // expects here
       cy.log('Was the task completed?');
     });
   });
 
-  it.skip('created a snapshot', () => {
+  it('created a snapshot', () => {
     /**
      * TODO: Handle snapshot
      */
