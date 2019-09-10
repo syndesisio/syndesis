@@ -101,6 +101,7 @@ job_default: &job_defaults
 
 push_images: &push_images
   deploy:
+    name: Push Images
     command: |
       if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
         exit 0
@@ -127,8 +128,12 @@ push_images: &push_images
         for image in ${IMAGES_TO_PUSH} ; do
           docker push syndesis/${image}:latest | cat -
         done
-      fi
-      if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
+      elif [ -n "${CIRCLE_PR_NUMBER}" ]; then
+        for image in ${IMAGES_TO_PUSH} ; do
+          docker tag syndesis/${image}:latest syndesis/${image}:${CIRCLE_PR_NUMBER}
+          docker save syndesis/${image}:${CIRCLE_PR_NUMBER} | gzip > ${CIRCLE_WORKING_DIRECTORY}/${image}.tar.gz
+        done
+      elif [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
         for image in ${IMAGES_TO_PUSH} ; do
           docker push syndesis/${image}:${CIRCLE_TAG} | cat -
@@ -177,8 +182,6 @@ jobs:
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
-      - store_artifacts:
-          path: ./build_ui_log.txt
       - save_cache:
           key: syndesis-yarn-{{ checksum "app/ui-react/yarn.lock" }}
           paths:
@@ -191,6 +194,9 @@ jobs:
           paths:
             - ~/.m2
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-ui.tar.gz
+          destination: /images/syndesis-ui.tar.gz
 
   # All connectors job depends on integration, mount workspace .m2
   connectors:
@@ -353,6 +359,9 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-meta.tar.gz
+          destination: /images/syndesis-meta.tar.gz
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -477,6 +486,9 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-s2i.tar.gz
+          destination: /images/syndesis-s2i.tar.gz
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -522,6 +534,9 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-server.tar.gz
+          destination: /images/syndesis-server.tar.gz
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -531,6 +546,7 @@ jobs:
             - ~/.m2
 
   operator:
+    working_directory: /home/circleci/project
     docker:
       - image: circleci/golang:1.12.5
     environment:
@@ -549,6 +565,9 @@ jobs:
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-operator.tar.gz
+          destination: /images/syndesis-operator.tar.gz
 
   upgrade:
     <<: *job_defaults
@@ -583,6 +602,9 @@ jobs:
             fi
             ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module upgrade --docker
       - <<: *push_images
+      - store_artifacts:
+          path: syndesis-upgrade.tar.gz
+          destination: /images/syndesis-upgrade.tar.gz
 
   # Test support depends on integration, server, mount workspace .m2
   test-support:
