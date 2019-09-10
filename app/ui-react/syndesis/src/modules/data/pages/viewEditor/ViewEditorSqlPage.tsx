@@ -51,6 +51,7 @@ export interface IViewEditorSqlRouteState {
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
   const [isSaving, setIsSaving] = React.useState(false);
+  const [isLoadingPreview, setIsLoadingPreview] = React.useState(false);
   const [isMetadataLoaded, setMetadataLoaded] = React.useState(false);
   const [sourceTableColumns, setSourceTableColumns] = React.useState<TableColumns[]>([]);
   const [viewValid, setViewValid] = React.useState(true);
@@ -190,6 +191,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
    * @param refreshClick 'true' if update is initiated by the preview refresh button
    */
   const updateQueryResults = async (isValid: boolean, refreshClick: boolean = false) => {
+    setIsLoadingPreview(true);
     let queryResult = queryResultsEmpty;
     try {
       // Valid view - run the preview query 
@@ -201,6 +203,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
           0
         );
       }
+      setIsLoadingPreview(false);
       setQueryResults(queryResult);
       // Show toast for refresh click
       if (refreshClick) {
@@ -213,6 +216,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       }
     } catch (error) {
       setQueryResults(queryResult);
+      setIsLoadingPreview(false);
       if (refreshClick) {
         const details = error.message ? error.message : '';
         pushNotification(
@@ -293,9 +297,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             i18nEmptyResultsTitle={noResultsTitle}
             i18nEmptyResultsMsg={noResultsMessage}
             i18nHidePreview={t('data:virtualization.preview.hidePreview')}
+            i18nLoadingQueryResults={t('data:virtualization.preview.loadingQueryResults')}
             i18nShowPreview={t('data:virtualization.preview.showPreview')}
             i18nTitle={t('data:virtualization.preview.title')}
             initialExpanded={previewExpanded}
+            isLoadingPreview={isLoadingPreview}
             onPreviewExpandedChanged={handlePreviewExpandedChanged}
             onRefreshResults={handleRefreshResults}
             queryResultRows={getQueryRows(
