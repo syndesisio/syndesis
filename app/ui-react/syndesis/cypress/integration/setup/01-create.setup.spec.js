@@ -16,10 +16,6 @@ const connectionSlug = 'e2e-todo-connection';
 const integrationSlug = 'e2e-todo-integration-' + nameInt;
 
 describe('Create Data', () => {
-  before(function() {
-    cy.visit('/');
-  });
-
   it('resets the database', () => {});
 
   it('creates a connection', () => {

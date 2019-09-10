@@ -55,6 +55,7 @@
     "e2e:setup": "cypress open --config testFiles=**/*.setup.spec.js",
     "e2e:terminal": "cypress run --config ignoreTestFiles=**/*.setup.spec.js",
     "eject": "react-scripts eject",
+    "rachel": "node ./scripts/db-setup.js",
     "minishift:setup": "./scripts/minishift-setup.sh",
     "minishift:restore": "./scripts/minishift-restore.sh",
     "copyasset:atlasmap": "cpr ../packages/atlasmap-assembly/dist/atlasmap public/atlasmap -d",

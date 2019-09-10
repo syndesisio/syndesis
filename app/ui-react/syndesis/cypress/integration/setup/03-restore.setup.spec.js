@@ -8,16 +8,11 @@
  */
 
 describe('Restore Snapshot', () => {
-  beforeEach(function() {
-    cy.visit('/');
-  });
-
-  it('loads the dashboard successfully', () => {
-    cy.get('[data-testid=dashboard-page-total-integrations]').should(
-      'contain',
-      'Integrations'
-    );
-
-    expect(cy.get('<header>')).to.exist;
+  it('restores the snapshot', () => {
+    /**
+     * TODO: Include snapshot here
+     */
+    cy.restoreDb();
+    cy.log('Check that the snapshot has been restored.');
   });
 });

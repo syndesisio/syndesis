@@ -35,8 +35,8 @@ Cypress.Commands.add('resetDb', () => {
  * SNAPSHOT OF DB
  * Returns JSON
  */
-Cypress.Commands.add('snapshotDb', () => {
-  cy.request('GET', 'api/v1/test-support/snapshot-db');
+Cypress.Commands.add('createSnapshot', () => {
+  cy.request('GET', 'api/v1alpha1/test-support/snapshot-db');
 });
 
 /**
