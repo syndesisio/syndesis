@@ -83,8 +83,8 @@ stories
     'sample virtualization item',
     withNotes(publishedVirtualizationNotes)(() => (
       <VirtualizationListItem
+        hasViews={true}
         virtualizationName={virtualizationName}
-        virtualizationViewNames={[]}
         virtualizationDescription={virtualizationDescription}
         serviceVdbName={serviceVdbName}
         i18nCancelText={cancelText}
@@ -136,8 +136,8 @@ stories
 
   .add('virtualization item with odata', () => (
     <VirtualizationListItem
+      hasViews={true}
       virtualizationName={virtualizationName}
-      virtualizationViewNames={[]}
       virtualizationDescription={virtualizationDescription}
       serviceVdbName={serviceVdbName}
       i18nCancelText={cancelText}
