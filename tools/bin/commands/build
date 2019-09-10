@@ -186,7 +186,7 @@ do_operator() {
 
     pushd "$top_dir/install/operator" > /dev/null
     if [ $(hasflag -i --image --docker) ]; then
-        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}:$tag"
+        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}" --image-tag="$tag"
     else
         ./build.sh --image-build=s2i
     fi

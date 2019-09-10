@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # Some reusable shell functions:
 #
@@ -157,7 +158,8 @@ build_image()
 {
     local strategy="$1"
     local OPERATOR_IMAGE_NAME="$2"
-    local S2I_STREAM_NAME="$3"
+    local OPERATOR_IMAGE_TAG="$3"
+    local S2I_STREAM_NAME="$4"
 
     local hasdocker=$(docker_is_available)
     local hasoc=$(is_oc_available)
@@ -208,7 +210,7 @@ build_image()
         echo ======================================================
         echo Building image with Docker
         echo ======================================================
-        docker build -f "build/Dockerfile" -t "${OPERATOR_IMAGE_NAME}" .
+        docker build -f "build/Dockerfile" -t "${OPERATOR_IMAGE_NAME}:${OPERATOR_IMAGE_TAG}" .
         echo ======================================================
         echo "Operator Image Built: ${OPERATOR_IMAGE_NAME}"
         echo ======================================================
