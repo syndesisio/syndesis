@@ -20,10 +20,12 @@ module.exports = (on, config) => {
   on('task', {
     storeSnapshot(snapshot) {
       const data = new Uint8Array(Buffer.from(snapshot));
-      fs.writeFile('snapshot.json', data, err => {
+      fs.writeFileSync('snapshot.json', data, err => {
         if (err) throw err;
         console.log('The file has been saved!');
       });
+
+      return null;
     },
   });
 };
