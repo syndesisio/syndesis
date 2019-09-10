@@ -42,7 +42,6 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.api.ApiHandler.APIFormData;
-import io.syndesis.server.endpoint.v1.handler.external.PublicApiHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -65,7 +64,6 @@ public class IntegrationSpecificationHandlerTest {
     public IntegrationSpecificationHandlerTest() {
         final IntegrationHandler integrationHandler = new IntegrationHandler(dataManager, null, null, null,
                 encryptionSupport, apiGenerator, null);
-        integrationHandler.setPublicApiHandler(mock(PublicApiHandler.class));
         handler = new IntegrationSpecificationHandler(integrationHandler, resourceManager);
     }
 

@@ -69,8 +69,10 @@ import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.environment.Environment;
 import io.syndesis.common.model.extension.Extension;
 import io.syndesis.common.model.icon.Icon;
+import io.syndesis.common.model.integration.ContinuousDeliveryEnvironment;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
@@ -245,6 +247,11 @@ public class IntegrationSupportHandler {
             }
         });
 
+        // add environments
+        integration.getContinuousDeliveryState().keySet().forEach(
+                id -> addModelToExport(export, dataManager.fetch(Environment.class, id))
+        );
+
         addResourcesToExport(export, integration);
     }
 
@@ -379,8 +386,8 @@ public class IntegrationSupportHandler {
             }
         };
 
-        final Map<String, String> replaceExtensions = new HashMap<>();
-        importExtensions(extensionDao, replaceExtensions, renamedIds, result);
+        final Map<String, String> replacedIds = new HashMap<>();
+        importExtensions(extensionDao, replacedIds, renamedIds, result);
 
         // NOTE: connectors are imported without renaming and ignoring renamed ids
         // as a matter of fact, the lambda should never be called
@@ -406,12 +413,20 @@ public class IntegrationSupportHandler {
             }
         }
 
+        // import missing environments
+        importEnvironments(new JsonDbDao<Environment>(given) {
+            @Override
+            public Class<Environment> getType() {
+                return Environment.class;
+            }
+        }, replacedIds, renamedIds, result);
+
         importIntegrations(sec, new JsonDbDao<Integration>(given) {
             @Override
             public Class<Integration> getType() {
                 return Integration.class;
             }
-        }, renamedIds, replaceExtensions, result);
+        }, renamedIds, replacedIds, result);
 
         importModels(new JsonDbDao<OpenApi>(given) {
             @Override
@@ -430,7 +445,23 @@ public class IntegrationSupportHandler {
         return result;
     }
 
-    private void importExtensions(JsonDbDao<Extension> extensionDao, Map<String, String> replaceExtensions,
+    private void importEnvironments(JsonDbDao<Environment> environmentDao, Map<String, String> replacedIds, Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
+        importModels(environmentDao, null, renamedIds, result, (e, i) -> {
+            // lookup by name
+            final Optional<Environment> existing = dataManager.fetchByPropertyValue(e.getType(), "name", i.getName());
+            if (existing.isPresent()) {
+                if (!existing.get().idEquals(i.getId().get())) {
+                    // name is present with a different id
+                    replacedIds.put(i.getId().get(), existing.get().getId().get());
+                }
+                return false;
+            }
+            // import new environment
+            return true;
+        });
+    }
+
+    private void importExtensions(JsonDbDao<Extension> extensionDao, Map<String, String> replacedIds,
                                   Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
         importModels(extensionDao, RENAME_EXTENSION, renamedIds, result, (e, i) -> {
 
@@ -452,7 +483,7 @@ public class IntegrationSupportHandler {
                     if (existingVersion.compareTo(importedVersion) < 0) {
                         doImport = true;
                     } else {
-                        replaceExtensions.put(i.getId().get(), id);
+                        replacedIds.put(i.getId().get(), id);
                     }
                 }
             }
@@ -488,7 +519,7 @@ public class IntegrationSupportHandler {
     }
 
     private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export,
-                                    Map<String, String> renamedIds, Map<String, String> replacedExtensions,
+                                    Map<String, String> renamedIds, Map<String, String> replacedIds,
                                     Map<String, List<WithResourceId>> result) {
         for (Integration integration : export.fetchAll().getItems()) {
             Integration.Builder builder = new Integration.Builder()
@@ -499,7 +530,7 @@ public class IntegrationSupportHandler {
             // Do we need to create it?
             String id = integration.getId().get();
             Integration previous = dataManager.fetch(Integration.class, id);
-            resolveDuplicateNames(integration, builder, renamedIds, replacedExtensions);
+            resolveDuplicateNames(integration, builder, renamedIds, replacedIds);
             if (previous == null) {
                 LOG.info("Creating integration: {}", integration.getName());
                 integrationHandler.create(sec, builder.build());
@@ -513,7 +544,7 @@ public class IntegrationSupportHandler {
     }
 
     private void resolveDuplicateNames(Integration integration, Integration.Builder builder,
-                                       Map<String, String> renamedIds, Map<String, String> replacedExtensions) {
+                                       Map<String, String> renamedIds, Map<String, String> replacedIds) {
 
         // check for duplicate integration name
         String integrationName = integration.getName();
@@ -536,7 +567,7 @@ public class IntegrationSupportHandler {
                             .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION)))
                             // step extensions
                             .extension(s.getExtension().map(e -> {
-                                final String existingId = replacedExtensions.get(e.getId().get());
+                                final String existingId = replacedIds.get(e.getId().get());
                                 return existingId != null ? dataManager.fetch(Extension.class, existingId) :
                                         renameIfNeeded(e, renamedIds, RENAME_EXTENSION);
                             }))
@@ -544,6 +575,17 @@ public class IntegrationSupportHandler {
                     .collect(Collectors.toList()))
                 .build())
             .collect(Collectors.toList()));
+
+        // sync replaced environment ids
+        final Map<String, ContinuousDeliveryEnvironment> newEnvironments = new HashMap<>();
+        integration.getContinuousDeliveryState().forEach((k, v) -> {
+            if (replacedIds.containsKey(k)) {
+                k = replacedIds.get(k);
+                v = new ContinuousDeliveryEnvironment.Builder().createFrom(v).environmentId(k).build();
+            }
+            newEnvironments.put(k, v);
+        });
+        builder.continuousDeliveryState(newEnvironments);
     }
 
     private <T extends WithId<T> & WithName> T renameIfNeeded(T model, Map<String, String> renames, BiFunction<T,
