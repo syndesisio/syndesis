@@ -9,10 +9,10 @@
           "io.syndesis.connector.aws.ddb.customizer.DDBConnectorCustomizerQuery"
         ],
         "inputDataShape": {
-          "kind": "any"
+          "kind": "json-schema"
         },
         "outputDataShape": {
-          "kind": "any"
+          "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
           {
@@ -51,6 +51,7 @@
       "name": "Query",
       "pattern": "To",
       "tags": [
+        "dynamic"
       ]
     },
     {
@@ -62,10 +63,10 @@
           "io.syndesis.connector.aws.ddb.customizer.DDBConnectorCustomizerPutItem"
         ],
         "outputDataShape": {
-          "kind": "any"
+          "kind": "json-schema"
         },
         "inputDataShape": {
-          "kind": "any"
+          "kind": "json-schema"
         },
         "propertyDefinitionSteps": [
           {
@@ -92,6 +93,7 @@
       "name": "Put Item",
       "pattern": "To",
       "tags": [
+        "dynamic"
       ]
     }
   ],

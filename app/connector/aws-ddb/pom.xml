@@ -41,6 +41,10 @@
       <artifactId>common-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+    <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
@@ -59,6 +63,14 @@
     <dependency>
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jsonSchema</artifactId>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -123,7 +135,6 @@
       <artifactId>connector-support-test</artifactId>
       <scope>test</scope>
     </dependency>
-
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
