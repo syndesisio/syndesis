@@ -78,7 +78,7 @@ func (c *LegacyController) doVerifyAndCreate(ctx context.Context, cl client.Clie
 
 		log.Info("Merging Syndesis legacy configuration into resource ", "resource", syndesisResourceName)
 
-		config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(ctx, cl, c.namespace)
+		config, err := configuration.GetSyndesisEnvVarsFromOpenShiftNamespace(ctx, cl, c.namespace)
 		if err != nil {
 			return nil
 		}
