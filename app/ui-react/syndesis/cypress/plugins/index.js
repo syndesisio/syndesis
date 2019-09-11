@@ -11,6 +11,7 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const fs = require('fs');
+const http = require('http');
 const path = require('path');
 const repoRoot = path.join(__dirname, '..', '..');
 
@@ -18,6 +19,11 @@ module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
   // `config` is the resolved Cypress config
   on('task', {
+    test() {
+      console.log(process.env);
+      return null;
+    },
+
     storeSnapshot(snapshot) {
       const data = new Uint8Array(Buffer.from(snapshot));
       fs.writeFileSync('snapshot.json', data, err => {

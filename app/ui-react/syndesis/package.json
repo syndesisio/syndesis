@@ -52,7 +52,7 @@
     "build": "NODE_OPTIONS=--max-old-space-size=3072 craco build",
     "test": "craco test",
     "e2e": "cypress open --config ignoreTestFiles=**/*.setup.spec.js",
-    "e2e:setup": "cypress open --config testFiles=**/*.setup.spec.js",
+    "e2e:setup": "cypress open --config testFiles=**/*.setup.spec.js; BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND`",
     "e2e:terminal": "cypress run --config ignoreTestFiles=**/*.setup.spec.js",
     "eject": "react-scripts eject",
     "minishift:setup": "./scripts/minishift-setup.sh",

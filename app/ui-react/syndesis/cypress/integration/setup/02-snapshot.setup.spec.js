@@ -7,20 +7,14 @@
  */
 
 describe('Create Snapshot', () => {
-  it.skip('writes to a file', () => {
-    cy.task('storeSnapshot', 'snap').then(content => {
-      // expects here
-      cy.log('Was the task completed?');
-    });
-  });
-
   it('created a snapshot', () => {
-    /**
-     * TODO: Handle snapshot
-     */
-    cy.createSnapshot().then(response => {
-      cy.log('Snapshot created: ' + JSON.stringify(response));
+    cy.request('GET', 'api/v1/test-support/snapshot-db').then(resp => {
+      expect(resp.status).to.eq(200);
+      cy.task('storeSnapshot', resp).then(content => {
+        // expects here
+        expect(content).not.to.be.null;
+        cy.log('Snapshot created');
+      });
     });
-    cy.log('Not sure what to put here..');
   });
 });
