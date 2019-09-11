@@ -89,7 +89,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: {{.Images.OAuthProxyImagePrefix}}/{{ .Images.Support.OAuthProxyImage }}:{{ .Syndesis.Spec.Components.Oauth.Tag }}
+        name: '{{.Images.OAuthProxyImagePrefix}}/{{ .Images.Support.OAuthProxyImage }}:{{ .Syndesis.Spec.Components.Oauth.Tag }}'
       importPolicy:
         scheduled: true
       name: "{{ .Syndesis.Spec.Components.Oauth.Tag }}"

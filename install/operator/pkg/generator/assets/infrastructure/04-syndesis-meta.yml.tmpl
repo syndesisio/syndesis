@@ -31,7 +31,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: {{.Env.META_VOLUME_CAPACITY}}
+        storage: {{.Syndesis.Spec.Components.Meta.Resources.VolumeCapacity}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -141,7 +141,7 @@
         from:
           kind: ImageStreamTag
           name: {{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}
-          namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
+          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - type: ConfigChange
 

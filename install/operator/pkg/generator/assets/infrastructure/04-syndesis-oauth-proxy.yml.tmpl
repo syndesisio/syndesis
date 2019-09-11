@@ -53,8 +53,8 @@
           image: ' '
           args:
             - --provider=openshift
-            - --client-id=system:serviceaccount:{{Env.OPENSHIFT_PROJECT}}:syndesis-oauth-client
-            - --client-secret={{Env.OPENSHIFT_OAUTH_CLIENT_SECRET}}
+            - --client-id=system:serviceaccount:{{.Syndesis.Namespace}}:syndesis-oauth-client
+            - --client-secret={{.Env.OPENSHIFT_OAUTH_CLIENT_SECRET}}
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
@@ -74,7 +74,7 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-            - --openshift-sar={"namespace":"{{Env.SAR_PROJECT}}","resource":"pods","verb":"get"}
+            - --openshift-sar={"namespace":"{{.Syndesis.Spec.SarNamespace}}","resource":"pods","verb":"get"}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
           env:
@@ -118,10 +118,10 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{ProductName}}-oauthproxy
+        - {{.ProductName}}-oauthproxy
         from:
           kind: ImageStreamTag
-          name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
-          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
+          name: {{ .Images.Support.OAuthProxy }}:{{ .Tags.OAuthProxy }}
+          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - type: ConfigChange

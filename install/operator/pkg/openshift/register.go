@@ -1,4 +1,4 @@
-// Register all Openshift types that we want to manage.
+// Register all OpenShift types that we want to manage.
 package openshift
 
 import (

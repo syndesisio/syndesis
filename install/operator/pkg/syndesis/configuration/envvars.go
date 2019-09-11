@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-func GetSyndesisEnvVarsFromOpenshiftNamespace(ctx context.Context, client client.Client, namespace string) (map[string]string, error) {
+func GetSyndesisEnvVarsFromOpenShiftNamespace(ctx context.Context, client client.Client, namespace string) (map[string]string, error) {
 	secret, err := GetSyndesisConfigurationSecret(ctx, client, namespace)
 	if err != nil {
 		return nil, err
