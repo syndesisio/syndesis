@@ -150,6 +150,12 @@ save_junit: &save_junit
       mkdir -p /workspace/junit/
       find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
 
+quay_transfer: &quay_transfer
+  run:
+    name: Trigger image transfer to quay.io
+    command: |
+      curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
+
 jobs:
   # UI has no dependencies, just load cache
   ui:
@@ -197,6 +203,7 @@ jobs:
       - store_artifacts:
           path: syndesis-ui.tar.gz
           destination: /images/syndesis-ui.tar.gz
+      - <<: *quay_transfer
 
   # All connectors job depends on integration, mount workspace .m2
   connectors:
@@ -362,6 +369,7 @@ jobs:
       - store_artifacts:
           path: syndesis-meta.tar.gz
           destination: /images/syndesis-meta.tar.gz
+      - <<: *quay_transfer
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -489,6 +497,7 @@ jobs:
       - store_artifacts:
           path: syndesis-s2i.tar.gz
           destination: /images/syndesis-s2i.tar.gz
+      - <<: *quay_transfer
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -537,6 +546,7 @@ jobs:
       - store_artifacts:
           path: syndesis-server.tar.gz
           destination: /images/syndesis-server.tar.gz
+      - <<: *quay_transfer
       - <<: *persist_m2_workspace
       - <<: *checkin_git_mvn_repo
       - <<: *scrub_m2_cache
@@ -568,6 +578,7 @@ jobs:
       - store_artifacts:
           path: syndesis-operator.tar.gz
           destination: /images/syndesis-operator.tar.gz
+      - <<: *quay_transfer
 
   upgrade:
     <<: *job_defaults
@@ -605,6 +616,7 @@ jobs:
       - store_artifacts:
           path: syndesis-upgrade.tar.gz
           destination: /images/syndesis-upgrade.tar.gz
+      - <<: *quay_transfer
 
   # Test support depends on integration, server, mount workspace .m2
   test-support:
