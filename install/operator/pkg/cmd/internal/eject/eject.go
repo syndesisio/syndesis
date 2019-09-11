@@ -180,6 +180,8 @@ func (e *Eject) eject() error {
 		all = append(all, resources...)
 	}
 
-	e.ejectedResources = all
+	for _, res := range all {
+		e.ejectedResources = append(e.ejectedResources, res)
+	}
 	return nil
 }
