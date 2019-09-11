@@ -667,7 +667,7 @@ export async function setFlow(
 ) {
   flow = await sanitizeFlow(flow, getSanitizedSteps);
   if (getFlow(integration, flow.id!)) {
-    return {
+    const updatedIntegration = {
       ...integration,
       flows: integration.flows!.map(f => {
         if (f.id === flow.id) {
@@ -676,23 +676,53 @@ export async function setFlow(
         return f;
       }),
     };
+
+    if (isPrimaryFlow(flow)) {
+      return reconcileIntegration(updatedIntegration, flow);
+    } else {
+      return updatedIntegration;
+    }
   } else {
     return { ...integration, flows: [...integration.flows!, flow] };
   }
 }
 
 /**
- * Returns a new integration object containing the supplied conditional flows for the given step ID. This reconcile step
- * includes setting of flow start and end data shapes according to the conditional flow input and output data shape.
+ * Returns a new integration object with reconciled flows and steps according to the changes in the updated flow.
+ * Reconcile logic includes conditional flow steps to update all linked alternate flows with up-to-date data shapes.
  * @param integration
- * @param newFlows
- * @param stepId
+ * @param updatedFlow
+ */
+export function reconcileIntegration(
+  integration: Integration,
+  updatedFlow: Flow) {
+  let reconciledIntegration = { ...integration };
+
+  const conditionalFlowsSteps = updatedFlow.steps!.filter(step => step.stepKind === CHOICE);
+  for (const cfStep of conditionalFlowsSteps) {
+    reconciledIntegration = reconcileConditionalFlows(reconciledIntegration,
+      getFlowsWithLinkedStepId(reconciledIntegration.flows!, cfStep.id!),
+      cfStep.id!,
+      cfStep.action!.descriptor!.inputDataShape!,
+      cfStep.action!.descriptor!.outputDataShape!)
+  }
+
+  return reconciledIntegration;
+}
+
+/**
+ * Returns a new integration object containing the supplied alternate flows for the given conditional flows step ID. The
+ * given alternate flows are reconciled which includes setting of flow start and end data shapes according to the
+ * conditional flow step input and output data shape.
+ * @param integration
+ * @param alternateFlows all alternate flows linked to the conditional flow step
+ * @param stepId the conditional flow step id
  * @param flowStartDataShape the input data shape of the conditional flow step to apply as an output data shape to flow start steps
  * @param flowEndDataShape the output data shape of the conditional flow step to apply as an input data shape to flow end steps
  */
 export function reconcileConditionalFlows(
   integration: Integration,
-  newFlows: Flow[],
+  alternateFlows: Flow[],
   stepId: string,
   flowStartDataShape: DataShape,
   flowEndDataShape: DataShape
@@ -701,7 +731,7 @@ export function reconcileConditionalFlows(
     integration.flows!,
     stepId
   );
-  const updatedFlows = newFlows.map(flow => {
+  const updatedFlows = alternateFlows.map(flow => {
     const startFlowStep = setDataShapeOnStep(
       { ...flow.steps![0] },
       flowStartDataShape,
@@ -720,12 +750,33 @@ export function reconcileConditionalFlows(
   return { ...integration, flows: [...flowsWithoutStepId, ...updatedFlows] };
 }
 
+/**
+ * Return a list of flows that are not linked to the given step id. Usually the given
+ * step id refers to a conditional flow step and this function returns all flows that are NOT marked as alternate flows
+ * according to this step meaning not linked to the step.
+ * @param flows
+ * @param stepId
+ */
 export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
     flow =>
       flow.type === FlowType.PRIMARY ||
       flow.type === FlowType.API_PROVIDER ||
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
+  );
+}
+
+/**
+ * Returns a list of alternate flows that are linked to the given step id. Usually the given step id refers to a
+ * conditional flow step. All alternate flows linked to this step are subject to be returned by this function.
+ * @param flows
+ * @param stepId
+ */
+export function getFlowsWithLinkedStepId(flows: Flow[], stepId: string) {
+  return flows.filter(
+    flow =>
+      flow.type === FlowType.ALTERNATE &&
+      getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) === stepId
   );
 }
 
