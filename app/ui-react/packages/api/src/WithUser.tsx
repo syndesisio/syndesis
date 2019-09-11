@@ -12,7 +12,7 @@ export class WithUser extends React.Component<IWithUserProps> {
     return (
       <SyndesisFetch<User>
         url={'/users/~'}
-        defaultValue={{ username: 'nobody' }}
+        defaultValue={{ username: 'Unknown user' }}
       >
         {({ response }) => this.props.children({ ...response })}
       </SyndesisFetch>
