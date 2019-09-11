@@ -1,7 +1,7 @@
 import * as H from '@syndesis/history';
 import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container, PageSection } from '../../Layout';
+import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IDvConnectionsListViewProps extends IListViewToolbarProps {
@@ -31,7 +31,7 @@ export const DvConnectionsListView: React.FunctionComponent<
               </ButtonLink>
             </div>
           </ListViewToolbar>
-          <Container>{props.children}</Container>
+          <PageSection>{props.children}</PageSection>
         </PageSection>
       ) : (
         <EmptyState>
