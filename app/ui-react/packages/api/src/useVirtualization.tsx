@@ -8,18 +8,11 @@ export const useVirtualization = (
 ) => {
   const { read, ...rest } = useApiResource<RestDataService>({
     defaultValue: {
-      connections: 0,
-      drivers: 0,
-      keng___links: [],
-      keng__baseUri: '',
-      keng__dataPath: '',
-      keng__hasChildren: false,
+      empty: true,
+      id: '',
       keng__id: '',
-      keng__kType: 'Dataservice',
       publishedState: 'NOTFOUND',
       serviceVdbName: '',
-      serviceVdbVersion: '1',
-      serviceViewDefinitions: [],
       serviceViewModel: '',
       tko__description: '',
     },

@@ -18,7 +18,6 @@ export interface IDvNameValidationResult {
 
 export const useVirtualizationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
-  const WORKSPACE_ROOT = '/tko:komodo/tko:workspace/';
 
   /**
    * Creates a virtualization with the specified name and description
@@ -32,7 +31,6 @@ export const useVirtualizationHelpers = () => {
     virtDesc?: string
   ): Promise<RestDataService> => {
     const newVirtualization = {
-      keng__dataPath: `${WORKSPACE_ROOT}${username}/${virtName}`,
       keng__id: `${virtName}`,
       serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc ? `${virtDesc}` : '',
@@ -49,7 +47,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve(newVirtualization);
-  }
+  };
 
   /**
    * Updates a virtualization.  Currently this will just update the description
@@ -62,9 +60,7 @@ export const useVirtualizationHelpers = () => {
     virtName: string,
     virtDesc: string
   ): Promise<void> => {
-    
     const updatedVirtualization = {
-      keng__dataPath: `${WORKSPACE_ROOT}${username}/${virtName}`,
       keng__id: `${virtName}`,
       serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc,
@@ -81,13 +77,15 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve();
-  }
+  };
 
   /**
    * Deletes the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being deleted
    */
-  const deleteVirtualization =  async (virtualizationName: string): Promise<void> => {
+  const deleteVirtualization = async (
+    virtualizationName: string
+  ): Promise<void> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
@@ -99,7 +97,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve();
-  }
+  };
 
   /**
    * Publish the virtualization with the specified name.
@@ -124,7 +122,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve();
-  }
+  };
 
   /**
    * Query the Service VDB with sql query and properties.
@@ -159,7 +157,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as QueryResults;
-  }
+  };
 
   /**
    * Get ViewDefinition for the supplied id
@@ -171,7 +169,9 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${apiContext.dvApiUri}service/userProfile/viewEditorState/${viewDefinitionId}`,
+      url: `${
+        apiContext.dvApiUri
+      }service/userProfile/viewEditorState/${viewDefinitionId}`,
     });
 
     if (!response.ok) {
@@ -179,7 +179,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as ViewDefinition;
-  }
+  };
 
   /**
    * Import tables from the specified connection source
@@ -190,13 +190,15 @@ export const useVirtualizationHelpers = () => {
   const importSource = async (
     virtualizationName: string,
     sourceName: string,
-    importSources: ImportSources,
+    importSources: ImportSources
   ): Promise<ImportSourcesStatus> => {
     const response = await callFetch({
       body: importSources,
       headers: {},
       method: 'PUT',
-      url: `${apiContext.dvApiUri}workspace/dataservices/${virtualizationName}/import/${sourceName}`,
+      url: `${
+        apiContext.dvApiUri
+      }workspace/dataservices/${virtualizationName}/import/${sourceName}`,
     });
 
     if (!response.ok) {
@@ -204,7 +206,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as ImportSourcesStatus;
-  }
+  };
 
   /**
    * Validate the supplied ViewDefinition
@@ -225,7 +227,7 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as ViewDefinitionStatus;
-  }
+  };
 
   /**
    * Validate the supplied Virtualization name
@@ -254,7 +256,7 @@ export const useVirtualizationHelpers = () => {
       error: hasError ? result : '',
       isError: hasError,
     } as IDvNameValidationResult;
-  }
+  };
 
   /**
    * Validate the view name for the specified vdb and model
@@ -271,7 +273,9 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${apiContext.dvApiUri}workspace/${vdbName}/views/nameValidation/${encodedName}`,
+      url: `${
+        apiContext.dvApiUri
+      }workspace/${vdbName}/views/nameValidation/${encodedName}`,
     });
 
     if (!response.ok) {
@@ -285,7 +289,7 @@ export const useVirtualizationHelpers = () => {
       error: hasError ? result : '',
       isError: hasError,
     } as IDvNameValidationResult;
-  }
+  };
 
   /**
    * Unpublish the Service VDB with the specified name.
@@ -303,13 +307,15 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve();
-  }
+  };
 
   /**
    * Delete the specified ViewDefinition
    * @param viewDefinitionId the view definition
    */
-  const deleteViewDefinition = async (viewDefinitionId: string): Promise<void> => {
+  const deleteViewDefinition = async (
+    viewDefinitionId: string
+  ): Promise<void> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
@@ -323,8 +329,8 @@ export const useVirtualizationHelpers = () => {
     }
 
     return Promise.resolve();
-  }
-  
+  };
+
   /**
    * Saves the ViewDefinition
    * @param viewDefinition the view definition
@@ -342,7 +348,7 @@ export const useVirtualizationHelpers = () => {
       throw new Error(response.statusText);
     }
     return Promise.resolve();
-  }
+  };
 
   /**
    * Get the Source info for a Virtualization
@@ -354,14 +360,16 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${virtualization.keng__id}`,
+      url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${
+        virtualization.keng__id
+      }`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
     }
     return (await response.json()) as ViewSourceInfo;
-  }
-  
+  };
+
   return {
     createVirtualization,
     deleteViewDefinition,
@@ -378,5 +386,4 @@ export const useVirtualizationHelpers = () => {
     validateViewName,
     validateVirtualizationName,
   };
-
 };
