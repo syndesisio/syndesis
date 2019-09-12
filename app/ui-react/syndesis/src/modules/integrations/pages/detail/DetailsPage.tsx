@@ -121,6 +121,10 @@ export const DetailsPage: React.FunctionComponent = () => {
 
                                     if (data.integration.currentState !== 'Unpublished') {
                                       try {
+                                        pushNotification(
+                                          t('integrations:PublishingIntegrationMessage'),
+                                          'info'
+                                        );
                                         await deployIntegration(
                                           data.integration.id!,
                                           data.integration.version!,

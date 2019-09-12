@@ -17,6 +17,10 @@ export const IntegrationExposeVia: React.FunctionComponent<
 
   const { t } = useTranslation(['integrations', 'shared']);
 
+  const exposureMeans = integration.exposureMeans ? integration.exposureMeans : [];
+  const unpublished = integration.currentState === 'Unpublished';
+  const pending = integration.currentState === 'Pending';
+
   const doShowDialog = () => {
     setShowDialog(true);
   };
@@ -31,17 +35,23 @@ export const IntegrationExposeVia: React.FunctionComponent<
     doHideDialog();
   };
 
-  const doManageIn3scale = () => {
-    window.location.href = integration.managementUrl!;
-  };
-
   const doHideDialog = () => {
     setShowDialog(false);
   };
 
-  const exposureMeans = integration.exposureMeans ? integration.exposureMeans : [];
-  const unpublished = integration.currentState === 'Unpublished';
-  const pending = integration.currentState === 'Pending';
+  const disableDiscoveryDialog = (<MessageDialog
+    show={showDialog}
+    title={t('integrations:exposeVia:disableDiscovery')} primaryContent={
+    <p className="lead">{t('integrations:exposeVia:disableDiscoveryConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
+  }
+    primaryActionButtonContent={t('shared:Yes')}
+    primaryAction={doDisable3scale}
+    secondaryActionButtonContent={t('shared:No')}
+    secondaryAction={doHideDialog}
+    onHide={doHideDialog}
+    onCancel={doHideDialog}
+  />);
+
   if (exposureMeans.indexOf('_3SCALE') !== -1) {
     return (
       <>
@@ -50,8 +60,8 @@ export const IntegrationExposeVia: React.FunctionComponent<
             <div className="pf-c-content">
               <MessageDialog
                 show={showDialog}
-                title={t('integrations:exposeVia:3scale')} primaryContent={
-                  <p className="lead">{t('integrations:exposeVia:3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
+                title={t('integrations:exposeVia:enableDiscovery')} primaryContent={
+                  <p className="lead">{t('integrations:exposeVia:enableDiscoveryConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
                 }
                 primaryActionButtonContent={t('shared:Yes')}
                 primaryAction={doEnable3scale}
@@ -61,8 +71,8 @@ export const IntegrationExposeVia: React.FunctionComponent<
                 onCancel={doHideDialog}
               />
               <div className="pf-l-split pf-m-gutter">
-                <div><ButtonLink children={t('integrations:exposeVia:3scale')} onClick={doShowDialog} disabled={pending} /></div>
-                <div>{t('integrations:exposeVia:3scaleDescription')}</div>
+                <div><ButtonLink children={t('integrations:exposeVia:enableDiscovery')} onClick={doShowDialog} disabled={pending} /></div>
+                <div>{t('integrations:exposeVia:discoveryDescription')}</div>
               </div>
             </div>
           </PageSection>
@@ -70,34 +80,10 @@ export const IntegrationExposeVia: React.FunctionComponent<
             <>
               <PageSection>
                 <div className="pf-c-content">
+                  {disableDiscoveryDialog}
                   <div className="pf-l-split pf-m-gutter">
-                    <div><ButtonLink children={t('integrations:exposeVia:manageIn3scale')} onClick={doManageIn3scale} disabled={pending || unpublished} /></div>
-                    {(pending || unpublished) ? (
-                      <div>{t('integrations:exposeVia:manageIn3scalePendingDescription')}</div>
-                    ) : (
-                        <div>{t('integrations:exposeVia:manageIn3scaleDescription')}</div>
-                      )
-                    }
-                  </div>
-                </div>
-              </PageSection>
-              <PageSection>
-                <div className="pf-c-content">
-                  <MessageDialog
-                    show={showDialog}
-                    title={t('integrations:exposeVia:not3scale')} primaryContent={
-                      <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
-                    }
-                    primaryActionButtonContent={t('shared:Yes')}
-                    primaryAction={doDisable3scale}
-                    secondaryActionButtonContent={t('shared:No')}
-                    secondaryAction={doHideDialog}
-                    onHide={doHideDialog}
-                    onCancel={doHideDialog}
-                  />
-                  <div className="pf-l-split pf-m-gutter">
-                    <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending} /></div>
-                    <div>{t('integrations:exposeVia:not3scaleDescription')}</div>
+                    <div><ButtonLink children={t('integrations:exposeVia:disableDiscovery')} onClick={doShowDialog} disabled={pending} /></div>
+                    <div>{t('integrations:exposeVia:discoveryDescription')}</div>
                   </div>
                 </div>
               </PageSection>
@@ -109,20 +95,9 @@ export const IntegrationExposeVia: React.FunctionComponent<
     return (integration.exposure && integration.exposure === '_3SCALE') ? (
       <PageSection>
         <div className="pf-c-content">
-          <MessageDialog
-            show={showDialog}
-            title={t('integrations:exposeVia:not3scale')} primaryContent={
-              <p className="lead">{t('integrations:exposeVia:not3scaleConfirm')}{unpublished ? (null) : (<> {t('integrations:exposeVia:republish')}</>)}?</p>
-            }
-            primaryActionButtonContent={t('shared:Yes')}
-            primaryAction={doDisable3scale}
-            secondaryActionButtonContent={t('shared:No')}
-            secondaryAction={doHideDialog}
-            onHide={doHideDialog}
-            onCancel={doHideDialog}
-          />
+          {disableDiscoveryDialog}
           <div className="pf-l-split pf-m-gutter">
-            <div><ButtonLink children={t('integrations:exposeVia:not3scale')} onClick={doShowDialog} disabled={pending} /></div>
+            <div><ButtonLink children={t('integrations:exposeVia:disableDiscovery')} onClick={doShowDialog} disabled={pending} /></div>
             <div>{t('integrations:exposeVia:no3scaleConfigured')}</div>
           </div>
         </div>

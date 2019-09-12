@@ -326,6 +326,59 @@ public class OpenShiftServiceImplTest {
         assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/routes"));
     }
 
+    @Test
+    public void shouldRemoveExposureViaRouteIfChangedTo3scale() {
+        shouldExposeDeploymentsViaServicesAndRoutes();
+
+        final DeploymentData deploymentData = new DeploymentData.Builder()
+            .withExposure(EnumSet.of(Exposure.SERVICE, Exposure._3SCALE))
+            .build();
+
+        final String name = "via-service-and-route";
+
+        final DeploymentConfig expectedDeploymentConfig = baseDeploymentFor(name, deploymentData)
+            .build();
+
+        expectDeploymentOf(name, expectedDeploymentConfig);
+
+        final Service expectedService = new ServiceBuilder()
+            .withNewMetadata()
+            .withName(openshiftName(name))
+            .addToLabels("discovery.3scale.net", "true")
+            .addToAnnotations("discovery.3scale.net/scheme", "http")
+            .addToAnnotations("discovery.3scale.net/port", "8080")
+            .addToAnnotations("discovery.3scale.net/description-path", "/openapi.json")
+            .endMetadata()
+            .withNewSpec()
+            .addNewPort()
+            .withName("http")
+            .withPort(8080)
+            .withProtocol("TCP")
+            .withTargetPort(new IntOrString(8080))
+            .endPort()
+            .addToSelector("syndesis.io/integration", openshiftName(name))
+            .endSpec()
+            .build();
+
+        server.expect()
+            .post()
+            .withPath("/api/v1/namespaces/test/services")
+            .andReturn(200, expectedService)
+            .always();
+
+        server.expect()
+            .put()
+            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
+            .andReturn(200, expectedDeploymentConfig)
+            .always();
+
+        service.deploy(name, deploymentData);
+        final List<Request> issuedRequests = gatherRequests();
+        assertThat(issuedRequests).contains(Request.with("PUT", "/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/i-via-service-and-route"));
+    }
+
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {
         return new DeploymentConfigBuilder()
             .withNewMetadata()
