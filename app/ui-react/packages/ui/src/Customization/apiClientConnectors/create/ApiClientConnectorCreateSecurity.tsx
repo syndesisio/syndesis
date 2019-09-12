@@ -1,6 +1,6 @@
+import { Card, CardBody, CardFooter, CardHeader, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
-  Card,
   ControlLabel,
   FormControl,
   FormGroup,
@@ -110,10 +110,10 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
   public render() {
     return (
       <Card style={{ maxWidth: '600px', margin: ' auto' }}>
-        <Card.Heading>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
-        </Card.Heading>
-        <Card.Body>
+        <CardHeader>
+          <Title size="2xl">{this.props.i18nTitle}</Title>
+        </CardHeader>
+        <CardBody>
           <FormGroup controlId={'authenticationType'} disabled={false}>
             {this.props.authenticationTypes!.map(
               (authType: IAuthenticationTypes, idx) => {
@@ -156,8 +156,8 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
               </>
             )}
           </FormGroup>
-        </Card.Body>
-        <Card.Footer>
+        </CardBody>
+        <CardFooter>
           <div>
             <ButtonLink href={this.props.backHref}>
               {this.props.i18nBtnBack}
@@ -177,7 +177,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
               {this.props.i18nBtnNext}
             </ButtonLink>
           </div>
-        </Card.Footer>
+        </CardFooter>
       </Card>
     );
   }

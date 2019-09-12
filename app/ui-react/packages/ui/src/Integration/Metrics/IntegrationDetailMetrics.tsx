@@ -1,11 +1,9 @@
+import { Card, CardBody, Title } from '@patternfly/react-core';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
   AggregateStatusNotifications,
-  Card,
-  CardBody,
   CardGrid,
-  CardTitle,
   Col,
   Icon,
   Row,
@@ -43,11 +41,8 @@ export class IntegrationDetailMetrics extends React.Component<
             <Col xs={6} sm={3} md={3}>
               <Card
                 data-testid={'integration-detail-metrics-total-errors-card'}
-                accented={true}
-                aggregated={true}
-                matchHeight={true}
               >
-                <CardTitle>{this.props.i18nTotalErrors}</CardTitle>
+                <Title size="2xl">{this.props.i18nTotalErrors}</Title>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
@@ -61,11 +56,8 @@ export class IntegrationDetailMetrics extends React.Component<
             <Col xs={6} sm={3} md={3}>
               <Card
                 data-testid={'integration-detail-metrics-last-processed-card'}
-                accented={true}
-                aggregated={true}
-                matchHeight={true}
               >
-                <CardTitle>{this.props.i18nLastProcessed}</CardTitle>
+                <Title size="2xl">{this.props.i18nLastProcessed}</Title>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification className="integration-detail-metrics__last-processed">
@@ -80,16 +72,13 @@ export class IntegrationDetailMetrics extends React.Component<
             <Col xs={6} sm={3} md={3}>
               <Card
                 data-testid={'integration-detail-metrics-total-messages-card'}
-                accented={true}
-                aggregated={true}
-                matchHeight={true}
               >
-                <CardTitle>
+                <Title size="2xl">
                   <AggregateStatusCount>
                     {this.props.messages ? this.props.messages : 0}&nbsp;
                   </AggregateStatusCount>
                   {this.props.i18nTotalMessages}
-                </CardTitle>
+                </Title>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
@@ -111,11 +100,8 @@ export class IntegrationDetailMetrics extends React.Component<
             <Col xs={6} sm={3} md={3}>
               <Card
                 data-testid={'integration-detail-metrics-uptime-card'}
-                accented={true}
-                aggregated={true}
-                matchHeight={true}
               >
-                <Card.Title className="integration-detail-metrics__uptime-header">
+                <Title size="2xl" className="integration-detail-metrics__uptime-header">
                   <div>{this.props.i18nUptime}</div>
                   {this.props.start !== undefined &&
                     this.props.durationDifference !== undefined && (
@@ -123,8 +109,8 @@ export class IntegrationDetailMetrics extends React.Component<
                         {startAsHuman}
                       </div>
                     )}
-                </Card.Title>
-                <Card.Body>
+                </Title>
+                <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification className="integration-detail-metrics__duration-difference">
                       {this.props.durationDifference !== undefined
@@ -132,7 +118,7 @@ export class IntegrationDetailMetrics extends React.Component<
                         : this.props.i18nNoDataAvailable}
                     </AggregateStatusNotification>
                   </AggregateStatusNotifications>
-                </Card.Body>
+                </CardBody>
               </Card>
             </Col>
           </Row>

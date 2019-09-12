@@ -1,6 +1,6 @@
 // tslint:disable:no-console
+import { Card, CardBody } from '@patternfly/react-core';
 import {
-  Card,
   Col,
   FormControl,
   FormGroup,
@@ -184,7 +184,7 @@ export class OpenApiSelectMethod extends React.Component<
   public render() {
     return (
       <Card className={'open-api-review-actions'}>
-        <Card.Body>
+        <CardBody>
           <Grid fluid={true} className={'open-api-select-method'}>
             <Row>
               <Col>
@@ -271,7 +271,7 @@ export class OpenApiSelectMethod extends React.Component<
               </ButtonLink>
             </Row>
           </Grid>
-        </Card.Body>
+        </CardBody>
       </Card>
     );
   }
