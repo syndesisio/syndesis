@@ -62,8 +62,7 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
     let filteredAndSortedConnections = generateDvConnections(
       connections,
       dvSourceStatuses,
-      selectedConn,
-      true
+      selectedConn
     );
     activeFilters.forEach((filter: IActiveFilter) => {
       const valueToLower = filter.value.toLowerCase();

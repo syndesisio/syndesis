@@ -50,14 +50,11 @@ export interface SchemaNodeInfo {
 }
 
 export interface VirtualizationSourceStatus {
-  sourceName: string;
-  hasTeiidSource: boolean;
-  vdbState: 'ACTIVE' | 'MISSING' | 'LOADING' | 'FAILED';
-  schemaState: 'ACTIVE' | 'MISSING' | 'LOADING' | 'FAILED';
   errors: string[];
-  vdbName?: string;
-  schemaVdbName?: string;
-  schemaModelName?: string;
+  id: string;
+  loading: boolean;
+  schemaState: 'ACTIVE' | 'MISSING' | 'FAILED';
+  sourceName: string;
 }
 
 export interface ViewDefinitionDescriptor {

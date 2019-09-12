@@ -19,12 +19,8 @@ interface IColumn {
 
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
+  FAILED = 'FAILED',
   INACTIVE = 'INACTIVE',
-}
-
-export enum DvConnectionSelection {
-  SELECTED = 'SELECTED',
-  NOTSELECTED = 'NOTSELECTED',
 }
 
 /**
@@ -206,36 +202,43 @@ function getViewDefinition(
  * @param conns the connections
  * @param virtualizationsSourceStatuses the available virtualization sources
  * @param selectedConn name of a selected connection
- * @param activeOnly (optional) true - return only active connections
  */
 export function generateDvConnections(
   conns: Connection[],
   virtualizationsSourceStatuses: VirtualizationSourceStatus[],
-  selectedConn: string,
-  activeOnly = false
+  selectedConn: string
 ): Connection[] {
   const dvConns: Connection[] = [];
   for (const conn of conns) {
-    let connStatus = DvConnectionStatus.INACTIVE;
     const virtSrcStatus = virtualizationsSourceStatuses.find(
       virtStatus => virtStatus.sourceName === conn.name
     );
-    if (
-      virtSrcStatus &&
-      virtSrcStatus.vdbState === 'ACTIVE' &&
-      virtSrcStatus.schemaState === 'ACTIVE'
-    ) {
-      connStatus = DvConnectionStatus.ACTIVE;
-    }
-
-    let selectionState = DvConnectionSelection.NOTSELECTED;
-    if (conn.name === selectedConn) {
-      selectionState = DvConnectionSelection.SELECTED;
-    }
-    conn.options = { dvStatus: connStatus, dvSelected: selectionState };
-    if (!activeOnly) {
-      dvConns.push(conn);
-    } else if (connStatus === DvConnectionStatus.ACTIVE) {
+    // If defined, a corresponding virtualization source was found
+    if(virtSrcStatus) {
+      let connStatus = DvConnectionStatus.INACTIVE;
+      let schemaLoading = String(false);
+      let selectionState = String(false);
+      // status (ACTIVE, FAILED, INACTIVE)
+      switch (virtSrcStatus.schemaState) {
+        case 'ACTIVE':
+          connStatus = DvConnectionStatus.ACTIVE;
+          break;
+        case 'FAILED':
+          connStatus = DvConnectionStatus.FAILED;
+          break;
+        case 'MISSING':
+          connStatus = DvConnectionStatus.INACTIVE;
+          break;
+        default:
+          break;
+      }
+      // loading (true/false)
+      schemaLoading = String(virtSrcStatus.loading);
+      // selection
+      if (conn.name === selectedConn) {
+        selectionState = String(true);
+      }
+      conn.options = { dvStatus: connStatus, dvLoading: schemaLoading, dvSelected: selectionState };
       dvConns.push(conn);
     }
   }
@@ -247,11 +250,7 @@ export function generateDvConnections(
  * @param connection the connection
  */
 export function getDvConnectionStatus(conn: Connection): string {
-  let dvState: string = DvConnectionStatus.INACTIVE;
-  if (conn.options && conn.options.dvStatus) {
-    dvState = conn.options.dvStatus;
-  }
-  return dvState;
+  return (conn.options && conn.options.dvStatus) ? conn.options.dvStatus : DvConnectionStatus.INACTIVE;
 }
 
 /**
@@ -259,15 +258,15 @@ export function getDvConnectionStatus(conn: Connection): string {
  * @param connection the connection
  */
 export function isDvConnectionSelected(conn: Connection) {
-  let isSelected = false;
-  if (
-    conn.options &&
-    conn.options.dvSelected &&
-    conn.options.dvSelected === DvConnectionSelection.SELECTED
-  ) {
-    isSelected = true;
-  }
-  return isSelected;
+  return (conn.options && conn.options.dvSelected && conn.options.dvSelected === String(true)) ? true : false;
+}
+
+/**
+ * Determine if the Connection is loading.  DV uses the options on a connection to set loading state
+ * @param connection the connection
+ */
+export function isDvConnectionLoading(conn: Connection) {
+  return (conn.options && conn.options.dvLoading && conn.options.dvLoading === String(true)) ? true : false;
 }
 
 /**

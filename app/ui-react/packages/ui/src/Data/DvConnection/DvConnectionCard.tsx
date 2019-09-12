@@ -4,16 +4,17 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Label,
   Text,
   Title,
 } from '@patternfly/react-core';
+import { Label, Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import './DvConnectionCard.css';
 
 export enum ConnectionStatus {
   ACTIVE = 'ACTIVE',
+  FAILED = 'FAILED',
   INACTIVE = 'INACTIVE',
 }
 
@@ -22,6 +23,7 @@ export interface IDvConnectionCardProps {
   description: string;
   dvStatus: string;
   icon: React.ReactNode;
+  loading: boolean;
   selected: boolean;
   onSelectionChanged: (connName: string, isSelected: boolean) => void;
 }
@@ -32,8 +34,8 @@ export const DvConnectionCard: React.FunctionComponent<
   const [isSelected, setIsSelected] = React.useState(props.selected);
 
   const doToggleSelected = (connName: string) => (event: any) => {
-    // User can only select active connections
-    if (props.dvStatus === ConnectionStatus.ACTIVE) {
+    // User can only select active connections that are not loading
+    if (props.dvStatus === ConnectionStatus.ACTIVE && props.loading === false) {
       setIsSelected(!isSelected);
       props.onSelectionChanged(connName, !isSelected);
     }
@@ -48,6 +50,10 @@ export const DvConnectionCard: React.FunctionComponent<
       onClick={doToggleSelected(props.name)}
     >
       <CardHeader>
+        {props.loading ? (
+          <Spinner loading={true} inline={true} />
+        ) : ( <></> )
+        }
         <Label
           className="dv-connection-card__status"
           type={
