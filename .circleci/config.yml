@@ -154,7 +154,7 @@ quay_transfer: &quay_transfer
   run:
     name: Trigger image transfer to quay.io
     command: |
-      [ -n "${CIRCLE_PR_NUMBER}" ] && curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
+      [ "${CIRCLE_BRANCH}" != "master" ] && curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
 
 jobs:
   ui:
