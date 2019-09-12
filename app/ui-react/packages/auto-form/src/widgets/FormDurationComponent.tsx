@@ -3,12 +3,12 @@ import {
   DropdownItem,
   DropdownToggle,
   FormGroup,
-  InputGroup, Popover,
+  InputGroup,
   TextInput,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
+import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
 interface IDuration {
@@ -62,7 +62,10 @@ export const FormDurationComponent: React.FunctionComponent<
   };
   const handleClick = (
     selectedDuration: IDuration,
-    event: MouseEvent | React.MouseEvent<any, MouseEvent> | React.KeyboardEvent<Element>
+    event:
+      | MouseEvent
+      | React.MouseEvent<any, MouseEvent>
+      | React.KeyboardEvent<Element>
   ) => {
     event.preventDefault();
     setIsOpen(false);
@@ -104,12 +107,7 @@ export const FormDurationComponent: React.FunctionComponent<
         <>
           {props.property.displayName || ''}
           {props.property.labelHint && (
-            <Popover
-              aria-label={props.property.labelHint}
-              bodyContent={props.property.labelHint}
-            >
-              <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-            </Popover>
+            <FormLabelHintComponent labelHint={props.property.labelHint} />
           )}
         </>
       }

@@ -99,10 +99,13 @@ export class ConfigureActionPage extends React.Component<
                * the old step.
                */
               const useOldStepConfig =
+                this.props.mode === 'editing' &&
                 oldStepConfig &&
                 oldStepConfig!.connection &&
                 oldStepConfig!.connection!.connectorId ===
-                  state.connection.connectorId;
+                  state.connection.connectorId &&
+                oldStepConfig!.action &&
+                oldStepConfig!.action.id === params.actionId;
               /**
                * configured properties will be set in the route state for
                * configuration pages higher than 0. If it's not set, its value
@@ -245,7 +248,9 @@ export class ConfigureActionPage extends React.Component<
                     })}
                     content={
                       <WithConfigurationForm
-                        key={`${positionAsNumber}:${pageAsNumber}`}
+                        key={`${positionAsNumber}:${
+                          params.actionId
+                        }:${pageAsNumber}`}
                         connection={state.connection}
                         actionId={params.actionId}
                         configurationPage={pageAsNumber}

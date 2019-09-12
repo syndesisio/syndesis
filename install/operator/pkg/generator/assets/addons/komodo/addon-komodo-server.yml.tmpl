@@ -68,8 +68,6 @@
             value: {{.Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_DATABASE
             value: {{.Env.POSTGRESQL_DATABASE}}
-          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: '{{.Env.OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}}'
 {{if .Debug}}
           - name: JAVA_DEBUG
             value: "true"
@@ -143,9 +141,16 @@
       syndesis.io/component: syndesis-dv
   spec:
     tags:
-    - from:
+      {{if .Syndesis.Spec.DevSupport}}
+    - name: "latest"
+      from:
+        kind: ImageStreamTag
+        name: '{{ .Images.Syndesis.Komodo }}:latest'
+      {{else}}
+    - name: "{{ .Syndesis.Spec.Components.Komodo.Tag }}"
+      from:
         kind: DockerImage
         name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}'
       importPolicy:
         scheduled: true
-      name: "{{ .Syndesis.Spec.Components.Komodo.Tag }}"
+      {{end}}

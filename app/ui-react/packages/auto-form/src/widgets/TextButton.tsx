@@ -5,7 +5,7 @@ import './TextButton.css';
 export interface ITextButtonProps {
   className?: string;
   linkText?: string;
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void;
   children?: React.ReactNode;
   enable?: boolean;
 }

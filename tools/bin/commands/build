@@ -7,12 +7,12 @@ build::description() {
 build::usage() {
     cat <<EOT
 -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-    --all-images               Build all modules with images: ui-angular, ui-react, server, meta, s2i, operator, upgrade
-    --app-images               Build only application modules with Docker images (ui-angular, ui-react, server, meta, s2i)
+    --all-images               Build all modules with images: ui-react, server, meta, s2i, operator, upgrade
+    --app-images               Build only application modules with Docker images (ui-react, server, meta, s2i)
                                and create images
     --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
 -m  --module <m1>,<m2>, ..     Build modules
-                               Modules: ui-angular, ui-react, server, connector, s2i, meta, integration, extension, common, operator, upgrade
+                               Modules: ui-react, server, connector, s2i, meta, integration, extension, common, operator, upgrade
                                Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
 -d  --dependencies             Build also all project the specified module depends on
     --skip-tests               Skip unit, integration and system test execution
@@ -186,7 +186,7 @@ do_operator() {
 
     pushd "$top_dir/install/operator" > /dev/null
     if [ $(hasflag -i --image --docker) ]; then
-        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}:$tag"
+        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}" --image-tag="$tag"
     else
         ./build.sh --image-build=s2i
     fi
@@ -255,15 +255,14 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui-angular ui-react test operator upgrade"
-MAVEN_MODULES="common extension integration connector meta server s2i ui-angular ui-react test"
-APP_IMAGES="ui-angular ui-react server meta s2i"
+ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade"
+MAVEN_MODULES="common extension integration connector meta server s2i ui-react test"
+APP_IMAGES="ui-react server meta s2i"
 INFRA_IMAGES="operator upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "upgrade:server common extension integration connector"
   "operator"
-  "ui-angular"
   "ui-react"
   "common"
   "extension:common"
@@ -277,7 +276,6 @@ MODULES=(
 MODULE_PATHS=(
   "upgrade:tools/upgrade/"
   "operator:install/operator/"
-  "ui-angular:app/ui-angular/"
   "ui-react:app/ui-react/"
   "common:app/common/"
   "extension:app/extension/"
@@ -296,7 +294,7 @@ extract_modules() {
     fi
 
     if [ "$(hasflag --all-images)" ]; then
-        modules="$modules ui-angular ui-react server meta s2i operator"
+        modules="$modules ui-react server meta s2i operator"
     fi
 
     if [ "$(hasflag --app-images)" ]; then

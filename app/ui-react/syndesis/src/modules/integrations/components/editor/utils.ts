@@ -17,6 +17,7 @@ import {
   getPreviousStepWithDataShape,
   getSubsequentSteps,
   HIDE_FROM_STEP_SELECT,
+  isActionOutputShapeless,
   LOG,
   SPLIT,
   TEMPLATE,
@@ -165,6 +166,7 @@ export function toUIIntegrationStepCollection(
     let previousStepShouldDefineDataShape = false;
     let previousStepShouldDefineDataShapePosition: number | undefined;
     let shouldAddDataMapper = false;
+    let shouldAddDefaultFlow = false;
     let restrictedDelete = false;
     if (
       step.connection &&
@@ -212,6 +214,16 @@ export function toUIIntegrationStepCollection(
             shouldAddDataMapper = true;
           }
         }
+
+        // When an output shape other than ANY is specified a default flow is required.
+        // This is because all alternate flows need to produce the output shape and in case no condition matches
+        // the default flow is supposed to produce this output.
+        if (
+          step.stepKind === CHOICE &&
+          !isActionOutputShapeless(step.action.descriptor)
+        ) {
+          shouldAddDefaultFlow = typeof step.configuredProperties!.default === 'undefined'
+        }
       }
     }
 
@@ -224,6 +236,7 @@ export function toUIIntegrationStepCollection(
       restrictedDelete,
       shape,
       shouldAddDataMapper,
+      shouldAddDefaultFlow,
     };
   });
 }

@@ -88,9 +88,9 @@ const viewItems = [
 const virtItem = [
   <VirtualizationListItem
     key="virtualizationListItem1"
+    hasViews={true}
     virtualizationName={virtualizationName1}
     virtualizationDescription={virtualizationDescription1}
-    virtualizationViewNames={[]}
     serviceVdbName={serviceVdbName1}
     detailsPageLink={''}
     i18nCancelText={cancelText}
@@ -125,9 +125,9 @@ const virtItem = [
 const virtualizationItems = [
   <VirtualizationListItem
     key="virtualizationListItem1"
+    hasViews={true}
     virtualizationName={virtualizationName1}
     virtualizationDescription={virtualizationDescription1}
-    virtualizationViewNames={[]}
     serviceVdbName={serviceVdbName1}
     detailsPageLink={''}
     i18nCancelText={cancelText}
@@ -158,9 +158,9 @@ const virtualizationItems = [
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
+    hasViews={true}
     virtualizationName={virtualizationName2}
     virtualizationDescription={virtualizationDescription2}
-    virtualizationViewNames={[]}
     serviceVdbName={serviceVdbName2}
     detailsPageLink={''}
     i18nCancelText={cancelText}
@@ -190,9 +190,9 @@ const virtualizationItems = [
   />,
   <VirtualizationListItem
     key="virtualizationListItem3"
+    hasViews={true}
     virtualizationName={virtualizationName3}
     virtualizationDescription={virtualizationDescription3}
-    virtualizationViewNames={[]}
     serviceVdbName={serviceVdbName3}
     detailsPageLink={''}
     i18nCancelText={cancelText}

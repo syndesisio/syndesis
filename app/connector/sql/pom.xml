@@ -117,6 +117,12 @@
       <artifactId>mariadb-java-client</artifactId>
       <scope>runtime</scope>
     </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid</artifactId>
+      <classifier>jdbc</classifier>
+      <scope>runtime</scope>
+    </dependency>    
 
     <!-- test -->
     <dependency>

@@ -33,6 +33,7 @@ import './VirtualizationListItem.css';
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
   detailsPageLink: H.LocationDescriptor;
+  hasViews: boolean;
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
@@ -64,7 +65,6 @@ export interface IVirtualizationListItemProps {
   publishingStepText?: string;
   serviceVdbName: string;
   virtualizationName: string;
-  virtualizationViewNames: string[];
   virtualizationDescription: string;
 }
 
@@ -95,11 +95,8 @@ export const VirtualizationListItem: React.FunctionComponent<
   };
 
   const doPublish = () => {
-    if (props.virtualizationName) {
-      props.onPublish(
-        props.virtualizationName,
-        props.virtualizationViewNames.length > 0
-      );
+    if (props.virtualizationName && props.hasViews) {
+      props.onPublish(props.virtualizationName, props.hasViews);
     }
   };
 

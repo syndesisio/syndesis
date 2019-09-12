@@ -7,6 +7,7 @@ import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
   ApiProviderIcon,
   IntegrationActions,
+  IntegrationsEmptyState,
   IntegrationsList,
   IntegrationsListItem,
   IntegrationsListItemUnreadable,
@@ -36,6 +37,19 @@ export class Integrations extends React.Component<IIntegrationsProps> {
           <AppContext.Consumer>
             {({ getPodLogUrl }) => (
               <IntegrationsList>
+                {!this.props.loading &&
+                  !this.props.error &&
+                  this.props.integrations.length === 0 && (
+                    <IntegrationsEmptyState
+                      i18nCreateIntegration={t('shared:linkCreateIntegration')}
+                      i18nCreateIntegrationTip={t(
+                        'integrationsEmptyState.createTip'
+                      )}
+                      i18nEmptyStateInfo={t('integrationsEmptyState.info')}
+                      i18nEmptyStateTitle={t('integrationsEmptyState.title')}
+                      linkCreateIntegration={resolvers.create.start.selectStep()}
+                    />
+                  )}
                 <WithLoader
                   error={this.props.error}
                   loading={this.props.loading}

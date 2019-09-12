@@ -178,7 +178,7 @@ class PodLogMonitor implements Consumer<InputStream> {
 
         public ActivityStep getStep(String step, String id) throws IOException {
             ActivityStep rc = activeSteps.get(step);
-            if( rc == null ) {
+            if (rc == null) {
                 rc = new ActivityStep();
                 rc.setId(step);
                 rc.setAt(KeyGenerator.getKeyTimeMillis(id));
@@ -190,7 +190,7 @@ class PodLogMonitor implements Consumer<InputStream> {
 
     InflightData getInflightData(String exchangeId, String logts) throws IOException {
         InflightData data = inflightActivities.get(exchangeId);
-        if( data==null ) {
+        if (data == null) {
             data = new InflightData();
             data.activity.setPod(podName);
             data.activity.setVer(deploymentVersion);
@@ -202,112 +202,41 @@ class PodLogMonitor implements Consumer<InputStream> {
         return data;
     }
 
-    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.ExcessiveMethodLength", "PMD.NPathComplexity", ""})
     void processLine(String line) throws IOException {
-
         // Does it look like a data of json structured output?
         Matcher matcher = LOG_LINE_REGEX.matcher(line);
-        if ( !matcher.matches() ) {
+        if (!matcher.matches()) {
             return;
         }
 
         String time = matcher.group(1);
         String data = matcher.group(2);
         try {
-
-
             @SuppressWarnings("unchecked")
             Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(data); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.remove("exchange"));
+            if (exchange == null) {
+                // This log entry is not valid json format
+                return;
+            }
             long keyTimeMillis = KeyGenerator.getKeyTimeMillis(exchange);
             long until = now() - logsController.getRetentionTime().toMillis();
-            if( keyTimeMillis < until ) {
+            if (keyTimeMillis < until) {
                 // This log entry is too old.. don't process it..
                 return;
             }
+            InflightData inflightData = getInflightData(exchange, time);
 
             String id = validate((String) json.remove("id"));
-
-            InflightData inflightData = getInflightData(exchange, time);
             String step = (String) json.remove("step");
-            if( step == null ) {
+            if (step == null) {
                 // Looks like an exchange level logging event.
-
-                Boolean failed = (Boolean) json.remove("failed");
-                if( failed != null ) {
-                    inflightData.activity.setFailed(failed);
-                }
-
-
-                String status = (String) json.remove("status");
-
-                inflightData.metadata.putAll(json);
-
-                if( status != null ) {
-                    inflightData.activity.setStatus(status);
-
-                    if( "done".equals(status) ) {
-                        inflightData.activity.setSteps(inflightData.doneSteps);
-                        if( !inflightData.metadata.isEmpty() ) {
-                            inflightData.activity.setMetadata(toJsonNode(inflightData.metadata));
-                        }
-
-                        String activityAsString = Json.writer().writeValueAsString(inflightData.activity);
-                        String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
-                        inflightActivities.remove(exchange);
-
-                        logsController.eventQueue.put(batch -> {
-                            // Do as little as possible in here, single thread processes the event queue.
-                            batch.put(transactionPath, activityAsString);
-                            trackState(time, batch);
-                        });
-
-                    }
-                }
-
+                processLogLineExchange(json, inflightData, exchange, time);
             } else {
-
                 // Looks like a step level logging event.
-                ActivityStep as = inflightData.getStep(step, id);
-                String message = (String) json.remove("message");
-                if( message!=null ) {
-                    if( as.getMessages() == null ) {
-                        as.setMessages(new ArrayList<>());
-                    }
-                    as.getMessages().add(message);
-                }
-
-                String failure = (String) json.remove("failure");
-                if( failure !=null ) {
-                    as.setFailure(failure);
-                }
-
-                Number duration = (Number) json.remove("duration");
-                if( duration!=null ) {
-                    as.setDuration(duration.longValue());
-                }
-
-                if( !json.isEmpty() ) {
-                    if( as.getEvents() == null)  {
-                        as.setEvents(new ArrayList<>());
-                    }
-                    as.getEvents().add(toJsonNode(json));
-                }
-
-                if( duration!=null ) {
-                    inflightData.activeSteps.remove(step);
-                    if( inflightData.doneSteps.size() == 50 ) {
-                        ActivityStep truncated = new ActivityStep();
-                        truncated.addMessage("Max activity tracking steps reached.  No further steps will be recorded.");
-                        inflightData.doneSteps.add(truncated);
-                    }
-                    if( inflightData.doneSteps.size() < 50 ) {
-                        inflightData.doneSteps.add(as);
-                    }
-                }
-
+                processLogLineStep(json, inflightData, step, id);
             }
 
         } catch (JsonDBException | ClassCastException | IOException ignored) {
@@ -316,6 +245,75 @@ class PodLogMonitor implements Consumer<InputStream> {
             final InterruptedIOException rethrow = new InterruptedIOException(e.getMessage());
             rethrow.initCause(e);
             throw rethrow;
+        }
+    }
+
+    private void processLogLineStep(Map<String, Object> json, InflightData inflightData, String step, String id) throws IOException {
+        ActivityStep as = inflightData.getStep(step, id);
+        String message = (String) json.remove("message");
+        if (message != null) {
+            if (as.getMessages() == null) {
+                as.setMessages(new ArrayList<>());
+            }
+            as.getMessages().add(message);
+        }
+
+        String failure = (String) json.remove("failure");
+        if (failure != null) {
+            as.setFailure(failure);
+        }
+
+        Number duration = (Number) json.remove("duration");
+        if (duration != null) {
+            as.setDuration(duration.longValue());
+        }
+
+        if (!json.isEmpty()) {
+            if (as.getEvents() == null) {
+                as.setEvents(new ArrayList<>());
+            }
+            as.getEvents().add(toJsonNode(json));
+        }
+
+        if (duration != null) {
+            inflightData.activeSteps.remove(step);
+            if (inflightData.doneSteps.size() == 50) {
+                ActivityStep truncated = new ActivityStep();
+                truncated.addMessage("Max activity tracking steps reached.  No further steps will be recorded.");
+                inflightData.doneSteps.add(truncated);
+            }
+            if (inflightData.doneSteps.size() < 50) {
+                inflightData.doneSteps.add(as);
+            }
+        }
+    }
+
+    private void processLogLineExchange(Map<String, Object> json, InflightData inflightData, String exchange, String time) throws IOException, InterruptedException {
+        Boolean failed = (Boolean) json.remove("failed");
+        if (failed != null) {
+            inflightData.activity.setFailed(failed);
+        }
+        String status = (String) json.remove("status");
+        inflightData.metadata.putAll(json);
+        if (status != null) {
+            inflightData.activity.setStatus(status);
+            if ("done".equals(status)) {
+                inflightData.activity.setSteps(inflightData.doneSteps);
+                if (!inflightData.metadata.isEmpty()) {
+                    inflightData.activity.setMetadata(toJsonNode(inflightData.metadata));
+                }
+
+                String activityAsString = Json.writer().writeValueAsString(inflightData.activity);
+                String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
+                inflightActivities.remove(exchange);
+
+                logsController.eventQueue.put(batch -> {
+                    // Do as little as possible in here, single thread processes the event queue.
+                    batch.put(transactionPath, activityAsString);
+                    trackState(time, batch);
+                });
+
+            }
         }
     }
 

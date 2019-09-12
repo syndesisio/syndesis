@@ -13,6 +13,7 @@ source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
 source "./.lib.sh"
 
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
+OPERATOR_IMAGE_TAG="$(readopt --image-tag           latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
@@ -28,6 +29,7 @@ where options are:
   --operator-build <auto|docker|go|skip>  how to build the operator executable (default: auto)
   --image-build <auto|docker|s2i|skip>    how to build the image (default: auto)
   --image-name <name>                     docker image name (default: syndesis/syndesis-operator)
+  --image-tag  <tag>                      docker image tag (default: latest)
   --s2i-stream-name <name>                s2i image stream name (default: syndesis-operator)
   --go-options <name>                     additional build options to pass to the go build
 
@@ -35,15 +37,10 @@ ENDHELP
 	exit 0
 fi
 
-#
-# TODO Could we avoid copying these files by moving them under the build directory
-#
-cp "../../app/integration/project-generator/src/main/resources/io/syndesis/integration/project/generator/templates/prometheus-config.yml" "./pkg/generator/assets"
-
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME" $GO_BUILD_OPTIONS
+  build_operator $OPERATOR_BUILD_MODE -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then
-  build_image $IMAGE_BUILD_MODE $OPERATOR_IMAGE_NAME $S2I_STREAM_NAME
+  build_image $IMAGE_BUILD_MODE $OPERATOR_IMAGE_NAME $OPERATOR_IMAGE_TAG $S2I_STREAM_NAME
 fi

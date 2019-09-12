@@ -89,6 +89,15 @@
       controllers:
 {{- if (eq (or .Syndesis.Spec.Addons.camelk.enabled "false") "true") }}
         integration: camel-k
+        camelk:
+          customizers:
+          - metadata
+          {{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+          - tracing
+          {{- else}}
+          - logging
+          {{- end}}
+          - syndesis
 {{- end}}
         maxIntegrationsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'
         maxDeploymentsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'

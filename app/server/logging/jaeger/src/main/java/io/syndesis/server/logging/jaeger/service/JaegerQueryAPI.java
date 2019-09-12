@@ -87,7 +87,8 @@ public class JaegerQueryAPI {
         public long duration;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public ArrayList<Tag> tags;
-        @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD") // NOPMD
+        @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
+        @SuppressWarnings("PMD.ProperLogger")
         public ArrayList<Log> logs;
         @SuppressFBWarnings("NP_UNWRITTEN_PUBLIC_OR_PROTECTED_FIELD")
         public String processID;

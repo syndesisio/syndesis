@@ -24,7 +24,7 @@ github.com/census-instrumentation/opencensus-proto/gen-go/agent/trace/v1
 github.com/census-instrumentation/opencensus-proto/gen-go/metrics/v1
 github.com/census-instrumentation/opencensus-proto/gen-go/resource/v1
 github.com/census-instrumentation/opencensus-proto/gen-go/trace/v1
-# github.com/chirino/hawtgo v0.0.0-20190728030238-0d67973a5907
+# github.com/chirino/hawtgo v0.0.1
 github.com/chirino/hawtgo/sh
 github.com/chirino/hawtgo/sh/line
 # github.com/coreos/prometheus-operator v0.29.0 => github.com/coreos/prometheus-operator v0.29.0
@@ -369,8 +369,8 @@ k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
 k8s.io/apimachinery/pkg/runtime
 k8s.io/apimachinery/pkg/apis/meta/v1
 k8s.io/apimachinery/pkg/runtime/schema
-k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/apis/meta/v1/unstructured
+k8s.io/apimachinery/pkg/api/errors
 k8s.io/apimachinery/pkg/util/intstr
 k8s.io/apimachinery/pkg/types
 k8s.io/apimachinery/pkg/util/runtime
@@ -555,7 +555,7 @@ sigs.k8s.io/controller-runtime/pkg/patch
 sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics
 sigs.k8s.io/controller-runtime/pkg/webhook/types
 sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics
-# sigs.k8s.io/controller-tools v0.2.0 => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
+# sigs.k8s.io/controller-tools v0.2.1 => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
 sigs.k8s.io/controller-tools/pkg/crd/generator
 sigs.k8s.io/controller-tools/pkg/crd/util
 sigs.k8s.io/controller-tools/pkg/internal/codegen

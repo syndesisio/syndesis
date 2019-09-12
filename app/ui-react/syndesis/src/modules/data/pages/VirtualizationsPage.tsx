@@ -191,14 +191,12 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             detailsPageLink={resolvers.virtualizations.views.root(
                               { virtualization }
                             )}
+                            hasViews={!virtualization.empty}
                             virtualizationName={virtualization.keng__id}
                             virtualizationDescription={
                               virtualization.tko__description
                                 ? virtualization.tko__description
                                 : ''
-                            }
-                            virtualizationViewNames={
-                              virtualization.serviceViewDefinitions
                             }
                             serviceVdbName={virtualization.serviceVdbName}
                             odataUrl={getOdataUrl(virtualization)}

@@ -6,7 +6,6 @@ import { QueryResults, ViewDefinitionDescriptor } from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
   PageSection,
-  PreviewButtonSelection,
   ViewHeaderBreadcrumb,
   VirtualizationDetailsHeader,
 } from '@syndesis/ui';
@@ -361,7 +360,6 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                                 viewDefinitionId: viewDefinitionDescriptor.id,
                                 viewDefinition: undefined,
                                 previewExpanded:true,
-                                previewButtonSelection:PreviewButtonSelection.PREVIEW,
                                 queryResults:queryResultsEmpty
                               }
                             )}

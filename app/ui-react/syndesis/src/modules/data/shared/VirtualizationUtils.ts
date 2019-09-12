@@ -190,7 +190,6 @@ function getViewDefinition(
   const viewDefn: ViewDefinition = {
     dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
-    id: '',
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',

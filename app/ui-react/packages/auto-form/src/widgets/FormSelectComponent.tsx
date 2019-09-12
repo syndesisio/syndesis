@@ -2,11 +2,10 @@ import {
   FormGroup,
   FormSelect,
   FormSelectOption,
-  Popover,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
+import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
 import './FormSelectComponent.css';
@@ -49,12 +48,7 @@ export const FormSelectComponent: React.FunctionComponent<
           <>
             {props.property.displayName}
             {props.property.labelHint && (
-              <Popover
-                aria-label={props.property.labelHint}
-                bodyContent={props.property.labelHint}
-              >
-                <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-              </Popover>
+              <FormLabelHintComponent labelHint={props.property.labelHint} />
             )}
           </>
         ) : (

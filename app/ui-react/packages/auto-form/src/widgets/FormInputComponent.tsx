@@ -1,7 +1,7 @@
-import { FormGroup, Popover, TextInput } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { FormGroup, TextInput } from '@patternfly/react-core';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
+import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
 export const FormInputComponent: React.FunctionComponent<
@@ -27,12 +27,7 @@ export const FormInputComponent: React.FunctionComponent<
           <>
             {props.property.displayName}
             {props.property.labelHint && (
-              <Popover
-                aria-label={props.property.labelHint}
-                bodyContent={props.property.labelHint}
-              >
-                <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-              </Popover>
+              <FormLabelHintComponent labelHint={props.property.labelHint} />
             )}
           </>
         ) : (

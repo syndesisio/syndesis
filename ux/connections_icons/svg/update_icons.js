@@ -8,8 +8,8 @@ const SVGO = require('svgo');
 const DEPLOYMENT_JSON = '../../../app/server/dao/src/main/resources/io/syndesis/server/dao/deployment.json';
 const CONNECTORS_PATH = '../../../app/connector';
 const SCHEMA_JAVA = '../../../app/common/model/src/main/java/io/syndesis/common/model/Schema.java';
-const STEP_ICON_ASSET_PATH = ['../../../app/ui-angular/src/assets/icons/steps', '../../../app/ui-react/syndesis/public/icons/steps'];
-const CONNECTOR_ICON_ASSET_PATH = ['../../../app/ui-angular/src/assets/icons', '../../../app/ui-react/syndesis/public/icons'];
+const STEP_ICON_ASSET_PATH = ['../../../app/ui-react/syndesis/public/icons/steps'];
+const CONNECTOR_ICON_ASSET_PATH = ['../../../app/ui-react/syndesis/public/icons'];
 
 const MAPPINGS = jsonfile.readFileSync('mapping.json');
 

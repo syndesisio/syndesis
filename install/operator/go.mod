@@ -8,7 +8,7 @@ module github.com/syndesisio/syndesis/install/operator
 
 require (
 	github.com/NYTimes/gziphandler v1.0.1 // indirect
-	github.com/chirino/hawtgo v0.0.0-20190728030238-0d67973a5907
+	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.2
 	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69
@@ -22,14 +22,15 @@ require (
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
 	golang.org/x/tools v0.0.0-20190826060629-95c3470cfb70 // indirect
+	gopkg.in/yaml.v2 v2.2.2
 	k8s.io/api v0.0.0-20190612125737-db0771252981
 	k8s.io/apimachinery v0.0.0-20190612125636-6a5db36e93ad
 	k8s.io/client-go v11.0.0+incompatible
 	k8s.io/code-generator v0.0.0-20181203235156-f8cba74510f3
 	k8s.io/gengo v0.0.0-20190327210449-e17681d19d3a
 	k8s.io/kube-openapi v0.0.0-20190603182131-db7b694dc208
-	sigs.k8s.io/controller-runtime v0.2.0
-	sigs.k8s.io/controller-tools v0.2.0
+	sigs.k8s.io/controller-runtime v0.2.1
+	sigs.k8s.io/controller-tools v0.2.1
 	sigs.k8s.io/yaml v1.1.0
 )
 

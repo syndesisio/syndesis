@@ -1,9 +1,9 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
+import { Card, CardBody, CardFooter } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import classnames from 'classnames';
 import * as React from 'react';
-import { ButtonLink, Loader } from '../../../Layout';
+import { ButtonLink, Loader, PageSection } from '../../../Layout';
 import './ViewsImportLayout.css';
 
 /**
@@ -72,58 +72,57 @@ export const ViewsImportLayout: React.FunctionComponent<
   isLastStep = false,
 }: IViewsImportLayoutProps) => {
   return (
-    <div
-      className={classnames(
-        'wizard-pf-body views-import-layout syn-scrollable',
-        {
-          'has-footer': true,
-        }
-      )}
-    >
-      {header}
-      <div className="wizard-pf-row views-import-layout__body syn-scrollable--body">
-        <div
-          className={
-            'wizard-pf-main cards-pf views-import-layout__contentWrapper'
-          }
-        >
-          <div className="views-import-layout__content">{content}</div>
+    <div className={'integration-editor-layout'}>
+      <div className={'integration-editor-layout__header'}>{header}</div>
+      <div className={'integration-editor-layout__body'}>
+        <div className={'integration-editor-layout__contentOuter'}>
+          <div className={'integration-editor-layout__contentInner'}>
+            <PageSection>
+              <Card>
+                <CardBody className="views-import-layout-card-body">
+                  {content}
+                </CardBody>
+                <CardFooter className="views-import-layout-card-footer">
+                  <ButtonLink
+                    data-testid={'views-import-layout-back-button'}
+                    onClick={onBack}
+                    href={backHref}
+                    className={'wizard-pf-back'}
+                  >
+                    <i className="fa fa-angle-left" /> Back
+                  </ButtonLink>
+                  &nbsp;
+                  <ButtonLink
+                    data-testid={'views-import-layout-next-button'}
+                    onClick={isLastStep ? onCreateViews : onNext}
+                    href={nextHref}
+                    as={'primary'}
+                    className={'wizard-pf-next'}
+                    disabled={isNextLoading || isNextDisabled}
+                  >
+                    {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
+                    {isLastStep ? (
+                      'Done'
+                    ) : (
+                        <>
+                          Next <i className="fa fa-angle-right" />
+                        </>
+                      )}
+                  </ButtonLink>
+                  &nbsp;
+                  <ButtonLink
+                    data-testid={'views-import-layout-cancel-button'}
+                    onClick={onCancel}
+                    href={cancelHref}
+                    className={'wizard-pf-cancel'}
+                  >
+                    Cancel
+                  </ButtonLink>
+                </CardFooter>
+              </Card>
+            </PageSection>
+          </div>
         </div>
-      </div>
-      <div className="wizard-pf-footer views-import-layout__footer">
-        <ButtonLink
-          data-testid={'views-import-layout-back-button'}
-          onClick={onBack}
-          href={backHref}
-          className={'wizard-pf-back'}
-        >
-          <i className="fa fa-angle-left" /> Back
-        </ButtonLink>
-        <ButtonLink
-          data-testid={'views-import-layout-next-button'}
-          onClick={isLastStep ? onCreateViews : onNext}
-          href={nextHref}
-          as={'primary'}
-          className={'wizard-pf-next'}
-          disabled={isNextLoading || isNextDisabled}
-        >
-          {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
-          {isLastStep ? (
-            'Done'
-          ) : (
-            <>
-              Next <i className="fa fa-angle-right" />
-            </>
-          )}
-        </ButtonLink>
-        <ButtonLink
-          data-testid={'views-import-layout-cancel-button'}
-          onClick={onCancel}
-          href={cancelHref}
-          className={'wizard-pf-cancel'}
-        >
-          Cancel
-        </ButtonLink>
       </div>
     </div>
   );
