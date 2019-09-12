@@ -8,10 +8,18 @@
  */
 
 describe('Restore Snapshot', () => {
-  it('restores the snapshot', () => {
-    /**
-     * TODO: Include snapshot here
-     */
-    cy.log('Check that the snapshot has been restored.');
+  before(function() {
+    cy.log('Retrieving latest snapshot...');
+    cy.task('getSnapshot');
+  });
+
+  it('test', () => {
+    cy.task('test');
+  });
+
+  it.skip('restores the snapshot', () => {
+    cy.request('POST', 'api/v1/test-support/restore-db').then(resp => {
+      cy.log('Database has been restored with snapshot...');
+    });
   });
 });
