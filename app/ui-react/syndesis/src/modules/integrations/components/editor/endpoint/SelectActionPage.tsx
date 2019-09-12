@@ -53,10 +53,10 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
               id={params.connectionId}
               initialValue={state.connection}
             >
-              {({ data, hasData, error, errorMessage }) => (
+              {({ data, hasData, error, errorMessage, loading }) => (
                 <WithLoader
                   error={error}
-                  loading={!hasData}
+                  loading={loading && !hasData}
                   loaderChildren={<PageLoader />}
                   errorChildren={<ApiError error={errorMessage!} />}
                 >
