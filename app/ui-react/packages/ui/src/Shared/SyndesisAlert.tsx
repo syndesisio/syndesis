@@ -1,22 +1,22 @@
 import { Alert, ExpandCollapse } from 'patternfly-react';
 import * as React from 'react';
 
-export enum AlertLevel {
+export enum SyndesisAlertLevel {
   ERROR = 'error',
   WARN = 'warning',
   INFO = 'info',
 }
 
-export interface IIntegrationBulletinBoardAlertProps {
-  level: AlertLevel;
+export interface ISyndesisAlertProps {
+  level: SyndesisAlertLevel;
   message: string;
   detail?: string;
   i18nTextExpanded: string;
   i18nTextCollapsed: string;
 }
 
-export class IntegrationBulletinBoardAlert extends React.Component<
-  IIntegrationBulletinBoardAlertProps
+export class SyndesisAlert extends React.Component<
+  ISyndesisAlertProps
 > {
   public render() {
     return (

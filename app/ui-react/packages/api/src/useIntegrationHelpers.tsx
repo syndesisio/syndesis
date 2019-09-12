@@ -433,7 +433,14 @@ export const useIntegrationHelpers = () => {
           : `${apiContext.apiUri}/integrations`,
       });
       if (!response.ok) {
-        throw new Error(response.statusText);
+        const text = await response.text();
+        let json;
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          throw { errorCode: response.status, userMsg: text || response.statusText };
+        }
+        throw json;
       }
       return !sanitizedIntegration.id
         ? ((await response.json()) as Integration)

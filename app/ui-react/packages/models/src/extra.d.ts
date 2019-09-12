@@ -148,3 +148,12 @@ export interface ErrorKey {
 export interface ExtendedActionDescriptor extends ActionDescriptor {
   standardizedErrors?: ErrorKey[];
 }
+
+/**
+ * The error response object that can come back from API responses, not sure why it's not in the generated model
+ */
+export interface ErrorResponse {
+  errorCode?: number;
+  userMsg: string;
+  developerMsg?: string;
+}

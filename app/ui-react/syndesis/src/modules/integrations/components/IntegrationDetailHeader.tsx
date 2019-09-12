@@ -9,14 +9,14 @@ import {
   LeveledMessage,
 } from '@syndesis/models';
 import {
-  AlertLevel,
   IMenuActions,
   InlineTextEdit,
-  IntegrationBulletinBoardAlert,
   IntegrationDetailBreadcrumb,
   IntegrationDetailEditableName,
   IntegrationDetailInfo,
   PageSection,
+  SyndesisAlert,
+  SyndesisAlertLevel,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -39,11 +39,11 @@ export interface IIntegrationDetailHeaderProps {
 function toAlertLevel(level: 'ERROR' | 'WARN' | 'INFO') {
   switch (level) {
     case 'WARN':
-      return AlertLevel.WARN;
+      return SyndesisAlertLevel.WARN;
     case 'ERROR':
-      return AlertLevel.ERROR;
+      return SyndesisAlertLevel.ERROR;
     default:
-      return AlertLevel.INFO;
+      return SyndesisAlertLevel.INFO;
   }
 }
 
@@ -164,7 +164,7 @@ export const IntegrationDetailHeader: React.FunctionComponent<
             </PageSection>
             {bulletinBoards.map((message: LeveledMessage, index) => (
               <PageSection variant={'light'} key={index}>
-                <IntegrationBulletinBoardAlert
+                <SyndesisAlert
                   level={toAlertLevel(message.level || 'INFO')}
                   message={
                     message.message

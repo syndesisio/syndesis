@@ -18,6 +18,7 @@ export * from './OpenApiSelectMethod';
 export * from './PfDropdownItem';
 export * from './ProgressWithLink';
 export * from './SimplePageHeader';
+export * from './SyndesisAlert';
 export * from './TextEditor';
 export * from './UnrecoverableError';
 export * from './WithDropzone';
