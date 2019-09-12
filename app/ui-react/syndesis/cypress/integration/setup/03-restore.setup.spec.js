@@ -12,7 +12,6 @@ describe('Restore Snapshot', () => {
     /**
      * TODO: Include snapshot here
      */
-    cy.restoreDb();
     cy.log('Check that the snapshot has been restored.');
   });
 });

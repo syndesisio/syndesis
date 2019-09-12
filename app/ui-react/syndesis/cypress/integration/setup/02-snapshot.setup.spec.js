@@ -11,7 +11,6 @@ describe('Create Snapshot', () => {
     cy.request('GET', 'api/v1/test-support/snapshot-db').then(resp => {
       expect(resp.status).to.eq(200);
       cy.task('storeSnapshot', resp).then(content => {
-        // expects here
         expect(content).not.to.be.null;
         cy.log('Snapshot created');
       });

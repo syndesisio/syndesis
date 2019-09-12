@@ -11,9 +11,17 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 const fs = require('fs');
-const http = require('http');
 const path = require('path');
 const repoRoot = path.join(__dirname, '..', '..');
+
+/**
+ * Offsets for timezone differences
+ */
+function toJSONLocal() {
+  const date = new Date();
+  date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+  return date.toJSON().slice(0, 10);
+}
 
 module.exports = (on, config) => {
   // `on` is used to hook into various events Cypress emits
@@ -25,10 +33,10 @@ module.exports = (on, config) => {
     },
 
     storeSnapshot(snapshot) {
-      const data = new Uint8Array(Buffer.from(snapshot));
-      fs.writeFileSync('snapshot.json', data, err => {
+      const snapshotJson = JSON.stringify(snapshot);
+      fs.writeFileSync(toJSONLocal() + '-snapshot.json', snapshotJson, err => {
         if (err) throw err;
-        console.log('The file has been saved!');
+        cy.log('The file has been saved!');
       });
 
       return null;
