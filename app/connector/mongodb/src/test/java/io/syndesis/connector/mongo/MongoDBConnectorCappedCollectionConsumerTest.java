@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.List;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
@@ -65,8 +64,9 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
         mock.expectedMessageCount(1);
         mock.expectedMessagesMatches((Exchange e) -> {
             try {
-                String doc = e.getMessage().getBody(String.class);
-                JsonNode jsonNode = MAPPER.readTree(doc);
+                @SuppressWarnings("unchecked")
+                List<String> doc = e.getMessage().getBody(List.class);
+                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 int id = jsonNode.get("id").asInt();
                 String value = jsonNode.get("someKey").asText();
                 return id <= ID && "someValue".equals(value);

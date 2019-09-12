@@ -23,7 +23,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
     // **************************
     // Set up

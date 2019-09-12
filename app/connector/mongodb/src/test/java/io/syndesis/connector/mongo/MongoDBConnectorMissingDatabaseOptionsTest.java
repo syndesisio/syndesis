@@ -15,17 +15,13 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.List;
+
 import io.syndesis.common.model.integration.Step;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
-
-public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConnectorTestSupport {
-
-    // **************************
-    // Set up
-    // **************************
+public class MongoDBConnectorMissingDatabaseOptionsTest extends MongoDBConnectorTestSupport {
 
     @Override
     @Before
@@ -41,16 +37,13 @@ public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConne
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE,
-            COLLECTION, "somethingNotSupported");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", "",
+            COLLECTION, "count");
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoTest() {
+        // Just need to verify that the route is not created in the setup phase
         assertTrue(true);
     }
 

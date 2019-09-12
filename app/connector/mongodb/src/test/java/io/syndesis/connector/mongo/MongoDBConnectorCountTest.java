@@ -22,7 +22,6 @@ import org.junit.Test;
 
 import java.util.List;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
 
     // **************************

@@ -31,7 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends MongoDBConnectorTestSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerAllOptionsTest.class);
@@ -80,8 +79,9 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
         mock.expectedMessagesMatches((Exchange e) -> {
             try {
                 // We just want to validate the output is coming as json well format
-                String doc = e.getMessage().getBody(String.class);
-                JsonNode jsonNode = MAPPER.readTree(doc);
+                @SuppressWarnings("unchecked")
+                List<String> doc = e.getMessage().getBody(List.class);
+                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
             } catch (IOException ex) {
                 log.error("Test failed because: ",ex);
                 return false;
