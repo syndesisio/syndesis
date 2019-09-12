@@ -36,7 +36,6 @@ export class IntegrationDetailMetrics extends React.Component<
     const okMessagesCount = this.props.messages! - this.props.errors!;
     const startAsDate = new Date(this.props.start!);
     const startAsHuman = this.props.i18nSince + startAsDate.toLocaleString();
-
     return (
       <PageSection className="integration-detail-metrics">
         <CardGrid fluid={true} matchHeight={true}>

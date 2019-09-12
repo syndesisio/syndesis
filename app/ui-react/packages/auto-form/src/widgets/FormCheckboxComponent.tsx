@@ -1,8 +1,8 @@
-import { Checkbox, FormGroup, Popover } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { Checkbox, FormGroup } from '@patternfly/react-core';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
 import './FormCheckboxComponent.css';
+import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getValidationState, toValidHtmlId } from './helpers';
 
 export const FormCheckboxComponent: React.FunctionComponent<
@@ -39,12 +39,7 @@ export const FormCheckboxComponent: React.FunctionComponent<
         title={props.property.controlHint}
       />
       {props.property.labelHint && (
-        <Popover
-          aria-label={props.property.labelHint}
-          bodyContent={props.property.labelHint}
-        >
-          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-        </Popover>
+        <FormLabelHintComponent labelHint={props.property.labelHint} />
       )}
     </FormGroup>
   );
