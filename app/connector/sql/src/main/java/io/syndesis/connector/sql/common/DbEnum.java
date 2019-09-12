@@ -17,6 +17,11 @@ package io.syndesis.connector.sql.common;
 
 import java.util.Locale;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.syndesis.connector.sql.SqlConnectorVerifierExtension;
+
 /**
  * Enumeration of Database products we have tested, and for which we ship
  * drivers for. One caveat is the Oracle Driver which cannot be shipped due to
@@ -34,9 +39,11 @@ public enum DbEnum {
     TEIID_SERVER("TEIID SERVER"),
     STANDARD("STANDARD");
 
+    private static final Logger LOG = LoggerFactory.getLogger(DbEnum.class);
+
     private final String name;
 
-    DbEnum(String name) {
+    private DbEnum(String name) {
         this.name = name;
     }
 
@@ -45,6 +52,11 @@ public enum DbEnum {
     }
 
     public static DbEnum fromName(final String dbProductName) {
-        return valueOf(dbProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
+        try {
+            return valueOf(dbProductName.toUpperCase(Locale.US).replaceAll(" ", "_"));
+        } catch (IllegalArgumentException e) {
+            LOG.info(dbProductName + " -> DbEnum.STANDARD");
+            return STANDARD;
+        }
     }
 }
