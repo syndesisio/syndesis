@@ -55,7 +55,7 @@ syndesis_deployments() {
 pod() {
   local dc=${1}
   local not=${2:-}
-  local ret=$(oc get pod -o custom-columns=:.metadata.name | tail -n +2 | grep "$dc")
+  local ret=$(oc get pod -o custom-columns=:.metadata.name | tail -n +2 | grep "$dc" | grep -v "\-deploy")
   if [ -n "$not" ]; then
       ret=$(echo $ret | grep -v $not)
   fi

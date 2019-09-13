@@ -128,6 +128,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	// Update the syndesis resource so that the user see all the default configuration
 	// that is being applied.
 	_, c, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
+	if err != nil {
+		return err
+	}
+
 	if c != controllerutil.OperationResultNone {
 
 		a.log.Info("Updated CRD ", "name", syndesis.Name)
@@ -271,7 +275,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		if err != nil {
+			return err
+		}
 		a.log.Info("Syndesis resource installed", "name", target.Name)
 	}
 	return err
@@ -291,7 +298,7 @@ func checkTags(context *generator.Context) error {
 	}
 	for _, image := range images {
 		if image.tag != "latest" {
-			if c.Match(version.Normalize(image.tag)) == false {
+			if !c.Match(version.Normalize(image.tag)) {
 				return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
 					image.name,
 					image.tag,

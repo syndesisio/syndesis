@@ -11,7 +11,32 @@
   - apiGroups:
     - ""
     resources:
+    - serviceaccounts
+    verbs:
+    - impersonate
+  - apiGroups:
+    - ""
+    resources:
+    - namespaces
+    verbs:
+    - get
+  - apiGroups:
+    - ""
+    - project.openshift.io
+    resources:
+    - projects
+    verbs:
+    - get
+  - apiGroups:
+    - ""
+    resources:
+    - serviceaccounts
+    verbs: [ impersonate ]
+  - apiGroups:
+    - ""
+    resources:
     - pods
+    - pods/exec
     - services
     - endpoints
     - persistentvolumeclaims

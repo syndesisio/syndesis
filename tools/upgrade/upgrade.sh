@@ -25,13 +25,13 @@ Usage: upgrade.sh [... options ...]
 with the following options
 
     --tag <tag>               Syndesis version/tag to upgrade to. Either --tag or --template is required.
-    --template <template>     Path to a local target template.
     --backup <dir>            Backup directory to use. The backup is kept after the upgrade
     --migration <dir>         Directory holding the migration scripts
     --local                   Use the local templates stored in this directory instead of
                               fetching them directly from GitHub
     --cleanup                 Whether to cleanup the backup gathered during the upgrade
     --oc-login                oc login command directly copied from openshift console
+    --oc-project              When defined, project to log onto right after oc-login
     --wait <seconds>          Wait so many seconds after a sucessful upgrade before exiting
 -h  --help                    Display this help message
     --verbose                 Verbose script output (set -x)
@@ -44,16 +44,10 @@ run() {
 
     local tag=$(readopt --tag)
     if [ -z "${tag}" ]; then
-      local template=$(readopt --template)
-      if [ -n "${template}" ]; then
-          tag=$(extract_version_from_template ${template})
-          check_error $tag
-      else
-          echo "ERROR: --tag or --template is required to specify the target version"
+          echo "ERROR: --tag is required to specify the target version"
           echo
           display_help
           exit 1
-      fi
     fi
 
     # Create backup dir
@@ -66,6 +60,11 @@ run() {
     oc_login=$(readopt --oc-login)
     if [ -n "${oc_login}" ]; then
         $oc_login --insecure-skip-tls-verify
+
+        oc_project=$(readopt --oc-project)
+        if [ -n "${oc_project}" ]; then
+		oc project $oc_project
+	fi
     else
         # Check whether we have a connection
         set +e
