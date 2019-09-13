@@ -1,0 +1,61 @@
+// This assembly is included in the following assemblies:
+// master.adoc
+
+[id='twitter-to-salesforce_{context}']
+= Implementing the Twitter to Salesforce sample integration
+:context: t2sf
+
+This sample integration watches Twitter for tweets that mention
+a particular Twitter user. When the integration finds such tweets,
+it filters
+them so that only those tweets that contain the text that you specify cause
+the integration to continue.
+
+For tweets that contain the specified text, the integration passes
+data related to the tweet, including the Twitter user name, to Salesforce
+and Salesforce creates a new contact.
+
+.Prerequisites
+* You need a Twitter developer account. If you do not already have one, 
+go to https://apps.twitter.com, sign in to Twitter, and click 
+*Apply for a developer account*. Obtaining the developer account is 
+quick when you provide a professional email address, 
+such as `me@redhat.com` rather than a personal address such as `you@gmail.com`.	
+
+* You need an account in a Salesforce installation that is used for development.
+This account must have Salesforce API access, which is available in a
+Salesforce Enterprise account or a Salesforce Developer account. To obtain
+a free developer account, visit https://developer.salesforce.com/signup.
+It takes less than two minutes to obtain a Salesforce account.
+
+ifeval::["{location}" == "downstream"]
+* You must be logged in to your {prodname} environment. 
+If you are not already logged in, see 
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.] 
+endif::[]
+
+To implement, deploy, and test this sample integration, the main steps are:
+
+. xref:register-with-twitter_{context}[]
+. xref:create-twitter-connection_{context}[]
+. xref:register-with-salesforce_{context}[]
+. xref:create-salesforce-connection_{context}[]
+. xref:create-twitter-sf-integration_{context}[]
+. xref:t2sf-confirm-working_{context}[]
+. xref:cleanup_{context}[]
+
+include::../../modules/tutorials/p_register-with-twitter.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_create-twitter-connection.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_register-with-sf.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_create-sf-connection.adoc[leveloffset=+1]
+
+include::as_t2sf-create-integration.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_t2sf-confirm-working.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_clean-up.adoc[leveloffset=+1]
+
+:context: tutorials

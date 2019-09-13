@@ -1,0 +1,25 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-kudu_{context}']
+= Connecting to Apache Kudu
+:context: kudu
+
+Apache Kudu is a columnar storage manager developed for the Apache Hadoop platform. 
+A {prodname} integration can connect to a Kudu data store to scan a table,
+which returns all records in the table to the integration, or to insert
+records into a table. Details are in the following topics:
+
+* xref:create-kudu-connections_{context}[]
+* xref:add-kudu-connection-get-records_{context}[]
+* xref:add-kudu-connection-add-records_{context}[]
+
+include::../../modules/connecting/p_create-kudu-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-kudu-connection-get-records.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-kudu-connection-add-records.adoc[leveloffset=+1]
+
+
+:context: connectors

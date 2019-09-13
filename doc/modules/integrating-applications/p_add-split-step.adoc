@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-split-step_{context}']
+= Adding a split step
+
+During execution of a flow, when a connection returns a collection of objects, 
+{prodname} executes subsequent steps once for the collection.
+If you want to execute subsequent steps once for each object 
+that is in the collection, add a split step. For example, a
+Google Sheets connection returns a collection of row objects.
+To execute subsequent steps once for each row, add a 
+split step after the Google Sheets connection. 
+
+Ensure that the input to a split step is always a collection. 
+If a split step gets a source document that is not a collection type, 
+the step splits the input at each space. For example, {prodname} splits 
+“Hello world!” input into two elements: “Hello” and “world!”, and 
+passes those two elements to the next step in the flow. In particular, 
+XML data is not a collection type.
+ 
+
+.Prerequisites
+* You are creating or editing a flow.
+* The flow already has all the connections that it requires.
+* In the flow visualization, the connection that obtains the source data 
+indicates that the data is a *(Collection)*. 
+
+
+.Procedure
+
+. In the flow visualization, where you want to 
+add a split step, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click *Split*. This step does not require any configuration. 
+. Click *Next*. 
+
+.Additional information 
+
+Typically, you want to add any split steps and aggregate steps 
+before you add data mapper steps. This is because 
+whether the data is a collection or individual objects affects
+the mappings. If you add a data mapper step and then add a split 
+step, you usually need to redo the mappings. Likewise, if you 
+remove a split or aggregate step, then you would need to redo
+any mappings. 

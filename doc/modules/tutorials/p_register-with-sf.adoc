@@ -1,0 +1,90 @@
+// Module included in the following assemblies:
+// Upstream:
+// tutorials/topics/as_t2sf-intro.adoc
+// tutorials/topics/as_sf2db-intro.adoc
+// connecting/topics/as_connecting-to-sf.adoc
+// Downstream:
+// connecting-fuse-online-to-applications-and-services/upstream/as_connecting-to-sf.adoc
+// fuse-online-sample-integration-tutorials/upstream/as_t2sf-intro.adoc
+// fuse-online-sample-integration-tutorials/upstream/as_sf2db-intro.adoc
+
+[id='register-with-salesforce_{context}']
+= Registering {prodname} as a Salesforce client application
+
+In an integration, to connect to Salesforce, the first thing you must do is
+register your {prodname} environment as a client application
+that can access Salesforce.
+This lets you create any number of integrations that connect
+to Salesforce. In other words, you need to register a particular
+{prodname} environment with Salesforce only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Salesforce client application. However, while each Salesforce
+connection uses the same registration, it can use different user
+credentials. 
+
+ifeval::["{context}" == "t2sf"]
+If you already registered {prodname} as a Salesforce
+client and created a Salesforce connection, skip to 
+link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Creating Twitter to Salesforce integration].
+endif::[]
+
+ifeval::["{context}" == "sf2db"]
+If you already registered {prodname} as a Salesforce
+client and created a Salesforce connection, skip to 
+link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Creating Salesforce to database integration]. 
+endif::[]
+
+ 
+.Prerequisite
+You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
+email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
+
+.Procedure
+. In {prodname}:
+.. In the left panel, click *Settings*.
+.. On the *Settings* page, near the top, to the right of the callback URL, 
+click 
+image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to 
+copy the callback URL for your {prodname} environment to the clipboard. 
+You will need this URL toward the end of this procedure. 
+.. Click the *Salesforce* entry 
+to display the *Client ID* and *Client Secret* fields.
+. In another browser tab, log in to your Salesforce account and
+follow the steps below to create a connected app.
+These instructions assume that you are
+using the Salesforce Classic user interface. To switch from the
+Salesforce Lightning Experience interface, click your profile icon and select
+*Switch to Salesforce Classic*.
+For additional information, see the Salesforce documentation for
+https://help.salesforce.com/articleView?id=connected_app_create.htm[Create a Connected App].
+.. In Salesforce, in the upper right, click *Setup*.
+.. In the left panel, select *Build* > *Create* > *Apps*.
+.. Scroll down to *Connected Apps* and click *New*.
+.. Enter the required information and then select *Enable OAuth Settings*.
+.. In the *Callback URL* field, paste your
+{prodname} URL, which you copied at the beginning of this procedure.
+For example:
+`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+.. For *OAuth Scopes*, add:
+** *Access and manage your data (api)*
+** *Allow access to your unique identifier (openid)*
+** *Perform requests on your behalf at any time (refresh_token, offline_accesss)*
+.. Select *Configure ID token* and then *Include Standard Claims*.
+.. Scroll down and click *Save*.
+.. Scroll up to see that Salesforce indicates a short wait:
+image:../../images/tutorials/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
+.. Click *Continue*.
+.. Copy the consumer key that Salesforce provides.
+. Return to your {prodname} *Settings* page and paste the
+Salesforce-provided
+consumer key into the {prodname} Salesforce *Client ID* field.
+. Return to Salesforce and copy the consumer secret that Salesforce provides.
+. Return to your {prodname} *Settings* page and paste the
+Salesforce-provided consumer secret into the {prodname} Salesforce
+*Client Secret* field.
+. Click *Save*.
+. Click the *Salesforce* entry to collapse it. 

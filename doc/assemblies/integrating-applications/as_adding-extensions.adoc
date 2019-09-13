@@ -1,0 +1,30 @@
+// This assembly is included in the following assemblies:
+// as_customizing.adoc
+
+:context: custom
+[id='adding-extensions_{context}']
+= Adding and managing extensions
+:context: add-extension
+
+Extensions let you add customizations to {prodname} so you can integrate 
+applications the way you want to. After
+you start using customizations provided in extensions, you can
+identify the integrations that use those customizations. This is helpful
+to do before you update or delete an extension. 
+
+The following topics provide details:
+
+* xref:making-extensions-available_{context}[]
+* xref:identifying-extension-use_{context}[]
+* xref:updating-extensions_{context}[]
+* xref:deleting-extensions_{context}[]
+
+include::../../modules/integrating-applications/p_making-extensions-available.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_identifying-extension-use.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_updating-extensions.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_deleting-extensions.adoc[leveloffset=+1]
+
+:context: custom

@@ -1,0 +1,26 @@
+// This module is included in the following assemblies:
+// as_putting-integrations-into-service.adoc
+
+[id='stopping-integrations_{context}']
+= Stopping integrations
+
+Each integration can have exactly one version that is running. A running
+version is in the *Running* state. At any time, you can stop
+running an integration.
+
+.Prerequisite
+The integration that you want to stop is in the *Running* state.
+
+.Procedure
+
+. In the left {prodname} panel, click *Integrations*.
+. In the list of integrations, identify the entry for the integration that you
+want to stop running. The entry shows that this integration is *Running*.
+. On the far right of this integration's entry, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab]
+and select *Stop*.
+
+.Result
+{prodname} stops running the integration. *Stopping* and then
+*Stopped* appears in the
+integration's entry in the list of integrations.

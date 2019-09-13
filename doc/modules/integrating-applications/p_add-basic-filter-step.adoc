@@ -1,0 +1,76 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-basic-filter-step_{context}']
+= Adding a basic filter step
+
+You can add a step to a flow to filter the data that the
+flow operates on. In a filter step, {prodname} inspects the
+data and continues only if the content meets
+criteria that you define. For example, in a flow that
+obtains data from Twitter, you can specify that you want to
+continue execution by operating only on tweets that contain "Red Hat".
+
+.Prerequisites
+* The flow contains all connections that it needs to. 
+* You are creating or editing a flow. 
+
+.Procedure
+
+. In the flow visualization, where you want to add a filter step, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click *Basic Filter*. 
+
+. On the *Configure Basic Filter Step* page, in
+the *Continue only if incoming data match* field:
++
+* Accept the default that all defined rules must be satisfied.
+* Or, select *ANY of the following* to indicate that only
+one rule must be satisfied.
+
+. Define the filter rule:
+
+.. In the *Property Name* field, enter or select the name of the field that contains the
+content you want the filter to evaluate. For example, suppose the data
+coming in to the step consists of tweets that mention your Twitter handle.
+You want to continue execution only when the tweet contains
+certain content. The tweet is in a field named `text` so you enter or
+select `text` as the value in the property name field.
++
+You can define the property name in the following ways:
++
+*** Start typing. The field has a typeahead feature that
+provides a list of possible completions for you in a pop-up box.
+Select the correct one from the box.
+*** Click in the field. A dropdown box appears with a list of
+available properties. Select the property of interest from the list.
+
+.. In the *Operator* field, select an operator from the dropdown box.
+The setting defaults to *Contains*. For execution to continue,
+the condition that you select in this field must evaluate to 
+true for the value that you enter in the *Keywords* field.
+
+.. In the *Keywords* field, enter a value to filter on. For example,
+suppose that you accept the default *Contains* operator and
+you want to continue integration execution only when the 
+incoming text mentions a certain product.
+You would enter the product name here.
+
+. Optionally, click *+ Add another rule* and define another rule.
++
+You can delete a rule by clicking the trash can icon in the top
+right of the rule entry.
+
+. When the filter step is complete, click *Done* to add it to the flow.
+
+.Additional resources
+
+* For details about the operators and for examples of specifying text
+to evaluate, see 
+link:https://camel.apache.org/manual/latest/simple-language.html#_operator_support[Camel Simple Language operators]. 
+Note that the basic filter step *matches* operator corresponds to the Simple Language
+*regex* operator. 
+
+* If you cannot define the filter you need in a basic filter step,
+see link:{LinkFuseOnlineIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].

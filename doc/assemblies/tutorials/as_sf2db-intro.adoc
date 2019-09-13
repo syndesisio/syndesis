@@ -1,0 +1,58 @@
+// Module included in the following assemblies:
+// master.adoc
+
+:parent-context: {context}
+[id='salesforce-to-db_{context}']
+= Implementing the Salesforce to database sample integration
+:context: sf2db
+
+This sample integration captures updates in Salesforce and then
+calls a database stored procedure, which synchronizes that database
+with the Salesforce updates.
+
+.Prerequisites
+
+* You need an account in a Salesforce installation that is used for development.
+This account must have Salesforce API access, which is available in a
+Salesforce Enterprise account or a Salesforce Developer account. To obtain
+a free developer account, visit https://developer.salesforce.com/signup.
+It takes less than two minutes to obtain a Salesforce account.
++
+If you already created the Twitter to Salesforce sample integration:
+
+** {prodname} is already registered as a Salesforce client.
+You do not need to do this again.
+** You already have a Salesforce connection, which you can reuse in
+this sample integration.
+
++
+If you did not already create the Twitter to Salesforce sample
+integration, then you must register {prodname} as a Salesforce client
+and create a Salesforce connection in order to complete the
+Salesforce to database sample integration.
+
+ifeval::["{location}" == "downstream"]
+* You must be logged in to your {prodname} environment. 
+If you are not already logged in, see 
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
+endif::[]
+
+To implement, deploy, and test this sample integration, the main steps are:
+
+. xref:register-with-salesforce_{context}[]
+. xref:create-salesforce-connection_{context}[]
+. xref:create-sf-db-integration_{context}[]
+. xref:sf2db-confirm-working_{context}[]
+. xref:cleanup_{context}[]
+
+include::../../modules/tutorials/p_register-with-sf.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_create-sf-connection.adoc[leveloffset=+1]
+
+include::as_sf2db-create-integration.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_sf2db-confirm-works.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_clean-up.adoc[leveloffset=+1]
+
+:context: tutorials

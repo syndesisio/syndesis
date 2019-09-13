@@ -1,4 +1,4 @@
-// JBoss Fuse titles
+// Red Hat Fuse titles
 :LinkCXFDevGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_cxf_development_guide/index
 :NameOfCXFDevGuide: Apache CXF Development Guide
 
@@ -32,11 +32,13 @@
 :LinkReleaseNotes: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes/index
 :NameOfReleaseNotes: Release Notes
 
-:LinkSecurityGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/security_guide/index
-:NameOfSecurityGuide: Security Guide
+:LinkReleaseNotesBOM: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes/index#StandaloneDistrib-BOMs
 
-:LinkTransactionsGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/transaction_guide/index
-:NameOfTransactionsGuide: Transaction Guide
+:LinkSecurityGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_karaf_security_guide/index
+:NameOfSecurityGuide: Apache Karaf Security Guide
+
+:LinkTransactionsGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_karaf_transaction_guide/index
+:NameOfTransactionsGuide: Apache Karaf Transaction Guide
 
 :LinkToolingTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/tooling_tutorials/index
 :NameOfToolingTutorials: Tooling Tutorials
@@ -67,29 +69,53 @@
 :LinkFuseOnlineOnOCP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/
 :NameOfFuseOnlineOnOCPGuide: Installing and Operating Fuse Online on OpenShift Container Platform
 
-
 //REVISIT Don't forget to add the guides from the tooling repo, FIS guide!
 
 // Developer Studio titles
-:DevStudioProdName: Red Hat JBoss Developer Studio
-:DevStudioProdNameShort: Developer Studio
-:DevStudioVersion: 11.1
+:DevStudioProdName: Red Hat CodeReady Studio
+:DevStudioProdNameShort: CodeReady Studio
+:DevStudioVersion: 12.11
 
-:LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_jboss_developer_studio/{DevStudioVersion}/html-single/installation_guide/
+:LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/installation_guide/
 :NameOfDevStudioInstallGuide: Installation Guide
 
-:LinkDevStudioRelNotes: https://access.redhat.com/documentation/en-us/red_hat_jboss_developer_studio/11.1/html-single/release_notes_and_known_issues/
+:LinkDevStudioRelNotes: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/release_notes_and_known_issues/
 :NameOfDevStudioRelNotes: Release Notes and Known Issues
 
 
 // Container Development Kit (CDK) titles
 :CDKProdName: Red Hat Container Development Kit
 :CDKProdNameShort: Container Development Kit
-:CDKVersion: 3.2
 
-:LinkCDKGettingStarted: https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/{CDKVersion}/html-single/getting_started_guide/
+:LinkCDKGettingStarted: https://access.redhat.com/documentation/en-us/red_hat_container_development_kit/{cdk-version}/html-single/getting_started_guide/
 :NameOfCDKGettingStarted: Getting Started Guide
 
 // Red Hat Single Sign-On titles
 :RHSSOProdName: Red Hat Single Sign-On
 :RHSSOProdNameShort: Single Sign-On
+
+// Red Hat 3scale API Management titles
+:3scaleProdName: Red Hat 3scale API Management
+:3scaleProdNameShort: 3scale
+:3scaleVersion: 2.5
+
+:Link3scaleServiceDiscovery: https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/{3scaleVersion}/html-single/service_discovery/
+:NameOf3scaleServiceDiscovery: Admin Portal Guide
+
+//Red Hat Integration titles
+:IntegrationVersion: 2019-07
+
+:LinkIntegrationRelNotes: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/release_notes/
+:NameIntegrationRelNotes: Release Notes
+
+:LinkIntegrationGetStart: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/getting_started_with_apis_in_red_hat_integration/
+:NameIntegrationGetStart: Getting Started with APIs in Red Hat Integration
+
+:LinkIntegrationDevDeploy: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/developing_and_deploying_apis_with_red_hat_integration/
+:NameIntegrationDevDeploy: Developing and Deploying APIs with Red Hat Integration
+
+:LinkIntegrationMonitor: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/monitoring_red_hat_integration/
+:NameIntegrationMonitor: Monitoring Red Hat Integration
+
+:LinkIntegrationData: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/data_virtualization/
+:NameIntegrationData: Data Integration

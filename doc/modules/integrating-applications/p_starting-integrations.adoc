@@ -1,0 +1,25 @@
+// This module is included in the following assemblies:
+// as_putting-integrations-into-service.adoc
+
+[id='starting-integrations_{context}']
+= Starting integrations
+
+The first time that you start an integration, the process is
+referred to as publishing the integration because {prodname} has to build
+the integration runtime before it can run the integration. At any time,
+you can stop running an integration and then start it again.
+
+.Prerequisite
+The integration that you want to start is in the *Stopped* state.
+
+.Procedure
+
+. In the left navigation panel, click *Integrations*. 
+. In the list of integrations, on the right of the entry for the
+integration that you want to start, click  
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab].
+. Select *Start*. 
+
+.Result
+{prodname} displays *Starting* as the status of that integration version, 
+and then *Running* when the integration is running again. 

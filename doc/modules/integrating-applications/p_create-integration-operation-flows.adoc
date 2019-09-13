@@ -1,0 +1,130 @@
+// Module included in the following assemblies:
+// as_trigger-integrations-with-api-calls.adoc
+
+[id='create-integration-operation-flows_{context}']
+= Creating the operation flows for an API provider integration
+
+The OpenAPI document that defines your REST API service defines
+the operations that the service can perform. After you create an API
+provider integration, you can edit the flow for each operation. 
+
+Each operation has exactly one flow. 
+In an operation flow, you can add connections
+to other applications and services, as well as steps that operate on data
+between connections. 
+
+As you add to operation flows, you might find that you need to update
+the OpenAPI document that the API provider integration is based on. To do this, 
+click *View/Edit API Definition* in the upper right of a page in which
+you are editing your API provider integration. This displays your document
+in the Apicurito editor. In your OpenAPI 
+definition, as long as each operation has a unique `operationId` property, 
+you can save your updates in Apicurito and {prodname} can synchronize the
+API provider integration's flow definitions to have your updates. 
+
+.Prerequisites
+
+* You created an API provider integration, gave it a name, and saved it.
+* You created a connection to each application or service that you want
+an operation flow to connect to. For details, see the
+link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[information about creating connections].
+* {prodname} is displaying the list of operations that the API defines. 
+
+.Procedure
+
+. In the *Operations* list page, for the operation
+whose flow you want to edit, click *Create flow*. 
+
+. For each connection that you want to add to this flow:
+.. In the flow visualization, click the plus sign to add a connection
+at that location. 
+.. Click the connection that you want to add. 
+.. Select the action that you want this connection to perform.  
+.. Configure the action by entering data in the labeled fields. 
+.. Click *Next*. 
+
++
+Add all desired connections to the flow
+before you continue. 
+
+. In this operation flow, to process data between connections:
+.. In the flow visualization, click the
+plus sign where you want to add a step. 
+.. Click the step that you want to add. 
+.. Configure the step by entering data in the labeled fields. 
+.. Click *Next*. 
+
++
+For help, see
+link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[Adding steps between connections].
+
++
+If you want to add another step that processes
+data between connections, repeat this subset of instructions. 
+
+. Map data to fields in the next connection: 
+.. In the flow visualization, check for data type mismatch 
+image:../../images/integrating-applications/DataTypeMismatchWarning.png[data mismatch] icons, which
+indicate that the connection cannot process the incoming data. You need
+to add a data mapper step here. 
+.. For each data mismatch icon in the flow visualization:
+... Click the plus sign that is just before that step. 
+... Click *Data Mapper*.
+... Define the needed mappings. For help, see
+link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields in the next connection].
+... Click *Done* to add the data mapper step to the flow. 
+
+. In the flow visualization, on the 
+*Provided API Return Path* step, click *Configure*.  
++
+Every API provider integration finishes each operation flow by 
+sending a response to the REST API caller that triggered execution of the 
+operation flow. The response contains the return code that is 
+configured here. 
++
+In this release, whenever an API call triggers 
+execution of this flow, the return code is the code that
+is specified in this step. 
+Error handling is expected to be supported in a future release. 
++
+Accept the flow's default return code, *501 Not implemented*, or specify another 
+return code as follows:
+
+.. Click in the *Return Code* input field, which displays a list of 
+possible return codes. 
+.. Scroll to the return code that you want and click it. 
+.. Click *Next*.
+
+. When this flow has all needed 
+connections and steps and there are no data mismatch icons, or when 
+you no longer want to edit the flow for now, do one of the following:
+* *Publish* -- To start running the integration, in the upper right, click *Publish*.
+This builds the integration, deploys the REST API service to 
+OpenShift, and makes the integration available to be executed. 
+You can publish the integration each time that you
+complete the creation of an operation's flow or each
+time that you edit an operation's flow.
+* *Save* -- To display the list of operations, in the upper right, 
+click *Save*.  
+* *Operation* -- To switch to editing another operation's flow, in the breadcrumbs at 
+the top of the page, display the *Operation* dropdown and click the
+operation whose flow you want to edit. {prodname} saves the current state
+of the flow you have been editing. 
+
+Repeat this procedure to edit another operation's 
+flow.
+
+.Next steps
+When an API provider integration 
+is running in {prodname} on OpenShift Online or on OpenShift Dedicated, 
+you can use the `curl` utility to confirm that it is
+working as expected. For examples of doing this, see 
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[the description of the API provider quickstart].
+
+When an API provider integration is running in {prodname} on 
+OpenShift Container Platform, an administrator might have set the 
+`OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment variable, which makes
+the integration’s API discoverable in Red Hat 3scale by default.  When this environment
+variable is set, {prodname} does not provide an external URL for
+an API provider integration unless 3scale is explicitly disabled for a particular integration.
+To test the integration, open up 3scale dashboard.

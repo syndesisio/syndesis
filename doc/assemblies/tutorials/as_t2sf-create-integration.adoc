@@ -1,0 +1,38 @@
+// This assembly is included in the following assemblies:
+// as_t2sf-intro.adoc
+ifdef::context[:parent-context: {context}]
+
+[id='create-twitter-sf-integration_{context}']
+= Creating and deploying the Twitter to Salesforce sample integration
+
+:context: t2sf-create
+To create and deploy an integration that uses the
+Twitter and Salesforce connections that 
+you created, the main steps are:
+
+* xref:t2sf-choose-start-connection_{context}[]
+* xref:t2sf-choose-finish-connection_{context}[]
+* xref:t2sf-add-basic-filter-step_{context}[]
+* xref:t2sf-add-data-mapping-step_{context}[]
+* xref:t2sf-name-and-publish_{context}[]
+
+.Prerequisites
+* You registered your {prodname} environment as a Twitter client and
+created a {prodname} Twitter connection. 
+* You registered your {prodname} environment as a Salesforce client and
+created a {prodname} Salesforce connection. 
+* {prodname} is open and you are logged in. 
+
+include::../../modules/tutorials/p_t2sf-choose-start.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_t2sf-choose-finish.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_t2sf-add-filter-step.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_t2sf-add-mapping-step.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_t2sf-name-and-publish.adoc[leveloffset=+1]
+
+
+ifdef::parent-context[:context: {parent-context}]
+ifndef::parent-context[:!context:]

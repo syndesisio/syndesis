@@ -1,0 +1,55 @@
+// This module is included in these assemblies:
+// as_how-to-process-a-collection-in-a-flow.adoc
+// as_mapping-data.adoc
+
+[id='using-data-mapper-to-process-collections_{context}']
+= Using the data mapper to process collections
+
+In a flow, when a step outputs a collection and when a
+subsequent connection that is in the flow expects a collection as the input, you can 
+use the data mapper to specify how you want the flow to 
+process the collection.  
+
+When a step outputs a collection, the flow visualization 
+displays *Collection* in the details about the step. For example: 
+
+image:../../images/integrating-applications/data-type-collection.png[Data Type: SQL Result (Collection)]
+
+Add a data mapper step after the step that provides the collection and 
+before the step that needs the mappings. Exactly where in the flow this 
+data mapper step needs to be depends on the other steps in the flow. 
+The following image shows mappings from source collection fields 
+to target collection fields: 
+
+image:../../images/integrating-applications/map-collections.png[mapping collection]
+
+In the source and target panels, the data mapper displays 
+image:../../images/integrating-applications/collection-icon.png[this icon] to indicate
+a collection. When a source collection or a target 
+collection contain only primitive types, the data mapper does not 
+display collection fields because there is no need to. You can map 
+from/to the collection itself. 
+
+When a collection contains more 
+than one kind of primitive type or when it contains at least one complex 
+type then the data mapper displays the collection’s child fields. 
+You can map from/to each field.
+However, you cannot map from or to a nested collection. 
+
+When {prodname} executes the flow, it iterates over the source 
+collection elements to populate the target collection elements.
+If you map one or more source collection fields to a target 
+collection or to target collection 
+fields, the target collection elements contain values for only 
+the mapped fields. 
+
+If you map a source collection or a field in a source collection 
+to a target field that is not in a collection, then when {prodname} 
+executes the flow, it assigns the value from only the last element 
+in the source collection. Any other elements in the collection are 
+ignored in that mapping step. However, any subsequent mapping steps 
+can access all elements in the source collection. 
+
+When a connection returns a collection that is defined in a 
+JSON or Java document, the data mapper can usually process 
+the source document as a collection.  

@@ -1,0 +1,21 @@
+// This assembly is included in the following assemblies:
+// connecting/master.adoc
+
+[id='connecting-to-amazon-sns_{context}']
+= Connecting to Amazon Simple Notification Service (SNS)
+:context: sns
+
+An integration can send a message to an AWS Simple Notification Service 
+topic. To do this, create an AWS SNS
+connection and then add that connection to an integration flow or
+as the finish connection for a simple integration. 
+For details, see:
+
+* xref:creating-amazon-sns-connections_{context}[]
+* xref:adding-amazon-sns-connection-send_{context}[]
+
+include::../../modules/connecting/p_creating-amazon-sns-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-amazon-sns-connection-send.adoc[leveloffset=+1]
+
+:context: aws

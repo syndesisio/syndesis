@@ -1,0 +1,32 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-twitter_{context}']
+= Connecting to Twitter
+:context: twitter
+
+To connect to Twitter in an integration, the main steps are: 
+
+* xref:register-with-twitter_{context}[]
+* xref:create-twitter-connection_{context}[]
+* xref:adding-twitter-connection-start_{context}[]
+* xref:adding-twitter-connection-finish-middle_{context}[]
+
+You need a Twitter developer account to authorize access from your
+{prodname} environment to Twitter. If you do not already have a Twitter
+developer account, 
+go to https://apps.twitter.com, sign in to Twitter, and click 
+*Apply for a developer account*. Obtaining the developer account is 
+quick when you provide a professional email address, 
+such as `me@redhat.com` rather than a personal address such as `you@gmail.com`.	
+
+include::../../modules/tutorials/p_register-with-twitter.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_create-twitter-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-twitter-connection-start.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-twitter-connection-finish-middle.adoc[leveloffset=+1]
+
+:context: connectors

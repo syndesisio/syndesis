@@ -1,0 +1,63 @@
+// Module included in the following assemblies:
+// master.adoc
+
+:parent-context: {context}
+[id='amq-to-rest-api_{context}']
+= Implementing the AMQ to REST API sample integration
+
+:context: amq2api
+This sample integration connects to a Red Hat AMQ broker to obtain item
+delivery records for a hypothetical enterprise. The integration then executes
+a custom step that operates on the records to identify any
+items that were damaged when they were received. After a simple data mapping,
+the integration connects to
+a REST API to obtain contact information for vendors of
+damaged items.
+
+The other sample integrations use connectors and data operations that are built
+into {prodname}. This integration also does that, but in addition,
+it provides instructions for customizing
+and extending {prodname} by leading you through the procedures for:
+
+* Adding a custom data operation by uploading an extension.
+* Adding a custom REST API client connector by uploading an OpenAPI (Swagger) document.
+
+{prodname} provides the extension file and the OpenAPI document.
+
+ifeval::["{location}" == "downstream"]
+.Prerequisites
+
+* You must be logged in to {prodname}.
+If you are not already logged in, see 
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.] 
+endif::[]
+
+To implement the AMQ to REST API sample integration, the main steps are:
+
+. xref:amq2api-create-amq-connection_{context}[]
+. xref:amq2api-create-custom-step_{context}[]
+. xref:amq2api-create-rest-api-connector_{context}[]
+. xref:amq2api-upload-todo-app-icon_{context}[]
+. xref:amq2api-create-rest-api-connection_{context}[]
+. xref:amq2api-create-integration_{context}[]
+. xref:amq2api-confirm-works_{context}[]
+. xref:cleanup_{context}[]
+
+
+include::../../modules/tutorials/p_amq2api-create-amq-connection.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_amq2api-create-custom-step.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_amq2api-create-rest-api-connector.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_amq2api-upload-todo-app-icon.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_amq2api-create-rest-api-connection.adoc[leveloffset=+1]
+
+include::as_amq2api-create-integration.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_amq2api-confirm-works.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_clean-up.adoc[leveloffset=+1]
+
+:context: {parent-context}

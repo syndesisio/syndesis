@@ -1,0 +1,23 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='identify-where-data-mapping-is-needed_{context}']
+= Identifying where data mapping is needed
+
+{prodname} displays warning icons to indicate where a flow 
+requires data mapping. 
+
+.Prerequisites
+* You are creating or editing a flow.
+* The flow contains all connections that it requires. 
+
+.Procedure
+
+. In the flow visualization, look for any
+image:../../images/tutorials/WarningIcon.png[Warning] icons.
+
+. Click the icon to see the *Data Type Mismatch* notification. 
+
+. In the message, click *Add a data mapping step*, which displays
+the data mapper. 
+ 

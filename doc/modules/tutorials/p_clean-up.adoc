@@ -1,0 +1,27 @@
+// Module included in the following assemblies:
+// as_t2sf-intro.adoc
+// as_sf2db-intro.adoc
+// as_amq2api-intro.adoc
+
+[id='cleanup_{context}']
+= Cleaning up your integration
+
+When you are done working with a sample integration, you should stop it and
+delete it so that you can use the resources for another integration. 
+
+.Prerequisites
+* You are finished working with a sample integration that you published.
+
+.Procedure
+. In {prodname}, in the left panel, click *Integrations*.
+. In the main panel, identify the entry for the sample integration that 
+you want to stop.
+. In that entry, to the right, click
+image:../..//images/tutorials/ThreeVerticalDotsKebab.png[Kebab Menu] and then 
+click *Stop*. 
+. Click *Stop* to confirm that you want to stop running the integration.
+
+. In the entry for the integration that you just stopped, to the right, click
+image:../..//images/tutorials//ThreeVerticalDotsKebab.png[Kebab Menu] and then 
+click *Delete*. 
+. Click *Delete* to confirm that you want to delete the integration.

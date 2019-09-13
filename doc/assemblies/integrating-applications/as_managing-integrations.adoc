@@ -1,0 +1,51 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='managing-integrations_{context}']
+= Managing integrations
+:context: manage
+
+A common set up is to have
+a {prodname} development environment, a {prodname} test environment, 
+and a {prodname} deployment environment. 
+To facilitate this, {prodname} provides the ability to export an 
+integration from one {prodname} environment and then import that integration
+into another {prodname} environment. 
+The information and procedures for managing integrations are the same
+in each kind of {prodname} environment, unless specifically noted. 
+
+The following topics provide information to help you manage your
+integrations:
+
+* xref:about-integration-lifecycle-handling_{context}[]
+* xref:putting-integrations-into-service_{context}[]
+* xref:add-log-step_{context}[]
+* xref:monitoring-integrations_{context}[]
+* xref:testing-integrations_{context}[]
+* xref:troubleshooting-integration-execution_{context}[]
+* xref:updating-integrations_{context}[]
+* xref:deleting-integrations_{context}[]
+* xref:copying-integrations-to-other-environments_{context}[]
+
+include::../../modules/integrating-applications/c_about-integration-lifecycle-handling.adoc[leveloffset=+1]
+
+include::as_putting-integrations-into-service.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-log-step.adoc[leveloffset=+1]
+
+include::as_monitoring-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_testing-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_troubleshooting-integration-execution.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_updating-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_deleting-integrations.adoc[leveloffset=+1]
+
+include::as_copying-integrations-to-other-environments.adoc[leveloffset=+1]
+
+
+:context: ug

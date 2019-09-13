@@ -1,0 +1,183 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='adding-conditional-execution-flows_{context}']
+= Adding conditional execution flows
+
+During integration development, you can add a *Conditional Flows* step to 
+a flow and define one or more conditions. For each condition, you add steps 
+to a conditional flow that is associated with only that condition. 
+During integration execution, for each message that the previous 
+integration step passes to a *Conditional Flows* step, the *Conditional Flows* 
+step evaluates the message content against the specified conditions in 
+the order in which you define them in the {prodname} page for adding a 
+*Conditional Flows* step. 
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Adding conditional execution flows is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+
+For the first expression that evaluates to true, the integration executes 
+the conditional flow that is associated with that expression. 
+If no conditions evaluate to true, and there is a default conditional flow, 
+the integration executes that flow. If no conditions evaluate to true 
+and there is no default conditional flow, the integration does not 
+execute a conditional flow. 
+
+After executing a conditional flow, or after no expressions evaluate 
+to true and there is no default conditional flow, the integration 
+executes the next step in the primary flow.  
+
+For example, consider an integration that connects to a SQL database to 
+obtain employee paid-time-off (PTO) data. The returned data indicates:
+
+* Some employees might lose PTO if they do not use it by a certain date.
+* Other employees already used more PTO than they earned.
+* The rest of the employees have PTO that they can use without time restrictions. 
+
+In a *Conditional Flows* step, this example integration can define two 
+conditions as well as a conditional execution flow for each condition:
+
+* When PTO is greater than some number, it indicates that some PTO 
+might be lost if not used by a certain date. The integration executes 
+a flow that sends email to affected employees. The email contains the 
+amount of PTO that must be used and the date by which it must
+be used. 
+
+* When PTO is a negative number, it indicates that some PTO has been 
+used but not earned. The integration executes a flow that sends 
+an email to affected employees. The email contains the amount of PTO that the
+employee has overdrawn and specifies the date on which the employee begins
+to accrue PTO again. 
+
+In addition, this integration can have a default conditional flow that 
+the integration executes for input that does not satisfy either of these 
+conditions. This example integration executes the default conditional flow for 
+employees whose PTO is neither a negative number nor above some specified number. 
+This flow sends an email to those employees with a statement of the 
+amount of PTO that the employee has. 
+
+.Prerequisites
+
+* You are creating or editing a primary flow. If this is a simple integration, 
+the start and finish connections have been added. You cannot add a 
+*Conditional Flows* step to a conditional flow. 
+* Input to a *Conditional Flows* step
+must be an individual message. In the integration visualization, 
+if the previous step's *Data Type* shows *(Collection)*, add a *Split* step. 
+* You are familiar with the fields that will be in the messages that the 
+integration passes to the *Conditional Flows* step you are about to add.  
+* You are familiar with the 
+http://camel.apache.org/simple.html[Camel Simple Expression] language
+or someone has provided you with expressions for the 
+conditions that you want to evaluate. 
+* You created each connection that you want to add to a conditional flow. 
+
+.Procedure
+
+. In the integration visualization, where you want to add a *Conditional Flows* step,
+click image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+. Click *Conditional Flows*.
+. In the *Configure Conditional Flows* page, define one or more conditions: 
+.. In the initial *When* field, enter a Camel Simple Expression. For example, 
+the following expression evaluates to true when the body of the message
+contains a `pto` field that is greater than `160`:
++
+`${body.pto} > 160`
++
+When this expression evaluates to true, the integration executes the 
+conditional flow that you create and associate with this condition. 
++
+[NOTE]
+====
+In an expression, an additional property specification is required when 
+the conditional flows step is in one of the following kinds of flows: 
+
+* An API provider integration operation flow
+* A simple integration that starts with a webhook connection
+* A simple integration that starts with a custom REST API connection
+
+In these flows, {prodname} wraps the actual message content inside a `body` 
+property. This means that the input to a conditional flows step contains a 
+`body` property that contains another `body` property that contains 
+the actual message content. Consequently, in an expression that is in a 
+conditonal flows step that is in one of these kinds of flows, 
+you must specify two instances of `body`. For example, suppose you want 
+to evaluate content that is in the `pto` field of the input message. 
+Specify the expression like this: 
+
+----
+${body.body.pto} > 160
+----
+
+====
+.. Optionally, click *Add another condition*, and repeat the previous 
+step. Do this for each additional condition that you want to define.
+
+.. Optionally, change the order in which the integration evaluates
+the defined conditions by clicking the up or down arrow to the right of a 
+condition field. 
+ 
+.. Optionally, click *Use a default flow*.
++
+If none of the specified conditions evaluate to true, the integration 
+executes the conditional flow that you create as the default conditional 
+flow. 
+
+.. Click *Apply* to display a list of the conditions that you defined. 
+.. Click *Done* to display the primary flow with a new *Flows* navigation 
+control at the top. 
+
+. Define a flow for each condition: 
+.. In the integration visualization, for the condition whose flow
+you want to define, click *Open Flow*.
++
+{prodname} displays that condition near the top of the page.
+The conditional flow visualization shows the *Flow Start* and 
+*Flow End* steps that all conditional flows have. 
+
+.. In the flow visualization, click the 
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign']
+where you want to add a step to this conditional flow. 
+
+.. Click the step that you want to add. You can add any connection or 
+step that you can add to a primary flow.  
++
+The output from the *Flow Start* step is always the same as the 
+output from the primary flow step that is before this *Conditional Flows* step. 
+For example, if you add a filter step or a data mapper step to this 
+conditional flow, the available fields are the same fields 
+that would be available in the primary flow. 
+
+.. Configure the step as needed. 
+
+.. Repeat the previous three instructions for each step that you 
+want to add to this conditional flow. 
+
+.. At the top of the page, in the *Flow* field, 
+click the down carat and click *Back to primary flow*, which saves 
+this conditional flow and displays the primary flow. 
+
+.. For each conditional flow that you want to create, go back to 
+the beginning of step 4 and repeat the instructions under step 4. 
+
+.Results
+The primary flow has a conditional flow for each condition that you 
+defined in the *Conditional Flows* step. If you selected the 
+*Use a default flow* option, the primary flow also has a default 
+conditional flow. During execution, the *Conditional Flows* step 
+executes the conditional flow that is associated with the 
+condition that evaluates to true or it evaluates the default 
+conditional flow, if there is one, and if no condition evaluates 
+to true. After executing a conditional flow, or after no condition 
+evaluates to true, the integration continues execution with the 
+step that follows the *Conditional Flows* step. 

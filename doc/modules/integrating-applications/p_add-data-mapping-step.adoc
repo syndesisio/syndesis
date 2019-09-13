@@ -1,0 +1,29 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-data-mapping-step_{context}']
+= Adding a data mapper step
+
+Almost all integrations require data mapping. A data mapper step 
+maps data fields from the previous
+connection(s) and any other steps to data fields that the 
+next connection in the flow 
+can operate on. For example,
+suppose the integration data contains a `Name` field and the next
+connection in the flow has a `CustomerName` field. You need to
+map the source `Name` field to the target `CustomerName` field.
+
+.Prerequisite
+
+You are creating or editing a flow. 
+
+.Procedure
+
+. In the flow visualization, where you want to add a data mapper step,
+click the image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+. Click *Data Mapper* to display source
+and target fields in the data mapper canvas. 
+
+.Next step
+
+See  link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping data fields to the next connection in the flow].

@@ -1,0 +1,32 @@
+// Module included in the following assemblies:
+// as_amq2api-create-integration.adoc
+
+[id='amq2api-add-mapping-step_{context}']
+= Adding a data mapping step
+
+To continue creating the AMQ to REST API sample integration, you need to add a 
+data mapping step. This step correlates the `task` field in the
+output from the damage reporter step to the `task` field in the
+database that the REST API accesses. 
+
+.Prerequisite
+* You added the Damage Reporter step to the integration. 
+
+.Procedure
+. In {prodname}, in the integration visualization, 
+click the plus sign that is between the Damage Reporter
+step and the finish connection.
+. Click *Data Mapper*. In the data mapper,
+the *Source* panel on the left displays the fields in the
+output from the damage reporter step. The
+*Target* panel on the right displays the fields in the database that
+the API accesses.
+. In the *Source* panel, click the `task` field.
+. In the *Target* panel, expand the `body` field and click `task`.
+. In the upper right, click *Done*.
+
+.Result
+The integration is complete and it is ready to be published. 
+On the left, in the integration visualization panel, you might see a
+image:../..//images/tutorials/WarningIcon.png[warning] Data Type Mismatch 
+warning icon. You can ignore it. 

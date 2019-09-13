@@ -1,0 +1,45 @@
+// This module is included in the following assemblies:
+// as_putting-integrations-into-service.adoc
+
+[id='publishing-integrations_{context}']
+= About publishing integrations
+
+To run a version of an integration for the first time, you publish it. 
+Publishing an integration builds and deploys the integration runtime. 
+The integration starts running. After publishing an integration, you can 
+stop it and restart it. Exactly one version of an integration
+can be running at one time. 
+
+.Alternatives for publishing
+
+To run an integration for the first time, publish it by doing
+one of the following:
+
+* At the end of the procedure in which you create or edit the integration,
+in the upper right, click *Publish*.
+
+* Publish the draft version of an integration:
++
+. In the left {prodname} panel, click *Integrations*.
+. In the list of integrations, 
+to the right of the draft entry, click 
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Publish*.
+
+.About the publication progress
+{prodname} displays the progress of the publication process, which has
+several stages:
+
+. *Assembling* creates pod resources needed to build the integration.
+. *Building* gets the integration ready to deploy.
+. *Deploying* waits for deployment of the pod that will run the integration.
+. *Starting* waits for the pod to start running the integration. 
+. *Deployed* indicates that the integration is running.
+
+During start-up, you can click *View Logs* to display OpenShift logs that
+provide start-up information. 
+
+.Integration status after publication
+When publishing the integration is complete, the *Running* status appears next to
+the integration name. The pod is running the integration. 
+ 

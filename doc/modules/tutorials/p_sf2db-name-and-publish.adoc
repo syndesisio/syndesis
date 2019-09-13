@@ -1,0 +1,59 @@
+// Module included in the following assemblies:
+// as_sf2db-create-integration.adoc
+
+[id='sf2db-name-and-publish_{context}']
+= Giving the integration a name and deploying it
+
+When the Salesforce to database sample integration is complete then you
+can deploy it and see how it works. 
+
+.Prerequisites
+* The integration's start connection is Salesforce. 
+* The integration's finish connection is to the sample database that
+is provided with {prodname}.
+* You just added a data mapping step to the integration. 
+
+.Procedure
+
+. In {prodname}, in the upper right, click *Publish* to give it a name.
+. In the *Name* field, enter a name for the
+integration. For example, `*Salesforce to Database Sample Integration*`.
+. Click *Save and publish*.
+
++
+{prodname} starts to deploy the integration and then displays the list of 
+integrations in this environment. The entry for your Salesforce to 
+database integration displays a progress
+indicator that shows the publishing stages. 
+{prodname} is generating the runtime for the integration and
+will start it when the runtime is ready. This takes a few minutes.
++
+A {prodname} account is limited to a specific number of 
+integrations that can be running at one time. For details, 
+see the pricing plan. If you are already running the maximum
+number of integrations, then you must stop an integration
+before you can start running another one. 
++
+If you are using a {prodname} evaluation 
+account, then only one integration at a time can be running. 
+If you already created one of the other sample integrations and that
+integration is running then this integration is automatically in the
+*Stopped* state. You must stop the running integration and
+then you can then publish this integration.  
+
+. If you are already running the maximum number of integrations, follow
+these steps to stop an integration:
+
+.. In the left panel, click *Integrations*.
+.. In the entry for the integration that you want to stop, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[title="the three vertical dots"]
+on the far right. 
+.. In the popup, click *Stop*. 
+
+. After stopping an integration, start another integration as follows:
+
+.. In the left panel, click *Integrations*.
+.. In the entry for the integration that you want to start, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[title="the three vertical dots"]
+on the far right. 
+.. In the popup, click *Publish*. 

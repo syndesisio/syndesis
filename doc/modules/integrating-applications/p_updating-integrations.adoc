@@ -1,0 +1,40 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='updating-integrations_{context}']
+= Updating integrations
+
+After you create an integration, you might need to update it to
+add, edit or remove a step.
+
+.Prerequisite
+In your {prodname} environment, there is a version of the integration
+that you want to update.
+
+.Procedure
+
+. In the left {prodname} panel, click *Integrations*.
+. In the list of integrations, click *View* for the integration that
+you want to update.
+. On the integration's summary page, in the upper right corner, click
+*Edit Integration*.
++
+If this is a simple integration, {prodname} displays the
+integration's flow.  If this is an API provider integration, {prodname}
+displays the operations list. To update the flow for a particular
+operation, click  *Create flow* or *Edit flow* on the right of that 
+operation to display its flow. 
+
+. Update the flow as needed:
++
+* To add a step, in the flow visualization, click the plus
+sign that is where you want to add the step.
+Then click the card that represents the step that you want to add.
+
+* To delete a step, in the flow visualization, click
+image:../../images/integrating-applications/TrashIcon.png[title='Delete']
+on the step that you want to delete.
+
+* To change the configuration of a step, in the flow visualization,
+click *Configure* on the step that you want to update. In the
+configuration page, update the parameter settings as needed.

@@ -1,0 +1,65 @@
+// This module is included in the following assemblies:
+// as_connecting-to-google-calendar.adoc
+
+[id='add-google-calendar-connection-to-get-one-event_{context}']
+= Obtaining a particular event from a Google Calendar
+
+In an integration, you can obtain a particular Google Calendar event
+in the middle of a flow. Obtaining a particular event is 
+useful, for example, when you want to:
+
+* Update the event in a subsequent Google Calendar connection.
+* Announce the event by using a subsequent Twitter connection. 
+
+To obtain one event, add a Google Calendar connection to the middle of 
+a flow.
+
+[NOTE]
+====
+In this release, while obtaining a specific event in a simple integration's 
+finish connection is supported, it is not particularly useful. This is 
+expected to change in a future release.
+====
+
+.Prerequisites
+* You created a Google Calendar connection that is 
+authorized to access the Google Calendar that has the event that
+that you want to get.
+
+* You are creating or editing a flow and {prodname} is prompting you 
+to add to the integration. 
+
+.Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. 
+. Click a Google Calendar connection that is authorized to access
+the calendar that you want to connect to.   
+. On the *Choose an action* page, select *Get a Specific Event*. 
+. Specify the name of the calendar that has the event that you want.
+. Specify the ID of the event to get. To obtain the event ID, do one of the 
+following:
++
+* Map it from a previous Google Calendar connection. 
+* Manually obtain it from the calendar as follows: 
++
+.. In a browser, display the calendar that contains the event you want to get. 
+.. Append `?gsessionid=OK&eventdeb=1` to the URL and redisplay the calendar.
+.. In the calendar, click the event that you want to get. 
+.. In the event popup, click 
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Options] and select 
+*Troubleshooting info*. 
+.. In the popup that Google Calendar displays, copy the string that
+follows *`eid=`*. For example, an event ID looks something like this: 
+`p1pva2a4t504gbsha12di9ch6k_20181107T150000Z*`.
+
+. Click *Next* to add the connection to the flow. 
+
+.Result
+The connection appears in the flow 
+where you added it. 
+
+.Next step
+If you want to map any values from a previous step to the 
+fields in this connection, add a data mapper step. First, add 
+all needed connections to the flow. Then add a data mapper 
+step immediately before this connection. 

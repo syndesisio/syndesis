@@ -1,0 +1,46 @@
+// This module is included in the following assemblies:
+// as_connecting-to-servicenow.adoc
+
+[id='add-servicenow-connection-finish_{context}']
+= Copying records to ServiceNow during or to finish an integration
+
+You can copy records to ServiceNow in the middle of a flow 
+or to finish a simple integration. 
+To do this, add a ServiceNow connection to the middle of a flow 
+or as a simple integration's finish connection. 
+
+.Prerequisites
+
+* You created a ServiceNow connection. 
+* You are creating or editing a flow and {prodname} is prompting you
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
+* You know the name of the ServiceNow import set that you want to 
+add records to. Your ServiceNow administrator can
+help you identify the appropriate import set. If the import set 
+does not exist, see 
+link:{LinkFuseOnlineConnectorGuide}#create-servicenow-import-set_servicenow[Creating an import set in ServiceNow].
+* The ServiceNow import set is configured to handle the addition 
+of records.
+
+.Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
+. Click the ServiceNow connection that you
+want to add to the integration. 
+
+. Select the *Add Record* action. 
+. Click in the *Import Set* field and select the import set that
+you want to add records to. 
+. Click *Next*. 
+
+.Results
+{prodname} adds the connection to the flow. 
+
+Typically, a data mapper step is needed before this connection.
+In the integration visualization, 
+{prodname} displays 
+image:../../images/tutorials/WarningIcon.png[Data Type Mismatch] on the
+connection. In most integrations, you need to map a source field 
+to the target field used as the correlation field in the 
+ServiceNow table. 

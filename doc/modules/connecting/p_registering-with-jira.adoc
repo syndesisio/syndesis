@@ -1,0 +1,230 @@
+// This module is included in the following assemblies:
+// as_connecting-to_jira.adoc
+
+[id='registering-with-jira_{context}']
+= Registering {prodname} with a Jira server that uses OAuth
+
+An integration can connect to a Jira server that uses
+the OAuth protocol to authenticate access. To enable this, 
+register your {prodname} environment as a Jira client application. 
+Jira client applications are also referred to as Jira consumers. 
+In other words, your {prodname} environment is a Jira consumer. 
+
+[NOTE]
+Registration is not required when a Jira server uses only basic authentication.
+
+Follow the procedure here to obtain the Jira OAuth credentials that 
+you need to create a {prodname} connection to Jira. For 
+more details about registering Jira consumers, including a tutorial
+that takes you through the steps with a sample server, see the 
+https://developer.atlassian.com/cloud/jira/platform/jira-rest-api-oauth-authentication/#overview[Jira documentation about OAuth for REST APIs]
+
+After you register {prodname} with a Jira server, you use {prodname} to create a 
+connection to that Jira server. Any number of integrations can use 
+the same Jira connection. However, if you want to create another Jira connection, 
+you must obtain another set of OAuth credentials by repeating the 
+registration procedure provided here. 
+
+.Overview of the main steps
+The main steps in the registration procedure are:  
+
+* Obtain the Atlassian command line application that enables you to 
+obtain OAuth credentials. 
+
+* Run the downloaded application to create a `config.properties` file. 
+
+* Create a public/private key pair, which {prodname} uses to access a Jira server. 
+
+* Edit the `config.properties` file to update some of its values. 
+
+* Configure your Jira server to recognize your {prodname} environment 
+as a consumer application. 
+
+* Obtain a Jira access token that {prodname} needs to access data on your Jira server. 
+
+Each of these steps has several substeps and the procedure below 
+provides the details. 
+
+.Prerequisites
+
+* Jira server administration permissions. 
+* Familiarity with command line interfaces. 
+
+.Procedure
+
+. Obtain the Atlassian command line application that enables 
+you to obtain OAuth credentials: 
+.. link:https://bitbucket.org/atlassianlabs/atlassian-oauth-examples/src/master/[Go to the `atlassian-oauth-examples` page].
+.. In the left panel, at the bottom, click *Downloads*. 
+.. On the *Downloads* page, click *Download repository*. 
+.. Extract the file into a directory that you choose.
+
+. Run the downloaded application to create a `config.properties` file 
+for OAuth credentials: 
+.. In a terminal, navigate to the directory that contains the extracted content.
+.. Change to the `java` directory and build the client:
++
+----
+cd atlassianlabs-atlassian-oauth-examples-dd0264cad043/java
+mvn clean compile assembly:single
+----
+.. Change to the `target` directory and generate the `config.properties` file: 
++
+----
+cd target
+java -jar OAuthTutorialClient-1.0.jar requestToken
+----
+
++
+You can ignore the connection exception. In the `target` directory,
+there is now a `config.properties` file that contains some 
+temporary keys. 
+
+. Generate a public/private key pair that {prodname} needs 
+for access to a Jira server. While you can run these commands anywhere, 
+the first instruction directs you to a particular directory for convenience: 
+.. Navigate to the directory that contains the downloaded application. 
+.. Generate a private key: 
++
+----
+openssl genrsa -out jira_privatekey.pem 1024
+----
+.. Obtain a public key: 
++
+----
+openssl req -newkey rsa:1024 -x509 -key jira_privatekey.pem -out jira_publickey.cer -days 365
+----
++
+This command prompts you to enter information about your {prodname} 
+environment. Alternatively, to avoid responding to prompts, add the `-subj` 
+option to the command. For example, at the end of the command line above, 
+add something like this: 
++
+----
+-subj "/C=US/ST=New York/L=New York/O=MyCompany Ltd./OU=IT/CN=mysubdomain.mydomain.com"
+----
+.. Export the keys: 
++
+----
+openssl pkcs8 -topk8 -nocrypt -in jira_privatekey.pem -out jira_privatekey.pcks8
+openssl x509 -pubkey -noout -in jira_publickey.cer  > jira_publickey.pem
+----
++
+You now have four files: 
++
+`jira_privatekey.pcks8` +
+`jira_privatekey.pem` +  
+`jira_publickey.cer` +
+`jira_publickey.pem`
+
+.. Obtain the private key, without the header, line breaks, and footer: 
++
+----
+cat jira_privatekey.pcks8 | grep -v 'PRIVATE'|awk '{print}' ORS=''
+----
+.. Copy the private key to the clipboard. 
+
+. Edit the `config.properties` file: 
+.. Navigate to the `java/target` directory that contains the `config.properties` 
+file and open the file for editing. 
+.. In the `config.properties` file, replace the private key with the 
+private key that you copied to the clipboard. 
+.. Change the `jira_home` setting to the URL for your Jira server. Be sure 
+to specify `https` if your Jira server uses `https`. Also, you need to 
+escape the colon. For example: 
++
+----
+jira_home=https\://issues.mycompany.org
+----
+
+.. Change the `consumer_key` setting to `*{prodname} App*`. For example: 
++
+ifeval::["{location}" == "upstream"]
+----
+consumer_key=Syndesis App
+----
+endif::[]
+ifeval::["{location}" == "downstream"]
+----
+consumer_key=Fuse Online App
+----
+endif::[]
+
+.. Save and close the `config.properties` file. 
+
+. Configure your Jira server to recognize your {prodname} environment 
+as a consumer application. 
+You must be logged in to the Jira server as an administrative user. 
+.. Select *Settings* (image:../../images/tutorials/EditorSettings.png[cog]) > *Products* > *Application links*. 
+.. In the *Create new link* input field, enter any URL, for example, 
+enter: `https://example.com`.
++
+This displays a dialog that indicates that no response was received, 
+which is okay because only one-way communication is required. 
+
+.. Click *Continue* to display the *Link applications* dialog. 
+In this dialog: 
+... In the *Consumer Key* field, enter `*{prodname} App*`.
+... At the bottom, select *Create incoming link*. 
+... In each of the other fields, enter any value. Each field requires a value. 
+The value that you enter does not matter because no response is needed.
+... Click *Continue* to display another dialog.
+... In the *Consumer Key* field, enter `*{prodname} App*`.
+... In the *Consumer Name* field, enter `*{prodname} App*`.
+... In the *Public Key* field, paste the public key that is in the 
+`jira_publickey.pem` file. Be sure to paste only the key without the 
+header and footer. To display the key so that you can copy it, in the directory that contains the 
+`jira_publickey.pem` file, enter `cat jira_publickey.pem`. 
+... Click *Continue*. 
+
+. Obtain a Jira access token that {prodname} needs to access data on 
+your Jira server. In the Jira OAuth documentation that is linked to at the 
+beginning of this procedure, this step is referred 
+to as "The Oauth dance" because there are exchanges among {prodname}, the 
+Jira server, and the Jira administrator. 
+
+.. Navigate to the `java/target` directory in the directory that contains 
+the command line application that you downloaded in the first step of this
+whole procedure. 
+.. Obtain a request token from your Jira server: 
++
+----
+java -jar OAuthTutorialClient-1.0.jar requestToken
+----
++
+This displays something like: 
++
+----
+Token:          ec3dj4byySM5ek3XW7gl7f4oc99obAlo
+Token Secret:   OhONj0eF7zhXAMKZLbD2Rd3x7Dmxjy0d
+Retrieved request token. go to https://jira101.atlassian.net/plugins/servlet/oauth/authorize?oauth_token=ec3dj4byySM5ek3XW7gl7f4oc99obAlo to authorize it
+----
+
+.. In another browser tab, go to the URL provided in that output.
+That page welcomes you to Jira and prompts you to allow access to
+the {prodname} App. 
+.. Click *Allow*, which displays an *Access Approved* page with a 
+verification code. 
+.. Copy the verification code to the clipboard and paste it somewhere 
+so that you can easily retrieve it. 
+
+.. Obtain an access token by invoking a command such as the following. 
+In the following command line example, the last value is a 
+verification code. In the command that you run, replace the 
+example verification code with the verification code that you 
+copied in the previous step. For example: 
++
+----
+java -jar OAuthTutorialClient-1.0.jar accessToken qTJkPi
+----
++
+The output from this command is the access token that {prodname} needs
+to access your Jira server. 
+
+.Result
+The Jira command line application updates the `config.properties` file
+so that it contains all values that you need to configure a 
+Jira connection for {prodname}. 
+
+.Next step
+Create a Jira connection. 

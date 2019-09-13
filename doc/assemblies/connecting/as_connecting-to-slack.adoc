@@ -1,0 +1,38 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-slack_{context}']
+= Connecting to Slack
+:context: slack
+
+As a business user, you can create an integration that connects to Slack. A 
+connection to Slack can do either one of the following:
+
+* Trigger execution of a simple integration when a Slack channel that you specify
+receives a message. The integration passes the message to the next
+step in the flow. For example, you can monitor a Slack channel 
+for keyword instances such as product names. Upon finding messages that
+contain those product names, the integration can notify the appropriate contact 
+in a Gmail connection. 
+
+* Deliver a message to a particular user or to a channel. For example, this 
+behavior is useful when an integration downloads a file from an FTP server and 
+processes it in some way. An integration flow can 
+notify a Slack channel or user that the process was successful.
+
+To connect to Slack in an integration, create a Slack 
+connection and then add the connection to an integration flow. 
+Details are in the following topics:
+
+* xref:creating-slack-connections_{context}[]
+* xref:add-slack-connection-start_{context}[]
+* xref:add-slack-connection-middle-finish_{context}[]
+
+include::../../modules/connecting/p_creating-slack-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-slack-connection-start.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-slack-connection-middle-finish.adoc[leveloffset=+1]
+
+:context: connectors

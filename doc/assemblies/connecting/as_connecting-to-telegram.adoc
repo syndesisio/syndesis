@@ -1,0 +1,36 @@
+// This assembly is included in the following assemblies:
+// connecting/master.adoc
+:context: connectors
+
+[id='connecting-to-telegram_{context}']
+= Connecting to Telegram
+
+As a business user, you can create an integration that connects to Telegram. A 
+connection to Telegram can do either one of the following:
+
+* Trigger execution of a simple integration when a Telegram bot that you specify
+receives a message. The integration passes the message to the next
+step in the flow. For example, after a simple integration receives a 
+message there might be a filter step that watches 
+for keyword instances such as product names. Upon finding messages that
+contain those product names, the integration can notify the appropriate contact 
+in a Gmail connection or in a different Telegram connection. 
+
+* Deliver a message to a particular Telegram chat. For example, this 
+behavior is useful when an integration downloads a file from an FTP server and 
+processes it in some way. You can add a Telegram connection that 
+notifies a Telegram chat that the process was successful.
+
+To connect to Telegram in an integration, create a Telegram 
+connection and then add the connection to an integration flow. 
+Details are in the following topics:
+
+* xref:creating-telegram-connections_{context}[]
+* xref:add-telegram-connection-start_{context}[]
+* xref:add-telegram-connection-middle-finish_{context}[]
+
+include::../../modules/connecting/p_creating-telegram-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-telegram-connection-start.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-telegram-connection-middle-finish.adoc[leveloffset=+1]

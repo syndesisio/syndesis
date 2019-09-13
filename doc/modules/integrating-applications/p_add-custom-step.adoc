@@ -1,0 +1,37 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-custom-step_{context}']
+= Adding a custom step
+
+If {prodname} does not provide a step that you need in a flow,
+a developer can define one or more custom steps in an extension. A custom
+step operates on data between connections in a flow. 
+
+You add a custom step to a flow in the same way that you add
+a built-in step. For a simple integration, choose the start and finish
+connections, add other connections as needed and then add additional steps.
+For an API provider integration, select the operation whose flow executes
+the custom step, add connections as needed to the flow, and then add other steps.
+When you add a step, {prodname} operates on the data it receives from the
+previous step(s) in the flow.
+
+.Prerequisites
+* You uploaded the custom step extension to {prodname}. See 
+link:{LinkFuseOnlineIntegrationGuide}#making-extensions-available_custom[Making extensions available].
+* You are creating or editing a flow.
+* The flow already has all the connections that it requires.
+
+.Procedure
+
+. In the flow visualization, where you want to add a custom step, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click the custom step that you want to add.
++
+The available steps includes any
+custom steps that are defined in extensions that were uploaded to
+your {prodname} environment.
+
+. Respond to prompts for any information that is required to perform the step.
+This information varies for each custom step.

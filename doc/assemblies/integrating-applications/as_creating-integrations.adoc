@@ -1,0 +1,61 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='creating-integrations_{context}']
+= Creating integrations
+:context: create
+
+After some planning and preparation, you are ready to create an
+integration. In the {prodname} web interface, when you
+click *Create Integration*, {prodname} guides you
+through the procedure to create an integration.
+
+.Prerequisites
+* link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Considerations for planning your integrations]
+* According to the kind of integration that you want to create: 
+** An understanding of the link:{LinkFuseOnlineIntegrationGuide}#workflow-overview_ready[general workflow for creating a simple integration]
+** An understanding of the link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[general workflow for creating an API provider integration]
+
+The following topics provide information and instructions for creating
+an integration:
+
+* xref:preparing-to-create-an-integration_{context}[]
+* xref:alternatives-for-triggering-integration-execution_{context}[]
+* xref:procedure-for-creating-an-integration_{context}[]
+* xref:add-timer-connection_{context}[]
+* xref:how-to-process-a-collection-in-a-flow_{context}[]
+* xref:about-adding-steps_{context}[]
+* xref:adding-conditional-execution-flows_{context}[]
+* xref:add-data-mapping-step_{context}[]
+* xref:add-basic-filter-step_{context}[]
+* xref:add-advanced-filter-step_{context}[]
+* xref:add-template-step_{context}[]
+* xref:add-custom-step_{context}[]
+
+include::../../modules/integrating-applications/c_preparing-to-create-an-integration.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_alternatives-for-triggering-integration-execution.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_procedure-for-creating-an-integration.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-timer-connection.adoc[leveloffset=+1]
+
+include::../../assemblies/integrating-applications/as_how-to-process-a-collection-in-a-flow.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/c_about-adding-steps.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_adding-conditional-execution-flows.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-data-mapping-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-basic-filter-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-advanced-filter-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-template-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-custom-step.adoc[leveloffset=+1]
+
+:context: ug

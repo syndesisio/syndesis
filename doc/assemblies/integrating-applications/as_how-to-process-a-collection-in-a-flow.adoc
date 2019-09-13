@@ -1,0 +1,42 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: create
+[id='how-to-process-a-collection-in-a-flow_{context}']
+= How to process a collection in a flow
+:context: collection
+
+Sometimes, a connection returns a collection, which contains 
+multiple values that are all the same type. 
+When a connection returns a collection, the flow can 
+operate on the collection in a number of ways, including:
+
+* Execute each step once for the collection.
+* Execute each step once for each element in the collection.
+* Execute some steps once for the collection and execute other 
+steps once for each element in the collection.
+
+To decide how to operate on a collection in a flow, you need to 
+know which applications the flow connects to, whether they can 
+handle collections, and what you want the flow to accomplish. 
+You can then use the information in the 
+following topics to add steps to a flow that processes a collection: 
+
+* xref:about-processing-collections_{context}[]
+* xref:using-data-mapper-to-process-collections_{context}[]
+* xref:add-split-step_{context}[]
+* xref:add-aggregate-step_{context}[]
+* xref:example-processing-collection_{context}[]
+
+include::../../modules/integrating-applications/c_about-processing-collections.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_using-data-mapper-to-process-collections.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-split-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_add-aggregate-step.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_example-processing-collection.adoc[leveloffset=+1]
+
+:context: create

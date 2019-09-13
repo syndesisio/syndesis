@@ -1,0 +1,21 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='view-mappings-in-a-step_{context}']
+= Viewing the mappings in a step
+
+While you are adding or editing a data mapper step, you can view the mappings
+already defined in this step. This lets you check whether the
+correct mappings are in place.
+
+.Prerequisites
+
+* You are creating or editing an integration.
+* You are adding a data mapper step. That is, the data mapper is visible.
+
+.Procedure
+. In the upper right, click
+image:../../images/tutorials/grid.png[title="Grid"].
+
+. To dismiss the list of mappings and redisplay the source and
+target fields, click image:../../images/tutorials/grid.png[title="Grid"] again.

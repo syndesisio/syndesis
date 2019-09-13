@@ -1,0 +1,92 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='about-integration-lifecycle-handling_{context}']
+= About integration lifecycle handling
+
+After you create and publish an integration, you might want to update
+what the integration does. You can edit a draft of the published integration
+and then replace the running version with the updated version.
+To facilitate this, for each integration, {prodname} maintains multiple
+versions as well as each version's state. 
+An understanding of integration versions and states helps you to 
+manage your integrations.
+
+.Description of integration versions
+
+In each {prodname} environment, each integration can have multiple
+versions. Support for multiple integration versions has several benefits:
+
+* If you publish a version that does not work correctly, then you
+can return to running a correct version of the integration. To do that, you
+stop the incorrect version and start a version
+that runs the way you want it to. 
+
+* As requirements or tools change, you can incrementally update an
+integration. You do not need to create a new integration. 
+
+{prodname} assigns a new version number each time it starts running
+a new version of an integration. For example, suppose you publish the
+Twitter to Salesforce sample integration. After it has been
+running, you update the integration to use a different
+account to connect to Twitter. You then publish the updated integration.
+{prodname} stops the running version of the integration, and 
+publishes the updated version of the integration with an incremented 
+version number.
+
+The initial integration that was running
+is version 1. The updated integration that is now running is
+version 2. If you edit version 2, for example to
+use a different account to connect to Salesforce, and you publish that
+version then it becomes version 3 of the integration.
+
+There can be exactly one draft version of an integration. 
+{prodname} has a definition for the draft version of an integration but it 
+has never run this version of the integration. The draft version of an integration
+does not have a number. When you edit an integration,
+you are updating the draft version of the integration. 
+
+In {prodname}, you can see a list of the versions of an integration in the 
+integration's summary page. To view this page, in the left navigation
+panel, click *Integrations*. In the entry for the integration that you
+are interested in, click *View*. 
+
+.Description of integration states
+
+In {prodname}, in the list of integration versions, each entry 
+indicates the state of that version, which is one of the following:
+
+[cols="2*"]
+|===
+|*State*
+|*Description*
+
+|*Running*
+|A *Running* version is executing; it is in service. Only one version
+of an integration can be running. That is, only one
+version at a time can be in the *Running* state.
+
+|*Stopped*
+|A *Stopped* version is not running. The draft version of an integration
+is in the *Stopped* state. Each integration that was running at one time
+and then stopped is in the *Stopped* state. 
+
+If no version of this integration is in the *Running* state, 
+then you can start a version that is stopped. 
+
+|*Pending*
+|A *pending* version is in transition. {prodname} is in the process
+of either starting this version of the integration or stopping  
+this version of the integration, but
+the integration is not yet running or stopped. 
+
+|*Error*
+|An integration version that is in the *Error* state 
+encountered an OpenShift error while being started or while running. 
+The error suspended start-up or execution.  If this happens, try 
+starting an earlier integration version that ran correctly. 
+Alternatively, contact technical support for help. 
+To do that, in any {prodname} page, in the upper right, click the 
+image:../../images/tutorials/InfoIcon.png[title="Help"] icon and select *Support*. 
+
+|===

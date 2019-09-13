@@ -1,0 +1,58 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='customizing_{context}']
+= Customizing {prodname}
+:context: custom
+
+{prodname} provides many connectors that you can use to connect to 
+common applications and services. There are also a number of built-in
+steps for processing data in common ways. However, if {prodname} does
+not provide a feature that you need, talk with a developer about 
+your requirements. An experienced developer can help you customize
+integrations by providing any of the following:
+
+* An OpenAPI document that {prodname} can
+use to create a connector for a REST API client. 
++
+You upload this schema to
+{prodname} and {prodname} creates a connector according to the schema. 
+You then use the connector to create a connection that you
+can add to an integration. For example, many retail web sites provide
+a REST API client interface that a developer can capture in an 
+OpenAPI document.  
+
+* An OpenAPI document that defines a REST API service. 
++
+You upload this schema to {prodname}. {prodname} makes the
+API service available and provides the URL for API calls. This lets you 
+link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
+
+* A `JAR` file that implements a {prodname} extension. An extension
+can be any one of the following:  
++
+** One or more steps that operate on integration data between connections
+** A connector for an application or service
+** A library resource such as a JDBC driver for a proprietary SQL database
++
+You upload this `JAR` file to {prodname} and {prodname} makes the 
+custom feature provided by the extension available. 
+
+See the following topics for details:
+
+* xref:developing-rest-api-client-connectors_{context}[]
+* xref:adding-api-connectors_{context}[]
+* xref:developing-extensions_{context}[]
+* xref:adding-extensions_{context}[]
+
+include::as_developing-rest-api-client-connectors.adoc[leveloffset=+1]
+
+include::../integrating-applications/as_adding-api-connectors.adoc[leveloffset=+1]
+
+include::as_developing-extensions.adoc[leveloffset=+1]
+
+include::../integrating-applications/as_adding-extensions.adoc[leveloffset=+1]
+
+:context: ug

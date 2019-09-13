@@ -1,0 +1,59 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='find-the-field-you-want-to-map_{context}']
+= Finding the data field that you want to map
+
+In a flow with relatively few steps, mapping data fields is easy
+and intuitive. In more complex flows or in flows that handle
+large sets of data fields, mapping from source to target is easier when
+you have some background about how to use the data mapper. 
+
+The data mapper displays two columns of data fields:
+
+* *Sources* is a list of the data fields that are obtained or
+processed in all previous steps in the flow. 
+* *Target* is a list of the data fields that the next 
+connection in the flow expects and can process.
+
+To quickly find the data field that you
+want to map, you can do any of the following:
+
+* Search for it. 
++
+The *Sources* panel and the *Target* panel each have
+a search field at the top. If the search field is not visible, click
+image:../../images/tutorials/magnifying-glass.png[Magnifying Glass] at the top
+right of the *Sources* or *Target* panel.
+
+* Enter the names of the fields that you want to map. 
++
+To do this, 
+in the upper right of the *Configure Mapper* page, click the plus sign
+to display the *Mapping Details* panel. In the *Sources* section, enter
+the name of the source field. In the *Target* section, enter the name of the
+field that you want to map to. 
+
+* Expand and collapse folders to limit the visible fields.
++
+To view the data fields available in a particular step, expand the 
+folder for that step. 
++
+As you add steps to a flow, {prodname} numbers and renumbers them to
+indicate the order in which {prodname} processes the steps.
+When you are adding a data
+mapper step, the step numbers appear in the folder labels in the
+*Sources* panel and in the *Target* panel.
++
+The folder label also displays the name of the data type that is output
+by that step. Connections to applications such as Twitter, Salesforce,
+and SQL define their own data types. For connecting to applications
+such as Amazon S3, AMQ,
+AMQP, Dropbox, and FTP/SFTP, you define the connection's input and/or output
+type when you add the connection to a flow and select the action
+that the connection performs.  
+When you specify the data type, you also give the type a name. 
+The type name you specify appears as the name of 
+a folder in the data mapper. If you specified a description when you 
+declared the data type, then the type description appears when you hover
+over the step folder in the mapper.  

@@ -1,0 +1,44 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-concur_{context}']
+= Connecting to SAP Concur
+:context: concur
+
+SAP Concur manages business expenses, travel, and invoices. 
+In an integration, you can connect to SAP Concur and perform
+any one of a large variety of SAP Concur actions.  
+For example, suppose that you store project codes in a SQL database and
+you need the same project codes in SAP Concur so that expenses can be
+associated with projects. You can create an integration that 
+connects to your SQL database and runs a stored procedure that obtains
+any new project codes. The integration can then connect to SAP Concur and
+upload the new project codes to the appropriate list. 
+
+See the following topics: 
+
+* xref:user-roles-for-connecting-to-concur_{context}[]
+* xref:obtain-concur-oauth-credentials-implementation_{context}[]
+* xref:obtain-concur-oauth-credentials-production_{context}[]
+* xref:configure-concur-connector_{context}[]
+* xref:create-concur-connection_{context}[]
+* xref:add-concur-connection_{context}[]
+* xref:identify-concur-fields-for-mapping_{context}[]
+
+
+include::../../modules/connecting/c_user-roles-for-connecting-to-concur.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_obtain-concur-oauth-credentials-implementation.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_obtain-concur-oauth-credentials-production.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_configure-concur-connector.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_create-concur-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-concur-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_identify-concur-fields-for-mapping.adoc[leveloffset=+1]
+
+:context: connectors

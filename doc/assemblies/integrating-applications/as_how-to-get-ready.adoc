@@ -1,0 +1,25 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='how-to-get-ready_{context}']
+= How to get ready to create integrations
+:context: ready
+
+Some planning and an understanding of the workflow for creating an 
+integration can help you create integrations that meet your needs. 
+The following topics provide information for getting ready to create 
+integrations. 
+
+* xref:plan_{context}[]
+* xref:workflow-overview_{context}[]
+* xref:workflow-example_{context}[]
+
+include::../../modules/integrating-applications/c_plan-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/c_workflow-overview.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_workflow-example.adoc[leveloffset=+1]
+
+:context: ug
