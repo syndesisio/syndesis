@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
 
     // **************************

@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -53,8 +54,8 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         // We ensure to convert input/ouput to json text
-        component.setBeforeConsumer(this::convertToJson);
-        component.setAfterProducer(this::convertToJson);
+        component.setBeforeConsumer(this::convertToJsonConsumer);
+        component.setAfterProducer(this::convertToJsonProducer);
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
@@ -83,7 +84,7 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
         }
     }
 
-    public void convertToJson(Exchange exchange) {
+    public void convertToJsonProducer(Exchange exchange) {
         Message in = exchange.getIn();
         if (in.getBody() instanceof Document) {
             in.setBody(in.getBody(Document.class).toJson());
@@ -105,5 +106,20 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
             LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
         }
     }
-}
 
+    public void convertToJsonConsumer(Exchange exchange) {
+        Message in = exchange.getIn();
+        if (in.getBody() instanceof Document) {
+            List<String> convertedToJson = new ArrayList<>();
+            convertedToJson.add(in.getBody(Document.class).toJson());
+            in.setBody(convertedToJson);
+        } else if (in.getBody() instanceof List) {
+            @SuppressWarnings("unchecked")
+            List<Document> list = in.getBody(List.class);
+            List<String> convertedToJson = list.stream().map(Document::toJson).collect(toList());
+            in.setBody(convertedToJson);
+        } else {
+            LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
+        }
+    }
+}
