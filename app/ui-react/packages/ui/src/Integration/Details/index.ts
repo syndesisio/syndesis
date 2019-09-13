@@ -1,6 +1,5 @@
 export * from './IntegrationActions';
 export * from './IntegrationActionSelectorCard';
-export * from './IntegrationBulletinBoardAlert';
 export * from './IntegrationDetailBreadcrumb';
 export * from './IntegrationDetailDescription';
 export * from './IntegrationDetailEditableName';

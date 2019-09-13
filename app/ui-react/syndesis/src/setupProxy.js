@@ -12,7 +12,15 @@ module.exports = function(app) {
   if (process.env.BACKEND) {
     function chaos(req, res, next) {
       const p = getRandomInt(0, 100);
-      if (process.env.CHAOS && p > 50) {
+      if (process.env.CHAOS && p > 75) {
+        res
+          .status(500)
+          .send({
+            errorCode: 500,
+            userMsg: 'Something has gone totally wrong',
+            developerMsg: 'This is for developers only',
+          });
+      } else if (process.env.CHAOS && p > 50) {
         res.status(500).send('Something broke!');
         next('route');
       } else {
