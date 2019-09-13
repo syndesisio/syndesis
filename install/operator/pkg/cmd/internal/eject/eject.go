@@ -21,11 +21,16 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/operator-framework/operator-sdk/pkg/restmapper"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
+
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 
@@ -124,6 +129,23 @@ func (e *Eject) eject() error {
 		},
 	}
 	if e.application != "" {
+		cfg, err := config.GetConfig()
+		if err != nil {
+			return err
+		}
+
+		mgr, err := manager.New(cfg, manager.Options{
+			Namespace:      e.Namespace,
+			MapperProvider: restmapper.NewDynamicRESTMapper,
+		})
+		if err != nil {
+			return err
+		}
+
+		if err := apis.AddToScheme(mgr.GetScheme()); err != nil {
+			return err
+		}
+
 		cli, err := e.GetClient()
 		if err != nil {
 			return err
