@@ -389,10 +389,14 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         } else {
             if (exposure.contains(Exposure.SERVICE)) {
                 ensureService(sanitizedName, deploymentData);
+            } else {
+                removeService(sanitizedName);
             }
 
             if (exposure.contains(Exposure.ROUTE)) {
                 ensureRoute(sanitizedName, deploymentData);
+            } else {
+                removeRoute(sanitizedName);
             }
         }
 
