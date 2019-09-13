@@ -88,7 +88,7 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
         } catch (MongoSocketException e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
                 VerificationError.StandardCode.GENERIC,
-                String.format("Unable to connect to %s on port %s!", mongoConf.getHost(), mongoConf.getPort()));
+                String.format("Unable to connect to %s!", mongoConf.getHost()));
             builder.error(errorBuilder.build());
         } catch (Exception e) {
             // TODO We will always hit a MongoTimerException, did not find a way to catch the above yet...

@@ -24,6 +24,7 @@ import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import io.syndesis.common.model.integration.Step;
@@ -34,6 +35,9 @@ import org.junit.BeforeClass;
 
 import java.util.Arrays;
 import java.util.List;
+
+import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
+import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
 
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
@@ -59,17 +63,22 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     @BeforeClass
     public static void startUpMongo() throws Exception {
-        IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
-            .net(new Net(HOST, PORT, Network.localhostIsIPv6())).build();
+        IMongodConfig mongodConfig = new MongodConfigBuilder()
+            .version(PRODUCTION)
+            .net(new Net(PORT, localhostIsIPv6()))
+            .replication(new Storage(null, "replicationName", 5000))
+            .build();
 
-        MongodStarter starter = MongodStarter.getDefaultInstance();
-        mongodExecutable = starter.prepare(mongodConfig);
+        mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
         mongodExecutable.start();
+
         initClient();
     }
 
     private static void initClient() {
         mongoClient = new MongoClient(HOST);
+        // init replica set
+        mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
         createAuthorizationUser();
         database = mongoClient.getDatabase(DATABASE);
         collection = database.getCollection(COLLECTION);
@@ -99,7 +108,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
             newEndpointStep("mongodb3", connector, builder -> {
             }, builder -> {
-                builder.putConfiguredProperty("host", HOST);
+                builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
                 builder.putConfiguredProperty("user", USER);
                 builder.putConfiguredProperty("password", PASSWORD);
                 builder.putConfiguredProperty("database", db);
@@ -118,7 +127,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                                          String tailTrackDb, String tailTrackCollection, String tailTrackField) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, builder -> {
         }, builder -> {
-            builder.putConfiguredProperty("host", HOST);
+            builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
             builder.putConfiguredProperty("user", USER);
             builder.putConfiguredProperty("password", PASSWORD);
             builder.putConfiguredProperty("database", db);

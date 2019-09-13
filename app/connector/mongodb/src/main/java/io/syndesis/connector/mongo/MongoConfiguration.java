@@ -18,10 +18,9 @@ package io.syndesis.connector.mongo;
 import java.util.Map;
 
 public class MongoConfiguration {
-    String host = "localhost";
+    String host = "localhost:27017";
     String user;
     String password;
-    int port = 27017;
     private String adminDB = "admin";
 
     public MongoConfiguration() {
@@ -34,22 +33,10 @@ public class MongoConfiguration {
         this.user = parameters.get("user");
         this.password = parameters.get("password");
         // Optional parameters
-        String optionalPort = parameters.getOrDefault("port", "");
         String optionalAdminDB = parameters.getOrDefault("adminDB", "");
-        if (!"".equals(optionalPort)) {
-            this.port = Integer.parseInt(optionalPort);
-        }
         if (!"".equals(optionalAdminDB)) {
             this.adminDB = optionalAdminDB;
         }
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
     }
 
     public String getHost() {
@@ -85,14 +72,12 @@ public class MongoConfiguration {
     }
 
     public String getMongoClientURI() {
-        return String.format("mongodb://%s:%s@%s:%d/%s", this.user, this.password, this.host,
-            this.port, this.adminDB);
+        return String.format("mongodb://%s:%s@%s/%s", this.user, this.password, this.host, this.adminDB);
     }
 
     @Override
     public String toString() {
-        return "MongoConfiguration [host=" + host + ", user=" + user + ", password=***, port=" + port + ", adminDB="
-            + adminDB + "]";
+        return "MongoConfiguration [host(s)=" + host + ", user=" + user + ", password=***, adminDB=" + adminDB + "]";
     }
 
 }
