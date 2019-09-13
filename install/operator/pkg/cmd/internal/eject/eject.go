@@ -23,8 +23,8 @@ import (
 
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 
-	"gopkg.in/yaml.v2"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"sigs.k8s.io/yaml"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
@@ -77,10 +77,6 @@ func (e *Eject) before(_ *cobra.Command, args []string) (err error) {
 
 	if len(args) > 0 {
 		return fmt.Errorf("unexpected argument: %s", args[0])
-	}
-
-	if e.out != "" {
-		e.ejectedResources = []unstructured.Unstructured{}
 	}
 
 	return
@@ -180,8 +176,8 @@ func (e *Eject) eject() error {
 		all = append(all, resources...)
 	}
 
-	for _, res := range all {
-		e.ejectedResources = append(e.ejectedResources, res)
-	}
+	e.ejectedResources = []unstructured.Unstructured{}
+	e.ejectedResources = append(e.ejectedResources, all...)
+
 	return nil
 }
