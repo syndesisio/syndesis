@@ -210,7 +210,6 @@ do_upgrade_pod() {
     trap "rm -rf '$build_dir'" EXIT
 
     cp -r ${upgrade_src}/* ${build_dir}
-    cp ${top_dir}/install/syndesis.yml ${build_dir}
     cp $cli_jar ${build_dir}
 
     echo "Creating image syndesis/syndesis-upgrade:latest"
