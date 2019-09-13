@@ -36,13 +36,14 @@
 
     <syndesis.integration.runtime>spring-boot</syndesis.integration.runtime>
     <syndesis.camel.k.customizers>health,logging,syndesis</syndesis.camel.k.customizers>
-    <syndesis.logging.enabled>false</syndesis.logging.enabled>
+    <syndesis.logging.enabled>true</syndesis.logging.enabled>
     <syndesis.server.port>8080</syndesis.server.port>
     <syndesis.management.port>8081</syndesis.management.port>
     <syndesis.debug.port>5005</syndesis.debug.port>
     <syndesis.debug.enabled>false</syndesis.debug.enabled>
     <syndesis.s2i.build.enabled>false</syndesis.s2i.build.enabled>
     <syndesis.output.directory>${project.build.directory}/integrations</syndesis.output.directory>
+    <syndesis.project.mount.path>/tmp/src</syndesis.project.mount.path>
     <syndesis.image.tag>${syndesis.version}</syndesis.image.tag>
   </properties>
 
@@ -199,13 +200,6 @@
           <skip>true</skip>
         </configuration>
       </plugin>
-      <!-- Required only for CircleCi build as the used JVM to run the tests has limited cryptography -->
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
 
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -225,6 +219,7 @@
             <syndesis.debug.enabled>${syndesis.debug.enabled}</syndesis.debug.enabled>
             <syndesis.s2i.build.enabled>${syndesis.s2i.build.enabled}</syndesis.s2i.build.enabled>
             <syndesis.output.directory>${syndesis.output.directory}</syndesis.output.directory>
+            <syndesis.project.mount.path>${syndesis.project.mount.path}</syndesis.project.mount.path>
             <syndesis.image.tag>${syndesis.image.tag}</syndesis.image.tag>
           </systemProperties>
         </configuration>

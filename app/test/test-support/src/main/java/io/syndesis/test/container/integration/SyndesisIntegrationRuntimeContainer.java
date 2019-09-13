@@ -36,6 +36,7 @@ import com.github.dockerjava.api.model.Ports;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.test.SyndesisTestEnvironment;
+import io.syndesis.test.container.dockerfile.SyndesisDockerfileBuilder;
 import io.syndesis.test.container.s2i.S2iProjectBuilder;
 import io.syndesis.test.integration.customizer.IntegrationCustomizer;
 import io.syndesis.test.integration.customizer.JsonPathIntegrationCustomizer;
@@ -44,11 +45,10 @@ import io.syndesis.test.integration.source.CustomizedIntegrationSource;
 import io.syndesis.test.integration.source.IntegrationExportSource;
 import io.syndesis.test.integration.source.IntegrationSource;
 import io.syndesis.test.integration.source.JsonIntegrationSource;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.output.Slf4jLogConsumer;
-import org.testcontainers.images.builder.ImageFromDockerfile;
 
 /**
  * Container that executes a integration runtime. The container is either provided with a runnable project fat jar or a project directory
@@ -62,6 +62,9 @@ import org.testcontainers.images.builder.ImageFromDockerfile;
  * @author Christoph Deppisch
  */
 public class SyndesisIntegrationRuntimeContainer extends GenericContainer<SyndesisIntegrationRuntimeContainer> {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(SyndesisIntegrationRuntimeContainer.class);
 
     private static final String S2I_RUN_SCRIPT = "/usr/local/s2i/run";
 
@@ -79,14 +82,14 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
      */
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, Path projectDir,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
-        super(new ImageFromDockerfile(integrationName, deleteOnExit)
-                .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
-                        .env(envProperties)
-                        .expose(SyndesisTestEnvironment.getDebugPort())
-                        .cmd(runCommand)
-                        .build()));
+        super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
+                .from("syndesis/syndesis-s2i", imageTag)
+                .project("projectDir", SyndesisTestEnvironment.getProjectMountPath(), projectDir.toAbsolutePath())
+                .env(envProperties)
+                .cmd(runCommand)
+                .build());
 
-        withFileSystemBind(projectDir.toAbsolutePath().toString(), "/tmp/src", BindMode.READ_WRITE);
+        LOG.info("Binding project folder: " + projectDir.toAbsolutePath());
         withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withName(integrationName));
     }
 
@@ -101,15 +104,14 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
      */
     protected SyndesisIntegrationRuntimeContainer(String imageTag, String integrationName, File projectJar,
                                                 Map<String, String> envProperties, String runCommand, boolean deleteOnExit) {
-        super(new ImageFromDockerfile(integrationName, deleteOnExit)
-                .withDockerfileFromBuilder(builder -> builder.from(String.format("syndesis/syndesis-s2i:%s", imageTag))
-                        .add("integration-runtime.jar", "/deployments/integration-runtime.jar")
-                        .env(envProperties)
-                        .expose(SyndesisTestEnvironment.getDebugPort())
-                        .cmd(runCommand)
-                        .build())
-                        .withFileFromPath("integration-runtime.jar", projectJar.toPath().toAbsolutePath()));
+        super(new SyndesisDockerfileBuilder(integrationName, deleteOnExit)
+                .from("syndesis/syndesis-s2i", imageTag)
+                .project("integration-runtime.jar", "/deployments/integration-runtime.jar", projectJar.toPath().toAbsolutePath())
+                .env(envProperties)
+                .cmd(runCommand)
+                .build());
 
+        LOG.info("Binding project jar file: " + projectJar.toPath().toAbsolutePath());
         withCreateContainerCmdModifier(createContainerCmd -> createContainerCmd.withName(integrationName));
     }
 
@@ -313,9 +315,9 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
 
             commandLine.add("mvn")
                     .add("-s")
-                    .add("/tmp/src/configuration/settings.xml")
+                    .add(SyndesisTestEnvironment.getProjectMountPath() + "/configuration/settings.xml")
                     .add("-f")
-                    .add("/tmp/src")
+                    .add(SyndesisTestEnvironment.getProjectMountPath())
                     .add(SyndesisTestEnvironment.getIntegrationRuntime().getCommand())
                     .add("-Dmaven.repo.local=/tmp/artifacts/m2");
 

@@ -645,38 +645,7 @@ jobs:
           destination: /images/syndesis-upgrade.tar.gz
       - <<: *quay_transfer
 
-  # Test support depends on integration, server, mount workspace .m2
-  test-support:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
-      - <<: *checkout_git_mvn_repo
-      - <<: *attach_m2_workspace
-      - run:
-          name: Build Test Support
-          command: |
-            if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
-              GOAL_ARGS="-g deploy"
-            fi
-            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --batch-mode --module :test-parent,:test-support | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *persist_m2_workspace
-      - <<: *checkin_git_mvn_repo
-      - <<: *scrub_m2_cache
-      - save_cache:
-          key: syndesis-mvn-test-{{ checksum "app/test/pom.xml" }}
-          paths:
-            - ~/.m2
-
-  # Integration test depends on test-support
+  # Integration test
   integration-test:
     environment:
       <<: *common_env
@@ -689,14 +658,22 @@ jobs:
       - run:
           name: Run integration tests
           command: |
-            mkdir -p /tmp/src
+            mkdir -p ~/integrations/
             mkdir -p ~/junit/
-            ./tools/bin/syndesis integration-test | tee ~/test_log.txt
+            mkdir -p ~/logs/
+            ./tools/bin/syndesis integration-test --output /home/circleci/integrations | tee ~/logs/test_log.txt
+            cp ./app/test/integration-test/target/integration-runtime.log ~/logs/
+      - run:
+          name: Collect test results
+          when: always
+          command: |
             find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} ~/junit
       - store_test_results:
           path: ~/junit
       - store_artifacts:
-          path: ~/test_log.txt
+          path: ~/logs
+      - store_artifacts:
+          path: ~/integrations
 
   system-test:
     <<: *job_defaults
@@ -1192,10 +1169,6 @@ workflows:
       - s2i:
           requires:
             - server
-      - test-support:
-          requires:
-            - s2i
       - integration-test:
           requires:
             - s2i
-            - test-support

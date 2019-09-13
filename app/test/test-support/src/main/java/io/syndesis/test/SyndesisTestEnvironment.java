@@ -28,7 +28,7 @@ import io.syndesis.test.model.IntegrationRuntime;
 public final class SyndesisTestEnvironment {
 
     private static final String SYNDESIS_PREFIX = "syndesis.";
-    private static final String SYNDESIS_ENV_PREFIX = "SYNDESIS";
+    private static final String SYNDESIS_ENV_PREFIX = "SYNDESIS_";
 
     /** System property names */
     private static final String CAMEL_VERSION = "camel.version";
@@ -81,6 +81,10 @@ public final class SyndesisTestEnvironment {
     private static final String SYNDESIS_OUTPUT_DIRECTORY_DEFAULT = "target/integrations";
     private static final String SYNDESIS_OUTPUT_DIRECTORY = SYNDESIS_PREFIX + "output.directory";
     private static final String SYNDESIS_OUTPUT_DIRECTORY_ENV = SYNDESIS_ENV_PREFIX + "OUTPUT_DIRECTORY";
+
+    private static final String SYNDESIS_PROJECT_MOUNT_PATH_DEFAULT = "/tmp/src";
+    private static final String SYNDESIS_PROJECT_MOUNT_PATH = SYNDESIS_PREFIX + "project.mount.path";
+    private static final String SYNDESIS_PROJECT_MOUNT_PATH_ENV = SYNDESIS_ENV_PREFIX + "PROJECT_MOUNT_PATH";
 
     /**
      * Prevent instantiation of utility class.
@@ -169,5 +173,10 @@ public final class SyndesisTestEnvironment {
                 System.getenv(SYNDESIS_CAMEL_K_CUSTOMIZERS_ENV) : SYNDESIS_CAMEL_K_CUSTOMIZERS_DEFAULT)
                 .split(",", -1))
                 .collect(Collectors.toList());
+    }
+
+    public static String getProjectMountPath() {
+        return System.getProperty(SYNDESIS_PROJECT_MOUNT_PATH, System.getenv(SYNDESIS_PROJECT_MOUNT_PATH_ENV) != null ?
+                System.getenv(SYNDESIS_PROJECT_MOUNT_PATH_ENV) : SYNDESIS_PROJECT_MOUNT_PATH_DEFAULT);
     }
 }
