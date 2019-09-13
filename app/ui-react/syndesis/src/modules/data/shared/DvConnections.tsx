@@ -6,7 +6,7 @@ import {
 } from '@syndesis/ui';
 import * as React from 'react';
 import { EntityIcon } from '../../../shared';
-import { getDvConnectionStatus } from './VirtualizationUtils';
+import { getDvConnectionStatus, isDvConnectionLoading } from './VirtualizationUtils';
 
 export interface IDvConnectionsProps {
   connections: Connection[];
@@ -40,6 +40,7 @@ export const DvConnections: React.FunctionComponent<
             description={c.description || ''}
             dvStatus={getDvConnectionStatus(c)}
             icon={<EntityIcon entity={c} alt={c.name} width={46} />}
+            loading={isDvConnectionLoading(c)}
             selected={selectedConnection === c.name}
             onSelectionChanged={handleConnSourceSelectionChanged}
           />
