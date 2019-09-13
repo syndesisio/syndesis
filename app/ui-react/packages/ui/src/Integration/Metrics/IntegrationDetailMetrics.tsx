@@ -1,4 +1,4 @@
-import { Card, CardBody, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
@@ -29,7 +29,7 @@ export interface IIntegrationDetailMetricsProps {
 
 export class IntegrationDetailMetrics extends React.Component<
   IIntegrationDetailMetricsProps
-> {
+  > {
   public render() {
     const okMessagesCount = this.props.messages! - this.props.errors!;
     const startAsDate = new Date(this.props.start!);
@@ -42,7 +42,9 @@ export class IntegrationDetailMetrics extends React.Component<
               <Card
                 data-testid={'integration-detail-metrics-total-errors-card'}
               >
-                <Title size="2xl">{this.props.i18nTotalErrors}</Title>
+                <CardHeader>
+                  <Title size="lg">{this.props.i18nTotalErrors}</Title>
+                </CardHeader>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
@@ -57,7 +59,9 @@ export class IntegrationDetailMetrics extends React.Component<
               <Card
                 data-testid={'integration-detail-metrics-last-processed-card'}
               >
-                <Title size="2xl">{this.props.i18nLastProcessed}</Title>
+                <CardHeader>
+                  <Title size="lg">{this.props.i18nLastProcessed}</Title>
+                </CardHeader>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification className="integration-detail-metrics__last-processed">
@@ -72,19 +76,21 @@ export class IntegrationDetailMetrics extends React.Component<
             <Col xs={6} sm={3} md={3}>
               <Card
                 data-testid={'integration-detail-metrics-total-messages-card'}
-              >
-                <Title size="2xl">
-                  <AggregateStatusCount>
-                    {this.props.messages ? this.props.messages : 0}&nbsp;
+              ><CardHeader>
+                  <Title size="lg">
+
+                    <AggregateStatusCount>
+                      {this.props.messages ? this.props.messages : 0}&nbsp;
                   </AggregateStatusCount>
-                  {this.props.i18nTotalMessages}
-                </Title>
+                    {this.props.i18nTotalMessages}
+                  </Title>
+                </CardHeader>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
                       <Icon type="pf" name="ok" />
                       {this.props.errors !== undefined &&
-                      this.props.messages !== undefined
+                        this.props.messages !== undefined
                         ? okMessagesCount
                         : 0}
                       &nbsp;
@@ -101,15 +107,17 @@ export class IntegrationDetailMetrics extends React.Component<
               <Card
                 data-testid={'integration-detail-metrics-uptime-card'}
               >
-                <Title size="2xl" className="integration-detail-metrics__uptime-header">
-                  <div>{this.props.i18nUptime}</div>
-                  {this.props.start !== undefined &&
-                    this.props.durationDifference !== undefined && (
-                      <div className="integration-detail-metrics__uptime-uptime">
-                        {startAsHuman}
-                      </div>
-                    )}
-                </Title>
+                <CardHeader>
+                  <Title size="lg" className="integration-detail-metrics__uptime-header">
+                    <div>{this.props.i18nUptime}</div>
+                    {this.props.start !== undefined &&
+                      this.props.durationDifference !== undefined && (
+                        <div className="integration-detail-metrics__uptime-uptime">
+                          {startAsHuman}
+                        </div>
+                      )}
+                  </Title>
+                </CardHeader>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification className="integration-detail-metrics__duration-difference">
