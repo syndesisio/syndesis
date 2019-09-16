@@ -64,12 +64,6 @@ module.exports = (on, config) => {
       return latestFile;
     },
 
-    test() {
-      //console.log(process.env);
-      //console.log('repoRoot: ' + repoRoot);
-      return null;
-    },
-
     storeSnapshot(snapshot) {
       const snapshotJson = JSON.stringify(snapshot);
       fs.writeFileSync(toJSONLocal() + '-snapshot.json', snapshotJson, err => {

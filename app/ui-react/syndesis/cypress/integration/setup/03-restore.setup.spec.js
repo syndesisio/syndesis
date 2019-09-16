@@ -8,18 +8,21 @@
  */
 
 describe('Restore Snapshot', () => {
+  let latestSnapshot;
+
   before(function() {
     cy.log('Retrieving latest snapshot...');
-    cy.task('getSnapshot');
-  });
-
-  it('test', () => {
-    cy.task('test');
+    cy.task('getSnapshot').then(snapshot => {
+      latestSnapshot = snapshot;
+    });
   });
 
   it.skip('restores the snapshot', () => {
-    cy.request('POST', 'api/v1/test-support/restore-db').then(resp => {
-      cy.log('Database has been restored with snapshot...');
-    });
+    cy.request('POST', 'api/v1/test-support/restore-db', latestSnapshot).then(
+      resp => {
+        cy.log('Response: ' + JSON.stringify(resp));
+        cy.log('Database has been restored with snapshot...');
+      }
+    );
   });
 });
