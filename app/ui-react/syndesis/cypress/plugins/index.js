@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 //const {resolve, join} = require('path');
 const repoRoot = path.join(__dirname, '..', '..');
-const snapshotPath = 'cypress/snapshots';
+const snapshotPath = path.join(__dirname, '..', 'snapshots');
 
 /**
  * Offsets for timezone differences
@@ -28,25 +28,31 @@ function toJSONLocal() {
 /**
  * Util function that retrieves the most recently updated file in a directory,
  * which we are using for snapshots.
- * @param dir
- * @return {{file: *, mtime: *}[]}
  */
-function orderRecentFiles(dir) {
-  fs.readdir(repoRoot, function(err, list) {
-    //console.log('path.join(repoRoot + snapshotPath): ' + path.join(repoRoot + snapshotPath));
-    list.forEach(function(file) {
-      console.log('file: ' + file);
-      let stats = fs.statSync(path.join('.', file));
-      console.log('stats.mtime: ' + stats.mtime);
-      console.log('stats.ctime: ' + stats.ctime);
-      return stats;
-    });
-  });
-}
+function getLatestFile(dirpath) {
+  // Check if directory path exists
+  let latest;
 
-function getMostRecentFile(dir) {
-  const files = orderRecentFiles(dir);
-  return files.length ? files[0] : undefined;
+  const files = fs.readdirSync(dirpath);
+  files.forEach(filename => {
+    // Get the file stats
+    const stat = fs.lstatSync(path.join(dirpath, filename));
+    // Continue if it is a directory
+    if (stat.isDirectory()) return;
+
+    // "latest" default to first file
+    if (!latest) {
+      latest = { filename, mtime: stat.mtime };
+      return;
+    }
+    // Update "latest" if mtime is greater than the current "latest"
+    if (stat.mtime > latest.mtime) {
+      latest.filename = filename;
+      latest.mtime = stat.mtime;
+    }
+  });
+
+  return latest;
 }
 
 module.exports = (on, config) => {
@@ -54,14 +60,13 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('task', {
     getSnapshot() {
-      console.log('repoRoot: ' + repoRoot);
-      return getMostRecentFile(repoRoot);
+      const latestFile = getLatestFile(snapshotPath);
+      return latestFile;
     },
 
     test() {
       //console.log(process.env);
-      console.log('repoRoot: ' + repoRoot);
-      console.log('repoRoot: ' + repoRoot);
+      //console.log('repoRoot: ' + repoRoot);
       return null;
     },
 

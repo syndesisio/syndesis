@@ -6,14 +6,10 @@
  * to create the data manually.
  */
 
-const randomInteger = () => {
-  return Math.floor(Math.random() * (100 + 1));
-};
-const nameInt = randomInteger();
 const connectionName = 'E2E Todo Connection';
-const integrationName = 'E2E Todo Integration ' + nameInt;
+const integrationName = 'E2E Todo Integration';
 const connectionSlug = 'e2e-todo-connection';
-const integrationSlug = 'e2e-todo-integration-' + nameInt;
+const integrationSlug = 'e2e-todo-integration';
 
 describe('Create Data', () => {
   before(function() {
