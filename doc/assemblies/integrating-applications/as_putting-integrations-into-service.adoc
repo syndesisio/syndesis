@@ -1,0 +1,36 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='putting-integrations-into-service_{context}']
+= Putting integrations into and out of service
+:context: service
+
+After you create an integration, you can save it as a draft or 
+publish it to start running it. When you publish
+an integration, {prodname} assembles the needed resources, 
+builds the integration runtime, deploys the OpenShift pod that will
+run the integration, and then starts running the integration. 
+
+At any time, you can click a button to stop running the integration. 
+When you want to start the integration again, {prodname} already
+has what it needs so starting it takes less time
+than when you published it to run it for the first time. 
+
+The process of starting a version of an integration for the first time is 
+referred to as publishing the integration. The following topics 
+provide details:
+
+* xref:publishing-integrations_{context}[]
+* xref:stopping-integrations_{context}[]
+* xref:starting-integrations_{context}[]
+* xref:restarting-older-integration-versions_{context}[]
+
+include::../../modules/integrating-applications/r_publishing-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_stopping-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_starting-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_restarting-older-integration-versions.adoc[leveloffset=+1]
+
+:context: manage

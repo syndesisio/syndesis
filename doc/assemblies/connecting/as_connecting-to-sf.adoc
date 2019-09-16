@@ -1,0 +1,26 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-sf_{context}']
+= Connecting to Salesforce
+
+:context: salesforce
+
+In an integration, to connect to Salesforce, you must register your
+{prodname} environment as a Salesforce client application. This authorizes
+{prodname} to access Salesforce. With registration in place, you create
+a Salesforce connection, which you can then add to any number of 
+integrations. For details, see the following topics:
+
+* xref:register-with-salesforce_{context}[]
+* xref:create-salesforce-connection_{context}[]
+* xref:adding-sf-connections_{context}[]
+
+include::../../modules/tutorials/p_register-with-sf.adoc[leveloffset=+1]
+
+include::../../modules/tutorials/p_create-sf-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-sf-connections.adoc[leveloffset=+1]
+
+:context: connectors

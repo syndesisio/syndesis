@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_connecting-to-rest-apis.adoc
+
+[id='register-with-rest-api_{context}']
+= Registering {prodname} as a REST API client
+
+Before {prodname} creates a REST API client
+connector, it prompts you to indicate the API's security requirements.
+For APIs that use the OAuth protocol, when {prodname} creates the connector it also
+adds an entry for the API to the {prodname} *Settings* page. This is
+where you provide the API client ID and the API client secret that
+authorize {prodname} to access the API.
+
+If the API you want to connect to does not use OAuth, skip this
+section and see 
+link:{LinkFuseOnlineConnectorGuide}#create-rest-api-connection_rest[Creating a REST API client connection].
+
+.Prerequisite
+You must know the URL for the OAuth custom application setting page for the
+REST API that you want to connect to.
+
+.Procedure
+
+. In {prodname}:
+.. On the *Settings* page, near the top, to the right of the callback URL, click
+image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to 
+copy the callback URL for your {prodname} environment to the clipboard. 
+You will need this URL later in this procedure. 
+.. Look for the name of the API you want to connect to and click it
+to display its client ID and client secret fields.
+
+. In another browser window, you must register {prodname} as an OAuth
+client of the API you want to connect to. The exact steps for doing this
+vary for each API service. Typically, the API service provides an OAuth
+custom application setting page. Go to that page and do the following:
+
+.. Provide the {prodname} callback URL, which you copied at the beginning
+of this procedure.
+.. Respond to any other prompts that require your input. 
+.. Obtain the client ID and client secret that the API service assigns to
+your {prodname} environment.
+
+. Return to the {prodname} *Settings* page entry for the 
+API service you are registering with and do the following:
+.. Paste the assigned client ID.
+.. Paste the assigned client secret.
+.. Click *Save*.

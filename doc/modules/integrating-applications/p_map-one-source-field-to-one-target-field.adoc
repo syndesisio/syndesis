@@ -1,0 +1,70 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='map-one-source-field-to-one-target-field_{context}']
+= Mapping one source field to one target field
+
+The default mapping behavior maps one source field to one target field.
+For example, map the `Name` field to the `CustomerName` field.
+
+.Procedure
+
+. In the *Sources* panel, click the data field that you want to map from.
++
+You might need to expand a step to see the data fields that it
+provides.
++
+When there are many source fields, you can search for the
+field of interest by clicking the
+image:../../images/tutorials/magnifying-glass.png[Magnifying Glass] and entering
+the name of the data field in the search field.
+. In the *Target* panel, click the data field that you want to map to.
++
+The data mapper displays a line that connects the two fields that you just
+selected.
+
+. Optionally, preview the data mapping result. This is useful when 
+you add a transformation to the mapping or when the mapping requires
+a type conversion. 
+.. In the upper right of the data mapper, click 
+image:../../images/tutorials/EditorSettings.png[Editor settings] and select 
+*Show Mapping Preview* to display a text input field on the source
+field and a read-only result field on the target field. 
+.. In the source field's data input field, enter text. 
+.. Click somewhere outside this text box to display
+the mapping result in the read-only field on the target field.
+.. Optionally, to see the result of a transformation, add a transformation
+in the *Mapping Details* panel. 
+
+.. Hide the preview fields by clicking 
+image:../../images/tutorials/EditorSettings.png[Editor settings] again and selecting
+*Show Mapping Preview*. 
+
+. Optionally, to confirm that the mapping is defined, in the upper right, click
+image:../../images/tutorials/grid.png[Grid] to display the defined mappings.
+
++
+You can also preview data mapping results in this view. 
+If preview fields are not visible, 
+click image:../../images/tutorials/EditorSettings.png[Editor settings] and select 
+*Show Mapping Preview*. Enter data as described in the previous step.
+In the table of defined mappings, preview fields 
+appear for only the selected mapping. To see preview fields for another 
+mapping, select it. 
++
+Click image:../../images/tutorials/grid.png[Grid] again to display the data field
+panels.
+. In the upper right, click *Done* to add the data mapper step to the integration. 
+
+.Alternative procedure
+Here is another way to map a single source field to a single target
+field:
+
+. In the *Configure Mapper* page, in the upper right, click the plus sign
+to display the *Mapping Details* panel. 
+. In the *Sources* section, enter
+the name of the source field. 
+. In the *Action* section, accept the
+default *Map* action. 
+. In the *Target* section, enter the name of the
+field that you want to map to and click *Enter*. 

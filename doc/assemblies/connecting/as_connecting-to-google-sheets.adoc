@@ -1,0 +1,52 @@
+// This assembly is included in the following assemblies:
+// Upstream: as_connecting-to-google.adoc
+// Downstream: connecting-fuse-online-to-applications-and-services/as_connecting-to-google.adoc
+
+:context: google
+[id='connecting-to-google-sheets_{context}']
+= Connecting to Google Sheets
+:context: sheets
+
+To trigger execution of an integration when a Google Sheets connection
+returns spreadsheet data or spreadsheet properties, add a Google Sheets 
+connection to a simple integration as its start connection. To finish a
+simple integration by updating
+spreadsheet values or properties, or by inserting a chart or pivot table
+into a spreadsheet, add a Google Sheets connection to a simple 
+integration as its finish connection. 
+
+In the middle of a flow, you can add a
+Google Sheets connection that obtains, creates or updates values in a spreadsheet, 
+or that inserts a chart or pivot table into a spreadsheet. 
+
+Details for connecting to Google Sheets are in the following topics:
+
+* xref:create-google-sheets-connection_{context}[]
+* xref:add-google-sheets-connection-get-sheet-values_{context}[]
+* xref:add-google-sheets-connection-get-properties_{context}[]
+* xref:add-google-sheets-connection-create-spreadsheet_{context}[]
+* xref:add-google-sheets-connection-update-sheet-values_{context}[]
+* xref:add-google-sheets-connection-append-sheet-values_{context}[]
+* xref:add-google-sheets-connection-update-properties_{context}[]
+* xref:add-google-sheets-connection-add-chart_{context}[]
+* xref:add-google-sheets-connection-add-pivot-table_{context}[]
+
+include::../../modules/connecting/p_create-google-sheets-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-get-sheet-values.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-get-properties.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-create-spreadsheet.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-update-sheet-values.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-append-sheet-values.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-update-properties.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-add-chart.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_add-google-sheets-connection-add-pivot-table.adoc[leveloffset=+1]
+
+:context: google

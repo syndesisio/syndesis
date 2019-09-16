@@ -1,0 +1,152 @@
+// This module is included in these assemblies:
+// as_connecting-to-google.adoc
+
+[id='register-with-google_{context}']
+= Registering {prodname} as a Google client application
+
+In an integration, to be able to connect to Gmail, Google Calendar, or
+Google Sheets, 
+you must register your {prodname} environment as a Google client application.
+During registration, you enable Google APIs and create credentials that
+{prodname} uses to access the Google APIs that you have enabled.
+
+With registration in place, you can create multiple connections
+to Gmail, Google Calendar, and Google Sheets. You can use each connection 
+in multiple integrations. 
+While each connection to a Google application can use the
+same Google client ID and Google client secret, which you obtain during registration, 
+each connection can access
+a different Google account, which you choose. 
+
+This procedure instructs you to enable the Gmail API, the Google Calendar API, 
+and the Google Sheets API. However, you can enable only the API(s) that you 
+need rather than all three APIs. At a later time, if you need to create connections
+to the applications whose APIs you did not enable, you can return here and 
+follow the instructions to enable their APIs. 
+
+[IMPORTANT]
+====
+You must create a new Google client application for {prodname}. 
+The credentials that Google provides for a new client application contain a 
+refresh token that is used for refreshing expired access tokens. This refresh 
+token is available only the first time that the {prodname} client application 
+uses the credentials. In {prodname}, connections to Gmail, Google Calendar, 
+and Google Sheets can all use the same Google client ID and Google client 
+secret. If they do, the refresh token is available to all connections 
+to Google applications. When you view connection details in the {prodname} 
+user interface, do not click the *Validate* button. Validation is a second 
+use of the credentials and the refresh token is no longer part of the 
+client credentials. You can, however, re-connect to Google applications.
+
+In development environments, be careful if you choose to use the Google client ID and Google client 
+secret that you are using for some other, non-{prodname}, OAuth client. 
+{prodname} requires offline access that is requested on the first OAuth 
+exchange. If another OAuth client already entered the OAuth exchange 
+and did not request offline access, then {prodname} cannot obtain 
+offline access on subsequent OAuth exchanges. If you are unsure 
+whether offline access was requested on the first exchange, 
+create a new Google client application for {prodname}.
+====
+
+.Prerequisites
+* You must be able to sign in to the Google account that you want to
+use to register {prodname} as a Google client application.
+
+.Procedure
+
+. In {prodname}:
+.. In the left navigation panel, click *Settings*.
+.. On the *Settings* page, near the top, to the right of the callback URL,
+click
+image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to
+copy the callback URL for your {prodname} environment to the clipboard.
+You will need this URL later in this procedure.
+. In another browser tab, go to `https://console.developers.google.com`
+and do the following:
+.. Check that you are signed into the Google account that you want to
+use to register {prodname} as a Google client application.
+Or, choose a different Google account and sign in to that account.
++
+The name of the current Google project appears at the top of the Google APIs page.
+
+.. To use the current project to grant authorization to {prodname}, 
+continue to the next step. To grant authorization to {prodname} in another 
+Google project, choose or create that project. 
+If this Google account does not already
+have a project, you must create one. 
+.. Enable Google APIs:
+... In the upper left corner, click 
+image:../../images/connecting/Hamburger.png[Navigation menu icon] and select
+*APIs and Services* > *Library*.
+... If necessary, scroll down to see the *G Suite* row of cards. 
+... Click the *Google Calendar API* card, which displays a page that indicates
+that the Google Calendar API is enabled.  
+... Scroll down and click the *Gmail API* card, which displays a page that indicates
+that the Gmail API is enabled.
+... In the upper left corner, click 
+image:../../images/connecting/Hamburger.png[Navigation menu icon] and select
+*APIs and Services* > *Library*.
+... If necessary, scroll down to see the *G Suite* row of cards. 
+... Click the *Google Sheets API* card, which displays a page that indicates
+that the Google Sheets API is enabled.  
+.. Give your client application a name:
+... Click *MANAGE*. 
+... In the page that appears, in the left navigation panel, click
+*Credentials* and then on the right, click *Credentials in APIs & Services*.
+... Click the *OAuth consent screen* tab.
+... In the page that appears, in the *Application Name* field, enter a name for the {prodname}
+client application. For example, enter `*{prodname} client application*`.
+... Skip the other fields.
+... Click *Save*.
+.. Obtain client application credentials as follows:
+... To the right of *Create Credentials*, click the down arrow to
+display a menu and select *OAuth client ID*.
+... In the page that appears, select *Web application* to display more content.
+... In the *Name* field, enter a name for the OAuth client ID for
+your {prodname} environment. This is different from the name that you
+entered for the client application itself. For example, enter
+`OAuth client ID for {prodname}`.
+... Skip *Authorized JavaScript origins*.
+... In the *Authorized redirect URIs* field, paste the callback URL
+that you copied from your {prodname} environment at the beginning of
+this procedure. 
+... Click *Create* to display the client ID and client secret for your
+{prodname} environment.
+.. To the right of the client ID field, click
+image:../../images/connecting/copy_icon.png[the Copy icon] to copy the client ID
+to your clipboard.
+
+. Return to the {prodname} *Settings* page and do the following: 
+.. Expand the entries for Gmail, Google Calendar, and Google Sheets. 
+.. In the *Client ID* field for each Google application, 
+paste the Google client ID that you just copied.
+
+. Return to the Google developers site and to the right of the
+client secret field, click
+image:../../images/connecting/copy_icon.png[the Copy icon] to copy the client secret to
+your clipboard.
+
+. Return to the {prodname} *Settings* page and do the following in
+the entry for each Google application: 
+.. In the *Client Secret* field, paste the Google client secret that you
+just copied.
+.. Click *Save*. You should get a *Registration Successful!* notification.
+.. Collapse the entry.
+
+.Results
+For each Google application API that you enabled, you can create a 
+connection to that application.
+
+All connections from {prodname} to Google applications use the same Google 
+client ID and Google client secret. 
+
+[IMPORTANT]
+====
+The Google client ID and Google client secret contain token refresh
+information to ensure that integrations
+that have connections to Google applications continuously work correctly.
+Consequently, you should *not* obtain new credentials. If you do, then you
+would need to recreate each Google connection, replace the old
+connections with new connections, and re-publish each
+integration that uses a Google connection.
+====

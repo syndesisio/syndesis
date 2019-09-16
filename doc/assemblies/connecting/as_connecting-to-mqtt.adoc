@@ -1,0 +1,27 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-mqtt_{context}']
+= Connecting to MQTT
+:context: mqtt
+
+MQ Telemetry Transport (MQTT) is a lightweight,
+machine-to-machine, internet of things, connectivity protocol. 
+In an integration, you can obtain messages from or publish messages to
+an MQTT broker. To do this, create a connection to the MQTT broker
+of interest and then add that connection to an integration flow.
+Details are in the following topics:
+
+* xref:creating-mqtt-connections_{context}[]
+* xref:adding-mqtt-connection-start_{context}[]
+* xref:adding-mqtt-connection-finish-middle_{context}[]
+
+include::../../modules/connecting/p_creating-mqtt-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-mqtt-connection-start.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-mqtt-connection-finish-middle.adoc[leveloffset=+1]
+
+
+:context: connectors

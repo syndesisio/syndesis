@@ -1,0 +1,44 @@
+// This assembly is included in these assemblies:
+// upstream: integrating-applications/master.adoc
+// downstream: integrating-applications-with-fuse-online/master.adoc
+
+:context: ug
+[id='connecting-to-applications_{context}']
+= About connections to applications that you want to integrate
+:context: connections
+
+To connect to applications that you want to integrate, the main steps are:
+
+. Create a connection to each application or service that you want to integrate.
+. Create an integration that has a connection to each application 
+that you want to integrate.
+
+The procedure for
+creating a connection varies for each application or service. The details
+for creating each kind of connection and configuring it for a particular
+integration are in 
+link:{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}].
+
+The following topics
+provide general information about connections:
+
+* xref:about-creating-connections_{context}[]
+* xref:general-procedure-for-obtaining-authorization_{context}[]
+* xref:about-connection-validation_{context}[]
+* xref:about-adding-connections-to-integrations_{context}[]
+* xref:viewing-and-editing-connection-information_{context}[]
+* xref:creating-connections-from-custom-connectors_{context}[]
+
+include::../../modules/integrating-applications/c_about-creating-connections.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/p_general-procedure-for-obtaining-authorization.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/c_about-connection-validation.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/c_about-adding-connections-to-integrations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_viewing-and-editing-connection-information.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/c_about-creating-connections-from-custom-connectors.adoc[leveloffset=+1]
+
+:context: ug

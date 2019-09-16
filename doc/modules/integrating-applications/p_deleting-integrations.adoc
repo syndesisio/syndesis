@@ -1,0 +1,19 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='deleting-integrations_{context}']
+= Deleting integrations
+
+After you delete an integration, {prodname} still has the history of 
+that integration. If you import a version of the deleted integration, 
+then {prodname} associates the history of the deleted integration with 
+the imported integration.
+
+.Procedure
+
+. In the left {prodname} panel, click *Integrations*.
+. In the list of integrations, at the right of the entry for the integration
+that you want to delete, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab] and select
+*Delete*.
+. In the popup, click *OK* to confirm that you want to delete the integration.

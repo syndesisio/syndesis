@@ -1,0 +1,124 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-template-step_{context}']
+= Adding a template step
+
+In a flow, a template step takes data from a source and
+inserts it into the format that is defined in a template that you upload to {prodname}.
+The benefit of a template step is that it provides data output in a
+consistent format that you specify.
+
+In the template, you define placeholders and specify static text.
+When you create the flow, you add a template step, map source fields
+to the template placeholders, and then map template content to the next step
+in the flow. When {prodname} executes the flow, it 
+inserts the values that are in the mapped source fields into an
+instance of the template and makes the result available to the next step 
+in the flow.
+
+If a flow includes a template step then it is most likely the only
+template step in that flow. However, more than one template step in a
+flow is allowed.
+
+{prodname} supports the following kinds of templates: 
+link:https://freemarker.apache.org[Freemarker], 
+link:https://mustache.github.io[Mustache], 
+link:https://velocity.apache.org[Velocity].
+
+.Prerequisites
+* You must be creating or editing a flow.
+* If you are creating a simple
+integration then it must already have its start and finish connections.
+
+.Procedure
+
+. In the flow visualization, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign]
+where you want to add a template step.
+. Click *Template*. The
+*Upload Template* page opens.
+. Specify the template type, which is Freemarker, Mustache, or Velocity. 
+
+. To define the template, do one of the following:
++
+* Drag and drop a template file or a file that contains text that you
+want to modify to create a template, into the template editor.
+* Click *browse to upload*, navigate to a file, and upload it.
+* In the template editor, start typing to define a template.
+
+. In the template editor, ensure that the template
+is valid for use with {prodname}. Examples of valid templates are 
+after this procedure. {prodname} displays
+image:../../images/integrating-applications/RedCircleXError.png[a red error indicator] to the left of
+a line that contains a syntax error. Hovering over a syntax error 
+indicator displays hints about how to resolve the error.
+
+. Click *Done* to add the template step to the flow.
++
+If the *Done* button is not enabled then there is at least one syntax error
+that you must correct.
++
+Input to a template step must be in the form of a JSON object. Consequently,
+you must add
+a data mapping step before a template step.
+. To add a data mapper step before the template step:
+.. In the flow visualization, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+immediately before the template step that you just added.
+.. Click *Data Mapper*.
+.. In the data mapper, map a source field to each template placeholder field.
++
+For example, using the example templates that are after this procedure, 
+map a source field to each of these template fields:
++
+* `time`
+* `name`
+* `text`
+.. In the upper right, click *Done* to add the data mapper step to the
+flow.
+
++
+Output from a template step is always a JSON object. Consequently, you must
+add a data mapper step after a template step.
+. To add a data mapper step after the template step:
+.. In the flow visualization, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+immediately after the template step that you just added.
+.. Click *Data Mapper*.
+.. In the data mapper, map the template's *message* field, which
+always contains the result of inserting source fields into the
+template, to a target field. For example, suppose that a Gmail connection is
+next in the flow and you want to send the result of the template step
+as the content of a Gmail message. To do this, you would map the *message*
+source field to the *text* target field.
+.. In the upper right, click *Done*.
+
+.Examples of templates
+
+Example of a Mustache template:
+
+----
+At {{time}}, {{name}} tweeted:
+{{text}}
+----
+
+Freemarker and Velocity support this example template:
+
+----
+At ${time}, ${name} tweeted:
+${text}
+----
+
+Velocity also supports syntax without braces, as shown in this example:
+
+----
+At $time, $name tweeted:
+$text
+----
+
+A placeholder cannot contain a `.` (period). 
+
+.Additional resources
+
+For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping integration data to fields for the next connection in the flow].

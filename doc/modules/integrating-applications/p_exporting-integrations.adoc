@@ -1,0 +1,28 @@
+// This module is included in the following assemblies:
+// as_copying-integrations-to-other-environments.adoc
+
+[id="exporting-integrations_{context}"]
+= Exporting integrations
+
+When {prodname} exports an integration it downloads a zip file
+to your local `Downloads` folder. This zip file
+contains the information needed to recreate the integration in a
+different {prodname} environment. 
+
+Exporting an integration is also a way to have a backup of the integration. 
+However, {prodname} maintains the versions of an integration so exporting
+an integration is not required for having a backup copy. 
+
+.Procedure
+
+. In the left panel of {prodname}, click *Integrations*. 
+. In the list of integrations, identify the entry for the integration 
+that you want to export.
+. At the right of the entry, click 
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Export*. 
+
+.Next step
+To import
+the integration into another {prodname} environment, open that environment
+and import the exported zip file. 

@@ -1,0 +1,49 @@
+// This module is included in the following assemblies:
+// as_putting-integrations-into-service.adoc
+
+[id='restarting-older-integration-versions_{context}']
+= Restarting older integration versions
+
+You might publish an integration that does not work the way you want it to.
+In this situation, you can stop the incorrect version
+and replace it with a version that you published previously and that
+runs correctly.
+
+.Prerequisites
+* A version of the integration is running but you want to stop it.
+* You have another version of the integration and you want to run that one.
+
+.Procedure
+
+. In the left panel, click *Integrations* to display a list of the
+the integrations in this environment.
+. Click the entry for the integration for which you want to publish
+an older version. {prodname} displays a list of the versions of the
+integration. 
+. In the entry for the version that is running, at the far right, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab] and select
+*Stop*.
+. Click *OK* to confirm that you want to stop running this version.
+. Wait for *Stopped* to appear to the right of the integration name near
+the top of the page.
+. To publish the older version as is, skip to the next step. Or, 
+before you publish the older version, you can update it: 
+.. In the entry for the integration version that you want to update, 
+at the far right, click  
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab] and select *Replace Draft*.
+.. Update the integration as needed. 
+.. When updates are complete, in the upper right, click *Publish*, 
+and then click *Publish* to confirm. This takes the place of the next two steps. 
+. To publish the older version as is, in the entry for the integration 
+version that you want to start
+running again, at the far right, click
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Kebab]
+and select *Start*.
+. Click *Start* to confirm that you want to start this version of the
+integration.
+
+.Result
+{prodname} starts 
+the integration, which takes a few minutes. When the integration 
+is running, then *Running version _n_* appears to the right
+of the integration's name.

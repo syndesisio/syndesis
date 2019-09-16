@@ -1,0 +1,25 @@
+// This module is included in the following assemblies:
+// as_how-to-get-ready.adoc
+
+[id='workflow-overview_{context}']
+= General workflow for creating a simple integration
+
+After you log in to the {prodname} console, you can start creating
+connections to the applications that you want to integrate. For each 
+application that you want to integrate and that uses the
+OAuth protocol, register {prodname} as a client of that application.
+Applications that you must register with include: 
+
+* Dropbox
+* Google applications (Gmail, Calendar, Sheets)
+* Salesforce
+* SAP Concur
+* Twitter
+
+With registration in place for those applications, the workflow for
+creating a simple integration looks like this:
+
+image:../../images/integrating-applications/general-workflow.png[general workflow]
+
+.Additional resource
+link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[Workflow for creating API provider integrations].

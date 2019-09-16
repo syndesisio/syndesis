@@ -1,0 +1,77 @@
+// Module included in the following assemblies:
+// Upstream:
+// tutorials/topics/as_t2sf-intro.adoc
+// connecting/topics/as_connecting-to-twitter.adoc
+// Downstream:
+// fuse-online-sample-integration-tutorials/upstream/as_t2sf-intro.adoc
+// connecting-fuse-online-to-applications-and-services/upstream/as_connecting-to-twitter.adoc
+
+[id='register-with-twitter_{context}']
+= Registering {prodname} as a Twitter client application
+
+In an integration, to connect to Twitter, the first thing you must do is
+register your {prodname} environment as a client application
+that can access Twitter.
+This lets you create any number of integrations that connect
+to Twitter. In other words, you need to regCopyCallbackister a particular
+{prodname} environment with Twitter only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Twitter client application. However, while each Twitter
+connection uses the same registration, it can use different user
+credentials. 
+
+.Prerequisite
+You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
+email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
+
+.Procedure
+
+. In {prodname}:
+.. In the left panel, click *Settings*.
+.. On the *Settings* page, near the top, to the right of the callback URL, click 
+image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to 
+copy the callback URL for your installation of {prodname} to the clipboard. 
+You will need this URL later in this procedure. 
+.. Click the *Twitter* entry 
+to display the *Consumer API Key* and *Consumer API Secret Key* fields.
+. In another browser tab, go to your
+https://developer.twitter.com/apps[Twitter developer account], sign in if you
+need to, and do the following: 
+
+.. In the upper right, next to the name of your developer project, click the 
+down caret and click *Apps*. 
+.. In the upper right, click *Create an app*. 
+.. In the *App name* field, enter a name such as *My {prodname} Client*. 
+.. In the *Application description* field, enter a tip such as 
+*For leveraging tweets*. 
+.. In the *Website URL* field, paste the URL that you copied at the beginning
+of this procedure and remove `api/v1/credentials/callback` from the end
+of the URL.
+.. Select *Enable Sign in with Twitter*. 
+.. In the *Callback URLs* field, paste the URL again. It should be
+something like this: 
+`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
++
+You can skip the next few fields.
+.. *Tell us how this app will be used* requires a 100-character description. 
+For convenience, you can copy and paste: 
+`This is a demo application so that I can evaluate how to integrate Twitter 
+with my enterprise applications.`
+.. Click *Create*. 
+.. Click *Create* again to confirm that you reviewed the developer terms. 
+.. At the top of the page for the app you just created, click 
+the *Keys and tokens* tab. 
+.. Copy the consumer API key. 
+
+. Return to your {prodname} *Settings* page and paste the Twitter
+consumer API key into the {prodname} Twitter *Consumer API Key* field.
+. Return to the Twitter *Keys and tokens* tab and copy the consumer API secret key. 
+. Return to your {prodname} *Settings* page and paste the Twitter
+consumer API secret key into the {prodname} Twitter
+*Consumer API Secret Key* field.
+. Click *Save*.
+. Click the *Twitter* entry to collapse it. 

@@ -1,0 +1,22 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-http_{context}']
+= Connecting to HTTP and HTTPS endpoints
+:context: http
+
+In an integration, you can connect to HTTP and HTTPS endpoints to execute
+the `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, 
+or `PATCH` method. To do this, create 
+an HTTP or HTTPS connection and then add it to an integration flow. 
+The following topics provide details:
+
+* xref:creating-http-connections_{context}[]
+* xref:adding-http-connections_{context}[]
+
+include::../../modules/connecting/p_creating-http-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-http-connections.adoc[leveloffset=+1]
+
+:context: connectors

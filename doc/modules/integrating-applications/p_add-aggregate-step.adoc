@@ -1,0 +1,41 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-aggregate-step_{context}']
+= Adding an aggregate step
+
+In a flow, add an aggregate step where you want {prodname} 
+to create a collection from individual objects. 
+During execution, after an aggregate step, 
+instead of executing subsequent steps once for each object, {prodname} 
+executes subsequent steps once for the collection. 
+
+When deciding whether to add an aggregate step to a flow, consider the 
+connections in the flow. After a split step, for each subsequent 
+connection, {prodname} connects to that application once for each element 
+in the flow’s data. For some connections, it might be preferable to 
+connect once rather than multiple times. 
+
+.Prerequisites
+* You are creating or editing a flow.
+* The flow already has all the connections that it requires.
+* A previous step split a collection into individual objects. 
+
+.Procedure
+
+. In the flow visualization, where you want to 
+add an aggregate step to the flow, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click *Aggregate*. This step does not require any configuration. 
+. Click *Next*. 
+
+.Additional information 
+
+Typically, you want to add any split and aggregate steps 
+before you add data mapper steps. This is because 
+whether the data is a collection or individual objects affects
+the mappings. If you add a data mapper step and then add an
+aggregate step, you usually need to redo the mappings. Likewise, if you 
+remove an aggregate step, then you would need to redo
+any mappings. 

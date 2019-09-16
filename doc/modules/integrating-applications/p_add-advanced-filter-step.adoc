@@ -1,0 +1,66 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-advanced-filter-step_{context}']
+= Adding an advanced filter step
+
+In a filter step, {prodname} inspects the
+data and continues executing the flow only if the content meets
+criteria that you define.
+If the basic filter step does not let you
+define the exact filter that you need, then add an advanced filter step.
+
+.Prerequisites
+* The flow contains all connections that it needs to. 
+* You are creating or editing a flow. 
+* You are familiar with the Camel Simple Language, or
+you have been provided with a filter expression. 
+
+.Procedure
+
+. In the flow visualization, where you want to add an advanced filter step to
+the flow, click the
+image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click *Advanced Filter*.
+
+. In the edit box, use the
+link:http://camel.apache.org/simple.html[Camel Simple Language] 
+to specify a filter
+expression. For example, the following expression evaluates to true
+when the message header's `type` field is set to `widget`:
++
+----
+${in.header.type} == 'widget' 
+----
++
+In the following example, the expression evaluates to true when the
+body of the message contains a `title` field:
++
+----
+${in.body.title} 
+----
+
+. Click *Next* to add the advanced filter step to the flow. 
+
+.Additional property specification in some kinds of flows
+
+In an expression, an additional property specification is required when 
+the advanced filter step is in one of the following kinds of flows: 
+
+* An API provider integration operation flow
+* A simple integration that starts with a webhook connection
+* A simple integration that starts with a custom REST API connection
+
+In these flows, {prodname} wraps the actual message content inside a `body` 
+property. This means that the input to the advanced filter contains a 
+`body` property that contains another `body` property that contains 
+the actual message content. Consequently, in an advanced filter expression
+that is in one of these kinds of flows, 
+you must specify two instances of `body`. For example, suppose you want 
+to evaluate content that is in the `completed` field of the input message. 
+Specify the expression like this: 
+
+----
+${body.body.completed} = 1
+----

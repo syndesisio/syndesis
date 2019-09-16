@@ -1,12 +1,12 @@
 
-include::topics/shared/attributes.adoc[]
+include::attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.4
-:imagesdir: topics
+:prodversion: 7.5
+:imagesdir: images
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.4
+:version: 7.5
 :parent-context: tutorials
 :location: upstream
 
@@ -28,10 +28,10 @@ can help you decide which of these integrations to create first:
 
 See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
-include::topics/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
+include::modules/tutorials/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
 
-include::topics/as_t2sf-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/as_t2sf-intro.adoc[leveloffset=+1]
 
-include::topics/as_sf2db-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/as_sf2db-intro.adoc[leveloffset=+1]
 
-include::topics/as_amq2api-intro.adoc[leveloffset=+1]
+include::assemblies/tutorials/as_amq2api-intro.adoc[leveloffset=+1]

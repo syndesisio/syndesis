@@ -1,0 +1,56 @@
+// This assembly is included in the following assemblies:
+// as_developing-extensions.adoc
+
+:context: extensions
+[id='develop-step-extensions_{context}']
+= Examples of developing step extensions 
+:context: step-alternatives
+
+A step extension implements one or more custom steps. 
+Each custom step implements one action for processing integration data
+between connections. 
+The following examples demonstrate the alternatives for developing
+step extensions: 
+
+* xref:example-route-xml-fragment_{context}[]
+* xref:example-route-builder_{context}[]
+* xref:example-route-builder-spring-boot_{context}[]
+* xref:example-camel-bean_{context}[]
+* xref:example-step-api_{context}[]
+
+Syndesis provides custom Java annotations that you can use in 
+conjunction with the `syndesis-extension-plugin`.  When you implement
+a step extension or a connector extension in Java, you can specify annotations 
+that enable Maven to add action definitions to the extension definition JSON file. 
+To enable annotation processing,  add 
+the following dependency to your Maven project:
+
+[source,xml]
+----
+<dependency>
+  <groupId>io.syndesis.extension</groupId>
+  <artifactId>extension-annotation-processor</artifactId>
+  <optional>true</optional>
+</dependency>
+----
+
+Because Spring Boot is the integration runtime, to inject beans 
+into a Camel context, be sure to follow standard Spring Boot 
+practices. For example, 
+link:https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html[create an auto configuration class] 
+and create beans there. However, the default behavior is that 
+extension code is not subject to package scanning. Consequently, 
+you must create and populate the `META-INF/spring.factories` file
+in a step extension.
+
+include::../../modules/customizing/r_example-route-xml-fragment.adoc[leveloffset=+1]
+
+include::../../modules/customizing/r_example-route-builder.adoc[leveloffset=+1]
+
+include::../../modules/customizing/r_example-route-builder-spring-boot.adoc[leveloffset=+1]
+
+include::../../modules/customizing/r_example-camel-bean.adoc[leveloffset=+1]
+
+include::../../modules/customizing/r_example-step-api.adoc[leveloffset=+1]
+
+:context: extensions

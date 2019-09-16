@@ -1,0 +1,28 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='about-adding-steps_{context}']
+= About adding steps between connections
+
+Although it is not a requirement, the recommendation is to add all 
+needed connections to a primary flow and then, according to the processing 
+that you want the flow to execute, add additional steps between
+connections. In a flow, each step operates on data obtained from the
+previous connection(s) and any previous steps. The resulting data is 
+available to the next step in the flow.
+
+Often, you must map data fields that are received from a
+connection to data fields that the next connection in the flow 
+can operate on. After you add all connections to a flow, 
+check the flow visualization.
+For each connection that requires data mapping before
+it can operate on the input data,
+{prodname} displays
+image:../../images/integrating-applications/DataTypeMismatchWarning.png[title="a warning"]. Click this
+icon to see *Data Type Mismatch: Add a data
+mapper step before this connection to resolve the difference.*
+
+You can click the link in the message to display the *Configure Mapper*
+page in which you add and specify a data mapper step. However, 
+the recommendation is to add other needed steps, and then add 
+data mapper steps last. 

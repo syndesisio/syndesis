@@ -1,0 +1,40 @@
+// This module is included in the following assemblies:
+// as_connecting-to-applications.adoc
+
+[id='viewing-and-editing-connection-information_{context}']
+= How to view and edit connection information
+
+After you create a connection, {prodname} assigns an internal identifier to
+the connection. This identifier does not change. You can
+change the connection's name, description, or configuration values and
+{prodname} recognizes it as the same connection.
+
+There are two ways to view and edit information about a connection:
+
+* In the left panel, click *Connections* and then click any connection to
+view its details.
+
+* In the left panel, click *Integrations* and then view any integration
+to see its summary page. In the integration's flow diagram:
+
+** For a simple integration, click a
+connection icon to view that connection's details.
+
+** For an API provider integration, click view
+image:../../images/integrating-applications/ApiProviderReturnIcon.png[flows icon] to display the integration's 
+operation list. Click the operation whose flow contains the connection 
+that you want to view details for.
+
+On the *Connection Details* page, for the connection that you want to edit, click
+image:../../images/integrating-applications/PencilForEditing.png[Edit] next to a field to edit that field.
+Or, for some connections, below the configuration fields, click *Edit* to
+change configuration values. If you change any values, be sure to click
+*Save*.
+
+If you update a connection that is used in an integration that is running,
+you must republish the integration.
+
+For connections to applications that use the OAuth protocol to authorize
+access, you cannot change the login credentials that the connection uses.
+To connect to the application and use different login credentials, you
+must create a new connection.

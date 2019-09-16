@@ -1,0 +1,61 @@
+// This module is included in the following assemblies:
+// as_connecting-to_dropbox.adoc
+
+[id='register-with-dropbox_{context}']
+= Registering {prodname} as a Dropbox client
+
+You must register your {prodname} environment as a client application
+that can access Dropbox.
+This lets you create any number of integrations that connect
+to Dropbox. In other words, you need to register a particular
+{prodname} environment with Dropbox only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Dropbox client application. However, while each Dropbox 
+connection uses the same registration, it can use different user
+credentials. 
+
+.Prerequisite
+You can sign in to the Dropbox account that you want an integration to use
+to download or upload files. 
+
+.Procedure
+
+. In {prodname}:
+.. In the left panel, click *Settings*.
+.. On the *Settings* page, near the top, to the right of the callback URL, 
+click 
+image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to 
+copy the callback URL for your {prodname} environment to the clipboard. 
+You will need this URL toward the end of this procedure. 
+. In another browser tab, go  to `https://www.dropbox.com` 
+and do the following:
+.. Sign in to the Dropbox account that has the data that you want to
+access in an integration. 
+.. After signing in, go to https://www.dropbox.com/developers/apps.
+.. Click *Create App*.
+.. Select *Dropbox API*. 
+.. Near the top of the page, in the sentence that starts with
+`*During registration, enter this callback URL:*`,
+paste the URL that you copied to the clipboard at the beginning of this procedure. 
+For example, the URL that you paste is something like this:
+`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+.. Choose whether {prodname} can access a single folder or all of the 
+folders and files. 
+.. Specify a name for your Dropbox app. For example, you might
+specify `*Fuse Online Access From Aslan LLC*`. The name you specify must be
+unique in the set of Dropbox app names. 
+.. Check the box to indicate that you agree to Dropbox API terms and 
+conditions. 
+.. Click *Create App*. 
+
+.. In the Dropbox *Settings* page for your new app, in
+the input field for *OAuth2 Redirect URIs*, paste your {prodname} URL,
+which you copied to the clipboard at the beginning of this procedure. 
+.. Click *Add*. 
+
+.Result 
+
+Your {prodname} environment is now registered as a Dropbox client, which 
+means that {prodname} can access content in the Dropbox account that
+you signed into. 

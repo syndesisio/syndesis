@@ -1,0 +1,107 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='procedure-for-creating-an-integration_{context}']
+= Procedure for creating a simple integration
+
+{prodname} guides you through the procedure for creating a simple integration. 
+It prompts you to choose the start connection, the finish connection, 
+optional middle connections, and other steps. When your integration is
+complete, you can publish it so that it is running or you can save
+it for publication at a later time. 
+
+To learn about the procedure for creating an API provider integration, see 
+xref:create-api-provider-integration_api-provider[].
+
+.Prerequisites
+* You have a plan for what the steps in the integration will be.
+* You created a connection to each application or service that you 
+want to connect to in this integration. 
+
+.Procedure
+
+. In the left panel in {prodname}, click *Integrations*.
+
+. In the upper right, click *Create Integration*.
+
+. Choose and configure the start connection:
+
+.. On the *Choose a connection* page, click the connection that you want
+to use to start the integration. When this integration is running,
+{prodname} will connect to this application and obtain data that you want
+the integration to operate on.
+
+.. On the *Choose an action* page, select the action you want this connection
+to perform. The available actions vary for each connection.
+
+.. On the page for configuring the action, enter values in the fields.
+.. Optionally, if the connection requires data type specification, 
+{prodname} prompts you to click
+*Next* to specify the input and/or output type of the action. 
+.. Click *Next* to add the start connection.
+
++
+As an alternative to connecting to an application, a start connection can
+be a timer that triggers integration execution at intervals that you specify
+or it can be a webhook that accepts HTTP requests. 
++
+After you choose and configure the start connection, {prodname}
+prompts you to choose the finish connection. 
+
+. Choose and configure the finish connection:
+
+.. On the *Choose a connection* page, click the connection you want
+to use to complete the integration. When this integration is running,
+{prodname} will connect to this application with the data that the integration
+has been operating on.
+
+.. On the *Choose an action* page, select the action you want this connection
+to perform. The available actions vary for each connection.
+
+.. On the page for configuring the action, enter values in the fields.
+.. Optionally, if the connection requires data type specification, 
+{prodname} prompts you to click
+*Next* to specify the input and/or output type of the action. 
+.. Click *Next* to add the finish connection.
+
++
+As an alternative to connecting to an application, a finish connection can
+send information to the integration's log about the messages that the
+integration processed. To do this, select *Log* when {prodname} prompts
+you to choose the finish connection. 
+
+. Optionally, add one or more connections between the start connection and
+the finish connection. For each connection, choose its action and enter
+any required configuration details.
+
+. Optionally, add one or more steps that operate on integration
+data between connections. See
+link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[About adding steps between connections].
+
+. In the integration visualization, look for any
+image:../../images/tutorials/WarningIcon.png[Warning] icons. These 
+warnings indicate that a data mapper step is needed before 
+this connection. Add the required data mapper steps. 
+
+. When the integration contains all needed steps,
+click *Save* or *Publish* according to whether you want
+to start running the integration.
+
+. In the *Name* field, enter a name that distinguishes this
+integration from any other integrations.
+
+. Optionally, in the *Description* field, enter a description, for example, you can
+indicate what this integration does.
+
+. If you are ready to start running the integration, click *Save and publish*.
++
+{prodname} displays the integration summary. You
+can see that {prodname} is in the process of publishing it. It may take 
+a few moments for the status of the integration to become *Running*. 
++
+If you do not want to publish the integration, click *Save*. {prodname}
+saves the integration and displays its flow visualization. You can 
+continue editing it. Or, in the breadcrumbs at the top of the page, 
+click *Integrations* to display the list of integrations. 
+If you saved but did not publish the integration, then
+*Stopped* appears on the integration's entry.

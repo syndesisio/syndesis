@@ -1,0 +1,23 @@
+// This assembly is included in the following assemblies:
+// Upstream: integrating/topics/as_creating-integrations.adoc
+// Downstream: integrating-applications-with-fuse-online/assemblies/syndesis-integrating-applications/as_creating-integrations.adoc
+
+[id='triggering-integrations-with-timers_{context}']
+= Triggering integration execution with a timer
+:context: timer
+
+To trigger execution of a simple integration according to a schedule that
+you specify, add a timer connection as a simple integration's start
+connection. {prodname} provides a timer connection, which you can use
+to start as many simple integrations as you like. You do not need to create
+a timer connection unless you inadvertently delete the provided
+timer connection. Details are in the following topics:
+
+* xref:add-timer-connection_{context}[]
+* xref:create-timer-connection_{context}[]
+
+include::../../modules/connecting/p_add-timer-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_create-timer-connection.adoc[leveloffset=+1]
+
+:context: create

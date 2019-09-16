@@ -1,0 +1,66 @@
+// This module is included in the following assemblies:
+// as_copying-integrations-to-other-environments.adoc
+
+[id='importing-integrations_{context}']
+= Importing integrations
+
+In a {prodname} environment, you can import an integration that was
+exported from another {prodname} environment. 
+Exporting an integration downloads the zip file that you upload
+to import the integration.
+
+.Prerequisites
+* You have a zip file that contains an integration that was exported from another
+{prodname} environment. 
+
+.Procedure
+. Open the {prodname} environment that you want to import the integration into.
+. In the left panel, click *Integrations*.
+. In the upper right, click *Import*.
+. Drag and drop one or more exported integration zip files,
+or navigate to a zip file that contains an exported integration and select it.
++
+{prodname} imports the file(s) and display a message when importing
+is successful. 
+. In the left panel, click *Integrations*.
+. In the list of integrations, on the entry for the integration 
+that you just imported, click *View*. 
+. In the integration summary, if there is a notification that
+configuration is required, in the upper right, click *Edit integration*. 
+. For each connection that requires configuration:
+
+.. Click its *Configure* button to display its details.
+.. Enter or change connection details as needed. It is possible that every
+field on this page is correct and that only security configuration is required.
+.. Click *Next*.
+. In the left panel, click *Settings*.
++
+The *Settings* page displays entries for applications that use the OAuth
+protocol. 
+
+. For each connection that requires configuration and that accesses an
+application that uses the OAuth protocol, register your {prodname}
+environment with the application. The steps vary for each application.
+See the appropriate topic:
+
+* link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering with Dropbox]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-jira[Registering with Jira]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Registering with a REST API]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering with Salesforce]
+* link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[Connecting to SAP Concur]
+* link:{LinkFuseOnlineConnectorGuide}#register-with-twitter_twitter[Registering with Twitter]
+
+. In the left panel, click *Connections* and confirm that there are no
+longer any connections that require configuration.
+. In the left panel, click *Integrations*. In the list of integrations, 
+imported integrations have a 
+green triangle in the upper left corner of their entries. 
+. In the list of integrations, at the right of the entry for the
+integration that you imported, click 
+image:../../images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+select *Edit*. 
+. In the upper right, click *Save* or, if you want to start
+running the imported integration, click *Publish*. Regardless of whether
+you save the integration as a draft or you publish the integration, 
+{prodname} updates the integration to use the updated connections. 
