@@ -12,8 +12,6 @@
 // the project's config changing)
 const fs = require('fs');
 const path = require('path');
-//const {resolve, join} = require('path');
-const repoRoot = path.join(__dirname, '..', '..');
 const snapshotPath = path.join(__dirname, '..', 'snapshots');
 
 /**
@@ -60,8 +58,7 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('task', {
     getSnapshot() {
-      const latestFile = getLatestFile(snapshotPath);
-      return latestFile;
+      return getLatestFile(snapshotPath);
     },
 
     storeSnapshot(snapshot) {
