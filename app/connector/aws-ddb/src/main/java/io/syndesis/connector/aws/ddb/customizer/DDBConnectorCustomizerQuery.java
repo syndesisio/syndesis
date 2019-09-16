@@ -17,6 +17,7 @@ package io.syndesis.connector.aws.ddb.customizer;
 
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.google.common.base.Splitter;
+import io.syndesis.connector.aws.ddb.util.Util;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.aws.ddb.DdbConstants;
@@ -31,7 +32,7 @@ public class DDBConnectorCustomizerQuery extends DDBConnectorCustomizer {
     @Override
     protected void customize(Exchange exchange, Map<String, Object> options) {
         Map<String, AttributeValue> element =
-        getAttributeValueMap("element", options);
+        Util.getAttributeValueMap("element", options);
         exchange.getIn().setHeader(DdbConstants.KEY, element);
         exchange.getIn().setHeader(DdbConstants.OPERATION, DdbOperations.GetItem);
 

@@ -135,7 +135,7 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
             String result = template.requestBody("direct:start",
                     AWSDDBConfiguration.ELEMENT_VALUE, String.class);
 
-            Assertions.assertThat(result).isEqualTo(AWSDDBConfiguration.ELEMENT_OUTPUT);
+            Assertions.assertThat(result).isEqualTo(AWSDDBConfiguration.ELEMENT_VALUE);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

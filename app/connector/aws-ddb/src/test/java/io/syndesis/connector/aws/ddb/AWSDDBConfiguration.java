@@ -43,7 +43,6 @@ public class AWSDDBConfiguration {
     protected static final Long randomId = System.currentTimeMillis();
 
     //TODO change this to your table constraints
-    protected static final String ELEMENT_VALUE = "{\"clave\" : \"" + randomId + "\"}";
-    protected static final String ELEMENT_OUTPUT = "{clave={S: " + randomId + ",}}";
+    protected static final String ELEMENT_VALUE = "{\"clave\":\"" + randomId + "\"}";
     //TODO change this to your table constraints
 }

@@ -13,20 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.aws.ddb.customizer;
-
-import io.syndesis.connector.aws.ddb.util.Util;
-import org.apache.camel.Exchange;
-import org.apache.camel.component.aws.ddb.DdbConstants;
-import org.apache.camel.component.aws.ddb.DdbOperations;
+package io.syndesis.connector.aws.ddb.metadata;
 
 import java.util.Map;
+import java.util.Optional;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
+import org.apache.camel.component.extension.metadata.DefaultMetaData;
 
-public class DDBConnectorCustomizerPutItem extends DDBConnectorCustomizer {
+public class AWSDDBConnectorMetaDataExtension extends AbstractMetaDataExtension {
+
+    public AWSDDBConnectorMetaDataExtension(CamelContext camelContext) {
+        super(camelContext);
+    }
 
     @Override
-    protected void customize(Exchange exchange, Map<String, Object> options) {
-        exchange.getIn().setHeader(DdbConstants.ITEM, Util.getAttributeValueMap("element", options));
-        exchange.getIn().setHeader(DdbConstants.OPERATION, DdbOperations.PutItem);
+    public Optional<MetaData> meta(Map<String, Object> parameters) {
+        final MetaData metaData = new DefaultMetaData(null, null, null);
+
+        return Optional.of(metaData);
     }
 }
