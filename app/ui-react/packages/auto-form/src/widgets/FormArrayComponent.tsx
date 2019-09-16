@@ -110,7 +110,9 @@ export const FormArrayComponent: React.FunctionComponent<
         );
       })}
       <div className={'form-array-control__array-add'}>
-        <TextButton onClick={() => props.push(getNewArrayRow(definition))}>
+        <TextButton
+          data-testid="form-array-control-add-another-item-button"
+          onClick={() => props.push(getNewArrayRow(definition))}>
           <>
             <i className="fa fa-plus-circle" />
             &nbsp;
