@@ -1,6 +1,5 @@
-.integration-detail-metrics .card-pf.card-pf-aggregate-status {
-  padding-top: 10px;
-  padding-bottom: 10px;
+.integration-detail-metrics .pf-c-card {
+  min-height: 155px;
 }
 
 .integration-detail-metrics__duration-difference {
@@ -20,4 +19,6 @@
 .integration-detail-metrics__uptime-uptime {
   font-size: 11px;
   color: #8b8d8f;
+  text-align: right;
 }
+

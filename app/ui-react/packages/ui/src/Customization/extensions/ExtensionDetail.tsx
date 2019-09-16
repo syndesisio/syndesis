@@ -1,4 +1,6 @@
 import {
+  Card,
+  CardBody,
   Level,
   LevelItem,
   PageSection,
@@ -10,8 +12,6 @@ import {
 import * as H from '@syndesis/history';
 import {
   Button,
-  Card,
-  CardBody,
   OverlayTrigger,
   Tooltip,
 } from 'patternfly-react';

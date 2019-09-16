@@ -1,4 +1,5 @@
-import { Alert, Card } from 'patternfly-react';
+import { Card, CardBody } from '@patternfly/react-core';
+import { Alert } from 'patternfly-react';
 import * as React from 'react';
 import { DndFileChooser } from '../../Shared/DndFileChooser';
 
@@ -65,7 +66,7 @@ export const ExtensionImportCard: React.FunctionComponent<
 > = props => {
   return (
     <Card>
-      <Card.Body>
+      <CardBody>
         {props.i18nAlertMessage ? (
           <Alert type={'error'}>
             <span>{props.i18nAlertMessage}</span>
@@ -83,7 +84,7 @@ export const ExtensionImportCard: React.FunctionComponent<
           onUploadAccepted={props.onDndUploadAccepted}
           onUploadRejected={props.onDndUploadRejected}
         />
-      </Card.Body>
+      </CardBody>
     </Card>
   );
 };
