@@ -329,9 +329,6 @@ create_upgrade_docker_image() {
     echo "==== Creating upgrade image syndesis/syndesis-upgrade:$release_version"
     cd $topdir/tools/upgrade
 
-    # Copy syndesis.yml
-    cp $topdir/install/syndesis.yml .
-
     # Copy over syndesis-cli jar
     cp $topdir/app/server/cli/target/syndesis-cli.jar .
 
