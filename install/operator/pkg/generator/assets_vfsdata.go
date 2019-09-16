@@ -459,11 +459,6 @@ func (fs vfsgen۰FS) Open(path string) (http.File, error) {
 			vfsgen۰CompressedFileInfo: f,
 			gr:                        gr,
 		}, nil
-	case *vfsgen۰FileInfo:
-		return &vfsgen۰File{
-			vfsgen۰FileInfo: f,
-			Reader:          bytes.NewReader(f.content),
-		}, nil
 	case *vfsgen۰DirInfo:
 		return &vfsgen۰Dir{
 			vfsgen۰DirInfo: f,
@@ -543,37 +538,6 @@ func (f *vfsgen۰CompressedFile) Seek(offset int64, whence int) (int64, error) {
 }
 func (f *vfsgen۰CompressedFile) Close() error {
 	return f.gr.Close()
-}
-
-// vfsgen۰FileInfo is a static definition of an uncompressed file (because it's not worth gzip compressing).
-type vfsgen۰FileInfo struct {
-	name    string
-	modTime time.Time
-	content []byte
-}
-
-func (f *vfsgen۰FileInfo) Readdir(count int) ([]os.FileInfo, error) {
-	return nil, fmt.Errorf("cannot Readdir from file %s", f.name)
-}
-func (f *vfsgen۰FileInfo) Stat() (os.FileInfo, error) { return f, nil }
-
-func (f *vfsgen۰FileInfo) NotWorthGzipCompressing() {}
-
-func (f *vfsgen۰FileInfo) Name() string       { return f.name }
-func (f *vfsgen۰FileInfo) Size() int64        { return int64(len(f.content)) }
-func (f *vfsgen۰FileInfo) Mode() os.FileMode  { return 0444 }
-func (f *vfsgen۰FileInfo) ModTime() time.Time { return f.modTime }
-func (f *vfsgen۰FileInfo) IsDir() bool        { return false }
-func (f *vfsgen۰FileInfo) Sys() interface{}   { return nil }
-
-// vfsgen۰File is an opened file instance.
-type vfsgen۰File struct {
-	*vfsgen۰FileInfo
-	*bytes.Reader
-}
-
-func (f *vfsgen۰File) Close() error {
-	return nil
 }
 
 // vfsgen۰DirInfo is a static definition of a directory.
