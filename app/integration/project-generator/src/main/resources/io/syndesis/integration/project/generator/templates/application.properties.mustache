@@ -34,6 +34,6 @@ spring.autoconfigure.exclude[2] = org.springframework.boot.autoconfigure.data.mo
 {{#configuration.isActivityTracing}}
 # Jaeger/Opentracing
 jaeger.service.name = {{integration.id}}
-syndesis.integration.runtime.logging=false
-syndesis.integration.runtime.tracing=true
+syndesis.integration.runtime.logging.enabled=false
+syndesis.integration.runtime.tracing.enabled=true
 {{/configuration.isActivityTracing}}
