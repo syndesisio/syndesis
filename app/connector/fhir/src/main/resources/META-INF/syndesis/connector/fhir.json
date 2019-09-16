@@ -43,7 +43,7 @@
                 "order": "3",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               },
               "resourceType": {
                 "deprecated": false,
@@ -67,7 +67,7 @@
                 "order": "4",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               }
             }
           }
@@ -110,7 +110,7 @@
                 "order": "2",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               },
               "resourceType": {
                 "deprecated": false,
@@ -167,7 +167,7 @@
                 "order": "2",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               },
               "resourceType": {
                 "deprecated": false,
@@ -179,7 +179,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "select"
               },
               "version": {
                 "deprecated": false,
@@ -191,7 +191,7 @@
                 "order": "3",
                 "required": false,
                 "secret": false,
-                "type": "String"
+                "type": "text"
               }
             }
           }
@@ -248,7 +248,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "select"
               }
             }
           }
@@ -292,7 +292,7 @@
                 "order": "3",
                 "required": false,
                 "secret": false,
-                "type": "String"
+                "type": "text"
               },
               "operationNumber": {
                 "defaultValue": 1,
@@ -387,7 +387,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "select"
               }
             }
           }
@@ -468,7 +468,7 @@
       "order": "5",
       "required": false,
       "secret": true,
-      "type": "string"
+      "type": "text"
     },
     "fhirVersion": {
       "defaultValue": "DSTU3",
@@ -487,7 +487,7 @@
       "order": "1",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "text"
     },
     "password": {
       "defaultValue": "",
@@ -500,7 +500,7 @@
       "order": "4",
       "required": false,
       "secret": true,
-      "type": "string"
+      "type": "text"
     },
     "serverUrl": {
       "defaultValue": "http://fhirtest.uhn.ca/baseDstu3",
@@ -513,7 +513,7 @@
       "order": "2",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "text"
     },
     "username": {
       "defaultValue": "",
@@ -526,7 +526,7 @@
       "order": "3",
       "required": false,
       "secret": false,
-      "type": "string"
+      "type": "text"
     }
   },
   "tags": [

@@ -176,7 +176,7 @@ export function massageValue(
       const answer: any =
         value ||
         defaultValue ||
-        (property.enum && property.enum.length > 0 && property.enum[0].value) ||
+        (property.required && property.enum && property.enum.length > 0 && property.enum[0].value) ||
         '';
       return typeof answer === 'string' ? answer : JSON.stringify(answer);
     }
