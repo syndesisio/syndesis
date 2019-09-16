@@ -76,6 +76,65 @@ Cypress.Commands.add('createConnection', cnx => {
 });
 
 /**
+ * CREATE INTEGRATION
+ */
+Cypress.Commands.add('createIntegration', data => {
+  cy.visit('/');
+
+  cy.get('[data-testid=dashboard-create-integration-button]').click();
+  cy.get('[data-testid=connection-card-timer-card]').click();
+
+  /**
+   * Select the Simple Timer action
+   */
+  cy.get(
+    '[data-testid=integration-editor-actions-list-item-cron-list-item]'
+  ).within(() => {
+    cy.get('[data-testid=select-action-page-select-button]').click();
+  });
+
+  cy.get('button#integration-editor-form-next-button').click();
+
+  /**
+   * Select Log connection
+   */
+  cy.wait(200);
+  cy.get('[data-testid=connection-card-log-card]').click();
+
+  cy.get('[data-testid=bodyloggingenabled]').check();
+  cy.get('button#integration-editor-form-next-button').click();
+
+  cy.get('[data-testid=integration-flow-add-step-add-step-link]').click();
+
+  /**
+   * Use connection created earlier
+   */
+  cy.get('[data-testid|=connection-card-' + data.connectionSlug + ']').click();
+
+  cy.get(
+    '[data-testid=integration-editor-actions-list-item-list-all-tasks-list-item]'
+  ).within(() => {
+    cy.get('[data-testid=select-action-page-select-button]').click();
+  });
+
+  cy.wait(200);
+  cy.get(
+    '[data-testid=integration-editor-nothing-to-configure-next-button]'
+  ).click();
+
+  /**
+   * Set name and description
+   */
+  cy.get('[data-testid=name]')
+    .clear()
+    .type(data.integrationName);
+  cy.get('[data-testid=description]')
+    .clear()
+    .type('This was created from an E2E test.');
+  cy.get('#integration-editor-publish-button').click();
+});
+
+/**
  * DELETE CONNECTION
  */
 Cypress.Commands.add('deleteConnection', cnx => {

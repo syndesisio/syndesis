@@ -15,6 +15,7 @@ describe('Create Data', () => {
   before(function() {
     cy.log('Resetting the database...');
     cy.request('GET', 'api/v1/test-support/reset-db').then(resp => {
+      cy.log('resp: ' + JSON.stringify(resp));
       cy.log('Database has been reset. Creating new data...');
     });
   });
@@ -31,15 +32,11 @@ describe('Create Data', () => {
     }
   });
 
-  it('creates an integration', () => {
-    cy.visit('/connections');
-
-    cy.get('.form-control').type(connectionName + '{enter}');
-    const testCnx = Cypress.$(
-      '[data-testid|=connection-card-' + connectionSlug + ']'
-    );
-    if (testCnx.length === 0) {
-      cy.createConnection({ name: connectionName, slug: connectionSlug });
-    }
+  /**
+   * Hold off on creating an integration,
+   * until we know for sure we will need this.
+   */
+  it.skip('creates an integration', () => {
+    cy.createIntegration({ connectionSlug, integrationName });
   });
 });
