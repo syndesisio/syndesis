@@ -135,22 +135,22 @@ github.com/modern-go/concurrent
 # github.com/modern-go/reflect2 v1.0.1
 github.com/modern-go/reflect2
 # github.com/openshift/api v3.9.0+incompatible
+github.com/openshift/api/route/v1
 github.com/openshift/api/apps/v1
 github.com/openshift/api/authorization/v1
 github.com/openshift/api/build/v1
 github.com/openshift/api/image/v1
 github.com/openshift/api/oauth/v1
-github.com/openshift/api/route/v1
 github.com/openshift/api/template/v1
 github.com/openshift/api/pkg/serialization
 github.com/openshift/api/image/docker10
 github.com/openshift/api/image/dockerpre012
 # github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
 github.com/operator-framework/operator-sdk/pkg/log/zap
-github.com/operator-framework/operator-sdk/pkg/restmapper
 github.com/operator-framework/operator-sdk/pkg/k8sutil
 github.com/operator-framework/operator-sdk/pkg/leader
 github.com/operator-framework/operator-sdk/pkg/metrics
+github.com/operator-framework/operator-sdk/pkg/restmapper
 github.com/operator-framework/operator-sdk/version
 github.com/operator-framework/operator-sdk/pkg/test
 github.com/operator-framework/operator-sdk/internal/pkg/scaffold
@@ -369,10 +369,10 @@ k8s.io/apiextensions-apiserver/pkg/apis/apiextensions
 k8s.io/apimachinery/pkg/runtime
 k8s.io/apimachinery/pkg/apis/meta/v1
 k8s.io/apimachinery/pkg/runtime/schema
-k8s.io/apimachinery/pkg/apis/meta/v1/unstructured
 k8s.io/apimachinery/pkg/api/errors
-k8s.io/apimachinery/pkg/util/intstr
+k8s.io/apimachinery/pkg/apis/meta/v1/unstructured
 k8s.io/apimachinery/pkg/types
+k8s.io/apimachinery/pkg/util/intstr
 k8s.io/apimachinery/pkg/util/runtime
 k8s.io/apimachinery/pkg/runtime/serializer
 k8s.io/apimachinery/pkg/runtime/serializer/json
@@ -460,12 +460,12 @@ k8s.io/client-go/transport
 k8s.io/client-go/util/cert
 k8s.io/client-go/kubernetes/scheme
 k8s.io/client-go/restmapper
-k8s.io/client-go/tools/leaderelection
-k8s.io/client-go/tools/leaderelection/resourcelock
-k8s.io/client-go/tools/record
 k8s.io/client-go/plugin/pkg/client/auth/azure
 k8s.io/client-go/plugin/pkg/client/auth/oidc
 k8s.io/client-go/plugin/pkg/client/auth/openstack
+k8s.io/client-go/tools/leaderelection
+k8s.io/client-go/tools/leaderelection/resourcelock
+k8s.io/client-go/tools/record
 k8s.io/client-go/util/workqueue
 k8s.io/client-go/tools/cache
 k8s.io/client-go/tools/auth
@@ -527,8 +527,8 @@ k8s.io/kube-openapi/pkg/util/proto
 sigs.k8s.io/controller-runtime/pkg/runtime/scheme
 sigs.k8s.io/controller-runtime/pkg/client
 sigs.k8s.io/controller-runtime/pkg/client/config
-sigs.k8s.io/controller-runtime/pkg/manager
 sigs.k8s.io/controller-runtime/pkg/controller/controllerutil
+sigs.k8s.io/controller-runtime/pkg/manager
 sigs.k8s.io/controller-runtime/pkg/runtime/log
 sigs.k8s.io/controller-runtime/pkg/runtime/signals
 sigs.k8s.io/controller-runtime/pkg/controller
@@ -536,6 +536,7 @@ sigs.k8s.io/controller-runtime/pkg/handler
 sigs.k8s.io/controller-runtime/pkg/reconcile
 sigs.k8s.io/controller-runtime/pkg/source
 sigs.k8s.io/controller-runtime/pkg/client/apiutil
+sigs.k8s.io/controller-runtime/pkg/client/fake
 sigs.k8s.io/controller-runtime/pkg/cache
 sigs.k8s.io/controller-runtime/pkg/internal/recorder
 sigs.k8s.io/controller-runtime/pkg/leaderelection
@@ -544,16 +545,15 @@ sigs.k8s.io/controller-runtime/pkg/recorder
 sigs.k8s.io/controller-runtime/pkg/runtime/inject
 sigs.k8s.io/controller-runtime/pkg/webhook/admission
 sigs.k8s.io/controller-runtime/pkg/webhook/admission/types
-sigs.k8s.io/controller-runtime/pkg/client/fake
 sigs.k8s.io/controller-runtime/pkg/internal/controller
 sigs.k8s.io/controller-runtime/pkg/predicate
 sigs.k8s.io/controller-runtime/pkg/event
 sigs.k8s.io/controller-runtime/pkg/source/internal
+sigs.k8s.io/controller-runtime/pkg/internal/objectutil
 sigs.k8s.io/controller-runtime/pkg/cache/internal
 sigs.k8s.io/controller-runtime/pkg/patch
 sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics
 sigs.k8s.io/controller-runtime/pkg/webhook/types
-sigs.k8s.io/controller-runtime/pkg/internal/objectutil
 sigs.k8s.io/controller-runtime/pkg/internal/controller/metrics
 # sigs.k8s.io/controller-tools v0.2.1 => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
 sigs.k8s.io/controller-tools/pkg/crd/generator
