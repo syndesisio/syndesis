@@ -62,7 +62,6 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                 try {
                     MongoConfiguration mongoConf = new MongoConfiguration();
                     consumeOption(camelContext, options, "host", String.class, mongoConf::setHost);
-                    consumeOption(camelContext, options, "port", Integer.class, mongoConf::setPort);
                     consumeOption(camelContext, options, "user", String.class, mongoConf::setUser);
                     consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
                     consumeOption(camelContext, options, "adminDB", String.class, mongoConf::setAdminDB);

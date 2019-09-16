@@ -143,10 +143,9 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionPortKO() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", "localhost");
+        params.put("host", "localhost:12343");
         params.put("user", USER);
         params.put("password", PASSWORD);
-        params.put("port", 12343);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
