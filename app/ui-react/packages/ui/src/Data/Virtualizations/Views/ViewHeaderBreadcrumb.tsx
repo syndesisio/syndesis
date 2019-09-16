@@ -41,7 +41,6 @@ export interface IViewHeaderBreadcrumbProps {
   onExport: (virtualizationName: string) => void; */
   onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
-  serviceVdbName: string;
   virtualizationName: string;
   hasViews: boolean;
 }
@@ -76,8 +75,8 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
   const doUnpublish = () => {
     setShowConfirmationDialog(false);
 
-    if (props.serviceVdbName) {
-      props.onUnpublish(props.serviceVdbName);
+    if (props.virtualizationName) {
+      props.onUnpublish(props.virtualizationName);
     }
   }
 

@@ -32,7 +32,6 @@ export const useVirtualizationHelpers = () => {
   ): Promise<RestDataService> => {
     const newVirtualization = {
       keng__id: `${virtName}`,
-      serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc ? `${virtDesc}` : '',
     } as RestDataService;
 
@@ -62,7 +61,6 @@ export const useVirtualizationHelpers = () => {
   ): Promise<void> => {
     const updatedVirtualization = {
       keng__id: `${virtName}`,
-      serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc,
     } as RestDataService;
 
@@ -259,14 +257,12 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
-   * Validate the view name for the specified vdb and model
-   * @param vdbName the VDB name
-   * @param modelName the model name
+   * Validate the view name for the specified virtualization
+   * @param virtualizationName the virtualization name
    * @param viewName the view name
    */
   const validateViewName = async (
-    vdbName: string,
-    modelName: string,
+    virtualizationName: string,
     viewName: string
   ): Promise<IDvNameValidationResult> => {
     const encodedName = encodeURIComponent(viewName);
@@ -275,7 +271,7 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/${vdbName}/views/nameValidation/${encodedName}`,
+      }workspace/${virtualizationName}/views/nameValidation/${encodedName}`,
     });
 
     if (!response.ok) {
@@ -292,14 +288,14 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
-   * Unpublish the Service VDB with the specified name.
-   * @param vdbName the name of the vdb associated with the service
+   * Unpublish the virtualization with the specified name
+   * @param virtualizationName the name of the virtualization
    */
-  const unpublishServiceVdb = async (vdbName: string): Promise<void> => {
+  const unpublishVirtualization = async (virtualizationName: string): Promise<void> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
-      url: `${apiContext.dvApiUri}metadata/publish/${vdbName}`,
+      url: `${apiContext.dvApiUri}metadata/publish/${virtualizationName}`,
     });
 
     if (!response.ok) {
@@ -380,7 +376,7 @@ export const useVirtualizationHelpers = () => {
     publishVirtualization,
     queryVirtualization,
     saveViewDefinition,
-    unpublishServiceVdb,
+    unpublishVirtualization,
     updateVirtualizationDescription,
     validateViewDefinition,
     validateViewName,

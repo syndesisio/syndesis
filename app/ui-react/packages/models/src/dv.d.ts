@@ -18,7 +18,6 @@ export interface RestDataService {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
-  serviceVdbName: string;
   serviceViewModel: string;
   tko__description: string;
 }

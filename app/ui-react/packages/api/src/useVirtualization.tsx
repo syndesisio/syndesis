@@ -12,7 +12,6 @@ export const useVirtualization = (
       id: '',
       keng__id: '',
       publishedState: 'NOTFOUND',
-      serviceVdbName: '',
       serviceViewModel: '',
       tko__description: '',
     },
