@@ -22,6 +22,8 @@ sed -i.bu "s#https://192\.168\.64\.2:8443#${OS_HOST}#" public/config.json
 sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" public/config.json
 rm public/config.json.bu
 
+# scale down the operator to stop it replacing our local changes
+oc scale --replicas=0 dc syndesis-operator
 oc replace --force -f - <<EOF
 {
   "kind": "List",
