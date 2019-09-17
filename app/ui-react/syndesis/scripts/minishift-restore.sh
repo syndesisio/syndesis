@@ -83,3 +83,6 @@ oc replace --force -f - <<EOF
   ]
 }
 EOF
+
+# also scale back up the operator
+oc scale --replicas=1 dc syndesis-operator
