@@ -6,21 +6,21 @@
  * to create the data manually.
  */
 
-const connectionName = 'E2E Todo Connection';
-const integrationName = 'E2E Todo Integration';
-const connectionSlug = 'e2e-todo-connection';
-const integrationSlug = 'e2e-todo-integration';
+const constants = require('../../fixtures/constants');
 
 describe('Create Data', () => {
   it('creates a connection', () => {
     cy.visit('/connections');
 
-    cy.get('.form-control').type(connectionName + '{enter}');
+    cy.get('.form-control').type(constants.CONNECTION_NAME + '{enter}');
     const testCnx = Cypress.$(
-      '[data-testid|=connection-card-' + connectionSlug + ']'
+      '[data-testid|=connection-card-' + constants.CONNECTION_SLUG + ']'
     );
     if (testCnx.length === 0) {
-      cy.createConnection({ name: connectionName, slug: connectionSlug });
+      cy.createConnection({
+        name: constants.CONNECTION_NAME,
+        slug: constants.CONNECTION_SLUG,
+      });
     }
   });
 
@@ -29,6 +29,9 @@ describe('Create Data', () => {
    * until we know for sure we will need this.
    */
   it.skip('creates an integration', () => {
-    cy.createIntegration({ connectionSlug, integrationName });
+    cy.createIntegration({
+      connectionSlug: constants.CONNECTION_NAME,
+      integrationName: constants.INTEGRATION_NAME,
+    });
   });
 });

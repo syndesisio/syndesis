@@ -30,7 +30,7 @@
 Cypress.Commands.add('createConnection', cnx => {
   /**
    * Create To Do Connection
-   * TODO: This will break if a Connection with the same name already exists.
+   * This will break if a Connection with the same name already exists.
    */
   cy.visit('/');
 

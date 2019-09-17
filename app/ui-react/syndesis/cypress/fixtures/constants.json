@@ -1,0 +1,6 @@
+{
+  "CONNECTION_NAME": "E2E Todo Connection",
+  "CONNECTION_SLUG": "e2e-todo-connection",
+  "INTEGRATION_NAME": "E2E Todo Integration",
+  "INTEGRATION_SLUG": "e2e-todo-integration"
+}

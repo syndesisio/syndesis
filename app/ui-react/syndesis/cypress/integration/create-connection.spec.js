@@ -1,7 +1,6 @@
-describe('Create a Connection', () => {
-  const connectionName = 'E2E DB Connection';
-  const connectionSlug = 'e2e-db-connection';
+const constants = require('../fixtures/constants');
 
+describe('Create a Connection', () => {
   /**
    * Happy Path
    *
@@ -102,8 +101,8 @@ describe('Create a Connection', () => {
 
     cy.get('[data-testid=name]')
       .clear()
-      .type(connectionName)
-      .should('have.value', connectionName);
+      .type(constants.CONNECTION_NAME)
+      .should('have.value', constants.CONNECTION_NAME);
 
     cy.get('[data-testid=description]')
       .clear()
@@ -118,9 +117,9 @@ describe('Create a Connection', () => {
   it('loads the Connections page with new Connection', () => {
     cy.location('pathname').should('eq', '/connections/');
 
-    cy.get('.form-control').type(connectionName + '{enter}');
-    cy.get('[data-testid=connection-card-' + connectionSlug + '-card]').should(
-      'exist'
-    );
+    cy.get('.form-control').type(constants.CONNECTION_NAME + '{enter}');
+    cy.get(
+      '[data-testid=connection-card-' + constants.CONNECTION_SLUG + '-card]'
+    ).should('exist');
   });
 });
