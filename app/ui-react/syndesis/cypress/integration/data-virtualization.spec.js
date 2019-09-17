@@ -1,11 +1,6 @@
+const constants = require('../fixtures/constants');
+
 describe('Create, Publish & Delete a Data Virtualization', () => {
-  const randomInteger = () => {
-    return Math.floor(Math.random() * (100 + 1));
-  };
-  const nameInt = randomInteger();
-
-  const name = 'E2E_' + nameInt;
-
   it('loads the data virtualization page', () => {
     cy.visit('/data/virtualizations/');
     cy.contains('h1', 'Data Virtualizations');
@@ -20,8 +15,8 @@ describe('Create, Publish & Delete a Data Virtualization', () => {
     cy.contains('main', 'Create New Data Virtualization');
     cy.get('[data-testid=virtname]')
       .clear()
-      .type(name)
-      .should('have.value', name);
+      .type(constants.DATA_VIRT_NAME)
+      .should('have.value', constants.DATA_VIRT_NAME);
 
     cy.get('[data-testid=virtdescription]')
       .clear()
@@ -50,7 +45,11 @@ describe('Create, Publish & Delete a Data Virtualization', () => {
    */
   it.skip('should publish a virtualization', () => {
     cy.visit('/data/virtualizations/');
-    cy.get('[data-testid=virtualization-list-item-' + name + '-dropdown-kebab]')
+    cy.get(
+      '[data-testid=virtualization-list-item-' +
+        constants.DATA_VIRT_NAME +
+        '-dropdown-kebab]'
+    )
       .should('exist')
       .click()
       .within(() => {
@@ -66,11 +65,15 @@ describe('Create, Publish & Delete a Data Virtualization', () => {
 
   it('should delete unpublished virtualization', () => {
     cy.visit('/data/virtualizations/');
-    cy.get('button#virtualization-' + name + '-action-menu')
+    cy.get('button#virtualization-' + constants.DATA_VIRT_NAME + '-action-menu')
       .should('exist')
       .click();
 
-    cy.get('[data-testid=virtualization-list-item-' + name + '-delete]')
+    cy.get(
+      '[data-testid=virtualization-list-item-' +
+        constants.DATA_VIRT_NAME +
+        '-delete]'
+    )
       .should('be.visible')
       .click();
 

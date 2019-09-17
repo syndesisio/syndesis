@@ -1,13 +1,6 @@
-describe('Integration CI.CD', () => {
-  const randomInteger = () => {
-    return Math.floor(Math.random() * (100 + 1));
-  };
-  const nameInt = randomInteger();
-  const envName = 'E2E Test Env ' + nameInt;
-  const envSlug = 'e2e-test-env-' + nameInt;
-  const integrationName = 'E2E Todo Integration';
-  const integrationSlug = 'e2e-todo-integration';
+const constants = require('../fixtures/constants');
 
+describe('Integration CI.CD', () => {
   /**
    * SETUP
    *
@@ -18,12 +11,16 @@ describe('Integration CI.CD', () => {
   before(function() {
     cy.visit('/integrations/manageCicd/');
 
-    const testEnv = Cypress.$('[data-testid|=cicd-list-item-' + envSlug + ']');
+    const testEnv = Cypress.$(
+      '[data-testid|=cicd-list-item-' + constants.ENVIRONMENT_SLUG + ']'
+    );
     if (testEnv.length) {
       /**
        * Delete the environment to properly test creating
        */
-      cy.get('[data-testid|=cicd-list-item-' + envSlug + ']').within(() => {
+      cy.get(
+        '[data-testid|=cicd-list-item-' + constants.ENVIRONMENT_SLUG + ']'
+      ).within(() => {
         cy.get('[data-testid=cicd-list-item-remove-button]').click();
       });
       cy.get('.modal-content').should('be.visible');
@@ -62,22 +59,28 @@ describe('Integration CI.CD', () => {
     cy.get('[data-testid=cicd-edit-dialog-save-button]').should('be.disabled');
     cy.get('[data-testid=cicd-edit-dialog-tag-name]')
       .click()
-      .type(envName);
+      .type(constants.ENVIRONMENT_NAME);
     cy.get('[data-testid=cicd-edit-dialog-save-button]')
       .should('not.be.disabled')
       .click();
     cy.wait(200);
-    cy.get('[data-testid|=cicd-list-item-' + envSlug + ']').should('exist');
+    cy.get(
+      '[data-testid|=cicd-list-item-' + constants.ENVIRONMENT_SLUG + ']'
+    ).should('exist');
   });
 
   it('tags integration for release', () => {
     cy.visit('/integrations');
 
-    cy.get('.form-control').type(integrationName + '{enter}');
-    cy.get('[data-testid|=integrations-list-item-' + integrationSlug + ']')
+    cy.get('.form-control').type(constants.INTEGRATION_NAME + '{enter}');
+    cy.get(
+      '[data-testid|=integrations-list-item-' + constants.INTEGRATION_SLUG + ']'
+    )
       .eq(0)
       .should('exist');
-    cy.get('[data-testid|=integrations-list-item-' + integrationSlug + ']')
+    cy.get(
+      '[data-testid|=integrations-list-item-' + constants.INTEGRATION_SLUG + ']'
+    )
       .eq(0)
       .within(() => {
         cy.get('.dropdown-toggle').click();
@@ -91,7 +94,7 @@ describe('Integration CI.CD', () => {
           .within(() => {
             cy.get(
               '[data-testid=tag-integration-list-item-' +
-                envSlug +
+                constants.ENVIRONMENT_SLUG +
                 '-selected-input]'
             ).click();
           });

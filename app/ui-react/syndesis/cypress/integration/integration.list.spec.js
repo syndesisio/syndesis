@@ -1,3 +1,5 @@
+const constants = require('../fixtures/constants');
+
 describe('Integration List', () => {
   const integrationSlug = 'e2e-todo-integration';
 
@@ -25,7 +27,9 @@ describe('Integration List', () => {
     /**
      * Start an integration
      */
-    cy.get('[data-testid|=integrations-list-item-' + integrationSlug + ']')
+    cy.get(
+      '[data-testid|=integrations-list-item-' + constants.INTEGRATION_SLUG + ']'
+    )
       .first()
       .within(() => {
         cy.get('.dropdown-toggle').click();
@@ -43,7 +47,9 @@ describe('Integration List', () => {
     /**
      * Stop an integration
      */
-    cy.get('[data-testid|=integrations-list-item-' + integrationSlug + ']')
+    cy.get(
+      '[data-testid|=integrations-list-item-' + constants.INTEGRATION_SLUG + ']'
+    )
       .first()
       .within(() => {
         cy.get('.dropdown-toggle').click();

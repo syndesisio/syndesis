@@ -1,6 +1,9 @@
 {
   "CONNECTION_NAME": "E2E Todo Connection",
   "CONNECTION_SLUG": "e2e-todo-connection",
+  "DATA_VIRT_NAME": "E2E_VIRT",
+  "ENVIRONMENT_NAME": "E2E Test Env",
+  "ENVIRONMENT_SLUG": "e2e-test-env",
   "INTEGRATION_NAME": "E2E Todo Integration",
   "INTEGRATION_SLUG": "e2e-todo-integration"
 }
