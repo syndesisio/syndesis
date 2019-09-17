@@ -14,7 +14,6 @@
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
     "errorUpdatingDescription": "Errore durante il salvataggio della descrizione per la virtualizzazione \"{{name}}\"",
     "errorValidatingViewName": "Error validating the view name",
-    "errorValidatingVirtualizationName": "Error validating the virtualization name",
     "importVirtualizationTip": "Import a data virtualization",
     "publishedDataVirtualization": "Published",
     "publishInProgress": "publish in progress...",
