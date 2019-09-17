@@ -1,11 +1,11 @@
-import { 
-  Alert, 
-  AlertActionCloseButton, 
-  Button, 
-  Card, 
-  CardBody, 
-  CardFooter, 
-  Title 
+import {
+  Alert,
+  AlertActionCloseButton,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
@@ -78,37 +78,53 @@ export interface IDdlEditorProps {
   /**
    * The callback for when the save button is clicked
    * @param ddl the text area ddl
+   * @returns `true` if saving the DDL was successful
    */
-  onSave: (ddl: string) => void;
+  onSave: (ddl: string) => Promise<boolean>;
+
+  /**
+   * @param dirty `true` if the editor has unsaved changes
+   */
+  setDirty: (dirty: boolean) => void;
 }
 
-export const DdlEditor: React.FunctionComponent<
-IDdlEditorProps
-> = props => {
-
+export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
   const [initialDdlValue] = React.useState(props.viewDdl);
+  const [hasChanges, setHasChanges] = React.useState(false);
+  const [savedValue, setSavedValue] = React.useState(props.viewDdl);
 
   const handleCloseValidationMessage = () => {
     props.onCloseValidationMessage();
-  }
+  };
 
   const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
     setDdlValue(value);
     handleCloseValidationMessage();
-  }
+
+    const dirty = value !== savedValue;
+
+    if (dirty !== hasChanges) {
+      setHasChanges(dirty);
+      props.setDirty(dirty);
+    }
+  };
 
   const handleFinish = () => {
     props.onFinish();
   };
 
-  const handleSave = () => {
-    props.onSave(ddlValue);
+  const handleSave = async () => {
+    const saved = await props.onSave(ddlValue);
+    if (saved) {
+      setSavedValue(ddlValue);
+      setHasChanges(false);
+    }
   };
 
   /**
    * reformats the tableInfo into the format expected by hintOptions
-   * Example - 
+   * Example -
    *   tables: {
    *     countries: ['name', 'population', 'size'],
    *     users: ['name', 'score', 'birthDate'],
@@ -116,13 +132,13 @@ IDdlEditorProps
    * @param tableInfos the table infos
    */
   const getHintOptions = (tableInfos: ITableInfo[]) => {
-    const result = {tables: {}};
+    const result = { tables: {} };
 
     for (const tableInfo of tableInfos) {
       result.tables[tableInfo.name] = tableInfo.columnNames;
     }
     return result;
-  }
+  };
 
   const editorOptions = {
     autofocus: true,
@@ -146,14 +162,22 @@ IDdlEditorProps
       </Title>
       <Card>
         <CardBody>
-          {props.showValidationMessage ? props.validationResults.map((e, idx) => (
-            <Alert key={idx}
-              variant={e.type}
-              title={props.i18nValidationResultsTitle}
-              action={<AlertActionCloseButton onClose={handleCloseValidationMessage} />}
-            >{e.message}
-            </Alert>
-          )) : null}
+          {props.showValidationMessage
+            ? props.validationResults.map((e, idx) => (
+                <Alert
+                  key={idx}
+                  variant={e.type}
+                  title={props.i18nValidationResultsTitle}
+                  action={
+                    <AlertActionCloseButton
+                      onClose={handleCloseValidationMessage}
+                    />
+                  }
+                >
+                  {e.message}
+                </Alert>
+              ))
+            : null}
           <TextEditor
             value={initialDdlValue}
             options={editorOptions}
@@ -161,11 +185,11 @@ IDdlEditorProps
           />
         </CardBody>
         <CardFooter>
-        <Button
+          <Button
             data-testid={'ddl-editor-done-button'}
             variant="secondary"
             className="ddl-editor__button"
-            isDisabled={false}
+            isDisabled={props.isSaving}
             onClick={handleFinish}
           >
             {props.i18nDoneLabel}
@@ -174,7 +198,7 @@ IDdlEditorProps
             data-testid={'ddl-editor-save-button'}
             variant="primary"
             className="ddl-editor__button"
-            isDisabled={props.isSaving}
+            isDisabled={props.isSaving || !hasChanges}
             onClick={handleSave}
           >
             {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
@@ -184,5 +208,4 @@ IDdlEditorProps
       </Card>
     </PageSection>
   );
-
-}
+};
