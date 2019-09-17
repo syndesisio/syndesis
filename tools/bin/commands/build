@@ -22,7 +22,6 @@ build::usage() {
     --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
--e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
 -l  --local                    If building the operators, use a locally installed go
                                Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
     --clean-cache              Used for the operator build to remove the local dependency cache.
@@ -223,14 +222,6 @@ is_minishift_docker_daemon() {
         echo "false"
     fi
 }
-
-ensure_rcp_on_minishift() {
-    if ! $(minishift ssh type rsync >/dev/null 2>&1); then
-        echo "Installing rsync on Minishift"
-        minishift ssh sudo "su -c 'yum install -y rsync'"
-    fi
-}
-
 
 mkdir_on_minishift() {
     local dirs="$@"
