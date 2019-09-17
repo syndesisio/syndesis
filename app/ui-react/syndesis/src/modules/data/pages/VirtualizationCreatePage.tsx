@@ -4,7 +4,7 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 
-import { Breadcrumb, ButtonLink, PageSection } from '@syndesis/ui';
+import { Breadcrumb, IVirtualizationCreateValidationResult, PageSection, VirtualizationCreateForm } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
@@ -21,6 +21,9 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
   const { history } = useRouteData();
   const appContext = React.useContext(AppContext);
   const { createVirtualization, validateVirtualizationName } = useVirtualizationHelpers();
+  const [validationResults, setValidationResults] = React.useState<
+  IVirtualizationCreateValidationResult[]
+  >([]);
 
   const formDefinition = {
     virtDescription: {
@@ -49,40 +52,48 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
     },
   } as IFormDefinition;
 
+  const doCancel = async () => {
+    history.push(resolvers.data.virtualizations.list());
+  };
+
   /**
    * Backend name validation only occurs when attempting to create
    * @param proposedName the name to validate
    */
   const doValidateName = async (
     proposedName: string
-  ): Promise<true | string> => {
+  ): Promise<IVirtualizationCreateValidationResult> => {
     // make sure name has a value
     if (proposedName === '') {
-      return t(
+      return {
+        message: t(
         'shared:requiredFieldMessage'
-      ) as string;
+      ) as string,
+      type: 'danger'
+      };
     }
-
+  
     const response: IDvNameValidationResult = await validateVirtualizationName(
       proposedName
     );
 
     if (!response.isError) {
-      return true;
+      return {
+        message: '',
+        type: 'success'
+      }
     }
-    return (
-      t(
-        'virtualization.errorValidatingVirtualizationName'
-      ) +
-      (response.error ? ' : ' + response.error : '')
-    );
+    return {
+      message: response.error ? response.error : '',
+      type: 'danger'
+    }
   };
 
   const handleCreate = async (value: any) => {
     const validation = await doValidateName(
       value.virtName
     );
-    if (validation === true) {
+    if (validation.type === 'success') {
       const virtualization = await createVirtualization(
         appContext.user.username || 'developer',
         value.virtName,
@@ -103,25 +114,13 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
         })
       );
     } else {
-      pushNotification(validation, 'error');
+      setValidationResults([validation]);
     }
   };
 
   return (
     <>
-      <Breadcrumb
-        actions={
-          <ButtonLink
-            data-testid={
-              'virtualization-create-page-cancel-button'
-            }
-            href={resolvers.data.root()}
-            className={'wizard-pf-cancel'}
-          >
-            Cancel
-          </ButtonLink>
-        }
-      >
+      <Breadcrumb>
         <Link
           data-testid={
             'virtualization-create-page-home-link'
@@ -164,19 +163,17 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
             });
           }}
         >
-          {({ fields, handleSubmit, isValid }) => (
-            <form onSubmit={handleSubmit}>
+          {({ fields, handleSubmit, isSubmitting, isValidating }) => (
+            <VirtualizationCreateForm
+              handleSubmit={handleSubmit}
+              i18nCancelLabel={t('shared:Cancel')}
+              i18nCreateLabel={t('shared:Create')}
+              isWorking={isSubmitting || isValidating}
+              validationResults={validationResults}
+              onCancel={doCancel}
+            >
               {fields}
-              <button
-                type="submit"
-                data-testid={
-                  'virtualization-create-page-create-button'
-                }
-                className="btn btn-primary"
-              >
-                {t('shared:Create')}
-              </button>
-            </form>
+            </VirtualizationCreateForm>
           )}
         </AutoForm>
       </PageSection>
