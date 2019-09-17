@@ -34,6 +34,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-jira_{context}>>
 * <<connecting-to-kafka_{context}>>
 * <<connecting-to-kudu_{context}>>
+* <<connecting-to-mongodb_{context}>>
 * <<connecting-to-mqtt_{context}>>
 * <<connecting-to-odata_{context}>>
 * <<connecting-to-rest-apis_{context}>>
@@ -70,6 +71,8 @@ include::assemblies/connecting/as_connecting-to-jira.adoc[leveloffset=+1]
 include::assemblies/connecting/as_connecting-to-kafka.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-kudu.adoc[leveloffset=+1]
+
+include::assemblies/connecting/as_connecting-to-mongodb.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-mqtt.adoc[leveloffset=+1]
 
