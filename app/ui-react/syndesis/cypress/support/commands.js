@@ -26,12 +26,9 @@
 
 /**
  * CREATE CONNECTION
+ * HTTP Connection
  */
 Cypress.Commands.add('createConnection', cnx => {
-  /**
-   * Create To Do Connection
-   * This will break if a Connection with the same name already exists.
-   */
   cy.visit('/');
 
   cy.get('[data-testid=dashboard-create-connection-button]').click();
@@ -41,19 +38,13 @@ Cypress.Commands.add('createConnection', cnx => {
     '/connections/create/connection-basics'
   );
 
-  cy.get('[data-testid=connection-card-todo-app-api-card]').click();
+  cy.get('[data-testid=connection-card-http-card]').click();
 
   cy.location('pathname').should('contain', '/configure-fields');
 
-  cy.get('[data-testid=username]')
-    .clear()
-    .type(Cypress.env('connectorTodoUser'))
-    .should('have.value', Cypress.env('connectorTodoUser'));
-
-  cy.get('[data-testid=password]')
-    .clear()
-    .type(Cypress.env('connectorTodoPassword'))
-    .should('have.value', Cypress.env('connectorTodoPassword'));
+  cy.get('[data-testid=baseurl]')
+    .type('www.redhat.com')
+    .should('have.value', 'www.redhat.com');
 
   cy.get('[data-testid=connection-creator-layout-next-button]')
     .should('not.be.disabled')

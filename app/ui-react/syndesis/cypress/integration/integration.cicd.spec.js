@@ -90,7 +90,7 @@ describe('Integration CI.CD', () => {
       .should('be.visible')
       .within(() => {
         cy.get('.modal-body')
-          .should('contain', envName)
+          .should('contain', constants.ENVIRONMENT_NAME)
           .within(() => {
             cy.get(
               '[data-testid=tag-integration-list-item-' +
