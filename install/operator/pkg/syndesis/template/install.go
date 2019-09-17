@@ -206,6 +206,28 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 		syndesis.Spec.SarNamespace = syndesis.Namespace
 	}
 
+	// Maven settings
+	if len(syndesis.Spec.MavenRepositories) == 0 {
+	    if syndesis.Spec.MavenRepositories == nil {
+            syndesis.Spec.MavenRepositories = make(map[string]string)
+        }
+	    if renderContext.Productized {
+	        syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
+	        if renderContext.EarlyAccess {
+                syndesis.Spec.MavenRepositories["repo-02-redhat-ea"] = "https://maven.repository.redhat.com/earlyaccess/all/"
+                syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
+            } else {
+                syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
+                syndesis.Spec.MavenRepositories["repo-03-jboss-ga"] = "https://repository.jboss.org/"
+            }
+        } else {
+            // Repositories needed for community builds
+            syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
+            syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
+            syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
+        }
+    }
+
 	//
 	// Apply DevSupport flag value to Debug
 	//
