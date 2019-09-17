@@ -73,6 +73,12 @@
     "obsolete": "The published integration has become obsolete. The recommendation is to republish it."
   },
   "editor": {
+    "BackToOperationList": "Back to Operation List",
+    "BackToOperationFlow": "Back to Operation Flow",
+    "BackToPrimaryFlow": "Back to Primary Flow",
+    "ConditionalFlowStepGroup": "{{group}} Cnditional Flow Step",
+    "OTHERWISE": "OTHERWISE",
+    "WHEN": "WHEN",
     "addStep": "Add a step",
     "addStepDescription": "You can continue adding steps and connections to your integration.",
     "addToIntegration": "Add to Integration",
