@@ -7,7 +7,7 @@ export const VirtualizationHandlers = () => {
 
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { deleteVirtualization, publishVirtualization, unpublishServiceVdb } = useVirtualizationHelpers();
+  const { deleteVirtualization, publishVirtualization, unpublishVirtualization } = useVirtualizationHelpers();
 
   const handleDeleteVirtualization = async (
     pVirtualizationId: string
@@ -86,17 +86,17 @@ export const VirtualizationHandlers = () => {
     return Promise.resolve(success);
   }
 
-  const handleUnpublishServiceVdb = async (
-    serviceVdbName: string
+  const handleUnpublishVirtualization = async (
+    virtualizationName: string
   ): Promise<boolean> => {
     let success = false;
     try {
-      await unpublishServiceVdb(serviceVdbName);
+      await unpublishVirtualization(virtualizationName);
 
       pushNotification(
         t(
           'virtualization.unpublishVirtualizationSuccess',
-          { name: serviceVdbName }
+          { name: virtualizationName }
         ),
         'success'
       );
@@ -108,7 +108,7 @@ export const VirtualizationHandlers = () => {
       pushNotification(
         t('virtualization.unpublishFailed', {
           details,
-          name: serviceVdbName,
+          name: virtualizationName,
         }),
         'error'
       );
@@ -119,7 +119,7 @@ export const VirtualizationHandlers = () => {
   return {
     handleDeleteVirtualization,
     handlePublishVirtualization,
-    handleUnpublishServiceVdb
+    handleUnpublishVirtualization
   };
 
 }

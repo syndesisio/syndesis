@@ -58,7 +58,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const {
     handleDeleteVirtualization,
     handlePublishVirtualization,
-    handleUnpublishServiceVdb,
+    handleUnpublishVirtualization,
   } = VirtualizationHandlers();
 
   const {
@@ -89,8 +89,8 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     }
   };
 
-  const doUnpublish = async (serviceVdbName: string) => {
-    const success = await handleUnpublishServiceVdb(serviceVdbName);
+  const doUnpublish = async (virtualizationName: string) => {
+    const success = await handleUnpublishVirtualization(virtualizationName);
     if (success) {
       history.push(resolvers.data.virtualizations.list());
     }
@@ -146,7 +146,6 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
             onExport={this.handleExportVirtualization} */
           onUnpublish={doUnpublish}
           onPublish={doPublish}
-          serviceVdbName={state.virtualization.serviceVdbName}
           hasViews={!state.virtualization.empty}
         />
       </PageSection>

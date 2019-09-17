@@ -63,7 +63,6 @@ export interface IVirtualizationListItemProps {
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
   publishingStepText?: string;
-  serviceVdbName: string;
   virtualizationName: string;
   virtualizationDescription: string;
 }
@@ -103,8 +102,8 @@ export const VirtualizationListItem: React.FunctionComponent<
   const doUnpublish = () => {
     setShowConfirmationDialog(false);
 
-    if (props.serviceVdbName) {
-      props.onUnpublish(props.serviceVdbName);
+    if (props.virtualizationName) {
+      props.onUnpublish(props.virtualizationName);
     }
   };
 
