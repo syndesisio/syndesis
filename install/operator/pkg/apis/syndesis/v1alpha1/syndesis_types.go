@@ -181,8 +181,9 @@ type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
 
-	Spec   SyndesisSpec   `json:"spec,omitempty"`
-	Status SyndesisStatus `json:"status,omitempty"`
+	Spec        SyndesisSpec   `json:"spec,omitempty"`
+	ReifiedSpec *SyndesisSpec  `json:"reifiedSpec,omitempty"`
+	Status      SyndesisStatus `json:"status,omitempty"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object

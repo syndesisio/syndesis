@@ -120,6 +120,16 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{}, err
 			}
+
+			// Refresh.. the original resource, a revision update may have occurred..
+			key, err := client.ObjectKeyFromObject(syndesis)
+			if err != nil {
+				return reconcile.Result{Requeue: true}, err
+			}
+			err = r.client.Get(ctx, key, syndesis)
+			if err != nil {
+				return reconcile.Result{Requeue: true}, err
+			}
 		}
 	}
 

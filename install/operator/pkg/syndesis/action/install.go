@@ -60,7 +60,9 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *installAction) Execute(ctx context.Context, original *v1alpha1.Syndesis) error {
+	syndesis := original.DeepCopy()
+
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
 		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 	}
@@ -125,26 +127,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		os.Exit(1)
 	}
 
-	// Update the syndesis resource so that the user see all the default configuration
-	// that is being applied.
-	_, c, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
-	if err != nil {
-		return err
-	}
-
-	if c != controllerutil.OperationResultNone {
-
-		a.log.Info("Updated CRD ", "name", syndesis.Name)
-		// load it back to make sure we've got the latest...
-		err = a.client.Get(ctx, client.ObjectKey{
-			Name:      syndesis.GetName(),
-			Namespace: syndesis.GetNamespace(),
-		}, syndesis)
-		if err != nil {
-			return err
-		}
-	}
-
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", renderContext)
 	if err != nil {
@@ -158,7 +140,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
-
 	if autoGenerateRoute {
 		// Set the right hostname after generating the route
 		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
@@ -170,6 +151,21 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			return err
 		}
 	}
+	addRouteAnnotation(original, syndesisRoute)
+
+	// The above section of code update the syndesis.Spec, lets not modify the CR
+	// lets copy it to the ReifiedSpec field so users can see how it was reified but not change the original
+	// spec on the CR
+	syndesis.ReifiedSpec = syndesis.Spec.DeepCopy()
+	original.ReifiedSpec = syndesis.Spec.DeepCopy()
+	_, c, err := util.CreateOrUpdate(ctx, a.client, original, "kind", "apiVersion")
+	if err != nil {
+		return err
+	}
+
+	if c != controllerutil.OperationResultNone {
+		a.log.Info("Updated CRD ", "name", syndesis.Name)
+	}
 
 	// Render the remaining syndesis resources...
 	all, err = generator.RenderDir("./infrastructure/", renderContext)
@@ -177,7 +173,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	for addon, properties := range syndesis.Spec.Addons {
+	for addon, properties := range original.Spec.Addons {
 		if properties["enabled"] != "true" {
 			continue
 		}
@@ -185,7 +181,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		addonDir := "./addons/" + addon + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			a.log.Info("unsuported addon configured", "addon", addon, "error", err)
+			a.log.Info("unsupported addon configured", "addon", addon, "error", err)
 			continue
 		}
 		f.Close()
@@ -200,7 +196,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 	// Link the image secret to service accounts
 	if secret != nil {
-		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, secret)
+		err = linkImageSecretToServiceAccounts(ctx, a.client, original, secret)
 		if err != nil {
 			return err
 		}
@@ -209,7 +205,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	// Install the resources..
 	for _, res := range all {
 
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
+		operation.SetNamespaceAndOwnerReference(res, original)
 		o, modificationType, err := util.CreateOrUpdate(ctx, a.client, &res)
 		if err != nil {
 			if util.IsNoKindMatchError(err) {
@@ -232,7 +228,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	// Find resources which need to be deleted.
-	labelSelector, err := labels.Parse("owner=" + string(syndesis.GetUID()))
+	labelSelector, err := labels.Parse("owner=" + string(original.GetUID()))
 	if err != nil {
 		panic(err)
 	}
@@ -268,18 +264,26 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	target := syndesis.DeepCopy()
-	addRouteAnnotation(target, syndesisRoute)
+	// Refresh.. the original resource, a revision update may have occurred..
+	key, err := client.ObjectKeyFromObject(original)
+	if err != nil {
+		return err
+	}
+	err = a.client.Get(ctx, key, original)
+	if err != nil {
+		return err
+	}
+
 	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		original.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		original.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		original.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, original, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
-		a.log.Info("Syndesis resource installed", "name", target.Name)
+		a.log.Info("Syndesis resource installed", "name", original.Name)
 	}
 	return err
 }

@@ -321,6 +321,11 @@ func (in *Syndesis) DeepCopyInto(out *Syndesis) {
 	out.TypeMeta = in.TypeMeta
 	in.ObjectMeta.DeepCopyInto(&out.ObjectMeta)
 	in.Spec.DeepCopyInto(&out.Spec)
+	if in.ReifiedSpec != nil {
+		in, out := &in.ReifiedSpec, &out.ReifiedSpec
+		*out = new(SyndesisSpec)
+		(*in).DeepCopyInto(*out)
+	}
 	in.Status.DeepCopyInto(&out.Status)
 	return
 }
