@@ -114,6 +114,10 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 
 	// Apply special handling for some fields.
 	switch path {
+	case "route.openshift.io/v1/Route/spec/host":
+		if from == "" {
+			return to
+		}
 	case "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/image":
 		return to
 	case "apps.openshift.io/v1/DeploymentConfig/spec/triggers/#/imageChangeParams/from/namespace":
