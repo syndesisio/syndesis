@@ -70,6 +70,9 @@ or publish streams of records to a Kafka topic that you specify.
 |Obtain records from a table in an Apache Kudu data store
 or add records to a table in a Kudu data store.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-mongodb_connectors[MongoDB]
+|Obtain data from a MongoDB database or update data in a MongoDB database. 
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker.

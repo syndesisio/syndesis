@@ -1,0 +1,55 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='creating-mongodb-connections_{context}']
+= Creating a connection to a MongoDB database
+
+Create a MongoDB connection so that you can 
+connect to a MongoDB database in an integration. 
+
+.Prerequisites
+
+* You must know the host name for the MongoDB database that you want
+to connect to. 
+* You must have a user name and password that authorizes 
+access to the MongoDB database. 
+
+.Procedure
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+connectors.  
+. Click the *MongoDB* connector.
+. Configure the connection:
+.. In the *Database host* field, identify the host of the MongoDB database 
+that you want to access. You can specify a host name, a virtual host name, 
+or an IP address.
+.. In the *Database port* field, optionally enter the port that the
+database service listens on for access requests. 
+.. In the *Username* field, enter a user name that is authorized to 
+access the database. 
+.. In the *Password* field, enter the password for the user name 
+that you specified. 
+.. In the *AdminDB* field, optionally enter the name of a MongoDB
+administrative database that is used to grant access permission. 
+A MongoDB administrator should let you know whether the database 
+that you want to access requires this. 
+
+. Click *Validate*. {prodname} immediately tries to validate the 
+connection and displays a message that indicates whether 
+validation is successful. If validation fails, revise the input 
+parameter(s) and try again.
+. When validation is successful, click *Next*.
+. In the *Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, you might enter `MongoDB North`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. 
+. Click *Save* to see that the connection you 
+created is now available. If you entered the example name, you would 
+see that *MongoDB North* appears as a connection that you can 
+choose to add to an integration. 
+
+.Next step
+Add your MongoDB connection to an integration. 
