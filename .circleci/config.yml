@@ -602,7 +602,7 @@ jobs:
             if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
               GOAL_ARGS="-g deploy"
             fi
-            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --module operator --image --docker --ensure | tee build_log.txt
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --module operator --image --docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
