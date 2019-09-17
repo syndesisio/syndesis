@@ -16,6 +16,7 @@ require (
 	github.com/openshift/api v3.9.0+incompatible
 	github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
 	github.com/pkg/errors v0.8.1
+	github.com/pmezard/go-difflib v1.0.0
 	github.com/shurcooL/httpfs v0.0.0-20190527155220-6a4d4a70508b
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
 	github.com/spf13/cobra v0.0.5

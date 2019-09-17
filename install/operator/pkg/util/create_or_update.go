@@ -20,9 +20,14 @@ func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, ski
 		return desired, controllerutil.OperationResultNone, err
 	}
 
+	originalYaml := ""
+	updatedYaml := ""
+
 	createdCopy := desired.DeepCopy()
 	modType, err := controllerutil.CreateOrUpdate(ctx, cl, createdCopy, func(o runtime.Object) error {
+
 		existing := o.(*unstructured.Unstructured)
+		originalYaml = Dump(existing)
 
 		mergePath := desired.GetAPIVersion() + "/" + desired.GetKind()
 		if len(skipFields) == 0 {
@@ -35,11 +40,18 @@ func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, ski
 		}
 
 		mergeMap(mergePath, existing.Object, desired.Object, skip)
+		updatedYaml = Dump(existing)
+
 		//if d.GetKind() == "DeploymentConfig" && d.GetName() == "syndesis-meta" {
 		//	Debug("existing:", existing, "(index .Object.spec.template.spec.containers 0).resources.limits.memory")
 		//}
 		return nil
 	})
+
+	if modType == controllerutil.OperationResultUpdated {
+		fmt.Println("resource", desired.GetKind(), "update:", desired.GetName())
+		fmt.Println(UnifiedDiff(originalYaml, updatedYaml))
+	}
 	return createdCopy, modType, err
 }
 
