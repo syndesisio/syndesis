@@ -12,7 +12,11 @@
 // the project's config changing)
 const fs = require('fs');
 const path = require('path');
-const snapshotPath = path.join(__dirname, '..', 'snapshots');
+const snapshotDirPath = path.join(__dirname, '..', 'snapshots');
+const snapshotFilePath = path.join(
+  snapshotDirPath,
+  toJSONLocal() + '-snapshot.json'
+);
 
 /**
  * Offsets for timezone differences
@@ -58,12 +62,12 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('task', {
     getSnapshot() {
-      return getLatestFile(snapshotPath);
+      return getLatestFile(snapshotDirPath);
     },
 
     storeSnapshot(snapshot) {
       const snapshotJson = JSON.stringify(snapshot);
-      fs.writeFileSync(toJSONLocal() + '-snapshot.json', snapshotJson, err => {
+      fs.writeFileSync(snapshotFilePath, snapshotJson, err => {
         if (err) throw err;
         cy.log('The file has been saved!');
       });
