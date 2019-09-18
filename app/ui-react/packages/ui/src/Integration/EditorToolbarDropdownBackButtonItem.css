@@ -1,0 +1,7 @@
+.editor-toolbar-dropdown-back-button-item__back-button-wrapper {
+  text-align: center;
+  padding: 0 8px;
+}
+.editor-toolbar-dropdown-back-button-item__back-button-wrapper .btn {
+  width: 100%;
+}
