@@ -27,6 +27,7 @@ import {
   setDescriptorOnStep,
   setStepId,
   setStepInFlow,
+  throwStandardError,
 } from './helpers';
 
 export const useIntegrationHelpers = () => {
@@ -190,7 +191,7 @@ export const useIntegrationHelpers = () => {
       url: `${apiContext.apiUri}/integrations/${id}`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
   };
 
@@ -284,7 +285,7 @@ export const useIntegrationHelpers = () => {
         : `${apiContext.apiUri}/integrations/${id}/deployments`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
   };
 
@@ -313,7 +314,7 @@ export const useIntegrationHelpers = () => {
       }/integrations/${id}/deployments/${version}/targetState`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
   };
 
@@ -433,14 +434,7 @@ export const useIntegrationHelpers = () => {
           : `${apiContext.apiUri}/integrations`,
       });
       if (!response.ok) {
-        const text = await response.text();
-        let json;
-        try {
-          json = JSON.parse(text);
-        } catch (e) {
-          throw { errorCode: response.status, userMsg: text || response.statusText };
-        }
-        throw json;
+        await throwStandardError(response);
       }
       return !sanitizedIntegration.id
         ? ((await response.json()) as Integration)
