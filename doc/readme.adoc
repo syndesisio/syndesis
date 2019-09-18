@@ -1,0 +1,83 @@
+= Explanation of the `doc` directory structure
+
+The Syndesis `doc` directory is organized for delivering flexible content, 
+which is a framework for, at some point in the future, 
+letting you put together exactly the content you need. The flexible 
+content framework also makes it easier to reuse the same content 
+in multiple places. This is an initiative that is
+being adopted by many open source projects. 
+
+Syndesis user doc is organized into several documents. The following
+table lists the `syndesis/doc` directories that contain the content for each 
+document.  
+
+[options="header"]
+[cols="1,2,3"]
+|===
+|Document
+|`master.adoc` location
+|Content location
+
+|_Syndesis Sample Integration Tutorials_
+|`tutorials`
+|`assemblies/tutorials`  
+`modules/tutorials`  
+`images/tutorials`
+
+|_Integrating Applications with Syndesis_
+|`integrating-applications`
+|`assemblies/integrating-applications` 
+`modules/integrating-applications`
+`images/integrating-applications`
+
+|_Connecting Syndesis to Applications and Services_
+|`connecting`
+|`assemblies/connecting` 
+`modules/connecting` 
+`images/connecting`
+
+|_Customizing Syndesis_
+|`customizing`
+|`assemblies/customizing` 
+`modules/customizing` 
+`images/customizing`
+
+|===
+
+
+For each document, the `master.adoc` file includes the 
+relevant assemblies and modules. 
+
+* Assemblies are files that introduce a subject and 
+include two or more modules, which provide the content.
+* Modules provide content and do not include other files. 
+There are three kinds of modules: 
+** Concept
+** Procedure
+** Reference
+
+The Syndesis `doc` directory contains these directories: 
+
+* `assemblies` contains a folder for each category of information. 
+These folders contain assembly files:  
+** `connecting` contains assembly files that are in _Connecting Syndesis to Applications and Services_.
+** `customizing` contains assembly files that contain information about creating 
+REST API client connectors and Syndesis extensions.
+** `integrating-applications` contains assembly files that are in 
+_Integrating Applications with Syndesis_. 
+** `tutorials` contains assembly files that are in 
+_Syndesis Sample Integration Tutorials_. 
+
+* `modules` also contains a folder for each category of information. 
+These folders contains concept, procedure, and reference modules, which contain the details:
+** `connecting`
+** `customizing`
+** `integrating-applications`
+** `tutorials`
+
+* `images` also contains a folder for each category of information.
+These folders contain image files: 
+** `connecting`
+** `customizing`
+** `integrating-applications`
+** `tutorials`
