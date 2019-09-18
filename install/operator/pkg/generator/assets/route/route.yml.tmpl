@@ -9,7 +9,7 @@
       console.alpha.openshift.io/overview-app-route: "true"
     name: syndesis
   spec:
-    host: {{Env.ROUTE_HOSTNAME}}
+    host: {{.Syndesis.Spec.RouteHostname}}
     port:
       targetPort: 8443
     tls:

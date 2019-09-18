@@ -158,10 +158,11 @@ func mergeSecretValues(to map[string]interface{}, from map[string]interface{}) {
 
 		updates := map[string]interface{}{}
 		for key, value := range stringData {
-			plain := value.(string)
-			encoded := base64.StdEncoding.EncodeToString([]byte(plain))
-			if data[key] != encoded {
-				updates[key] = value
+			if plain, ok := value.(string); ok {
+				encoded := base64.StdEncoding.EncodeToString([]byte(plain))
+				if data[key] != encoded {
+					updates[key] = value
+				}
 			}
 		}
 		if len(updates) > 0 {

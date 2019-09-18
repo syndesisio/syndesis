@@ -99,7 +99,7 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		OAuthClientSecret: token,
 	}
 
-	config, err := configuration.GetSyndesisEnvVarsFromOpenshiftNamespace(ctx, a.client, syndesis.Namespace)
+	config, err := configuration.GetSyndesisEnvVarsFromOpenShiftNamespace(ctx, a.client, syndesis.Namespace)
 	if err != nil {
 		config = map[string]string{}
 	}
