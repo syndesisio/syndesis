@@ -154,7 +154,11 @@ quay_transfer: &quay_transfer
   run:
     name: Trigger image transfer to quay.io
     command: |
-      [ "${CIRCLE_BRANCH}" != "master" ] && curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
+      if [ -n "${CIRCLE_PR_NUMBER}" ]; then
+        curl -vs "https://ci.fabric8.io/generic-webhook-trigger/invoke?token=syndesis-circleci-to-quay&build_number=$CIRCLE_BUILD_NUM"
+      else
+        echo "Skip transfer to quay.io for non PR build"
+      fi
 
 jobs:
   ui:
@@ -598,7 +602,7 @@ jobs:
             if [[  "$SYNDESIS_GIT_MVN_REPO" != "" ]] ; then
               GOAL_ARGS="-g deploy"
             fi
-            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --module operator --image --docker --ensure | tee build_log.txt
+            ./tools/bin/syndesis build ${GOAL_ARGS} ${INCREMENTAL} --module operator --image --docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images

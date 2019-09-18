@@ -21,8 +21,26 @@ export const FormSelectComponent: React.FunctionComponent<
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
   const { onChange, onBlur, value, ...field } = props.field;
   const id = toValidHtmlId(field.name);
-  const updatedValue =
-    isMultiple && typeof value === 'string' ? JSON.parse(value) : value;
+
+  const adjustValue = () => {
+    if (isMultiple) {
+      let arrayValue = value;
+      if (!value) {
+        arrayValue = [];
+      } else if (typeof value === 'string') {
+        if (value.startsWith('[')) {
+          arrayValue = JSON.parse(value);
+        } else {
+          arrayValue = [value];
+        }
+      }
+      return arrayValue;
+    } else {
+      return value;
+    }
+  };
+
+  const updatedValue = adjustValue();
   const handleChange = (
     eventValue: string,
     event: React.FormEvent<HTMLSelectElement>
@@ -73,6 +91,7 @@ export const FormSelectComponent: React.FunctionComponent<
         id={id}
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
+        isRequired={props.property.required}
         title={props.property.controlHint}
         value={updatedValue}
       >

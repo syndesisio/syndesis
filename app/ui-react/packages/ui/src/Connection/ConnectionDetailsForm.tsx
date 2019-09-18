@@ -1,5 +1,5 @@
-import { Form } from '@patternfly/react-core';
-import { Alert, Button, Card } from 'patternfly-react';
+import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
+import { Alert, Button } from 'patternfly-react';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';
 import './ConnectionDetailsForm.css';
@@ -90,10 +90,10 @@ export class ConnectionDetailsForm extends React.Component<
         <Container>
           <div className="row row-cards-pf">
             <Card>
-              <Card.Heading>
-                <Card.Title>{this.props.i18nTitle}</Card.Title>
-              </Card.Heading>
-              <Card.Body>
+              <CardHeader>
+                <Title size="2xl">{this.props.i18nTitle}</Title>
+              </CardHeader>
+              <CardBody>
                 <Form
                   isHorizontal={true}
                   data-testid={'connection-details-form'}
@@ -129,9 +129,9 @@ export class ConnectionDetailsForm extends React.Component<
                     )}
                   </div>
                 </Form>
-              </Card.Body>
+              </CardBody>
               {this.props.isEditing ? (
-                <Card.Footer>
+                <CardFooter>
                   <Button
                     data-testid={'connection-details-form-cancel-button'}
                     bsStyle="default"
@@ -150,7 +150,7 @@ export class ConnectionDetailsForm extends React.Component<
                   >
                     {this.props.i18nSaveLabel}
                   </Button>
-                </Card.Footer>
+                </CardFooter>
               ) : null}
             </Card>
           </div>

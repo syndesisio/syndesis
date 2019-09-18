@@ -82,7 +82,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
   const {
     handleDeleteVirtualization,
     handlePublishVirtualization,
-    handleUnpublishServiceVdb,
+    handleUnpublishVirtualization,
   } = VirtualizationHandlers();
   const { resource: data, hasData, error } = useVirtualizations();
 
@@ -198,7 +198,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                                 ? virtualization.tko__description
                                 : ''
                             }
-                            serviceVdbName={virtualization.serviceVdbName}
                             odataUrl={getOdataUrl(virtualization)}
                             i18nCancelText={t('shared:Cancel')}
                             i18nDelete={t('shared:Delete')}
@@ -239,7 +238,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                                   this
                                     .handleExportVirtualization
                                 } */
-                            onUnpublish={handleUnpublishServiceVdb}
+                            onUnpublish={handleUnpublishVirtualization}
                             onPublish={handlePublishVirtualization}
                             currentPublishedState={publishingDetails.state}
                             publishingLogUrl={publishingDetails.logUrl}

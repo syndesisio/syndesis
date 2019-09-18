@@ -67,8 +67,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
     }
 
     const response: IDvNameValidationResult = await validateViewName(
-      state.virtualization.serviceVdbName,
-      'views',
+      state.virtualization.keng__id,
       proposedName
     );
 

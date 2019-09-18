@@ -2,9 +2,12 @@
   background-color: #ededed;
 }
 
-.view-create-layout-card-footer {
+.pf-c-card__footer.view-create-layout-card-footer {
   background-color: #ededed;
   border-top-width: 1px;
   border-top-style: solid;
   border-top-color: #d1d1d1;
+  padding-top: 20px;
+  padding-bottom: 10px;
+  padding-left: 20px;
 }

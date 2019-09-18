@@ -21,6 +21,7 @@ spec:
     registry: docker.io
     # Component specific configuration
     components:
+        scheduled: true
         db:
             resources:
                 limits:

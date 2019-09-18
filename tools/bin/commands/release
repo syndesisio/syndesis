@@ -263,10 +263,6 @@ generate_versioned_files() {
     local tag="$2"
     local previous_tag="${3:-latest}"
 
-    echo "==== Creating templates for $tag"
-    cd $dir/generator
-    sh run.sh --syndesis-tag="$tag" --upgrade-tag="$tag"
-
     echo "==== Updating operator deployment config"
     cd $dir/operator/deploy
 
@@ -329,9 +325,6 @@ create_upgrade_docker_image() {
 
     echo "==== Creating upgrade image syndesis/syndesis-upgrade:$release_version"
     cd $topdir/tools/upgrade
-
-    # Copy syndesis.yml
-    cp $topdir/install/syndesis.yml .
 
     # Copy over syndesis-cli jar
     cp $topdir/app/server/cli/target/syndesis-cli.jar .

@@ -16,6 +16,7 @@
 package io.syndesis.common.jaeger;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 @Configuration
 @ConditionalOnProperty("jaeger.service.name")
 @ConditionalOnClass(WebMvcConfigurerAdapter.class)
+@AutoConfigureOrder(-2147483639)
 public class JaegerConfiguration {
 
     @Value("${jaeger.service.name}")

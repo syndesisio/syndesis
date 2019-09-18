@@ -5,7 +5,7 @@
 #
 
 set -e
-cd $(dirname "${BASH_SOURCE[0]}")
+cd -P $(dirname "${BASH_SOURCE[0]}")
 
 source "$(pwd)/../../tools/bin/commands/util/common_funcs"
 source "$(pwd)/../../tools/bin/commands/util/operator_funcs"

@@ -9,8 +9,6 @@ set -e
 # Default is current directory
 cd $(dirname "${BASH_SOURCE[0]}")
 
-# Copy syndesis.yml
-cp ../../install/syndesis.yml .
 # Copy syndesis-cli.jar
 cp ../../app/server/cli/target/syndesis-cli.jar .
 
