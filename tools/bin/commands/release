@@ -262,10 +262,6 @@ generate_versioned_files() {
     local tag="$2"
     local previous_tag="${3:-latest}"
 
-    echo "==== Creating templates for $tag"
-    cd $dir/generator
-    sh run.sh --syndesis-tag="$tag" --upgrade-tag="$tag"
-
     echo "==== Updating operator deployment config"
     cd $dir/operator/deploy
 
