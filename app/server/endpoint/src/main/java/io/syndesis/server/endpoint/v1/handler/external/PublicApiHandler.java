@@ -213,6 +213,7 @@ public class PublicApiHandler {
         final ListResult<Integration> integrations;
 
         // export all integrations ignoring any missing/existing tags?
+        final String envId = env.getId().get();
         if (exportAll) {
 
             integrations = dataMgr.fetchAll(Integration.class);
@@ -221,7 +222,7 @@ public class PublicApiHandler {
             Date taggedAt = new Date();
             integrations.getItems().forEach(i -> {
                 final HashMap<String, ContinuousDeliveryEnvironment> state = new HashMap<>(i.getContinuousDeliveryState());
-                EnvironmentHandler.createOrUpdateTag(state, env.getId().get(), taggedAt);
+                EnvironmentHandler.createOrUpdateTag(state, envId, taggedAt);
                 dataMgr.update(i.builder().continuousDeliveryState(state).build());
             });
 
@@ -233,9 +234,10 @@ public class PublicApiHandler {
 
                 boolean result = false;
                 final Map<String, ContinuousDeliveryEnvironment> map = i.getContinuousDeliveryState();
-                if (map.containsKey(environment)) {
-                    final Date taggedAt = map.get(environment).getLastTaggedAt();
-                    final Date exportedAt = map.get(environment).getLastExportedAt().orElse(null);
+                final ContinuousDeliveryEnvironment cdEnv = map.get(envId);
+                if (cdEnv != null) {
+                    final Date taggedAt = cdEnv.getLastTaggedAt();
+                    final Date exportedAt = cdEnv.getLastExportedAt().orElse(null);
                     result = exportedAt == null || exportedAt.before(taggedAt);
                 }
 
@@ -257,7 +259,7 @@ public class PublicApiHandler {
         final StreamingOutput output = handler.export(ids);
 
         // update lastExportedAt
-        environmentHandler.updateCDEnvironments(integrations.getItems(), env.getId().get(), exportedAt, b -> b.lastExportedAt(exportedAt));
+        environmentHandler.updateCDEnvironments(integrations.getItems(), envId, exportedAt, b -> b.lastExportedAt(exportedAt));
 
         LOG.debug("Exported ({}) integrations for environment {}", ids.size(), environment);
         return Response.ok(output).build();
