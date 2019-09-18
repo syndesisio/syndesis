@@ -1,12 +1,12 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
-import { 
-  Button, 
-  Expandable, 
-  PageSection, 
-  Split, 
-  SplitItem, 
-  Title 
+import {
+  Button,
+  Expandable,
+  PageSection,
+  Split,
+  SplitItem,
+  Title,
 } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
 import * as React from 'react';
@@ -34,10 +34,8 @@ export interface IExpandablePreviewProps {
   i18nShowPreview: string;
   i18nTitle: string;
   initialExpanded?: boolean;
-  isLoadingPreview: boolean
-  onPreviewExpandedChanged: (
-    previewExpanded: boolean
-  ) => void;
+  isLoadingPreview: boolean;
+  onPreviewExpandedChanged: (previewExpanded: boolean) => void;
   onRefreshResults: () => void;
   /**
    * Array of column info for the query results.  (The column id and display label)
@@ -79,7 +77,6 @@ export const ExpandablePreview: React.FunctionComponent<
   queryResultCols,
   queryResultRows,
 }: IExpandablePreviewProps) => {
-
   const [expanded, setExpanded] = React.useState(initialExpanded);
   const toggleExpanded = () => {
     setExpanded(!expanded);
@@ -87,8 +84,12 @@ export const ExpandablePreview: React.FunctionComponent<
   };
 
   return (
-    <PageSection variant='light'>
-      <Expandable toggleText={expanded ? i18nHidePreview : i18nShowPreview} onToggle={toggleExpanded} isExpanded={expanded}>
+    <PageSection isFilled={expanded} variant="light">
+      <Expandable
+        toggleText={expanded ? i18nHidePreview : i18nShowPreview}
+        onToggle={toggleExpanded}
+        isExpanded={expanded}
+      >
         <Split>
           <SplitItem isFilled={false}>
             <Title headingLevel="h5" size="lg">
@@ -100,7 +101,8 @@ export const ExpandablePreview: React.FunctionComponent<
               variant="plain"
               aria-label="Action"
               onClick={onRefreshResults}
-              isDisabled={false}>
+              isDisabled={false}
+            >
               <SyncIcon />
             </Button>
           </SplitItem>
@@ -112,8 +114,9 @@ export const ExpandablePreview: React.FunctionComponent<
           i18nEmptyResultsTitle={i18nEmptyResultsTitle}
           i18nEmptyResultsMsg={i18nEmptyResultsMsg}
           i18nLoadingQueryResults={i18nLoadingQueryResults}
-          isLoadingPreview={isLoadingPreview}/>
+          isLoadingPreview={isLoadingPreview}
+        />
       </Expandable>
     </PageSection>
-    );
-  };
+  );
+};
