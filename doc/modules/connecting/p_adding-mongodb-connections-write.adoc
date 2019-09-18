@@ -10,7 +10,7 @@ a flow or as a simple integration's finish connection.
 
 .Prerequisites
 * You created a MongoDB connection. 
-* You know the name of the MongoDB database and the MongoDB collection
+* You know the name of the MongoDB collection
 that you want the connection to update.
 * You are creating or editing an integration and {prodname} is
 prompting you to add to the integration. Or, {prodname} is 
@@ -25,8 +25,6 @@ a simple integration's finish connection.
 connection updates a collection, the connection does not return anything. 
 . On the *Choose an action* page, select the *MongoDB producer* action. 
 . Configure the action: 
-.. In the *Database name* field, enter the name of the database that 
-you want the connection to update.
 .. In the *Collection name* field, enter the name of the collection that 
 you want the connection update. 
 .. In the *Operation to perform* field, accept the *Insert* operation or 
