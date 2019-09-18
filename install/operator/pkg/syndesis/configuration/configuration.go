@@ -55,7 +55,6 @@ const (
 	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
 	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
 
-	EnvUpgradeRegistry        SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
 )
@@ -650,11 +649,11 @@ func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.S
 }
 
 func envManagementUrlFor3scale(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-    url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale
-    return &SyndesisEnvVarConfig{
-        Var:   EnvManagementUrlFor3scale,
-        Value: url,
-    }
+	url := syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale
+	return &SyndesisEnvVarConfig{
+		Var:   EnvManagementUrlFor3scale,
+		Value: url,
+	}
 }
 
 func managementUrlFor3scale(config map[string]string, syndesis *v1alpha1.Syndesis) {

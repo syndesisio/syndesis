@@ -235,6 +235,7 @@ update_image_versions() {
 
     echo "==== Updating image versions to $version"
     sed "s/Syndesis: latest/Syndesis: $version/" -i $topdir/install/operator/build/conf/config.yaml
+    sed "s/Upgrade: latest/Upgrade: $version/" -i $topdir/install/operator/build/conf/config.yaml
     sed "s/TagMinor: .*$/TagMinor: \"$moving_tag\"/" -i $topdir/install/operator/build/conf/config.yaml
     sed "s/TagMajor: .*$/TagMajor: \"$next_version\"/" -i $topdir/install/operator/build/conf/config.yaml
 }
