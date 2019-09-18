@@ -88,6 +88,10 @@
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-util</artifactId>
+    </dependency>
 
     <!-- test -->
     <dependency>
@@ -136,8 +140,14 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-support-util</artifactId>
+      <groupId>org.skyscreamer</groupId>
+      <artifactId>jsonassert</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.vaadin.external.google</groupId>
+      <artifactId>android-json</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
   <build>
