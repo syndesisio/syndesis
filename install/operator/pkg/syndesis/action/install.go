@@ -60,11 +60,11 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.Syndesis) error {
+	syndesis := originalSyndesis.DeepCopy()
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
 		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 	}
-
 	resourcesThatShouldExist := map[types.UID]bool{}
 
 	// Check if an image secret exists, to be used to connect to registries that require authentication
@@ -123,26 +123,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if err != nil {
 		fmt.Println("error:", err)
 		os.Exit(1)
-	}
-
-	// Update the syndesis resource so that the user see all the default configuration
-	// that is being applied.
-	_, c, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
-	if err != nil {
-		return err
-	}
-
-	if c != controllerutil.OperationResultNone {
-
-		a.log.Info("Updated CRD ", "name", syndesis.Name)
-		// load it back to make sure we've got the latest...
-		err = a.client.Get(ctx, client.ObjectKey{
-			Name:      syndesis.GetName(),
-			Namespace: syndesis.GetNamespace(),
-		}, syndesis)
-		if err != nil {
-			return err
-		}
 	}
 
 	// Render the route resource...
@@ -268,18 +248,17 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	target := syndesis.DeepCopy()
-	addRouteAnnotation(target, syndesisRoute)
+	addRouteAnnotation(originalSyndesis, syndesisRoute)
 	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		originalSyndesis.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		originalSyndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		originalSyndesis.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, originalSyndesis, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
-		a.log.Info("Syndesis resource installed", "name", target.Name)
+		a.log.Info("Syndesis resource installed", "name", originalSyndesis.Name)
 	}
 	return err
 }
