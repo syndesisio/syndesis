@@ -22,19 +22,25 @@ display any available connections.
 connectors.  
 . Click the *MongoDB* connector.
 . Configure the connection:
-.. In the *Database host* field, identify the host of the MongoDB database 
-that you want to access. You can specify a host name, a virtual host name, 
-or an IP address.
-.. In the *Database port* field, optionally enter the port that the
-database service listens on for access requests. 
+.. In the *Database host(s)* field, specify one or more MongoDB 
+database hosts that this connection can access. Separate multiple 
+specifications of `_host:port_` with commas. Replace `_host_` with 
+a host name, a virtual host name, or an IP address. For example: 
+`mongodb0.example.com:1234,mongodb1.example.com:1234`. 
 .. In the *Username* field, enter a user name that is authorized to 
 access the database. 
 .. In the *Password* field, enter the password for the user name 
 that you specified. 
-.. In the *AdminDB* field, optionally enter the name of a MongoDB
-administrative database that is used to grant access permission. 
+.. Optional. In the *Administration database* field, enter the name of a MongoDB
+administration database that is used to grant access permission. 
 A MongoDB administrator should let you know whether the database 
 that you want to access requires this. 
+.. Optional. In the *Replica set name* field, 
+specify the name of the MongoDB replica set (cluster) that the 
+connection can access. 
+.. In the *Database* field,  enter the name of the MongoDB 
+database that contains the collection(s) that you want the 
+connection to read. 
 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 

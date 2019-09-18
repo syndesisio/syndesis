@@ -17,7 +17,7 @@ to the next step in the integration.
 
 .Prerequisites
 * You created a MongoDB connection. 
-* You know the name of the MongoDB database and the MongoDB capped collection
+* You know the name of the MongoDB capped collection
 that you want the connection to read.
 * You know the name of the MongoDB collection field that tracks incoming documents. 
 * You know whether persistent tracking is enabled for the database that
@@ -38,8 +38,6 @@ is configured to access the database that you want the integration
 to obtain updates from. 
 . On the *Choose an action* page, select the *Mongo consumer* action.
 . Configure the action: 
-.. In the *Database name* field, enter the name of the MongoDB database 
-that contains the collection that you want the connection to read. 
 .. In the *Collection name* field, enter the name of the MongoDB 
 collection that you want the connection to read. 
 .. In the *Collection field used to track incoming documents* field, 
