@@ -37,7 +37,9 @@ export interface ICiCdManagePageUIProps extends IListViewToolbarProps {
   nameValidationError: TagNameValidationError;
   onValidateItem: (name: string) => void;
   onEditItem: (oldName: string, newName: string) => void;
+  onCancelEditItem: () => void;
   onAddItem: (name: string) => void;
+  onCancelAddItem: () => void;
   onRemoveItem: (name: string) => void;
   children: (props: ICiCdManagePageUIChildrenProps) => any;
 }
@@ -93,7 +95,7 @@ export class CiCdManagePageUI extends React.Component<
     this.setState({ showRemoveDialog: false });
   }
   public openAddDialog() {
-    this.setState({ currentItemName: undefined, showAddDialog: true });
+    this.setState({ currentItemName: '', showAddDialog: true });
   }
   public closeAddDialog() {
     this.setState({ showAddDialog: false });
@@ -113,22 +115,27 @@ export class CiCdManagePageUI extends React.Component<
         />
         {this.state.showAddDialog && (
           <CiCdEditDialog
+            key={this.state.currentItemName}
             i18nTitle={this.props.i18nAddTagDialogTitle}
             i18nDescription={this.props.i18nAddTagDialogDescription}
-            tagName={''}
+            tagName={this.state.currentItemName!}
             i18nInputLabel={this.props.i18nTagInputLabel}
             i18nSaveButtonText={this.props.i18nSaveButtonText}
             i18nCancelButtonText={this.props.i18nCancelButtonText}
             i18nNoNameError={this.props.i18nNoNameError}
             i18nNameInUseError={this.props.i18nNameInUseError}
             validationError={this.props.nameValidationError}
-            onHide={this.closeAddDialog}
+            onHide={() => {
+              this.closeAddDialog();
+              this.props.onCancelAddItem();
+            }}
             onSave={this.handleSave}
             onValidate={this.props.onValidateItem}
           />
         )}
         {this.state.showEditDialog && (
           <CiCdEditDialog
+            key={this.state.currentItemName}
             i18nTitle={this.props.i18nEditTagDialogTitle}
             i18nDescription={this.props.i18nEditTagDialogDescription}
             tagName={this.state.currentItemName!}
@@ -138,7 +145,10 @@ export class CiCdManagePageUI extends React.Component<
             i18nNoNameError={this.props.i18nNoNameError}
             i18nNameInUseError={this.props.i18nNameInUseError}
             validationError={this.props.nameValidationError}
-            onHide={this.closeEditDialog}
+            onHide={() => {
+              this.closeEditDialog();
+              this.props.onCancelEditItem();
+            }}
             onSave={this.handleSave}
             onValidate={this.props.onValidateItem}
           />
