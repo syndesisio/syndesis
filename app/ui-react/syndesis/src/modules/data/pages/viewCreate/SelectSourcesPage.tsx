@@ -26,7 +26,7 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
     ISelectSourcesRouteState
   >();
   const [selectedSchemaNodes, setSelectedSchemaNodes] = React.useState<SchemaNodeInfo[]>([]);
-  const [hasSelectedNodes, setHasSelectedNodes] = React.useState(false);
+  const [selectedNodesCount, setSelectedNodesCount] = React.useState(0);
 
   const handleNodeSelected = async (connName: string, name: string, teiidName: string, nodePath: string[]) => {
     const srcInfo = {
@@ -39,7 +39,7 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
     const currentNodes = selectedSchemaNodes;
     currentNodes.push(srcInfo);
     setSelectedSchemaNodes(currentNodes);
-    setHasSelectedNodes(currentNodes.length>0);
+    setSelectedNodesCount(currentNodes.length);
   }
 
   const handleNodeDeselected = async (connectionName: string, teiidName: string) => {
@@ -47,7 +47,7 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
     const index = getIndex(teiidName, tempArray, 'teiidName');
     tempArray.splice(index, 1);
     setSelectedSchemaNodes(tempArray);
-    setHasSelectedNodes(tempArray.length>0);
+    setSelectedNodesCount(tempArray.length);
   }
 
   const getIndex = (value: string, arr: SchemaNodeInfo[], prop: string) => {
@@ -80,7 +80,7 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
           virtualization,
         }
       )}
-      isNextDisabled={!hasSelectedNodes}
+      isNextDisabled={selectedNodesCount>1}
       isNextLoading={false}
       isLastStep={false}
     />
