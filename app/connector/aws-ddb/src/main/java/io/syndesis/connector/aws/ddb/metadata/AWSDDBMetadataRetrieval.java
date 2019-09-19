@@ -98,7 +98,7 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
         elements.removeIf(e -> !e.getValue().getS().startsWith(":"));
 
         for (Map.Entry<String, AttributeValue> inParam : elements) {
-            builderIn.putOptionalProperty(inParam.getKey(), factory.stringSchema());
+            builderIn.putOptionalProperty(inParam.getValue().toString(), factory.stringSchema());
         }
 
         final ObjectSchema builderOut = new ObjectSchema();
