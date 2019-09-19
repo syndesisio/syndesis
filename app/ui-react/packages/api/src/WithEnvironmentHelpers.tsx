@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
+import { throwStandardError } from './helpers';
 
 /**
  *
@@ -32,9 +33,9 @@ export class WithEnvironmentHelpersWrapped extends React.Component<
       url: `${this.props.apiUri}/public/environments/${name}`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
-    return await response.body;
+    return response.body;
   }
 
   public async deleteEnvironment(name: string) {
@@ -44,9 +45,9 @@ export class WithEnvironmentHelpersWrapped extends React.Component<
       url: `${this.props.apiUri}/public/environments/${name}`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
-    return await response.body;
+    return response.body;
   }
 
   public async renameEnvironment(name: string, newName: string) {
@@ -58,9 +59,9 @@ export class WithEnvironmentHelpersWrapped extends React.Component<
       url: `${this.props.apiUri}/public/environments/${name}`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      await throwStandardError(response);
     }
-    return await response.body;
+    return response.body;
   }
 
   public render() {
