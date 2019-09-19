@@ -13,10 +13,6 @@
 const fs = require('fs');
 const path = require('path');
 const snapshotDirPath = path.join(__dirname, '..', 'snapshots');
-const snapshotFilePath = path.join(
-  snapshotDirPath,
-  toJSONLocal() + '-snapshot.json'
-);
 
 /**
  * Offsets for timezone differences
@@ -27,24 +23,30 @@ function toJSONLocal() {
   return date.toJSON().slice(0, 10);
 }
 
+const snapshotFilePath = path.join(
+  snapshotDirPath,
+  toJSONLocal() + '-snapshot.json'
+);
+
 /**
  * Util function that retrieves the most recently updated file in a directory,
  * which we are using for snapshots.
  */
-function getLatestFile(dirpath) {
+function getLatestFilePath(snapshotDirPath) {
   // Check if directory path exists
   let latest;
 
-  const files = fs.readdirSync(dirpath);
+  const files = fs.readdirSync(snapshotDirPath);
   files.forEach(filename => {
+    const filePath = path.join(snapshotDirPath, filename);
     // Get the file stats
-    const stat = fs.lstatSync(path.join(dirpath, filename));
+    const stat = fs.lstatSync(filePath);
     // Continue if it is a directory
     if (stat.isDirectory()) return;
 
     // "latest" default to first file
     if (!latest) {
-      latest = { filename, mtime: stat.mtime };
+      latest = { filename: filename, mtime: stat.mtime };
       return;
     }
     // Update "latest" if mtime is greater than the current "latest"
@@ -54,7 +56,13 @@ function getLatestFile(dirpath) {
     }
   });
 
-  return latest;
+  console.log(
+    'path.join(snapshotDirPath, latest.filename): ' +
+      path.join(snapshotDirPath, latest.filename)
+  );
+  console.log('snapshotDirPath: ' + snapshotDirPath);
+
+  return path.join(snapshotDirPath, latest.filename);
 }
 
 module.exports = (on, config) => {
@@ -62,7 +70,13 @@ module.exports = (on, config) => {
   // `config` is the resolved Cypress config
   on('task', {
     getSnapshot() {
-      return getLatestFile(snapshotDirPath);
+      const latestFilePath = getLatestFilePath(snapshotDirPath);
+
+      if (fs.existsSync(latestFilePath)) {
+        return fs.readFileSync(latestFilePath, 'utf8');
+      }
+
+      return null;
     },
 
     storeSnapshot(snapshot) {

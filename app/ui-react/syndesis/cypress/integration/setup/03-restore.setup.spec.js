@@ -10,19 +10,14 @@
 describe('Restore Snapshot', () => {
   let latestSnapshot;
 
-  before(function() {
+  it('gets the snapshot', () => {
     cy.log('Retrieving latest snapshot...');
     cy.task('getSnapshot').then(snapshot => {
       latestSnapshot = snapshot;
     });
   });
 
-  it.skip('restores the snapshot', () => {
-    cy.request('POST', 'api/v1/test-support/restore-db', latestSnapshot).then(
-      resp => {
-        cy.log('Response: ' + JSON.stringify(resp));
-        cy.log('Database has been restored with snapshot...');
-      }
-    );
+  it('restores the snapshot', () => {
+    cy.request('POST', 'api/v1/test-support/restore-db', latestSnapshot);
   });
 });
