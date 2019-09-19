@@ -235,6 +235,7 @@ update_image_versions() {
 
     echo "==== Updating image versions to $version"
     sed "s/Syndesis: latest/Syndesis: $version/" -i $topdir/install/operator/build/conf/config.yaml
+    sed "s/Upgrade: latest/Upgrade: $version/" -i $topdir/install/operator/build/conf/config.yaml
     sed "s/TagMinor: .*$/TagMinor: \"$moving_tag\"/" -i $topdir/install/operator/build/conf/config.yaml
     sed "s/TagMajor: .*$/TagMajor: \"$next_version\"/" -i $topdir/install/operator/build/conf/config.yaml
 }
@@ -261,10 +262,6 @@ generate_versioned_files() {
     local dir="$1/install"
     local tag="$2"
     local previous_tag="${3:-latest}"
-
-    echo "==== Creating templates for $tag"
-    cd $dir/generator
-    sh run.sh --syndesis-tag="$tag" --upgrade-tag="$tag"
 
     echo "==== Updating operator deployment config"
     cd $dir/operator/deploy
@@ -328,9 +325,6 @@ create_upgrade_docker_image() {
 
     echo "==== Creating upgrade image syndesis/syndesis-upgrade:$release_version"
     cd $topdir/tools/upgrade
-
-    # Copy syndesis.yml
-    cp $topdir/install/syndesis.yml .
 
     # Copy over syndesis-cli jar
     cp $topdir/app/server/cli/target/syndesis-cli.jar .

@@ -73,6 +73,8 @@
       "reorderColumnUp": "Riordina colonna in alto",
       "sqlTab": "SQL",
       "title": "View Editor",
+      "unsavedChangesTitle": "Annullare la modifica?",
+      "unsavedChangesMessage": "Sono state apportate modifiche non salvate alla definizione della vista che andranno perse. Vuoi ancora interrompere la modifica?",
       "viewOutputTab": "Visualizza Produzione"
     },
     "viewNameDisplay": "View Name",
@@ -107,6 +109,7 @@
     "saveViewFailed": "Save view {{name}} failed. Details: {{details}}",
     "validationResultsTitle": "DDL Validation",
     "validateViewRequired": "Please re-validate view {{name}} and re-try",
+    "viewValidationFailed": "Visualizza la convalida \"{{name}}\" non riuscita, quindi non sono disponibili risultati. Dettagli: {{details}}",
     "activeConnectionsEmptyStateTitle": "No Active Connections",
     "activeConnectionsEmptyStateInfo": "There are no active connections available. Please retry."
   }

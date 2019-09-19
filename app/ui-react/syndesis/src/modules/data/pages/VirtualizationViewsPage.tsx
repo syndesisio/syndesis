@@ -111,7 +111,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const {
     handleDeleteVirtualization,
     handlePublishVirtualization,
-    handleUnpublishServiceVdb,
+    handleUnpublishVirtualization,
   } = VirtualizationHandlers();
 
   const queryResultsEmpty: QueryResults = {
@@ -146,8 +146,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     await handlePublishVirtualization(pVirtualizationId, hasViews);
   };
 
-  const doUnpublish = async (serviceVdbName: string) => {
-    await handleUnpublishServiceVdb(serviceVdbName);
+  const doUnpublish = async (virtualizationName: string) => {
+    await handleUnpublishVirtualization(virtualizationName);
   };
 
   const doSetDescription = async (newDescription: string) => {
@@ -247,7 +247,6 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
               } */
                 onUnpublish={doUnpublish}
                 onPublish={doPublish}
-                serviceVdbName={state.virtualization.serviceVdbName}
                 hasViews={viewDefinitionDescriptors.length > 0}
               />
             </PageSection>

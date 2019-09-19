@@ -23,6 +23,7 @@ import {
 import { Subscription } from 'rxjs';
 import { environment } from '../environments/environment';
 import { IDocumentProps } from './app.component';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-apicurio-host',
@@ -81,6 +82,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     c.initCfg.xsrfCookieName = environment.xsrf.cookieName;
     c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
     c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
+    c.logger.updateConfig(environment.ngxLoggerConfig);
 
     const makeUrl = (url: string) => {
       return !url.startsWith('http') &&
@@ -118,6 +120,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
       inputDoc.isSource = true;
       inputDoc.showFields = d.showFields;
       c.addDocument(inputDoc);
+      if (c.isTraceEnabled()) {
+        c.logger.trace(`Added source doc: ${JSON.stringify(inputDoc)}`);
+      }
     });
 
     const outputDoc: DocumentInitializationModel = new DocumentInitializationModel();
@@ -131,6 +136,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     outputDoc.isSource = false;
     outputDoc.showFields = this.outputDocument.showFields;
     c.addDocument(outputDoc);
+    if (c.isTraceEnabled()) {
+      c.logger.trace(`Added target doc: ${JSON.stringify(outputDoc)}`);
+    }
 
     if (this.initialMappings) {
       try {

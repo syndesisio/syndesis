@@ -25,7 +25,6 @@ import io.atlasmap.xml.v2.XmlDocument;
 import io.atlasmap.xml.v2.XmlField;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.SyndesisServerException;
@@ -199,7 +198,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
             specification = Resources.getResourceAsText("META-INF/syndesis/schemas/dstu3/" + resourcePath + ".json", FhirMetadataRetrieval.class.getClassLoader());
 
             if (ObjectHelper.isNotEmpty(containedResourceTypes)) {
-                String[] containedResourceTypesSplit = StringUtils.split(containedResourceTypes, ConfigurationProperty.MULTIPLE_SEPARATOR);
+                String[] containedResourceTypesSplit = Json.reader().forType(String[].class).readValue(containedResourceTypes);
                 specification = includeResources(specification, containedResourceTypesSplit);
             }
         } catch (Exception e) {

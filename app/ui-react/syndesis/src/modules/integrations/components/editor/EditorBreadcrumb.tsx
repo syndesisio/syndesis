@@ -16,15 +16,16 @@ import {
   BreadcrumbItem,
   BreadcrumbItemProps,
   ButtonLink,
-  ConditionsBackButtonItem,
   ConditionsDropdown,
   ConditionsDropdownBody,
   ConditionsDropdownHeader,
   ConditionsDropdownItem,
+  EditorToolbarDropdownBackButtonItem,
   HttpMethodColors,
   OperationsDropdown,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import resolvers from '../../resolvers';
 
@@ -95,15 +96,17 @@ export const BaseBreadcrumbItems: React.FunctionComponent<
 
 export interface IApiProviderOperationItemProps {
   description: string;
+  isCurrent?: boolean;
 }
 export const ApiProviderOperationItem: React.FunctionComponent<
   IApiProviderOperationItemProps
-> = ({ description }) => {
+> = ({ description, isCurrent }) => {
   const [method, desc] = (description || '').split(' ');
   return (
     <>
       <HttpMethodColors method={method} />
       &nbsp;{desc}
+      {isCurrent && <i className="fa fa-check pull-right" />}
     </>
   );
 };
@@ -114,7 +117,8 @@ export interface IApiProviderDropdownProps extends IEditorBreadcrumbProps {
 }
 const ApiProviderDropdown: React.FunctionComponent<
   IApiProviderDropdownProps
-> = ({ currentFlow, integration, getFlowHref, isApiProvider }) => {
+> = ({ currentFlow, integration, getFlowHref, isApiProvider, rootHref }) => {
+  const { t } = useTranslation(['integrations', 'shared']);
   const isPrimary = isPrimaryFlow(currentFlow);
   const primaryFlow = isPrimary
     ? currentFlow
@@ -140,9 +144,16 @@ const ApiProviderDropdown: React.FunctionComponent<
           )
         }
       >
+        <EditorToolbarDropdownBackButtonItem
+          title={t('integrations:editor:BackToOperationList')}
+          href={rootHref}
+        />
         {getApiProviderFlows(integration).map(f => (
           <Link to={getFlowHref(f.id!)} key={f.id}>
-            <ApiProviderOperationItem description={f.description!} />
+            <ApiProviderOperationItem
+              description={f.description!}
+              isCurrent={f.id === currentFlow.id}
+            />
             <div>
               <strong>{f.name}</strong>
             </div>
@@ -163,6 +174,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
   isApiProvider,
   getFlowHref,
 }) => {
+  const { t } = useTranslation(['integrations', 'shared']);
   const isPrimary = isPrimaryFlow(currentFlow);
   const primaryFlow = isPrimary
     ? currentFlow
@@ -184,11 +196,11 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
       >
         <>
           {!isPrimary && (
-            <ConditionsBackButtonItem
+            <EditorToolbarDropdownBackButtonItem
               title={
                 isApiProvider
-                  ? 'Back to Operation Flow'
-                  : 'Back to Primary Flow'
+                  ? t('integrations:editor:BackToOperationFlow')
+                  : t('integrations:editor:BackToPrimaryFlow')
               }
               href={getFlowHref(primaryFlow!.id!)}
             />
@@ -196,7 +208,9 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
           {flowGroups.map((group, groupIndex) => (
             <ConditionsDropdownHeader
               key={groupIndex}
-              title={`${groupIndex + 1} Conditional Flow Step`}
+              title={t('integrations:editor:ConditionalFlowStepGroup', {
+                group: groupIndex + 1,
+              })}
             >
               {group.flows.map(f => (
                 <ConditionsDropdownItem
@@ -204,7 +218,11 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
                   name={getFlowName(f)}
                   description={f.description!}
                   isCurrent={f.id === currentFlow.id}
-                  condition={isDefaultFlow(f) ? 'OTHERWISE' : 'WHEN'}
+                  condition={
+                    isDefaultFlow(f)
+                      ? t('integrations:editor:OTHERWISE')
+                      : t('integrations:editor:WHEN')
+                  }
                   link={getFlowHref(f.id!)}
                 />
               ))}

@@ -63,13 +63,22 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     @BeforeClass
     public static void startUpMongo() throws Exception {
-        IMongodConfig mongodConfig = new MongodConfigBuilder()
+        // Single embedded host configuration
+        IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
+            .net(new Net(HOST, PORT, Network.localhostIsIPv6())).build();
+        MongodStarter starter = MongodStarter.getDefaultInstance();
+        mongodExecutable = starter.prepare(mongodConfig);
+
+        // Clustered configuration
+        // TODO check how to enable cluster without MVN fork error
+        /*IMongodConfig mongodConfig = new MongodConfigBuilder()
             .version(PRODUCTION)
             .net(new Net(PORT, localhostIsIPv6()))
             .replication(new Storage(null, "replicationName", 5000))
             .build();
 
         mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
+         */
         mongodExecutable.start();
 
         initClient();
@@ -78,7 +87,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     private static void initClient() {
         mongoClient = new MongoClient(HOST);
         // init replica set
-        mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
+        // mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
         createAuthorizationUser();
         database = mongoClient.getDatabase(DATABASE);
         collection = database.getCollection(COLLECTION);

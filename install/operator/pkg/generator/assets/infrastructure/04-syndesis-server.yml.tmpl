@@ -60,9 +60,9 @@
               fieldRef:
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
-            value: '{{.Env.TEST_SUPPORT_ENABLED}}'
+            value: '{{ .Syndesis.Spec.TestSupport }}'
           - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: '{{.Env.CONTROLLERS_INTEGRATION_ENABLED}}'
+            value: '{{ .Syndesis.Spec.DeployIntegrations }}'
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: '{{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}'
           - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
@@ -82,9 +82,9 @@
           - name: CLIENT_STATE_TID
             value: "1"
           - name: INTEGRATION_STATE_CHECK_INTERVAL
-            value: '{{.Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
+            value: '{{ .Syndesis.Spec.Integration.StateCheckInterval }}'
           - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: '{{.Env.OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}}'
+            value: '{{ .Syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale }}'
 {{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
           - name: JAEGER_ENDPOINT
             value: "http://syndesis-jaeger-collector:14268/api/traces"
@@ -135,7 +135,7 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: '{{.Env.SERVER_MEMORY_LIMIT}}'
+              memory: '{{ memoryLimit .Syndesis.Spec.Components.Server.Resources.Limits }}'
               cpu: 750m
             requests:
               memory: 256Mi
@@ -152,7 +152,7 @@
         from:
           kind: ImageStreamTag
           name: '{{ .Images.Syndesis.Rest }}:{{ .Tags.Syndesis }}'
-          namespace: '{{.Env.IMAGE_STREAM_NAMESPACE}}'
+          namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
       type: ImageChange
     - type: ConfigChange
 

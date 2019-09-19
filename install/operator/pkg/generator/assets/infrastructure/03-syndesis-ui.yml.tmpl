@@ -86,11 +86,11 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{ProductName}}-ui
+        - {{.ProductName}}-ui
         from:
           kind: ImageStreamTag
-          name: '{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}'
-          namespace: '{{Env.IMAGE_STREAM_NAMESPACE}}'
+          name: '{{ .Images.Syndesis.Ui }}:{{ .Tags.Syndesis }}'
+          namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
       type: ImageChange
     - type: ConfigChange
 - apiVersion: v1
@@ -105,38 +105,38 @@
   data:
     config.json: |
       {
-        "apiBase": "https://{{Env.ROUTE_HOSTNAME}}",
+        "apiBase": "https://{{.Syndesis.Spec.RouteHostname}}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
-        "consoleUrl": "{{Env.OPENSHIFT_CONSOLE_URL}}",
-        "project": "{{Env.OPENSHIFT_PROJECT}}",
+        "consoleUrl": "{{.Syndesis.Spec.OpenShiftConsoleUrl}}",
+        "project": "{{.Syndesis.Namespace}}",
         "datamapper": {
-          "baseMappingServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/",
-          "baseJavaInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/json/",
+          "baseMappingServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
         "datavirt": {
           "dvUrl": "/vdb-builder/v1/",
-          "enabled": {{Env.DATAVIRT_ENABLED}}
+          "enabled": {{addonsValue .Syndesis.Spec.Addons "komodo" "enabled"}}
         },
         "features" : {
           "logging": false
         },
-{{#Productized}}
+{{- if .Productized}}
         "branding": {
           "appName": "Fuse Online",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png",
           "productBuild": true
-       }{{/Productized}}{{^Productized}}
+       }{{- end}}{{- if not .Productized}}
         "branding": {
           "appName": "Syndesis",
           "favicon32": "/favicon-32x32.png",
           "favicon16": "/favicon-16x16.png",
           "touchIcon": "/apple-touch-icon.png",
           "productBuild": false
-       }{{/Productized}}
+       }{{- end}}
       }

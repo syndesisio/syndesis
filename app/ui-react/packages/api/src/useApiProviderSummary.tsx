@@ -29,6 +29,19 @@ export function useApiProviderSummary(specification: string) {
         if (summary.errorCode) {
           throw new Error(summary.userMsg);
         }
+        if (!summary.actionsSummary) {
+          let errorMessage = '';
+          // we should be getting an array of error objects
+          if (Array.isArray(summary.errors)) {
+            errorMessage = summary.errors
+              .map((e: string | any) => (e.message ? e.message : e))
+              .join('\n');
+          } else {
+            // but in case we don't, let's show what we got and hope for the best
+            errorMessage = JSON.stringify(summary);
+          }
+          throw new Error(errorMessage);
+        }
         setApiSummary(summary as APISummary);
       } catch (e) {
         setError(e as Error);

@@ -20,7 +20,8 @@ type SyndesisSpec struct {
 	// The container registry to pull syndesis images from
 	Registry            string         `json:"registry,omitempty"`
 	Components          ComponentsSpec `json:"components,omitempty"`
-	OpenShiftConsoleUrl string         `json:"openShiftConsoleUrl,omitempty"`
+	OpenShiftMaster     string         `json:"openshiftMaster,omitempty"`
+	OpenShiftConsoleUrl string         `json:"openshiftConsoleUrl,omitempty"`
 	SarNamespace        string         `json:"sarNamespace,omitempty"`
 	Addons              AddonsSpec     `json:"addons,omitempty"`
 	// if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled
@@ -55,6 +56,7 @@ type IntegrationSpec struct {
 }
 
 type ComponentsSpec struct {
+	Scheduled        bool                          `json:"scheduled,omitempty"`
 	Server           ServerConfiguration           `json:"server,omitempty"`
 	Meta             MetaConfiguration             `json:"meta,omitempty"`
 	UI               UIConfiguration               `json:"ui,omitempty"`
@@ -77,7 +79,8 @@ type PostgresExporterConfiguration struct {
 }
 
 type KomodoConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Resources Resources `json:"resources,omitempty"`
+	Tag       string    `json:"tag,omitempty"`
 }
 
 type S2IConfiguration struct {

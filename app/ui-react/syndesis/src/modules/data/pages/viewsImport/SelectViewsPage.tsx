@@ -84,7 +84,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
       await importSource(params.virtualizationId, connName, importSources);
       pushNotification(
         t('virtualization.importViewsSuccess', {
-          name: virtualization.serviceVdbName,
+          name: virtualization.keng__id,
         }),
         'success'
       );
@@ -93,7 +93,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
       pushNotification(
         t('virtualization.importViewsFailed', {
           details,
-          name: virtualization.serviceVdbName,
+          name: virtualization.keng__id,
         }),
         'error'
       );

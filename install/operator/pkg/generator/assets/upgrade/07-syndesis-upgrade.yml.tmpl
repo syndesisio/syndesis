@@ -11,16 +11,16 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: '{{ .Env.UPGRADE_VOLUME_CAPACITY }}'
+        storage: '{{.Syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity}}'
 - apiVersion: v1
   kind: Pod
   metadata:
-    name: {{ .ProductName }}-upgrade-{{ .Tags.Upgrade }}
+    name: {{.ProductName }}-upgrade-{{ .Tags.Upgrade }}
   spec:
     serviceAccountName: syndesis-operator
     containers:
     - name: upgrade
-      image: '{{ .Env.UPGRADE_REGISTRY }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Upgrade }}:{{ .Tags.Upgrade }}'
+      image: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Upgrade }}:{{ .Tags.Upgrade }}'
       env:
         - name: SYNDESIS_VERSION
           value: {{ .Tags.Syndesis }}

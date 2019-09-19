@@ -20,6 +20,7 @@ import java.io.ByteArrayOutputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -98,6 +99,7 @@ public class PublicApiHandlerTest {
     private List<Environment> environments;
 
     @Before
+    @SuppressWarnings("unchecked")
     public void setUp() throws Exception {
         // prime mock objects
         final HashMap<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>();
@@ -144,7 +146,19 @@ public class PublicApiHandlerTest {
         doAnswer(invocation -> Stream.of(integration)).when(dataManager).fetchAllByPropertyValue(Integration.class,
                 NAME_PROPERTY, INTEGRATION_NAME);
         doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class));
-        doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class), any());
+        doAnswer(invocation -> {
+            ListResult<Integration> result = ListResult.of(integration);
+            final Object[] args = invocation.getArguments();
+            if (args.length < 2) {
+                return result;
+            }
+
+            for (Object arg : Arrays.copyOfRange(args, 1, args.length)) {
+                Function<ListResult<Integration>, ListResult<Integration>> operator = (Function<ListResult<Integration>, ListResult<Integration>>) arg;
+                result = operator.apply(result);
+            }
+            return result;
+        }).when(dataManager).fetchAll(eq(Integration.class), any());
         doAnswer(invocation -> integration = invocation.getArgument(0)).when(dataManager).update(any(Integration.class));
 
         when(supportHandler.export(any())).thenReturn(out -> out.write('b'));

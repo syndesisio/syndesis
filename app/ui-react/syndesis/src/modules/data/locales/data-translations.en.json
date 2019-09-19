@@ -73,6 +73,8 @@
       "reorderColumnUp": "Reorder column up",
       "sqlTab": "SQL",
       "title": "View Editor",
+      "unsavedChangesTitle": "Cancel editing?",
+      "unsavedChangesMessage": "You have unsaved changes to the view definition which will be lost. Do you still want to stop editing?",
       "viewOutputTab": "View Output"
     },
     "viewNameDisplay": "View Name",
@@ -107,6 +109,7 @@
     "saveViewFailed": "Save view {{name}} failed. Details: {{details}}",
     "validationResultsTitle": "DDL Validation",
     "validateViewRequired": "Please re-validate view {{name}} and re-try",
+    "viewValidationFailed": "View \"{{name}}\" failed validation so no results are available. Details: {{details}}",
     "activeConnectionsEmptyStateTitle": "No Active Connections",
     "activeConnectionsEmptyStateInfo": "There are no active connections available. Try again."
   }

@@ -346,7 +346,7 @@ export function getPublishingDetails(
  * @param viewDefinition the ViewDefinition
  */
 export function getPreviewSql(viewDefinition: ViewDefinition): string {
-  return 'SELECT * FROM views.' + viewDefinition.name;
+  return 'SELECT * FROM ' + viewDefinition.name;
 }
 
 /**

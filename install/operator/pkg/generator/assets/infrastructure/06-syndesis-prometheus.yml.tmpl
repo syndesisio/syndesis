@@ -1,14 +1,4 @@
 - apiVersion: v1
-  kind: ServiceAccount
-  metadata:
-    name: syndesis-prometheus
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-prometheus
-
-- apiVersion: v1
   kind: ConfigMap
   metadata:
     labels:
@@ -55,7 +45,7 @@
           - role: pod
             namespaces:
               names:
-                - ${OPENSHIFT_PROJECT}
+                - {{.Syndesis.Namespace}}
 
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
@@ -133,7 +123,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: ${PROMETHEUS_VOLUME_CAPACITY}
+        storage: {{.Syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -167,11 +157,7 @@
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-{{^WithDockerImages}}
           image: ' '
-{{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.PrometheusImagePrefix }}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
-{{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
@@ -190,9 +176,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
+              memory: {{memoryLimit .Syndesis.Spec.Components.Prometheus.Resources.Limits}}
             requests:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
+              memory: {{memoryLimit .Syndesis.Spec.Components.Prometheus.Resources.Limits}}
           volumeMounts:
           - name: syndesis-prometheus-data
             mountPath: /prometheus
@@ -206,15 +192,13 @@
           configMap:
             name: syndesis-prometheus-config
     triggers:
-{{^WithDockerImages}}
     - imageChangeParams:
         automatic: true
         containerNames:
         - prometheus
         from:
           kind: ImageStreamTag
-          name: {{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          name: {{ .Images.Support.Prometheus }}:{{ .Tags.Prometheus }}
+          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
-{{/WithDockerImages}}
     - type: ConfigChange
