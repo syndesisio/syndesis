@@ -250,6 +250,34 @@
       </build>
     </profile>
     <profile>
+      <id>with-custom-cafile</id>
+      <activation>
+        <property>
+          <name>custom-cafile</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>yarn set cafile</id>
+                <phase>generate-sources</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set cafile ${custom-cafile}</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>insecure</id>
       <build>
         <plugins>
