@@ -157,3 +157,12 @@ export interface ErrorResponse {
   userMsg: string;
   developerMsg?: string;
 }
+
+/**
+ * It looks like when saving an integration we get a different object than the above
+ */
+export interface IntegrationSaveErrorResponse {
+  error: string;
+  message: string;
+  property: string;
+}
