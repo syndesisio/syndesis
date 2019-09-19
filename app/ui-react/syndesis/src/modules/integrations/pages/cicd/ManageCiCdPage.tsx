@@ -139,9 +139,11 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                             onEditItem={(name: string, newName: string) =>
                               renameEnvironment(name, newName).finally(read)
                             }
+                            onCancelEditItem={this.clearNameValidation}
                             onAddItem={(name: string) =>
                               createEnvironment(name).finally(read)
                             }
+                            onCancelAddItem={this.clearNameValidation}
                             onRemoveItem={(name: string) =>
                               deleteEnvironment(name).finally(read)
                             }
@@ -197,14 +199,6 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                               openEditDialog,
                               openRemoveDialog,
                             }) => {
-                              const handleAddClicked = () => {
-                                this.clearNameValidation(openAddDialog);
-                              };
-                              const handleEditClicked = (name: string) => {
-                                this.clearNameValidation(() =>
-                                  openEditDialog(name)
-                                );
-                              };
                               return (
                                 <WithLoader
                                   error={error}
@@ -226,7 +220,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                                               <CiCdListItem
                                                 key={index}
                                                 onEditClicked={
-                                                  handleEditClicked
+                                                  openEditDialog
                                                 }
                                                 onRemoveClicked={
                                                   openRemoveDialog
@@ -249,7 +243,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                                       {filteredAndSortedEnvironments.length ===
                                         0 && (
                                         <CiCdListEmptyState
-                                          onAddNew={handleAddClicked}
+                                          onAddNew={openAddDialog}
                                           i18nTitle={t(
                                             'integrations:NoEnvironmentsAvailable'
                                           )}
@@ -279,7 +273,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
       </Translation>
     );
   }
-  private clearNameValidation(onClear: () => void) {
+  public clearNameValidation(onClear?: () => void) {
     this.setState(
       {
         nameValidationError: TagNameValidationError.NoErrors,
