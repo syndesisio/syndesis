@@ -75,6 +75,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
     this.state = {
       nameValidationError: TagNameValidationError.NoErrors,
     };
+    this.clearNameValidation = this.clearNameValidation.bind(this);
   }
   public render() {
     return (
@@ -98,7 +99,15 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                       this.setState({
                         nameValidationError: TagNameValidationError.NoName,
                       });
-                    } else if (data.indexOf(name) !== -1) {
+                    } else if (
+                      typeof data.find((item: string | IEnvironment) => {
+                        if (typeof item === 'string') {
+                          return (item as string) === name;
+                        } else {
+                          return (item as IEnvironment).name === name;
+                        }
+                      }) !== 'undefined'
+                    ) {
                       this.setState({
                         nameValidationError: TagNameValidationError.NameInUse,
                       });
@@ -187,62 +196,76 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                               openAddDialog,
                               openEditDialog,
                               openRemoveDialog,
-                            }) => (
-                              <WithLoader
-                                error={error}
-                                loading={!hasData}
-                                loaderChildren={
-                                  <CiCdList children={<CiCdListSkeleton />} />
-                                }
-                                errorChildren={
-                                  <ApiError error={errorMessage!} />
-                                }
-                              >
-                                {() => (
-                                  <>
-                                    {filteredAndSortedEnvironments.length !==
-                                      0 && (
-                                      <CiCdList
-                                        children={filteredAndSortedEnvironments.map(
-                                          (listItem, index) => (
-                                            <CiCdListItem
-                                              key={index}
-                                              onEditClicked={openEditDialog}
-                                              onRemoveClicked={openRemoveDialog}
-                                              i18nEditButtonText={t(
-                                                'shared:Edit'
-                                              )}
-                                              i18nRemoveButtonText={t(
-                                                'shared:Remove'
-                                              )}
-                                              name={listItem.name}
-                                              i18nUsesText={
-                                                listItem.i18nUsesText
-                                              }
-                                            />
-                                          )
-                                        )}
-                                      />
-                                    )}
-                                    {filteredAndSortedEnvironments.length ===
-                                      0 && (
-                                      <CiCdListEmptyState
-                                        onAddNew={openAddDialog}
-                                        i18nTitle={t(
-                                          'integrations:NoEnvironmentsAvailable'
-                                        )}
-                                        i18nAddNewButtonText={t(
-                                          'shared:AddNew'
-                                        )}
-                                        i18nInfo={t(
-                                          'integrations:NoEnvironmentsAvailableInfo'
-                                        )}
-                                      />
-                                    )}
-                                  </>
-                                )}
-                              </WithLoader>
-                            )}
+                            }) => {
+                              const handleAddClicked = () => {
+                                this.clearNameValidation(openAddDialog);
+                              };
+                              const handleEditClicked = (name: string) => {
+                                this.clearNameValidation(() =>
+                                  openEditDialog(name)
+                                );
+                              };
+                              return (
+                                <WithLoader
+                                  error={error}
+                                  loading={!hasData}
+                                  loaderChildren={
+                                    <CiCdList children={<CiCdListSkeleton />} />
+                                  }
+                                  errorChildren={
+                                    <ApiError error={errorMessage!} />
+                                  }
+                                >
+                                  {() => (
+                                    <>
+                                      {filteredAndSortedEnvironments.length !==
+                                        0 && (
+                                        <CiCdList
+                                          children={filteredAndSortedEnvironments.map(
+                                            (listItem, index) => (
+                                              <CiCdListItem
+                                                key={index}
+                                                onEditClicked={
+                                                  handleEditClicked
+                                                }
+                                                onRemoveClicked={
+                                                  openRemoveDialog
+                                                }
+                                                i18nEditButtonText={t(
+                                                  'shared:Edit'
+                                                )}
+                                                i18nRemoveButtonText={t(
+                                                  'shared:Remove'
+                                                )}
+                                                name={listItem.name}
+                                                i18nUsesText={
+                                                  listItem.i18nUsesText
+                                                }
+                                              />
+                                            )
+                                          )}
+                                        />
+                                      )}
+                                      {filteredAndSortedEnvironments.length ===
+                                        0 && (
+                                        <CiCdListEmptyState
+                                          onAddNew={handleAddClicked}
+                                          i18nTitle={t(
+                                            'integrations:NoEnvironmentsAvailable'
+                                          )}
+                                          i18nAddNewButtonText={t(
+                                            'shared:AddNew'
+                                          )}
+                                          i18nInfo={t(
+                                            'integrations:NoEnvironmentsAvailableInfo'
+                                          )}
+                                        />
+                                      )}
+                                    </>
+                                  )}
+                                </WithLoader>
+                              );
+                            }}
                           </CiCdManagePageUI>
                         </>
                       )}
@@ -254,6 +277,14 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
           </WithEnvironments>
         )}
       </Translation>
+    );
+  }
+  private clearNameValidation(onClear: () => void) {
+    this.setState(
+      {
+        nameValidationError: TagNameValidationError.NoErrors,
+      },
+      onClear
     );
   }
 }

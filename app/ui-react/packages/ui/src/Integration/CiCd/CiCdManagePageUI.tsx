@@ -93,7 +93,7 @@ export class CiCdManagePageUI extends React.Component<
     this.setState({ showRemoveDialog: false });
   }
   public openAddDialog() {
-    this.setState({ showAddDialog: true });
+    this.setState({ currentItemName: undefined, showAddDialog: true });
   }
   public closeAddDialog() {
     this.setState({ showAddDialog: false });
