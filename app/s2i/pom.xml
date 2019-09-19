@@ -35,6 +35,8 @@
     <!-- Must be set empty here so that it can be overridden from the outside-->
     <!-- Don't delete this line -->
     <maven.repo.local></maven.repo.local>
+    <s2i.sample-generation.skip>false</s2i.sample-generation.skip>
+    <s2i.local-repo-generation.skip>false</s2i.local-repo-generation.skip>
     <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
     <license.output.dir>${project.build.directory}/licenses</license.output.dir>
   </properties>
@@ -123,6 +125,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
+              <skip>${s2i.sample-generation.skip}</skip>
               <executable>java</executable>
               <arguments>
                 <argument>-jar</argument>
@@ -138,6 +141,7 @@
               <goal>exec</goal>
             </goals>
             <configuration>
+              <skip>${s2i.local-repo-generation.skip}</skip>
               <executable>bash</executable>
               <commandlineArgs>
                 ${basedir}/copy_mvn_repo.sh
@@ -255,6 +259,19 @@
       </activation>
       <properties>
         <mavenMirrorOf>external:*</mavenMirrorOf>
+      </properties>
+    </profile>
+    <!-- Build by PNC -->
+    <profile>
+      <id>with-proxy</id>
+      <activation>
+        <property>
+          <name>proxy-server</name>
+        </property>
+      </activation>
+      <properties>
+        <s2i.sample-generation.skip>true</s2i.sample-generation.skip>
+        <s2i.local-repo-generation.skip>true</s2i.local-repo-generation.skip>
       </properties>
     </profile>
   </profiles>
