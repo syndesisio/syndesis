@@ -83,11 +83,13 @@ export class ConnectorsPage extends React.Component {
                       loading={!hasData}
                       loaderChildren={
                         <PageSection>
-                          {new Array(5).fill(0).map((_, index) => (
-                            <ConnectionsGridCell key={index}>
-                              <ConnectionSkeleton />
-                            </ConnectionsGridCell>
-                          ))}
+                          <ConnectionsGrid>
+                            {new Array(5).fill(0).map((_, index) => (
+                              <ConnectionsGridCell key={index}>
+                                <ConnectionSkeleton />
+                              </ConnectionsGridCell>
+                            ))}
+                          </ConnectionsGrid>
                         </PageSection>
                       }
                       errorChildren={<ApiError error={errorMessage!} />}
@@ -130,11 +132,15 @@ export class ConnectorsPage extends React.Component {
                                               description={
                                                 connector.description || ''
                                               }
-                                              i18nCannotDelete={t('cannotDelete')}
+                                              i18nCannotDelete={t(
+                                                'cannotDelete'
+                                              )}
                                               i18nConfigRequired={t(
                                                 'configurationRequired'
                                               )}
-                                              i18nTechPreview={t('shared:techPreview')}
+                                              i18nTechPreview={t(
+                                                'shared:techPreview'
+                                              )}
                                               icon={
                                                 <EntityIcon
                                                   entity={connector}
