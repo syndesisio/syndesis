@@ -23,7 +23,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.netflix.hystrix.HystrixExecutable;
 import com.netflix.hystrix.HystrixInvokableInfo;
 import io.syndesis.common.model.DataShape;
@@ -34,14 +33,11 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
-import io.syndesis.common.util.Json;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -178,14 +174,13 @@ public class ConnectionActionHandlerTest {
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
-                c -> c.addDataList("Contact"))
+                c -> c.addDataList("Contact").defaultValue("Contact"))
             .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("ID", "Contact ID")))
-            .replaceConfigurationProperty("sObjectIdName", 
+            .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Email", "Email")))
             .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("TwitterScreenName__c", "Twitter Screen Name")))
-
             .inputDataShape(salesforceContactShape)//
             .build();
 
