@@ -32,6 +32,10 @@
 
     <packaging>pom</packaging>
 
+    <properties>
+      <basepom.check.skip-all>true</basepom.check.skip-all>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -45,7 +49,7 @@
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}</sourceDirectory>
-                            <sourceDocumentName>master.adoc</sourceDocumentName>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
                             <imagesDir>images</imagesDir>
                             <backend>html</backend>
                             <doctype>book</doctype>
