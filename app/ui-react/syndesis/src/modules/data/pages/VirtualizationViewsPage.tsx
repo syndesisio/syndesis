@@ -11,6 +11,7 @@ import {
 } from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
+  Loader,
   PageSection,
   ViewHeaderBreadcrumb,
   VirtualizationDetailsHeader,
@@ -113,13 +114,9 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const [description, setDescription] = React.useState(
     virtualization.tko__description
   );
-  const [publishedState, setPublishedState] = React.useState({
-    state: 'CONFIGURING',
-    stepNumber: 0,
-    stepText: 'querying for initial publish state',
-    stepTotal: 4,
-  } as VirtualizationPublishingDetails);
-
+  const [publishedState, setPublishedState] = React.useState(
+    {} as VirtualizationPublishingDetails
+  );
   const {
     deleteViewDefinition,
     updateVirtualizationDescription,
@@ -274,29 +271,35 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
               />
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
-              <VirtualizationDetailsHeader
-                i18nDescriptionPlaceholder={t(
-                  'virtualization.descriptionPlaceholder'
-                )}
-                i18nDraft={t('shared:Draft')}
-                i18nError={t('shared:Error')}
-                i18nPublished={t('virtualization.publishedDataVirtualization')}
-                i18nPublishInProgress={t('virtualization.publishInProgress')}
-                i18nUnpublishInProgress={t(
-                  'virtualization.unpublishInProgress'
-                )}
-                i18nPublishLogUrlText={t('shared:viewLogs')}
-                odataUrl={getOdataUrl(virtualization)}
-                publishedState={publishedState.state}
-                publishingCurrentStep={publishedState.stepNumber}
-                publishingLogUrl={publishedState.logUrl}
-                publishingTotalSteps={publishedState.stepTotal}
-                publishingStepText={publishedState.stepText}
-                virtualizationDescription={description}
-                virtualizationName={virtualization.keng__id}
-                isWorking={false}
-                onChangeDescription={doSetDescription}
-              />
+              {virtualization ? (
+                <VirtualizationDetailsHeader
+                  i18nDescriptionPlaceholder={t(
+                    'virtualization.descriptionPlaceholder'
+                  )}
+                  i18nDraft={t('shared:Draft')}
+                  i18nError={t('shared:Error')}
+                  i18nPublished={t(
+                    'virtualization.publishedDataVirtualization'
+                  )}
+                  i18nPublishInProgress={t('virtualization.publishInProgress')}
+                  i18nUnpublishInProgress={t(
+                    'virtualization.unpublishInProgress'
+                  )}
+                  i18nPublishLogUrlText={t('shared:viewLogs')}
+                  odataUrl={getOdataUrl(virtualization)}
+                  publishedState={publishedState.state || 'Loading'}
+                  publishingCurrentStep={publishedState.stepNumber}
+                  publishingLogUrl={publishedState.logUrl}
+                  publishingTotalSteps={publishedState.stepTotal}
+                  publishingStepText={publishedState.stepText}
+                  virtualizationDescription={description}
+                  virtualizationName={virtualization.keng__id}
+                  isWorking={false}
+                  onChangeDescription={doSetDescription}
+                />
+              ) : (
+                <Loader size={'sm'} inline={true} />
+              )}
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
               <VirtualizationNavBar virtualization={virtualization} />
