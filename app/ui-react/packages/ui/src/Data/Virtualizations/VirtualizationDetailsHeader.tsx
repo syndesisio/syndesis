@@ -11,6 +11,7 @@ export interface IVirtualizationDetailsHeaderProps {
   i18nDescriptionPlaceholder: string;
   i18nDraft: string;
   i18nError: string;
+  i18nInUseText: string;
   i18nPublished: string;
   i18nPublishInProgress: string;
   i18nUnpublishInProgress: string;
@@ -77,6 +78,9 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                   </a>
                 </span>
               )}
+            </SplitItem>
+            <SplitItem>
+              {props.i18nInUseText}
             </SplitItem>
           </Split>
         </StackItem>

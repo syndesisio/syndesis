@@ -96,6 +96,7 @@ stories
         i18nEditTip={editTip}
         /* TD-636: Commented out for TP 
         i18nExport={'Export'} */
+        i18nInUseText={'The virtualization is in use by an integration.'}
         i18nPublished={publishedText}
         i18nUnpublish={unpublishText}
         i18nPublish={publishText}
@@ -128,6 +129,7 @@ stories
           'NOTFOUND'
         )}
         publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+        usedBy={['stuff']}
       />
     ))
   )
@@ -149,6 +151,7 @@ stories
       i18nEditTip={editTip}
       /* TD-636: Commented out for TP 
         i18nExport={'Export'} */
+      i18nInUseText={'The virtualization is in use by an integration.'}
       i18nPublished={publishedText}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
@@ -181,5 +184,6 @@ stories
         'NOTFOUND'
       )}
       publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+      usedBy={['stuff']}
     />
   ));
