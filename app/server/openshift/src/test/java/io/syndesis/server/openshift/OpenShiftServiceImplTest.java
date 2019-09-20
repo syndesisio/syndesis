@@ -16,12 +16,19 @@
 package io.syndesis.server.openshift;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
@@ -37,13 +44,9 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftMockServer;
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import okhttp3.mockwebserver.RecordedRequest;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import static io.fabric8.kubernetes.client.utils.Serialization.asJson;
 import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
@@ -367,14 +370,14 @@ public class OpenShiftServiceImplTest {
             .always();
 
         server.expect()
-            .put()
+            .patch()
             .withPath("/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
             .andReturn(200, expectedDeploymentConfig)
             .always();
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("PUT", "/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("PATCH", "/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", Collections.EMPTY_LIST));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
         assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/i-via-service-and-route"));
     }
@@ -462,6 +465,9 @@ public class OpenShiftServiceImplTest {
                         .endFrom()
                     .endImageChangeParams()
                     .withType("ImageChange")
+                .endTrigger()
+                .addNewTrigger()
+                    .withType("ConfigChange")
                 .endTrigger()
             .endSpec();
     }
