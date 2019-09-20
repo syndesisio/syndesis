@@ -45,8 +45,11 @@ import (
 // the rest of the resources are parsed. The host of the route and the token of the serviceaccount
 // are passed down to the templates.
 func (o *Install) installStandalone() error {
+	if o.ejectedResources != nil {
+		o.ejectedResources = nil
+	}
+
 	ctx := context.TODO()
-	o.ejectedResources = nil
 	cli, err := o.GetClient()
 	if err != nil {
 		return err
@@ -75,9 +78,24 @@ func (o *Install) installStandalone() error {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			DevSupport: o.devSupport,
+			Addons:     v1alpha1.AddonsSpec{},
 		},
 	}
 	gen.Syndesis = syndesis
+
+	addons := make([]string, 0)
+	if o.addons != "" {
+		addons = strings.Split(o.addons, ",")
+	}
+
+	for _, addon := range addons {
+		if contains(addons, addon) {
+			if syndesis.Spec.Addons[addon] == nil {
+				syndesis.Spec.Addons[addon] = v1alpha1.Parameters{}
+			}
+			syndesis.Spec.Addons[addon]["enabled"] = "true"
+		}
+	}
 
 	// Get pull secret in case it was created, and link it to the serviceaccounts
 	secret := &corev1.Secret{}
@@ -136,7 +154,7 @@ func (o *Install) installStandalone() error {
 				res.SetNamespace(o.Namespace)
 			}
 
-			if err := o.install("synderoute was", route); err != nil {
+			if err := o.install("syndesis route was", route); err != nil {
 				return err
 			}
 		} else {
@@ -165,13 +183,13 @@ func (o *Install) installStandalone() error {
 	}
 
 	// Render addons
-	addons := strings.Split(o.addons, ",")
-	for addon := range syndesis.Spec.Addons {
-		if !contains(addons, addon) {
+	for addon, properties := range syndesis.Spec.Addons {
+		if properties["enabled"] != "true" {
 			continue
 		}
 
 		addonDir := "./addons/" + addon + "/"
+
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
 			fmt.Printf("unsuported addon configured: [%s]. [%v]", addon, err)
@@ -184,6 +202,7 @@ func (o *Install) installStandalone() error {
 			return err
 		}
 
+		o.Println("addon " + addon + " enabled")
 		all = append(all, resources...)
 	}
 
@@ -219,7 +238,7 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	}
 
 	if !exist {
-		sa.Secrets = append(sa.Secrets, corev1.ObjectReference{Namespace: sa.Namespace, Name: SyndesisPullSecret})
+		sa.Secrets = append(sa.Secrets, corev1.ObjectReference{Namespace: sa.Namespace, Name: action.SyndesisPullSecret})
 		return true
 	}
 
