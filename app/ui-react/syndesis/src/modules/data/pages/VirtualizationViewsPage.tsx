@@ -1,10 +1,17 @@
 import {
+  usePolling,
   useViewDefinitionDescriptors,
+  useVirtualization,
   useVirtualizationHelpers,
 } from '@syndesis/api';
-import { QueryResults, ViewDefinitionDescriptor } from '@syndesis/models';
+import {
+  QueryResults,
+  ViewDefinitionDescriptor,
+  VirtualizationPublishingDetails,
+} from '@syndesis/models';
 import { RestDataService } from '@syndesis/models';
 import {
+  Loader,
   PageSection,
   ViewHeaderBreadcrumb,
   VirtualizationDetailsHeader,
@@ -97,12 +104,18 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
   const { pushNotification } = React.useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { params, state, history } = useRouteData<
+  const { params, history } = useRouteData<
     IVirtualizationViewsPageRouteParams,
     IVirtualizationViewsPageRouteState
   >();
+  const { resource: virtualization } = useVirtualization(
+    params.virtualizationId
+  );
   const [description, setDescription] = React.useState(
-    state.virtualization.tko__description
+    virtualization.tko__description
+  );
+  const [publishedState, setPublishedState] = React.useState(
+    {} as VirtualizationPublishingDetails
   );
   const {
     deleteViewDefinition,
@@ -130,10 +143,17 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     read,
   } = useViewDefinitionDescriptors(params.virtualizationId);
 
-  const publishingDetails = getPublishingDetails(
-    appContext.config.consoleUrl,
-    state.virtualization
-  );
+  const updatePublishedState = async () => {
+    const publishedDetails: VirtualizationPublishingDetails = getPublishingDetails(
+      appContext.config.consoleUrl,
+      virtualization
+    ) as VirtualizationPublishingDetails;
+
+    setPublishedState(publishedDetails);
+  };
+
+  // poll to check for updates to the published state
+  usePolling({ callback: updatePublishedState, delay: 5000 });
 
   const doDelete = async (pVirtualizationId: string) => {
     const success = await handleDeleteVirtualization(pVirtualizationId);
@@ -159,12 +179,12 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
         params.virtualizationId,
         newDescription
       );
-      state.virtualization.tko__description = newDescription;
+      virtualization.tko__description = newDescription;
       return true;
     } catch {
       pushNotification(
         t('virtualization.errorUpdatingDescription', {
-          name: state.virtualization.keng__id,
+          name: virtualization.keng__id,
         }),
         'error'
       );
@@ -214,8 +234,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
           <>
             <PageSection variant={'light'} noPadding={true}>
               <ViewHeaderBreadcrumb
-                currentPublishedState={publishingDetails.state}
-                virtualizationName={state.virtualization.keng__id}
+                currentPublishedState={publishedState.state}
+                virtualizationName={virtualization.keng__id}
                 dashboardHref={resolvers.dashboard.root()}
                 dashboardString={t('shared:Home')}
                 dataHref={resolvers.data.root()}
@@ -223,7 +243,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 i18nCancelText={t('shared:Cancel')}
                 i18nDelete={t('shared:Delete')}
                 i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {
-                  name: state.virtualization.keng__id,
+                  name: virtualization.keng__id,
                 })}
                 i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
                 /* TD-636: Commented out for TP
@@ -234,7 +254,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 i18nUnpublishModalMessage={t(
                   'virtualization.unpublishModalMessage',
                   {
-                    name: state.virtualization.keng__id,
+                    name: virtualization.keng__id,
                   }
                 )}
                 i18nUnpublishModalTitle={t(
@@ -251,32 +271,38 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
               />
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
-              <VirtualizationDetailsHeader
-                i18nDescriptionPlaceholder={t(
-                  'virtualization.descriptionPlaceholder'
-                )}
-                i18nDraft={t('shared:Draft')}
-                i18nError={t('shared:Error')}
-                i18nPublished={t('virtualization.publishedDataVirtualization')}
-                i18nPublishInProgress={t('virtualization.publishInProgress')}
-                i18nUnpublishInProgress={t(
-                  'virtualization.unpublishInProgress'
-                )}
-                i18nPublishLogUrlText={t('shared:viewLogs')}
-                odataUrl={getOdataUrl(state.virtualization)}
-                publishedState={publishingDetails.state}
-                publishingCurrentStep={publishingDetails.stepNumber}
-                publishingLogUrl={publishingDetails.logUrl}
-                publishingTotalSteps={publishingDetails.stepTotal}
-                publishingStepText={publishingDetails.stepText}
-                virtualizationDescription={description}
-                virtualizationName={state.virtualization.keng__id}
-                isWorking={false}
-                onChangeDescription={doSetDescription}
-              />
+              {virtualization ? (
+                <VirtualizationDetailsHeader
+                  i18nDescriptionPlaceholder={t(
+                    'virtualization.descriptionPlaceholder'
+                  )}
+                  i18nDraft={t('shared:Draft')}
+                  i18nError={t('shared:Error')}
+                  i18nPublished={t(
+                    'virtualization.publishedDataVirtualization'
+                  )}
+                  i18nPublishInProgress={t('virtualization.publishInProgress')}
+                  i18nUnpublishInProgress={t(
+                    'virtualization.unpublishInProgress'
+                  )}
+                  i18nPublishLogUrlText={t('shared:viewLogs')}
+                  odataUrl={getOdataUrl(virtualization)}
+                  publishedState={publishedState.state || 'Loading'}
+                  publishingCurrentStep={publishedState.stepNumber}
+                  publishingLogUrl={publishedState.logUrl}
+                  publishingTotalSteps={publishedState.stepTotal}
+                  publishingStepText={publishedState.stepText}
+                  virtualizationDescription={description}
+                  virtualizationName={virtualization.keng__id}
+                  isWorking={false}
+                  onChangeDescription={doSetDescription}
+                />
+              ) : (
+                <Loader size={'sm'} inline={true} />
+              )}
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
-              <VirtualizationNavBar virtualization={state.virtualization} />
+              <VirtualizationNavBar virtualization={virtualization} />
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
               <WithLoader
@@ -325,12 +351,12 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     })}
                     linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
                       {
-                        virtualization: state.virtualization,
+                        virtualization,
                       }
                     )}
                     linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
                       {
-                        virtualization: state.virtualization,
+                        virtualization,
                       }
                     )}
                     hasListData={viewDefinitionDescriptors.length > 0}
@@ -354,12 +380,12 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                             }
                             viewEditPageLink={resolvers.data.virtualizations.views.edit.sql(
                               {
-                                virtualization: state.virtualization,
+                                virtualization,
                                 // tslint:disable-next-line: object-literal-sort-keys
                                 viewDefinitionId: viewDefinitionDescriptor.id,
                                 viewDefinition: undefined,
-                                previewExpanded:true,
-                                queryResults:queryResultsEmpty
+                                previewExpanded: true,
+                                queryResults: queryResultsEmpty,
                               }
                             )}
                             i18nCancelText={t('shared:Cancel')}
