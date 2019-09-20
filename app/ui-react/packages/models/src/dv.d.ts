@@ -20,6 +20,7 @@ export interface RestDataService {
     | 'SUBMITTED';
   serviceViewModel: string;
   tko__description: string;
+  usedBy: string[];
 }
 
 export interface SchemaNode {

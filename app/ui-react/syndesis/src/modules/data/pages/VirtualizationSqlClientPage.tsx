@@ -1,8 +1,12 @@
 import {
+  usePolling,
   useViewDefinitionDescriptors,
+  useVirtualization,
   useVirtualizationHelpers,
 } from '@syndesis/api';
-import { RestDataService } from '@syndesis/models';
+import { RestDataService, 
+         VirtualizationPublishingDetails
+} from '@syndesis/models';
 import {
   PageSection,
   SqlClientContentSkeleton,
@@ -49,6 +53,9 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     IVirtualizationSqlClientPageRouteParams,
     IVirtualizationSqlClientPageRouteState
   >();
+  const { resource: virtualization } = useVirtualization(
+    params.virtualizationId
+  );
   const [description, setDescription] = React.useState(
     state.virtualization.tko__description
   );
@@ -60,6 +67,10 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     handlePublishVirtualization,
     handleUnpublishVirtualization,
   } = VirtualizationHandlers();
+  const [publishedState, setPublishedState] = React.useState(
+    {} as VirtualizationPublishingDetails
+  );
+  const [usedBy, setUsedBy] = React.useState( state.virtualization.usedBy );
 
   const {
     resource: viewDefinitionDescriptors,
@@ -67,11 +78,27 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     loading,
   } = useViewDefinitionDescriptors(params.virtualizationId);
 
-  const publishingDetails = getPublishingDetails(
-    appContext.config.consoleUrl,
-    state.virtualization
-  );
+  const updatePublishedState = async () => {
+    const publishedDetails: VirtualizationPublishingDetails = getPublishingDetails(
+      appContext.config.consoleUrl,
+      virtualization
+    ) as VirtualizationPublishingDetails;
 
+    setPublishedState(publishedDetails);
+    setUsedBy(virtualization.usedBy);
+  };
+
+  // poll to check for updates to the published state
+  usePolling({ callback: updatePublishedState, delay: 5000 });
+
+  const getUsedByMessage = (integrationNames: string[]): string => {
+    if (integrationNames.length === 1) {
+      return t('usedByOne');
+    }
+
+    return t('usedByMulti', { count: integrationNames.length });
+  };
+  
   const doDelete = async (pVirtualizationId: string) => {
     const success = await handleDeleteVirtualization(pVirtualizationId);
     if (success) {
@@ -80,21 +107,13 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   };
 
   const doPublish = async (pVirtualizationId: string, hasViews: boolean) => {
-    const success = await handlePublishVirtualization(
-      pVirtualizationId,
-      hasViews
-    );
-    if (success) {
-      history.push(resolvers.data.virtualizations.list());
-    }
+    await handlePublishVirtualization(pVirtualizationId, hasViews);
   };
 
   const doUnpublish = async (virtualizationName: string) => {
-    const success = await handleUnpublishVirtualization(virtualizationName);
-    if (success) {
-      history.push(resolvers.data.virtualizations.list());
-    }
+    await handleUnpublishVirtualization(virtualizationName);
   };
+
 
   const doSetDescription = async (newDescription: string) => {
     const previous = description;
@@ -123,7 +142,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     <>
       <PageSection variant={'light'} noPadding={true}>
         <ViewHeaderBreadcrumb
-          currentPublishedState={publishingDetails.state}
+          currentPublishedState={publishedState.state}
           virtualizationName={state.virtualization.keng__id}
           dashboardHref={resolvers.dashboard.root()}
           dashboardString={t('shared:Home')}
@@ -147,6 +166,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           onUnpublish={doUnpublish}
           onPublish={doPublish}
           hasViews={!state.virtualization.empty}
+          usedInIntegration={usedBy.length > 0}
         />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
@@ -156,16 +176,17 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           )}
           i18nDraft={t('shared:Draft')}
           i18nError={t('shared:Error')}
+          i18nInUseText={getUsedByMessage(usedBy)}
           i18nPublished={t('virtualization.publishedDataVirtualization')}
           i18nPublishInProgress={t('virtualization.publishInProgress')}
           i18nUnpublishInProgress={t('virtualization.unpublishInProgress')}
           i18nPublishLogUrlText={t('shared:viewLogs')}
-          odataUrl={getOdataUrl(state.virtualization)}
-          publishedState={publishingDetails.state}
-          publishingCurrentStep={publishingDetails.stepNumber}
-          publishingLogUrl={publishingDetails.logUrl}
-          publishingTotalSteps={publishingDetails.stepTotal}
-          publishingStepText={publishingDetails.stepText}
+          odataUrl={getOdataUrl(virtualization)}
+          publishedState={publishedState.state || 'Loading'}
+          publishingCurrentStep={publishedState.stepNumber}
+          publishingLogUrl={publishedState.logUrl}
+          publishingTotalSteps={publishedState.stepTotal}
+          publishingStepText={publishedState.stepText}
           virtualizationDescription={description}
           virtualizationName={state.virtualization.keng__id}
           isWorking={false}

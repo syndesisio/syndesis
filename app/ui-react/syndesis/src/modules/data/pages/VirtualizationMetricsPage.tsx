@@ -51,6 +51,14 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
     state.virtualization
   );
 
+  const getUsedByMessage = (integrationNames: string[]): string => {
+    if (integrationNames.length === 1) {
+      return t('usedByOne');
+    }
+
+    return t('usedByMulti', { count: integrationNames.length });
+  };
+  
   const doSetDescription = async (newDescription: string) => {
     const previous = description;
     setDescription(newDescription); // this sets InlineTextEdit component to new value
@@ -98,6 +106,7 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
         i18nDescriptionPlaceholder={t('virtualization.descriptionPlaceholder')}
         i18nDraft={t('shared:Draft')}
         i18nError={t('shared:Error')}
+        i18nInUseText={getUsedByMessage(state.virtualization.usedBy)}
         i18nPublished={t('virtualization.publishedDataVirtualization')}
         i18nPublishInProgress={t('virtualization.publishInProgress')}
         i18nUnpublishInProgress={t('virtualization.unpublishInProgress')}
