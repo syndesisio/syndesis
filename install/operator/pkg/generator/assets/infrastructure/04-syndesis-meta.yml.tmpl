@@ -140,7 +140,7 @@
         - {{.ProductName}}-meta
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Syndesis.Verifier }}:{{ .Tags.Syndesis }}
+          name: {{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}
           namespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
     - type: ConfigChange
