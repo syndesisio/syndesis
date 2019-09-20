@@ -121,7 +121,7 @@
         - {{.ProductName}}-oauthproxy
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.OAuthProxy }}:{{ .Tags.OAuthProxy }}
+          name: {{ .Images.Support.OAuthProxy }}:{{ .Syndesis.Spec.Components.Oauth.Tag }}
           namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - type: ConfigChange

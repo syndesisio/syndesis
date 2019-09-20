@@ -6,3 +6,11 @@ metadata:
 spec:
   integration:
     limit: 1
+
+  components:
+    server:
+      tag: 1.8.1-20190918
+    meta:
+      tag: 1.8.1-20190918
+    ui:
+      tag: 1.8.1-20190918
