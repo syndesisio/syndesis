@@ -12,12 +12,11 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/hoisie/mustache"
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"sigs.k8s.io/yaml"
 )
 
 type supportImages struct {
@@ -108,6 +107,20 @@ var templateFunctions = template.FuncMap{
 			return false, nil
 		}
 	},
+	"memoryLimit": func(limits v1.ResourceList) (string, error) {
+		if l := limits.Memory(); l != nil && l.Value() > 0 {
+			return l.String(), nil
+		}
+
+		return "", nil
+	},
+	"addonsValue": func(addons v1alpha1.AddonsSpec, key1 string, key2 string) (string, error) {
+		if addons == nil || len(key1) == 0 || len(key2) == 0 {
+			return "", nil
+		}
+
+		return addons[key1][key2], nil
+	},
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
@@ -177,48 +190,6 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 		if err != nil {
 			return nil, errors.Errorf("%s: %s: \n%s\n", filePath, err, string(rawYaml))
 		}
-	}
-
-	// We can process mustache templates.
-	if strings.HasSuffix(filePath, ".yml.mustache") || strings.HasSuffix(filePath, ".yaml.mustache") {
-		fileData, err := AssetAsBytes(filePath)
-		if err != nil {
-			return nil, err
-		}
-
-		rawYaml := mustache.Render(string(fileData), context)
-		err = util.UnmarshalYaml([]byte(rawYaml), &obj)
-		if err != nil {
-			return nil, fmt.Errorf("%s:\n%s\n", err, rawYaml)
-		}
-
-		// This is only here to assist in migrating from mustache to go lang templates.
-		fileDataTmpl, err := AssetAsBytes(filePath + ".tmpl")
-		if err == nil {
-			t, err := template.New(filePath + ".tmpl").Parse(string(fileDataTmpl))
-			if err != nil {
-				return nil, err
-			}
-
-			x := &bytes.Buffer{}
-			err = t.Execute(x, context)
-			if err != nil {
-				return nil, err
-			}
-
-			var objTmpl interface{} = nil
-			err = util.UnmarshalYaml([]byte(x.String()), &objTmpl)
-			if err != nil {
-				return nil, fmt.Errorf("%s:\n%s\n", err, rawYaml)
-			}
-
-			must1 := string(Must(yaml.Marshal(obj)))
-			must2 := string(Must(yaml.Marshal(objTmpl)))
-			if must1 != must2 {
-				return nil, fmt.Errorf("template did not render the same way")
-			}
-		}
-
 	}
 
 	switch v := obj.(type) {

@@ -12,12 +12,12 @@
   data:
     application.yml: |-
       deployment:
-        load-demo-data: '{{.Env.DEMO_DATA_ENABLED}}'
+        load-demo-data: '{{.Syndesis.Spec.DemoData}}'
       cors:
 {{- if (not .AllowLocalHost)}}
-        allowedOrigins: https://{{.Env.ROUTE_HOSTNAME}}
+        allowedOrigins: https://{{.Syndesis.Spec.RouteHostname}}
 {{- else}}
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://.Env.ROUTE_HOSTNAME}}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{.Syndesis.Spec.RouteHostname}}
 {{- end}}
       cache:
         cluster:
@@ -31,8 +31,8 @@
           enabled: false
         datasource:
           url: jdbc:postgresql://syndesis-db:5432/syndesis?sslmode=disable
-          username: '{{.Env.POSTGRESQL_USER}}'
           password: '{{.Env.POSTGRESQL_PASSWORD}}'
+          username: '{{.Syndesis.Spec.Components.Db.User}}'
           driver-class-name: org.postgresql.Driver
       security:
         basic:
@@ -77,9 +77,9 @@
 {{- end}}
 {{- end}}
       openshift:
-        apiBaseUrl: '{{.Env.OPENSHIFT_MASTER}}/oapi/v1'
-        namespace: '{{.Env.OPENSHIFT_PROJECT}}'
-        imageStreamNamespace: {{.Env.IMAGE_STREAM_NAMESPACE}}
+        apiBaseUrl: '{{.Syndesis.Spec.OpenShiftMaster}}/oapi/v1'
+        namespace: '{{.Syndesis.Namespace}}'
+        imageStreamNamespace: {{.Syndesis.Spec.ImageStreamNamespace}}
         builderImageStreamTag: {{ .Images.Syndesis.S2i }}:{{ .Tags.Syndesis }}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
@@ -99,9 +99,9 @@
           {{- end}}
           - syndesis
 {{- end}}
-        maxIntegrationsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'
-        maxDeploymentsPerUser: '{{.Env.MAX_INTEGRATIONS_PER_USER}}'
-        integrationStateCheckInterval: '{{.Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
+        maxIntegrationsPerUser: '{{.Syndesis.Spec.Integration.Limit}}'
+        maxDeploymentsPerUser: '{{.Syndesis.Spec.Integration.Limit}}'
+        integrationStateCheckInterval: '{{.Syndesis.Spec.Integration.StateCheckInterval}}'
 {{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
       generator:
         activityTracing: true
