@@ -206,9 +206,15 @@ public class ConnectionActionHandler {
                     else if ("string".equalsIgnoreCase(property.getType())
                        || "text".equalsIgnoreCase(property.getType()) ) {
                         enriched.replaceConfigurationProperty(suggestions.getKey(),
-                                builder -> builder.addAllDataList(suggestions.getValue()
-                                                    .stream()
-                                                    .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator));
+                                builder -> {
+                                    if (suggestions.getValue().size() == 1) {
+                                        builder.defaultValue(suggestions.getValue().get(0).value());
+                                    }
+
+                                    builder.addAllDataList(suggestions.getValue()
+                                            .stream()
+                                            .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator);
+                                });
                     } else if (suggestions.getValue().size() == 1) {
                         //for types 'hidden', 'boolean', 'int', etc.
                         enriched.replaceConfigurationProperty(suggestions.getKey(), builder -> builder.defaultValue(suggestions.getValue().get(0).value()));
