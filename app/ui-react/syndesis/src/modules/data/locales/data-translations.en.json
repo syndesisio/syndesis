@@ -49,7 +49,7 @@
       "resultsTableValidEmptyTitle": "NO DATA AVAILABLE",
       "resultsTableValidEmptyInfo": "Click 'refresh' button to refresh the preview results",
       "title": "Preview Results",
-      "loadingQueryResults":"Loading query results..."
+      "loadingQueryResults": "Loading query results..."
     },
     "unpublishModalMessage": "This Virtualization has been published. Unpublish Virtualization \"{{name}}\" first.",
     "unpublishModalTitle": "Unpublish Virtualization",
@@ -91,10 +91,10 @@
     "queryResultsRefreshed": "The view preview results were refreshed for {{name}}",
     "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
     "createVirtualizationSuccess": "{{name}} virtualization created.",
-    "publishVirtualizationSuccess": "Virtualization {{name}} was submitted for publishing.",
+    "publishVirtualizationSuccess": "Virtualization \"{{name}}\" was submitted for publishing.",
     "publishVirtualizationFailed": "Publishing failed for virtualization {{name}}. Details: {{details}}",
     "publishVirtualizationNoViews": "Cannot publish virtualization {{name}} - No views are defined",
-    "unpublishVirtualizationSuccess": "Virtualizaton {{name}} was submitted for unpublishing.",
+    "unpublishVirtualizationSuccess": "Virtualizaton \"{{name}}\" was submitted for unpublishing.",
     "unpublishVirtualizationFailed": "Unpublish virtualization {{name}} failed. Details: {{details}}",
     "deleteVirtualizationSuccess": "Virtualization {{name}} was deleted.",
     "deleteVirtualizationFailed": "Delete virtualization {{name}} failed. Details: {{details}}",
