@@ -309,7 +309,7 @@
         - postgresql
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.Postgresql }}:{{ .Tags.Postgresql }}
+          name: {{ .Images.Support.Postgresql }}:{{ .Syndesis.Spec.Components.Db.Tag }}
           namespace: {{.Syndesis.Spec.Components.Db.ImageStreamNamespace}}
       type: ImageChange
     - imageChangeParams:
@@ -318,6 +318,6 @@
         - syndesis-db-metrics
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.PostgresExporter }}:{{ .Tags.PostgresExporter }}
+          name: {{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}
           namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange

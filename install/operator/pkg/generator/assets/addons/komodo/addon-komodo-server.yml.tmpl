@@ -127,7 +127,7 @@
         - syndesis-dv
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Syndesis.Komodo }}:{{ .Tags.Komodo }}
+          name: {{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}
           namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - type: ConfigChange

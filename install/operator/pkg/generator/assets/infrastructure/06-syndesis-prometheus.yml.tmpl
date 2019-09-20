@@ -198,7 +198,7 @@
         - prometheus
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.Prometheus }}:{{ .Tags.Prometheus }}
+          name: {{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}
           namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - type: ConfigChange
