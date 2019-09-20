@@ -166,8 +166,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     await handlePublishVirtualization(pVirtualizationId, hasViews);
   };
 
-  const doUnpublish = async (serviceVdbName: string) => {
-    await handleUnpublishVirtualization(serviceVdbName);
+  const doUnpublish = async (virtualizationName: string) => {
+    await handleUnpublishVirtualization(virtualizationName);
   };
 
   const doSetDescription = async (newDescription: string) => {
