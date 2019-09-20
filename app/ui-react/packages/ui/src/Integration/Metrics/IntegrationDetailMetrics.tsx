@@ -27,7 +27,7 @@ export interface IIntegrationDetailMetricsProps {
   lastProcessed?: string;
   messages?: number;
   start?: number;
-  durationDifference?: string;
+  uptimeDuration?: string;
 }
 
 export class IntegrationDetailMetrics extends React.Component<
@@ -106,7 +106,7 @@ export class IntegrationDetailMetrics extends React.Component<
                 <Title size="lg" className="integration-detail-metrics__uptime-header">
                   <div>{this.props.i18nUptime}</div>
                   {this.props.start !== undefined &&
-                    this.props.durationDifference !== undefined && (
+                    this.props.uptimeDuration !== undefined && (
                       <div className="integration-detail-metrics__uptime-uptime">
                         {startAsHuman}
                       </div>
@@ -116,8 +116,8 @@ export class IntegrationDetailMetrics extends React.Component<
               <CardBody>
                 <AggregateStatusNotifications>
                   <AggregateStatusNotification className="integration-detail-metrics__duration-difference">
-                    {this.props.durationDifference !== undefined
-                      ? this.props.durationDifference
+                    {this.props.uptimeDuration !== undefined
+                      ? this.props.uptimeDuration
                       : this.props.i18nNoDataAvailable}
                   </AggregateStatusNotification>
                 </AggregateStatusNotifications>

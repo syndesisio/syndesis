@@ -233,7 +233,7 @@ storiesOf('Integration/Detail', module)
             lastProcessed={'2 May 2019 08:19:42 GMT'}
             messages={26126}
             start={2323342333}
-            durationDifference={'3:15:59'}
+            uptimeDuration={'3:15:59'}
           />
         </Container>
       </>
