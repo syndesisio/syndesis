@@ -47,13 +47,13 @@ github.com/ghodss/yaml
 github.com/go-logr/logr
 # github.com/go-logr/zapr v0.1.1
 github.com/go-logr/zapr
-# github.com/go-openapi/jsonpointer v0.19.2
+# github.com/go-openapi/jsonpointer v0.19.3
 github.com/go-openapi/jsonpointer
 # github.com/go-openapi/jsonreference v0.19.2
 github.com/go-openapi/jsonreference
-# github.com/go-openapi/spec v0.19.2
+# github.com/go-openapi/spec v0.19.3
 github.com/go-openapi/spec
-# github.com/go-openapi/swag v0.19.2
+# github.com/go-openapi/swag v0.19.5
 github.com/go-openapi/swag
 # github.com/gobuffalo/envy v1.6.15
 github.com/gobuffalo/envy
@@ -116,7 +116,7 @@ github.com/konsorten/go-windows-terminal-sequences
 # github.com/magefile/mage v1.8.0
 github.com/magefile/mage/sh
 github.com/magefile/mage/mg
-# github.com/mailru/easyjson v0.0.0-20190614124828-94de47d64c63
+# github.com/mailru/easyjson v0.0.0-20190626092158-b2ccc519800e
 github.com/mailru/easyjson/jlexer
 github.com/mailru/easyjson/jwriter
 github.com/mailru/easyjson/buffer
@@ -232,7 +232,7 @@ go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 # golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8
 golang.org/x/crypto/ssh/terminal
-# golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+# golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
 golang.org/x/net/http2
 golang.org/x/net/context
 golang.org/x/net/http/httpguts
@@ -521,7 +521,7 @@ k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/sets
 k8s.io/kube-openapi/pkg/util/proto
-# sigs.k8s.io/controller-runtime v0.2.1 => sigs.k8s.io/controller-runtime v0.1.12
+# sigs.k8s.io/controller-runtime v0.2.2 => sigs.k8s.io/controller-runtime v0.1.12
 sigs.k8s.io/controller-runtime/pkg/runtime/scheme
 sigs.k8s.io/controller-runtime/pkg/client
 sigs.k8s.io/controller-runtime/pkg/client/config

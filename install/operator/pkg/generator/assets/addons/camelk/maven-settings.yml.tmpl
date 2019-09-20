@@ -11,178 +11,41 @@ data:
             <activeByDefault>true</activeByDefault>
           </activation>
 
-          <!-- Config: Productized={{.Productized}}, EarlyAccess={{.EarlyAccess}} -->
+          <!-- Config: Productized={{.Productized}}, EarlyAccess={{.EarlyAccess}}, Custom={{ if .Syndesis.Spec.MavenRepositories}}true{{else}}false{{end}} -->
 
-          {{- if .Productized}}
-
+      {{- if .Syndesis.Spec.MavenRepositories}}
           <repositories>
+            {{- range $id, $url := .Syndesis.Spec.MavenRepositories}}
+              <repository>
+                <id>{{ $id }}</id>
+                <url>{{ $url }}</url>
+                <snapshots>
+                  <enabled>false</enabled>
+                </snapshots>
+                <releases>
+                  <enabled>true</enabled>
+                </releases>
+              </repository>
 
-            {{- if .EarlyAccess}}
-
-            <repository>
-              <id>redhat-ea</id>
-              <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </repository>
-
-            <repository>
-              <id>jboss-ea</id>
-              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </repository>
-
-            {{- else}}
-
-            <repository>
-              <id>redhat-ga</id>
-              <url>https://maven.repository.redhat.com/ga/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </repository>
-
-            <repository>
-              <id>jboss-ga</id>
-              <url>https://repository.jboss.org/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </repository>
-
-            {{- end}}
-
-            <repository>
-              <id>central</id>
-              <url>https://repo.maven.apache.org/maven2/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </repository>
-
+            {{- end }}
           </repositories>
           <pluginRepositories>
+            {{- range $id, $url := .Syndesis.Spec.MavenRepositories}}
+              <pluginRepository>
+                <id>{{ $id }}</id>
+                <url>{{ $url }}</url>
+                <snapshots>
+                  <enabled>false</enabled>
+                </snapshots>
+                <releases>
+                  <enabled>true</enabled>
+                </releases>
+              </pluginRepository>
 
-            {{- if .EarlyAccess}}
-
-            <pluginRepository>
-              <id>redhat-ea</id>
-              <url>https://maven.repository.redhat.com/earlyaccess/all/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </pluginRepository>
-
-            <pluginRepository>
-              <id>jboss-ea</id>
-              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </pluginRepository>
-
-            {{- else}}
-
-            <pluginRepository>
-              <id>redhat-ga</id>
-              <url>https://maven.repository.redhat.com/ga/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </pluginRepository>
-
-            <pluginRepository>
-              <id>jboss-ga</id>
-              <url>https://repository.jboss.org/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </pluginRepository>
-
-            {{- end}}
-
-            <pluginRepository>
-              <id>central</id>
-              <url>https://repo.maven.apache.org/maven2/</url>
-              <snapshots>
-                <enabled>false</enabled>
-              </snapshots>
-              <releases>
-                <enabled>true</enabled>
-              </releases>
-            </pluginRepository>
-
+            {{- end }}
           </pluginRepositories>
 
-          {{- else}}
-
-          <repositories>
-            <repository>
-              <id>central</id>
-              <name>Maven Central</name>
-              <url>https://repo.maven.apache.org/maven2/</url>
-            </repository>
-            <repository>
-              <id>jboss-ea</id>
-              <name>JBoss Early Access</name>
-              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-            </repository>
-            <repository>
-              <id>redhat-ga</id>
-              <name>Red Hat General Availability Repository</name>
-              <url>https://maven.repository.redhat.com/ga/</url>
-            </repository>
-          </repositories>
-
-          <pluginRepositories>
-            <pluginRepository>
-              <id>central</id>
-              <name>Maven Central</name>
-              <url>https://repo.maven.apache.org/maven2/</url>
-            </pluginRepository>
-            <pluginRepository>
-              <id>jboss-ea</id>
-              <name>JBoss Early Access</name>
-              <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-            </pluginRepository>
-            <pluginRepository>
-              <id>redhat-ga</id>
-              <name>Red Hat General Availability Repository</name>
-              <url>https://maven.repository.redhat.com/ga/</url>
-            </pluginRepository>
-          </pluginRepositories>
-          {{- end}}
-
+      {{- end}}
         </profile>
       </profiles>
     </settings>
