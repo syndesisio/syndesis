@@ -25,6 +25,7 @@ export class WithIntegrationsMetrics extends React.Component<
           metricsProvider: 'null',
           start: `${Date.now()}`, // date-time
           topIntegrations: {},
+          uptimeDuration: 0, // int64
         }}
       >
         {({ read, response }) => {

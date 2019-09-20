@@ -1,24 +1,36 @@
 import moment from 'moment';
 
-export function toDurationDifferenceString(
+export function toUptimeDurationString(
   timestamp: number,
   defaultValue = 'n/a'
 ): string {
   if (!timestamp) {
     return defaultValue;
   }
-  const startDate = moment(timestamp);
-  const uptimeDuration = moment.duration(moment().diff(startDate));
+
+  const uptimeDuration = moment.duration(timestamp);
   const duration = {
     days: uptimeDuration.days(),
     hours: uptimeDuration.hours(),
     minutes: uptimeDuration.minutes(),
+    seconds: uptimeDuration.seconds()
   };
   const durationString = Object.keys(duration).reduce(
     (timeSpan: string, key: string) => {
-      return duration[key] > 0
-        ? timeSpan + `${duration[key]} ${key} `
-        : timeSpan;
+      if (duration[key] > 0) {
+        if (key === 'seconds') {
+          if (timeSpan.length === 0) {
+            // show seconds only when overall duration is below one minute
+            return `${duration[key]} ${key}`;
+          } else {
+            return timeSpan;
+          }
+        }
+
+        return timeSpan + `${duration[key]} ${key} `;
+      }
+
+      return timeSpan;
     },
     ''
   );

@@ -4,7 +4,7 @@ import {
 } from '@syndesis/api';
 import { IntegrationDetailMetrics, PageLoader } from '@syndesis/ui';
 import {
-  toDurationDifferenceString,
+  toUptimeDurationString,
   WithLoader,
   WithRouteData,
 } from '@syndesis/utils';
@@ -119,17 +119,10 @@ export class MetricsPage extends React.Component {
                                                     10
                                                   )
                                             }
-                                            durationDifference={
-                                              metricsData.lastProcessed !==
-                                                undefined &&
-                                              metricsData.start !== undefined &&
-                                              metricsData.lastProcessed !==
-                                                metricsData.start
-                                                ? toDurationDifferenceString(
-                                                    parseInt(
-                                                      metricsData.start!,
-                                                      10
-                                                    ),
+                                            uptimeDuration={
+                                              metricsData.uptimeDuration! > 0
+                                                ? toUptimeDurationString(
+                                                    metricsData.uptimeDuration!,
                                                     t('metrics.NoDataAvailable')
                                                   )
                                                 : undefined

@@ -19,14 +19,13 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeploymentMetrics.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationDeploymentMetrics extends Serializable{
+public interface IntegrationDeploymentMetrics extends Serializable {
 
     String getVersion();
     /**
@@ -46,6 +45,10 @@ public interface IntegrationDeploymentMetrics extends Serializable{
      * @return the TimeStamp of when the last message for processed
      */
     Optional<Date> getLastProcessed();
+    /**
+     * @return the duration this deployment is up and running.
+     */
+    Long getUptimeDuration();
 
     class Builder extends ImmutableIntegrationDeploymentMetrics.Builder {
         // allow access to ImmutableIntegrationDeploymentMetrics.Builder
