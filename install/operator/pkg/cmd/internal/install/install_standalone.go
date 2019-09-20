@@ -1,19 +1,17 @@
 /*
+ * Copyright (C) 2019 Red Hat, Inc.
  *
- *  * Copyright (C) 2019 Red Hat, Inc.
- *  *
- *  * Licensed under the Apache License, Version 2.0 (the "License");
- *  * you may not use this file except in compliance with the License.
- *  * You may obtain a copy of the License at
- *  *
- *  * http://www.apache.org/licenses/LICENSE-2.0
- *  *
- *  * Unless required by applicable law or agreed to in writing, software
- *  * distributed under the License is distributed on an "AS IS" BASIS,
- *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  * See the License for the specific language governing permissions and
- *  * limitations under the License.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package install
@@ -23,26 +21,34 @@ import (
 	"encoding/json"
 	"fmt"
 	"strings"
+	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/types"
 
 	v1 "github.com/openshift/api/route/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/types"
-	"k8s.io/client-go/kubernetes/scheme"
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/client-go/kubernetes/scheme"
 )
 
+// Parse the templates and apply the resources
+// There are two hacky bits here. It is needed to create the syndesis
+// route and the syndesis-oauth-client service account in advance, before
+// the rest of the resources are parsed. The host of the route and the token of the serviceaccount
+// are passed down to the templates.
 func (o *Install) installStandalone() error {
+	if o.ejectedResources != nil {
+		o.ejectedResources = nil
+	}
+
 	ctx := context.TODO()
 	cli, err := o.GetClient()
 	if err != nil {
@@ -72,55 +78,87 @@ func (o *Install) installStandalone() error {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			DevSupport: o.devSupport,
+			Addons:     v1alpha1.AddonsSpec{},
 		},
 	}
 	gen.Syndesis = syndesis
 
-	// fill in the addons
+	addons := make([]string, 0)
+	if o.addons != "" {
+		addons = strings.Split(o.addons, ",")
+	}
+
+	for _, addon := range addons {
+		if contains(addons, addon) {
+			if syndesis.Spec.Addons[addon] == nil {
+				syndesis.Spec.Addons[addon] = v1alpha1.Parameters{}
+			}
+			syndesis.Spec.Addons[addon]["enabled"] = "true"
+		}
+	}
+
+	// Get pull secret in case it was created, and link it to the serviceaccounts
+	secret := &corev1.Secret{}
+	err = cli.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: action.SyndesisPullSecret}, secret)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			secret = nil
+		} else {
+			return err
+		}
+	}
+	if secret != nil {
+		gen.ImagePullSecrets = append(gen.ImagePullSecrets, secret.Name)
+	}
+
 	params := template.ResourceParams{}
 
-	// Check whether we there is a secret for authentication, and link it to the
-	// service accounts
+	// Create the syndesis-oauth-client serviceaccount to grab the token
 	{
-		// Lets create the service account and link it to the secret
-		// Check if an image secret exists, to be used to connect to registries that require authentication
-		secret := &corev1.Secret{}
-		err = cli.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: action.SyndesisPullSecret}, secret)
+		if sa, err := generator.RenderDir("./serviceaccount/", gen); err == nil {
+			for _, res := range sa {
+				res.SetNamespace(o.Namespace)
+			}
+
+			if err := o.install("serviceaccount syndesis-oauth-client was", sa); err != nil {
+				o.Println("unable to create syndesis-oauth-client service account")
+				return err
+			}
+		} else {
+			o.Println("unable to parse syndesis-oauth-client service account")
+			return err
+		}
+
+		time.Sleep(2 * time.Second)
+		token, err := serviceaccount.GetServiceAccountToken(ctx, cli, "syndesis-oauth-client", syndesis.Namespace)
 		if err != nil {
-			if k8serrors.IsNotFound(err) {
-				secret = nil
+			return err
+		}
+
+		if secret != nil {
+			sa := &corev1.ServiceAccount{}
+			if err := cli.Get(ctx, util.NewObjectKey("syndesis-oauth-client", o.Namespace), sa); err == nil {
+				linkSecret(sa, secret.Name)
 			} else {
 				return err
 			}
 		}
-
-		serviceAccount, err := installServiceAccount(ctx, cli, syndesis, secret)
-		if err != nil {
-			return err
-		}
-
-		token, err := serviceaccount.GetServiceAccountToken(ctx, cli, serviceAccount.Name, syndesis.Namespace)
-		if err != nil {
-			return err
-		}
-
 		params.OAuthClientSecret = token
 	}
 
-	// Get the value of the route, by creating a dummy route and taking it's
-	// host value. Delete the route afterwards
+	// Get the value of the route, by creating syndesis route first and taking it's
+	// host value
 	{
-		route, err := generator.RenderDir("./route/", gen)
-		if err != nil {
-			return err
-		}
+		if route, err := generator.RenderDir("./route/", gen); err == nil {
+			for _, res := range route {
+				res.SetNamespace(o.Namespace)
+			}
 
-		for _, res := range route {
-			res.SetNamespace(o.Namespace)
-			_, _, err := util.CreateOrUpdate(ctx, cli, &res)
-			if err != nil {
+			if err := o.install("syndesis route was", route); err != nil {
 				return err
 			}
+		} else {
+			return err
 		}
 
 		syndesisRoute := &v1.Route{}
@@ -130,11 +168,6 @@ func (o *Install) installStandalone() error {
 		}
 		// Set the right hostname after generating the route
 		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
-
-		if err := cli.Delete(ctx, syndesisRoute); err != nil {
-			return err
-		}
-
 	}
 
 	if err = template.SetupRenderContext(gen, syndesis, params, map[string]string{}); err != nil {
@@ -143,27 +176,20 @@ func (o *Install) installStandalone() error {
 
 	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
 
-	// Render the route resource... this time for real
-	all, err := generator.RenderDir("./route/", gen)
-	if err != nil {
-		return err
-	}
-
 	// Render the remaining syndesis resources...
-	inf, err := generator.RenderDir("./infrastructure/", gen)
+	all, err := generator.RenderDir("./infrastructure/", gen)
 	if err != nil {
 		return err
 	}
 
-	all = append(all, inf...)
-
-	addons := strings.Split(o.addons, ",")
-	for addon := range syndesis.Spec.Addons {
-		if !contains(addons, addon) {
+	// Render addons
+	for addon, properties := range syndesis.Spec.Addons {
+		if properties["enabled"] != "true" {
 			continue
 		}
 
 		addonDir := "./addons/" + addon + "/"
+
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
 			fmt.Printf("unsuported addon configured: [%s]. [%v]", addon, err)
@@ -176,22 +202,18 @@ func (o *Install) installStandalone() error {
 			return err
 		}
 
+		o.Println("addon " + addon + " enabled")
 		all = append(all, resources...)
 	}
 
-	if o.eject == "" {
-		// Install the resources..
-		for _, res := range all {
-			res.SetNamespace(o.Namespace)
-		}
+	// Install the resources..
+	for _, res := range all {
+		res.SetNamespace(o.Namespace)
+	}
 
-		err := o.install("syndesis was", all)
-		if err != nil {
-			return err
-		}
-	} else {
-		o.ejectedResources = []unstructured.Unstructured{}
-		o.ejectedResources = append(o.ejectedResources, all...)
+	err = o.install("syndesis was", all)
+	if err != nil {
+		return err
 	}
 
 	return nil
@@ -206,56 +228,17 @@ func contains(s []string, e string) bool {
 	return false
 }
 
-func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
-	sa := newSyndesisServiceAccount(syndesis.Namespace)
-	if secret != nil {
-		linkImagePullSecret(sa, secret)
-	}
-
-	o, _, err := util.CreateOrUpdate(ctx, cl, sa)
-	if err != nil {
-		return nil, err
-	}
-	sa.SetUID(o.GetUID())
-	return sa, nil
-}
-
-func newSyndesisServiceAccount(ns string) *corev1.ServiceAccount {
-	sa := corev1.ServiceAccount{
-		TypeMeta: metav1.TypeMeta{
-			APIVersion: "v1",
-			Kind:       "ServiceAccount",
-		},
-		ObjectMeta: metav1.ObjectMeta{
-			Name:      "syndesis-oauth-client",
-			Namespace: ns,
-			Labels: map[string]string{
-				"app": "syndesis",
-			},
-			Annotations: map[string]string{
-				"serviceaccounts.openshift.io/oauth-redirecturi.local":       "https://localhost:4200",
-				"serviceaccounts.openshift.io/oauth-redirecturi.route":       "https://",
-				"serviceaccounts.openshift.io/oauth-redirectreference.route": `{"kind": "OAuthRedirectReference", "apiVersion": "v1", "reference": {"kind": "Route","name": "syndesis"}}`,
-			},
-		},
-	}
-
-	return &sa
-}
-
-func linkImagePullSecret(sa *corev1.ServiceAccount, secret *corev1.Secret) bool {
+func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	exist := false
-	for _, s := range sa.ImagePullSecrets {
-		if s.Name == secret.Name {
+	for _, s := range sa.Secrets {
+		if s.Name == secret {
 			exist = true
 			break
 		}
 	}
 
 	if !exist {
-		sa.ImagePullSecrets = append(sa.ImagePullSecrets, corev1.LocalObjectReference{
-			Name: secret.Name,
-		})
+		sa.Secrets = append(sa.Secrets, corev1.ObjectReference{Namespace: sa.Namespace, Name: action.SyndesisPullSecret})
 		return true
 	}
 
