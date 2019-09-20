@@ -32,10 +32,6 @@
 
     <packaging>pom</packaging>
 
-    <modules>
-      <module>tools</module>
-    </modules>
-
     <build>
         <plugins>
             <plugin>
@@ -57,25 +53,6 @@
                                 <!-- Can use this to set AsciiDoc attributes from POM properties -->
                                 <!-- camel-version>${version.apache.camel}</camel-version -->
                             </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-documentation-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>extract-tooltips</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.basedir}/master.adoc</source>
-                            </sources>
-                            <output>tooltips/tooltips.json</output>
                         </configuration>
                     </execution>
                 </executions>
