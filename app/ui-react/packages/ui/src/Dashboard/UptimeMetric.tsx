@@ -4,7 +4,7 @@ import './UptimeMetric.css';
 
 export interface IUptimeMetricProps {
   start: number;
-  durationDifference: string;
+  uptimeDuration: string;
   i18nTitle: string;
 }
 
@@ -19,7 +19,7 @@ export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
           <div className="metrics-uptime__uptime">since {startAsHuman}</div>
         </Title>
         <CardBody>
-          <span>{this.props.durationDifference}</span>
+          <span>{this.props.uptimeDuration}</span>
         </CardBody>
       </Card>
     );

@@ -3427,6 +3427,10 @@
         "lastProcessed": {
           "type": "string",
           "format": "date-time"
+        },
+        "uptimeDuration": {
+          "type": "integer",
+          "format": "int64"
         }
       }
     },
@@ -3491,6 +3495,10 @@
         "lastProcessed": {
           "type": "string",
           "format": "date-time"
+        },
+        "uptimeDuration": {
+          "type": "integer",
+          "format": "int64"
         },
         "topIntegrations": {
           "type": "object",

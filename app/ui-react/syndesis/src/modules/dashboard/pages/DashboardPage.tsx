@@ -15,8 +15,11 @@ import {
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
-import { toShortDateAndTimeString } from '@syndesis/utils';
-import { toDurationDifferenceString, WithLoader } from '@syndesis/utils';
+import {
+  toShortDateAndTimeString,
+  toUptimeDurationString,
+  WithLoader
+} from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
@@ -183,9 +186,7 @@ export default () => (
                         <div data-testid={'dashboard-page-metrics-uptime'}>
                           <UptimeMetric
                             start={parseInt(metricsData.start!, 10)}
-                            durationDifference={toDurationDifferenceString(
-                              parseInt(metricsData.start!, 10)
-                            )}
+                            uptimeDuration={toUptimeDurationString(metricsData.uptimeDuration!, t('metrics.NoDataAvailable'))}
                             i18nTitle={t('titleUptimeMetric')}
                           />
                         </div>
