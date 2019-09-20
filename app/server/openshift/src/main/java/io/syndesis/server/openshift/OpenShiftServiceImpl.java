@@ -148,7 +148,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
 
 
     @Override
-    public boolean isScaled(String name, int desiredReplicas, Map<String, String> labels) {
+    public boolean isScaled(String name, int desiredMinimumReplicas, Map<String, String> labels) {
         List<DeploymentConfig> deploymentConfigs = getDeploymentsByLabel(labels);
         if (deploymentConfigs.isEmpty()) {
           return false;
@@ -163,7 +163,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             allReplicas = nullSafe(status.getReplicas());
             availableReplicas = nullSafe(status.getAvailableReplicas());
         }
-        return desiredReplicas == allReplicas && desiredReplicas == availableReplicas;
+
+        return desiredMinimumReplicas <= allReplicas && desiredMinimumReplicas <= availableReplicas;
     }
 
     @Override
