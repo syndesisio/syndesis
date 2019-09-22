@@ -100,6 +100,7 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
                 .messages(totalMessages)
                 .errors(totalErrors)
                 .lastProcessed(totalLastProcessed)
+                .uptimeDuration(totalStart.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                 .start(totalStart)
                 .build();
     }
