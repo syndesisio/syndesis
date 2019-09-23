@@ -9,7 +9,7 @@ packaging the extension as a valid Spring Boot module. For step extensions
 that you implement in Java, this plugin can generate the 
 extension definition JSON file. 
 
-In your Maven project's`pom.xml` file, add the following plugin declaration:
+In your Maven project's `pom.xml` file, add the following plugin declaration:
 
 [source,xml]
 ----
