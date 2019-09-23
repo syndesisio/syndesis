@@ -32,7 +32,7 @@ import (
 
 const (
 	ns      = "namespace"
-	tag     = "1.8.0"
+	tag     = "1.9.0"
 	succeed = "\u2713"
 	failed  = "\u2717"
 )

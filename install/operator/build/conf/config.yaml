@@ -29,8 +29,8 @@ Oso: false
 Productized: false
 PrometheusRules: ""
 Registry: docker.io
-TagMinor: "1.8.0"
-TagMajor: "1.9.0"
+TagMinor: "1.9.0"
+TagMajor: "2.0.0"
 Tags:
   Komodo: latest
   OAuthProxy: v4.0.0

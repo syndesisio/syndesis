@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.8-SNAPSHOT</version>
+    <version>1.9-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -266,7 +266,7 @@
       <artifactId>connector-aws-ddb</artifactId>
       <scope>runtime</scope>
     </dependency>
-    
+
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-aws-s3</artifactId>
