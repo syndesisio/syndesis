@@ -169,16 +169,22 @@ export function massageValue(
       const answer: any = value || defaultValue || {};
       return typeof answer === 'string' ? JSON.parse(answer) : answer;
     }
-    default: {
-      // if the value has an enum property
-      // a select control is used, default
-      // to the first available value
-      const answer: any =
+    case 'select': {
+      if (property.multiple) {
+        return value || defaultValue || [];
+      }
+      // select controls in syndesis need to default
+      // to the first available value if no value
+      // is set
+      return (
         value ||
         defaultValue ||
-        (property.required && property.enum && property.enum.length > 0 && property.enum[0].value) ||
-        '';
-      return typeof answer === 'string' ? answer : JSON.stringify(answer);
+        (property.enum && property.enum.length > 0 && property.enum[0].value) ||
+        ''
+      );
+    }
+    default: {
+      return value || defaultValue || '';
     }
   }
 }
