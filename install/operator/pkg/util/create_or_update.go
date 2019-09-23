@@ -1,16 +1,15 @@
 package util
 
 import (
-	"encoding/base64"
-	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"k8s.io/apimachinery/pkg/runtime"
-	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
-
-	"context"
-	"fmt"
-	"reflect"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+    "context"
+    "encoding/base64"
+    "fmt"
+    "k8s.io/apimachinery/pkg/api/resource"
+    "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+    "k8s.io/apimachinery/pkg/runtime"
+    "reflect"
+    "sigs.k8s.io/controller-runtime/pkg/client"
+    "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
@@ -70,7 +69,15 @@ func mergeMap(path string, to map[string]interface{}, from map[string]interface{
 		if skip[field] {
 			continue
 		}
-		to[key] = mergeValue(field, to[key], value, skip)
+
+		// handle cases like https://issues.jboss.org/browse/ENTESB-11711 setting a env value to "" does not work well, k8s gives delete
+		// the value field under the covers, and we keep trying to set it again to the "" value.
+        if field == "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/env/#/value" && (value == nil || value=="") {
+            delete(to, key)
+            continue
+        }
+
+        to[key] = mergeValue(field, to[key], value, skip)
 	}
 }
 
