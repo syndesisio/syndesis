@@ -155,7 +155,7 @@ export const WithConfigurationForm: React.FunctionComponent<
       {({ data, hasData, error, errorMessage, loading }) => (
         <WithLoader
           error={error}
-          loading={loading && !hasData}
+          loading={loading}
           loaderChildren={<PageSectionLoader />}
           errorChildren={<ApiError error={errorMessage!} />}
         >
