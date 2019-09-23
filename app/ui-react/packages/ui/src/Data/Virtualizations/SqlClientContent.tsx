@@ -1,11 +1,10 @@
-import { Split, SplitItem, Text, TextContent } from '@patternfly/react-core';
+import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { EmptyState, Table } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
-import './SqlClientContent.css';
 
 export interface ISqlClientContentProps {
   /**
@@ -73,23 +72,19 @@ export const SqlClientContent: React.FunctionComponent<
       {props.viewNames.length > 0 ? (
         <Split gutter="md">
           <SplitItem isFilled={false}>{props.formContent}</SplitItem>
-          <SplitItem isFilled={true}>
+          <SplitItem isFilled={true} style={{ overflowX: 'auto' }}>
             {props.queryResultCols.length > 0 ? (
-              <>
-                <TextContent>
-                  <Text>{props.i18nResultsTitle}</Text>
-                </TextContent>
-                <TextContent>
-                  <Text>
-                    <small>
-                      <i>
-                        {props.i18nResultsRowCountMsg}
-                        {props.queryResultRows.length}
-                      </i>
-                    </small>
-                  </Text>
-                </TextContent>
-                <div className="generic-table_content">
+              <Stack>
+                <StackItem isFilled={false}>{props.i18nResultsTitle}</StackItem>
+                <StackItem isFilled={false}>
+                  <small>
+                    <i>
+                      {props.i18nResultsRowCountMsg}
+                      {props.queryResultRows.length}
+                    </i>
+                  </small>
+                </StackItem>
+                <StackItem isFilled={true}>
                   <GenericTable
                     columns={props.queryResultCols.map(col => ({
                       cell: {
@@ -109,8 +104,8 @@ export const SqlClientContent: React.FunctionComponent<
                     }
                     {...props}
                   />
-                </div>
-              </>
+                </StackItem>
+              </Stack>
             ) : (
               <EmptyState>
                 <EmptyState.Title>
