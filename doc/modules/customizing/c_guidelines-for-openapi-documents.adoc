@@ -23,7 +23,7 @@ OpenAPI document, ensure that there is a YAML or JSON schema that specifies
 each operation's request and response types.
 
 After you upload the schema, {prodname} gives you an opportunity 
-to review and edit it in Apicurito, which is a visual editor for 
+to review and edit it in API Designer, which is a visual editor for 
 designing APIs based on the OpenAPI document. You can add more detail, 
 save  your updates, and {prodname} creates an API client connector that 
 incorporates your updates. 
