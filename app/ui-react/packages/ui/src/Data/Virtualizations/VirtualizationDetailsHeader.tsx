@@ -1,10 +1,4 @@
-import {
-  TextContent,
-  TextList,
-  TextListItem,
-  TextListItemVariants,
-  TextListVariants,
-} from '@patternfly/react-core';
+import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Loader, PageSection } from '../../Layout';
@@ -42,57 +36,60 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
 > = props => {
   return (
     <PageSection variant={'light'}>
-      <TextContent>
-        <TextList component={TextListVariants.dl}>
-          <TextListItem
-            className="virtualization-details-header__virtualizationName"
-            component={TextListItemVariants.dt}
-          >
-            {props.virtualizationName}
-          </TextListItem>
-          <TextListItem component={TextListItemVariants.dd}>
-            {props.publishedState !== 'Loading' ? (
-              <PublishStatusWithProgress
-                publishedState={props.publishedState}
-                i18nError={props.i18nError}
-                i18nPublished={props.i18nPublished}
-                i18nUnpublished={props.i18nDraft}
-                i18nPublishInProgress={props.i18nPublishInProgress}
-                i18nUnpublishInProgress={props.i18nUnpublishInProgress}
-                i18nPublishLogUrlText={props.i18nPublishLogUrlText}
-                publishingCurrentStep={props.publishingCurrentStep}
-                publishingLogUrl={props.publishingLogUrl}
-                publishingTotalSteps={props.publishingTotalSteps}
-                publishingStepText={props.publishingStepText}
-              />
-            ) : (
-              <Loader size={'sm'} inline={true} />
-            )}
-            {props.odataUrl && props.publishedState !== 'Loading' && (
-              <span>
-                <a
-                  data-testid={'virtualization-details-header-odataUrl'}
-                  target="_blank"
-                  href={props.odataUrl}
-                >
-                  {props.odataUrl}
-                  <Icon
-                    className={'virtualization-details-header-odata-link-icon'}
-                    name={'external-link'}
-                  />
-                </a>
-              </span>
-            )}
-          </TextListItem>
-        </TextList>
-      </TextContent>
-      <InlineTextEdit
-        value={props.virtualizationDescription || ''}
-        allowEditing={!props.isWorking}
-        i18nPlaceholder={props.i18nDescriptionPlaceholder}
-        isTextArea={true}
-        onChange={props.onChangeDescription}
-      />
+      <Stack gutter="md">
+        <StackItem>
+          <Split gutter="md" className={'virtualization-details-header__row'}>
+            <SplitItem className="virtualization-details-header__virtualizationName">
+              {props.virtualizationName}
+            </SplitItem>
+            <SplitItem>
+              {props.publishedState !== 'Loading' ? (
+                <PublishStatusWithProgress
+                  publishedState={props.publishedState}
+                  i18nError={props.i18nError}
+                  i18nPublished={props.i18nPublished}
+                  i18nUnpublished={props.i18nDraft}
+                  i18nPublishInProgress={props.i18nPublishInProgress}
+                  i18nUnpublishInProgress={props.i18nUnpublishInProgress}
+                  i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+                  publishingCurrentStep={props.publishingCurrentStep}
+                  publishingLogUrl={props.publishingLogUrl}
+                  publishingTotalSteps={props.publishingTotalSteps}
+                  publishingStepText={props.publishingStepText}
+                />
+              ) : (
+                <Loader size={'sm'} inline={true} />
+              )}
+              {props.odataUrl && props.publishedState !== 'Loading' && (
+                <span>
+                  <a
+                    data-testid={'virtualization-details-header-odataUrl'}
+                    target="_blank"
+                    href={props.odataUrl}
+                  >
+                    {props.odataUrl}
+                    <Icon
+                      className={
+                        'virtualization-details-header-odata-link-icon'
+                      }
+                      name={'external-link'}
+                    />
+                  </a>
+                </span>
+              )}
+            </SplitItem>
+          </Split>
+        </StackItem>
+        <StackItem>
+          <InlineTextEdit
+            value={props.virtualizationDescription || ''}
+            allowEditing={!props.isWorking}
+            i18nPlaceholder={props.i18nDescriptionPlaceholder}
+            isTextArea={true}
+            onChange={props.onChangeDescription}
+          />
+        </StackItem>
+      </Stack>
     </PageSection>
   );
 };

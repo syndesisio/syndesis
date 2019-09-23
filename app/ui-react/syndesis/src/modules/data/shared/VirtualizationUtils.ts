@@ -113,12 +113,12 @@ export function generateSchemaNodeInfos(
         connectionName: schemaNode.connectionName,
         name: schemaNode.name,
         nodePath: sourcePath,
-        teiidName: schemaNode.teiidName
+        teiidName: schemaNode.teiidName,
       };
       schemaNodeInfos.push(view);
     }
     // Update path for next level
-    if(schemaNode.type !== 'root') {
+    if (schemaNode.type !== 'root') {
       sourcePath.push(schemaNode.name);
     }
     // Process this nodes children
@@ -159,7 +159,8 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
   let index = 0;
   schemaNodeInfo.map(
     item =>
-      (srcPaths[index++] = 'schema=' + item.connectionName + '/table=' + item.teiidName)
+      (srcPaths[index++] =
+        'schema=' + item.connectionName + '/table=' + item.teiidName)
   );
 
   return srcPaths;
@@ -214,7 +215,7 @@ export function generateDvConnections(
       virtStatus => virtStatus.sourceName === conn.name
     );
     // If defined, a corresponding virtualization source was found
-    if(virtSrcStatus) {
+    if (virtSrcStatus) {
       let connStatus = DvConnectionStatus.INACTIVE;
       let schemaLoading = String(false);
       let selectionState = String(false);
@@ -238,7 +239,11 @@ export function generateDvConnections(
       if (conn.name === selectedConn) {
         selectionState = String(true);
       }
-      conn.options = { dvStatus: connStatus, dvLoading: schemaLoading, dvSelected: selectionState };
+      conn.options = {
+        dvLoading: schemaLoading,
+        dvSelected: selectionState,
+        dvStatus: connStatus,
+      };
       dvConns.push(conn);
     }
   }
@@ -250,7 +255,9 @@ export function generateDvConnections(
  * @param connection the connection
  */
 export function getDvConnectionStatus(conn: Connection): string {
-  return (conn.options && conn.options.dvStatus) ? conn.options.dvStatus : DvConnectionStatus.INACTIVE;
+  return conn.options && conn.options.dvStatus
+    ? conn.options.dvStatus
+    : DvConnectionStatus.INACTIVE;
 }
 
 /**
@@ -258,7 +265,11 @@ export function getDvConnectionStatus(conn: Connection): string {
  * @param connection the connection
  */
 export function isDvConnectionSelected(conn: Connection) {
-  return (conn.options && conn.options.dvSelected && conn.options.dvSelected === String(true)) ? true : false;
+  return conn.options &&
+    conn.options.dvSelected &&
+    conn.options.dvSelected === String(true)
+    ? true
+    : false;
 }
 
 /**
@@ -266,7 +277,11 @@ export function isDvConnectionSelected(conn: Connection) {
  * @param connection the connection
  */
 export function isDvConnectionLoading(conn: Connection) {
-  return (conn.options && conn.options.dvLoading && conn.options.dvLoading === String(true)) ? true : false;
+  return conn.options &&
+    conn.options.dvLoading &&
+    conn.options.dvLoading === String(true)
+    ? true
+    : false;
 }
 
 /**
@@ -290,9 +305,9 @@ export function getPodLogUrl(
   namespace?: string,
   publishPodName?: string
 ): string {
-  return namespace && publishPodName ?
-    `${consoleUrl}/project/${namespace}/browse/pods/${publishPodName}?tab=logs` :
-    '';
+  return namespace && publishPodName
+    ? `${consoleUrl}/project/${namespace}/browse/pods/${publishPodName}?tab=logs`
+    : '';
 }
 
 /**
@@ -394,7 +409,7 @@ export function generateTableColumns(sourceInfo: ViewSourceInfo): ITableInfo[] {
     return schema.tables.map(table => {
       const ti = {
         columnNames: table.columns.map(p => p.name),
-        name: table.name
+        name: schema.name + '.' + table.name,
       } as ITableInfo;
       tblColumns.push(ti);
       return ti;
