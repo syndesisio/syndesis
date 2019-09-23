@@ -18,6 +18,13 @@ describe('Restore Snapshot', () => {
   });
 
   it('restores the snapshot', () => {
-    cy.request('POST', 'api/v1/test-support/restore-db', latestSnapshot);
+    cy.request({
+      method: 'POST',
+      url: 'api/v1/test-support/restore-db',
+      headers: {
+        'SYNDESIS-XSRF-TOKEN': Cypress.env('SYNDESIS-XSRF-TOKEN'),
+      },
+      body: latestSnapshot,
+    });
   });
 });

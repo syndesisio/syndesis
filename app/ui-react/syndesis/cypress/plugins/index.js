@@ -56,12 +56,6 @@ function getLatestFilePath(snapshotDirPath) {
     }
   });
 
-  console.log(
-    'path.join(snapshotDirPath, latest.filename): ' +
-      path.join(snapshotDirPath, latest.filename)
-  );
-  console.log('snapshotDirPath: ' + snapshotDirPath);
-
   return path.join(snapshotDirPath, latest.filename);
 }
 
@@ -81,7 +75,7 @@ module.exports = (on, config) => {
 
     storeSnapshot(snapshot) {
       const snapshotJson = JSON.stringify(snapshot);
-      fs.writeFileSync(snapshotFilePath, snapshotJson, err => {
+      fs.writeFileSync(snapshotFilePath, snapshotJson.body, err => {
         if (err) throw err;
         cy.log('The file has been saved!');
       });
