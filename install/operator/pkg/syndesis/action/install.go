@@ -220,7 +220,7 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		Namespace:     syndesis.Namespace,
 		LabelSelector: labelSelector,
 	}
-	err = ListInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+	err = ListAllTypesInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
 		for _, res := range list {
 			if resourcesThatShouldExist[res.GetUID()] {
 				continue
@@ -290,7 +290,7 @@ func checkTags(context *generator.Context) error {
 	return nil
 }
 
-func ListInChunks(ctx context.Context, api kubernetes.Interface, c client.Client, options client.ListOptions, handler func([]unstructured.Unstructured) error) error {
+func ListAllTypesInChunks(ctx context.Context, api kubernetes.Interface, c client.Client, options client.ListOptions, handler func([]unstructured.Unstructured) error) error {
 	types, err := getTypes(api)
 	if err != nil {
 		return err
@@ -305,33 +305,20 @@ nextType:
 				Limit:    200,
 			},
 		}
-		for {
-			list := unstructured.UnstructuredList{
-				Object: map[string]interface{}{
-					"apiVersion": t.APIVersion,
-					"kind":       t.Kind,
-				},
+		list := unstructured.UnstructuredList{
+			Object: map[string]interface{}{
+				"apiVersion": t.APIVersion,
+				"kind":       t.Kind,
+			},
+		}
+		err = util.ListInChunks(ctx, c, &options, &list, handler)
+		if err != nil {
+			if k8serrors.IsNotFound(err) ||
+				k8serrors.IsForbidden(err) ||
+				k8serrors.IsMethodNotSupported(err) {
+				continue nextType
 			}
-			if err := c.List(ctx, &options, &list); err != nil {
-				if k8serrors.IsNotFound(err) ||
-					k8serrors.IsForbidden(err) ||
-					k8serrors.IsMethodNotSupported(err) {
-					continue nextType
-				}
-				return err
-			}
-
-			err = handler(list.Items)
-			if err != nil {
-				return err
-			}
-
-			if len(list.GetContinue()) == 0 {
-				break
-			}
-
-			// keep loading....
-			options.Raw.Continue = list.GetContinue()
+			return err
 		}
 	}
 	return nil

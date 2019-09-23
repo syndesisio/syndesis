@@ -30,6 +30,7 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/run"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/uninstall"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"os"
 )
 
 // Creates a new operator command.
@@ -56,7 +57,10 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.PersistentFlags().AddGoFlag(&f)
 
 	// cmd.PersistentFlags().StringVar(&options.KubeConfig, "config", , "path to the config file to connect to the cluster")
-	namespace, _ := util.GetClientNamespace(options.KubeConfig)
+	namespace, found := os.LookupEnv("NAMESPACE")
+	if !found {
+		namespace, _ = util.GetClientNamespace(options.KubeConfig)
+	}
 	cmd.PersistentFlags().StringVarP(&options.Namespace, "namespace", "n", namespace, "namespace to run against")
 
 	cmd.AddCommand(install.New(&options))
