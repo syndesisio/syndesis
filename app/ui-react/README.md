@@ -671,7 +671,7 @@ Where `username` would just be a property in your `cypress.env.json` file or `ex
 
 _Running Tests_
 
-1. Have your dev server running using the tapes, this way: `$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn replay`
+1. Have your dev server running using the tapes: `$ BACKEND=https://syndesis-e2e-tests.b6ff.rh-idev.openshiftapps.com yarn replay`
 2. To run all E2E tests: `$ yarn e2e`. To run E2E tests directly in the terminal, no browser: `$ yarn e2e:terminal`.
 
 Note: These tests do not make requests to the backend, they use existing tapes, so they won't test the creating, editing, or deletion of anything--they simply ensure the UI loads as expected.
