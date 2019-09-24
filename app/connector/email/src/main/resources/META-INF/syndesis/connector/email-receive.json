@@ -102,9 +102,7 @@
   "description": "Receive email messages from an imap or pop3 account.",
   "icon": "assets:email-receive.svg",
   "id": "email-receive",
-  "metadata": {
-    "tech-preview": true
-  },
+  "metadata": {},
   "name": "Receive Email (imap or pop3)",
   "properties": {
     "host": {
@@ -129,7 +127,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "common,security",
-      "labelHint": "Specify a password for authentication of the email service, if required.",
+      "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
       "order": "5",
       "required": true,
       "secret": true,
@@ -235,7 +233,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "common,security",
-      "labelHint": "Specify a user name for authentication of the email service url, if required.",
+      "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
       "order": "4",
       "required": true,
       "secret": false,
