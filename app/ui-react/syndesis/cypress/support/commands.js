@@ -102,14 +102,21 @@ Cypress.Commands.add('createIntegration', data => {
    */
   cy.get('[data-testid|=connection-card-' + data.connectionSlug + ']').click();
 
-  cy.get('[data-testid=select-action-page-select-button]').within(() => {
-    cy.get('[data-testid=select-action-page-select-button]').click();
-  });
+  cy.get('[data-testid=select-action-page-select-button]').click();
+
+  cy.get('#integration-editor-form-next-button').click();
 
   cy.wait(200);
-  cy.get(
-    '[data-testid=integration-editor-nothing-to-configure-next-button]'
-  ).click();
+  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
+
+  cy.wait(200);
+  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
+
+  cy.wait(200);
+  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
+
+  cy.wait(200);
+  cy.get('#integration-editor-publish-button').click();
 
   /**
    * Set name and description
