@@ -130,16 +130,6 @@ export interface IDescribeDataShapeRouteState extends IBaseRouteState {
   updatedIntegration?: Integration;
 }
 
-export interface IDescribeStepDataShapeRouteParams extends IBaseFlowRouteParams {
-  position: string;
-  direction: DataShapeDirection;
-}
-
-export interface IDescribeStepDataShapeRouteState extends IBaseRouteState {
-  step: StepKind;
-  updatedIntegration?: Integration;
-}
-
 /**
  * @param connectionId - the ID of the connection selected in the previous step
  * @param position - the zero-based position for the new step in the integration
@@ -181,14 +171,22 @@ export interface IApiProviderEditorRouteState
   specification: string | Integration;
 }
 
+/**
+ * @param mode - valid choice configuration modes.
+ */
+export interface IChoiceStepRouteParams extends IConfigureStepRouteParams {
+  configMode: 'basic' | 'advanced'
+}
+export interface IChoiceStepRouteState extends IConfigureStepRouteState {}
+
 export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
 export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
 export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
 export interface IDataMapperRouteState extends IConfigureStepRouteState {}
 export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
 export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
-export interface IChoiceStepRouteParams extends IConfigureStepRouteParams {}
-export interface IChoiceStepRouteState extends IConfigureStepRouteState {}
+export interface ISelectConfigModeRouteParams extends IConfigureStepRouteParams {}
+export interface ISelectConfigModeRouteState extends IConfigureStepRouteState {}
 export interface ISelectConnectionRouteState extends IBaseRouteState {}
 export interface IPostPublishRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteParams extends IBaseRouteParams {}
@@ -211,9 +209,10 @@ export const stepRoutes = {
   basicFilter: 'filter',
   // if selected step kind is choice
   choice: include('choice', {
-    configure: '',
+    selectMode: '',
+    configure: 'configure/:configMode',
     // if 'any' data shape
-    describeData: 'describe-data/:position/:direction',
+    describeData: 'describe-data',
   }),
   // if selected step kind is template
   template: 'template',

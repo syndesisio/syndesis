@@ -111,23 +111,30 @@ export const BasicFilterApp: React.FunctionComponent<
 };
 
 export interface IChoiceAppProps {
-  choicePath: string;
-  choiceChildren: React.ReactElement<IChoiceAppProps>;
+  configurePath: string;
+  configureChildren: React.ReactElement<IChoiceAppProps>;
   describeDataPath: string;
   describeDataChildren: React.ReactElement<DescribeChoiceDataShapePage>;
+  selectModePath: string;
+  selectModeChildren: React.ReactElement<IChoiceAppProps>;
 }
 export const ChoiceApp: React.FunctionComponent<IChoiceAppProps> = props => {
   return (
     <Switch>
       <Route
-        path={props.choicePath}
+        path={props.configurePath}
         exact={true}
-        children={props.choiceChildren}
+        children={props.configureChildren}
       />
       <Route
         path={props.describeDataPath}
         exact={true}
         children={props.describeDataChildren}
+      />
+      <Route
+        path={props.selectModePath}
+        exact={true}
+        children={props.selectModeChildren}
       />
     </Switch>
   );
@@ -249,12 +256,14 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
           basicFilterChildren={props.basicFilter.basicFilterChildren}
         />
       </Route>
-      <Route path={props.choice.choicePath}>
+      <Route path={props.choice.selectModePath}>
         <ChoiceApp
-          choicePath={props.choice.choicePath}
-          choiceChildren={props.choice.choiceChildren}
+          configurePath={props.choice.configurePath}
+          configureChildren={props.choice.configureChildren}
           describeDataPath={props.choice.describeDataPath}
           describeDataChildren={props.choice.describeDataChildren}
+          selectModePath={props.choice.selectModePath}
+          selectModeChildren={props.choice.selectModeChildren}
         />
       </Route>
       <Route path={props.step.configurePath}>

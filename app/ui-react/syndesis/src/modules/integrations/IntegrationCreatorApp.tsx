@@ -1,4 +1,10 @@
-import { ALL_STEPS, createStep, DATA_MAPPER, getStep } from '@syndesis/api';
+import {
+  ALL_STEPS,
+  createStep,
+  DATA_MAPPER,
+  getChoiceConfigMode,
+  getStep
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
 import { useRouteData } from '@syndesis/utils';
@@ -187,13 +193,23 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                           ...s,
                         })
                       }
-                      choiceHref={(step, p, s) =>
-                        resolvers.create.configure.editStep.choice.configure({
-                          step,
-                          ...p,
-                          ...s,
-                        })
-                      }
+                      choiceHref={(step, p, s) => {
+                        const configMode = getChoiceConfigMode(step);
+                        if (typeof configMode !== 'undefined') {
+                          return resolvers.create.configure.editStep.choice.configure({
+                            configMode,
+                            step,
+                            ...p,
+                            ...s,
+                          })
+                        } else {
+                          return resolvers.create.configure.editStep.choice.selectMode({
+                            step,
+                            ...p,
+                            ...s,
+                          })
+                        }
+                      }}
                       getAddMapperStepHref={(position, p, s) =>
                         resolvers.create.configure.addStep.dataMapper({
                           position: `${position}`,

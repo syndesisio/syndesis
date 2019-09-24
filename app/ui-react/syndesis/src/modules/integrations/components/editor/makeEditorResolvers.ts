@@ -19,12 +19,12 @@ import {
   IDataMapperRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
-  IDescribeStepDataShapeRouteParams,
-  IDescribeStepDataShapeRouteState,
   IRuleFilterStepRouteParams,
   IRuleFilterStepRouteState,
   ISelectActionRouteParams,
   ISelectActionRouteState,
+  ISelectConfigModeRouteParams,
+  ISelectConfigModeRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   ITemplateStepRouteParams,
@@ -64,8 +64,8 @@ export interface IEditorConfigureDataShape extends IEditorSelectAction {
   direction: DataShapeDirection;
 }
 
-export interface IEditorConfigureStepDataShape extends IEditorConfigureStep {
-  direction: DataShapeDirection;
+export interface IEditorConfigureChoiceStep extends IEditorConfigureStep {
+  configMode: string;
 }
 
 export interface IEditorConfigureStep extends IEditorIndex {
@@ -149,19 +149,19 @@ export const configureDescribeDataShapeMapper = ({
     } as IDescribeDataShapeRouteState,
   };
 };
-export const configureDescribeStepDataShapeMapper = ({
-  direction,
+export const configureConfigureChoiceStepMapper = ({
+  configMode,
   ...rest
-}: IEditorConfigureStepDataShape) => {
+}: IEditorConfigureChoiceStep) => {
   const { params, state } = configureConfigureStepMapper(rest);
   return {
     params: {
       ...params,
-      direction,
-    } as IDescribeStepDataShapeRouteParams,
+      configMode,
+    } as IChoiceStepRouteParams,
     state: {
       ...state,
-    } as IDescribeStepDataShapeRouteState,
+    } as IChoiceStepRouteState,
   };
 };
 export const configureConfigureStepMapper = ({
@@ -175,7 +175,7 @@ export const configureConfigureStepMapper = ({
     params: {
       ...params,
       position,
-    } as IConfigureActionRouteParams,
+    } as IConfigureStepRouteParams,
     state: {
       ...state,
       step,
@@ -323,15 +323,20 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
     >(esr.basicFilter, configureConfigureStepMapper),
     choice: {
       configure: makeResolver<
-        IEditorConfigureStep,
+        IEditorConfigureChoiceStep,
         IChoiceStepRouteParams,
         IChoiceStepRouteState
-        >(esr.choice.configure, configureConfigureStepMapper),
+        >(esr.choice.configure, configureConfigureChoiceStepMapper),
       describeData: makeResolver<
-        IEditorConfigureStepDataShape,
-        IDescribeStepDataShapeRouteParams,
-        IDescribeStepDataShapeRouteState
-        >(esr.choice.describeData, configureDescribeStepDataShapeMapper),
+        IEditorConfigureChoiceStep,
+        IChoiceStepRouteParams,
+        IChoiceStepRouteState
+        >(esr.choice.describeData, configureConfigureChoiceStepMapper),
+      selectMode: makeResolver<
+        IEditorConfigureStep,
+        ISelectConfigModeRouteParams,
+        ISelectConfigModeRouteState
+        >(esr.choice.selectMode, configureConfigureStepMapper),
     },
     dataMapper: makeResolver<
       IEditorConfigureStep,
