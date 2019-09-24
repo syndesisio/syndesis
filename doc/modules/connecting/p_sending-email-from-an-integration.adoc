@@ -19,42 +19,36 @@ want to add the connection. Skip this step if {prodname} is
 prompting you to choose the finish connection. 
 . Click the email server connection that you want to use to send messages. 
 . Select the *Send Email* action.
+. In the *Email from* field, enter the email address that sends the 
+messages. This is required even if you plan to add 
+a data mapper step that maps an email address
+from a previous integration step to this connection.
 
-. On the configuration page for *Send Email*, do one of the following:
-+
-* Leave all fields blank if you plan to add a data mapper step
-just before this connection and you plan to map integration data 
-to the *Send Email* fields.
-
-* Enter information in one or more of the following *Send Email* fields. 
-Separate multiple email addresses with a comma. 
+. Recommended: Specify a value in each of the following fields. Separate 
+multiple email addresses with a comma. 
 
 .. *Email to*
-.. *Email from*
 .. *Email subject* 
 .. *Email text*
 .. *Email cc*
 .. *Email bcc* 
 
-* Leave some fields blank and enter information in some fields. 
-+
-If you plan to add a data mapper step just before this email connection,
-and you want to map integration data to some email fields, leave those fields
-blank in the action configuration. Enter values in other action fields as needed. 
-
 . In the *Parameter Priority* field, accept *Input Values* or select 
 *Consumed Data*. This determines which of the following has precedence: 
 +
-* The input values in this action configuration. 
-* The data values that are available to this connection during 
-integration execution. 
+* Input values in this action configuration
+* Data values that you map to this connection
+
++
+The recommendation is to select *Consumed Data*. This means that the 
+values that you specify in the email fields here serve as default values.
 
 . Click *Next* to add the connection to the flow. 
 
 .Result
 The connection appears in the integration flow where you added it. 
 
-.Next step
-If you plan to add a data mapper step
-before this connection, first add any other connections that you plan to add
-to this flow. Then add the data mapper step. 
+.Next steps
+Add all other needed to connections to the flow. Then add a data mapper 
+step before the connection that sends email. 
+In the data mapper step, map source fields to the target fields for sending emails. 

@@ -15,7 +15,7 @@ connection accesses. Specifically, you must know:
 
 * Whether the email server uses the IMAP or POP3 protocol. 
 * Whether authentication credentials are required. If they are,
-you must know a user name and password.
+you must have a user name and password.
 * Whether a security method is implemented. If one is, you must know 
 which method.
 * Whether a server certificate is required. If it is, 
