@@ -20,7 +20,6 @@ package install
 import (
 	"encoding/json"
 	"fmt"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/pkg/errors"
@@ -114,7 +113,7 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
-
+	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
 

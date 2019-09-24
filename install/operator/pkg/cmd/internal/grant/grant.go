@@ -50,6 +50,7 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().BoolVarP(&o.cluster, "cluster", "", false, "add the permission for all projects in the cluster(requires cluster admin privileges)")
 	cmd.PersistentFlags().StringVarP(&o.User, "user", "u", pkg.DefaultOperatorImage, "add permissions for the given User")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
+	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	cmd.MarkFlagRequired("user")
 
 	return &cmd

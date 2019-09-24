@@ -57,6 +57,7 @@ func New(parent *internal.Options) *cobra.Command {
 
 	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
+	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 
 	return &cmd
 }
