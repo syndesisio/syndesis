@@ -172,6 +172,7 @@
     prometheus-config.yml: |-
 {{.PrometheusRules}}
 
+{{- if eq .Syndesis.Spec.Addons.camelk.enabled "true" }}
 # START:CAMEL-K
 - kind: Role
   apiVersion: rbac.authorization.k8s.io/v1beta1
@@ -241,3 +242,4 @@
     name: syndesis-knative-reader
     apiGroup: rbac.authorization.k8s.io
 # END:CAMEL-K
+{{end}}

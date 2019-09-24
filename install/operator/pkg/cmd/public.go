@@ -23,7 +23,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/backup"
-	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/eject"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/grant"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/install"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/restore"
@@ -69,7 +68,6 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.AddCommand(uninstall.New(&options))
 	cmd.AddCommand(backup.New(&options))
 	cmd.AddCommand(restore.New(&options))
-	cmd.AddCommand(eject.New(&options))
 
 	return &cmd, nil
 }
