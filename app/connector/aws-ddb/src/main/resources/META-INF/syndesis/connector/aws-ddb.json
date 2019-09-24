@@ -95,6 +95,48 @@
       "tags": [
         "dynamic"
       ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete an item from an AWS Dynamo DB",
+      "descriptor": {
+        "componentScheme": "aws-ddb",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.ddb.customizer.DDBConnectorCustomizerRemoveItem"
+        ],
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Delete an item from a DynamoDB table",
+            "name": "Remove Item",
+            "properties": {
+              "element": {
+                "deprecated": false,
+                "displayName": "JSON filter of the element",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "property",
+                "labelHint": "Filter of the element to be removed. Can contain input parameters prefixed by ':#'.",
+                "placeholder": "for example '{key : :#MYPARAMNAME}'",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-ddb-removeitem-to-connector",
+      "name": "Remove Item",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     }
   ],
   "configuredProperties": {},
