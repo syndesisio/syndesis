@@ -12,14 +12,14 @@ const constants = require('../../fixtures/constants');
 describe('Restore Snapshot', () => {
   let latestSnapshot;
 
-  it('gets the snapshot', () => {
+  it.skip('gets the snapshot', () => {
     cy.log('Retrieving latest snapshot...');
     cy.task('getSnapshot').then(snapshot => {
       latestSnapshot = snapshot;
     });
   });
 
-  it('restores the snapshot', () => {
+  it.skip('restores the snapshot', () => {
     cy.request({
       method: 'POST',
       url: 'api/v1/test-support/restore-db',
