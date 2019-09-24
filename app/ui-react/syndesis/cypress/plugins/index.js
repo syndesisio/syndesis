@@ -74,8 +74,8 @@ module.exports = (on, config) => {
     },
 
     storeSnapshot(snapshot) {
-      const snapshotJson = JSON.stringify(snapshot);
-      fs.writeFileSync(snapshotFilePath, snapshotJson.body, err => {
+      const snapshotJson = JSON.stringify(snapshot.body);
+      fs.writeFileSync(snapshotFilePath, snapshotJson, err => {
         if (err) throw err;
         cy.log('The file has been saved!');
       });
