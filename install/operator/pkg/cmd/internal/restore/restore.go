@@ -42,6 +42,7 @@ func New(parent *internal.Options) *cobra.Command {
 	}
 	cmd.Flags().StringVar(&o.backupDir, "backup", "/tmp/backup", "The directory where the backup is stored")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
+	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
 
