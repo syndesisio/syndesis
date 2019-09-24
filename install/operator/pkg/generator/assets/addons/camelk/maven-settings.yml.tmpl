@@ -11,8 +11,6 @@ data:
             <activeByDefault>true</activeByDefault>
           </activation>
 
-          <!-- Config: Productized={{.Productized}}, EarlyAccess={{.EarlyAccess}}, Custom={{ if .Syndesis.Spec.MavenRepositories}}true{{else}}false{{end}} -->
-
       {{- if .Syndesis.Spec.MavenRepositories}}
           <repositories>
             {{- range $id, $url := .Syndesis.Spec.MavenRepositories}}

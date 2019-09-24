@@ -25,8 +25,7 @@ type SyndesisSpec struct {
 	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
 	// Integration is used to configure settings related to runtime integrations that get deployed.
 	Integration IntegrationSpec `json:"integration,omitempty"`
-	// The container registry to pull syndesis images from
-	Registry string `json:"registry,omitempty"`
+
 	// Components is used to configure all the core components of Syndesis
 	Components ComponentsSpec `json:"components,omitempty"`
 
@@ -91,31 +90,31 @@ type ComponentsSpec struct {
 }
 
 type OauthConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Image string `json:"image,omitempty"`
 	// if set to true, then any authenticated user can access the install. otherwise the user
 	// needs access to get pods against the SarNamespace
 	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
 }
 
 type PostgresExporterConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Image string `json:"image,omitempty"`
 }
 
 type KomodoConfiguration struct {
 	Resources Resources `json:"resources,omitempty"`
-	Tag       string    `json:"tag,omitempty"`
+	Image     string    `json:"image,omitempty"`
 }
 
 type S2IConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Image string `json:"image,omitempty"`
 }
 
 type UIConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Image string `json:"image,omitempty"`
 }
 
 type DbConfiguration struct {
-	Tag                  string              `json:"tag,omitempty"`
+	Image                string              `json:"image,omitempty"`
 	Resources            ResourcesWithVolume `json:"resources,omitempty"`
 	User                 string              `json:"user,omitempty"`
 	Database             string              `json:"database,omitempty"`
@@ -123,7 +122,7 @@ type DbConfiguration struct {
 }
 
 type PrometheusConfiguration struct {
-	Tag       string              `json:"tag,omitempty"`
+	Image     string              `json:"image,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
@@ -132,17 +131,18 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Tag       string         `json:"tag,omitempty"`
+	Image     string         `json:"image,omitempty"`
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
-	Tag       string              `json:"tag,omitempty"`
+	Image     string              `json:"image,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
 type UpgradeConfiguration struct {
+	Image     string              `json:"image,omitempty"`
 	Resources VolumeOnlyResources `json:"resources,omitempty"`
 }
 

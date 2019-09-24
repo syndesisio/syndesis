@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"strings"
 	"time"
 
@@ -30,7 +31,6 @@ import (
 	v1 "github.com/openshift/api/route/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -111,8 +111,7 @@ func (o *Install) installStandalone() error {
 		gen.ImagePullSecrets = append(gen.ImagePullSecrets, secret.Name)
 	}
 
-	params := template.ResourceParams{}
-
+	config := map[string]string{}
 	// Create the syndesis-oauth-client serviceaccount to grab the token
 	{
 		if sa, err := generator.RenderDir("./serviceaccount/", gen); err == nil {
@@ -134,6 +133,7 @@ func (o *Install) installStandalone() error {
 		if err != nil {
 			return err
 		}
+		config[string(configuration.EnvOpenShiftOauthClientSecret)] = token
 
 		if secret != nil {
 			sa := &corev1.ServiceAccount{}
@@ -143,7 +143,7 @@ func (o *Install) installStandalone() error {
 				return err
 			}
 		}
-		params.OAuthClientSecret = token
+		// gen.OAuthClientSecret = token
 	}
 
 	// Get the value of the route, by creating syndesis route first and taking it's
@@ -170,7 +170,7 @@ func (o *Install) installStandalone() error {
 		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
 	}
 
-	if err = template.SetupRenderContext(gen, syndesis, params, map[string]string{}); err != nil {
+	if err = template.SetupRenderContext(gen, syndesis, config); err != nil {
 		return err
 	}
 

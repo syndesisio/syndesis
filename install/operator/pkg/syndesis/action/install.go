@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"os"
 	"time"
 
@@ -26,7 +27,6 @@ import (
 	v1 "github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
@@ -84,19 +84,10 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 	}
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
-	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
-	if err != nil {
-		return err
-	}
-
 	// Detect if the route should be auto-generated
 	autoGenerateRoute := syndesis.Spec.RouteHostname == ""
 	if autoGenerateRoute {
 		syndesis.Spec.RouteHostname = "dummy"
-	}
-
-	params := syndesistemplate.ResourceParams{
-		OAuthClientSecret: token,
 	}
 
 	config, err := configuration.GetSyndesisEnvVarsFromOpenShiftNamespace(ctx, a.client, syndesis.Namespace)
@@ -104,12 +95,18 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		config = map[string]string{}
 	}
 
+	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
+	if err != nil {
+		return err
+	}
+	config[string(configuration.EnvOpenShiftOauthClientSecret)] = token
+
 	renderContext, err := syndesistemplate.GetTemplateContext()
 	if err != nil {
 		return err
 	}
 
-	err = syndesistemplate.SetupRenderContext(renderContext, syndesis, params, config)
+	err = syndesistemplate.SetupRenderContext(renderContext, syndesis, config)
 	if err != nil {
 		return err
 	}
@@ -270,10 +267,10 @@ func checkTags(context *generator.Context) error {
 		name string
 		tag  string
 	}{
-		{"server", context.Syndesis.Spec.Components.Server.Tag},
-		{"meta", context.Syndesis.Spec.Components.Meta.Tag},
-		{"ui", context.Syndesis.Spec.Components.UI.Tag},
-		{"s2i", context.Syndesis.Spec.Components.S2I.Tag},
+		{"server", util.TagOf(context.Syndesis.Spec.Components.Server.Image)},
+		{"meta", util.TagOf(context.Syndesis.Spec.Components.Meta.Image)},
+		{"ui", util.TagOf(context.Syndesis.Spec.Components.UI.Image)},
+		{"s2i", util.TagOf(context.Syndesis.Spec.Components.S2I.Image)},
 	}
 	for _, image := range images {
 		if image.tag != "latest" {

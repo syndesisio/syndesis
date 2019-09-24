@@ -18,6 +18,7 @@ package e2e
 
 import (
 	goctx "context"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"testing"
 	"time"
@@ -168,10 +169,11 @@ func imageStreamsTest(t *testing.T, f *framework.Framework, config *generator.Co
 		} else {
 			t.Logf("the imagestream has only one tag")
 
-			if is.Spec.Tags[0].Name != config.Tags.Syndesis {
-				t.Fatalf("the imagestream tag should be named [%s], but got %s", config.Tags.Syndesis, is.Spec.Tags[0].Name)
+			tag := util.TagOf(config.SpecDefaults.Components.Server.Image)
+			if is.Spec.Tags[0].Name != tag {
+				t.Fatalf("the imagestream tag should be named [%s], but got %s", tag, is.Spec.Tags[0].Name)
 			}
-			t.Logf("the imagestream tag is named [%s]", config.Tags.Syndesis)
+			t.Logf("the imagestream tag is named [%s]", tag)
 		}
 	}
 }
@@ -196,10 +198,10 @@ func changeImageStreamTagTest(t *testing.T, f *framework.Framework, config *gene
 		{"UI", "syndesis-ui", "1.9"},
 	}
 
-	syndesis.Spec.Components.Server.Tag = flagtests[0].value
-	syndesis.Spec.Components.Meta.Tag = flagtests[1].value
-	syndesis.Spec.Components.S2I.Tag = flagtests[2].value
-	syndesis.Spec.Components.UI.Tag = flagtests[3].value
+	syndesis.Spec.Components.Server.Image = flagtests[0].imageName + ":" + flagtests[0].value
+	syndesis.Spec.Components.Meta.Image = flagtests[1].imageName + ":" + flagtests[1].value
+	syndesis.Spec.Components.S2I.Image = flagtests[2].imageName + ":" + flagtests[2].value
+	syndesis.Spec.Components.UI.Image = flagtests[3].imageName + ":" + flagtests[3].value
 
 	if err := f.Client.Update(ctx, syndesis); err != nil {
 		t.Fatalf("unable to update syndesis cr name [%s], got error [%v]", cr, err)
@@ -213,7 +215,7 @@ func changeImageStreamTagTest(t *testing.T, f *framework.Framework, config *gene
 			return false, err
 		}
 
-		if syndesis.Spec.Components.Server.Tag == flagtests[0].value {
+		if util.TagOf(syndesis.Spec.Components.Server.Image) == flagtests[0].value {
 			t.Logf("tag [%s] for imagestream [%s] found in syndesis custom resource", flagtests[0].value, flagtests[0].imageName)
 			return true, nil
 		}

@@ -11,13 +11,13 @@ const (
 	SyndesisUpgrateTemplateName = "syndesis-upgrade"
 )
 
-func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params ResourceParams) ([]unstructured.Unstructured, error) {
+func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]unstructured.Unstructured, error) {
 	renderContext, err := GetTemplateContext()
 	if err != nil {
 		return nil, err
 	}
 
-	err = SetupRenderContext(renderContext, syndesis, params, map[string]string{})
+	err = SetupRenderContext(renderContext, syndesis, map[string]string{})
 	if err != nil {
 		return nil, err
 	}

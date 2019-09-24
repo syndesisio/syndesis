@@ -98,9 +98,15 @@
           - name: CAMEL_K_ENABLED
             value: "true"
 {{- end}}
+{{if .Syndesis.Spec.DevSupport}}
           - name: JAVA_DEBUG
-            value: "{{.Debug}}"
+            value: "true"
+{{end}}
+{{if .Syndesis.Spec.DevSupport}}
           image: ' '
+{{else}}
+          image: '{{ .Syndesis.Spec.Components.Server.Image }}'
+{{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -145,16 +151,34 @@
           configMap:
             name: syndesis-server-config
     triggers:
+    - type: ConfigChange
+{{if .Syndesis.Spec.DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{.ProductName}}-server
+        - syndesis-server
         from:
           kind: ImageStreamTag
-          name: '{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
-          namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
+          name: 'syndesis-server:latest'
+          namespace: '{{.Syndesis.Namespace}}'
       type: ImageChange
-    - type: ConfigChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-server
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+  spec:
+    tags:
+    - name: "latest"
+      from:
+        kind: ImageStreamTag
+        name: 'syndesis-server:latest'
+{{end}}
 
 # workaround camel-k metrics
 - apiVersion: v1

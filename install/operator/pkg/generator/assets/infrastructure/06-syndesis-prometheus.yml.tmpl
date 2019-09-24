@@ -157,7 +157,7 @@
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-          image: ' '
+          image: '{{ .Syndesis.Spec.Components.Prometheus.Image }}'
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
@@ -192,13 +192,4 @@
           configMap:
             name: syndesis-prometheus-config
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - prometheus
-        from:
-          kind: ImageStreamTag
-          name: {{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}
-          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
-      type: ImageChange
     - type: ConfigChange

@@ -84,9 +84,15 @@
           - name: JAEGER_SAMPLER_PARAM
             value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_PARAM "0"}}"
 {{end}}
+{{if .Syndesis.Spec.DevSupport}}
           - name: JAVA_DEBUG
-            value: "{{.Debug}}"
+            value: "true"
+{{end}}
+{{if .Syndesis.Spec.DevSupport}}
           image: ' '
+{{else}}
+          image: '{{ .Syndesis.Spec.Components.Meta.Image }}'
+{{end}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
             httpGet:
@@ -134,16 +140,33 @@
           configMap:
             name: syndesis-meta-config
     triggers:
+    - type: ConfigChange
+{{if .Syndesis.Spec.DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{.ProductName}}-meta
+        - syndesis-meta
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Syndesis.Verifier }}:{{ .Syndesis.Spec.Components.Meta.Tag }}
-          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
+          name: syndesis-meta:latest
+          namespace: {{.Syndesis.Namespace}}
       type: ImageChange
-    - type: ConfigChange
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-meta
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-meta
+  spec:
+    tags:
+    - name: "latest"
+      from:
+        kind: ImageStreamTag
+        name: 'syndesis-meta:latest'
+{{end}}
 
 - apiVersion: v1
   kind: ConfigMap

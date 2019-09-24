@@ -19,59 +19,13 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
-type supportImages struct {
-	Postgresql       string
-	OAuthProxy       string
-	OAuthProxyImage  string
-	Prometheus       string
-	PostgresExporter string
-}
-
-type syndesisImages struct {
-	Rest     string
-	Ui       string
-	Verifier string
-	S2i      string
-	Upgrade  string
-	Komodo   string
-}
-
-type images struct {
-	Support                     supportImages
-	Syndesis                    syndesisImages
-	ImageStreamNamespace        string
-	SyndesisImagesPrefix        string
-	OAuthProxyImagePrefix       string
-	PrometheusImagePrefix       string
-	PostgresExporterImagePrefix string
-	KomodoImagesPrefix          string
-	CamelKBaseImagePrefix       string
-}
-
-type tags struct {
-	Syndesis         string
-	Postgresql       string
-	OAuthProxy       string
-	Prometheus       string
-	Upgrade          string
-	PostgresExporter string
-	Komodo           string
-	CamelKBase       string
-}
-
 type Context struct {
+	SpecDefaults     v1alpha1.SyndesisSpec `json:"spec-defaults,omitempty"`
 	ProductName      string
 	AllowLocalHost   bool
 	Productized      bool
-	EarlyAccess      bool
-	Oso              bool
-	Ocp              bool
 	TagMinor         string
 	TagMajor         string
-	Registry         string
-	Images           images
-	Tags             tags
-	Debug            bool
 	PrometheusRules  string
 	Env              map[string]string
 	Syndesis         *v1alpha1.Syndesis
@@ -121,6 +75,7 @@ var templateFunctions = template.FuncMap{
 
 		return addons[key1][key2], nil
 	},
+	"tagOf": util.TagOf,
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {

@@ -71,7 +71,7 @@ func CreateCR(name string, namespace string) *v1alpha1.Syndesis {
 		Spec: v1alpha1.SyndesisSpec{
 			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DbConfiguration{
-					Tag:      "9.5",
+					Image:    "postgresql:9.5",
 					User:     "syndesis",
 					Database: "syndesis",
 					Resources: v1alpha1.ResourcesWithVolume{
@@ -80,13 +80,13 @@ func CreateCR(name string, namespace string) *v1alpha1.Syndesis {
 					},
 				},
 				Server: v1alpha1.ServerConfiguration{
-					Tag: "latest",
+					Image: "docker.io/syndesis/syndesis-server:latest",
 				},
 				Meta: v1alpha1.MetaConfiguration{
-					Tag: "latest",
+					Image: "docker.io/syndesis/syndesis-meta:latest",
 				},
 				Prometheus: v1alpha1.PrometheusConfiguration{
-					Tag: "v2.1.0",
+					Image: "docker.io/prom/prometheus:v2.1.0",
 				},
 			},
 			Addons: v1alpha1.AddonsSpec{
