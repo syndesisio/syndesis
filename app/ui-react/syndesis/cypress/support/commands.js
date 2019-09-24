@@ -102,9 +102,7 @@ Cypress.Commands.add('createIntegration', data => {
    */
   cy.get('[data-testid|=connection-card-' + data.connectionSlug + ']').click();
 
-  cy.get(
-    '[data-testid=integration-editor-actions-list-item-list-all-tasks-list-item]'
-  ).within(() => {
+  cy.get('[data-testid=select-action-page-select-button]').within(() => {
     cy.get('[data-testid=select-action-page-select-button]').click();
   });
 
