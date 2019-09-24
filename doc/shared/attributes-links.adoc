@@ -119,3 +119,6 @@
 
 :LinkIntegrationData: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/data_virtualization/
 :NameIntegrationData: Data Integration
+
+:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/designing_apis_with_api_designer/
+:NameDesigningAPIs: Designing APIs with API Designer
