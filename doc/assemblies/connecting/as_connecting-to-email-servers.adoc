@@ -5,8 +5,9 @@
 = Connecting to Email Servers (IMAP, POP3, SMTP)
 :context: email
 
-An integration can retrieve messages from an IMAP or POP3 email server or 
-connect to an SMTP email server to send messages. To trigger integration
+An integration can connect to an IMAP or POP3 email server to 
+retrieve email messages or 
+connect to an SMTP email server to send email messages. To trigger integration
 execution upon retrieving email, create a
 connection to an IMAP or POP3 email server and then add that connection 
 as a simple integration's start connection. 
