@@ -111,14 +111,21 @@ export function useOAuthFlow(
        * the API in the document. This cookie will be later used by the BE in the
        * redirect page set up in the 3rd party.
        */
-      const popup = window.open(
-        connectResource!.redirectUrl,
-        'Connection popup',
-        'width=600,height=400,resizable,scrollbars=yes,status=yes'
-      );
-      if (!popup) {
+      if (connectResource && connectResource.redirectUrl) {
+        const popup = window.open(
+          connectResource.redirectUrl,
+          'Connection popup',
+          'width=600,height=400,resizable,scrollbars=yes,status=yes'
+        );
+        if (!popup) {
+          pushNotification(
+            `Your browser is preventing the application from opening the connection to ${connectorName} page.`,
+            'error'
+          );
+        }
+      } else {
         pushNotification(
-          `Your browser is preventing the application from opening the connection to ${connectorName} page.`,
+          `Couldn't connect, check your credentials and try again.`,
           'error'
         );
       }
