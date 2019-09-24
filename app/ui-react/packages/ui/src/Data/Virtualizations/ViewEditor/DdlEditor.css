@@ -1,6 +1,14 @@
+.ddl-editor {
+  min-height: 300px;
+}
+
 .ddl-editor__button {
   margin-bottom: 8px;
   margin-right: 4px;
+}
+
+.ddl-editor__card {
+  height: 100%;
 }
 
 .ddl-editor .text-editor {
