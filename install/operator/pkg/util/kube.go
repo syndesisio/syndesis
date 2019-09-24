@@ -3,15 +3,21 @@ package util
 import (
 	"context"
 	"fmt"
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
+	"k8s.io/client-go/kubernetes"
+	k8sscheme "k8s.io/client-go/kubernetes/scheme"
+	"k8s.io/client-go/rest"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	"k8s.io/client-go/tools/remotecommand"
 	"os"
 	"os/user"
 	"path/filepath"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"strconv"
 	"time"
 )
@@ -110,4 +116,71 @@ func WaitForResourceCondition(ctx context.Context, client dynamic.Interface, gvr
 			}
 		}
 	}
+}
+
+func GetPodWithLabelSelector(api kubernetes.Interface, namespace string, LabelSelector string) (*v1.Pod, error) {
+	podList, err := api.CoreV1().Pods(namespace).List(metav1.ListOptions{
+		LabelSelector: LabelSelector,
+	})
+	if err != nil {
+		return nil, err
+	}
+	switch len(podList.Items) {
+	case 1:
+		return &podList.Items[0], nil // All good..
+	case 0:
+		return nil, fmt.Errorf("syndesis-db pod is not running")
+	default:
+		return nil, fmt.Errorf("too many pods look like they could be the syndesis-db pod")
+	}
+}
+
+func ListInChunks(ctx context.Context, c client.Client, options *client.ListOptions, list *unstructured.UnstructuredList, handler func([]unstructured.Unstructured) error) (err error) {
+	for {
+		if err := c.List(ctx, options, list); err != nil {
+			return err
+		}
+		err = handler(list.Items)
+		if err != nil {
+			return err
+		}
+
+		if len(list.GetContinue()) == 0 {
+			return
+		}
+		// keep loading....
+		options.Raw.Continue = list.GetContinue()
+	}
+
+}
+
+type ExecOptions struct {
+	Config    *rest.Config
+	Api       kubernetes.Interface
+	Namespace string
+	Pod       string
+	Container string
+	Command   []string
+	remotecommand.StreamOptions
+}
+
+func Exec(o ExecOptions) error {
+	req := o.Api.CoreV1().RESTClient().Post().
+		Resource("pods").
+		Name(o.Pod).
+		Namespace(o.Namespace).
+		SubResource("exec").
+		VersionedParams(&v1.PodExecOptions{
+			Container: o.Container,
+			Command:   o.Command,
+			Stdout:    o.Stdout != nil,
+			Stderr:    o.Stderr != nil,
+			Stdin:     o.Stdin != nil,
+		}, k8sscheme.ParameterCodec)
+
+	exec, err := remotecommand.NewSPDYExecutor(o.Config, "POST", req.URL())
+	if err != nil {
+		return err
+	}
+	return exec.Stream(o.StreamOptions)
 }

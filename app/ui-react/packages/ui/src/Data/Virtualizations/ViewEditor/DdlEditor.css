@@ -2,3 +2,19 @@
   margin-bottom: 8px;
   margin-right: 4px;
 }
+
+.ddl-editor .text-editor {
+  flex: 1 1 auto;
+  height: 100%;
+  margin-top: 0;
+  position: relative;
+}
+
+.ddl-editor .CodeMirror {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}

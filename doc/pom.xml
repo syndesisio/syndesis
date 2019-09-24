@@ -32,9 +32,9 @@
 
     <packaging>pom</packaging>
 
-    <modules>
-      <module>tools</module>
-    </modules>
+    <properties>
+      <basepom.check.skip-all>true</basepom.check.skip-all>
+    </properties>
 
     <build>
         <plugins>
@@ -49,7 +49,7 @@
                         </goals>
                         <configuration>
                             <sourceDirectory>${project.basedir}</sourceDirectory>
-                            <sourceDocumentName>master.adoc</sourceDocumentName>
+                            <sourceDocumentName>index.adoc</sourceDocumentName>
                             <imagesDir>images</imagesDir>
                             <backend>html</backend>
                             <doctype>book</doctype>
@@ -57,25 +57,6 @@
                                 <!-- Can use this to set AsciiDoc attributes from POM properties -->
                                 <!-- camel-version>${version.apache.camel}</camel-version -->
                             </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>io.syndesis</groupId>
-                <artifactId>syndesis-documentation-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <executions>
-                    <execution>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>extract-tooltips</goal>
-                        </goals>
-                        <configuration>
-                            <sources>
-                                <source>${project.basedir}/master.adoc</source>
-                            </sources>
-                            <output>tooltips/tooltips.json</output>
                         </configuration>
                     </execution>
                 </executions>

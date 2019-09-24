@@ -229,7 +229,7 @@ option cannot be applied at the endpoint, and only in this case,
 the method creates a custom component instance and configures it 
 according to the applicable options.
 
-* `configureDelegateComponent()``
+* `configureDelegateComponent()`
 +
 Syndesis invokes this method only if a custom component instance has been 
 created to configure additional behavior of the delegated component instance.

@@ -61,13 +61,13 @@ export class Connections extends React.Component<IConnectionsProps> {
                         error={this.props.error}
                         loading={this.props.loading}
                         loaderChildren={
-                          <>
+                          <ConnectionsGrid>
                             {new Array(5).fill(0).map((_, index) => (
                               <ConnectionsGridCell key={index}>
                                 <ConnectionSkeleton />
                               </ConnectionsGridCell>
                             ))}
-                          </>
+                          </ConnectionsGrid>
                         }
                         errorChildren={
                           <ApiError error={this.props.errorMessage!} />

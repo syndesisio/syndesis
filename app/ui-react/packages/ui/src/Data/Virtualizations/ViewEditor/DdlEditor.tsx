@@ -119,6 +119,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     if (saved) {
       setSavedValue(ddlValue);
       setHasChanges(false);
+      props.setDirty(false);
     }
   };
 
@@ -156,11 +157,11 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   };
 
   return (
-    <PageSection variant={'light'}>
+    <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
       <Title headingLevel="h5" size="lg">
         {props.i18nTitle}
       </Title>
-      <Card>
+      <Card style={{ height: '100%' }}>
         <CardBody>
           {props.showValidationMessage
             ? props.validationResults.map((e, idx) => (

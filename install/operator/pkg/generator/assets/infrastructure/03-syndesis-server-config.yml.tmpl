@@ -64,17 +64,12 @@
         query.api.url: http://noauth-syndesis-jaeger-query:443/api
         service.name: syndesis-server
 {{- end}}
-{{- if .Productized}}
+{{- if .Syndesis.Spec.MavenRepositories}}
       maven:
         repositories:
-          central: https://repo.maven.apache.org/maven2/
-{{- if .EarlyAccess}}
-          redhat-ea: https://maven.repository.redhat.com/earlyaccess/all/
-          jboss-ea: https://repository.jboss.org/nexus/content/groups/ea/
-{{- else}}
-          redhat-ga: https://maven.repository.redhat.com/ga/
-          jboss-ga: https://repository.jboss.org/
-{{- end}}
+    {{- range $id, $url := .Syndesis.Spec.MavenRepositories}}
+          {{ $id }}: {{ $url }}
+    {{- end }}
 {{- end}}
       openshift:
         apiBaseUrl: '{{.Syndesis.Spec.OpenShiftMaster}}/oapi/v1'

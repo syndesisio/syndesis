@@ -4,6 +4,7 @@ export * from './PublishStatusWithProgress';
 export * from './SqlClientContent';
 export * from './SqlClientContentSkeleton';
 export * from './SqlClientForm';
+export * from './VirtualizationCreateForm';
 export * from './VirtualizationDetailsHeader';
 export * from './VirtualizationList';
 export * from './VirtualizationListItem';

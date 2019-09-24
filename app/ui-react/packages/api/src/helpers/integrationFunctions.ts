@@ -353,6 +353,22 @@ export function isActionOutputShapeless(descriptor: ActionDescriptor) {
 }
 
 /**
+ * Converts the response body or status message into a Syndesis error exception
+ * @param response
+ */
+export async function throwStandardError(response: Response) {
+  const text = await response.text();
+  let json;
+  try {
+    json = JSON.parse(text);
+  } catch (e) {
+    throw { errorCode: response.status, userMsg: text || response.statusText };
+  }
+  throw json;
+}
+
+
+/**
  * Sets an arbitrary property on an integration
  * @param integration
  * @param propertyName

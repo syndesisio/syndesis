@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationMetricsSummary.Builder.class)
@@ -54,6 +53,10 @@ public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSumm
      * @return the TimeStamp of when the last message for processed
      */
     Optional<Date> getLastProcessed();
+    /**
+     * @return the duration this application is up and running.
+     */
+    Long getUptimeDuration();
 
     Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
 

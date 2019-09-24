@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.metrics.prometheus;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,13 +29,6 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -43,6 +38,10 @@ import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "prometheus")
@@ -137,7 +136,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
-            startTimeMap, lastProcessedTimeMap, startTime,Optional.ofNullable(lastProcessedTime));
+            startTimeMap, lastProcessedTimeMap, startTime, Optional.ofNullable(lastProcessedTime));
     }
 
     private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap, Map<String, Long> failedMessagesMap,
@@ -152,8 +151,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             final Long messages = entry.getValue();
 
             final Long errors = failedMessagesMap.get(version);
-            final Date start = startTimeMap.get(version);
-            final Date lastProcessed = lastProcessingTimeMap.get(version);
+            final Optional<Date> start = Optional.ofNullable(startTimeMap.get(version));
+            final Optional<Date> lastProcessed = Optional.ofNullable(lastProcessingTimeMap.get(version));
 
             // aggregate values while we are at it
             totalMessages[0] = SUM_LONGS.apply(totalMessages[0], messages);
@@ -163,8 +162,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .version(version)
                 .messages(messages)
                 .errors(errors)
-                .start(Optional.ofNullable(start))
-                .lastProcessed(Optional.ofNullable(lastProcessed))
+                .start(start)
+                .lastProcessed(lastProcessed)
+                .uptimeDuration(start.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                 .build();
         }).sorted(Comparator.comparing(IntegrationDeploymentMetrics::getVersion)).collect(Collectors.toList());
 
@@ -173,6 +173,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .integrationDeploymentMetrics(deploymentMetrics)
                 .start(startTime)
                 .lastProcessed(lastProcessedTime)
+                .uptimeDuration(startTime.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                 .messages(totalMessages[0])
                 .errors(totalErrors[0])
                 .build();
@@ -198,15 +199,14 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             // compute last processed time
             final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
             final Optional<Date> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, "max");
-            final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+            final Optional<Date> lastProcessedTime = Optional.ofNullable(MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
 
             // get top 5 integrations by total messages
-
-
             return new IntegrationMetricsSummary.Builder()
                 .metricsProvider("prometheus")
                 .start(startTime)
-                .lastProcessed(Optional.ofNullable(lastProcessedTime))
+                .lastProcessed(lastProcessedTime)
+                .uptimeDuration(startTime.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                 .messages(totalMessages.orElse(0L))
                 .errors(failedMessages.orElse(0L))
                 .topIntegrations(getTopIntegrations())

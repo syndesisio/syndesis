@@ -37,7 +37,7 @@ integration, you can update the document as needed while you define
 the execution flows for the API operations. To do this, click
 *View/Edit API Definition* in the upper right of a page in
 which you are editing the API provider integration. This displays
-your OpenAPI document in the Apicurito editor. Edit and
+your OpenAPI document in the API Designer editor. Edit and
 save the document to make changes that are reflected in
 {prodname}.
 
@@ -45,7 +45,7 @@ Considerations while editing the OpenAPI document:
 
 * *`operationId` properties for synchronization*
 +
-Synchronization between the versions of the OpenAPI document in the Apicurito 
+Synchronization between the versions of the OpenAPI document in the API Designer 
 editor and in the {prodname} integration editor depend on a unique `operationId` 
 property that is assigned to each operation that is defined in the document. 
 You can assign a specific `operationId` property value to each operation, 
