@@ -4,67 +4,42 @@
 [id='obtaining-email-to-trigger-integration-execution_{context}']
 = Obtaining email to trigger integration execution
 
-To start an integration by obtaining messages from an Amazon SQS queue, 
-add an Amazon SQS connection as a simple integration's start connection.
+To trigger execution of an integration upon receiving email,
+add a an IMAP or POP3 email server connection 
+as a simple integration's start connection.
 
 .Prerequisites
-* You created an Amazon SQS connection that is configured to access 
-the queue that you want to obtain messages from. 
-* You know the name of the SQS queue that you want the connection to 
-obtain messages from. 
+* You created an IMAP or POP3 email server connection that is configured to access 
+the account that you want to obtain email from. 
+* You know the name of the folder to retrieve messages from. 
 
 .Procedure
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a connection* page, click the Amazon SQS connection that
+. On the *Choose a connection* page, click the email server connection that
 you want to use to start the integration.
-. On the *Choose an action* page, select *Poll an Amazon SQS Queue* 
-to periodically retrieve messages from an SQS queue. 
-. Configure this action:
-.. In the *Delay* field, accept the default of 500 milliseconds as the time
-that elapses between polls. Or, to specify a different polling interval,
-enter a number and select its time unit. 
-.. In the *Maximum Objects to Retrieve* field, enter the largest number 
-of messages
-that one poll operation can obtain. The default is 10.
+. On the *Choose an action* page, select *Receive Email* 
+to periodically retrieve messages from an email account. 
+. Configure the action:
+.. Leave the *Folder* field blank to obtain email from the inbox. Or, 
+to obtain messages from a particular folder, enter the name of that folder.
 +
-To have no limit on the number of messages that can be obtained, specify
-`0` or a negative integer. When *Maximum Objects to Retrieve* is unlimited,
-the poll action obtains all messages in the SQS queue.
-
-.. In the *Queue Name or Amazon Resource Name* field, specify 
-the name of the SQS queue to retrieve messages from, or the queue's ARN.  
-If a queue with this name does not exist, the connection creates it. 
-This is the only required field. 
-
-.. Indicate whether you want to  
-*Obtain messages and then delete them from the queue*. Obtaining 
-messages and then deleting them from the queue is the default behavior.  
-Unselect this option only if you want the connection to retrieve 
-messages and also leave  them on the queue, which means that 
-the messages will be retrieved again. 
-
-.. Indicate whether you want to  
-*Obtain messages and delete the message if it does make it through a Camel filter*. 
-This option is selected by default. Leave it selected when you want to pass 
-a retrieved message through a filter to determine whether to delete it 
-from the queue. You do not need to unselect 
-*Obtain messages and then delete from the queue*. {prodname} ensures the 
-correct behavior when you select 
-*Obtain messages and delete the message if it does make it through a Camel filter*. 
- 
+If this connection accesses a POP3 email server, only standard folders,  
+such as *Inbox* or *Sent* are supported. 
+.. Select the *Unseen Only* checkbox to obtain only new messages, which 
+arrived since the previous poll. When this checkbox is not selected, each 
+poll returns all messsages that are in the specified folder. 
+.. In the *Delay* field, accept the default of 5 seconds as the time
+that elapses between polls for messages. Or, to specify a different polling interval,
+enter a number and select its time unit. 
+.. In the *Maximum Emails* field, enter the largest number 
+of messages that one poll operation can obtain. The default is 5.
++
+To always obtain all new messages or all messages in the specified folder, 
+set *Maximum Emails* to *`-1`*.
 . Click *Next*. 
 
 .Result
 
 The connection appears at the beginning of the integration flow. 
-
-.Next steps
-If you selected *Obtain messages and delete the message if it does make it through a Camel filter* 
-then you need to add a filter step after this SQS connection. The filter 
-step does not need to be immediately after the SQS connection. Add all 
-connections to the integration, and then add the filter step. 
-During execution, if there are messages that pass the filter, {prodname} uses the 
-same connection, the SQS start connection, to delete those messages 
-from the queue. 
