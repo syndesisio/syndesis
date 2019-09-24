@@ -76,6 +76,29 @@ public class Util {
         return attributeMap;
     }
 
+    public static Object getValue(AttributeValue value) {
+        if(value.getB() != null) {
+            return value.getB();
+        } else if (value.getS() != null){
+            return value.getS();
+        } else if (value.getBOOL() != null){
+            return value.getBOOL();
+        } else if (value.getBS() != null){
+            return value.getBS();
+        } else if (value.getL() != null){
+            return value.getL();
+        } else if (value.getM() != null){
+            return value.getM();
+        } else if (value.getN() != null){
+            return value.getN();
+        } else if (value.getNS() != null){
+            return value.getNS();
+        } else if (value.getSS() != null){
+            return value.getSS();
+        }
+        return null;
+    }
+
 
 
     public static <T> T setProperties(T instance, Map<String, Object> properties,

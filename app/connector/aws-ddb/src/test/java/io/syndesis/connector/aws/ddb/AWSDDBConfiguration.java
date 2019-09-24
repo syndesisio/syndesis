@@ -29,20 +29,20 @@ import com.amazonaws.regions.Regions;
  */
 public class AWSDDBConfiguration {
 
-    protected static final String ACCESSKEY_VALUE = "INVALID_KEY";
-    protected static final String SECRETKEY_VALUE = "INVALID_KEY";
-    protected static final String REGION_VALUE = Regions.EU_WEST_2.name();
-    protected static final String TABLENAME_VALUE = "TestTable";
+    public static final String ACCESSKEY_VALUE = "INVALID_KEY";
+    public static final String SECRETKEY_VALUE = "INVALID_KEY";
+    public static final String REGION_VALUE = Regions.EU_WEST_2.name();
+    public static final String TABLENAME_VALUE = "TestTable";
 
-    protected static final String ACCESSKEY = "accessKey";
-    protected static final String SECRETKEY = "secretKey";
-    protected static final String REGION = "region";
-    protected static final String TABLENAME = "tableName";
-    protected static final String ELEMENT = "element";
+    public static final String ACCESSKEY = "accessKey";
+    public static final String SECRETKEY = "secretKey";
+    public static final String REGION = "region";
+    public static final String TABLENAME = "tableName";
+    public static final String ELEMENT = "element";
 
-    protected static final Long randomId = System.currentTimeMillis();
+    public static final Long randomId = System.currentTimeMillis();
 
     //TODO change this to your table constraints
-    protected static final String ELEMENT_VALUE = "{\"clave\":\"" + randomId + "\"}";
+    public static final String ELEMENT_VALUE = "{\"clave\":\"" + randomId + "\"}";
     //TODO change this to your table constraints
 }
