@@ -24,11 +24,8 @@ import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
-  DataShapeDirection,
   IChoiceStepRouteParams,
   IChoiceStepRouteState,
-  IDescribeStepDataShapeRouteParams,
-  IDescribeStepDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
@@ -49,8 +46,8 @@ export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
   ) => H.LocationDescriptor;
   postConfigureHref: (
     integration: Integration,
-    p: IDescribeStepDataShapeRouteParams,
-    s: IDescribeStepDataShapeRouteState
+    p: IChoiceStepRouteParams,
+    s: IChoiceStepRouteState
   ) => H.LocationDescriptorObject;
 }
 
@@ -211,13 +208,12 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         reconciledIntegration,
                         {
                           ...params,
-                          direction: DataShapeDirection.OUTPUT,
-                        } as IDescribeStepDataShapeRouteParams,
+                        } as IChoiceStepRouteParams,
                         {
                           ...state,
                           step: stepWithUpdatedDescriptor,
                           updatedIntegration: reconciledIntegration
-                        } as IDescribeStepDataShapeRouteState
+                        } as IChoiceStepRouteState
                       )
                     );
                   };
@@ -259,6 +255,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                               >
                                 {() => (
                                   <WithChoiceConfigurationForm
+                                    configMode={params.configMode}
                                     initialValue={initialFormValue}
                                     filterOptions={options}
                                     onUpdatedIntegration={onUpdatedIntegration}
