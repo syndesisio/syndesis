@@ -1,3 +1,5 @@
+const constants = require('../../fixtures/constants');
+
 /**
  * 03: RESTORE SNAPSHOT/DATA
  *
@@ -22,7 +24,7 @@ describe('Restore Snapshot', () => {
       method: 'POST',
       url: 'api/v1/test-support/restore-db',
       headers: {
-        'SYNDESIS-XSRF-TOKEN': Cypress.env('SYNDESIS-XSRF-TOKEN'),
+        'SYNDESIS-XSRF-TOKEN': constants.XSRF_TOKEN,
       },
       body: latestSnapshot,
     });
