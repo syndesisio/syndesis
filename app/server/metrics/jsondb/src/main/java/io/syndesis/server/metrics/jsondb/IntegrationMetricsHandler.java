@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
+import io.syndesis.server.dao.manager.DataManager;
 import lombok.Data;
 
 public class IntegrationMetricsHandler {
@@ -97,6 +97,7 @@ public class IntegrationMetricsHandler {
                     .errors(mh.getErrors())
                     .start(mh.getStartDate())
                     .lastProcessed(mh.getLastProcessed())
+                    .uptimeDuration(mh.getStartDate().map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                     .build();
             dmList.add(dm);
         }
@@ -106,6 +107,7 @@ public class IntegrationMetricsHandler {
                 .errors(tm.getErrors())
                 .start(tm.getStartDate())
                 .lastProcessed(tm.getLastProcessed())
+                .uptimeDuration(tm.getStartDate().map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
                 .integrationDeploymentMetrics(dmList)
                 .build();
     }

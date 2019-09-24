@@ -10,8 +10,7 @@ require (
 	github.com/NYTimes/gziphandler v1.0.1 // indirect
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
-	github.com/go-openapi/spec v0.19.2
-	github.com/hoisie/mustache v0.0.0-20160804235033-6375acf62c69 // indirect
+	github.com/go-openapi/spec v0.19.3
 	github.com/mcuadros/go-version v0.0.0-20190308113854-92cdf37c5b75
 	github.com/openshift/api v3.9.0+incompatible
 	github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
@@ -21,7 +20,7 @@ require (
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
 	github.com/spf13/cobra v0.0.5
 	github.com/stretchr/testify v1.4.0
-	golang.org/x/net v0.0.0-20190620200207-3b0461eec859
+	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
 	golang.org/x/tools v0.0.0-20190826060629-95c3470cfb70 // indirect
 	k8s.io/api v0.0.0-20190612125737-db0771252981
 	k8s.io/apimachinery v0.0.0-20190612125636-6a5db36e93ad
@@ -29,7 +28,7 @@ require (
 	k8s.io/code-generator v0.0.0-20181203235156-f8cba74510f3
 	k8s.io/gengo v0.0.0-20190327210449-e17681d19d3a
 	k8s.io/kube-openapi v0.0.0-20190603182131-db7b694dc208
-	sigs.k8s.io/controller-runtime v0.2.1
+	sigs.k8s.io/controller-runtime v0.2.2
 	sigs.k8s.io/controller-tools v0.2.1
 	sigs.k8s.io/yaml v1.1.0
 )

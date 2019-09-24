@@ -1,0 +1,14 @@
+:experimental:
+include::shared/attributes.adoc[]
+
+= Syndesis User Documentation
+
+include::tutorials/master.adoc[offsetlevel=+1]
+
+include::integrating_applications/master.adoc[offsetlevel=+1]
+
+include::connecting/master.adoc[offsetlevel=+1]
+
+include::developing_extensions/master.adoc[offsetlevel=+1]
+
+include::managing_environments/master.adoc[offsetlevel=+1]

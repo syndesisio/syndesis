@@ -15,6 +15,13 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.InputStream;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.BiConsumer;
+
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -26,19 +33,13 @@ import io.fabric8.kubernetes.client.Watcher;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.User;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.function.BiConsumer;
-
 public interface OpenShiftService {
 
     String INTEGRATION_NAME_ANNOTATION = "syndesis.io/integration-name";
     String DEPLOYMENT_ID_ANNOTATION = "syndesis.io/deploy-id";
     String PROMETHEUS_PORT_ANNOTATION = "prometheus.io/port";
     String PROMETHEUS_SCRAPE_ANNOTATION = "prometheus.io/scrape";
+    String DEPLOYMENT_REPLICAS_ANNOTATION = "syndesis.io/deploy-replicas";
 
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
     String INTEGRATION_NAME_LABEL = "syndesis.io/integration";
@@ -113,10 +114,10 @@ public interface OpenShiftService {
     /**
      * Checks if the deployment (Deployment and Build configurations, Image Streams etc) is scaled.
      * @param name of the deployment to delete
-     * @param desiredReplicas how many replicas should be running for this method to return true
+     * @param desiredMinimumReplicas how many replicas should be running at a minimum for this method to return true
      * @param labels a set of labels that need to be match.
      */
-    boolean isScaled(String name, int desiredReplicas, Map<String, String> labels);
+    boolean isScaled(String name, int desiredMinimumReplicas, Map<String, String> labels);
 
     /**
      * Check whether a given build is failed

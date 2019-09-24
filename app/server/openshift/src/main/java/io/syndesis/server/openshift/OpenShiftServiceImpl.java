@@ -27,12 +27,17 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.function.BiConsumer;
+import java.util.stream.Collectors;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.PodTemplateSpec;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Secret;
@@ -46,6 +51,8 @@ import io.fabric8.openshift.api.model.Build;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigBuilder;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
+import io.fabric8.openshift.api.model.DeploymentTriggerPolicyBuilder;
+import io.fabric8.openshift.api.model.DoneableDeploymentConfig;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.User;
@@ -53,8 +60,6 @@ import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -142,13 +147,23 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         getDeploymentsByLabel(labels)
             .stream()
             .filter(d -> d.getMetadata().getName().equals(sName))
-            .map(d -> new DeploymentConfigBuilder(d).editSpec().withReplicas(desiredReplicas).endSpec().build())
+            .map(d -> new DeploymentConfigBuilder(d)
+                    // record the previous, possibly user defined custom number of replicas
+                    .editSpec()
+                        .withReplicas(desiredReplicas)
+                        .editTemplate()
+                            .editMetadata()
+                                .addToAnnotations(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION, d.getSpec().getReplicas().toString())
+                            .endMetadata()
+                        .endTemplate()
+                    .endSpec()
+                    .build())
             .findAny().ifPresent(d -> openShiftClient.deploymentConfigs().createOrReplace(d));
     }
 
 
     @Override
-    public boolean isScaled(String name, int desiredReplicas, Map<String, String> labels) {
+    public boolean isScaled(String name, int desiredMinimumReplicas, Map<String, String> labels) {
         List<DeploymentConfig> deploymentConfigs = getDeploymentsByLabel(labels);
         if (deploymentConfigs.isEmpty()) {
           return false;
@@ -163,7 +178,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             allReplicas = nullSafe(status.getReplicas());
             availableReplicas = nullSafe(status.getAvailableReplicas());
         }
-        return desiredReplicas == allReplicas && desiredReplicas == availableReplicas;
+
+        return desiredMinimumReplicas <= allReplicas && desiredMinimumReplicas <= availableReplicas;
     }
 
     @Override
@@ -219,94 +235,200 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return openShiftClient.imageStreams().withName(name).delete();
     }
 
+    @SuppressWarnings("PMD.ExcessiveMethodLength")
     protected void ensureDeploymentConfig(String name, DeploymentData deploymentData) {
-        openShiftClient.deploymentConfigs().withName(name).createOrReplaceWithNew()
-            .withNewMetadata()
-                .withName(name)
-                .addToAnnotations(deploymentData.getAnnotations())
-                .addToLabels(deploymentData.getLabels())
-                .addToLabels(INTEGRATION_DEFAULT_LABELS)
-            .endMetadata()
-            .withNewSpec()
-                .withReplicas(1)
-                .addToSelector(INTEGRATION_NAME_LABEL, name)
-                .withNewStrategy()
-                    .withType("Recreate")
-                    .withNewResources()
-                       .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
-                       .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
-                    .endResources()
-                .endStrategy()
-                .withRevisionHistoryLimit(0)
-                .withNewTemplate()
-                    .withNewMetadata()
-                        .addToLabels(INTEGRATION_NAME_LABEL, name)
-                        .addToLabels(COMPONENT_LABEL, "integration")
-                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
-                        .addToLabels(deploymentData.getLabels())
+        // check if deployment config exists
+        final DoneableDeploymentConfig deploymentConfig;
+        final DeploymentConfig oldConfig = openShiftClient.deploymentConfigs().withName(name).get();
+        if (oldConfig != null) {
+            // make sure replicas is set to at least 1 or restore the previous replica count if present
+            final PodTemplateSpec oldTemplate = oldConfig.getSpec().getTemplate();
+            final String deploymentReplicas = oldTemplate.getMetadata()
+                    .getAnnotations().get(OpenShiftService.DEPLOYMENT_REPLICAS_ANNOTATION);
+            Integer replicas = deploymentReplicas != null ? Integer.valueOf(deploymentReplicas) : oldConfig.getSpec().getReplicas();
+
+            // environment variables are stored in a list, so remove duplicates manually before patching
+            final EnvVar[] vars = { new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
+                    new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
+                    new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
+                    new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
+                    new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
+                    new EnvVar("JAEGER_SAMPLER_PARAM", "1", null) };
+            final Map<String, EnvVar> envVarMap = new HashMap<>();
+            for (EnvVar var : vars) {
+                envVarMap.put(var.getName(), var);
+            }
+
+            deploymentConfig = openShiftClient.deploymentConfigs().withName(name).edit()
+                    .editMetadata()
+                        .withName(name)
                         .addToAnnotations(deploymentData.getAnnotations())
-                        .addToAnnotations("prometheus.io/scrape", "true")
-                        .addToAnnotations("prometheus.io/port", "9779")
+                        .addToLabels(deploymentData.getLabels())
+                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
+                    .endMetadata()
+                    .editSpec()
+                        // if not set to more than 1, force replicas to 1 to start the integration pod
+                        .withReplicas(replicas != null && replicas > 1 ? replicas : 1)
+                        .addToSelector(INTEGRATION_NAME_LABEL, name)
+                        .withRevisionHistoryLimit(0)
+                        .editTemplate()
+                            .editMetadata()
+                                .addToLabels(INTEGRATION_NAME_LABEL, name)
+                                .addToLabels(COMPONENT_LABEL, "integration")
+                                .addToLabels(INTEGRATION_DEFAULT_LABELS)
+                                .addToLabels(deploymentData.getLabels())
+                                .addToAnnotations(deploymentData.getAnnotations())
+                                .addToAnnotations("prometheus.io/scrape", "true")
+                                .addToAnnotations("prometheus.io/port", "9779")
+                            .endMetadata()
+                            .editSpec()
+                                .editFirstContainer()
+                                    .withImage(deploymentData.getImage())
+                                    .withImagePullPolicy("Always")
+                                    .withName(name)
+                                    // use withEnv to preserve user added env vars
+                                    .withEnv(oldTemplate.getSpec().getContainers().get(0).getEnv().stream()
+                                        .map(e -> envVarMap.containsKey(e.getName()) ? envVarMap.remove(e.getName()) : e)
+                                        .collect(Collectors.toList()))
+                                    .editMatchingPort(p -> "jolokia".equals(p.getName()))
+                                        .withContainerPort(8778)
+                                    .endPort()
+                                    .editMatchingPort(p -> "metrics".equals(p.getName()))
+                                        .withContainerPort(9779)
+                                    .endPort()
+                                    .editMatchingPort(p -> "management".equals(p.getName()))
+                                        .withContainerPort(8081)
+                                    .endPort()
+                                    .editMatchingVolumeMount(v -> "secret-volume".equals(v.getName()))
+                                        .withMountPath("/deployments/config")
+                                        .withReadOnly(false)
+                                    .endVolumeMount()
+                                    .withLivenessProbe(new ProbeBuilder()
+                                            .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
+                                            .withNewHttpGet()
+                                            .withPath("/health")
+                                            .withNewPort(8081)
+                                            .endHttpGet()
+                                            .build())
+                                .endContainer()
+                                .editMatchingVolume(v -> "secret-volume".equals(v.getName()))
+                                    .withNewSecret()
+                                        .withSecretName(name)
+                                    .endSecret()
+                                .endVolume()
+                            .endSpec()
+                        .endTemplate()
+                        .withTriggers(
+                            new DeploymentTriggerPolicyBuilder()
+                                .withType("ImageChange")
+                                .withNewImageChangeParams()
+                                // set automatic to 'true' when not performing the deployments on our own
+                                .withAutomatic(true)
+                                .addToContainerNames(name)
+                                .withNewFrom()
+                                .withKind("ImageStreamTag")
+                                .withName(name + ":" + deploymentData.getVersion())
+                                .endFrom()
+                                .endImageChangeParams()
+                                .build(),
+                            new DeploymentTriggerPolicyBuilder()
+                                .withType("ConfigChange")
+                                .build())
+                    .endSpec();
+        } else {
+            deploymentConfig = openShiftClient.deploymentConfigs().withName(name).createNew()
+                    .withNewMetadata()
+                        .withName(name)
+                        .addToAnnotations(deploymentData.getAnnotations())
+                        .addToLabels(deploymentData.getLabels())
+                        .addToLabels(INTEGRATION_DEFAULT_LABELS)
                     .endMetadata()
                     .withNewSpec()
-                        .addNewContainer()
-                        .withImage(deploymentData.getImage())
-                        .withImagePullPolicy("Always")
-                        .withName(name)
-                        // don't chain withEnv as every invocation overrides the previous one, use var-args instead
-                        .withEnv(
-                            new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
-                            new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
-                            new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
-                            new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
-                            new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
-                            new EnvVar("JAEGER_SAMPLER_PARAM", "1", null))
-                        .addNewPort()
-                            .withName("jolokia")
-                            .withContainerPort(8778)
-                        .endPort()
-                        .addNewPort()
-                            .withName("metrics")
-                            .withContainerPort(9779)
-                        .endPort()
-                        .addNewPort()
-                            .withName("management")
-                            .withContainerPort(8081)
-                        .endPort()
-                        .addNewVolumeMount()
-                            .withName("secret-volume")
-                            .withMountPath("/deployments/config")
-                            .withReadOnly(false)
-                        .endVolumeMount()
-                        .withLivenessProbe(new ProbeBuilder()
-                            .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
-                            .withNewHttpGet()
-                                .withPath("/health")
-                                .withNewPort(8081)
-                            .endHttpGet()
-                            .build())
-                        .endContainer()
-                        .addNewVolume()
-                            .withName("secret-volume")
-                            .withNewSecret()
-                                .withSecretName(name)
-                            .endSecret()
-                        .endVolume()
-                    .endSpec()
-                .endTemplate()
-                .addNewTrigger()
-                    .withType("ImageChange")
-                    .withNewImageChangeParams()
-                        // set automatic to 'true' when not performing the deployments on our own
-                        .withAutomatic(true)
-                        .addToContainerNames(name)
-                        .withNewFrom()
-                            .withKind("ImageStreamTag")
-                            .withName(name + ":" + deploymentData.getVersion())
-                        .endFrom()
-                    .endImageChangeParams()
-                .endTrigger()
-            .endSpec()
+                        .withReplicas(1)
+                        .addToSelector(INTEGRATION_NAME_LABEL, name)
+                        .withNewStrategy()
+                            .withType("Recreate")
+                            .withNewResources()
+                            .addToLimits("memory", new Quantity(config.getDeploymentMemoryLimitMi()  + "Mi"))
+                            .addToRequests("memory", new Quantity(config.getDeploymentMemoryRequestMi() +  "Mi"))
+                            .endResources()
+                        .endStrategy()
+                        .withRevisionHistoryLimit(0)
+                        .withNewTemplate()
+                            .withNewMetadata()
+                                .addToLabels(INTEGRATION_NAME_LABEL, name)
+                                .addToLabels(COMPONENT_LABEL, "integration")
+                                .addToLabels(INTEGRATION_DEFAULT_LABELS)
+                                .addToLabels(deploymentData.getLabels())
+                                .addToAnnotations(deploymentData.getAnnotations())
+                                .addToAnnotations("prometheus.io/scrape", "true")
+                                .addToAnnotations("prometheus.io/port", "9779")
+                            .endMetadata()
+                            .withNewSpec()
+                                .addNewContainer()
+                                    .withImage(deploymentData.getImage())
+                                    .withImagePullPolicy("Always")
+                                    .withName(name)
+                                    // don't chain withEnv as every invocation overrides the previous one, use var-args instead
+                                    .withEnv(
+                                            new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
+                                            new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
+                                            new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
+                                            new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
+                                            new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
+                                            new EnvVar("JAEGER_SAMPLER_PARAM", "1", null))
+                                    .addNewPort()
+                                        .withName("jolokia")
+                                        .withContainerPort(8778)
+                                    .endPort()
+                                    .addNewPort()
+                                        .withName("metrics")
+                                        .withContainerPort(9779)
+                                    .endPort()
+                                    .addNewPort()
+                                        .withName("management")
+                                        .withContainerPort(8081)
+                                    .endPort()
+                                    .addNewVolumeMount()
+                                        .withName("secret-volume")
+                                        .withMountPath("/deployments/config")
+                                        .withReadOnly(false)
+                                    .endVolumeMount()
+                                    .withLivenessProbe(new ProbeBuilder()
+                                            .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
+                                            .withNewHttpGet()
+                                            .withPath("/health")
+                                            .withNewPort(8081)
+                                            .endHttpGet()
+                                            .build())
+                                .endContainer()
+                                .addNewVolume()
+                                    .withName("secret-volume")
+                                    .withNewSecret()
+                                        .withSecretName(name)
+                                    .endSecret()
+                                .endVolume()
+                            .endSpec()
+                        .endTemplate()
+                        .addNewTrigger()
+                            .withType("ImageChange")
+                            .withNewImageChangeParams()
+                                // set automatic to 'true' when not performing the deployments on our own
+                                .withAutomatic(true)
+                                .addToContainerNames(name)
+                                .withNewFrom()
+                                .withKind("ImageStreamTag")
+                                .withName(name + ":" + deploymentData.getVersion())
+                                .endFrom()
+                            .endImageChangeParams()
+                        .endTrigger()
+                        .addNewTrigger()
+                            .withType("ConfigChange")
+                        .endTrigger()
+                    .endSpec();
+        }
+
+        deploymentConfig
             .done();
     }
 

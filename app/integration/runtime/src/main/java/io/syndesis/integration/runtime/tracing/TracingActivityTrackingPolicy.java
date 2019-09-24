@@ -37,6 +37,9 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
 
     @Override
     public void onExchangeBegin(Route route, Exchange exchange) {
+        if (tracer == null) {
+            return;
+        }
         String activityId = ActivityTracker.getActivityId(exchange);
         if (ObjectHelper.isEmpty(activityId)) {
             ActivityTracker.initializeTracking(exchange);
@@ -53,6 +56,9 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
 
     @Override
     public void onExchangeDone(Route route, Exchange exchange) {
+        if (tracer == null) {
+            return;
+        }
         final String activityId = ActivityTracker.getActivityId(exchange);
 
         if (Objects.nonNull(activityId)) {

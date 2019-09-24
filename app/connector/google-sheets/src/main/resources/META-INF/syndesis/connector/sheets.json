@@ -279,7 +279,7 @@
                 "label": "producer",
                 "labelHint": "Comma delimited list of names that describe the columns.",
                 "order": "4",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               }
@@ -420,7 +420,7 @@
                 "label": "producer",
                 "labelHint": "Comma delimited list of names that describe the columns.",
                 "order": "4",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               }
@@ -533,7 +533,7 @@
                 "label": "producer",
                 "labelHint": "Comma delimited list of names that describe the columns.",
                 "order": "4",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               }
@@ -700,7 +700,7 @@
                 "label": "producer",
                 "labelHint": "Comma delimited list of names that describe the columns.",
                 "order": "4",
-                "required": false,
+                "required": true,
                 "secret": false,
                 "type": "string"
               }

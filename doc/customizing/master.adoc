@@ -1,0 +1,74 @@
+:experimental:
+include::attributes.adoc[]
+
+:prodname: Syndesis
+:prodversion: 7.5
+:imagesdir: images
+:prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.5
+:location: upstream
+:parent-context: custom
+:context: custom
+
+// This master.adoc file is only upstream. 
+// Except for different paths in the include statements, the content
+// here is duplicated in assemblies/as_customizing.adoc. 
+// That assembly file is used downstream as the beginning of the 
+// customization chapter in Integrating Applications with Fuse Online.
+// As of September 2019, we do not publish user doc on the 
+// Syndesis community site. We expect to do this in the future. 
+// When we do, this file can be the toplevel file for a customization guide. 
+
+[id='customizing-syndesis']
+= Developing OpenAPI Documents and Extensions to Customize Syndesis
+:context: custom
+
+Syndesis provides many connectors that you can use to connect to 
+common applications and services. There are also a number of built-in
+steps for processing data in common ways. However, if Syndesis does
+not provide a needed feature, an experienced developer can 
+create any of the following:
+
+* An OpenAPI document that Syndesis can
+use to create a connector for a REST API client. 
++
+You upload this schema to
+Syndesis and Syndesis creates a connector according to the schema. 
+You then use the connector to create a connection that you
+can add to an integration. For example, many retail web sites provide
+a REST API client interface that a developer can capture in an 
+OpenAPI document.  
+
+* An OpenAPI document that defines a REST API service. 
++
+You upload this schema to Syndesis. Syndesis makes the
+API service available and provides the URL for API calls. This lets you 
+link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[trigger integration execution with an API call]. 
+
+* A `JAR` file that implements a Syndesis extension. An extension
+can be any one of the following:  
++
+** One or more steps that operate on integration data between connections
+** A connector for an application or service
+** A library resource such as a JDBC driver for a proprietary SQL database
++
+You upload this `JAR` file to Syndesis and Syndesis makes the 
+custom feature provided by the extension available. 
+
+See the following topics for details:
+
+* xref:developing-rest-api-client-connectors_{context}[]
+* xref:adding-api-connectors_{context}[]
+* xref:developing-extensions_{context}[]
+* xref:adding-extensions_{context}[]
+
+include::assemblies/customizing/as_developing-rest-api-client-connectors.adoc[leveloffset=+1]
+
+include::assemblies/integrating-applications/as_adding-api-connectors.adoc[leveloffset=+1]
+
+include::assemblies/customizing/as_developing-extensions.adoc[leveloffset=+1]
+
+include::assemblies/integrating-applications/as_adding-extensions.adoc[leveloffset=+1]
+
+:context: custom

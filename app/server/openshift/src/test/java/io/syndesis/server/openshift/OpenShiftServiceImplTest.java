@@ -16,6 +16,7 @@
 package io.syndesis.server.openshift;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Objects;
@@ -340,9 +341,7 @@ public class OpenShiftServiceImplTest {
             .build();
 
         expectDeploymentOf(name, expectedDeploymentConfig);
-
         final String serviceName = openshiftName(name);
-
         final Service expectedService = new ServiceBuilder()
             .withNewMetadata()
             .withName(serviceName)
@@ -358,7 +357,7 @@ public class OpenShiftServiceImplTest {
             .withProtocol("TCP")
             .withTargetPort(new IntOrString(8080))
             .endPort()
-            .addToSelector("syndesis.io/integration", openshiftName(name))
+            .addToSelector("syndesis.io/integration", serviceName)
             .endSpec()
             .build();
 
@@ -369,16 +368,16 @@ public class OpenShiftServiceImplTest {
             .always();
 
         server.expect()
-            .put()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/"+serviceName)
+            .patch()
+            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/" + serviceName)
             .andReturn(200, expectedDeploymentConfig)
             .always();
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("PUT", "/oapi/v1/namespaces/test/deploymentconfigs/"+serviceName, expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("PATCH", "/oapi/v1/namespaces/test/deploymentconfigs/" + serviceName, Collections.EMPTY_LIST));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/"+serviceName));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/" + serviceName));
     }
 
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {
@@ -464,6 +463,9 @@ public class OpenShiftServiceImplTest {
                         .endFrom()
                     .endImageChangeParams()
                     .withType("ImageChange")
+                .endTrigger()
+                .addNewTrigger()
+                    .withType("ConfigChange")
                 .endTrigger()
             .endSpec();
     }

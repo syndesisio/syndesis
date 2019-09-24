@@ -10,7 +10,7 @@ const stories = storiesOf(
   module
 );
 
-const durationDifference = '3:15:59';
+const uptimeDuration = '3:15:59';
 const errors = 2;
 const i18nLastProcessed = 'Last Processed';
 const i18nNoDataAvailable = 'No data available';
@@ -33,7 +33,7 @@ const propsOnlyRequired = {
 
 const propsAll = {
   ...propsOnlyRequired,
-  durationDifference,
+  uptimeDuration,
   errors,
   lastProcessed,
   messages,

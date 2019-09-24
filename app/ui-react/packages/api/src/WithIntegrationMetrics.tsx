@@ -23,6 +23,7 @@ export class WithIntegrationMetrics extends React.Component<
           messages: 0, // int64
           metricsProvider: 'null',
           start: `${Date.now()}`, // date-time
+          uptimeDuration: 0, // int64
         }}
       >
         {({ read, response }) => {
