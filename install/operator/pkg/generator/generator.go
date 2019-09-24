@@ -79,6 +79,12 @@ type Context struct {
 	Versions         map[string]string
 }
 
+const (
+	FuncMapHasKey   string = "mapHasKey"
+	FuncMemoryLimit string = "memoryLimit"
+	FuncAddonsValue string = "addonsValue"
+)
+
 func AssetAsBytes(path string) ([]byte, error) {
 	file, err := GetAssetsFS().Open(path)
 	if err != nil {
@@ -97,7 +103,7 @@ func RenderDir(directory string, context interface{}) ([]unstructured.Unstructur
 }
 
 var templateFunctions = template.FuncMap{
-	"mapHasKey": func(item reflect.Value, key reflect.Value) (bool, error) {
+	FuncMapHasKey: func(item reflect.Value, key reflect.Value) (bool, error) {
 		if item.Kind() != reflect.Map {
 			return false, fmt.Errorf("mapHasKey requires a map type")
 		}
@@ -107,20 +113,28 @@ var templateFunctions = template.FuncMap{
 			return false, nil
 		}
 	},
-	"memoryLimit": func(limits v1.ResourceList) (string, error) {
+	FuncMemoryLimit: func(limits v1.ResourceList) (string, error) {
 		if l := limits.Memory(); l != nil && l.Value() > 0 {
 			return l.String(), nil
 		}
 
 		return "", nil
 	},
-	"addonsValue": func(addons v1alpha1.AddonsSpec, key1 string, key2 string) (string, error) {
+	FuncAddonsValue: func(addons v1alpha1.AddonsSpec, key1 string, key2 string) (string, error) {
 		if addons == nil || len(key1) == 0 || len(key2) == 0 {
 			return "", nil
 		}
 
 		return addons[key1][key2], nil
 	},
+}
+
+func TemplateFunctionNames() []string {
+	names := make([]string, 0)
+	for k, _ := range templateFunctions {
+		names = append(names, k)
+	}
+	return names
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
