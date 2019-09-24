@@ -26,17 +26,18 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import io.swagger.models.Swagger;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.openapi.OpenApiHelper;
+import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.json.JSONException;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
 public class AWSDDBMetadataAdapterTest {
-
 
     @Test
     public void adaptTest() throws JsonProcessingException, JSONException {
@@ -45,10 +46,10 @@ public class AWSDDBMetadataAdapterTest {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("element", "{\"clave\" : \":#KEY\"}");
         parameters.put("attributes", "clave, atributo");
-        parameters.put("region", "EU_WEST_3");
-        parameters.put("secretKey", "invalidKey");
-        parameters.put("accessKey", "invalidKey");
-        parameters.put("tableName", "TestTable");
+        parameters.put(AWSDDBConfiguration.REGION, AWSDDBConfiguration.REGION_VALUE);
+        parameters.put(AWSDDBConfiguration.SECRETKEY, AWSDDBConfiguration.SECRETKEY_VALUE);
+        parameters.put(AWSDDBConfiguration.ACCESSKEY, AWSDDBConfiguration.ACCESSKEY_VALUE);
+        parameters.put(AWSDDBConfiguration.TABLENAME, AWSDDBConfiguration.TABLENAME_VALUE);
         Optional<MetaData> metadata = ext.meta(parameters);
         AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval();
 
@@ -64,7 +65,7 @@ public class AWSDDBMetadataAdapterTest {
             "    \"kind\" : \"json-schema\",\n" +
             "    \"type\" : \"Parameters\",\n" +
             "    \"specification\" : \"{\\\"type\\\":\\\"object\\\",\\\"title\\\":\\\"Parameters\\\"," +
-            "\\\"properties\\\":{\\\"{S: :#KEY,}\\\":{\\\"type\\\":\\\"string\\\"}}}\",\n" +
+            "\\\"properties\\\":{\\\":#KEY\\\":{\\\"type\\\":\\\"string\\\"}}}\",\n" +
             "    \"metadata\" : {\n" +
             "      \"variant\" : \"element\"\n" +
             "    }\n" +
@@ -81,11 +82,56 @@ public class AWSDDBMetadataAdapterTest {
             "      \"variant\" : \"collection\"\n" +
             "    }\n" +
             "  }\n" +
+            "}\n";
+
+        JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+    }
+
+
+    @Test
+    public void adaptRemovalTest() throws JsonProcessingException, JSONException {
+        CamelContext camelContext = new DefaultCamelContext();
+        AWSDDBConnectorMetaDataExtension ext = new AWSDDBConnectorMetaDataExtension(camelContext);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("element", "{\"clave\" : \":#KEY\"}");
+        parameters.put("region", "EU_WEST_3");
+        parameters.put("secretKey", "invalidKey");
+        parameters.put("accessKey", "invalidKey");
+        parameters.put("tableName", "TestTable");
+        Optional<MetaData> metadata = ext.meta(parameters);
+        AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval();
+
+        ObjectWriter writer = Json.writer();
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext,
+            "aws-ddb", "io.syndesis:aws-ddb-removeitem-to-connector", parameters, metadata.get());
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
+
+        String expectedMetadata = "{\n" +
+            "  \"inputShape\" : {\n" +
+            "    \"name\" : \"Parameters\",\n" +
+            "    \"description\" : \"Query parameters.\",\n" +
+            "    \"kind\" : \"json-schema\",\n" +
+            "    \"type\" : \"Parameters\",\n" +
+            "    \"specification\" : \"{\\\"type\\\":\\\"object\\\",\\\"title\\\":\\\"Parameters\\\"," +
+            "\\\"properties\\\":{\\\":#KEY\\\":{\\\"type\\\":\\\"string\\\"}}}\",\n" +
+            "    \"metadata\" : {\n" +
+            "      \"variant\" : \"element\"\n" +
+            "    }\n" +
+            "  },\n" +
+            "  \"outputShape\" : {\n" +
+            "    \"name\" : \"Result\",\n" +
+            "    \"description\" : \"Attributes on the result.\",\n" +
+            "    \"kind\" : \"json-schema\",\n" +
+            "    \"type\" : \"Result\",\n" +
+            "    \"specification\" : \"{\\\"type\\\":\\\"object\\\",\\\"title\\\":\\\"Result\\\"," +
+            "\\\"properties\\\":{\\\"clave\\\":{\\\"type\\\":\\\"string\\\"}}}\",\n" +
+            "    \"metadata\" : {\n" +
+            "      \"variant\" : \"collection\"\n" +
+            "    }\n" +
+            "  }\n" +
             "}";
 
         JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
-
-
     }
 
 }

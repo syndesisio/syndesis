@@ -66,9 +66,7 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
      * @return
      */
     private SyndesisMetadata adaptForDDB(final Map<String, Object> properties) {
-
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-
 
         Map<String, AttributeValue> element = Util.getAttributeValueMap("element", properties);
 
@@ -81,13 +79,11 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
             attributes = splitter.splitToList(optionAttributes);
         }
 
-
         //fallback to use the list of attributes on the filter
         //this is used always on put-item
         if (attributes.isEmpty()) {
             attributes.addAll(element.keySet());
         }
-
 
         // build the input and output schemas
         final JsonSchemaFactory factory = new JsonSchemaFactory();
@@ -95,10 +91,10 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
         builderIn.setTitle("Parameters");
 
         Set<Map.Entry<String, AttributeValue>> elements = element.entrySet();
-        elements.removeIf(e -> !e.getValue().getS().startsWith(":"));
+        elements.removeIf(e -> !Util.getValue(e.getValue()).toString().startsWith(":"));
 
         for (Map.Entry<String, AttributeValue> inParam : elements) {
-            builderIn.putOptionalProperty(inParam.getValue().toString(), factory.stringSchema());
+            builderIn.putOptionalProperty(Util.getValue(inParam.getValue()).toString(), factory.stringSchema());
         }
 
         final ObjectSchema builderOut = new ObjectSchema();
@@ -113,9 +109,9 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
                 inDataShapeBuilder.kind(DataShapeKinds.NONE);
             } else {
                 inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
-                .name("Parameters")
-                .description(String.format("Query parameters."))
-                .specification(Json.writer().writeValueAsString(builderIn));
+                    .name("Parameters")
+                    .description(String.format("Query parameters."))
+                    .specification(Json.writer().writeValueAsString(builderIn));
 
                 inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
 
@@ -125,14 +121,14 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
                 outDataShapeBuilder.kind(DataShapeKinds.NONE);
             } else {
                 outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
-                .name("Result")
-                .description(String.format("Attributes on the result."))
-                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
-                .specification(Json.writer().writeValueAsString(builderOut));
+                    .name("Result")
+                    .description(String.format("Attributes on the result."))
+                    .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
+                    .specification(Json.writer().writeValueAsString(builderOut));
             }
 
             return new SyndesisMetadata(enrichedProperties,
-            inDataShapeBuilder.build(), outDataShapeBuilder.build());
+                inDataShapeBuilder.build(), outDataShapeBuilder.build());
         } catch (JsonProcessingException e) {
             throw new IllegalStateException(e);
         }

@@ -16,6 +16,8 @@
 package io.syndesis.connector.aws.ddb;
 
 
+import java.util.ArrayList;
+import java.util.List;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -27,9 +29,6 @@ import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.ProducerTemplate;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
@@ -121,6 +120,75 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
         return result;
     }
 
+    protected void addExtraOperation(List<Step> result, String operation, String customizer, Integer order) {
+        final ConnectorAction action = new ConnectorAction.Builder()
+            .descriptor(new ConnectorDescriptor.Builder()
+                .componentScheme("aws-ddb")
+                .connectorId(operation)
+                .build())
+            .build();
+
+        final Connection connection = new Connection.Builder()
+            .putConfiguredProperty(AWSDDBConfiguration.ACCESSKEY,
+                AWSDDBConfiguration.ACCESSKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.SECRETKEY,
+                AWSDDBConfiguration.SECRETKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.REGION,
+                AWSDDBConfiguration.REGION_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
+                AWSDDBConfiguration.TABLENAME_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.ELEMENT,
+                AWSDDBConfiguration.ELEMENT_VALUE)
+            .connector(new Connector.Builder()
+                .putProperty(
+                    AWSDDBConfiguration.ACCESSKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ACCESSKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.SECRETKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.SECRETKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.REGION,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.REGION)
+                        .secret(false)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.TABLENAME,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.TABLENAME)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.ELEMENT,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ELEMENT)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .addConnectorCustomizer(customizer)
+                .build())
+            .build();
+
+        Step step = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .connection(connection)
+            .action(action)
+            .build();
+
+        result.add(order, step);
+    }
     @Test
     /**
      * To run this test you need to change the values of the parameters for real values of an
