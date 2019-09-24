@@ -113,7 +113,7 @@ public class CamelKPublishHandlerTest {
 
         Secret secret = handler.createIntegrationSecret(deployment);
 
-        assertThat(secret.getMetadata()).hasFieldOrPropertyWithValue("name", "i-test-integration");
+        assertThat(secret.getMetadata().getName()).matches("i-test-integration-\\d\\d\\d\\d");
         assertThat(secret.getStringData()).containsKeys("application.properties");
 
         Properties actual = CamelKSupport.secretToProperties(secret);

@@ -341,9 +341,11 @@ public class OpenShiftServiceImplTest {
 
         expectDeploymentOf(name, expectedDeploymentConfig);
 
+        final String serviceName = openshiftName(name);
+
         final Service expectedService = new ServiceBuilder()
             .withNewMetadata()
-            .withName(openshiftName(name))
+            .withName(serviceName)
             .addToLabels("discovery.3scale.net", "true")
             .addToAnnotations("discovery.3scale.net/scheme", "http")
             .addToAnnotations("discovery.3scale.net/port", "8080")
@@ -368,15 +370,15 @@ public class OpenShiftServiceImplTest {
 
         server.expect()
             .put()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
+            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/"+serviceName)
             .andReturn(200, expectedDeploymentConfig)
             .always();
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("PUT", "/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("PUT", "/oapi/v1/namespaces/test/deploymentconfigs/"+serviceName, expectedDeploymentConfig));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/i-via-service-and-route"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/"+serviceName));
     }
 
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {

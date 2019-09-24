@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -55,9 +54,9 @@ public class IntegrationResourceManagerTest {
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                                .id("timer-connection")
-                                .connectorId(getTimerConnector().getId().get())
-                                .build())
+                    .id("timer-connection")
+                    .connectorId(getTimerConnector().getId().get())
+                    .build())
                 .putConfiguredProperty("period", "5000")
                 .action(getPeriodicTimerAction())
                 .build());
@@ -84,7 +83,7 @@ public class IntegrationResourceManagerTest {
 
         Integration sanitized = resourceManager.sanitize(source);
 
-        assertThat(sanitized.getName()).isEqualTo("test-integration-with-a-l0t-of-strnge-hars");
+        assertThat(sanitized.getName()).startsWith("test-integration-with-a-l0t-of-strnge-hars");
     }
 
     @Test
@@ -110,7 +109,7 @@ public class IntegrationResourceManagerTest {
 
         Integration sanitized = resourceManager.sanitize(source);
 
-        assertThat(sanitized.getName()).isEqualTo("this-is-a-test-integration-name-that-wants-to-exceed-sixtyfour0");
+        assertThat(sanitized.getName()).startsWith("this-is-a-test-integration-name-that-wants-to-exceed-sixty");
     }
 
     @Test
@@ -128,7 +127,7 @@ public class IntegrationResourceManagerTest {
 
         Integration sanitized = resourceManager.sanitize(source);
 
-        assertThat(sanitized.getName()).isEqualTo("test-integration");
+        assertThat(sanitized.getName()).startsWith("test-integration");
     }
 
     private String getSyndesisVersion() {
@@ -141,9 +140,9 @@ public class IntegrationResourceManagerTest {
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                                .id("timer-connection")
-                                .connector(getHttpConnector())
-                                .build())
+                    .id("timer-connection")
+                    .connector(getHttpConnector())
+                    .build())
                 .putConfiguredProperty("schedulerType", "timer")
                 .putConfiguredProperty("schedulerExpression", "1s")
                 .action(getHttpGetAction())
@@ -168,13 +167,13 @@ public class IntegrationResourceManagerTest {
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                                .id("timer-connection")
-                                .connector(getHttpConnector())
-                                .build())
+                    .id("timer-connection")
+                    .connector(getHttpConnector())
+                    .build())
                 .putConfiguredProperty("schedulerExpression", "1s")
                 .action(getHttpGetAction())
                 .build()
-                                                           );
+        );
 
         assertThat(source.getFlows().get(0).getScheduler().isPresent()).isFalse();
 
@@ -196,8 +195,8 @@ public class IntegrationResourceManagerTest {
             .name("Test Integration")
             .description("This is a test integration!")
             .addFlow(new Flow.Builder()
-                         .steps(Arrays.asList(steps))
-                         .build())
+                .steps(Arrays.asList(steps))
+                .build())
             .build();
     }
 
@@ -263,9 +262,9 @@ public class IntegrationResourceManagerTest {
         return new ConnectorAction.Builder()
             .id("periodic-timer-action")
             .descriptor(new ConnectorDescriptor.Builder()
-                            .connectorId("timer")
-                            .componentScheme("periodic-timer-connector")
-                            .build())
+                .connectorId("timer")
+                .componentScheme("periodic-timer-connector")
+                .build())
             .build();
     }
 
@@ -320,9 +319,6 @@ public class IntegrationResourceManagerTest {
             }
         };
     }
-
-
-
 
 
 }

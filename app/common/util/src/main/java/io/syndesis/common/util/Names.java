@@ -17,6 +17,7 @@ package io.syndesis.common.util;
 
 import java.util.Locale;
 import java.util.regex.Pattern;
+
 import static io.syndesis.common.util.Strings.truncate;
 
 public final class Names {
@@ -46,8 +47,10 @@ public final class Names {
      * 4. Ensures that the first character is a alphanumeric
      * 5. Remove invalid characters.
      * 6. Keep the first 64 characters.
-     * @param name  The specified name.
-     * @return      The sanitized string.
+     * 7. Add the last 4 hashcode values from the original name to limit repeated names
+     *
+     * @param name The specified name.
+     * @return The sanitized string.
      */
     public static String sanitize(String name) {
         final String firstPass = name
@@ -61,7 +64,7 @@ public final class Names {
         final String thirdPass = INVALID_CHARACTER_REGEX.matcher(secondPass).replaceAll(BLANK);
 
         final String fourthPass = truncate(thirdPass.chars()
-             //Handle consecutive dashes
+            //Handle consecutive dashes
             .collect(StringBuilder::new,
                 (b, chr) -> {
                     int lastChar = b.length() > 0 ? b.charAt(b.length() - 1) : -1;
@@ -69,21 +72,29 @@ public final class Names {
                     if (lastChar != '-' || chr != '-') {
                         b.appendCodePoint(chr);
                     }
-             }, StringBuilder::append)
+                }, StringBuilder::append)
             .toString(), MAXIMUM_NAME_LENGTH);
 
-        final int fourthPassLength = fourthPass.length();
-        if (Character.isLetterOrDigit(fourthPass.charAt(fourthPassLength - 1))) {
-            // this includes some letters and numbers out of ASCII range,
-            // but those should have been filtered out prior
-            return fourthPass;
-        }
+        // remove any trailing '-' before appending the hashcode of the original
+        return appendHash(
+            Character.valueOf('-').equals(fourthPass.charAt(fourthPass.length() - 1)) ? fourthPass.substring(0, fourthPass.length() - 1) : fourthPass,
+            name);
+    }
 
-        if (fourthPassLength < MAXIMUM_NAME_LENGTH) {
-            return fourthPass + "0";
-        }
-
-        return fourthPass.substring(0, MAXIMUM_NAME_LENGTH - 1) + "0";
+    /**
+     * Calculate an hashcode based on name and append to sanitized name.
+     *
+     * @param sanitized a sanitized name
+     * @param name the original name on which the hashcode will be calculated
+     * @return a sanitized plus hash
+     */
+    private static String appendHash(String sanitized, String name) {
+        int hashedName = name.hashCode();
+        int truncateIndex = MAXIMUM_NAME_LENGTH - 5;
+        String base = sanitized.length() < truncateIndex ? sanitized : sanitized.substring(0, truncateIndex);
+        // get the last 4 digits
+        int modulo = hashedName % 10000;
+        return String.format("%s-%04d", base, Math.abs(modulo));
     }
 
 
