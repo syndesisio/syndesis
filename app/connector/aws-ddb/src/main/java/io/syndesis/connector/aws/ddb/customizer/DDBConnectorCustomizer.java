@@ -20,19 +20,25 @@ import java.util.Map;
 import java.util.Set;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.syndesis.connector.aws.ddb.util.Util;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.aws.ddb.DdbConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Generic class to customize DDB operations. Common utilities.
  */
 public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DDBConnectorCustomizer.class);
     //Store options to customize the connector
     private Map<String, Object> options;
+
+    private ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -62,39 +68,16 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
             out.setBody(in.getHeader(DdbConstants.ITEMS));
         }
 
-        if(out.getBody() instanceof Map) {
+        if (out.getBody() instanceof Map) {
             @SuppressWarnings("unchecked")
             Set<Map.Entry<String, AttributeValue>> elements = ((Map<String, AttributeValue>) out.getBody()).entrySet();
             Map<String, Object> output = new HashMap<String, Object>();
 
-            for(Map.Entry<String, AttributeValue> element : elements) {
-                AttributeValue value = element.getValue();
-                if(value.getB() != null) {
-                    output.put(element.getKey(), value.getB());
-                } else if (value.getS() != null){
-                    output.put(element.getKey(), value.getS());
-                } else if (value.getBOOL() != null){
-                    output.put(element.getKey(), value.getBOOL());
-                } else if (value.getBS() != null){
-                    output.put(element.getKey(), value.getBS());
-                } else if (value.getL() != null){
-                    output.put(element.getKey(), value.getL());
-                } else if (value.getM() != null){
-                    output.put(element.getKey(), value.getM());
-                } else if (value.getN() != null){
-                    output.put(element.getKey(), value.getN());
-                } else if (value.getNS() != null){
-                    output.put(element.getKey(), value.getNS());
-                } else if (value.getSS() != null){
-                    output.put(element.getKey(), value.getSS());
-                } else if (value.getNULL() != null){
-                    output.put(element.getKey(), null);
-                }
+            for (Map.Entry<String, AttributeValue> element : elements) {
+                output.put(element.getKey(), Util.getValue(element.getValue()).toString());
             }
 
-            ObjectMapper mapper = new ObjectMapper();
-            try
-            {
+            try {
                 //Convert Map to JSON
                 String json = mapper.writeValueAsString(output);
 
@@ -112,12 +95,55 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
      *
      * @param exchange
      */
+    @SuppressWarnings("unchecked")
     protected void doBeforeProducer(Exchange exchange) {
         exchange.getIn().setHeader(DdbConstants.CONSISTENT_READ, "true");
         exchange.getIn().setHeader(DdbConstants.RETURN_VALUES, "ALL_OLD");
 
+
+        LOG.trace("pre this.options: " + this.options);
+
+        //Do we have variables from atlas?
+        if (exchange.getIn().getBody() != null) {
+            Object body = exchange.getIn().getBody();
+            Map<String, Object> map = null;
+
+            if (body instanceof Map) {
+                map = (Map<String, Object>) body;
+            } else {
+                try {
+                    map = (Map<String, Object>) mapper.readValue(body.toString(), Map.class);
+                } catch (Exception e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+
+            if (map != null && !map.isEmpty()) {
+                for (Map.Entry<String, Object> entry : map.entrySet()) {
+                    if (entry.getKey().startsWith("#")) {
+                        final String searchKey = ":" + entry.getKey();
+                        final String replacement = entry.getValue().toString();
+                        for (Map.Entry<String, Object> option : options.entrySet()) {
+                            if (option.getValue() != null &&
+                                option.getValue() instanceof String) {
+                                final String oldValue = option.getValue().toString();
+                                final String key = option.getKey();
+                                final String newValue = oldValue.replace(searchKey, replacement);
+
+                                LOG.trace("this.option: " + key + ":" + oldValue + "->" + newValue);
+                                this.options.put(key, newValue);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        LOG.trace("post this.options: " + this.options);
+
         customize(exchange, this.options);
     }
+
 
     /**
      * Customizations for each operation.
@@ -126,7 +152,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
      * @param options
      */
     abstract void customize(Exchange exchange, Map<String,
-    Object> options);
+        Object> options);
 
 
 }

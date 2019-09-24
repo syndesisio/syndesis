@@ -15,7 +15,8 @@
  */
 package io.syndesis.connector.aws.ddb;
 
-
+import java.util.List;
+import io.syndesis.common.model.integration.Step;
 import org.junit.Ignore;
 
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
@@ -33,4 +34,20 @@ public class AWSDDBInsertItemTest extends AWSDDBGenericOperation {
                 ".DDBConnectorCustomizerPutItem";
     }
 
+
+    /**
+     * Extend the steps to add an intermediate putitem
+     *
+     * @return
+     */
+    @Override
+    protected List<Step> createSteps() {
+
+        List<Step> result = super.createSteps();
+
+        addExtraOperation(result, "io.syndesis:aws-ddb-removeitem-to-connector", "io.syndesis.connector.aws.ddb" +
+            ".customizer.DDBConnectorCustomizerRemoveItem", 3);
+
+        return result;
+    }
 }
