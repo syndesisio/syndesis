@@ -87,7 +87,7 @@
     "queryResultsTableEmptyStateInfo": "Query has not yet been executed.\nSelect view, enter SQL query and click 'Submit'",
     "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE",
     "queryResultsTitle": "Query Results",
-    "queryResultsRowCountMsg": "Number of Rows: ",
+    "queryResultsRowCountMsg": "Numero di righe: ",
     "queryResultsRefreshed": "The view preview results were refreshed for {{name}}",
     "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
     "createVirtualizationSuccess": "{{name}} virtualization created.",
