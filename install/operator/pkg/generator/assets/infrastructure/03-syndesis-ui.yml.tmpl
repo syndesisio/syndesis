@@ -89,7 +89,7 @@
         - {{.ProductName}}-ui
         from:
           kind: ImageStreamTag
-          name: '{{ Images.Syndesis.Ui }}:{{ Syndesis.Spec.Components.UI.Tag }}'
+          name: '{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
           namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
       type: ImageChange
     - type: ConfigChange
