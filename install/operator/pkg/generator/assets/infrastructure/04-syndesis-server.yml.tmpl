@@ -151,7 +151,7 @@
         - {{.ProductName}}-server
         from:
           kind: ImageStreamTag
-          name: '{{ .Images.Syndesis.Rest }}:{{ .Tags.Syndesis }}'
+          name: '{{ .Images.Syndesis.Rest }}:{{ .Syndesis.Spec.Components.Server.Tag }}'
           namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
       type: ImageChange
     - type: ConfigChange
