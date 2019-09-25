@@ -26,7 +26,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-parent</artifactId>
-  <version>1.8-SNAPSHOT</version>
+  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Syndesis</name>
@@ -1411,7 +1411,7 @@
         <artifactId>connector-aws-ddb</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-aws-s3</artifactId>
@@ -1864,13 +1864,13 @@
         <artifactId>reflections</artifactId>
         <version>0.9.11</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid</artifactId>
         <classifier>jdbc</classifier>
         <version>${teiid.version}</version>
-      </dependency>       
+      </dependency>
 
       <!-- ActiveMQ deps to override Spring Boot imported pom -->
       <dependency>
