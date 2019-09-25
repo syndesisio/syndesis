@@ -15,6 +15,7 @@
  */
 
 import {
+  getChoiceConfigMode,
   getFlow,
   getStep,
   getSteps,
@@ -30,11 +31,8 @@ import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
-  DataShapeDirection,
   IChoiceStepRouteParams,
   IChoiceStepRouteState,
-  IDescribeStepDataShapeRouteParams,
-  IDescribeStepDataShapeRouteState,
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { WithDescribeDataShapeForm } from '../shape/WithDescribeDataShapeForm';
@@ -67,16 +65,22 @@ export class DescribeChoiceDataShapePage extends React.Component<
         <WithIntegrationHelpers>
           {({ updateStep }) => (
             <WithRouteData<
-              IDescribeStepDataShapeRouteParams,
-              IDescribeStepDataShapeRouteState
+              IChoiceStepRouteParams,
+              IChoiceStepRouteState
             >>
               {(params, state, { history }) => {
                 const positionAsNumber = parseInt(params.position, 10);
                 const descriptor = state.step.action!.descriptor!;
                 const dataShape: DataShape = descriptor.outputDataShape!;
+                const configMode = getChoiceConfigMode(state.step);
                 const backHref = this.props.backHref(
-                  params,
-                  state
+                  {
+                    ...params,
+                    configMode,
+                  } as IChoiceStepRouteParams,
+                  {
+                    ...state,
+                  } as IChoiceStepRouteState
                 );
                 const configuration = createChoiceConfiguration(
                   state.step.configuredProperties || {}
@@ -84,10 +88,7 @@ export class DescribeChoiceDataShapePage extends React.Component<
                 const handleUpdatedDataShape = async (
                   newDataShape: DataShape
                 ) => {
-                  const newDescriptor =
-                    params.direction === DataShapeDirection.INPUT
-                      ? { ...descriptor, inputDataShape: newDataShape }
-                      : { ...descriptor, outputDataShape: newDataShape };
+                  const newDescriptor = { ...descriptor, outputDataShape: newDataShape };
                   const updatedAction = {
                     ...state.step.action!,
                     descriptor: newDescriptor,

@@ -8,6 +8,7 @@ import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
 import { ChoiceStepPage } from './choice/ChoiceStepPage';
 import { DescribeChoiceDataShapePage } from './choice/DescribeChoiceDataShapePage';
+import { SelectChoiceConfigModePage } from "./choice/SelectChoiceConfigModePage";
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -23,8 +24,6 @@ import {
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
-  IDescribeStepDataShapeRouteParams,
-  IDescribeStepDataShapeRouteState,
   IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -84,7 +83,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         })
       }
       choiceHref={(step, params, state) =>
-        appResolvers.choice.configure({
+        appResolvers.choice.selectMode({
           step,
           ...params,
           ...state,
@@ -207,15 +206,14 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <DescribeChoiceDataShapePage
       cancelHref={cancelHref}
       sidebar={props => (
-        <EditorSidebar {...props} isAdding={false} />
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       backHref={(p, s) => {
         return appResolvers.choice.configure({
           ...(p as IChoiceStepRouteParams),
           ...(s as IChoiceStepRouteState),
         });
-      }
-      }
+      }}
       postConfigureHref={postConfigureHref}
       getBreadcrumb={getBreadcrumb}
     />
@@ -279,8 +277,24 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       postConfigureHref={(integration, p, s) => {
         return appResolvers.choice.describeData({
           integration,
-          ...(p as IDescribeStepDataShapeRouteParams),
-          ...(s as IDescribeStepDataShapeRouteState),
+          ...(p as IChoiceStepRouteParams),
+          ...(s as IChoiceStepRouteState),
+        });
+      }}
+      getBreadcrumb={getBreadcrumb}
+    />
+  );
+
+  const selectChoiceConfigModePage = (
+    <SelectChoiceConfigModePage
+      cancelHref={cancelHref}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
+      selectHref={(p, s) => {
+        return appResolvers.choice.configure({
+          ...(p as IChoiceStepRouteParams),
+          ...(s as IChoiceStepRouteState),
         });
       }}
       getBreadcrumb={getBreadcrumb}
@@ -380,10 +394,12 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         basicFilterChildren: basicFilterPage,
       }}
       choice={{
-        choicePath: appStepRoutes.choice.configure,
-        choiceChildren: choicePage,
+        configurePath: appStepRoutes.choice.configure,
+        configureChildren: choicePage,
         describeDataPath: appStepRoutes.choice.describeData,
         describeDataChildren: describeChoiceDataShapePage,
+        selectModePath: appStepRoutes.choice.selectMode,
+        selectModeChildren: selectChoiceConfigModePage,
       }}
       step={{
         configurePath: appStepRoutes.step,

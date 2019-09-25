@@ -106,9 +106,8 @@
       "otherwise": "When none of the above conditions match the incoming data",
       "useDefaultFlowTitle": "Execute default flow",
       "fieldRequired": "{{field}} is required",
-      "operatorDescription": "Must meet this condition",
-      "pathDisplay": "Build a condition expression from ...",
-      "pathDescription": "The property you want to evaluate",
+      "operatorDescription": "Property must meet this condition",
+      "pathDescription": "Choose the property you want to evaluate from available properties on the current data type.",
       "pathPlaceholder": "Property name",
       "keywordsDescription": "For this value",
       "keywordsPlaceholder": "Keywords"

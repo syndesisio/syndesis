@@ -3,9 +3,10 @@ package template
 import (
 	"encoding/json"
 	"fmt"
-	"k8s.io/apimachinery/pkg/api/resource"
 	"math/rand"
 	"time"
+
+	"k8s.io/apimachinery/pkg/api/resource"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
@@ -171,6 +172,22 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.Prometheus.Tag, renderContext.Tags.Prometheus)
 
 	ifMissingSet(&syndesis.Spec.Registry, renderContext.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Server.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.UI.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Upgrade.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Registry)
+
+	ifMissingSet(&syndesis.Spec.Components.ImagePrefix, renderContext.Images.SyndesisImagesPrefix)
+	ifMissingSet(&syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.Server.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.Upgrade.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.KomodoImagesPrefix)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.PostgresExporterImagePrefix)
 
 	if syndesis.Spec.DeployIntegrations == nil {
 		v := true
@@ -208,25 +225,25 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 
 	// Maven settings
 	if len(syndesis.Spec.MavenRepositories) == 0 {
-	    if syndesis.Spec.MavenRepositories == nil {
-            syndesis.Spec.MavenRepositories = make(map[string]string)
-        }
-	    if renderContext.Productized {
-	        syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
-	        if renderContext.EarlyAccess {
-                syndesis.Spec.MavenRepositories["repo-02-redhat-ea"] = "https://maven.repository.redhat.com/earlyaccess/all/"
-                syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
-            } else {
-                syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
-                syndesis.Spec.MavenRepositories["repo-03-jboss-ga"] = "https://repository.jboss.org/"
-            }
-        } else {
-            // Repositories needed for community builds
-            syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
-            syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
-            syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
-        }
-    }
+		if syndesis.Spec.MavenRepositories == nil {
+			syndesis.Spec.MavenRepositories = make(map[string]string)
+		}
+		if renderContext.Productized {
+			syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
+			if renderContext.EarlyAccess {
+				syndesis.Spec.MavenRepositories["repo-02-redhat-ea"] = "https://maven.repository.redhat.com/earlyaccess/all/"
+				syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
+			} else {
+				syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
+				syndesis.Spec.MavenRepositories["repo-03-jboss-ga"] = "https://repository.jboss.org/"
+			}
+		} else {
+			// Repositories needed for community builds
+			syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
+			syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
+			syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
+		}
+	}
 
 	//
 	// Apply DevSupport flag value to Debug
