@@ -161,7 +161,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
       <Title headingLevel="h5" size="lg">
         {props.i18nTitle}
       </Title>
-      <Card style={{ height: '100%' }}>
+      <Card className={'ddl-editor__card'}>
         <CardBody>
           {props.showValidationMessage
             ? props.validationResults.map((e, idx) => (

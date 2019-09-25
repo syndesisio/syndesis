@@ -377,8 +377,9 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 i18nLoadingQueryResults={t(
                   'data:virtualization.preview.loadingQueryResults'
                 )}
+                i18nRowTotalLabel={t('virtualization.queryResultsRowCountMsg')}
                 i18nShowPreview={t('data:virtualization.preview.showPreview')}
-                i18nTitle={t('data:virtualization.preview.title')}
+                i18nTitle={t('Refresh')}
                 initialExpanded={previewExpanded}
                 isLoadingPreview={isLoadingPreview}
                 onPreviewExpandedChanged={handlePreviewExpandedChanged}
