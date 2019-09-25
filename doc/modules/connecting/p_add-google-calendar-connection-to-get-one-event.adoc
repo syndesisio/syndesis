@@ -46,7 +46,7 @@ following:
 .. Append `?gsessionid=OK&eventdeb=1` to the URL and redisplay the calendar.
 .. In the calendar, click the event that you want to get. 
 .. In the event popup, click 
-image:../../images/tutorials/ThreeVerticalDotsKebab.png[Options] and select 
+image:images/tutorials/ThreeVerticalDotsKebab.png[Options] and select 
 *Troubleshooting info*. 
 .. In the popup that Google Calendar displays, copy the string that
 follows *`eid=`*. For example, an event ID looks something like this: 

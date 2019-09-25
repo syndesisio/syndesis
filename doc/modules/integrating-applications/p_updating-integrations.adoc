@@ -32,7 +32,7 @@ sign that is where you want to add the step.
 Then click the card that represents the step that you want to add.
 
 * To delete a step, in the flow visualization, click
-image:../../images/integrating-applications/TrashIcon.png[title='Delete']
+image:images/integrating-applications/TrashIcon.png[title='Delete']
 on the step that you want to delete.
 
 * To change the configuration of a step, in the flow visualization,

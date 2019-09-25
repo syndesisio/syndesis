@@ -20,7 +20,7 @@ you have been provided with a filter expression.
 
 . In the flow visualization, where you want to add an advanced filter step to
 the flow, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Advanced Filter*.
 

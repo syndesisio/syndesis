@@ -6,14 +6,14 @@
 
 In the data mapper *Source* and *Target* panels: 
 
-* image:../../images/integrating-applications/collection-icon.png[Collection icon]
+* image:images/integrating-applications/collection-icon.png[Collection icon]
 indicates a collection. If the collection contains one primitive type, 
 you can map directly from or to that collection. If the collection 
 contains two or more different types, the data mapper 
 displays the collection’s child fields and you can map to or from the 
 collection’s fields.  
 
-* image:../../images/integrating-applications/folder.png[Folder icon] indicates an 
+* image:images/integrating-applications/folder.png[Folder icon] indicates an 
 expandable container that is a complex type. A complex type contains 
 multiple fields of different types. A field in a complex type can be a 
 type that is a collection, such as an array. You cannot map a complex 
@@ -21,7 +21,7 @@ type container itself. You can map only the fields that are in the complex type.
 
 To toggle the display of data types, such as `*(COMPLEX)*`, 
 `*STRING*`, `*INTEGER*`, in the upper right of the data mapper, click 
-image:../../images/tutorials/EditorSettings.png[settings] and click 
+image:images/tutorials/EditorSettings.png[settings] and click 
 *Show Types*. 
 
 The following table shows the default behavior when mapping 

@@ -63,7 +63,7 @@ the user enters values in the two required fields and clicks
 *Next*, {prodname} creates an IRC connection that is configured 
 with the values that the {prodname} user enters. 
 
-image:../../images/integrating-applications/IRC-create-connection-fields.png[Hostname, Password, Port]
+image:images/integrating-applications/IRC-create-connection-fields.png[Hostname, Password, Port]
 
 .About `properties` objects in extension definition JSON files
 

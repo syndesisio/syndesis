@@ -14,7 +14,7 @@ requires data mapping.
 .Procedure
 
 . In the flow visualization, look for any
-image:../../images/tutorials/WarningIcon.png[Warning] icons.
+image:images/tutorials/WarningIcon.png[Warning] icons.
 
 . Click the icon to see the *Data Type Mismatch* notification. 
 

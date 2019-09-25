@@ -54,7 +54,7 @@ execution of the integration.
 The *general* workflow for creating an API provider integration is shown 
 in the following diagram: 
 
-image::../../images/integrating-applications/ApiProviderCreateIntegrationWorkflow.png[General workflow for creating an API provider integration]
+image:images/integrating-applications/ApiProviderCreateIntegrationWorkflow.png[General workflow for creating an API provider integration]
 
 .Publishing an API provider integration
 After you publish an API provider integration, in the integration's

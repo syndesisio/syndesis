@@ -25,7 +25,7 @@ connect once rather than multiple times.
 
 . In the flow visualization, where you want to 
 add an aggregate step to the flow, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Aggregate*. This step does not require any configuration. 
 . Click *Next*. 

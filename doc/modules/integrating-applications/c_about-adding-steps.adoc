@@ -18,7 +18,7 @@ check the flow visualization.
 For each connection that requires data mapping before
 it can operate on the input data,
 {prodname} displays
-image:../../images/integrating-applications/DataTypeMismatchWarning.png[title="a warning"]. Click this
+image:images/integrating-applications/DataTypeMismatchWarning.png[title="a warning"]. Click this
 icon to see *Data Type Mismatch: Add a data
 mapper step before this connection to resolve the difference.*
 

@@ -28,7 +28,7 @@ Each flow can use any connection or step that
 is available in {prodname}. The REST API along with its flows 
 is one {prodname} API provider integration, which is deployed in one OpenShift pod.
 
-image:../../images/integrating-applications/api-provider.png[API provider integration with 3 flows]
+image:images/integrating-applications/api-provider.png[API provider integration with 3 flows]
 
 .Editing the OpenAPI document while creating an API provider integration
 

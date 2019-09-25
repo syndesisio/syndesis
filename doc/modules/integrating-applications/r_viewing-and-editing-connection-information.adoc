@@ -21,12 +21,12 @@ to see its summary page. In the integration's flow diagram:
 connection icon to view that connection's details.
 
 ** For an API provider integration, click view
-image:../../images/integrating-applications/ApiProviderReturnIcon.png[flows icon] to display the integration's 
+image:images/integrating-applications/ApiProviderReturnIcon.png[flows icon] to display the integration's 
 operation list. Click the operation whose flow contains the connection 
 that you want to view details for.
 
 On the *Connection Details* page, for the connection that you want to edit, click
-image:../../images/integrating-applications/PencilForEditing.png[Edit] next to a field to edit that field.
+image:images/integrating-applications/PencilForEditing.png[Edit] next to a field to edit that field.
 Or, for some connections, below the configuration fields, click *Edit* to
 change configuration values. If you change any values, be sure to click
 *Save*.

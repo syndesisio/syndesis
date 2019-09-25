@@ -34,7 +34,7 @@ integration then it must already have its start and finish connections.
 .Procedure
 
 . In the flow visualization, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign]
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign]
 where you want to add a template step.
 . Click *Template*. The
 *Upload Template* page opens.
@@ -50,7 +50,7 @@ want to modify to create a template, into the template editor.
 . In the template editor, ensure that the template
 is valid for use with {prodname}. Examples of valid templates are 
 after this procedure. {prodname} displays
-image:../../images/integrating-applications/RedCircleXError.png[a red error indicator] to the left of
+image:images/integrating-applications/RedCircleXError.png[a red error indicator] to the left of
 a line that contains a syntax error. Hovering over a syntax error 
 indicator displays hints about how to resolve the error.
 
@@ -64,7 +64,7 @@ you must add
 a data mapping step before a template step.
 . To add a data mapper step before the template step:
 .. In the flow visualization, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
 immediately before the template step that you just added.
 .. Click *Data Mapper*.
 .. In the data mapper, map a source field to each template placeholder field.
@@ -83,7 +83,7 @@ Output from a template step is always a JSON object. Consequently, you must
 add a data mapper step after a template step.
 . To add a data mapper step after the template step:
 .. In the flow visualization, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[Plus Sign] that is
 immediately after the template step that you just added.
 .. Click *Data Mapper*.
 .. In the data mapper, map the template's *message* field, which

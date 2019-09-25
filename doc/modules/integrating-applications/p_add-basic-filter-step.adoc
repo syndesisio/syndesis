@@ -18,7 +18,7 @@ continue execution by operating only on tweets that contain "Red Hat".
 .Procedure
 
 . In the flow visualization, where you want to add a filter step, click the
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Basic Filter*. 
 
