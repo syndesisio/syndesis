@@ -74,6 +74,9 @@ type ComponentsSpec struct {
 
 type OauthConfiguration struct {
 	Tag string `json:"tag,omitempty"`
+	// if set to true, then any authenticated user can access the install. otherwise the user
+	// needs access to get pods against the SarNamespace
+	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
 }
 
 type PostgresExporterConfiguration struct {
