@@ -74,7 +74,9 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+{{ if (not .Syndesis.Spec.Components.Oauth.DisableSarCheck) }}
             - --openshift-sar={"namespace":"{{.Syndesis.Spec.SarNamespace}}","resource":"pods","verb":"get"}
+{{ end }}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
           env:
