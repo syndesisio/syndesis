@@ -18,7 +18,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify the emails that you want to obtain.",
+            "description": "Specify the email messages that you want to send.",
             "name": "Send messages to Email",
             "properties": {
               "bcc": {
@@ -145,9 +145,7 @@
   "description": "Send email messages.",
   "icon": "assets:email-send.svg",
   "id": "email-send",
-  "metadata": {
-    "tech-preview": true
-  },
+  "metadata": {},
   "name": "Send Email (smtp)",
   "properties": {
     "host": {
@@ -172,7 +170,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "common,security",
-      "labelHint": "Specify a password for authentication of the email service, if required.",
+      "labelHint": "Specify the password for the email account that this connection is authorized to access.",
       "order": "4",
       "required": true,
       "secret": true,
@@ -254,7 +252,7 @@
       "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "common,security",
-      "labelHint": "Specify a user name for authentication of the email service url, if required.",
+      "labelHint": "Specify the user name for the email account that this connection is authorized to access.",
       "order": "3",
       "required": true,
       "secret": false,
