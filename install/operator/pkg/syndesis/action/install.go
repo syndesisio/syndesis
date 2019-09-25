@@ -78,7 +78,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		}
 	}
 
-	serviceAccount, err := InstallServiceAccount(ctx, a.client, syndesis, secret)
+	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
 	if err != nil {
 		return err
 	}
@@ -358,7 +358,7 @@ nextType:
 	return nil
 }
 
-func InstallServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
+func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
 	sa := newSyndesisServiceAccount()
 	if secret != nil {
 		linkImagePullSecret(sa, secret)

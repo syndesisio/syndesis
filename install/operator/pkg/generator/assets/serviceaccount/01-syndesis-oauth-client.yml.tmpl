@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: syndesis-oauth-client
+  labels:
+    app: syndesis
+{{if .ImagePullSecrets }}
+  imagePullSecrets:
+{{end}}{{range .ImagePullSecrets}}
+  - name: "{{.}}"
+{{end}}
+  annotations:
+    serviceaccounts.openshift.io/oauth-redirecturi.local: https://localhost:4200
+    serviceaccounts.openshift.io/oauth-redirecturi.route: https://
+    serviceaccounts.openshift.io/oauth-redirectreference.route: '{"kind": "OAuthRedirectReference", "apiVersion": "v1", "reference": {"kind": "Route","name": "syndesis"}}'
