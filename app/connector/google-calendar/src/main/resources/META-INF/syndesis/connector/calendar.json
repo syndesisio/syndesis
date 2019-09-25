@@ -47,7 +47,7 @@
                 "order": "2",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               },
               "description": {
                 "deprecated": false,
@@ -198,7 +198,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               },
               "description": {
                 "deprecated": false,
@@ -347,7 +347,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               },
               "eventId": {
                 "deprecated": false,
@@ -405,7 +405,7 @@
                 "order": "2",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               },
               "considerLastUpdate": {
                 "defaultValue": false,
