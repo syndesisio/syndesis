@@ -97,7 +97,7 @@ export const ExpandablePreview: React.FunctionComponent<
         onToggle={toggleExpanded}
         isExpanded={expanded}
       >
-        <Split>
+        <Split style={{ alignItems: 'center' }}>
           <SplitItem isFilled={false}>
             <Title headingLevel="h5" size="lg">
               {i18nTitle}
