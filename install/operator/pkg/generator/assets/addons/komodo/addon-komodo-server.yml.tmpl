@@ -152,7 +152,7 @@
     - name: "{{ .Syndesis.Spec.Components.Komodo.Tag }}"
       from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}'
+        name: '{{ .Syndesis.Spec.Components.Komodo.Registry }}/{{ .Syndesis.Spec.Components.Komodo.ImagePrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}'
       importPolicy:
         scheduled: true
       {{end}}
