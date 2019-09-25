@@ -87,7 +87,10 @@ This package contains a collection of UI elements that are common across the app
 
 All the elements are written as React PureComponents or Stateless Functional Components. The idea is to decouple the 
 presentation from the model that holds the data that needs to be presented to promote code reuse and easing the testing
-efforts. 
+efforts.
+
+### packages/auto-form
+[AutoForm](./packages/auto-form/README.md) contains the code responsible for rendering most of the forms in Syndesis from JSON.
 
 ### packages/utils
 
@@ -99,15 +102,12 @@ Extra typings for pure JavaScript dependencies that should eventually be pushed 
 
 ## Setup and preparation 
 
-[Yarn](https://yarnpkg.com) is the package manager required to work on the project.
+[Yarn](https://yarnpkg.com) is the package manager required to work on the project.  It's required to be installed, however the `syndesis ui` command can be used for day to day development tasks.  Add [this directory](../../tools/bin) to your PATH to make it easier to run the following commands.
 
 
 ```bash
-# install all the dependencies: 
-yarn install
-
-# build the project
-yarn build
+# install all the dependendencies and build the project
+syndesis ui --install --build
 ```
 
 ## Development workflow
@@ -115,6 +115,9 @@ yarn build
 ### `yarn build`
 
 Builds the project for production.
+
+### `syndesis ui --serve --minishift`
+Runs the app in development mode using minishift.  Automates running `yarn watch:app:minishift` and restores the console URL when you stop the development server
 
 ### `yarn watch:app:minishift` 
 
@@ -146,6 +149,10 @@ Restores the `syndesis-ui` POD to the original state.
 
 ### `BACKEND=https://syndesis.192.168.64.1.nip.io yarn watch:app:proxy`
 
+or
+
+### `syndesis ui --serve`
+
 Runs the app in the development mode. API calls will be proxied to the provided `BACKEND` URL.
 
 The proxy will require the session cookies to be able to properly work. The right cookies will be retrieved through an automated instance of Chromium, that will wait for the user to login. Once properly logged in - a condition recognized by the browser navigating back to the provided `BACKEND` url - the session cookies will be extracted and the Chromium instance will be closed.
@@ -170,6 +177,10 @@ $ yarn watch:packages --scope @syndesis/package-name
 ```
 
 ### `yarn test`
+
+or
+
+### `syndesis ui --run-tests`
 
 Runs the test suite.
 
