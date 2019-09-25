@@ -28,8 +28,8 @@ to obtain messages from a particular folder, enter the name of that folder.
 +
 If this connection accesses a POP3 email server, only standard folders,  
 such as *Inbox* or *Sent* are supported. 
-.. Select the *Unseen Only* checkbox to obtain only messages that 
-the connection has not previously returned. 
+.. Select the *Unseen Only* checkbox to obtain 
+only messages that are marked as unread on the email server. 
 .. In the *Delay* field, accept the default of 5 seconds as the time
 that elapses between polls for messages. Or, to specify a different polling interval,
 enter a number and select its time unit. 
