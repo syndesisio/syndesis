@@ -74,12 +74,13 @@ build_operator()
         echo ======================================================
         export GO111MODULE=on
 
+        go mod tidy
         go mod vendor
 
         local hassdk=$(operatorsdk_is_available)
         if [ "$hassdk" == "OK" ]; then
             operator-sdk generate k8s
-            # operator-sdk generate openapi
+            operator-sdk generate openapi
         else
             # display warning message and move on
             printf "$hassdk\n\n"

@@ -31,13 +31,14 @@ spec:
           properties:
             addons:
               additionalProperties:
-                items:
-                  additionalProperties:
-                    type: string
-                  type: object
-                type: array
+                additionalProperties:
+                  type: string
+                type: object
+              description: Optional add on features that can be enabled. +k8s:openapi-gen=false
               type: object
             components:
+              description: Components is used to configure all the core components
+                of Syndesis
               properties:
                 db:
                   properties:
@@ -65,6 +66,8 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
+                    tag:
+                      type: string
                     user:
                       type: string
                   type: object
@@ -89,6 +92,29 @@ spec:
                           type: object
                       type: object
                   type: object
+                komodo:
+                  properties:
+                    resources:
+                      properties:
+                        limits:
+                          additionalProperties:
+                            type: string
+                          description: 'Limits describes the maximum amount of compute
+                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                          type: object
+                        requests:
+                          additionalProperties:
+                            type: string
+                          description: 'Requests describes the minimum amount of compute
+                            resources required. If Requests is omitted for a container,
+                            it defaults to Limits if that is explicitly specified,
+                            otherwise to an implementation-defined value. More info:
+                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
+                          type: object
+                      type: object
+                    tag:
+                      type: string
+                  type: object
                 meta:
                   properties:
                     resources:
@@ -111,6 +137,13 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
+                    tag:
+                      type: string
+                  type: object
+                oauth:
+                  properties:
+                    tag:
+                      type: string
                   type: object
                 prometheus:
                   properties:
@@ -134,14 +167,27 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
+                    tag:
+                      type: string
                   type: object
+                psql:
+                  properties:
+                    tag:
+                      type: string
+                  type: object
+                s2i:
+                  properties:
+                    tag:
+                      type: string
+                  type: object
+                scheduled:
+                  type: boolean
                 server:
                   properties:
                     features:
                       properties:
                         managementUrlFor3scale:
                           type: string
-                          description: 'Allows to configure URL to 3scale in OpenShift.'
                       type: object
                     resources:
                       properties:
@@ -161,6 +207,13 @@ spec:
                             https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
                           type: object
                       type: object
+                    tag:
+                      type: string
+                  type: object
+                ui:
+                  properties:
+                    tag:
+                      type: string
                   type: object
                 upgrade:
                   properties:
@@ -175,9 +228,18 @@ spec:
               type: boolean
             deployIntegrations:
               type: boolean
+            devSupport:
+              description: if true, then the image streams are changed to used local
+                development builds & JAVA_DEBUG is enabled
+              type: boolean
             imageStreamNamespace:
+              description: Set ImageStreamNamespace to the namespace where the operator
+                should store image streams in.  Defaults to match the namespace of
+                the the Syndesis resource.
               type: string
             integration:
+              description: Integration is used to configure settings related to runtime
+                integrations that get deployed.
               properties:
                 limit:
                   format: int64
@@ -186,15 +248,33 @@ spec:
                   format: int64
                   type: integer
               type: object
+            mavenRepositories:
+              additionalProperties:
+                type: string
+              type: object
             openShiftConsoleUrl:
+              description: Set OpenShiftConsoleUrl to the the http URL of your OpenShift
+                console so we can deep link to things like pod logs.
+              type: string
+            openShiftMaster:
               type: string
             registry:
+              description: The container registry to pull syndesis images from
               type: string
             routeHostname:
+              description: Set RouteHostname to the hostname of the exposed syndesis
+                service.  Typically the operator can automatically determine this
+                by looking at the result of the Route object it creates.
               type: string
             sarNamespace:
+              description: SarNamespace is the namespace to perform Subject Access
+                Review authorization checks against.  Defaults to match the namespace
+                of the the Syndesis resource.
               type: string
             testSupport:
+              description: Set TestSupport to true to enable a very low level data
+                access API into Syndesis, typically used for integration testing,
+                and should not be enabled in production. +k8s:openapi-gen=false
               type: boolean
           type: object
         status:

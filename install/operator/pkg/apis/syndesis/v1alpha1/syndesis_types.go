@@ -11,19 +11,38 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
-	RouteHostname        string          `json:"routeHostname,omitempty"`
-	DemoData             *bool           `json:"demoData,omitempty"`
-	DeployIntegrations   *bool           `json:"deployIntegrations,omitempty"`
-	TestSupport          *bool           `json:"testSupport,omitempty"`
-	ImageStreamNamespace string          `json:"imageStreamNamespace,omitempty"`
-	Integration          IntegrationSpec `json:"integration,omitempty"`
+	// Set RouteHostname to the hostname of the exposed syndesis service.  Typically the operator can automatically
+	// determine this by looking at the result of the Route object it creates.
+	RouteHostname      string `json:"routeHostname,omitempty"`
+	DemoData           *bool  `json:"demoData,omitempty"`
+	DeployIntegrations *bool  `json:"deployIntegrations,omitempty"`
+	// Set TestSupport to true to enable a very low level data access API into Syndesis, typically used for
+	// integration testing, and should not be enabled in production.
+	// +k8s:openapi-gen=false
+	TestSupport *bool `json:"testSupport,omitempty"`
+	// Set ImageStreamNamespace to the namespace where the operator should store image streams in.  Defaults to match
+	// the namespace of the the Syndesis resource.
+	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
+	// Integration is used to configure settings related to runtime integrations that get deployed.
+	Integration IntegrationSpec `json:"integration,omitempty"`
 	// The container registry to pull syndesis images from
-	Registry            string         `json:"registry,omitempty"`
-	Components          ComponentsSpec `json:"components,omitempty"`
-	OpenShiftMaster     string         `json:"openshiftMaster,omitempty"`
-	OpenShiftConsoleUrl string         `json:"openshiftConsoleUrl,omitempty"`
-	SarNamespace        string         `json:"sarNamespace,omitempty"`
-	Addons              AddonsSpec     `json:"addons,omitempty"`
+	Registry string `json:"registry,omitempty"`
+	// Components is used to configure all the core components of Syndesis
+	Components ComponentsSpec `json:"components,omitempty"`
+
+	OpenShiftMaster string `json:"openShiftMaster,omitempty"`
+
+	// Set OpenShiftConsoleUrl to the the http URL of your OpenShift console so we can deep link to things like
+	// pod logs.
+	OpenShiftConsoleUrl string `json:"openShiftConsoleUrl,omitempty"`
+	// SarNamespace is the namespace to perform Subject Access Review authorization checks against.  Defaults to match
+	// the namespace of the the Syndesis resource.
+	SarNamespace string `json:"sarNamespace,omitempty"`
+
+	// Optional add on features that can be enabled.
+	// +k8s:openapi-gen=false
+	Addons AddonsSpec `json:"addons,omitempty"`
+
 	// if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled
 	DevSupport bool `json:"devSupport,omitempty"`
 
@@ -144,8 +163,10 @@ type ServerFeatures struct {
 	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
+// +k8s:openapi-gen=true
 type AddonsSpec map[string]Parameters
 
+// +k8s:openapi-gen=false
 type Parameters map[string]string
 
 // =============================================================================
