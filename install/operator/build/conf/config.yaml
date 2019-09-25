@@ -37,8 +37,8 @@ Tags:
   PostgresExporter: v0.4.7
   Postgresql: "9.5"
   Prometheus: v2.1.0
-  Syndesis: latest
-  Upgrade: latest
+  Syndesis: 1.8.1-20190920
+  Upgrade: 1.8.1-20190920
   CamelKBase: 3.0-java8
 WithDockerImages: false
 Versions:
