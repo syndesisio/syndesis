@@ -81,8 +81,10 @@ type PostgresExporterConfiguration struct {
 }
 
 type KomodoConfiguration struct {
-	Resources Resources `json:"resources,omitempty"`
-	Tag       string    `json:"tag,omitempty"`
+	Registry    string    `json:"registry,omitempty"`
+	ImagePrefix string    `json:"imagePrefix,omitempty"`
+	Resources   Resources `json:"resources,omitempty"`
+	Tag         string    `json:"tag,omitempty"`
 }
 
 type S2IConfiguration struct {

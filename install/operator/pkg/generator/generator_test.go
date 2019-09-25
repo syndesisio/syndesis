@@ -370,6 +370,7 @@ func TestEmptyCRComponents(t *testing.T) {
 		{"UI", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Registry},
 		{"S2I", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry},
 		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, syndesis.Spec.Registry},
+		{"Komodo", syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Registry},
 	}
 
 	{
@@ -397,6 +398,7 @@ func TestFullCRComponents(t *testing.T) {
 				UI:      v1alpha1.UIConfiguration{Registry: "ui-registry"},
 				S2I:     v1alpha1.S2IConfiguration{Registry: "s2i-registry"},
 				Upgrade: v1alpha1.UpgradeConfiguration{Registry: "upgrade-registry"},
+				Komodo:  v1alpha1.KomodoConfiguration{Registry: "komodo-registry"},
 			},
 		},
 	}
@@ -412,6 +414,7 @@ func TestFullCRComponents(t *testing.T) {
 		{"UI", syndesis.Spec.Components.UI.Registry, "ui-registry"},
 		{"S2I", syndesis.Spec.Components.S2I.Registry, "s2i-registry"},
 		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, "upgrade-registry"},
+		{"Komodo", syndesis.Spec.Components.Komodo.Registry, "komodo-registry"},
 	}
 
 	{
@@ -447,6 +450,7 @@ func TestImageStreams(t *testing.T) {
 		{"syndesis-meta", syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.Meta.Tag},
 		{"syndesis-ui", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.UI.Tag},
 		{"syndesis-s2i", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
+		{"syndesis-dv", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
 	}
 
 	for _, resource := range resources {
@@ -478,7 +482,6 @@ func TestImageStreams(t *testing.T) {
 			}
 		}
 	}
-
 }
 
 // Align syndesis and context
@@ -519,6 +522,12 @@ func renderResources(t *testing.T, syndesis *v1alpha1.Syndesis) ([]unstructured.
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", gen)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
+
+	komodo, err := generator.RenderFSDir(generator.GetAssetsFS(), "./addons/komodo/", gen)
+	require.NoError(t, err)
+	assert.True(t, len(komodo) > 0)
+
+	resources = append(resources, komodo...)
 
 	return resources, gen
 }

@@ -145,6 +145,8 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.Components.Grafana.Resources.Limits.Memory|string|Memory limits|
 |Spec.Components.Komodo|KomodoConfiguration|syndesis komodo configurations|
 |Spec.Components.Komodo.Tag|string|tag used for the syndesis-dv `ImageStream`|
+|Spec.Components.Komodo.Registry|string|registry used for the syndesis-dv `ImageStream`|
+|Spec.Components.Komodo.ImagePrefix|string|prefix used for the syndesis-dv `ImageStream`|
 |Spec.Components.Komodo.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Komodo.Resources.Limits.Memory|string|Memory limits|
 |Spec.Components.Upgrade|UpgradeConfiguration|syndesis upgrade configurations|
