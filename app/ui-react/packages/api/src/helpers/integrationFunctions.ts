@@ -916,6 +916,26 @@ export function removeStepFromFlow(
 }
 
 /**
+ * Compute choice configuration mode from configured properties. In case any of given flow options uses an expression
+ * condition we use advanced config mode otherwise basic.
+ * @param step
+ */
+export function getChoiceConfigMode(step: StepKind) {
+  if (step.stepKind === CHOICE &&
+      typeof step.configuredProperties!.flows !== 'undefined' &&
+      step.configuredProperties!.flows.length > 0) {
+    const flows = JSON.parse(step.configuredProperties!.flows) as any[];
+    if (flows.find(flow => flow.condition!.length > 0)) {
+      return 'advanced';
+    } else {
+      return 'basic';
+    }
+  }
+
+  return undefined;
+}
+
+/**
  * Inserts the supplied step after the position
  * @param steps
  * @param step
