@@ -42,5 +42,5 @@ Tags:
   CamelKBase: 3.0-java8
 WithDockerImages: false
 Versions:
-  Camel: "2.21.0.fuse-750007"
+  Camel: "2.21.0.fuse-750029"
   CamelKRuntime: "0.3.4.fuse-740008"
