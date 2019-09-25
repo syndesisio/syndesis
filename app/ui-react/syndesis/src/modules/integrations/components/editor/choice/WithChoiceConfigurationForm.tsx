@@ -14,6 +14,7 @@ export interface IWithChoiceConfigurationFormChildrenProps {
 }
 
 export interface IWithChoiceConfigurationFormProps {
+  configMode: 'basic' | 'advanced';
   filterOptions: FilterOptions;
   initialValue: IChoiceFormConfiguration;
   stepId: string;
@@ -23,7 +24,7 @@ export interface IWithChoiceConfigurationFormProps {
 
 export const WithChoiceConfigurationForm: React.FunctionComponent<
   IWithChoiceConfigurationFormProps
-> = ({ onUpdatedIntegration, filterOptions, stepId, initialValue, children }) => {
+> = ({ onUpdatedIntegration, filterOptions, stepId, initialValue, children, configMode }) => {
   const { t } = useTranslation(['integrations', 'shared']);
 
   const definition = {
@@ -40,7 +41,7 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           order: 0,
           placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
           required: false,
-          type: 'text',
+          type: configMode === 'advanced' ? 'text' : 'hidden',
         },
         flowId: {
           defaultValue: '',
@@ -58,16 +59,16 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           enum: filterOptions.ops,
           order: 2,
           required: false,
-          type: 'text',
+          type: configMode === 'basic' ? 'text' : 'hidden',
         },
         path: {
           dataList: filterOptions.paths,
           description: t('integrations:editor:choiceForm:pathDescription'),
-          displayName: t('integrations:editor:choiceForm:pathDisplay'),
+          displayName: '',
           order: 1,
           placeholder: t('integrations:editor:choiceForm:pathPlaceholder'),
           required: false,
-          type: 'text',
+          type: configMode === 'basic' ? 'text' : 'hidden',
         },
         value: {
           description: t('integrations:editor:choiceForm:keywordsDescription'),
@@ -75,7 +76,7 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           order: 3,
           placeholder: t('integrations:editor:choiceForm:keywordsPlaceholder'),
           required: false,
-          type: 'text',
+          type: configMode === 'basic' ? 'text' : 'hidden',
         },
       },
       arrayDefinitionOptions: {
