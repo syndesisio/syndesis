@@ -1,0 +1,39 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-mongodb_{context}']
+= Connecting to MongoDB
+:context: mongodb
+
+MongoDB is a distributed NoSQL database. 
+A {prodname} integration can obtain content from a MongoDB database
+or update content in a MongoDB database. 
+To do this, create a MongoDB connection, and add it to an integration. 
+ 
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Connecting to MongoDB is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+ 
+Details for connecting to a MongoDB database are in the following topics:
+
+* xref:creating-mongodb-connections_{context}[]
+* xref:adding-mongodb-connections-read_{context}[]
+* xref:adding-mongodb-connections-write_{context}[]
+
+include::../../modules/connecting/p_creating-mongodb-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-mongodb-connections-read.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-mongodb-connections-write.adoc[leveloffset=+1]
+
+:context: connectors

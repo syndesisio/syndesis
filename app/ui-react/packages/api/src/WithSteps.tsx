@@ -121,7 +121,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
         properties: {},
         configuredProperties: undefined,
         visible: [],
-        isTechPreview: true,
+        isTechPreview: false,
       },
       true
     )
