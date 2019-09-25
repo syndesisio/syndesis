@@ -71,7 +71,9 @@
           "io.syndesis.connector.box.customizer.BoxDownloadCustomizer"
         ],
         "inputDataShape": {
-          "kind": "none"
+          "kind": "java",
+          "name": "File Info",
+          "type": "io.syndesis.connector.box.BoxFileDownload"
         },
         "outputDataShape": {
           "kind": "java",
@@ -88,9 +90,9 @@
                 "displayName": "File ID",
                 "group": "producer",
                 "javaType": "java.lang.String",
-                "kind": "parameter",
-                "labelHint": "File ID to download",
-                "required": true,
+                "kind": "path",
+                "labelHint": "File ID to download, you can also set the file id by adding a data mapping step",
+                "required": false,
                 "secret": false,
                 "type": "string"
               },

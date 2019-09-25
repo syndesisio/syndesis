@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import io.syndesis.connector.box.BoxFile;
+import io.syndesis.connector.box.BoxFileDownload;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
@@ -45,7 +46,17 @@ public class BoxDownloadCustomizer implements ComponentProxyCustomizer {
 
     private void beforeProducer(Exchange exchange) {
         Message in = exchange.getIn();
-        in.setBody(new ByteArrayOutputStream());
+        // retrieve the BoxFileDownload object mapping if exists
+        BoxFileDownload boxFileInfo = in.getBody(BoxFileDownload.class);
+        if (boxFileInfo != null && boxFileInfo.getFileId() != null) {
+            fileId = boxFileInfo.getFileId();
+        }
+        if (fileId != null) {
+            in.setHeader("CamelBox.fileId", fileId);
+            in.setBody(new ByteArrayOutputStream());
+        } else {
+            LOG.error("There is a missing CamelBox.fileId parameter, you should set the File ID parameter in the Box Download step parameter or add a data mapping step to set it.");
+        }
     }
 
     private void afterProducer(Exchange exchange) {
