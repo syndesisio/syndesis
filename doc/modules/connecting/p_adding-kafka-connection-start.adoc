@@ -58,7 +58,7 @@ in the integration visualization and in the data mapper.
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Newx*. 
+. Click *Next*. 
 
 .Result
 The integration now has a start connection and {prodname} prompts

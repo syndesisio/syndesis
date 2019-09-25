@@ -1,0 +1,38 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-mongodb-connections-write_{context}']
+= Updating, creating, and deleting data in a MongoDB database
+
+In an integration, you can update, delete or add data in a MongoDB 
+database. To do this, add a MongoDB connection to the middle of 
+a flow or as a simple integration's finish connection. 
+
+.Prerequisites
+* You created a MongoDB connection. 
+* You know the name of the MongoDB collection
+that you want the connection to update.
+* You are creating or editing an integration and {prodname} is
+prompting you to add to the integration. Or, {prodname} is 
+prompting you to choose a finish connection.  
+
+.Procedure
+
+. On the *Add to Integration* page, click the plus sign where you 
+want to add a MongoDB connection. Skip this step if you are adding 
+a simple integration's finish connection. 
+. Click the MongoDB connection that you want to use. Note that when a MongoDB 
+connection updates a collection, the connection does not return anything. 
+. On the *Choose an action* page, select the *MongoDB producer* action. 
+. Configure the action: 
+.. In the *Collection name* field, enter the name of the collection that 
+you want the connection update. 
+.. In the *Operation to perform* field, accept the *Insert* operation or 
+click in the field to display the available actions. Click the action 
+that you want the connection to perform. 
+. Click *Next*. 
+
+.Result
+The connection appears in the integration visualization where
+you added it. 
+ 
