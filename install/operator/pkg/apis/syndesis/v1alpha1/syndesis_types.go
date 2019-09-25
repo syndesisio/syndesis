@@ -57,6 +57,7 @@ type IntegrationSpec struct {
 }
 
 type ComponentsSpec struct {
+	ImagePrefix      string                        `json:"imagePrefix,omitempty"`
 	Scheduled        bool                          `json:"scheduled,omitempty"`
 	Server           ServerConfiguration           `json:"server,omitempty"`
 	Meta             MetaConfiguration             `json:"meta,omitempty"`
@@ -85,11 +86,15 @@ type KomodoConfiguration struct {
 }
 
 type S2IConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
+	Tag         string `json:"tag,omitempty"`
 }
 
 type UIConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
+	Tag         string `json:"tag,omitempty"`
 }
 
 type DbConfiguration struct {
@@ -110,18 +115,25 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Tag       string         `json:"tag,omitempty"`
-	Resources Resources      `json:"resources,omitempty"`
-	Features  ServerFeatures `json:"features,omitempty"`
+	Registry    string         `json:"registry,omitempty"`
+	ImagePrefix string         `json:"imagePrefix,omitempty"`
+	Tag         string         `json:"tag,omitempty"`
+	Resources   Resources      `json:"resources,omitempty"`
+	Features    ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
-	Tag       string              `json:"tag,omitempty"`
-	Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Resources   ResourcesWithVolume `json:"resources,omitempty"`
 }
 
 type UpgradeConfiguration struct {
-	Resources VolumeOnlyResources `json:"resources,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Resources   VolumeOnlyResources `json:"resources,omitempty"`
 }
 
 type Resources struct {

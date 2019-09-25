@@ -2,6 +2,11 @@ package generator_test
 
 import (
 	"encoding/json"
+	"path/filepath"
+	"strconv"
+	"strings"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
@@ -12,10 +17,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"path/filepath"
-	"strconv"
-	"strings"
-	"testing"
 
 	v12 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -345,4 +346,179 @@ func TestConfigYAML(t *testing.T) {
 
 	assert.NotNil(t, gen.TagMinor, "TagMinor is a mandatory field in config.yaml file")
 	assert.NotEmpty(t, gen.TagMinor, "TagMinor is a mandatory field in config.yaml file")
+}
+
+// Test individual components from the syndesis custom resource
+// Check than when using an empty custom resource, the values for
+// components are filled correctly
+func TestEmptyCRComponents(t *testing.T) {
+	syndesis := &v1alpha1.Syndesis{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: "TEST",
+		},
+		Spec: v1alpha1.SyndesisSpec{},
+	}
+	gen := prepare(t, syndesis)
+
+	var flagtests = []struct {
+		name  string
+		value string
+		def   string
+	}{
+		{"Server", syndesis.Spec.Components.Server.Registry, syndesis.Spec.Registry},
+		{"Meta", syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Registry},
+		{"UI", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Registry},
+		{"S2I", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry},
+		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, syndesis.Spec.Registry},
+	}
+
+	{
+		// Test that with an empty CR. Spec.Registry receives the value from config file
+		assert.Equal(t, gen.Registry, syndesis.Spec.Registry)
+
+		// Test that with an empty CR, Spec.Components.*.Registry receives the value
+		for _, tt := range flagtests {
+			assert.Equal(t, tt.def, tt.value)
+		}
+	}
+}
+
+// Test individual components from the syndesis custom resource
+// Check that after filling the context, the cr values are not changed
+func TestFullCRComponents(t *testing.T) {
+	syndesis := &v1alpha1.Syndesis{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: "TEST",
+		},
+		Spec: v1alpha1.SyndesisSpec{
+			Components: v1alpha1.ComponentsSpec{
+				Server:  v1alpha1.ServerConfiguration{Registry: "server-registry"},
+				Meta:    v1alpha1.MetaConfiguration{Registry: "meta-registry"},
+				UI:      v1alpha1.UIConfiguration{Registry: "ui-registry"},
+				S2I:     v1alpha1.S2IConfiguration{Registry: "s2i-registry"},
+				Upgrade: v1alpha1.UpgradeConfiguration{Registry: "upgrade-registry"},
+			},
+		},
+	}
+	gen := prepare(t, syndesis)
+
+	var flagtests = []struct {
+		name  string
+		value string
+		def   string
+	}{
+		{"Server", syndesis.Spec.Components.Server.Registry, "server-registry"},
+		{"Meta", syndesis.Spec.Components.Meta.Registry, "meta-registry"},
+		{"UI", syndesis.Spec.Components.UI.Registry, "ui-registry"},
+		{"S2I", syndesis.Spec.Components.S2I.Registry, "s2i-registry"},
+		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, "upgrade-registry"},
+	}
+
+	{
+		// Test that with an empty CR. Spec.Registry receives the value from config file
+		assert.Equal(t, gen.Registry, syndesis.Spec.Registry)
+
+		// These values were set in the CR and should not have changed
+		for _, tt := range flagtests {
+			assert.Equal(t, tt.def, tt.value)
+		}
+	}
+}
+
+// Test generated syndesis ImageStreams.
+// Check that each image contains the right tag, and that the docker image has the
+// right name, tag, registry and prefix
+func TestImageStreams(t *testing.T) {
+	syndesis := &v1alpha1.Syndesis{
+		ObjectMeta: metav1.ObjectMeta{
+			Namespace: "TEST",
+		},
+		Spec: v1alpha1.SyndesisSpec{},
+	}
+	resources, _ := renderResources(t, syndesis)
+
+	var flagtests = []struct {
+		name     string
+		registry string
+		prefix   string
+		tag      string
+	}{
+		{"syndesis-server", syndesis.Spec.Components.Server.Registry, syndesis.Spec.Components.Server.ImagePrefix, syndesis.Spec.Components.Server.Tag},
+		{"syndesis-meta", syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.Meta.Tag},
+		{"syndesis-ui", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.UI.Tag},
+		{"syndesis-s2i", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
+	}
+
+	for _, resource := range resources {
+		if resource.GetKind() == "ImageStream" {
+			for _, tt := range flagtests {
+				if tt.name == resource.GetName() {
+					var checked bool
+					t.Logf("checking imagestream %s", tt.name)
+					if value, ee, _ := unstructured.NestedSlice(resource.UnstructuredContent(), "spec", "tags"); ee {
+						if m, ok := value[0].(map[string]interface{}); ok == true {
+							// we could get the path to properties
+							checked = true
+
+							// Check that the tag in included in the image url
+							if tag, a, _ := unstructured.NestedString(m, "name"); a {
+								assert.Contains(t, tag, tt.tag, "the tag name should be the same as specified in the cr")
+							}
+
+							// Check that registry, prefix and tag are correctly included in the image url
+							if reg, a, _ := unstructured.NestedString(m, "from", "name"); a {
+								assert.Contains(t, reg, tt.registry, "the registry should be the same as specified in the cr")
+								assert.Contains(t, reg, tt.prefix, "the prefix should be the same as specified in the cr")
+								assert.Contains(t, reg, tt.tag, "the tag name should be the same as specified in the cr")
+							}
+						}
+					}
+					assert.True(t, checked, "Test not found for %s", resource.GetName())
+				}
+			}
+		}
+	}
+
+}
+
+// Align syndesis and context
+func prepare(t *testing.T, syndesis *v1alpha1.Syndesis) *generator.Context {
+	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
+	require.NoError(t, err)
+
+	// Parse the config
+	gen := &generator.Context{}
+	err = json.Unmarshal(templateConfig, gen)
+	require.NoError(t, err)
+
+	gen.Syndesis = syndesis
+
+	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{})
+	require.NoError(t, err)
+
+	return gen
+}
+
+// Get the list of parsed resources given a syndesis cr
+func renderResources(t *testing.T, syndesis *v1alpha1.Syndesis) ([]unstructured.Unstructured, *generator.Context) {
+	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
+	require.NoError(t, err)
+
+	// Parse the config
+	gen := &generator.Context{}
+	err = json.Unmarshal(templateConfig, gen)
+	require.NoError(t, err)
+
+	gen.Syndesis = syndesis
+
+	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{})
+	require.NoError(t, err)
+
+	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
+
+	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", gen)
+	require.NoError(t, err)
+	assert.True(t, len(resources) > 0)
+
+	return resources, gen
 }

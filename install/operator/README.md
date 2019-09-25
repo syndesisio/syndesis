@@ -102,20 +102,29 @@ These are the fields available. Only fields of type string or bool can be edited
 |------------ |----|-----------|
 |Spec.Components|ComponentsSpec|Fine grained settings for all syndesis components|
 |Spec.Components.Scheduled|bool| Sets the value of `importPolicy.scheduled` for some ImageStreams: syndesis-meta, syndesis-s2i, syndesis-prometheus, syndesis-server and syndesis-db-metrics|
+|Spec.Components.ImagePrefix|string| Prefix for `ImageStreams` for syndesis components|
 |Spec.Components.Server|ServerConfiguration|syndesis server configurations|
 |Spec.Components.Server.Tag|string|tag used for the syndesis-server `ImageStream`|
+|Spec.Components.Server.Registry|string|registry used for the syndesis-server `ImageStream`|
+|Spec.Components.Server.ImagePrefix|string|prefix used for the syndesis-server `ImageStream`|
 |Spec.Components.Server.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Server.Resources.Limits.Memory|string|Memory limits|
 |Spec.Components.Server.Features|ServerFeatures|Features|
 |Spec.Components.Server.Features.ManagementUrlFor3scale|string|
 |Spec.Components.Meta|MetaConfiguration|syndesis meta configurations|
+|Spec.Components.Meta.Registry|string|registry used for the syndesis-meta `ImageStream`|
+|Spec.Components.Meta.ImagePrefix|string|prefix used for the syndesis-meta `ImageStream`|
 |Spec.Components.Meta.Tag|string|tag used for the syndesis-meta `ImageStream`|
 |Spec.Components.Meta.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Meta.Resources.Limits.Memory|string|Memory limits|
 |Spec.Components.UI|UIConfiguration|syndesis UI configurations|
 |Spec.Components.UI.Tag|string|tag used for the syndesis-ui `ImageStream`|
+|Spec.Components.UI.Registry|string|registry used for the syndesis-ui `ImageStream`|
+|Spec.Components.UI.ImagePrefix|string|prefix used for the syndesis-ui `ImageStream`|
 |Spec.Components.S2I|S2IConfiguration|syndesis S2I configurations|
 |Spec.Components.S2I.Tag|string|tag used for the syndesis-S2I `ImageStream`|
+|Spec.Components.S2I.Registry|string|registry used for the syndesis-S2I `ImageStream`|
+|Spec.Components.S2I.ImagePrefix|string|prefix used for the syndesis-S2I `ImageStream`|
 |Spec.Components.Oauth|OauthConfiguration|syndesis Oauth configurations|
 |Spec.Components.Oauth.Tag|string|tag used for the syndesis-oauth `ImageStream`|
 |Spec.Components.PostgresExporter|PostgresExporterConfiguration|posgress exporter configurations|
@@ -141,3 +150,6 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.Components.Upgrade|UpgradeConfiguration|syndesis upgrade configurations|
 |Spec.Components.Upgrade.Resources|Resources|Contains resource limits for the pod|
 |Spec.Components.Upgrade.Resources.Limits.Memory|string|Memory limits|
+|Spec.Components.Upgrade.Tag|string|tag used for the upgrade pod|
+|Spec.Components.Upgrade.Registry|string|registry used for the upgrade pod|
+|Spec.Components.Upgrade.ImagePrefix|string|prefix used for the upgrade pod|
