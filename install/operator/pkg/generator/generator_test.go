@@ -371,6 +371,7 @@ func TestEmptyCRComponents(t *testing.T) {
 		{"S2I", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry},
 		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, syndesis.Spec.Registry},
 		{"Komodo", syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Registry},
+		{"Postgres Exporter", syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Registry},
 	}
 
 	{
@@ -393,12 +394,13 @@ func TestFullCRComponents(t *testing.T) {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			Components: v1alpha1.ComponentsSpec{
-				Server:  v1alpha1.ServerConfiguration{Registry: "server-registry"},
-				Meta:    v1alpha1.MetaConfiguration{Registry: "meta-registry"},
-				UI:      v1alpha1.UIConfiguration{Registry: "ui-registry"},
-				S2I:     v1alpha1.S2IConfiguration{Registry: "s2i-registry"},
-				Upgrade: v1alpha1.UpgradeConfiguration{Registry: "upgrade-registry"},
-				Komodo:  v1alpha1.KomodoConfiguration{Registry: "komodo-registry"},
+				Server:           v1alpha1.ServerConfiguration{Registry: "server-registry"},
+				Meta:             v1alpha1.MetaConfiguration{Registry: "meta-registry"},
+				UI:               v1alpha1.UIConfiguration{Registry: "ui-registry"},
+				S2I:              v1alpha1.S2IConfiguration{Registry: "s2i-registry"},
+				Upgrade:          v1alpha1.UpgradeConfiguration{Registry: "upgrade-registry"},
+				Komodo:           v1alpha1.KomodoConfiguration{Registry: "komodo-registry"},
+				PostgresExporter: v1alpha1.PostgresExporterConfiguration{Registry: "pexporter-registry"},
 			},
 		},
 	}
@@ -415,6 +417,7 @@ func TestFullCRComponents(t *testing.T) {
 		{"S2I", syndesis.Spec.Components.S2I.Registry, "s2i-registry"},
 		{"Upgrade", syndesis.Spec.Components.Upgrade.Registry, "upgrade-registry"},
 		{"Komodo", syndesis.Spec.Components.Komodo.Registry, "komodo-registry"},
+		{"Postgres Exporter", syndesis.Spec.Components.PostgresExporter.Registry, "pexporter-registry"},
 	}
 
 	{
@@ -451,6 +454,7 @@ func TestImageStreams(t *testing.T) {
 		{"syndesis-ui", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.UI.Tag},
 		{"syndesis-s2i", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
 		{"syndesis-dv", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
+		{"postgres_exporter", syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Components.PostgresExporter.ImagePrefix, syndesis.Spec.Components.PostgresExporter.Tag},
 	}
 
 	for _, resource := range resources {

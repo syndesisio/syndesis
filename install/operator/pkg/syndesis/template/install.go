@@ -178,6 +178,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry)
 	ifMissingSet(&syndesis.Spec.Components.Upgrade.Registry, syndesis.Spec.Registry)
 	ifMissingSet(&syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Registry)
 
 	ifMissingSet(&syndesis.Spec.Components.ImagePrefix, renderContext.Images.SyndesisImagesPrefix)
 	ifMissingSet(&syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
@@ -185,7 +186,8 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Upgrade.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
-	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.KomodoImagesPrefix)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.PostgresExporterImagePrefix)
 
 	if syndesis.Spec.DeployIntegrations == nil {
 		v := true

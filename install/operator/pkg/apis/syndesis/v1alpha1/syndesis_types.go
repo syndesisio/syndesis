@@ -77,7 +77,9 @@ type OauthConfiguration struct {
 }
 
 type PostgresExporterConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	Tag         string `json:"tag,omitempty"`
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
 }
 
 type KomodoConfiguration struct {

@@ -125,7 +125,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PostgresExporterImagePrefix}}/{{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}'
+        name: '{{ .Syndesis.Spec.Components.PostgresExporter.Registry }}/{{ .Syndesis.Spec.Components.PostgresExporter.ImagePrefix }}/{{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}'
       {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true

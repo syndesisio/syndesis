@@ -129,6 +129,8 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.Components.Oauth.Tag|string|tag used for the syndesis-oauth `ImageStream`|
 |Spec.Components.PostgresExporter|PostgresExporterConfiguration|posgress exporter configurations|
 |Spec.Components.PostgresExporter.Tag|string|tag used for the postgres_exporter `ImageStream`|
+|Spec.Components.PostgresExporter.Registry|string|registry used for the postgres_exporter `ImageStream`|
+|Spec.Components.PostgresExporter.ImagePrefix|string|prefix used for the postgres_exporter `ImageStream`|
 |Spec.Components.Db|DbConfiguration|syndesis Db configurations|
 |Spec.Components.Db.Tag|string|tag used for the syndesis-db `ImageStream`|
 |Spec.Components.Db.User|string|syndesis user|
