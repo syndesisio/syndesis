@@ -25,7 +25,7 @@ to download or upload files.
 .. In the left panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL, 
 click 
-image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to 
+image:images/tutorials/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL toward the end of this procedure. 
 . In another browser tab, go  to `https://www.dropbox.com` 

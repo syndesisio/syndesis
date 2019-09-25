@@ -23,7 +23,7 @@ in the upper right, click *Publish*.
 . In the left {prodname} panel, click *Integrations*.
 . In the list of integrations, 
 to the right of the draft entry, click 
-image:../../images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
 select *Publish*.
 
 .About the publication progress

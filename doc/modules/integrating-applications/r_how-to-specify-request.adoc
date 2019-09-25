@@ -12,13 +12,13 @@ The following examples show how to specify HTTP requests for the
 Consider an integration that starts with a Webhook connection and then
 creates a row in the *Todo* table of the {prodname}-provided database:
 
-image:../../images/integrating-applications/WebhookToDB.png[Webhook-Data Mapper-DB integration]
+image:images/integrating-applications/WebhookToDB.png[Webhook-Data Mapper-DB integration]
 
 During creation of this integration, when you add the Webhook start
 connection, you specify its output data type with a JSON instance that
 has this content: `{"todo":"text"}`:
 
-image:../../images/integrating-applications/SpecifyDataShape.png[Specify Data Shape Image]
+image:images/integrating-applications/SpecifyDataShape.png[Specify Data Shape Image]
 
 When you add the *PostgresDB* connection as the finish connection, you 
 select the *Invoke SQL* action and specify this SQL statement:
@@ -27,12 +27,12 @@ select the *Invoke SQL* action and specify this SQL statement:
 
 After you add the database connection, you add a mapping step: 
 
-image:../../images/integrating-applications/TODOtoTASK.png[Map Todo to Task]
+image:images/integrating-applications/TODOtoTASK.png[Map Todo to Task]
 
 You save and publish the integration. When it is running, you can
 copy the external URL that {prodname} provides: 
 
-image:../../images/integrating-applications/ExternalURL.png[External URL]
+image:images/integrating-applications/ExternalURL.png[External URL]
 
 To understand the parts of the external URL, consider this sample URL: 
  
@@ -100,7 +100,7 @@ Click *Update* and you should see `from webhook` as a new task.
 For this example, consider the same integration as in the previous 
 example: 
 
-image:../../images/integrating-applications/WebhookToDB.png[Webhook-Data Mapper-DB integration]
+image:images/integrating-applications/WebhookToDB.png[Webhook-Data Mapper-DB integration]
 
 But in this example, you define the Webhook connection output
 data type by specifying a JSON schema with this content:
@@ -178,7 +178,7 @@ instance that looks like this:
 
 It is this internal JSON instance that enables the following mapping: 
 
-image:../../images/integrating-applications/TODOtoAddLead.png[Map to Add Lead]
+image:images/integrating-applications/TODOtoAddLead.png[Map to Add Lead]
 
 .Webhook examples with GET
 

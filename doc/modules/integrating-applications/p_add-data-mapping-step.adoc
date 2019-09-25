@@ -20,7 +20,7 @@ You are creating or editing a flow.
 .Procedure
 
 . In the flow visualization, where you want to add a data mapper step,
-click the image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+click the image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
 . Click *Data Mapper* to display source
 and target fields in the data mapper canvas. 
 

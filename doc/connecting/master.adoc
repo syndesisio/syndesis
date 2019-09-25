@@ -4,7 +4,6 @@ include::attributes-links.adoc[]
 
 :prodname: Syndesis
 :prodversion: 7.5
-:imagesdir: images
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
 :version: 7.5

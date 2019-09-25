@@ -19,7 +19,7 @@ an integration is not required for having a backup copy.
 . In the list of integrations, identify the entry for the integration 
 that you want to export.
 . At the right of the entry, click 
-image:../../images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
+image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and
 select *Export*. 
 
 .Next step

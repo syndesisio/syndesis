@@ -15,7 +15,7 @@ correct mappings are in place.
 
 .Procedure
 . In the upper right, click
-image:../../images/tutorials/grid.png[title="Grid"].
+image:images/tutorials/grid.png[title="Grid"].
 
 . To dismiss the list of mappings and redisplay the source and
-target fields, click image:../../images/tutorials/grid.png[title="Grid"] again.
+target fields, click image:images/tutorials/grid.png[title="Grid"] again.

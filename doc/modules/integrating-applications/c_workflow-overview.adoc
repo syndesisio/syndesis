@@ -19,7 +19,7 @@ Applications that you must register with include:
 With registration in place for those applications, the workflow for
 creating a simple integration looks like this:
 
-image:../../images/integrating-applications/general-workflow.png[general workflow]
+image:images/integrating-applications/general-workflow.png[general workflow]
 
 .Additional resource
 link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[Workflow for creating API provider integrations].

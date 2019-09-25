@@ -85,7 +85,7 @@ conditions that you want to evaluate.
 .Procedure
 
 . In the integration visualization, where you want to add a *Conditional Flows* step,
-click image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
+click image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign'].
 . Click *Conditional Flows*.
 . In the *Configure Conditional Flows* page, define one or more conditions: 
 .. In the initial *When* field, enter a Camel Simple Expression. For example, 
@@ -146,7 +146,7 @@ The conditional flow visualization shows the *Flow Start* and
 *Flow End* steps that all conditional flows have. 
 
 .. In the flow visualization, click the 
-image:../../images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign']
+image:images/integrating-applications/PlusSignToAddStepOrConnection.png[title='plus sign']
 where you want to add a step to this conditional flow. 
 
 .. Click the step that you want to add. You can add any connection or 

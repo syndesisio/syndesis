@@ -12,7 +12,7 @@ link:{LinkFuseOnlineTutorials}[sample integration tutorials].
 The following diagram shows the workflow for creating the sample
 Salesforce to Database integration. 
 
-image:../../images/integrating-applications/sample-workflow.png[sample workflow]
+image:images/integrating-applications/sample-workflow.png[sample workflow]
 
 After you publish an integration, the {prodname} dashboard
 displays *Running* next to the integration name when the integration

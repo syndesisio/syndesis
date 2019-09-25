@@ -40,7 +40,7 @@ you want to add records to.
 Typically, a data mapper step is needed before this connection.
 In the integration visualization, 
 {prodname} displays 
-image:../../images/tutorials/WarningIcon.png[Data Type Mismatch] on the
+image:images/tutorials/WarningIcon.png[Data Type Mismatch] on the
 connection. In most integrations, you need to map a source field 
 to the target field used as the correlation field in the 
 ServiceNow table. 

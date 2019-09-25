@@ -64,7 +64,7 @@ data between connections, repeat this subset of instructions.
 
 . Map data to fields in the next connection: 
 .. In the flow visualization, check for data type mismatch 
-image:../../images/integrating-applications/DataTypeMismatchWarning.png[data mismatch] icons, which
+image:images/integrating-applications/DataTypeMismatchWarning.png[data mismatch] icons, which
 indicate that the connection cannot process the incoming data. You need
 to add a data mapper step here. 
 .. For each data mismatch icon in the flow visualization:

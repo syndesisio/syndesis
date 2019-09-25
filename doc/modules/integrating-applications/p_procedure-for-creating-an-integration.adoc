@@ -79,7 +79,7 @@ data between connections. See
 link:{LinkFuseOnlineIntegrationGuide}#about-adding-steps_create[About adding steps between connections].
 
 . In the integration visualization, look for any
-image:../../images/tutorials/WarningIcon.png[Warning] icons. These 
+image:images/tutorials/WarningIcon.png[Warning] icons. These 
 warnings indicate that a data mapper step is needed before 
 this connection. Add the required data mapper steps. 
 

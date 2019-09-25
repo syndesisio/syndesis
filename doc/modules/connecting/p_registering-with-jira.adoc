@@ -155,7 +155,7 @@ endif::[]
 . Configure your Jira server to recognize your {prodname} environment 
 as a consumer application. 
 You must be logged in to the Jira server as an administrative user. 
-.. Select *Settings* (image:../../images/tutorials/EditorSettings.png[cog]) > *Products* > *Application links*. 
+.. Select *Settings* (image:images/tutorials/EditorSettings.png[cog]) > *Products* > *Application links*. 
 .. In the *Create new link* input field, enter any URL, for example, 
 enter: `https://example.com`.
 +

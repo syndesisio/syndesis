@@ -50,7 +50,7 @@ to a mapping.
 .Procedure
 
 . If data types are not already visible, display them by clicking 
-image:../../images/tutorials/EditorSettings.png[Editor settings] and then 
+image:images/tutorials/EditorSettings.png[Editor settings] and then 
 *Show Types*. 
 +
 While this is not a requirement for specifying a condition, it is
@@ -60,16 +60,16 @@ helpful to see the data types.
 ensure that the currently selected mapping is the mapping that you 
 want to apply a condition to. For example, consider this mapping: 
 +
-image:../../images/integrating-applications/first-conditional-mapping.png[lastName and firstName map to customerName]
+image:images/integrating-applications/first-conditional-mapping.png[lastName and firstName map to customerName]
 
 . In the upper right, click
-image:../../images/integrating-applications/add-condition-to-mapping.png[Add expression] to 
+image:images/integrating-applications/add-condition-to-mapping.png[Add expression] to 
 display the conditional expression input field. 
 +
 In the expression field, the data mapper automatically displays 
 the names of the source fields in the current mapping. For example: 
 +
-image:../../images/integrating-applications/first-conditional-mapping-expression.png[lastName + firstName]
+image:images/integrating-applications/first-conditional-mapping-expression.png[lastName + firstName]
 +
 In the expression input field, the order of the source fields is the 
 order in which you selected them when you created the mapping. 
@@ -99,7 +99,7 @@ that field to the mapping. For example, consider this conditional
 expression: 
 
 +
-image:../../images/integrating-applications/second-conditional-mapping-expression.png[if(ISEMPTY(lastName), firstName, orderId + phone)]
+image:images/integrating-applications/second-conditional-mapping-expression.png[if(ISEMPTY(lastName), firstName, orderId + phone)]
 
 +
 During execution, if the data mapper determines that the `lastName`
@@ -118,7 +118,7 @@ For this example, after you complete entering the expression,
 the data mapping is: 
 
 +
-image:../../images/integrating-applications/second-conditional-mapping.png[lastName, firstName, orderId, phone are mapped to customerName]
+image:images/integrating-applications/second-conditional-mapping.png[lastName, firstName, orderId, phone are mapped to customerName]
 
 +
 In the conditional expression, if you remove a field name that is in 
@@ -127,7 +127,7 @@ field from the mapping. In other words, every field name in the mapping
 must be in the conditional expression. 
 
 . If mapping preview fields are not already visible, display them 
-by clicking image:../../images/tutorials/EditorSettings.png[Editor settings] and then 
+by clicking image:images/tutorials/EditorSettings.png[Editor settings] and then 
 *Show Mapping Preview*. 
 
 . Enter sample data in the source preview input field(s) 

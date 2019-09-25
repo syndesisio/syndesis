@@ -58,7 +58,7 @@ use to register {prodname} as a Google client application.
 .. In the left navigation panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL,
 click
-image:../../images/tutorials/CopyCallback.png[Copy Callback URL] to
+image:images/tutorials/CopyCallback.png[Copy Callback URL] to
 copy the callback URL for your {prodname} environment to the clipboard.
 You will need this URL later in this procedure.
 . In another browser tab, go to `https://console.developers.google.com`
@@ -76,7 +76,7 @@ If this Google account does not already
 have a project, you must create one. 
 .. Enable Google APIs:
 ... In the upper left corner, click 
-image:../../images/connecting/Hamburger.png[Navigation menu icon] and select
+image:images/connecting/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Library*.
 ... If necessary, scroll down to see the *G Suite* row of cards. 
 ... Click the *Google Calendar API* card, which displays a page that indicates
@@ -84,7 +84,7 @@ that the Google Calendar API is enabled.
 ... Scroll down and click the *Gmail API* card, which displays a page that indicates
 that the Gmail API is enabled.
 ... In the upper left corner, click 
-image:../../images/connecting/Hamburger.png[Navigation menu icon] and select
+image:images/connecting/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Library*.
 ... If necessary, scroll down to see the *G Suite* row of cards. 
 ... Click the *Google Sheets API* card, which displays a page that indicates
@@ -113,7 +113,7 @@ this procedure.
 ... Click *Create* to display the client ID and client secret for your
 {prodname} environment.
 .. To the right of the client ID field, click
-image:../../images/connecting/copy_icon.png[the Copy icon] to copy the client ID
+image:images/connecting/copy_icon.png[the Copy icon] to copy the client ID
 to your clipboard.
 
 . Return to the {prodname} *Settings* page and do the following: 
@@ -123,7 +123,7 @@ paste the Google client ID that you just copied.
 
 . Return to the Google developers site and to the right of the
 client secret field, click
-image:../../images/connecting/copy_icon.png[the Copy icon] to copy the client secret to
+image:images/connecting/copy_icon.png[the Copy icon] to copy the client secret to
 your clipboard.
 
 . Return to the {prodname} *Settings* page and do the following in

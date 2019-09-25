@@ -23,7 +23,7 @@ and the *Target* panel on the right displays the Salesforce fields.
 . Map the Twitter `name` field to the Salesforce
 `FirstName` and `LastName` fields:
 .. In the *Sources* panel, click the magnifying
-glass image:../../images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
+glass image:images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*name*`.
 .. Under the `user` folder, click the `name` field.
 .. In the *Target* panel, scroll down and click *FirstName*. The
@@ -50,7 +50,7 @@ mapping. Then click the trash can icon in the top right of the data mapper's
 the *screenName* field.
 .. On the right, at the top of the *Target* panel,
 click the magnifying
-glass image:../../images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
+glass image:images/tutorials/magnifying-glass.png[title="Magnifying Glass"]
 to display the search field and enter `*Title*`.
 .. Click the *Title* field. The data mapper displays a line
 from the Twitter *screenName* field to the Salesforce *Title* field.
@@ -64,7 +64,7 @@ from the Twitter *screenName* field to the Salesforce *Title* field.
 .. Click the
 Salesforce *Description* field to create the mapping.
 . In the upper right, click
-the grid icon image:../../images/tutorials/grid.png[title="Grid"] to
+the grid icon image:images/tutorials/grid.png[title="Grid"] to
 display the list of mappings, which should look like this:
-image:../../images/tutorials/t2sf-mappings.png[Data Mappings]
+image:images/tutorials/t2sf-mappings.png[Data Mappings]
 . In the upper right, click *Done*.

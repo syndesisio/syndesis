@@ -87,6 +87,6 @@ The error suspended start-up or execution.  If this happens, try
 starting an earlier integration version that ran correctly. 
 Alternatively, contact technical support for help. 
 To do that, in any {prodname} page, in the upper right, click the 
-image:../../images/tutorials/InfoIcon.png[title="Help"] icon and select *Support*. 
+image:images/tutorials/InfoIcon.png[title="Help"] icon and select *Support*. 
 
 |===
