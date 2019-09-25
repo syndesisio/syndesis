@@ -187,7 +187,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Upgrade.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.KomodoImagesPrefix)
-	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.PostgresExporterImagePrefix)
+	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.ImagePrefix, renderContext.Images.PostgresExporterImagePrefix)
 
 	if syndesis.Spec.DeployIntegrations == nil {
 		v := true
