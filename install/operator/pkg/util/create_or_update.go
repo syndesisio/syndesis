@@ -1,16 +1,25 @@
 package util
 
 import (
-    "context"
-    "encoding/base64"
-    "fmt"
-    "k8s.io/apimachinery/pkg/api/resource"
-    "k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-    "k8s.io/apimachinery/pkg/runtime"
-    "reflect"
-    "sigs.k8s.io/controller-runtime/pkg/client"
-    "sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
+	"context"
+	"encoding/base64"
+	"fmt"
+	"github.com/spf13/pflag"
+	"k8s.io/apimachinery/pkg/api/resource"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	"reflect"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
+
+var FlagSet *pflag.FlagSet = nil
+var showResourceDiffs = false
+
+func init() {
+	FlagSet = pflag.NewFlagSet("util", pflag.ExitOnError)
+	FlagSet.BoolVar(&showResourceDiffs, "print-resource-diffs", false, "Enable printing resource diffs for resources that get updated.")
+}
 
 func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, skipFields ...string) (*unstructured.Unstructured, controllerutil.OperationResult, error) {
 
@@ -47,7 +56,7 @@ func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, ski
 		return nil
 	})
 
-	if modType == controllerutil.OperationResultUpdated {
+	if showResourceDiffs && modType == controllerutil.OperationResultUpdated {
 		fmt.Println("resource", desired.GetKind(), "update:", desired.GetName())
 		fmt.Println(UnifiedDiff(originalYaml, updatedYaml))
 	}
@@ -72,12 +81,12 @@ func mergeMap(path string, to map[string]interface{}, from map[string]interface{
 
 		// handle cases like https://issues.jboss.org/browse/ENTESB-11711 setting a env value to "" does not work well, k8s gives delete
 		// the value field under the covers, and we keep trying to set it again to the "" value.
-        if field == "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/env/#/value" && (value == nil || value=="") {
-            delete(to, key)
-            continue
-        }
+		if field == "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/env/#/value" && (value == nil || value == "") {
+			delete(to, key)
+			continue
+		}
 
-        to[key] = mergeValue(field, to[key], value, skip)
+		to[key] = mergeValue(field, to[key], value, skip)
 	}
 }
 
