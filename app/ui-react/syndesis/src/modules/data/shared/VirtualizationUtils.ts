@@ -89,6 +89,36 @@ export function generateViewInfos(
 
 /**
  * Recursively flattens the tree structure of SchemaNodes,
+ * into an array of ViewInfos
+ * @param viewInfos the array of ViewInfos
+ * @param schemaNodes the SchemaNode[] array from which the ViewInfo is generated
+ * @param nodePath path for current SchemaNode eg ['name0', 'name1', 'name2']
+ * @param selectedViewNames names of views which are selected
+ * @param existingViewNames names of views which exist (marked as update)
+ */
+export function generateAllViewInfos(
+  viewInfos: ViewInfo[],
+  schemaNodes: SchemaNode[],
+  nodePath: string[],
+  selectedViewNames: string[],
+  existingViewNames: string[]
+): void {
+  if (schemaNodes && schemaNodes.length > 0) {
+    // Process each schemaNode
+    schemaNodes.map(schemaNode => {
+      return generateViewInfos(
+        viewInfos,
+        schemaNode,
+        nodePath,
+        selectedViewNames,
+        existingViewNames
+      );
+    });
+  }
+}
+
+/**
+ * Recursively flattens the tree structure of SchemaNodes,
  * into an array of SchemaNodeInfos
  * @param schemaNodeInfos the array of SchemaNodeInfos
  * @param schemaNode the SchemaNode from which the SchemaNodeInfo is generated
