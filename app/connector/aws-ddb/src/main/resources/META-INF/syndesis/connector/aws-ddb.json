@@ -150,6 +150,9 @@
   "icon": "assets:sql.svg",
   "id": "aws-ddb",
   "name": "AWS-DDB",
+  "metadata": {
+    "tech-preview": true
+  },
   "properties": {
     "region": {
       "defaultValue": "EU CENTRAL 1",
