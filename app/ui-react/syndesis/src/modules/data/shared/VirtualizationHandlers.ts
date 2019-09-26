@@ -4,39 +4,34 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../app';
 
 export const VirtualizationHandlers = () => {
-
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { deleteVirtualization, publishVirtualization, unpublishVirtualization } = useVirtualizationHelpers();
+  const {
+    deleteVirtualization,
+    publishVirtualization,
+    unpublishVirtualization,
+  } = useVirtualizationHelpers();
 
   const handleDeleteVirtualization = async (
     pVirtualizationId: string
   ): Promise<boolean> => {
     let success = false;
     try {
-      await deleteVirtualization(
-        pVirtualizationId
-      );
+      await deleteVirtualization(pVirtualizationId);
       pushNotification(
-        t(
-          'virtualization.deleteVirtualizationSuccess',
-          { name: pVirtualizationId }
-        ),
+        t('virtualization.deleteVirtualizationSuccess', {
+          name: pVirtualizationId,
+        }),
         'success'
       );
       success = true;
     } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
+      const details = error.message ? error.message : '';
       pushNotification(
-        t(
-          'virtualization.deleteVirtualizationFailed',
-          {
-            details,
-            name: pVirtualizationId,
-          }
-        ),
+        t('virtualization.deleteVirtualizationFailed', {
+          details,
+          name: pVirtualizationId,
+        }),
         'error'
       );
     }
@@ -50,63 +45,81 @@ export const VirtualizationHandlers = () => {
     let success = false;
     if (hasViews) {
       try {
-        await publishVirtualization(
-          virtualizationId
-        );
-  
-        pushNotification(
-          t(
-            'virtualization.publishVirtualizationSuccess',
-            { name: virtualizationId }
-          ),
-          'success'
-        );
-        success = true;
+        const status = await publishVirtualization(virtualizationId);
+
+        if (status.Information.error) {
+          pushNotification(
+            t('virtualization.publishVirtualizationFailed', {
+              details: status.Information.error,
+              name: virtualizationId,
+            }),
+            'error'
+          );
+        } else {
+          pushNotification(
+            t('virtualization.publishVirtualizationSuccess', {
+              name: virtualizationId,
+            }),
+            'success'
+          );
+          success = true;
+        }
       } catch (error) {
-        const details = error.error
-          ? error.error
-          : '';
+        const details = error.error ? error.error : '';
         pushNotification(
-          t(
-            'virtualization.publishVirtualizationFailed',
-            { name: virtualizationId, details }
-          ),
+          t('virtualization.publishVirtualizationFailed', {
+            details,
+            name: virtualizationId,
+          }),
           'error'
         );
       }
     } else {
       pushNotification(
-        t(
-          'virtualization.publishVirtualizationNoViews',
-          { name: virtualizationId }
-        ),
+        t('virtualization.publishVirtualizationNoViews', {
+          name: virtualizationId,
+        }),
         'error'
       );
     }
     return Promise.resolve(success);
-  }
+  };
 
   const handleUnpublishVirtualization = async (
     virtualizationName: string
   ): Promise<boolean> => {
     let success = false;
     try {
-      await unpublishVirtualization(virtualizationName);
+      const buildStatus = await unpublishVirtualization(virtualizationName);
 
-      pushNotification(
-        t(
-          'virtualization.unpublishVirtualizationSuccess',
-          { name: virtualizationName }
-        ),
-        'success'
-      );
-      success = true;
+      if (buildStatus.build_status === 'NOTFOUND') {
+        pushNotification(
+          t('virtualization.unpublishedVirtualization', {
+            name: virtualizationName,
+          }),
+          'info'
+        );
+      } else if (buildStatus.build_status !== 'DELETE_SUBMITTED') {
+        pushNotification(
+          t('virtualization.unpublishVirtualizationFailed', {
+            details: buildStatus.build_status_message,
+            name: virtualizationName,
+          }),
+          'error'
+        );
+      } else {
+        pushNotification(
+          t('virtualization.unpublishVirtualizationSuccess', {
+            name: virtualizationName,
+          }),
+          'success'
+        );
+        success = true;
+      }
     } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
+      const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.unpublishFailed', {
+        t('virtualization.unpublishVirtualizationFailed', {
           details,
           name: virtualizationName,
         }),
@@ -119,7 +132,6 @@ export const VirtualizationHandlers = () => {
   return {
     handleDeleteVirtualization,
     handlePublishVirtualization,
-    handleUnpublishVirtualization
+    handleUnpublishVirtualization,
   };
-
-}
+};
