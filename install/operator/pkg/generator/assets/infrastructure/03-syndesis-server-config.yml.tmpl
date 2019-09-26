@@ -30,9 +30,9 @@
         zipkin:
           enabled: false
         datasource:
-          url: jdbc:postgresql://syndesis-db:5432/syndesis?sslmode=disable
+          url: jdbc:{{.Env.POSTGRESQL_URL}}
+          username: '{{.Env.POSTGRESQL_USER}}'
           password: '{{.Env.POSTGRESQL_PASSWORD}}'
-          username: '{{.Syndesis.Spec.Components.Db.User}}'
           driver-class-name: org.postgresql.Driver
       security:
         basic:
