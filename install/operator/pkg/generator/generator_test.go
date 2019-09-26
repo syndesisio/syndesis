@@ -453,7 +453,7 @@ func TestImageStreams(t *testing.T) {
 		{"syndesis-meta", syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.Meta.Tag},
 		{"syndesis-ui", syndesis.Spec.Components.UI.Registry, syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.UI.Tag},
 		{"syndesis-s2i", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
-		{"syndesis-dv", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
+		{"syndesis-dv", syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Components.Komodo.ImagePrefix, syndesis.Spec.Components.Komodo.Tag},
 		{"postgres_exporter", syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Components.PostgresExporter.ImagePrefix, syndesis.Spec.Components.PostgresExporter.Tag},
 	}
 
