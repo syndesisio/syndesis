@@ -80,7 +80,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
 
 			for _, res := range resources {
-				operation.SetNamespaceAndOwnerReference(res, syndesis)
+				operation.SetNamespaceAndOwnerReference(res, target)
 
 				err = createOrReplaceForce(ctx, a.client, res, true)
 				if err != nil {
