@@ -6,6 +6,11 @@ import {
   PageSection,
   Split,
   SplitItem,
+  Stack,
+  StackItem,
+  Text,
+  TextContent,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import { SyncIcon } from '@patternfly/react-icons';
@@ -31,6 +36,7 @@ export interface IExpandablePreviewProps {
   i18nEmptyResultsMsg: string;
   i18nHidePreview: string;
   i18nLoadingQueryResults: string;
+  i18nRowTotalLabel: string;
   i18nShowPreview: string;
   i18nTitle: string;
   initialExpanded?: boolean;
@@ -68,6 +74,7 @@ export const ExpandablePreview: React.FunctionComponent<
   i18nEmptyResultsMsg,
   i18nHidePreview,
   i18nLoadingQueryResults,
+  i18nRowTotalLabel,
   i18nShowPreview,
   i18nTitle,
   initialExpanded = true,
@@ -90,7 +97,7 @@ export const ExpandablePreview: React.FunctionComponent<
         onToggle={toggleExpanded}
         isExpanded={expanded}
       >
-        <Split>
+        <Split style={{ alignItems: 'center' }}>
           <SplitItem isFilled={false}>
             <Title headingLevel="h5" size="lg">
               {i18nTitle}
@@ -106,16 +113,28 @@ export const ExpandablePreview: React.FunctionComponent<
               <SyncIcon />
             </Button>
           </SplitItem>
-          <SplitItem isFilled={true} />
         </Split>
-        <PreviewResults
-          queryResultRows={queryResultRows}
-          queryResultCols={queryResultCols}
-          i18nEmptyResultsTitle={i18nEmptyResultsTitle}
-          i18nEmptyResultsMsg={i18nEmptyResultsMsg}
-          i18nLoadingQueryResults={i18nLoadingQueryResults}
-          isLoadingPreview={isLoadingPreview}
-        />
+        <Stack>
+          {queryResultRows.length > 0 && (
+            <StackItem isFilled={false}>
+              <TextContent>
+                <Text component={TextVariants.small}>
+                  {i18nRowTotalLabel} {queryResultRows.length}
+                </Text>
+              </TextContent>
+            </StackItem>
+          )}
+          <StackItem isFilled={true}>
+            <PreviewResults
+              queryResultRows={queryResultRows}
+              queryResultCols={queryResultCols}
+              i18nEmptyResultsTitle={i18nEmptyResultsTitle}
+              i18nEmptyResultsMsg={i18nEmptyResultsMsg}
+              i18nLoadingQueryResults={i18nLoadingQueryResults}
+              isLoadingPreview={isLoadingPreview}
+            />
+          </StackItem>
+        </Stack>
       </Expandable>
     </PageSection>
   );

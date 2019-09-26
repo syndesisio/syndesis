@@ -1,4 +1,5 @@
 {
+  "Refresh": "Refresh",
   "Submit": "Submit",
   "virtualization": {
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
@@ -47,8 +48,7 @@
       "resultsTableInvalidEmptyTitle": "CURRENT VIEW INVALID",
       "resultsTableInvalidEmptyInfo": "The current view is invalid - no results to show",
       "resultsTableValidEmptyTitle": "NO DATA AVAILABLE",
-      "resultsTableValidEmptyInfo": "Click 'refresh' button to refresh the preview results",
-      "title": "Preview Results",
+      "resultsTableValidEmptyInfo": "Click the 'Refresh' button to refresh the preview results. Remember to save the View Editor above to make sure you are getting the results you expect.",
       "loadingQueryResults": "Loading query results..."
     },
     "unpublishModalMessage": "This Virtualization has been published. Unpublish Virtualization \"{{name}}\" first.",
@@ -87,7 +87,7 @@
     "queryResultsTableEmptyStateInfo": "Query has not yet been executed.\nSelect view, enter SQL query and click 'Submit'",
     "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE",
     "queryResultsTitle": "Query Results",
-    "queryResultsRowCountMsg": "Number of Rows: ",
+    "queryResultsRowCountMsg": "Number of rows: ",
     "queryResultsRefreshed": "The view preview results were refreshed for {{name}}",
     "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
     "createVirtualizationSuccess": "{{name}} virtualization created.",
