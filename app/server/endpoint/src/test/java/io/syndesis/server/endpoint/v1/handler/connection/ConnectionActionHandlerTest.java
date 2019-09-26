@@ -174,7 +174,7 @@ public class ConnectionActionHandlerTest {
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
-                c -> c.addDataList("Contact").defaultValue("Contact"))
+                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")).defaultValue("Contact"))
             .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("ID", "Contact ID")))
             .replaceConfigurationProperty("sObjectIdName",
@@ -233,7 +233,9 @@ public class ConnectionActionHandlerTest {
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
-                c -> c.addDataList("Account", "Contact"))
+                c -> c.addAllEnum(Arrays.asList(
+                        ConfigurationProperty.PropertyValue.Builder.of("Account", "Account"),
+                        ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact"))))
             .inputDataShape(ConnectionActionHandler.ANY_SHAPE)//
             .build();
 
