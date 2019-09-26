@@ -41,5 +41,5 @@ The connection appears in the integration flow where you added it.
 .Next step
 If you want to map any values to the fields in this Google Calendar 
 connection, add a data mapper step to the flow. First, add all 
-needed connections to the flow. Then add a data mapper immediately 
+needed connections to the flow. Then add a data mapper step immediately 
 before this Google Calendar connection.
