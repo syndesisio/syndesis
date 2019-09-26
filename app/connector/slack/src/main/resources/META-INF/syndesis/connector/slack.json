@@ -70,7 +70,7 @@
                 "labelHint": "The name of the Slack channel to send the message to.",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               }
             }
           }
@@ -111,7 +111,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "select"
               },
               "delay": {
                 "defaultValue": 500,
