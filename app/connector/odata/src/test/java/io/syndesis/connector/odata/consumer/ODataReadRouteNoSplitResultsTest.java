@@ -501,30 +501,18 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
 
-        int expectedMsgCount = 3;
+        int expectedMsgCount = 1;
         MockEndpoint result = initMockEndpoint();
-        result.setMinimumExpectedMessageCount(expectedMsgCount);
+        result.setExpectedMessageCount(expectedMsgCount);
 
         context.start();
 
         result.assertIsSatisfied();
 
-        for (int i = 0; i < expectedMsgCount; ++i) {
-            String json = extractJsonFromExchgMsg(result, i, String.class);
-            assertNotNull(json);
-
-            String expected;
-            if (i == 0) {
-                expected = testData(REF_SERVER_AIRPORT_DATA_1);
-                JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
-            } else {
-                //
-                // Subsequent polling messages should be empty
-                //
-                expected = testData(TEST_SERVER_DATA_EMPTY);
-                JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
-            }
-        }
+        String json = extractJsonFromExchgMsg(result, 0, String.class);
+        assertNotNull(json);
+        String expected = testData(REF_SERVER_AIRPORT_DATA_1);
+        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 
         //
         // Check backup consumer options carried through to olingo4 component
