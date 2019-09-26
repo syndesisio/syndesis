@@ -26,7 +26,7 @@
 
   <groupId>io.syndesis</groupId>
   <artifactId>syndesis-parent</artifactId>
-  <version>1.9-SNAPSHOT</version>
+  <version>1.9.1-20190926</version>
   <packaging>pom</packaging>
 
   <name>Syndesis</name>
