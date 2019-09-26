@@ -1,46 +1,39 @@
 ProductName: syndesis
 AllowLocalHost: false
-Debug: false
-EarlyAccess: false
-Images:
-  ImageStreamNamespace: ""
-  KomodoImagesPrefix: teiid
-  OAuthProxyImagePrefix: quay.io/openshift
-  PostgresExporterImagePrefix: wrouesnel
-  PrometheusImagePrefix: prom
-  CamelKBaseImagePrefix: fabric8/s2i-java
-  Support:
-    OAuthProxy: oauth-proxy
-    OAuthProxyImage: origin-oauth-proxy
-    PostgresExporter: postgres_exporter
-    Postgresql: postgresql
-    Prometheus: prometheus
-  Syndesis:
-    Komodo: syndesis-dv
-    Rest: syndesis-server
-    S2i: syndesis-s2i
-    Ui: syndesis-ui
-    Upgrade: syndesis-upgrade
-    Verifier: syndesis-meta
-  SyndesisImagesPrefix: syndesis
-Name: fuse-ignite
-Ocp: false
-Oso: false
 Productized: false
 PrometheusRules: ""
-Registry: docker.io
 TagMinor: "1.9.0"
 TagMajor: "2.0.0"
-Tags:
-  Komodo: latest
-  OAuthProxy: v4.0.0
-  PostgresExporter: v0.4.7
-  Postgresql: "9.5"
-  Prometheus: v2.1.0
-  Syndesis: latest
-  Upgrade: latest
-  CamelKBase: 3.0-java8
-WithDockerImages: false
 Versions:
   Camel: "2.21.0.fuse-750029"
   CamelKRuntime: "0.3.4.fuse-740008"
+spec-defaults:
+  imageStreamNamespace: ""
+  components:
+    psql:
+      image: docker.io/wrouesnel/postgres_exporter:v0.4.7
+    s2i:
+      image: docker.io/syndesis/syndesis-s2i:latest
+    operator:
+      image: docker.io/syndesis/syndesis-operator:latest
+    ui:
+      image: docker.io/syndesis/syndesis-ui:latest
+    server:
+      image: docker.io/syndesis/syndesis-server:latest
+    meta:
+      image: docker.io/syndesis/syndesis-meta:latest
+    db:
+      imageStreamNamespace: openshift
+      image: postgresql:9.5
+    komodo:
+      image: docker.io/teiid/syndesis-dv:latest
+    oauth:
+      image: quay.io/openshift/origin-oauth-proxy:v4.0.0
+    prometheus:
+      image: docker.io/prom/prometheus:v2.1.0
+    upgrade:
+      image: docker.io/syndesis/syndesis-upgrade:latest
+  mavenRepositories:
+    central: https://repo.maven.apache.org/maven2/
+    repo-02-redhat-ga: https://maven.repository.redhat.com/ga/
+    repo-03-jboss-ea: https://repository.jboss.org/nexus/content/groups/ea/

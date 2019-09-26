@@ -55,7 +55,11 @@
         serviceAccountName: syndesis-default
         containers:
         - name: syndesis-ui
+{{if .Syndesis.Spec.DevSupport}}
           image: ' '
+{{else}}
+          image: '{{ .Syndesis.Spec.Components.UI.Image }}'
+{{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -83,16 +87,35 @@
             name: syndesis-ui-config
           name: config-volume
     triggers:
+    - type: ConfigChange
+{{if .Syndesis.Spec.DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
-        - {{.ProductName}}-ui
+        - syndesis-ui
         from:
           kind: ImageStreamTag
-          name: '{{ .Images.Syndesis.Ui }}:{{ .Syndesis.Spec.Components.UI.Tag }}'
+          name: 'syndesis-ui:latest'
           namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
       type: ImageChange
-    - type: ConfigChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
+  spec:
+    tags:
+    - name: "latest"
+      from:
+        kind: ImageStreamTag
+        name: 'syndesis-ui:latest'
+{{end}}
+
 - apiVersion: v1
   kind: ConfigMap
   metadata:

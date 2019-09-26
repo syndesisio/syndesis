@@ -98,13 +98,6 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.IntegrationSpec"),
 						},
 					},
-					"registry": {
-						SchemaProps: spec.SchemaProps{
-							Description: "The container registry to pull syndesis images from",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"components": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Components is used to configure all the core components of Syndesis",

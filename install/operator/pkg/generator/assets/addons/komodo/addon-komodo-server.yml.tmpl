@@ -61,7 +61,7 @@
           - name: GC_MAX_METASPACE_SIZE
             value: "512"
           - name: BUILD_IMAGE_STREAM
-            value: {{ .Images.Syndesis.S2i }}:latest
+            value: syndesis-s2i:{{ tagOf .Syndesis.Spec.Components.S2I.Image }}
           - name: POSTGRESQL_PASSWORD
             value: {{.Env.POSTGRESQL_PASSWORD}}
           - name: POSTGRESQL_USER
@@ -70,11 +70,15 @@
             value: {{.Syndesis.Spec.Components.Db.Database}}
           - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
             value: '{{.Syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale}}'
-{{if .Debug}}
+{{if .Syndesis.Spec.DevSupport}}}
           - name: JAVA_DEBUG
             value: "true"
 {{end}}
+{{if .Syndesis.Spec.DevSupport}}
           image: ' '
+{{else}}
+          image: '{{ .Syndesis.Spec.Components.Komodo.Image }}'
+{{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -121,21 +125,22 @@
           configMap:
             name: syndesis-server-config
     triggers:
+    - type: ConfigChange
+{{if .Syndesis.Spec.DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
         - syndesis-dv
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}
-          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
+          name: syndesis-dv:latest
+          namespace: {{.Syndesis.Namespace}}
       type: ImageChange
-    - type: ConfigChange
 
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
-    name: {{ .Images.Syndesis.Komodo }}
+    name: syndesis-dv
     labels:
       app: syndesis
       syndesis.io/app: syndesis
@@ -143,16 +148,8 @@
       syndesis.io/component: syndesis-dv
   spec:
     tags:
-      {{if .Syndesis.Spec.DevSupport}}
     - name: "latest"
       from:
         kind: ImageStreamTag
-        name: '{{ .Images.Syndesis.Komodo }}:latest'
-      {{else}}
-    - name: "{{ .Syndesis.Spec.Components.Komodo.Tag }}"
-      from:
-        kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{ .Images.KomodoImagesPrefix }}/{{ .Images.Syndesis.Komodo }}:{{ .Syndesis.Spec.Components.Komodo.Tag }}'
-      importPolicy:
-        scheduled: true
-      {{end}}
+        name: 'syndesis-dv:latest'
+{{end}}

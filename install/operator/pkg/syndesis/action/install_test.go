@@ -35,7 +35,7 @@ func TestTagsDefautValues(t *testing.T) {
 	}
 	gen.Syndesis = syndesis
 
-	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{})
+	err = template.SetupRenderContext(gen, syndesis, map[string]string{})
 	require.NoError(t, err)
 
 	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
@@ -45,14 +45,16 @@ func TestTagsDefautValues(t *testing.T) {
 		value string
 		def   string
 	}{
-		{"Server", syndesis.Spec.Components.Server.Tag, gen.Tags.Syndesis},
-		{"Meta", syndesis.Spec.Components.Meta.Tag, gen.Tags.Syndesis},
-		{"UI", syndesis.Spec.Components.UI.Tag, gen.Tags.Syndesis},
-		{"Komodo", syndesis.Spec.Components.Komodo.Tag, gen.Tags.Komodo},
-		{"Oauth", syndesis.Spec.Components.Oauth.Tag, gen.Tags.OAuthProxy},
-		{"Prometheus", syndesis.Spec.Components.Prometheus.Tag, gen.Tags.Prometheus},
-		{"Postgres exporter", syndesis.Spec.Components.PostgresExporter.Tag, gen.Tags.PostgresExporter},
-		{"Postgresql", syndesis.Spec.Components.Db.Tag, gen.Tags.Postgresql},
+		{"Server", syndesis.Spec.Components.Server.Image, gen.SpecDefaults.Components.Server.Image},
+		{"Meta", syndesis.Spec.Components.Meta.Image, syndesis.Spec.Components.Meta.Image},
+		{"UI", syndesis.Spec.Components.UI.Image, syndesis.Spec.Components.UI.Image},
+		{"Komodo", syndesis.Spec.Components.Komodo.Image, syndesis.Spec.Components.Komodo.Image},
+		{"Oauth", syndesis.Spec.Components.Oauth.Image, syndesis.Spec.Components.Oauth.Image},
+		{"Prometheus", syndesis.Spec.Components.Prometheus.Image, syndesis.Spec.Components.Prometheus.Image},
+		{"PostgresExporter", syndesis.Spec.Components.PostgresExporter.Image, syndesis.Spec.Components.PostgresExporter.Image},
+		{"Db", syndesis.Spec.Components.Db.Image, syndesis.Spec.Components.Db.Image},
+		{"S2I", syndesis.Spec.Components.S2I.Image, syndesis.Spec.Components.S2I.Image},
+		{"Upgrade", syndesis.Spec.Components.Upgrade.Image, syndesis.Spec.Components.Upgrade.Image},
 	}
 
 	{
@@ -81,16 +83,16 @@ func TestCheckTags(t *testing.T) {
 		Spec: v1alpha1.SyndesisSpec{
 			Components: v1alpha1.ComponentsSpec{
 				Server: v1alpha1.ServerConfiguration{
-					Tag: "1.4.2",
+					Image: "test:1.4.2",
 				},
 				Meta: v1alpha1.MetaConfiguration{
-					Tag: "1.5.0",
+					Image: "test:1.5.0",
 				},
 				UI: v1alpha1.UIConfiguration{
-					Tag: "1.5-beta",
+					Image: "test:1.5-beta",
 				},
 				S2I: v1alpha1.S2IConfiguration{
-					Tag: "1.5.0-RC1",
+					Image: "test:1.5.0-RC1",
 				},
 			},
 		},
@@ -106,14 +108,14 @@ func TestCheckTags(t *testing.T) {
 		}
 		t.Logf("\t%s\tAll tags are valid.", succeed)
 
-		gen.Syndesis.Spec.Components.Server.Tag = "1.7"
+		gen.Syndesis.Spec.Components.Server.Image = "test:1.7"
 		err = checkTags(gen)
 		if err == nil {
 			t.Fatalf("\t%s\tAll tags are valid but server tag [1.7 not in range: >=1.4 <1.6], it should fail: (%v)", failed, err)
 		}
 		t.Logf("\t%s\tServer tag is invalid [1.7 not in range: >=1.4 <1.6], and it should fail.", succeed)
 
-		gen.Syndesis.Spec.Components.Server.Tag = "some_invalid_tag"
+		gen.Syndesis.Spec.Components.Server.Image = "test:some_invalid_tag"
 		err = checkTags(gen)
 		if err == nil {
 			t.Fatalf("\t%s\tAll tags are valid but server tag [some_invalid_tag has an invalid format], it should fail: (%v)", failed, err)

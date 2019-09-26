@@ -12,7 +12,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	v1 "k8s.io/api/core/v1"
-	"k8s.io/apimachinery/pkg/runtime"
 )
 
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -83,16 +82,7 @@ func GetTemplateContext() (*generator.Context, error) {
 	return gen, nil
 }
 
-// Each operator instance is bound to a single version currently that can be retrieved from this method.
-func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, error) {
-	ctx, err := GetTemplateContext()
-	if err != nil {
-		return "", err
-	}
-	return ctx.Tags.Syndesis, nil
-}
-
-func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, params ResourceParams, env map[string]string) error {
+func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syndesis, env map[string]string) error {
 
 	// Lets fill in all the addons we know about...
 	if syndesis.Spec.Addons == nil {
@@ -133,7 +123,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	// Setup the config..
 	config := make(map[string]string)
 	copyMap(config, env)
-	config[string(configuration.EnvOpenShiftOauthClientSecret)] = params.OAuthClientSecret
+
 	ifMissingGeneratePwd(config, configuration.EnvOpenShiftOauthClientSecret, 64)
 	ifMissingGeneratePwd(config, configuration.EnvPostgresqlPassword, 16)
 	ifMissingGeneratePwd(config, configuration.EnvPostgresqlSampledbPassword, 16)
@@ -144,11 +134,9 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	configuration.SetConfigurationFromEnvVars(config, syndesis)
 
 	ifMissingSet(&syndesis.Spec.OpenShiftMaster, "https://localhost:8443")
-	ifMissingSetResource(syndesis.Spec.Components.Db.Resources.Resources.Limits, "memory", "255Mi")
 	ifMissingSet(&syndesis.Spec.Components.Db.ImageStreamNamespace, "openshift")
 	ifMissingSet(&syndesis.Spec.Components.Db.User, "syndesis")
 	ifMissingSet(&syndesis.Spec.Components.Db.Database, "syndesis")
-	ifMissingSet(&syndesis.Spec.Components.Db.Resources.VolumeCapacity, "1Gi")
 
 	if syndesis.Spec.TestSupport == nil {
 		v := false
@@ -159,38 +147,36 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 		syndesis.Spec.DemoData = &v
 	}
 
-	ifMissingSet(&syndesis.Spec.Components.Meta.Tag, renderContext.Tags.Syndesis)
-	ifMissingSet(&syndesis.Spec.Components.Server.Tag, renderContext.Tags.Syndesis)
-	ifMissingSet(&syndesis.Spec.Components.UI.Tag, renderContext.Tags.Syndesis)
-	ifMissingSet(&syndesis.Spec.Components.S2I.Tag, renderContext.Tags.Syndesis)
-
-	ifMissingSet(&syndesis.Spec.Components.Db.Tag, renderContext.Tags.Postgresql)
-	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Tag, renderContext.Tags.PostgresExporter)
-	ifMissingSet(&syndesis.Spec.Components.Komodo.Tag, renderContext.Tags.Komodo)
-	ifMissingSet(&syndesis.Spec.Components.Oauth.Tag, renderContext.Tags.OAuthProxy)
-	ifMissingSet(&syndesis.Spec.Components.Prometheus.Tag, renderContext.Tags.Prometheus)
-
-	ifMissingSet(&syndesis.Spec.Registry, renderContext.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Meta.Image, renderContext.SpecDefaults.Components.Meta.Image)
+	ifMissingSet(&syndesis.Spec.Components.Server.Image, renderContext.SpecDefaults.Components.Server.Image)
+	ifMissingSet(&syndesis.Spec.Components.UI.Image, renderContext.SpecDefaults.Components.UI.Image)
+	ifMissingSet(&syndesis.Spec.Components.UI.Image, renderContext.SpecDefaults.Components.UI.Image)
+	ifMissingSet(&syndesis.Spec.Components.S2I.Image, renderContext.SpecDefaults.Components.S2I.Image)
+	ifMissingSet(&syndesis.Spec.Components.Db.Image, renderContext.SpecDefaults.Components.Db.Image)
+	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Image, renderContext.SpecDefaults.Components.PostgresExporter.Image)
+	ifMissingSet(&syndesis.Spec.Components.Komodo.Image, renderContext.SpecDefaults.Components.Komodo.Image)
+	ifMissingSet(&syndesis.Spec.Components.Oauth.Image, renderContext.SpecDefaults.Components.Oauth.Image)
+	ifMissingSet(&syndesis.Spec.Components.Prometheus.Image, renderContext.SpecDefaults.Components.Prometheus.Image)
+	ifMissingSet(&syndesis.Spec.Components.Upgrade.Image, renderContext.SpecDefaults.Components.Upgrade.Image)
 
 	if syndesis.Spec.DeployIntegrations == nil {
 		v := true
 		syndesis.Spec.DeployIntegrations = &v
 	}
-	ifMissingSet(&syndesis.Spec.ImageStreamNamespace, renderContext.Images.ImageStreamNamespace)
+	ifMissingSet(&syndesis.Spec.ImageStreamNamespace, renderContext.SpecDefaults.ImageStreamNamespace)
 
 	ifMissingSet(&syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity, "1Gi")
-	ifMissingSetResource(syndesis.Spec.Components.Prometheus.Resources.Resources.Limits, "memory", "512Mi")
 	ifMissingSet(&syndesis.Spec.Components.Meta.Resources.VolumeCapacity, "1Gi")
+	ifMissingSet(&syndesis.Spec.Components.Db.Resources.VolumeCapacity, "1Gi")
 
+	ifMissingSetResource(syndesis.Spec.Components.Prometheus.Resources.Resources.Limits, "memory", "512Mi")
+	ifMissingSetResource(syndesis.Spec.Components.Db.Resources.Resources.Limits, "memory", "255Mi")
 	ifMissingSetResource(syndesis.Spec.Components.Meta.Resources.Resources.Limits, "memory", "512Mi")
 	ifMissingSetResource(syndesis.Spec.Components.Server.Resources.Limits, "memory", "800Mi")
 	ifMissingSetResource(syndesis.Spec.Components.Komodo.Resources.Limits, "memory", "1024Mi")
 
-	maxIntegrations := 0
-	if renderContext.Ocp {
-		maxIntegrations = 1
-	}
 	if syndesis.Spec.Integration.Limit == nil {
+		maxIntegrations := 0
 		syndesis.Spec.Integration.Limit = &maxIntegrations
 	}
 	if syndesis.Spec.Integration.StateCheckInterval == nil {
@@ -206,35 +192,10 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 		syndesis.Spec.SarNamespace = syndesis.Namespace
 	}
 
-	// Maven settings
+	// Copy Maven settings
 	if len(syndesis.Spec.MavenRepositories) == 0 {
-	    if syndesis.Spec.MavenRepositories == nil {
-            syndesis.Spec.MavenRepositories = make(map[string]string)
-        }
-	    if renderContext.Productized {
-	        syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
-	        if renderContext.EarlyAccess {
-                syndesis.Spec.MavenRepositories["repo-02-redhat-ea"] = "https://maven.repository.redhat.com/earlyaccess/all/"
-                syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
-            } else {
-                syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
-                syndesis.Spec.MavenRepositories["repo-03-jboss-ga"] = "https://repository.jboss.org/"
-            }
-        } else {
-            // Repositories needed for community builds
-            syndesis.Spec.MavenRepositories["central"] = "https://repo.maven.apache.org/maven2/"
-            syndesis.Spec.MavenRepositories["repo-02-redhat-ga"] = "https://maven.repository.redhat.com/ga/"
-            syndesis.Spec.MavenRepositories["repo-03-jboss-ea"] = "https://repository.jboss.org/nexus/content/groups/ea/"
-        }
-    }
-
-	//
-	// Apply DevSupport flag value to Debug
-	//
-	// If using dev images then doing development so
-	// useful to have JAVA_DEBUG set to allow for image debugging
-	//
-	renderContext.Debug = syndesis.Spec.DevSupport
+		syndesis.Spec.MavenRepositories = renderContext.SpecDefaults.MavenRepositories
+	}
 
 	renderContext.Syndesis = syndesis
 	renderContext.Env = config

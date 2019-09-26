@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"strconv"
 	"strings"
 	"time"
@@ -45,11 +46,7 @@ func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := template.GetSyndesisVersionFromOperatorTemplate(a.scheme)
-		if err != nil {
-			return err
-		}
-		a.operatorVersion = operatorVersion
+		a.operatorVersion = pkg.DefaultOperatorTag
 	}
 
 	targetVersion := a.operatorVersion
@@ -146,15 +143,7 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
 
-	c, err := template.GetTemplateContext()
-	if err != nil {
-		return nil, err
-	}
-
-	unstructured, err := template.GetUpgradeResources(scheme, syndesis, template.ResourceParams{
-		OAuthClientSecret: "-",
-		UpgradeRegistry:   c.Registry,
-	})
+	unstructured, err := template.GetUpgradeResources(scheme, syndesis)
 	if err != nil {
 		return nil, err
 	}

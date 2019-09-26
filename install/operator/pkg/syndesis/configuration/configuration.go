@@ -81,25 +81,12 @@ var (
 
 		imageStreamNamespaceFromEnv,
 		controllersIntegrationsEnabledFromEnv,
-		syndesisRegistryFromEnv,
 		demoDataEnabledFromEnv,
 		maxIntegrationsPerUserFromEnv,
 		integrationStateCheckInterval,
 
 		komodoMemoryLimitFromEnv,
 		sarNamespaceFromEnv,
-
-		syndesisServerTagFromEnv,
-		syndesisUITagFromEnv,
-		syndesisS2ITagFromEnv,
-		syndesisMetaTagFromEnv,
-
-		postgresTagFromEnv,
-		postgresExporterTagFromEnv,
-
-		komodoTagFromEnv,
-		oauthProxyTagFromEnv,
-		prometheusTagFromEnv,
 
 		upgradeVolumeCapacityFromEnv,
 		managementUrlFor3scale,
@@ -134,66 +121,6 @@ func openshiftConsoleUrlFromEnv(config map[string]string, syndesis *v1alpha1.Syn
 func sarNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvSarNamespace); ok && syndesis.Spec.SarNamespace == "" {
 		syndesis.Spec.SarNamespace = v
-	}
-}
-
-func syndesisRegistryFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisRegistry); ok && syndesis.Spec.Registry == "" {
-		syndesis.Spec.Registry = v
-	}
-}
-
-func syndesisServerTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisServerTag); ok && syndesis.Spec.Components.Server.Tag == "" {
-		syndesis.Spec.Components.Server.Tag = v
-	}
-}
-
-func syndesisMetaTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisMetaTag); ok && syndesis.Spec.Components.Meta.Tag == "" {
-		syndesis.Spec.Components.Meta.Tag = v
-	}
-}
-
-func syndesisUITagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisUITag); ok && syndesis.Spec.Components.UI.Tag == "" {
-		syndesis.Spec.Components.UI.Tag = v
-	}
-}
-
-func syndesisS2ITagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSyndesisS2ITag); ok && syndesis.Spec.Components.S2I.Tag == "" {
-		syndesis.Spec.Components.S2I.Tag = v
-	}
-}
-
-func postgresTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresTag); ok && syndesis.Spec.Components.Db.Tag == "" {
-		syndesis.Spec.Components.Db.Tag = v
-	}
-}
-
-func postgresExporterTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresExporterTag); ok && syndesis.Spec.Components.PostgresExporter.Tag == "" {
-		syndesis.Spec.Components.PostgresExporter.Tag = v
-	}
-}
-
-func komodoTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvKomodoTag); ok && syndesis.Spec.Components.Komodo.Tag == "" {
-		syndesis.Spec.Components.Komodo.Tag = v
-	}
-}
-
-func oauthProxyTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvOauthProxyTag); ok && syndesis.Spec.Components.Oauth.Tag == "" {
-		syndesis.Spec.Components.Oauth.Tag = v
-	}
-}
-
-func prometheusTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPrometheusTag); ok && syndesis.Spec.Components.Prometheus.Tag == "" {
-		syndesis.Spec.Components.Prometheus.Tag = v
 	}
 }
 

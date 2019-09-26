@@ -15,17 +15,17 @@
 - apiVersion: v1
   kind: Pod
   metadata:
-    name: {{.ProductName }}-upgrade-{{ .Tags.Upgrade }}
+    name: syndesis-upgrade-{{ .Syndesis.Status.TargetVersion }}
   spec:
     serviceAccountName: syndesis-operator
     containers:
     - name: upgrade
-      image: '{{ .Syndesis.Spec.Registry }}/{{ .Images.SyndesisImagesPrefix }}/{{ .Images.Syndesis.Upgrade }}:{{ .Tags.Upgrade }}'
+      image: '{{ .Syndesis.Spec.Components.Upgrade.Image }}'
       env:
         - name: SYNDESIS_VERSION
-          value: {{ .Tags.Syndesis }}
+          value: {{ .Syndesis.Status.TargetVersion }}
         - name: ENV_S2I_TARGET_TAG
-          value: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
+          value: "{{ .Syndesis.Status.TargetVersion }}"
         - name: SYNDESIS_UPGRADE_PROJECT
           valueFrom:
               fieldRef:

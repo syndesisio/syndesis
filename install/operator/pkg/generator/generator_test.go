@@ -56,7 +56,7 @@ func TestGenerator(t *testing.T) {
 					},
 				},
 				Oauth: v1alpha1.OauthConfiguration{
-					Tag: "2.1.0",
+					Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0",
 				},
 				Komodo: v1alpha1.KomodoConfiguration{
 					Resources: v1alpha1.Resources{
@@ -77,7 +77,7 @@ func TestGenerator(t *testing.T) {
 	}
 	gen.Syndesis = syndesis
 
-	err = template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, map[string]string{})
+	err = template.SetupRenderContext(gen, syndesis, map[string]string{})
 	require.NoError(t, err)
 
 	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
@@ -207,7 +207,6 @@ func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, synd
 		assert.True(t, strings.Contains(paramsStr, "OPENSHIFT_OAUTH_CLIENT_SECRET="))
 		assert.True(t, strings.Contains(paramsStr, "POSTGRESQL_PASSWORD="))
 		assert.True(t, strings.Contains(paramsStr, "POSTGRESQL_SAMPLEDB_PASSWORD="))
-		assert.True(t, strings.Contains(paramsStr, "OAUTH_COOKIE_SECRET="))
 		assert.True(t, strings.Contains(paramsStr, "SYNDESIS_ENCRYPT_KEY="))
 		assert.True(t, strings.Contains(paramsStr, "CLIENT_STATE_AUTHENTICATION_KEY="))
 		assert.True(t, strings.Contains(paramsStr, "CLIENT_STATE_ENCRYPTION_KEY="))
@@ -259,7 +258,7 @@ func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndes
 	//
 	tags := sliceProperty(resource, "spec", "tags")
 	if tags != nil {
-		assertPropStr(t, tags, syndesis.Spec.Components.Oauth.Tag, "name")
+		assertPropStr(t, tags, "quay.io/openshift/origin-oauth-proxy:v4.0.0", "name")
 	}
 
 	return 1
@@ -321,24 +320,45 @@ func TestConfigYAML(t *testing.T) {
 	err = json.Unmarshal(templateConfig, gen)
 	require.NoError(t, err)
 
-	// Tags are mandatory as fallback in case CR and Secret dont have them defined
-	assert.NotNil(t, gen.Tags.Syndesis, "Tags.Syndesis is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.Syndesis, "Tags.Syndesis is a mandatory field in config.yaml file")
+	// Images are mandatory as fallback in case CR dont have them defined
+	assert.NotNil(t, gen.SpecDefaults.Components.Server.Image, "Spec.Components.Server.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Server.Image, "Spec.Components.Server.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.Tags.Komodo, "Tags.Komodo is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.Komodo, "Tags.Komodo is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.Meta.Image, "Spec.Components.Meta.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Meta.Image, "Spec.Components.Meta.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.Tags.OAuthProxy, "Tags.OAuthProxy is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.OAuthProxy, "Tags.OAuthProxy is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.UI.Image, "Spec.Components.UI.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.UI.Image, "Spec.Components.UI.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.Tags.PostgresExporter, "Tags.PostgresExporter is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.PostgresExporter, "Tags.PostgresExporter is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.S2I.Image, "Spec.Components.S2I.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.S2I.Image, "Spec.Components.S2I.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.Tags.Postgresql, "Tags.Postgresql is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.Postgresql, "Tags.Postgresql is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.Db.Image, "Spec.Components.Db.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Db.Image, "Spec.Components.Db.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.Tags.Prometheus, "Tags.Prometheus is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.Tags.Prometheus, "Tags.Prometheus is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.PostgresExporter.Image, "Spec.Components.PostgresExporter.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.PostgresExporter.Image, "Spec.Components.PostgresExporter.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.Prometheus.Image, "Spec.Components.Prometheus.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Prometheus.Image, "Spec.Components.Prometheus.Image is a mandatory field in config.yaml file")
+
+	//assert.NotNil(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
+	//assert.NotEmpty(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+
+	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
 
 	assert.NotNil(t, gen.TagMajor, "TagMajor is a mandatory field in config.yaml file")
 	assert.NotEmpty(t, gen.TagMajor, "TagMajor is a mandatory field in config.yaml file")

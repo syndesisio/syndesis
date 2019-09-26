@@ -49,12 +49,12 @@
           syndesis.io/component: syndesis-oauthproxy
       spec:
         containers:
-        - name: syndesis-oauthproxy
-          image: ' '
+        - name: oauthproxy
+          image: '{{ .Syndesis.Spec.Components.Oauth.Image }}'
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:{{.Syndesis.Namespace}}:syndesis-oauth-client
-            - --client-secret={{.Env.OPENSHIFT_OAUTH_CLIENT_SECRET}}
+            - --client-secret=$(OPENSHIFT_OAUTH_CLIENT_SECRET)
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
@@ -83,8 +83,13 @@
           - name: OAUTH_COOKIE_SECRET
             valueFrom:
               secretKeyRef:
-                name: syndesis-oauth-proxy-cookie-secret
-                key: oauthCookieSecret
+                name: syndesis-global-config
+                key: OAUTH_COOKIE_SECRET
+          - name: OPENSHIFT_OAUTH_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-global-config
+                key: OPENSHIFT_OAUTH_CLIENT_SECRET
           ports:
           - containerPort: 8443
             name: public
@@ -117,13 +122,4 @@
           secret:
             secretName: syndesis-oauthproxy-tls
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - {{.ProductName}}-oauthproxy
-        from:
-          kind: ImageStreamTag
-          name: {{ .Images.Support.OAuthProxy }}:{{ .Syndesis.Spec.Components.Oauth.Tag }}
-          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
-      type: ImageChange
     - type: ConfigChange

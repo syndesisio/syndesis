@@ -44,6 +44,8 @@ spec:
                   properties:
                     database:
                       type: string
+                    image:
+                      type: string
                     imageStreamNamespace:
                       type: string
                     resources:
@@ -66,8 +68,6 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
-                    tag:
-                      type: string
                     user:
                       type: string
                   type: object
@@ -94,6 +94,8 @@ spec:
                   type: object
                 komodo:
                   properties:
+                    image:
+                      type: string
                     resources:
                       properties:
                         limits:
@@ -112,11 +114,11 @@ spec:
                             https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
                           type: object
                       type: object
-                    tag:
-                      type: string
                   type: object
                 meta:
                   properties:
+                    image:
+                      type: string
                     resources:
                       properties:
                         limits:
@@ -137,16 +139,16 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
-                    tag:
-                      type: string
                   type: object
                 oauth:
                   properties:
-                    tag:
+                    image:
                       type: string
                   type: object
                 prometheus:
                   properties:
+                    image:
+                      type: string
                     resources:
                       properties:
                         limits:
@@ -167,17 +169,15 @@ spec:
                         volumeCapacity:
                           type: string
                       type: object
-                    tag:
-                      type: string
                   type: object
                 psql:
                   properties:
-                    tag:
+                    image:
                       type: string
                   type: object
                 s2i:
                   properties:
-                    tag:
+                    image:
                       type: string
                   type: object
                 scheduled:
@@ -189,6 +189,8 @@ spec:
                         managementUrlFor3scale:
                           type: string
                       type: object
+                    image:
+                      type: string
                     resources:
                       properties:
                         limits:
@@ -207,16 +209,16 @@ spec:
                             https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
                           type: object
                       type: object
-                    tag:
-                      type: string
                   type: object
                 ui:
                   properties:
-                    tag:
+                    image:
                       type: string
                   type: object
                 upgrade:
                   properties:
+                    image:
+                      type: string
                     resources:
                       properties:
                         volumeCapacity:
@@ -257,9 +259,6 @@ spec:
                 console so we can deep link to things like pod logs.
               type: string
             openShiftMaster:
-              type: string
-            registry:
-              description: The container registry to pull syndesis images from
               type: string
             routeHostname:
               description: Set RouteHostname to the hostname of the exposed syndesis

@@ -263,7 +263,7 @@
             value: postgresql://{{.Syndesis.Spec.Components.Db.User}}:{{.Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
-          image: ' '
+          image: '{{ .Syndesis.Spec.Components.PostgresExporter.Image }}'
           imagePullPolicy: IfNotPresent
           name: syndesis-db-metrics
           livenessProbe:
@@ -309,15 +309,6 @@
         - postgresql
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.Postgresql }}:{{ .Syndesis.Spec.Components.Db.Tag }}
+          name: {{.Syndesis.Spec.Components.Db.Image}}
           namespace: {{.Syndesis.Spec.Components.Db.ImageStreamNamespace}}
-      type: ImageChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-db-metrics
-        from:
-          kind: ImageStreamTag
-          name: {{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}
-          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
