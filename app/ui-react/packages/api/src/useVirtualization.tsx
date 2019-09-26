@@ -14,6 +14,7 @@ export const useVirtualization = (
       publishedState: 'NOTFOUND',
       serviceViewModel: '',
       tko__description: '',
+      usedBy: []
     },
     url: `workspace/dataservices/${virtualizationName}`,
     useDvApiUrl: true,

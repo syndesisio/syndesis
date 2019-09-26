@@ -117,6 +117,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const [publishedState, setPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
+  const [usedBy, setUsedBy] = React.useState( state.virtualization.usedBy );
   const {
     deleteViewDefinition,
     updateVirtualizationDescription,
@@ -150,10 +151,19 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     ) as VirtualizationPublishingDetails;
 
     setPublishedState(publishedDetails);
+    setUsedBy(virtualization.usedBy);
   };
 
   // poll to check for updates to the published state
   usePolling({ callback: updatePublishedState, delay: 5000 });
+
+  const getUsedByMessage = (integrationNames: string[]): string => {
+    if (integrationNames.length === 1) {
+      return t('usedByOne');
+    }
+  
+    return t('usedByMulti', { count: integrationNames.length });
+  };
 
   const doDelete = async (pVirtualizationId: string) => {
     const success = await handleDeleteVirtualization(pVirtualizationId);
@@ -247,7 +257,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 })}
                 i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
                 /* TD-636: Commented out for TP
-                        i18nExport={t('shared:Export')}
+                   i18nExport={t('shared:Export')}
                 */
                 i18nPublish={t('shared:Publish')}
                 i18nUnpublish={t('shared:Unpublish')}
@@ -268,6 +278,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 onUnpublish={doUnpublish}
                 onPublish={doPublish}
                 hasViews={viewDefinitionDescriptors.length > 0}
+                usedInIntegration={usedBy.length > 0}
               />
             </PageSection>
             <PageSection variant={'light'} noPadding={true}>
@@ -278,6 +289,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                   )}
                   i18nDraft={t('shared:Draft')}
                   i18nError={t('shared:Error')}
+                  i18nInUseText={getUsedByMessage(usedBy)}
                   i18nPublished={t(
                     'virtualization.publishedDataVirtualization'
                   )}

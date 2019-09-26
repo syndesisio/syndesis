@@ -43,10 +43,7 @@ export interface IViewHeaderBreadcrumbProps {
   onUnpublish: (virtualizationName: string) => void;
   virtualizationName: string;
   hasViews: boolean;
-}
-
-export interface IViewHeaderBreadcrumbState {
-  showConfirmationDialog: boolean;
+  usedInIntegration: boolean;
 }
 
 export const ViewHeaderBreadcrumb: React.FunctionComponent<
@@ -81,7 +78,9 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
   }
 
   const showConfirmDialog = () => {
-    setShowConfirmationDialog(true);
+    if (!props.usedInIntegration) {
+      setShowConfirmationDialog(true);
+    }
   }
 
   const isPublished =
@@ -134,9 +133,10 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
               className="btn btn-primary"
               onClick={
                 isPublished || publishInProgress
-                  ? doUnpublish
+                  ? doUnpublish 
                   : doPublish
               }
+              disabled={props.usedInIntegration}
             >
               {isPublished || publishInProgress
                 ? props.i18nUnpublish
@@ -148,7 +148,7 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
                 }-action-menu`}
               pullRight={true}
             >
-              <MenuItem onClick={showConfirmDialog}>
+              <MenuItem onClick={showConfirmDialog} disabled={props.usedInIntegration}>
                 {props.i18nDelete}
               </MenuItem>
             </DropdownKebab>
