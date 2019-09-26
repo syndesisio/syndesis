@@ -147,3 +147,53 @@ export interface VirtualizationPublishingDetails {
   stepText: string;
   stepTotal: number;
 }
+
+export interface TeiidStatus {
+  Information: {
+    error?: string;
+    log?: string;
+    Publishing?: string;
+    'Build Status'?:
+      | 'BUILDING'
+      | 'CANCELLED'
+      | 'CONFIGURING'
+      | 'DELETE_SUBMITTED'
+      | 'DELETE_REQUEUE'
+      | 'DELETE_DONE'
+      | 'DEPLOYING'
+      | 'FAILED'
+      | 'NOTFOUND'
+      | 'RUNNING'
+      | 'SUBMITTED';
+    'Build Status Message'?: string;
+    'OpenShift Name'?: string;
+    [name: string]: any;
+  };
+  Title?: string;
+}
+
+export interface BuildStatus {
+  build_name?: string;
+  build_status?:
+    | 'BUILDING'
+    | 'CANCELLED'
+    | 'CONFIGURING'
+    | 'DELETE_SUBMITTED'
+    | 'DELETE_REQUEUE'
+    | 'DELETE_DONE'
+    | 'DEPLOYING'
+    | 'FAILED'
+    | 'NOTFOUND'
+    | 'RUNNING'
+    | 'SUBMITTED';
+  build_status_message?: string;
+  dataVirtualizationName?: string;
+  deployment_name?: string;
+  last_updated?: number;
+  namespace?: string;
+  openShiftName: string;
+  routes?: {
+    [name: string]: any;
+  };
+  usedBy?: string[];
+}

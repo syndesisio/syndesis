@@ -1,8 +1,10 @@
 import {
+  BuildStatus,
   ImportSources,
   ImportSourcesStatus,
   QueryResults,
   RestDataService,
+  TeiidStatus,
   ViewDefinition,
   ViewDefinitionStatus,
   ViewSourceInfo,
@@ -100,10 +102,11 @@ export const useVirtualizationHelpers = () => {
   /**
    * Publish the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being published
+   * @returns the `TeiidStatus` model object
    */
   const publishVirtualization = async (
     virtualizationName: string
-  ): Promise<void> => {
+  ): Promise<TeiidStatus> => {
     const pubVirtualization = {
       name: `${virtualizationName}`,
     };
@@ -119,7 +122,7 @@ export const useVirtualizationHelpers = () => {
       throw new Error(response.statusText);
     }
 
-    return Promise.resolve();
+    return (await response.json()) as TeiidStatus;
   };
 
   /**
@@ -290,8 +293,11 @@ export const useVirtualizationHelpers = () => {
   /**
    * Unpublish the virtualization with the specified name
    * @param virtualizationName the name of the virtualization
+   * @returns the `BuildStatus` model object
    */
-  const unpublishVirtualization = async (virtualizationName: string): Promise<void> => {
+  const unpublishVirtualization = async (
+    virtualizationName: string
+  ): Promise<BuildStatus> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
@@ -302,7 +308,7 @@ export const useVirtualizationHelpers = () => {
       throw new Error(response.statusText);
     }
 
-    return Promise.resolve();
+    return (await response.json()) as BuildStatus;
   };
 
   /**
