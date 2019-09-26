@@ -27,6 +27,9 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
 > = ({ onUpdatedIntegration, filterOptions, stepId, initialValue, children, configMode }) => {
   const { t } = useTranslation(['integrations', 'shared']);
 
+  const basicMode = configMode === 'basic';
+  const advancedMode = configMode === 'advanced';
+
   const definition = {
     defaultFlowId: {
       order: 6,
@@ -40,8 +43,8 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           displayName: '',
           order: 0,
           placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
-          required: false,
-          type: configMode === 'advanced' ? 'text' : 'hidden',
+          required: advancedMode,
+          type: advancedMode ? 'text' : 'hidden',
         },
         flowId: {
           defaultValue: '',
@@ -58,8 +61,8 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           displayName: '',
           enum: filterOptions.ops,
           order: 2,
-          required: false,
-          type: configMode === 'basic' ? 'text' : 'hidden',
+          required: basicMode,
+          type: basicMode ? 'text' : 'hidden',
         },
         path: {
           dataList: filterOptions.paths,
@@ -67,16 +70,16 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           displayName: '',
           order: 1,
           placeholder: t('integrations:editor:choiceForm:pathPlaceholder'),
-          required: false,
-          type: configMode === 'basic' ? 'text' : 'hidden',
+          required: basicMode,
+          type: basicMode ? 'text' : 'hidden',
         },
         value: {
           description: t('integrations:editor:choiceForm:keywordsDescription'),
           displayName: '',
           order: 3,
           placeholder: t('integrations:editor:choiceForm:keywordsPlaceholder'),
-          required: false,
-          type: configMode === 'basic' ? 'text' : 'hidden',
+          required: basicMode,
+          type: basicMode ? 'text' : 'hidden',
         },
       },
       arrayDefinitionOptions: {
