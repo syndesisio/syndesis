@@ -4,7 +4,7 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { ErrorResponse } from '@syndesis/models';
+import { ErrorResponse, IntegrationSaveErrorResponse } from '@syndesis/models';
 import {
   IntegrationEditorLayout,
   IntegrationSaveForm,
@@ -68,7 +68,9 @@ export const SaveIntegrationPage: React.FunctionComponent<
   cancelHref,
   ...props
 }) => {
-  const [error, setError] = React.useState<false | ErrorResponse>(false);
+  const [error, setError] = React.useState<
+    false | ErrorResponse | IntegrationSaveErrorResponse
+  >(false);
   const { t } = useTranslation('shared');
   return (
     <WithLeaveConfirmation {...props}>
@@ -139,7 +141,11 @@ export const SaveIntegrationPage: React.FunctionComponent<
                           );
                         }
                       } catch (err) {
-                        setError(err);
+                        if (Array.isArray(err)) {
+                          setError(err[0]);
+                        } else {
+                          setError(err);
+                        }
                       }
                       actions.setSubmitting(false);
                     };
@@ -218,8 +224,17 @@ export const SaveIntegrationPage: React.FunctionComponent<
                                     {error && (
                                       <SyndesisAlert
                                         level={SyndesisAlertLevel.ERROR}
-                                        message={error.userMsg}
-                                        detail={error.developerMsg}
+                                        message={
+                                          (error as ErrorResponse).userMsg ||
+                                          (error as IntegrationSaveErrorResponse)
+                                            .message
+                                        }
+                                        detail={
+                                          (error as ErrorResponse)
+                                            .developerMsg ||
+                                          (error as IntegrationSaveErrorResponse)
+                                            .error
+                                        }
                                         i18nTextExpanded={t(
                                           'shared:HideDetails'
                                         )}
