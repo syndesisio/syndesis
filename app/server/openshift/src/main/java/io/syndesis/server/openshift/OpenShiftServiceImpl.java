@@ -33,6 +33,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import io.fabric8.kubernetes.api.model.ConfigMap;
+import io.fabric8.kubernetes.api.model.Container;
+import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -258,6 +260,28 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             for (EnvVar var : vars) {
                 envVarMap.put(var.getName(), var);
             }
+            final Container container = oldTemplate.getSpec().getContainers().get(0);
+            final List<EnvVar> envVars = container.getEnv().stream()
+                    .map(e -> envVarMap.containsKey(e.getName()) ? envVarMap.remove(e.getName()) : e)
+                    .collect(Collectors.toList());
+            // add missing vars
+            envVars.addAll(envVarMap.values());
+
+            // edit ports to avoid duplicate or missing ports
+            final ContainerPort[] ports = {
+                new ContainerPort(8778, null, null, "jolokia", null),
+                new ContainerPort(9779, null, null, "metrics", null),
+                new ContainerPort(8081, null, null, "management", null)
+            };
+            final Map<String, ContainerPort> portMap = new HashMap<>();
+            for (ContainerPort port : ports) {
+                portMap.put(port.getName(), port);
+            }
+            final List<ContainerPort> newPorts = container.getPorts().stream()
+                    .map(p -> portMap.containsKey(p.getName()) ? portMap.remove(p.getName()) : p)
+                    .collect(Collectors.toList());
+            // add missing ports
+            newPorts.addAll(portMap.values());
 
             deploymentConfig = openShiftClient.deploymentConfigs().withName(name).edit()
                     .editMetadata()
@@ -286,19 +310,8 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                     .withImage(deploymentData.getImage())
                                     .withImagePullPolicy("Always")
                                     .withName(name)
-                                    // use withEnv to preserve user added env vars
-                                    .withEnv(oldTemplate.getSpec().getContainers().get(0).getEnv().stream()
-                                        .map(e -> envVarMap.containsKey(e.getName()) ? envVarMap.remove(e.getName()) : e)
-                                        .collect(Collectors.toList()))
-                                    .editMatchingPort(p -> "jolokia".equals(p.getName()))
-                                        .withContainerPort(8778)
-                                    .endPort()
-                                    .editMatchingPort(p -> "metrics".equals(p.getName()))
-                                        .withContainerPort(9779)
-                                    .endPort()
-                                    .editMatchingPort(p -> "management".equals(p.getName()))
-                                        .withContainerPort(8081)
-                                    .endPort()
+                                    .withEnv(envVars)
+                                    .withPorts( newPorts)
                                     .editMatchingVolumeMount(v -> "secret-volume".equals(v.getName()))
                                         .withMountPath("/deployments/config")
                                         .withReadOnly(false)
