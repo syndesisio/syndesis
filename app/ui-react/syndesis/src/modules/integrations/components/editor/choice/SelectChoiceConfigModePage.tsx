@@ -112,7 +112,7 @@ export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceCon
                           actions={
                             <ButtonLink
                               data-testid={
-                                'select-mode-page-select-button'
+                                'select-action-page-select-button'
                               }
                               href={this.props.selectHref(
                                 {
