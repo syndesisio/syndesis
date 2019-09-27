@@ -44,6 +44,7 @@ export interface IVirtualizationListItemProps {
   i18nEditTip?: string;
   /* TD-636: Commented out for TP
   i18nExport: string; */
+  i18nInUseText: string;
   i18nPublish: string;
   i18nPublished: string;
   i18nPublishLogUrlText: string;
@@ -63,6 +64,7 @@ export interface IVirtualizationListItemProps {
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
   publishingStepText?: string;
+  usedBy: string[];
   virtualizationName: string;
   virtualizationDescription: string;
 }
@@ -87,10 +89,12 @@ export const VirtualizationListItem: React.FunctionComponent<
   };
 
   const doDelete = () => {
-    setShowConfirmationDialog(false);
+    if (props.usedBy.length < 1) {
+      setShowConfirmationDialog(false);
 
-    // TODO: disable components while delete is processing
-    props.onDelete(props.virtualizationName);
+      // TODO: disable components while delete is processing
+      props.onDelete(props.virtualizationName);
+    }
   };
 
   const doPublish = () => {
@@ -100,15 +104,19 @@ export const VirtualizationListItem: React.FunctionComponent<
   };
 
   const doUnpublish = () => {
-    setShowConfirmationDialog(false);
+    if (props.usedBy.length < 1) {
+      setShowConfirmationDialog(false);
 
-    if (props.virtualizationName) {
-      props.onUnpublish(props.virtualizationName);
+      if (props.virtualizationName) {
+        props.onUnpublish(props.virtualizationName);
+      }
     }
   };
 
   const showConfirmDialog = () => {
-    setShowConfirmationDialog(true);
+    if (props.usedBy.length < 1) {
+      setShowConfirmationDialog(true);
+    }
   };
 
   // Determine published state
@@ -189,6 +197,7 @@ export const VirtualizationListItem: React.FunctionComponent<
             >
               <MenuItem
                 onClick={showConfirmDialog}
+                disabled={props.usedBy.length > 0}
                 data-testid={`virtualization-list-item-${
                   props.virtualizationName
                 }-delete`}
@@ -203,7 +212,8 @@ export const VirtualizationListItem: React.FunctionComponent<
                 onClick={
                   isPublished || publishInProgress ? doUnpublish : doPublish
                 }
-              >
+                disabled={props.usedBy.length > 0}
+                >
                 {isPublished || publishInProgress
                   ? props.i18nUnpublish
                   : props.i18nPublish}
@@ -217,6 +227,9 @@ export const VirtualizationListItem: React.FunctionComponent<
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
+            {props.i18nInUseText}
+          </ListViewInfoItem>,
+          <ListViewInfoItem key={2}>
             {props.odataUrl && (
               <span>
                 <a

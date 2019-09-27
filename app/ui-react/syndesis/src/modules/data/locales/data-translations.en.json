@@ -1,6 +1,8 @@
 {
   "Refresh": "Refresh",
   "Submit": "Submit",
+  "usedByOne": "Used by 1 integration",
+  "usedByMulti": "Used by integrations {{count}} times",
   "virtualization": {
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
     "createDataVirtualizationTip": "Create a data virtualization",
@@ -15,6 +17,7 @@
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
     "errorUpdatingDescription": "Error saving the description for virtualization \"{{name}}\"",
     "errorValidatingViewName": "Error validating the view name",
+    "inUseText": "The virtualization is in use",
     "importVirtualizationTip": "Import a data virtualization",
     "publishedDataVirtualization": "Published",
     "publishInProgress": "publish in progress...",

@@ -97,6 +97,14 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     alert('Export virtualization ');
   } */
 
+  const getUsedByMessage = (integrationNames: string[]): string => {
+    if (integrationNames.length === 1) {
+      return t('usedByOne');
+    }
+
+    return t('usedByMulti', { count: integrationNames.length });
+  };
+
   return appContext.config.datavirt.enabled === 0 ? (
     <SimplePageHeader
       i18nTitle={t('virtualization.virtualizationsPageTitle')}
@@ -218,6 +226,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nError={t('shared:Error')}
                             /* TD-636: Commented out for TP
                                 i18nExport={t('shared:Export')} */
+                            i18nInUseText={getUsedByMessage(virtualization.usedBy)}
                             i18nPublish={t('shared:Publish')}
                             i18nPublished={t(
                               'virtualization.publishedDataVirtualization'
@@ -252,6 +261,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               'virtualization.unpublishInProgress'
                             )}
                             i18nPublishLogUrlText={t('shared:viewLogs')}
+                            usedBy={virtualization.usedBy}
                           />
                         );
                       }
