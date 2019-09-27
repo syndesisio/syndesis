@@ -121,6 +121,10 @@ export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceCon
                                 } as IChoiceStepRouteParams,
                                 {
                                   ...state,
+                                  step: {
+                                    ...state.step,
+                                    configuredProperties: undefined
+                                  }
                                 } as IChoiceStepRouteState
                               )}
                             >
