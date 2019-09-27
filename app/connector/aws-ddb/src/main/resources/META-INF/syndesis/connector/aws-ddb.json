@@ -26,7 +26,8 @@
                 "javaType": "java.lang.String",
                 "kind": "property",
                 "labelHint": "Characteristics of the element to be queried. Can contain input parameters prefixed by ':#'. Should contain at least a key.",
-                "placeholder": "for example '{\"key\" : \":#MYPARAMNAME\"}'",
+                "placeholder": "{\"key\" : \":#MYPARAMNAME\"}",
+                "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -36,11 +37,14 @@
                 "displayName": "Attributes to query",
                 "group": "common",
                 "javaType": "java.lang.String",
-                "kind": "property",
-                "labelHint": "Comma separated elements to query. Can contain input parameters prefixed by ':#'. If missing, it will use the parameters from the filter",
-                "placeholder": "for example 'attribute1,attribute2,:#attributes'",
+                "kind": "parameter",
+                "labelHint": "Elements to query. Can contain input parameters prefixed by ':#'. If missing, it will use the parameters from the filter",
+                "controlHint": "attribute1, attribute2,:#attributes",
+                "placeHolder": "attribute1, attribute2,:#attributes",
                 "required": false,
+
                 "secret": false,
+                "multiple": true,
                 "type": "string"
               }
             }
@@ -70,7 +74,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Insert an item on a DynamoDB table",
+            "description": "Insert or update an item on a DynamoDB table",
             "name": "Put Item",
             "properties": {
               "element": {
@@ -80,7 +84,8 @@
                 "javaType": "java.lang.String",
                 "kind": "property",
                 "labelHint": "Element to be inserted. Can contain input parameters prefixed by ':#'.",
-                "placeholder": "for example '{\"key\" : \":#MYPARAMNAME\"}'",
+                "placeholder": "{\"key\" : \":#MYPARAMNAME\"}",
+                "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -122,7 +127,8 @@
                 "javaType": "java.lang.String",
                 "kind": "property",
                 "labelHint": "Filter of the element to be removed. Can contain input parameters prefixed by ':#'.",
-                "placeholder": "for example '{\"key\" : \":#MYPARAMNAME\"}'",
+                "placeholder": "{\"key\" : \":#MYPARAMNAME\"}",
+                "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
                 "type": "string"

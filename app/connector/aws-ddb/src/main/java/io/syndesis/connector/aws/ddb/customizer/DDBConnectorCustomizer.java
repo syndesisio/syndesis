@@ -21,6 +21,7 @@ import java.util.Set;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.connector.aws.ddb.util.Util;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -44,8 +45,11 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
 
         this.options = options;
-        component.setBeforeProducer(this::doBeforeProducer);
 
+        options.put("element", ConnectorOptions.popOption(options, "element"));
+        options.put("attributes", ConnectorOptions.popOption(options, "attributes"));
+
+        component.setBeforeProducer(this::doBeforeProducer);
         component.setAfterProducer(this::doAfterProducer);
     }
 
@@ -114,7 +118,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
                 try {
                     map = (Map<String, Object>) mapper.readValue(body.toString(), Map.class);
                 } catch (Exception e) {
-                    throw new IllegalStateException(e);
+                    LOG.trace("Couldn't parse parameters." + e);
                 }
             }
 

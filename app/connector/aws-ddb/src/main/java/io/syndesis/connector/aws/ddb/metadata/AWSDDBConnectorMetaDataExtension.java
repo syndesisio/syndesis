@@ -29,8 +29,7 @@ public class AWSDDBConnectorMetaDataExtension extends AbstractMetaDataExtension 
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-        final MetaData metaData = new DefaultMetaData(null, null, null);
 
-        return Optional.of(metaData);
+        return Optional.of(new DefaultMetaData(this.getCamelContext(), parameters, null));
     }
 }
