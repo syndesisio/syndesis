@@ -15,6 +15,7 @@ import (
 
 var FlagSet *pflag.FlagSet = nil
 var showResourceDiffs = false
+var KnownDockerImages map[string]bool = map[string]bool{}
 
 func init() {
 	FlagSet = pflag.NewFlagSet("util", pflag.ExitOnError)
@@ -142,7 +143,16 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 			return to
 		}
 	case "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/image":
-		return to
+		if from == "" || from == " " {
+			// We are using an image stream.. typically we want to preserve the image
+			// that this gets updated with since it's an image pushed to the cluster registry...
+			// unless we ware switching off docker images to image stream, in that case we want to
+			// set this to ' ' so that it get updated with the the image pointed at by the image stream.
+			if KnownDockerImages[to.(string)] {
+				return " "
+			}
+			return to
+		}
 	case "apps.openshift.io/v1/DeploymentConfig/spec/triggers/#/imageChangeParams/from/namespace":
 		return to
 	case "v1/PersistentVolumeClaim/spec/resources/requests/storage":

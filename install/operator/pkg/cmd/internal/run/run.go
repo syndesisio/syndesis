@@ -11,6 +11,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"github.com/syndesisio/syndesis/install/operator/version"
 	v1 "k8s.io/api/core/v1"
@@ -80,6 +81,21 @@ func (o *options) run() error {
 	if err != nil {
 		return err
 	}
+
+	config, err := template.GetTemplateContext()
+	if err != nil {
+		return err
+	}
+	util.KnownDockerImages[config.SpecDefaults.Components.Server.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Meta.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.UI.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.S2I.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Db.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Oauth.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.PostgresExporter.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Prometheus.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Komodo.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Upgrade.Image] = true
 
 	ctx := o.Context
 

@@ -60,6 +60,11 @@
 {{else}}
           image: '{{ .Syndesis.Spec.Components.UI.Image }}'
 {{end}}
+          env:
+# We need a config value to change to trigger a new deployment which switching the DevSupport flag.
+# Just changing the image name is not considered a config change.
+          - name: DEV_SUPPORT
+            value: '{{.Syndesis.Spec.DevSupport}}'
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
