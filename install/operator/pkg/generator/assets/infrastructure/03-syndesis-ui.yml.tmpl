@@ -119,7 +119,11 @@
         },
         "datavirt": {
           "dvUrl": "/vdb-builder/v1/",
-          "enabled": {{addonsValue .Syndesis.Spec.Addons "komodo" "enabled"}}
+{{- if eq (addonsValue .Syndesis.Spec.Addons "komodo" "enabled") "true" }}
+          "enabled": 1
+        {{- else }}
+          "enabled": 0
+        {{- end }}
         },
         "features" : {
           "logging": false
