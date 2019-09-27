@@ -10,8 +10,8 @@ export interface IWithChoiceConfigurationFormChildrenProps {
   fields: JSX.Element;
   isValid: boolean;
   isSubmitting: boolean;
-  submitForm(): void;
   values: IChoiceFormConfiguration;
+  submitForm(): void;
 }
 
 export interface IWithChoiceConfigurationFormProps {
