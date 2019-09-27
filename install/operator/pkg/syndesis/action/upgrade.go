@@ -53,6 +53,10 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	targetVersion := a.operatorVersion
+	target := &v1alpha1.Syndesis{}
+	if err := a.client.Get(ctx, client.ObjectKey{Namespace: syndesis.Namespace, Name: syndesis.Name}, target); err != nil {
+		return err
+	}
 
 	resources, err := a.getUpgradeResources(a.scheme, syndesis)
 	if err != nil {
@@ -76,7 +80,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
 
 			for _, res := range resources {
-				operation.SetNamespaceAndOwnerReference(res, syndesis)
+				operation.SetNamespaceAndOwnerReference(res, target)
 
 				err = createOrReplaceForce(ctx, a.client, res, true)
 				if err != nil {
@@ -89,7 +93,6 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 				currentAttemptDescr = " (attempt " + strconv.Itoa(int(syndesis.Status.UpgradeAttempts+1)) + ")"
 			}
 
-			target := syndesis.DeepCopy()
 			target.Status.ForceUpgrade = false
 			// Set to avoid stale information in case of operator version change
 			target.Status.TargetVersion = targetVersion
@@ -99,7 +102,7 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		} else {
 			// No upgrade pod, no version change: upgraded
 			a.log.Info("Syndesis resource already upgraded to version ", "name", syndesis.Name, "targetVersion", targetVersion)
-			return a.completeUpgrade(ctx, syndesis, targetVersion)
+			return a.completeUpgrade(ctx, target, targetVersion)
 		}
 	} else {
 		// Upgrade pod present, checking the status
@@ -107,12 +110,11 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			// Upgrade finished (correctly)
 
 			a.log.Info("Syndesis resource upgraded", "name", syndesis.Name, "targetVersion", targetVersion)
-			return a.completeUpgrade(ctx, syndesis, targetVersion)
+			return a.completeUpgrade(ctx, target, targetVersion)
 		} else if upgradePod.Status.Phase == v1.PodFailed {
 			// Upgrade failed
 			a.log.Error(nil, "Failure while upgrading Syndesis resource: upgrade pod failure", "name", syndesis.Name, "targetVersion", targetVersion)
 
-			target := syndesis.DeepCopy()
 			target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailureBackoff
 			target.Status.Reason = v1alpha1.SyndesisStatusReasonUpgradePodFailed
 			target.Status.Description = "Syndesis upgrade from " + syndesis.Status.Version + " to " + targetVersion + " failed (it will be retried again)"

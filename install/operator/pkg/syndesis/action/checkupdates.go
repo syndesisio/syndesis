@@ -44,16 +44,15 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		return nil
 	} else {
 		// Let's start the upgrade process
-		target := syndesis.DeepCopy()
-		target.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
-		target.Status.TargetVersion = a.operatorVersion
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
-		target.Status.LastUpgradeFailure = nil
-		target.Status.UpgradeAttempts = 0
-		target.Status.ForceUpgrade = false
+		syndesis.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
+		syndesis.Status.TargetVersion = a.operatorVersion
+		syndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		syndesis.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
+		syndesis.Status.LastUpgradeFailure = nil
+		syndesis.Status.UpgradeAttempts = 0
+		syndesis.Status.ForceUpgrade = false
 
 		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", a.operatorVersion, "type", "checkUpdate")
-		return a.client.Update(ctx, target)
+		return a.client.Update(ctx, syndesis)
 	}
 }

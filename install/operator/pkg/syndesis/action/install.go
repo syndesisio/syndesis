@@ -60,7 +60,8 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.Syndesis) error {
+	syndesis := originalSyndesis.DeepCopy()
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
 		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 	}
@@ -125,26 +126,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		os.Exit(1)
 	}
 
-	// Update the syndesis resource so that the user see all the default configuration
-	// that is being applied.
-	_, c, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
-	if err != nil {
-		return err
-	}
-
-	if c != controllerutil.OperationResultNone {
-
-		a.log.Info("Updated CRD ", "name", syndesis.Name)
-		// load it back to make sure we've got the latest...
-		err = a.client.Get(ctx, client.ObjectKey{
-			Name:      syndesis.GetName(),
-			Namespace: syndesis.GetNamespace(),
-		}, syndesis)
-		if err != nil {
-			return err
-		}
-	}
-
 	// Render the route resource...
 	all, err := generator.RenderDir("./route/", renderContext)
 	if err != nil {
@@ -162,6 +143,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if autoGenerateRoute {
 		// Set the right hostname after generating the route
 		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
+		originalSyndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
 
 		// Hack to remove the auto-generated annotation
 		// In OpenShift 3.9, the route gets low priority for being displayed as main route for the app if the openshift.io/host.generated=true annotation is present
@@ -268,18 +250,17 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	target := syndesis.DeepCopy()
-	addRouteAnnotation(target, syndesisRoute)
+	addRouteAnnotation(originalSyndesis, syndesisRoute)
 	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		originalSyndesis.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		originalSyndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		originalSyndesis.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, originalSyndesis, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
-		a.log.Info("Syndesis resource installed", "name", target.Name)
+		a.log.Info("Syndesis resource installed", "name", originalSyndesis.Name)
 	}
 	return err
 }
