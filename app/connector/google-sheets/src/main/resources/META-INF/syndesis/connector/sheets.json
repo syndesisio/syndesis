@@ -281,7 +281,7 @@
                 "order": "4",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -422,7 +422,7 @@
                 "order": "4",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -535,7 +535,7 @@
                 "order": "4",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -702,7 +702,7 @@
                 "order": "4",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
