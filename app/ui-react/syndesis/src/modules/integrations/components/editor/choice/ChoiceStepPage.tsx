@@ -40,6 +40,10 @@ const DEFAULT_FLOW_DESCRIPTION = 'Use this as default';
 export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
   sidebar: (props: IEditorSidebarProps) => React.ReactNode;
+  backHref: (
+    p: IChoiceStepRouteParams,
+    s: IChoiceStepRouteState
+  ) => H.LocationDescriptor;
   cancelHref: (
     p: IChoiceStepRouteParams,
     s: IChoiceStepRouteState
@@ -83,6 +87,9 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                     ),
                     routingScheme: configuration.routingScheme,
                     useDefaultFlow: configuration.defaultFlowEnabled,
+                  };
+                  const hasConfiguration = (values: IChoiceFormConfiguration) => {
+                    return values.flowConditions.some(option => (option.condition! || option.path! || option.value!).length > 0);
                   };
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
@@ -261,14 +268,17 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                     onUpdatedIntegration={onUpdatedIntegration}
                                     stepId={step.id!}
                                   >
-                                    {({ fields, isValid, submitForm }) => (
+                                    {({ fields, isValid, submitForm, values }) => (
                                       <ChoicePageCard
+                                        backHref={this.props.backHref(params, state)}
                                         header={
                                           <ChoiceCardHeader
                                             i18nConditions={'Conditions'}
                                           />
                                         }
+                                        i18nBack={'Choose Action'}
                                         i18nDone={'Next'}
+                                        isBackAllowed={!hasConfiguration(values)}
                                         isValid={isValid}
                                         submitForm={submitForm}
                                       >

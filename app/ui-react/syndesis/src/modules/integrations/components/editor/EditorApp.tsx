@@ -269,6 +269,12 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
 
   const choicePage = (
     <ChoiceStepPage
+      backHref={(p, s) => {
+        return appResolvers.choice.selectMode({
+          ...(p as IChoiceStepRouteParams),
+          ...(s as IChoiceStepRouteState),
+        });
+      }}
       cancelHref={cancelHref}
       mode={mode}
       sidebar={props => (
