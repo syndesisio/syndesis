@@ -587,7 +587,7 @@
                 <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
                 <arg>-Xep:ParameterName:OFF</arg>
                 <!-- configuration to patch in fixes -->
-                <arg>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable</arg>
+                <arg>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod</arg>
                 <arg>-XepPatchLocation:IN_PLACE</arg>
               </compilerArgs>
             </configuration>

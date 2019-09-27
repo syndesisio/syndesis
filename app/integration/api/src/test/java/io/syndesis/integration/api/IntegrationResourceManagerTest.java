@@ -131,10 +131,6 @@ public class IntegrationResourceManagerTest {
         assertThat(sanitized.getName()).isEqualTo("test-integration");
     }
 
-    private String getSyndesisVersion() {
-        return "1.0";
-    }
-
     @Test
     public void testSanitizeScheduler() {
         Integration source = newIntegration(
