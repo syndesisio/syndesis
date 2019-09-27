@@ -20,7 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.model.AmazonDynamoDBException;
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
@@ -37,12 +47,15 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Extract all automatic info (column names) to enrich the properties.
  */
 public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AWSDDBMetadataRetrieval.class);
     @Override
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context,
                                                          Class<? extends MetaDataExtension> metaDataExtensionClass,
@@ -56,7 +69,60 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId,
                                      Map<String, Object> properties, MetaData metadata) {
 
-        return adaptForDDB(properties);
+        return adaptForDDB(properties, setupDefaultValues(properties));
+    }
+
+
+
+    protected Map<String, List<PropertyPair>> setupDefaultValues(Map<String, Object> properties) {
+        Map<String, List<PropertyPair>> res = new HashMap<String, List<PropertyPair>>();
+
+        try {
+            AWSCredentials credentials = new BasicAWSCredentials(properties.get("accessKey").toString(),
+                properties.get("secretKey").toString());
+            AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+            AmazonDynamoDB client =
+                AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider)
+                    .withRegion(Regions.valueOf(properties.get("region").toString())).build();
+
+            DescribeTableResult table = client.describeTable(properties.get(
+                "tableName").toString());
+
+            StringBuilder element = new StringBuilder("{");
+            StringBuilder attributes = new StringBuilder();
+
+            for (AttributeDefinition attribute : table.getTable().getAttributeDefinitions()) {
+                if (attributes.length() > 0) {
+                    attributes.append(", ");
+                }
+                attributes.append(attribute.getAttributeName());
+
+                if (element.length() > 1) {
+                    element.append(", ");
+                }
+
+                element.append('\"');
+                element.append(attribute.getAttributeName());
+                element.append("\" : \"");
+                element.append(attribute.getAttributeType());
+                element.append('\"');
+            }
+
+            element.append('}');
+
+            List<PropertyPair> list = new ArrayList<PropertyPair>();
+            list.add(new PropertyPair(element.toString(), element.toString()));
+            res.put("element", list);
+
+            list = new ArrayList<PropertyPair>();
+            list.add(new PropertyPair(attributes.toString(), attributes.toString()));
+            res.put("attributes", list);
+
+        } catch (AmazonDynamoDBException t) {
+           LOG.error("Couldn't connect to Amazon services. No suggestions on the fields.", t);
+        }
+
+        return res;
     }
 
     /**
@@ -65,8 +131,8 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
      * @param properties
      * @return
      */
-    private SyndesisMetadata adaptForDDB(final Map<String, Object> properties) {
-        final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
+    private SyndesisMetadata adaptForDDB(final Map<String, Object> properties,
+                                         Map<String, List<PropertyPair>> enrichedProperties) {
 
         Map<String, AttributeValue> element = Util.getAttributeValueMap("element", properties);
 
