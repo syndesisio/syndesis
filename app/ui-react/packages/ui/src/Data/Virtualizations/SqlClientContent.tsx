@@ -1,6 +1,6 @@
 import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState, Table } from 'patternfly-react';
+import { EmptyState, OverlayTrigger, Table, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
@@ -53,9 +53,19 @@ interface IColumn {
   label: string;
 }
 
-const defaultCellFormat = (value: any) => (
-  <Table.Heading>{value}</Table.Heading>
-);
+const defaultCellFormat = (value: any) => {
+  // strings over 20 chars - shorten and use tooltip
+  if (typeof value === "string" && value.length > 20) {
+    const displayedString = `${value.substring(0,15)}...${value.substring(value.length-5)}`;
+    return <OverlayTrigger
+      overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
+      placement="top"
+    >
+      <Table.Heading>{displayedString}</Table.Heading>
+    </OverlayTrigger>;
+  }
+  return <Table.Heading>{value}</Table.Heading>
+};
 const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
 
 /**
