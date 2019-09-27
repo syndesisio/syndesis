@@ -193,18 +193,10 @@ public class ConnectionActionHandler {
 
         // Setting enum or dataList as needed by UI widget
         for (final Entry<String, List<DynamicActionMetadata.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
-            if (! suggestions.getValue().isEmpty()) {
-
+            if (!suggestions.getValue().isEmpty()) {
                 ConfigurationProperty property= enriched.findProperty(suggestions.getKey());
                 if (property != null) {
-                    if ("select".equalsIgnoreCase(property.getType())) {
-                        enriched.replaceConfigurationProperty(suggestions.getKey(),
-                                builder -> builder.addAllEnum(suggestions.getValue()
-                                                    .stream()
-                                                    .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator));
-                    }
-                    else if ("string".equalsIgnoreCase(property.getType())
-                       || "text".equalsIgnoreCase(property.getType()) ) {
+                    if ("dataList".equalsIgnoreCase(property.getType())) {
                         enriched.replaceConfigurationProperty(suggestions.getKey(),
                                 builder -> {
                                     if (suggestions.getValue().size() == 1) {
@@ -215,9 +207,17 @@ public class ConnectionActionHandler {
                                             .stream()
                                             .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator);
                                 });
-                    } else if (suggestions.getValue().size() == 1) {
-                        //for types 'hidden', 'boolean', 'int', etc.
-                        enriched.replaceConfigurationProperty(suggestions.getKey(), builder -> builder.defaultValue(suggestions.getValue().get(0).value()));
+                    } else {
+                        enriched.replaceConfigurationProperty(suggestions.getKey(),
+                                builder -> {
+                                    if (suggestions.getValue().size() == 1) {
+                                        builder.defaultValue(suggestions.getValue().get(0).value());
+                                    }
+
+                                    builder.addAllEnum(suggestions.getValue()
+                                            .stream()
+                                            .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator);
+                                });
                     }
                 }
             }
