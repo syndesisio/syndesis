@@ -99,6 +99,7 @@ const virtItem = [
     i18nError={errorText}
     /* TD-636: Commented out for TP
     i18nExport={exportText} */
+    i18nInUseText={'Used by 1 integrations'}
     i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -115,6 +116,7 @@ const virtItem = [
     currentPublishedState={currentStatusDraft}
     publishingLogUrl=""
     children={viewItems}
+    usedBy={['MyVirt']}
   />,
 ];
 
@@ -135,6 +137,7 @@ const virtualizationItems = [
     i18nError={errorText}
     /* TD-636: Commented out for TP
     i18nExport={exportText} */
+    i18nInUseText={'Used by 0 integrations'}
     i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -150,6 +153,7 @@ const virtualizationItems = [
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
     publishingLogUrl=""
+    usedBy={[]}
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
@@ -167,6 +171,7 @@ const virtualizationItems = [
     i18nError={errorText}
     /* TD-636: Commented out for TP
     i18nExport={exportText} */
+    i18nInUseText={'Used by 0 integrations'}
     i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -181,6 +186,7 @@ const virtualizationItems = [
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusPublished}
+    usedBy={[]}
   />,
   <VirtualizationListItem
     key="virtualizationListItem3"
@@ -198,6 +204,7 @@ const virtualizationItems = [
     i18nError={errorText}
     /* TD-636: Commented out for TP
     i18nExport={exportText} */
+    i18nInUseText={'Used by 0 integrations'}
     i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -216,6 +223,7 @@ const virtualizationItems = [
     publishingCurrentStep={2}
     publishingTotalSteps={4}
     publishingStepText={'Building'}
+    usedBy={[]}
   />,
 ];
 
