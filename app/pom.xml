@@ -55,7 +55,7 @@
 
     <hibernate.validator.version>6.0.16.Final</hibernate.validator.version>
 
-    <jackson.version>2.9.9</jackson.version>
+    <jackson.version>2.10.0</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>3.1.12.fuse-740022-redhat-00001</kubernetes.client.version>
 
