@@ -13,7 +13,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
-import { generateViewInfos } from './VirtualizationUtils';
+import { generateAllViewInfos } from './VirtualizationUtils';
 
 function getFilteredAndSortedViewInfos(
   schemaNodes: SchemaNode[],
@@ -25,9 +25,9 @@ function getFilteredAndSortedViewInfos(
 ) {
   const viewInfos: ViewInfo[] = [];
   if (schemaNodes && schemaNodes.length > 0) {
-    generateViewInfos(
+    generateAllViewInfos(
       viewInfos,
-      schemaNodes[0],
+      schemaNodes,
       [],
       selectedViewNames,
       existingViewNames
