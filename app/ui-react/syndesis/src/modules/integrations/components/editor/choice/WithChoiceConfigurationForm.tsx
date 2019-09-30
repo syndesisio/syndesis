@@ -10,6 +10,7 @@ export interface IWithChoiceConfigurationFormChildrenProps {
   fields: JSX.Element;
   isValid: boolean;
   isSubmitting: boolean;
+  values: IChoiceFormConfiguration;
   submitForm(): void;
 }
 
@@ -154,12 +155,13 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
       validateInitial={validator}
       onSave={onSave}
     >
-      {({ fields, isSubmitting, isValid, submitForm }) =>
+      {({ fields, isSubmitting, isValid, submitForm, values }) =>
         children({
           fields,
           isSubmitting,
           isValid,
           submitForm,
+          values,
         })
       }
     </AutoForm>
