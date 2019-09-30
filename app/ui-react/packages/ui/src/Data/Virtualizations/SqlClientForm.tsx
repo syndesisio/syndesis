@@ -1,11 +1,11 @@
 import {
-  Button,
   Card,
   CardBody,
   Form,
   Stack,
   StackItem,
 } from '@patternfly/react-core';
+import { Button } from "patternfly-react";
 import * as React from 'react';
 
 export interface ISqlClientFormProps {
@@ -39,10 +39,11 @@ export const SqlClientForm: React.FunctionComponent<
           </CardBody>
         </Card>
       </StackItem>
-      <StackItem isFilled={false} style={{ margin: '0 auto' }}>
+      <StackItem isFilled={false}>
         <Button
           data-testid={'sql-client-form-submit-button'}
-          variant="primary"
+          bsStyle="primary"
+          style={{ marginTop: 5 }}
           onClick={props.handleSubmit}
         >
           {props.i18nSubmit}
