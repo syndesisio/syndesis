@@ -75,7 +75,7 @@
         apiBaseUrl: '{{.Syndesis.Spec.OpenShiftMaster}}/oapi/v1'
         namespace: '{{.Syndesis.Namespace}}'
         imageStreamNamespace: {{.Syndesis.Spec.ImageStreamNamespace}}
-        builderImageStreamTag: {{ .Images.Syndesis.S2i }}:{{ .Tags.Syndesis }}
+        builderImageStreamTag: {{ .Images.Syndesis.S2i }}:{{ .Syndesis.Spec.Components.S2I.Tag }}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
