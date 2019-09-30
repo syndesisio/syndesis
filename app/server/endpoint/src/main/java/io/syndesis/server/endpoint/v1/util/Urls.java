@@ -122,7 +122,7 @@ public final class Urls {
                 keyValues.put(key, value);
             }
         }
-        return keyValues;
+        return Collections.unmodifiableMap(keyValues);
     }
 
     static Optional<URI> parseOrigin(final String origin) {

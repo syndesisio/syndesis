@@ -105,7 +105,7 @@ public final class JSONBeanUtil {
             SqlParameterValue sqlParam = new SqlParameterValue(jdbcType, value);
             ret.put(key, sqlParam);
         }
-        return ret;
+        return Collections.unmodifiableMap(ret);
     }
 
     /**

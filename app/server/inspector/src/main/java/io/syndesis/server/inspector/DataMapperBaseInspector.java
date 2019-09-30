@@ -142,7 +142,7 @@ abstract class DataMapperBaseInspector<T> implements Inspector {
                     paths.addAll(getPathsForJavaClassName(prependPrefix(prefix, name), fieldClassName, specification, context));
                 }
 
-                return paths;
+                return Collections.unmodifiableList(paths);
             }
 
             return Collections.emptyList();
