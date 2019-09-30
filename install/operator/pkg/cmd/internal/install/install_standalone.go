@@ -72,16 +72,33 @@ func (o *Install) installStandalone() error {
 		return err
 	}
 
-	syndesis := &v1alpha1.Syndesis{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: o.Namespace,
-		},
-		Spec: v1alpha1.SyndesisSpec{
-			DevSupport: o.devSupport,
-			Addons:     v1alpha1.AddonsSpec{},
-		},
-	}
+    // create custom resource
+	syndesis := &v1alpha1.Syndesis{ }
+
+    if(o.customResource == "") {
+        syndesis = &v1alpha1.Syndesis{
+            ObjectMeta: metav1.ObjectMeta{
+                Namespace: o.Namespace,
+            },
+            Spec: v1alpha1.SyndesisSpec{
+                DevSupport: o.devSupport,
+                Addons:     v1alpha1.AddonsSpec{},
+            },
+        }
+    } else {
+        customResource, err := util.LoadJsonFromFile(o.customResource)
+        if err != nil {
+            return err
+        }
+
+        err = json.Unmarshal(customResource, syndesis)
+        if err != nil {
+            return err
+        }
+    }
+
 	gen.Syndesis = syndesis
+    // end CR
 
 	addons := make([]string, 0)
 	if o.addons != "" {
