@@ -49,7 +49,7 @@
       spec:
         serviceAccountName: syndesis-server
         containers:
-        - name: syndesis-server
+        - name: {{.ProductName}}-server
           env:
           - name: JAVA_APP_DIR
             value: /deployments
