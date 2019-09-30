@@ -1,7 +1,5 @@
 import * as React from 'react';
-import {
-  ProgressWithLink,
-} from '../../Shared';
+import { ProgressWithLink } from '../../Shared';
 import {
   BUILDING,
   CONFIGURING,
@@ -26,51 +24,38 @@ export interface IPublishStatusWithProgressProps {
 }
 
 export const PublishStatusWithProgress: React.FunctionComponent<
-IPublishStatusWithProgressProps
+  IPublishStatusWithProgressProps
 > = props => {
-
   const publishInProgress =
     props.publishedState === BUILDING ||
-      props.publishedState === CONFIGURING ||
-      props.publishedState === DEPLOYING
+    props.publishedState === CONFIGURING ||
+    props.publishedState === DEPLOYING
       ? true
       : false;
 
-  return (
-    publishInProgress ? (
-      <div
-        data-testid={'publish-status-with-progress-progress'}
-        className={'publish-status-with-progress-progress'}
-      >
-        <ProgressWithLink
-          logUrl={props.publishingLogUrl}
-          value={
-            props.publishingStepText
-              ? props.publishingStepText
-              : ''
-          }
-          currentStep={
-            props.publishingCurrentStep
-              ? props.publishingCurrentStep
-              : 0
-          }
-          totalSteps={
-            props.publishingTotalSteps
-              ? props.publishingTotalSteps
-              : 4
-          }
-          i18nLogUrlText={props.i18nPublishLogUrlText}
-        />
-      </div>
-    ) : (
-        <VirtualizationPublishStatus
-          currentState={props.publishedState}
-          i18nPublished={props.i18nPublished}
-          i18nUnpublished={props.i18nUnpublished}
-          i18nPublishInProgress={props.i18nPublishInProgress}
-          i18nUnpublishInProgress={props.i18nUnpublishInProgress}
-          i18nError={props.i18nError}
-        />
-      )
+  return publishInProgress ? (
+    <div
+      data-testid={'publish-status-with-progress-progress'}
+      className={'publish-status-with-progress-progress'}
+    >
+      <ProgressWithLink
+        logUrl={props.publishingLogUrl}
+        value={props.publishingStepText ? props.publishingStepText : ''}
+        currentStep={
+          props.publishingCurrentStep ? props.publishingCurrentStep : 0
+        }
+        totalSteps={props.publishingTotalSteps ? props.publishingTotalSteps : 4}
+        i18nLogUrlText={props.i18nPublishLogUrlText}
+      />
+    </div>
+  ) : (
+    <VirtualizationPublishStatus
+      currentState={props.publishedState}
+      i18nPublished={props.i18nPublished}
+      i18nUnpublished={props.i18nUnpublished}
+      i18nPublishInProgress={props.i18nPublishInProgress}
+      i18nUnpublishInProgress={props.i18nUnpublishInProgress}
+      i18nError={props.i18nError}
+    />
   );
-}
+};

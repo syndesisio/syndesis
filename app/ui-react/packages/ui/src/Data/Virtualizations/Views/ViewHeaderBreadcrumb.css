@@ -1,0 +1,12 @@
+.view-header-breadcrumb__menuItem {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  font-weight: 400;
+  text-align: start;
+  width: 100%;
+}
+
+.view-header-breadcrumb__menuItem:hover {
+  background: #edf8ff;
+}

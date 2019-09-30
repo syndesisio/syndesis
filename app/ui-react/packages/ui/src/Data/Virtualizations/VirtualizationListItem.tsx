@@ -1,6 +1,5 @@
 import * as H from '@syndesis/history';
 import {
-  //  Button,
   DropdownKebab,
   Icon,
   ListView,
@@ -215,7 +214,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                   isPublished || publishInProgress ? doUnpublish : doPublish
                 }
                 disabled={props.usedBy.length > 0}
-                >
+              >
                 {isPublished || publishInProgress
                   ? props.i18nUnpublish
                   : props.i18nPublish}
@@ -236,13 +235,14 @@ export const VirtualizationListItem: React.FunctionComponent<
           props.virtualizationDescription ? props.virtualizationDescription : ''
         }
         additionalInfo={[
-          <ListViewInfoItem key={1}>
+          <ListViewInfoItem key={1} stacked={true}>
             {props.i18nInUseText}
           </ListViewInfoItem>,
-          <ListViewInfoItem key={2}>
+          <ListViewInfoItem key={2} stacked={true}>
             {props.odataUrl && (
-              <span>
+              <span className={'virtualization-list-item__odata-span'}>
                 <a
+                  className={'virtualization-list-item__odata-anchor'}
                   data-testid={'virtualization-list-item-odataUrl'}
                   target="_blank"
                   href={props.odataUrl}

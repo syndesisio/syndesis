@@ -161,11 +161,19 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     return t('usedByMulti', { count: integrationNames.length });
   };
 
-  const doDelete = async (pVirtualizationId: string) => {
+  const doDelete = async (pVirtualizationId: string): Promise<boolean> => {
+    // set to submitted before calling delete instead of waiting for polling to update state
+    setPublishedState({
+      state: 'DELETE_SUBMITTED',
+      stepNumber: 0,
+      stepText: 'blah',
+      stepTotal: 0,
+    });
     const success = await handleDeleteVirtualization(pVirtualizationId);
     if (success) {
       history.push(resolvers.data.virtualizations.list());
     }
+    return success;
   };
 
   const doExport = () => {
@@ -182,10 +190,24 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   }
 
   const doPublish = async (pVirtualizationId: string, hasViews: boolean) => {
+    // set to submitted before calling publish instead of waiting for polling to update state
+    setPublishedState({
+      state: 'SUBMITTED',
+      stepNumber: 0,
+      stepText: 'blah',
+      stepTotal: 0,
+    });
     await handlePublishVirtualization(pVirtualizationId, hasViews);
   };
 
   const doUnpublish = async (virtualizationName: string) => {
+    // set to submitted before calling unpublish instead of waiting for polling to update state
+    setPublishedState({
+      state: 'DELETE_SUBMITTED',
+      stepNumber: 0,
+      stepText: 'blah',
+      stepTotal: 0,
+    });
     await handleUnpublishVirtualization(virtualizationName);
   };
 
@@ -266,6 +288,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 i18nDeleteModalTitle={t('deleteModalTitle')}
                 i18nExport={t('shared:Export')}
                 i18nPublish={t('shared:Publish')}
+                i18nResolving={t('virtualization.resolvingPublishState')}
                 i18nUnpublish={t('shared:Unpublish')}
                 i18nUnpublishModalMessage={t('unpublishModalMessage', {
                   name: state.virtualization.name,

@@ -104,11 +104,12 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     return t('usedByMulti', { count: integrationNames.length });
   };
 
-  const doDelete = async (pVirtualizationId: string) => {
+  const doDelete = async (pVirtualizationId: string): Promise<boolean> => {
     const success = await handleDeleteVirtualization(pVirtualizationId);
     if (success) {
       history.push(resolvers.data.virtualizations.list());
     }
+    return success;
   };
 
   const doExport = () => {
@@ -172,6 +173,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           i18nDeleteModalTitle={t('deleteModalTitle')}
           i18nExport={t('shared:Export')}
           i18nPublish={t('shared:Publish')}
+          i18nResolving={t('virtualization.resolvingPublishState')}
           i18nUnpublish={t('shared:Unpublish')}
           i18nUnpublishModalMessage={t('unpublishModalMessage', {
             name: state.virtualization.name,

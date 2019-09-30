@@ -79,7 +79,12 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                 </span>
               )}
             </SplitItem>
-            <SplitItem>{props.i18nInUseText}</SplitItem>
+            <SplitItem
+              className={'virtualization-details-header__usedByMessage'}
+              isFilled={true}
+            >
+              {props.i18nInUseText}
+            </SplitItem>
           </Split>
         </StackItem>
         <StackItem>
