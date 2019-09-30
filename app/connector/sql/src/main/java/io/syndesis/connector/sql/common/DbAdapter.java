@@ -51,7 +51,7 @@ public class DbAdapter {
         case POSTGRESQL:
             return new DbPostgresql();
         case TEIID_SERVER:
-        	return new DbTeiid();
+            return new DbTeiid();
         default:
             return new DbStandard();
         }
