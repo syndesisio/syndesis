@@ -106,7 +106,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Spec.Registry}}/{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}'
+        name: '{{.Images.PrometheusImagePrefix}}/{{ .Images.Support.Prometheus }}:{{ .Syndesis.Spec.Components.Prometheus.Tag }}'
       {{if .Syndesis.Spec.Components.Scheduled}}
       importPolicy:
         scheduled: true
