@@ -36,7 +36,6 @@ import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
 import org.junit.Test;
-import org.mockito.Mock;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -69,7 +68,6 @@ public class NoDuplicateValidatorTest implements StringConstants {
 
     private static final long INTEGRATION_UPDATED_AT = 1533024600000L; // 31/07/2018 09:10:00
 
-    @Mock
     private final DataManager dataManager = mock(DataManager.class);
 
     private Validator validator;

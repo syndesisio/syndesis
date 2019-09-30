@@ -350,7 +350,7 @@ public class SqlFileStore {
 
         private Handle handle;
 
-        public HandleCloserInputStream(Handle handle, InputStream in) {
+        HandleCloserInputStream(Handle handle, InputStream in) {
             super(in);
             this.handle = handle;
         }
