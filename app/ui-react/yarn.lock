@@ -4427,10 +4427,17 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apicurio-design-studio@0.2.26:
-  version "0.2.26"
-  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.26.tgz#f2f65a56ee432c3a4a839d23741904dc66188e96"
-  integrity sha512-IXg/Bx4bld9eU0bwlY0LTf4JCH3R+BWQ+8DtneHJszQoNCCNA/6AP1flzZt6/123LKBdR/MeESm4uPFr1S6nPw==
+apicurio-data-models@1.0.13:
+  version "1.0.13"
+  resolved "https://registry.yarnpkg.com/apicurio-data-models/-/apicurio-data-models-1.0.13.tgz#b2f4361fd7be2b076529b0b6598ffb930ed388e7"
+  integrity sha512-y7NIQ9dIWRDmeziLN0TzYGKwMq6KpAo3q6A1aOEkgzWuAzkXqnjaRGJ5BEto3z3Q+99uXrUZH44ZH+ZvCll6ZQ==
+  dependencies:
+    core-js "3.2.1"
+
+apicurio-design-studio@0.2.40:
+  version "0.2.40"
+  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.40.tgz#92e24ffe99f2e0801328b15e05f00f7ff3dd378b"
+  integrity sha512-HAAlMNVW6WXKljFP8f7nJRO0g75N+3PdjLhqAdLu7XyEDfNToqa5yy7H3l7qIII0LF7eeU0dIiaV6zrAK2GAAQ==
   dependencies:
     tslib "^1.9.0"
 
@@ -7211,6 +7218,11 @@ core-js@3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.1.tgz#1343182634298f7f38622f95e73f54e48ddf4738"
   integrity sha512-sco40rF+2KlE0ROMvydjkrVMMG1vYilP2ALoRXcYR4obqbYIuV3Bg+51GEDW+HF8n7NRA+iaA4qD0nD9lo9mew==
+
+core-js@3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.2.1.tgz#cd41f38534da6cc59f7db050fe67307de9868b09"
+  integrity sha512-Qa5XSVefSVPRxy2XfUC13WbvqkxhkwB3ve+pgCQveNgYzbM/UxZeu1dcOX/xr4UmfUd+muuvsaxilQzCyUurMw==
 
 core-js@^1.0.0:
   version "1.2.7"
