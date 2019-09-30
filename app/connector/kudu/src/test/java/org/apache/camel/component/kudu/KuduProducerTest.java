@@ -108,7 +108,6 @@ public class KuduProducerTest extends AbstractKuduTest {
         final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");
 
         for (int i = 0; i < columnNames.size(); i++) {
-            Type type = i == 0 ? Type.INT32 : Type.STRING;
             columns.add(
                     new ColumnSchema.ColumnSchemaBuilder(columnNames.get(i), Type.STRING)
                     .key(i == 0)

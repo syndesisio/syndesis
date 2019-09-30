@@ -34,6 +34,7 @@ import io.syndesis.server.dao.init.ReadApiClientData;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReadApiClientDataTest {
 
@@ -46,6 +47,7 @@ public class ReadApiClientDataTest {
                     .build();
         String integrationJson = Json.writer().writeValueAsString(integrationIn);
         Integration integrationOut = Json.reader().forType(Integration.class).readValue(integrationJson);
+        assertThat(integrationOut).isNotNull();
 
         //serialize
         ConnectorGroup cg = new ConnectorGroup.Builder().id("label").name("label").build();

@@ -31,6 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.assertj.core.api.Assertions;
+
 public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends MongoDBConnectorTestSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerAllOptionsTest.class);
@@ -82,6 +84,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
                 @SuppressWarnings("unchecked")
                 List<String> doc = e.getMessage().getBody(List.class);
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+                Assertions.assertThat(jsonNode).isNotNull();
             } catch (IOException ex) {
                 log.error("Test failed because: ",ex);
                 return false;

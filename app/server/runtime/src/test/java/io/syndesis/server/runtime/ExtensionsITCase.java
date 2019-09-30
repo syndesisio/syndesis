@@ -54,10 +54,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExtensionsITCase extends BaseITCase {
 
-    private static final ParameterizedTypeReference<Map<String, Object>> RAW = new ParameterizedTypeReference<Map<String, Object>>() {
-        // type token pattern
-    };
-
     @Test
     public void basicConnectivityTest() {
         final ResponseEntity<ListResult<Extension>> exts = get("/api/v1/extensions",

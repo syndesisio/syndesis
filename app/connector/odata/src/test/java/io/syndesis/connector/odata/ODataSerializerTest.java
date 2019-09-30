@@ -203,7 +203,6 @@ public class ODataSerializerTest extends AbstractODataTest {
             .getJsonSchema(schemaURI);
 
         ProcessingReport report = jsonSchema.validate(jsonResultNode);
-        Iterator<ProcessingMessage> msgIter = report.iterator();
         assertTrue(report.isSuccess());
     }
 

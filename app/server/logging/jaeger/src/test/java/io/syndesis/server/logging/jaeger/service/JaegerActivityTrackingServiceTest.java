@@ -45,7 +45,6 @@ public class JaegerActivityTrackingServiceTest {
             public ArrayList<Trace> tracesForService(String service, int lookbackDays, int limit) {
                 try {
                     String json = resource("example-jaeger-trace-result.json");
-                    ObjectMapper objectMapper = new ObjectMapper();
                     Traces traces = Json.reader().forType(Traces.class).readValue(json);
                     return traces.data;
                 } catch (IOException e) {

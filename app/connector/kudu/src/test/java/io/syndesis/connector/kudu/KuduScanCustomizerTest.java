@@ -36,7 +36,6 @@ import java.util.Map;
 public class KuduScanCustomizerTest extends AbstractKuduCustomizerTestSupport {
     private KuduScanCustomizer customizer;
     private KuduClient connection;
-    private static final String TABLE = "impala::default.syndesis_test";
     private static final String HOST = "quickstart.cloudera";
     private static final String PORT = "7051";
 

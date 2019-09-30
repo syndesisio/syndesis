@@ -50,8 +50,6 @@ import static org.junit.Assert.fail;
 
 @SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.AvoidThrowingRawExceptionTypes"})
 public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ActivityTracingWithSplitTest.class);
-
     protected CamelContext context;
     protected ArrayList<JaegerSpan> activityEvents;
 
