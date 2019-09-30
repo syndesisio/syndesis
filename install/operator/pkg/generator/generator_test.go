@@ -222,7 +222,13 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 
 	config, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "data", "config.json")
 	if exists {
-		assert.True(t, strings.Contains(config, "\"enabled\": "+syndesis.Spec.Addons["komodo"]["enabled"]))
+        var expected string
+        if (syndesis.Spec.Addons["komodo"]["enabled"] == "true") {
+            expected = "1"
+        } else {
+            expected = "0"
+        }
+		assert.True(t, strings.Contains(config, "\"enabled\": "+expected))
 	}
 
 	return 1
