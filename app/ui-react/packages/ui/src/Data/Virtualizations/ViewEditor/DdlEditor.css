@@ -11,6 +11,20 @@
   height: 100%;
 }
 
+.ddl-editor__card-body.pf-c-card__body {
+  padding-left: 0;
+  padding-bottom: 8px;
+}
+
+.ddl-editor__card-body.pf-c-card__body:first-child {
+  padding-top: 4px; 
+}
+
+.ddl-editor__card-footer.pf-c-card__footer {
+  padding-left: 0;
+  padding-bottom: 8px;
+}
+
 .ddl-editor .text-editor {
   flex: 1 1 auto;
   height: 100%;
