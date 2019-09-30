@@ -112,6 +112,7 @@ rules:
   resources:
   - deploymentconfigs
   - deploymentconfigs/scale
+  - deploymentconfigs/finalizers
   verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
 - apiGroups:
   - ""
