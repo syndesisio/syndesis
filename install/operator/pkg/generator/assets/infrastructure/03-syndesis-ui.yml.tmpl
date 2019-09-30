@@ -54,7 +54,7 @@
       spec:
         serviceAccountName: syndesis-default
         containers:
-        - name: syndesis-ui
+        - name: {{.ProductName}}-ui
           image: ' '
           imagePullPolicy: IfNotPresent
           livenessProbe:

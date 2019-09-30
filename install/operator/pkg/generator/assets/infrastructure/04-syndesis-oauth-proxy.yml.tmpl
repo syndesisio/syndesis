@@ -49,7 +49,7 @@
           syndesis.io/component: syndesis-oauthproxy
       spec:
         containers:
-        - name: syndesis-oauthproxy
+        - name: {{.ProductName}}-oauthproxy
           image: ' '
           args:
             - --provider=openshift

@@ -64,7 +64,7 @@
       spec:
         serviceAccountName: syndesis-server
         containers:
-        - name: syndesis-meta
+        - name: {{.ProductName}}-meta
           env:
           - name: JAVA_APP_DIR
             value: /deployments
