@@ -1,3 +1,4 @@
+import { Title } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IChoiceCardHeaderProps {
@@ -6,4 +7,4 @@ export interface IChoiceCardHeaderProps {
 
 export const ChoiceCardHeader: React.FunctionComponent<
   IChoiceCardHeaderProps
-> = ({ i18nConditions }) => <h2 className="card-pf-title">{i18nConditions}</h2>;
+> = ({ i18nConditions }) => <Title headingLevel="h2" size="lg">{i18nConditions}</Title>;

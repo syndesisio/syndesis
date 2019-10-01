@@ -1,4 +1,4 @@
-import { Form } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
 
@@ -48,24 +48,26 @@ export const IntegrationSaveForm: React.FunctionComponent<
   return (
     <PageSection>
       <div className="row row-cards-pf">
-        <div className="card-pf"
+        <Card
              style={{
                margin: 'auto',
                maxWidth: 600,
              }}
         >
           {i18nFormTitle && (
-            <div className="card-pf-title">{i18nFormTitle}</div>
+            <CardHeader>
+              <Title headingLevel="h2" size="lg">{i18nFormTitle}</Title>
+            </CardHeader>
           )}
-          <div className="card-pf-body">
+          <CardBody>
             <Form
               isHorizontal={true}
               onSubmit={handleSubmit}
             >
               {children}
             </Form>
-          </div>
-          <div className="card-pf-footer">
+          </CardBody>
+          <CardFooter>
             <ButtonLink
               id={'integration-editor-save-button'}
               onClick={onSave}
@@ -83,8 +85,8 @@ export const IntegrationSaveForm: React.FunctionComponent<
             >
               {i18nSaveAndPublish}
             </ButtonLink>
-          </div>
-        </div>
+          </CardFooter>
+        </Card>
       </div>
     </PageSection>
   );

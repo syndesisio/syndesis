@@ -1,4 +1,4 @@
-import { Popover } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, Popover } from '@patternfly/react-core';
 import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
@@ -63,8 +63,8 @@ export class DescribeDataShapeForm extends React.Component<
       <PageSection>
         <Container>
           <div className="row row-cards-pf">
-            <div className="card-pf">
-              <div className="card-pf-body">
+            <Card>
+              <CardBody>
                 <form>
                   <FormGroup>
                     <ControlLabel>{this.props.i18nSelectType}</ControlLabel>
@@ -160,8 +160,8 @@ export class DescribeDataShapeForm extends React.Component<
                     </>
                   )}
                 </form>
-              </div>
-              <div className="card-pf-footer">
+              </CardBody>
+              <CardFooter>
                 {this.props.backActionHref && (
                   <>
                     <ButtonLink
@@ -181,8 +181,8 @@ export class DescribeDataShapeForm extends React.Component<
                 >
                   {this.props.i18nNext}
                 </ButtonLink>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           </div>
         </Container>
       </PageSection>
