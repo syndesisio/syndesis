@@ -78,22 +78,55 @@ link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data t
 *Provided API Return Path* step, click *Configure*.  
 +
 Every API provider integration finishes each operation flow by 
-sending a response to the REST API caller that triggered execution of the 
-operation flow. The response contains the return code that is 
-configured here. 
-+
-In this release, whenever an API call triggers 
-execution of this flow, the return code is the code that
-is specified in this step. 
-Error handling is expected to be supported in a future release. 
-+
-Accept the flow's default return code, *501 Not implemented*, or specify another 
-return code as follows:
+sending a response to the REST API caller that triggered execution of 
+the operation flow. The response contains one of the return codes 
+that you configure for the *Provided API Return Path* step that 
+finishes the operation’s flow. Configure the return path step as follows: 
 
-.. Click in the *Return Code* input field, which displays a list of 
-possible return codes. 
-.. Scroll to the return code that you want and click it. 
-.. Click *Next*.
+.. Under *Default Response*, in the *Return Code* field, accept 
+the default response that {prodname} displays, or click the down 
+caret and scroll to select the default response that you want. 
+The flow sends this response when execution of the operation 
+flow does not return any of the configured error responses. 
+Typically, the default response return code indicates a successful operation. 
+
+
+.. Under *Error Handling*, indicate whether you want to include 
+the error message in the body of the returned message. 
++
+During development, you typically want to return the error message. 
+In production, however, you might want to hide the error message if 
+it contains sensitive or proprietary information. The error message 
+is a JSON formatted string that contains `responseCode`, `category`, 
+and `message` elements, for example: 
++
+[source,json]
+----
+   {
+      responseCode: 404,
+      category:  "SQL_ENTITY_NOT_FOUND_ERROR",
+      message: "SQL SELECT did not SELECT any records"
+    }
+----
+
+.. Under *Error Response Codes*, {prodname} displays an entry for 
+each error that a connection in the flow might return. For each 
+error, accept the *500 Server Error* default return code or click to 
+select another HTTP status return code. 
++
+The return codes that you 
+can select from, are the return codes that the OpenAPI document 
+defines for the operation that this flow executes. 
+If {prodname} does not display a return code that you need, you can 
+edit the OpenAPI document to add it. 
++
+To do this, in the upper right, 
+click *View/Edit API Definition*. Edit the OpenAPI document as needed. 
+When you are done, save the OpenAPI document. {prodname} returns to 
+editing the *Provided API Return Path* and reflects any changes that you saved.
+
+.. Click Next to complete configuration of the return path. 
+
 
 . When this flow has all needed 
 connections and steps and there are no data mismatch icons, or when 
@@ -127,4 +160,4 @@ OpenShift Container Platform, an administrator might have set the
 the integration’s API discoverable in Red Hat 3scale by default.  When this environment
 variable is set, {prodname} does not provide an external URL for
 an API provider integration unless 3scale is explicitly disabled for a particular integration.
-To test the integration, open up 3scale dashboard.
+To test the integration, open the 3scale dashboard.
