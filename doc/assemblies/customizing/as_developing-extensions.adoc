@@ -10,7 +10,7 @@ If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
 can code an extension that provides the needed behavior.  The Syndesis 
 extension repository, 
-https://github.com/syndesisio/syndesis-extensions[], 
+link:https://github.com/syndesisio/syndesis-extensions[], 
 contains examples of extensions. 
 
 A business integrator shares requirements with a developer who codes the 
