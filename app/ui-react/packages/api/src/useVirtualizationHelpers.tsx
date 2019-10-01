@@ -35,6 +35,7 @@ export const useVirtualizationHelpers = () => {
     const newVirtualization = {
       keng__id: `${virtName}`,
       tko__description: virtDesc ? `${virtDesc}` : '',
+      usedBy: [] as string[]
     } as RestDataService;
 
     const response = await callFetch({
