@@ -1,9 +1,9 @@
 import { ActionGroup, 
          Alert, 
-         Button, 
          Card, 
          CardBody, 
          Form } from '@patternfly/react-core';
+import { Button } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IVirtualizationCreateValidationResult {
@@ -64,16 +64,18 @@ export const VirtualizationCreateForm: React.FunctionComponent<
           <ActionGroup>
             <Button
               data-testid={'virtualization-create-form-save-button'}
-              variant="primary"
-              isDisabled={props.isWorking}
+              bsStyle="primary"
+              style={{ marginRight: 0 }}
+              disabled={props.isWorking}
               onClick={props.handleSubmit}
             >
               {props.i18nCreateLabel}
             </Button>
             <Button
               data-testid={'virtualization-create-form-cancel-button'}
-              variant="secondary"
-              isDisabled={props.isWorking}
+              bsStyle="default"
+              style={{ marginLeft: 5 }}
+              disabled={props.isWorking}
               onClick={props.onCancel}
             >
               {props.i18nCancelLabel}
