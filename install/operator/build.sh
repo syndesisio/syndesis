@@ -13,10 +13,11 @@ source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
 source "./.lib.sh"
 
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
-OPERATOR_IMAGE_TAG="$(readopt --image-tag           latest)"
+OPERATOR_IMAGE_TAG="$(readopt  --image-tag          latest)"
 S2I_STREAM_NAME="$(readopt     --s2i-stream-name    syndesis-operator)"
 OPERATOR_BUILD_MODE="$(readopt --operator-build     auto)"
 IMAGE_BUILD_MODE="$(readopt    --image-build        auto)"
+SOURCE_GEN="$(readopt          --source-gen         on)"
 GO_BUILD_OPTIONS="$(readopt    --go-options         '')"
 
 if [[ -n "$(readopt --help)" ]] ; then
@@ -26,6 +27,7 @@ usage: ./build.sh [options]
 
 where options are:
   --help                                  display this help messages
+  --source-gen <on|skip>                  should the source generators be run (default: on)
   --operator-build <auto|docker|go|skip>  how to build the operator executable (default: auto)
   --image-build <auto|docker|s2i|skip>    how to build the image (default: auto)
   --image-name <name>                     docker image name (default: syndesis/syndesis-operator)
@@ -38,7 +40,7 @@ ENDHELP
 fi
 
 if [ $OPERATOR_BUILD_MODE != "skip" ] ; then
-  build_operator $OPERATOR_BUILD_MODE -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
+  build_operator $OPERATOR_BUILD_MODE "$SOURCE_GEN" -ldflags "-X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorImage=$OPERATOR_IMAGE_NAME -X github.com/syndesisio/syndesis/install/operator/pkg.DefaultOperatorTag=$OPERATOR_IMAGE_TAG" $GO_BUILD_OPTIONS
 fi
 
 if [ $IMAGE_BUILD_MODE != "skip" ] ; then

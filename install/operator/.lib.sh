@@ -44,6 +44,8 @@ build_operator()
 {
     local strategy="$1"
     shift
+    local source_gen="$1"
+    shift
 
     local hasgo=$(go_is_available)
     local hasdocker=$(docker_is_available)
@@ -74,18 +76,23 @@ build_operator()
         echo ======================================================
         export GO111MODULE=on
 
-        go mod vendor
+        if [ "$source_gen" == "on" ]; then
+        	echo "generating sources"
+	        go mod vendor
 
-        local hassdk=$(operatorsdk_is_available)
-        if [ "$hassdk" == "OK" ]; then
-            operator-sdk generate k8s
-            # operator-sdk generate openapi
+	        local hassdk=$(operatorsdk_is_available)
+	        if [ "$hassdk" == "OK" ]; then
+	            operator-sdk generate k8s
+	            #operator-sdk generate openapi
+	        else
+	            # display warning message and move on
+	            printf "$hassdk\n\n"
+	        fi
+	        go generate ./pkg/...
+    	    go mod tidy
         else
-            # display warning message and move on
-            printf "$hassdk\n\n"
+        	echo "skipping source generation"
         fi
-
-        go generate ./pkg/...
 
         echo building executable
         go test -test.short -mod=vendor ./cmd/... ./pkg/...
