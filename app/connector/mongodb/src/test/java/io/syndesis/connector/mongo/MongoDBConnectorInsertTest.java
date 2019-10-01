@@ -65,7 +65,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         // When
         int iteration = 10;
         int batchId = 432;
-        List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
+        List<Document> batchMessage = formatBatchMessageDocument(batchId);
         // Given
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
@@ -76,7 +76,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
 
-    private List<Document> formatBatchMessageDocument(int nDocs, int batchNo) {
+    private List<Document> formatBatchMessageDocument(int batchNo) {
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Document next = new Document();
@@ -92,7 +92,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         // When
         int iteration = 10;
         int batchId = 654;
-        List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
+        List<Document> batchMessage = formatBatchMessageDocument(batchId);
         List<String> jsonStrings = batchMessage.stream().map(Document::toJson).collect(Collectors.toList());
         // Given
         @SuppressWarnings("unchecked")

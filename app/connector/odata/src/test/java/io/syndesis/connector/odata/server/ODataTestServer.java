@@ -130,7 +130,6 @@ public class ODataTestServer extends Server implements ODataConstants {
 
         SSLContext sslContext = null;
         String userName = null;
-        char[] password = null;
 
         if (optionsList.contains(Options.SSL)) {
             sslContext = createServerSSLContext();
@@ -138,7 +137,6 @@ public class ODataTestServer extends Server implements ODataConstants {
 
         if (optionsList.contains(Options.AUTH_USER)) {
             userName = USER;
-            password = KEYPASS_AND_STOREPASS_VALUE;
         }
 
         if (optionsList.contains(Options.HTTP_PORT)) {
@@ -158,7 +156,7 @@ public class ODataTestServer extends Server implements ODataConstants {
             }
         });
 
-        initServer(sslContext, userName, password);
+        initServer(sslContext, userName);
     }
 
     private int extractPort(String property) {
@@ -249,7 +247,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         return sslContext;
     }
 
-    private void initServer(SSLContext sslContext, String userName, char[] password) throws UnknownHostException {
+    private void initServer(SSLContext sslContext, String userName) throws UnknownHostException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(FORWARD_SLASH);
         this.setHandler(context);

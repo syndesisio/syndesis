@@ -17,8 +17,8 @@ package io.syndesis.connector.sql.common;
 
 public class CamelSqlConstants {
 
-	public static final String SQL_UPDATE_COUNT            = "CamelSqlUpdateCount";
-	public static final String SQL_ROW_COUNT               = "CamelSqlRowCount";
-	public static final String SQL_RETRIEVE_GENERATED_KEYS = "CamelSqlRetrieveGeneratedKeys";
-	public static final String SQL_GENERATED_KEYS_DATA     = "CamelSqlGeneratedKeyRows";
+    public static final String SQL_UPDATE_COUNT            = "CamelSqlUpdateCount";
+    public static final String SQL_ROW_COUNT               = "CamelSqlRowCount";
+    public static final String SQL_RETRIEVE_GENERATED_KEYS = "CamelSqlRetrieveGeneratedKeys";
+    public static final String SQL_GENERATED_KEYS_DATA     = "CamelSqlGeneratedKeyRows";
 }

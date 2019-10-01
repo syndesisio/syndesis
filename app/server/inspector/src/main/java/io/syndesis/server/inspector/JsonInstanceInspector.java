@@ -59,7 +59,7 @@ public class JsonInstanceInspector implements Inspector {
                 context = ARRAY_CONTEXT;
 
                 if (items.isEmpty()) {
-                    return paths;
+                    return Collections.unmodifiableList(paths);
                 }
 
                 json = (Map<String, Object>) items.get(0);
@@ -74,7 +74,7 @@ public class JsonInstanceInspector implements Inspector {
             LOG.trace("Unable to parse the given JSON instance", e);
         }
 
-        return paths;
+        return Collections.unmodifiableList(paths);
     }
 
     @SuppressWarnings("unchecked")

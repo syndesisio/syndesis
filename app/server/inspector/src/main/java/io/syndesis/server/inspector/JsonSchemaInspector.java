@@ -75,7 +75,7 @@ public class JsonSchemaInspector implements Inspector {
             fetchPaths(context, paths, properties);
         }
 
-        return paths;
+        return Collections.unmodifiableList(paths);
     }
 
     @Override

@@ -56,10 +56,6 @@ public class IntegrationBaseTest {
             .build().getUsedConnectorIds()).containsOnly("ctr1", "ctr2", "ctr3");
     }
 
-    private static ConnectorAction actionWithConnector(final String connectorId) {
-        return new ConnectorAction.Builder().descriptor(connectorDescriptor(connectorId)).build();
-    }
-
     private static Connection connectionWithConnector(final String connectorId) {
         return new Connection.Builder().connectorId(connectorId).build();
     }

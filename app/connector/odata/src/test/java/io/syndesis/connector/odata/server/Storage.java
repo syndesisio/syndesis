@@ -100,7 +100,7 @@ public class Storage implements ODataServerConstants {
 
         // actually, this is only required if we have more than one Entity Type
         if (edmEntityType.getName().equals(ProductsEdmProvider.ET_PRODUCT_NAME)) {
-            return createProduct(edmEntityType, entityToCreate);
+            return createProduct(entityToCreate);
         }
 
         return null;
@@ -167,7 +167,7 @@ public class Storage implements ODataServerConstants {
         }
     }
 
-    private Entity createProduct(EdmEntityType edmEntityType, Entity entity) {
+    private Entity createProduct(Entity entity) {
         // the ID of the newly created product entity is generated automatically
         int newId = 1;
         while (productIdExists(newId)) {

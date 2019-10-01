@@ -462,6 +462,6 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             }
         }
 
-        return messages;
+        return Collections.unmodifiableList(messages);
     }
 }

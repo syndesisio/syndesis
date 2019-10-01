@@ -156,7 +156,7 @@ public class ConnectorsITCase extends BaseITCase {
         multipartData.add("connector", connectorWithNewdescription);
         multipartData.add("icon", new InputStreamResource(getClass().getResourceAsStream("test-image.png")));
 
-        final ResponseEntity<Void> updated = put("/api/v1/connectors/twitter",
+        put("/api/v1/connectors/twitter",
             multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
             multipartHeaders());
 
@@ -195,7 +195,7 @@ public class ConnectorsITCase extends BaseITCase {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("connector", connectorWithNewdescription);
 
-        final ResponseEntity<Void> updated = put("/api/v1/connectors/twitter",
+        put("/api/v1/connectors/twitter",
             multipartData, Void.class, tokenRule.validToken(), HttpStatus.NO_CONTENT,
             multipartHeaders());
 

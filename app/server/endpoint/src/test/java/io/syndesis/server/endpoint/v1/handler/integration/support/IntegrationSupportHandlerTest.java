@@ -24,7 +24,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public class IntegrationSupportHandlerTest {
 
@@ -35,6 +38,7 @@ public class IntegrationSupportHandlerTest {
        // disabling feature inline, skipt closing source stream
         try(InputStream fis = spy(new FileInputStream(new File(classLoader.getResource("model.json").getFile())))){
             ModelExport models = Json.reader().forType(ModelExport.class).readValue(fis);
+            assertThat(models).isNotNull();
             verify(fis, times(0)).close();
         }
     }

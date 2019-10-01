@@ -408,10 +408,6 @@ public class ActionProcessor extends AbstractProcessor {
         }
     }
 
-    private void info(String format, Object... args) {
-        processingEnv.getMessager().printMessage(Diagnostic.Kind.NOTE, String.format(format, args));
-    }
-
     private void warning(String format, Object... args) {
         processingEnv.getMessager().printMessage(Diagnostic.Kind.WARNING, String.format(format, args));
     }

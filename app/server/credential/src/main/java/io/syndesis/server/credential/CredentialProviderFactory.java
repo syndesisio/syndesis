@@ -22,7 +22,7 @@ import org.springframework.boot.autoconfigure.social.SocialProperties;
  */
 public interface CredentialProviderFactory {
 
-    CredentialProvider create(final SocialProperties properties);
+    CredentialProvider create(SocialProperties properties);
 
     String id();
 

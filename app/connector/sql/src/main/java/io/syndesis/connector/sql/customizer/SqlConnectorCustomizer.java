@@ -143,7 +143,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
             case INSERT:
                 Integer updateCount = (Integer) in.getHeader(CamelSqlConstants.SQL_UPDATE_COUNT);
                 if (updateCount.intValue() > 0) {
-                	return true;
+                    return true;
                 }
                 break;
 
