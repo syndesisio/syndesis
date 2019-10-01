@@ -59,8 +59,9 @@
     },
     "security": {
       "accessTokenUrl": "Access Token URL",
-      "authorizationUrl": "Authorization URL",
       "authTypeLabel": "Authentication Type",
+      "authorizationUrl": "Authorization URL",
+      "description": "$t(shared:project.name) reads the OpenAPI definition to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.",
       "noSecurity": "No Security",
       "required": "All fields are required.",
       "title": "Specify Security"

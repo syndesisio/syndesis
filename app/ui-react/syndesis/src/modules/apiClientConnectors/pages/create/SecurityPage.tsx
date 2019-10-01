@@ -98,6 +98,7 @@ export const SecurityPage: React.FunctionComponent = () => {
                         'apiClientConnectors:create:security:noSecurity'
                       )}
                       i18nTitle={t('apiClientConnectors:create:security:title')}
+                      i18nDescription={t('apiClientConnectors:create:security:description')}
                       onNext={onNext}
                     />
                   </PageSection>
