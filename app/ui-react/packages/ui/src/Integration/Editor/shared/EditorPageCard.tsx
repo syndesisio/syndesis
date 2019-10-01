@@ -24,7 +24,7 @@ export class EditorPageCard extends React.Component<IEditorPageCardProps> {
                   <Form isHorizontal={true}>{this.props.children}</Form>
                 </Container>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="syn-card__footer">
                 <ButtonLink
                   data-testid={'editor-page-card-done-button'}
                   onClick={this.props.submitForm}

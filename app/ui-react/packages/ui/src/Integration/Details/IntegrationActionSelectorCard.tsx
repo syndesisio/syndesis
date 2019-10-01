@@ -13,7 +13,7 @@ export const IntegrationActionSelectorCard: React.FunctionComponent<
 > = ({ content, title }) => (
   <Card>
     <CardHeader>
-      <Title headingLevel="h2" size="lg">{title}</Title>
+      <Title className="syn-card__title" headingLevel="h2" size="md">{title}</Title>
     </CardHeader>
     <CardBody>{content}</CardBody>
   </Card>

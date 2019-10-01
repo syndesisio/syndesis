@@ -30,7 +30,7 @@ export class ChoicePageCard extends React.Component<IChoicePageCardProps> {
                   <Form className={'conditional-flow__form'} isHorizontal={true}>{this.props.children}</Form>
                 </Container>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="syn-card__footer">
                 {this.props.backHref && (
                   <>
                     <ButtonLink

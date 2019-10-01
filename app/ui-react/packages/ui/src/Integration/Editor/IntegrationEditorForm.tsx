@@ -42,7 +42,7 @@ export class IntegrationEditorForm extends React.Component<
             <Card>
               {this.props.i18nFormTitle && (
                 <CardHeader>
-                  <Title headingLevel="h2" size="lg">{this.props.i18nFormTitle}</Title>
+                  <Title className="syn-card__title" headingLevel="h2" size="md">{this.props.i18nFormTitle}</Title>
                 </CardHeader>
               )}
               {this.props.error ? (
@@ -57,7 +57,7 @@ export class IntegrationEditorForm extends React.Component<
                   </Form>
                 </Container>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="syn-card__footer">
                 {this.props.backActionHref && (
                   <>
                     <ButtonLink

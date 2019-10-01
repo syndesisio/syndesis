@@ -56,7 +56,7 @@ export const IntegrationSaveForm: React.FunctionComponent<
         >
           {i18nFormTitle && (
             <CardHeader>
-              <Title headingLevel="h2" size="lg">{i18nFormTitle}</Title>
+              <Title className="syn-card__title" headingLevel="h2" size="md">{i18nFormTitle}</Title>
             </CardHeader>
           )}
           <CardBody>
@@ -67,7 +67,7 @@ export const IntegrationSaveForm: React.FunctionComponent<
               {children}
             </Form>
           </CardBody>
-          <CardFooter>
+          <CardFooter className="syn-card__footer">
             <ButtonLink
               id={'integration-editor-save-button'}
               onClick={onSave}

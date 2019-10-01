@@ -35,7 +35,7 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                   </Text>
                 </Container>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="syn-card__footer">
                 <ButtonLink
                   data-testid={
                     'integration-editor-nothing-to-configure-back-button'

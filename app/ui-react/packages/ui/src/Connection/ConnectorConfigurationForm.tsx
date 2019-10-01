@@ -52,9 +52,9 @@ export class ConnectorConfigurationForm extends React.Component<
       <Container>
         <div className="row row-cards-pf">
           <Card>
-            <CardHeader>
+            <CardHeader className="syn-card__header--border">
               {this.props.i18nFormTitle && (
-                <Title headingLevel="h2" size="lg">{this.props.i18nFormTitle}</Title>
+                <Title className="syn-card__title" headingLevel="h2" size="md">{this.props.i18nFormTitle}</Title>
               )}
             </CardHeader>
             <CardBody>
@@ -75,7 +75,7 @@ export class ConnectorConfigurationForm extends React.Component<
                 {this.props.children}
               </Form>
             </CardBody>
-            <CardFooter>
+            <CardFooter className="syn-card__footer">
               <ButtonLink
                 data-testid={'connection-creator-layout-back-button'}
                 href={this.props.backHref}

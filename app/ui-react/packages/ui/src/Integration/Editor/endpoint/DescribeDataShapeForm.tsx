@@ -161,7 +161,7 @@ export class DescribeDataShapeForm extends React.Component<
                   )}
                 </form>
               </CardBody>
-              <CardFooter>
+              <CardFooter className="syn-card__footer">
                 {this.props.backActionHref && (
                   <>
                     <ButtonLink

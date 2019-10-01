@@ -195,3 +195,20 @@ body {
   white-space: normal;
   word-break: break-word;
 }
+
+.syn-card__title.pf-c-title.pf-m-md {
+  font-size: 16px;
+}
+
+.syn-card__header--border.pf-c-card__header {
+  --pf-c-card__header--not-last-child--PaddingBottom: var(--pf-c-card--first-child--PaddingTop);
+  border-bottom: 1px solid #d1d1d1;
+  margin-bottom: var(--pf-c-card__header--not-last-child--PaddingBottom);
+}
+
+.syn-card__footer.pf-c-card__footer {
+  padding-top: var(--pf-global--spacer--lg);
+  padding-bottom: var(--pf-global--spacer--md);
+  background-color: #fafafa;
+  border-top: 1px solid #d1d1d1;
+}
