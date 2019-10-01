@@ -53,9 +53,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Extract all automatic info (column names) to enrich the properties.
  */
-public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
+public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
 
     private static final Logger LOG = LoggerFactory.getLogger(AWSDDBMetadataRetrieval.class);
+
     @Override
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context,
                                                          Class<? extends MetaDataExtension> metaDataExtensionClass,
@@ -64,7 +65,6 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
         return new AWSDDBConnectorMetaDataExtension(context);
     }
 
-
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId,
                                      Map<String, Object> properties, MetaData metadata) {
@@ -72,21 +72,11 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
         return adaptForDDB(properties, setupDefaultValues(properties));
     }
 
-
-
     protected Map<String, List<PropertyPair>> setupDefaultValues(Map<String, Object> properties) {
         Map<String, List<PropertyPair>> res = new HashMap<String, List<PropertyPair>>();
 
         try {
-            AWSCredentials credentials = new BasicAWSCredentials(properties.get("accessKey").toString(),
-                properties.get("secretKey").toString());
-            AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-            AmazonDynamoDB client =
-                AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider)
-                    .withRegion(Regions.valueOf(properties.get("region").toString())).build();
-
-            DescribeTableResult table = client.describeTable(properties.get(
-                "tableName").toString());
+            DescribeTableResult table = fetchTableDescription(properties);
 
             StringBuilder element = new StringBuilder("{");
             StringBuilder attributes = new StringBuilder();
@@ -119,10 +109,20 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
             res.put("attributes", list);
 
         } catch (AmazonDynamoDBException t) {
-           LOG.error("Couldn't connect to Amazon services. No suggestions on the fields.", t);
+            LOG.error("Couldn't connect to Amazon services. No suggestions on the fields.", t);
         }
 
         return res;
+    }
+
+    DescribeTableResult fetchTableDescription(Map<String, Object> properties) {
+        AWSCredentials credentials = new BasicAWSCredentials(properties.get("accessKey").toString(),
+            properties.get("secretKey").toString());
+        AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withCredentials(credentialsProvider)
+            .withRegion(Regions.valueOf(properties.get("region").toString())).build();
+
+        return client.describeTable(properties.get("tableName").toString());
     }
 
     /**
@@ -131,8 +131,8 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
      * @param properties
      * @return
      */
-    private SyndesisMetadata adaptForDDB(final Map<String, Object> properties,
-                                         Map<String, List<PropertyPair>> enrichedProperties) {
+    private static SyndesisMetadata adaptForDDB(final Map<String, Object> properties,
+        Map<String, List<PropertyPair>> enrichedProperties) {
 
         Map<String, AttributeValue> element = Util.getAttributeValueMap("element", properties);
 
@@ -145,8 +145,8 @@ public final class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
             attributes = splitter.splitToList(optionAttributes);
         }
 
-        //fallback to use the list of attributes on the filter
-        //this is used always on put-item
+        // fallback to use the list of attributes on the filter
+        // this is used always on put-item
         if (attributes.isEmpty()) {
             attributes.addAll(element.keySet());
         }

@@ -15,27 +15,29 @@
  */
 package io.syndesis.connector.aws.ddb.metadata;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectWriter;
-import io.swagger.models.Swagger;
 import io.syndesis.common.util.Json;
-import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.json.JSONException;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import com.amazonaws.services.dynamodbv2.model.TableDescription;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 public class AWSDDBMetadataAdapterTest {
 
@@ -51,7 +53,18 @@ public class AWSDDBMetadataAdapterTest {
         parameters.put(AWSDDBConfiguration.ACCESSKEY, AWSDDBConfiguration.ACCESSKEY_VALUE);
         parameters.put(AWSDDBConfiguration.TABLENAME, AWSDDBConfiguration.TABLENAME_VALUE);
         Optional<MetaData> metadata = ext.meta(parameters);
-        AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval();
+        AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval() {
+            @Override
+            DescribeTableResult fetchTableDescription(Map<String, Object> properties) {
+                DescribeTableResult tableDescriptionResult = new DescribeTableResult();
+                TableDescription tableDescription = new TableDescription();
+                tableDescription.setAttributeDefinitions(Collections.singletonList(new AttributeDefinition("clave", ScalarAttributeType.S)));
+
+                tableDescriptionResult.setTable(tableDescription);
+
+                return tableDescriptionResult;
+            }
+        };
 
         ObjectWriter writer = Json.writer();
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext,
@@ -109,7 +122,18 @@ public class AWSDDBMetadataAdapterTest {
         parameters.put("accessKey", "invalidKey");
         parameters.put("tableName", "TestTable");
         Optional<MetaData> metadata = ext.meta(parameters);
-        AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval();
+        AWSDDBMetadataRetrieval adapter = new AWSDDBMetadataRetrieval() {
+            @Override
+            DescribeTableResult fetchTableDescription(Map<String, Object> properties) {
+                DescribeTableResult tableDescriptionResult = new DescribeTableResult();
+                TableDescription tableDescription = new TableDescription();
+                tableDescription.setAttributeDefinitions(Collections.emptyList());
+
+                tableDescriptionResult.setTable(tableDescription);
+
+                return tableDescriptionResult;
+            }
+        };
 
         ObjectWriter writer = Json.writer();
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext,
@@ -138,6 +162,13 @@ public class AWSDDBMetadataAdapterTest {
             "    \"metadata\" : {\n" +
             "      \"variant\" : \"collection\"\n" +
             "    }\n" +
+            "  },\n" +
+            "  \"properties\" : {\n" +
+            "    \"attributes\" : [ { } ],\n" +
+            "    \"element\" : [ {\n" +
+            "      \"displayValue\" : \"{}\",\n" +
+            "      \"value\" : \"{}\"\n" +
+            "    } ]\n" +
             "  }\n" +
             "}\n";
 
