@@ -144,20 +144,27 @@ the top of the page, display the *Operation* dropdown and click the
 operation whose flow you want to edit. {prodname} saves the current state
 of the flow you have been editing. 
 
-Repeat this procedure to edit another operation's 
-flow.
+Repeat this procedure to edit another operation's flow.
 
-.Next steps
-When an API provider integration 
-is running in {prodname} on OpenShift Online or on OpenShift Dedicated, 
-you can use the `curl` utility to confirm that it is
-working as expected. For examples of doing this, see 
-link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[the description of the API provider quickstart].
+.Testing API provider integrations
 
-When an API provider integration is running in {prodname} on 
-OpenShift Container Platform, an administrator might have set the 
-`OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment variable, which makes
-the integration’s API discoverable in Red Hat 3scale by default.  When this environment
-variable is set, {prodname} does not provide an external URL for
-an API provider integration unless 3scale is explicitly disabled for a particular integration.
-To test the integration, open the 3scale dashboard.
+* *API provider integrations running on OpenShift Online or OpenShift Dedicated*
++
+*API provider integrations running on OpenShift Container Platform when specifying API discovery is not enabled*
++
+You can use the `curl` utility to confirm that the integration is working as 
+expected. In the `curl` command, specify the external URL that {prodname} displays
+after it publishes the API provider integration. 
+For examples of doing this, see the description of the API provider quickstart.
+
+* *API provider integrations running on OpenShift Container Platform when specifying API discovery is enabled* 
++
+An OCP administrator might have set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` 
+environment variable. When this environment variable is set, after you publish 
+an API provider integration for the first time, {prodname} displays the 
+*Enable discovery* button. Click *Enable discovery* if you want Red Hat 3scale 
+to control access to the integration’s API. {prodname} republishes the integration 
+and no longer provides an external URL for the integration. To test the integration, 
+open the 3scale dashboard to obtain the URL. 
++
+You can enable or disable discovery for each API provider integration. 
