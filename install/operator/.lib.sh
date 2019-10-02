@@ -76,7 +76,7 @@ build_operator()
         echo ======================================================
         export GO111MODULE=on
 
-        if [ "$source_gen" == "on" ]; then
+        if [[ ( "$source_gen" == "on" ) || ( "$source_gen" == "verify-none" ) ]]; then
         	echo "generating sources"
 	        go mod vendor
 
@@ -90,6 +90,19 @@ build_operator()
 	        fi
 	        go generate ./pkg/...
     	    go mod tidy
+
+            if [ "$source_gen" == "verify-none" ]; then
+        	    echo "verifying no sources have been generated"
+                if [ "$(git diff)" != "" ] ; then
+                    echo ===========================================
+                    echo   Looks like some generated source code
+                    echo   not previously checked in.  See diff:
+                    echo ===========================================
+                    echo
+                    git diff
+                    exit 1
+                fi
+            fi
         else
         	echo "skipping source generation"
         fi

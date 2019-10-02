@@ -184,10 +184,17 @@ do_operator() {
     echo "=============================================================================="
 
     pushd "$top_dir/install/operator" > /dev/null
+
+    local args=""
+    local source_gen="$(readopt --source-gen)"
+    if [ -n "${source_gen}" ]; then
+        args="$args --source-gen ${source_gen}"
+    fi
+
     if [ $(hasflag -i --image --docker) ]; then
-        ./build.sh --source-gen skip --image-build=docker --image-name="${OPERATOR_IMAGE}" --image-tag="$tag"
+        ./build.sh $args --image-build=docker --image-name="${OPERATOR_IMAGE}" --image-tag="$tag"
     else
-        ./build.sh --source-gen skip --image-build=s2i
+        ./build.sh $args --image-build=s2i
     fi
     popd >/dev/null
 }
