@@ -1,17 +1,11 @@
-import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
-import {
-  classNames,
-  Table,
-  TableBody,
-  TableHeader,
-  TableVariant,
-} from '@patternfly/react-table';
+import { Grid, GridItem, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { EmptyState, Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
 import './SqlClientContent.css';
+import { SqlResultsTable } from './SqlResultsTable';
 
 export interface ISqlClientContentProps {
   /**
@@ -40,7 +34,7 @@ export interface ISqlClientContentProps {
    *   ['Jordan', 'Dristol', 'Ontario']
    * ]
    */
-  queryResultRows: Array<{}>;
+  queryResultRows: string[][];
   isQueryRunning: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
@@ -62,29 +56,20 @@ interface IColumn {
   label: string;
 }
 
-const getColumnLabels = (cols: IColumn[]) => {
-  return cols.map(col => ({
-    columnTransforms: [classNames('pf-m-fit-content')],
-    title: col.label,
-  }));
-};
-
 /**
  * The SQL client content.  This component includes:
  * - SqlClientForm - for selection of the view and query params
  * - Table - for display of the query results
  * - EmptyStates - displayed when no views available or no results available.
  */
-export const SqlClientContent: React.FunctionComponent<
-  ISqlClientContentProps
-> = props => {
+export const SqlClientContent: React.FunctionComponent<ISqlClientContentProps> = props => {
   return (
     <PageSection>
       {props.viewNames.length > 0 ? (
-        <Split gutter="md">
-          <SplitItem isFilled={false}>{props.formContent}</SplitItem>
-          <SplitItem
-            isFilled={true}
+        <Grid gutter="md">
+          <GridItem span={3}>{props.formContent}</GridItem>
+          <GridItem
+            span={9}
             className={'sql-client-content__resultsSection'}
           >
             {props.isQueryRunning ? (
@@ -108,14 +93,10 @@ export const SqlClientContent: React.FunctionComponent<
                   </small>
                 </StackItem>
                 <StackItem isFilled={true}>
-                  <Table
-                    variant={TableVariant.compact}
-                    cells={getColumnLabels(props.queryResultCols)}
-                    rows={props.queryResultRows}
-                  >
-                    <TableHeader />
-                    <TableBody />
-                  </Table>
+                  <SqlResultsTable
+                    queryResultCols={props.queryResultCols}
+                    queryResultRows={props.queryResultRows}
+                  />
                 </StackItem>
               </Stack>
             ) : (
@@ -126,8 +107,8 @@ export const SqlClientContent: React.FunctionComponent<
                 <EmptyState.Info>{props.i18nEmptyResultsMsg}</EmptyState.Info>
               </EmptyState>
             )}
-          </SplitItem>
-        </Split>
+          </GridItem>
+        </Grid>
       ) : (
         <EmptyViewsState
           i18nEmptyStateTitle={props.i18nEmptyStateTitle}

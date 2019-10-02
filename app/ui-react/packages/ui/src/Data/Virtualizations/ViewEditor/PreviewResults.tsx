@@ -4,17 +4,10 @@ import {
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableVariant,
-  wrappable,
-  IRow
-} from '@patternfly/react-table';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../../src/Layout';
+import { SqlResultsTable } from '../SqlResultsTable';
 import './PreviewResults.css';
 
 export interface IPreviewResultsProps {
@@ -36,7 +29,7 @@ export interface IPreviewResultsProps {
    *   ['Jordan', 'Dristol', 'Ontario']
    * ]
    */
-  queryResultRows: Array<IRow | string[]>;
+  queryResultRows: string[][];
   i18nEmptyResultsTitle: string;
   i18nEmptyResultsMsg: string;
   i18nLoadingQueryResults: string;
@@ -48,25 +41,13 @@ export interface IColumn {
   label: string;
   props?: {
     className?: string;
-  }
+  };
 }
-
-const getColumns = (cols: IColumn[]) => {
-  return cols.map(col => ({
-    title: col.label,
-    props: {
-      className: col.props && col.props.className
-    },
-    transforms: [wrappable],
-  }));
-};
 
 /**
  * The PreviewResults component.  Displays table of supplied results.
  */
-export const PreviewResults: React.FunctionComponent<
-  IPreviewResultsProps
-> = props => {
+export const PreviewResults: React.FunctionComponent<IPreviewResultsProps> = props => {
   return (
     <PageSection>
       {props.isLoadingPreview ? (
@@ -77,16 +58,12 @@ export const PreviewResults: React.FunctionComponent<
       ) : (
         <>
           {props.queryResultCols.length > 0 ? (
-            <Table
-              className="preview-results__tableSection"
-              aria-label="Query Results Table"
-              variant={TableVariant.compact}
-              cells={getColumns(props.queryResultCols)}
-              rows={props.queryResultRows}
-            >
-              <TableHeader />
-              <TableBody />
-            </Table>
+            <div className={'preview-results__tableSection'}>
+              <SqlResultsTable
+                queryResultCols={props.queryResultCols}
+                queryResultRows={props.queryResultRows}
+              />
+            </div>
           ) : (
             <EmptyState variant={EmptyStateVariant.full}>
               <Title headingLevel="h5" size="lg">
