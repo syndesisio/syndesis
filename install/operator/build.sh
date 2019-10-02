@@ -27,7 +27,7 @@ usage: ./build.sh [options]
 
 where options are:
   --help                                  display this help messages
-  --source-gen <on|skip>                  should the source generators be run (default: on)
+  --source-gen <on|skip|verify-none>      should the source generators be run (default: on)
   --operator-build <auto|docker|go|skip>  how to build the operator executable (default: auto)
   --image-build <auto|docker|s2i|skip>    how to build the image (default: auto)
   --image-name <name>                     docker image name (default: syndesis/syndesis-operator)
