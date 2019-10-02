@@ -81,8 +81,18 @@ public class AWSDDBMetadataAdapterTest {
             "    \"metadata\" : {\n" +
             "      \"variant\" : \"collection\"\n" +
             "    }\n" +
+            "  },\n" +
+            "  \"properties\" : {\n" +
+            "    \"attributes\" : [ {\n" +
+            "      \"displayValue\" : \"clave\",\n" +
+            "      \"value\" : \"clave\"\n" +
+            "    } ],\n" +
+            "    \"element\" : [ {\n" +
+            "      \"displayValue\" : \"{\\\"clave\\\" : \\\"S\\\"}\",\n" +
+            "      \"value\" : \"{\\\"clave\\\" : \\\"S\\\"}\"\n" +
+            "    } ]\n" +
             "  }\n" +
-            "}\n";
+            "}";
 
         JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
@@ -129,7 +139,7 @@ public class AWSDDBMetadataAdapterTest {
             "      \"variant\" : \"collection\"\n" +
             "    }\n" +
             "  }\n" +
-            "}";
+            "}\n";
 
         JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
