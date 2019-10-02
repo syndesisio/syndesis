@@ -1,0 +1,29 @@
+// This module is included in the following assemblies:
+// as_evaluating-integration-data-to-determine-execution-flow.adoc
+
+[id='behavior-of-conditional-flows-step_{context}']
+= Behavior of a *Conditional Flows* step 
+
+During integration development, you can add a *Conditional Flows* step to 
+a flow and define one or more conditions. For each condition, you add steps 
+to a conditional flow that is associated with only that condition. 
+During integration execution, for each message that the previous 
+integration step passes to a *Conditional Flows* step, the *Conditional Flows* 
+step evaluates the message content against the specified conditions in 
+the order in which you define them in the {prodname} page for specifying
+conditions. 
+
+In a *Conditional Flows* step, the behavior is one of the following:
+
+* For the first condition that evaluates to true, the integration executes 
+the conditional flow that is associated with that condition. 
+
+* If no conditions evaluate to true, and there is a default conditional flow, 
+the integration executes that flow. 
+
+* If no conditions evaluate to true and there is no default conditional flow, 
+the integration does not execute a conditional flow. 
+
+After executing a conditional flow, or after no expressions evaluate 
+to true and there is no default conditional flow, the integration 
+executes the next step in the primary flow.  

@@ -2,7 +2,7 @@
 // as_creating-integrations.adoc
 
 [id='procedure-for-creating-an-integration_{context}']
-= Procedure for creating a simple integration
+= General procedure for creating a simple integration
 
 {prodname} guides you through the procedure for creating a simple integration. 
 It prompts you to choose the start connection, the finish connection, 

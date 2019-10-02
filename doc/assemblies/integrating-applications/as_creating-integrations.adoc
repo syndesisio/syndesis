@@ -27,7 +27,7 @@ an integration:
 * xref:add-timer-connection_{context}[]
 * xref:how-to-process-a-collection-in-a-flow_{context}[]
 * xref:about-adding-steps_{context}[]
-* xref:adding-conditional-execution-flows_{context}[]
+* xref:evaluating-integration-data-to-determine-execution-flow_{context}[]
 * xref:add-data-mapping-step_{context}[]
 * xref:add-basic-filter-step_{context}[]
 * xref:add-advanced-filter-step_{context}[]
@@ -46,7 +46,7 @@ include::../../assemblies/integrating-applications/as_how-to-process-a-collectio
 
 include::../../modules/integrating-applications/c_about-adding-steps.adoc[leveloffset=+1]
 
-include::../../modules/integrating-applications/p_adding-conditional-execution-flows.adoc[leveloffset=+1]
+include::../../assemblies/integrating-applications/as_evaluating-integration-data-to-determine-execution-flow.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/p_add-data-mapping-step.adoc[leveloffset=+1]
 
