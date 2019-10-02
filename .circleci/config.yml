@@ -30,7 +30,7 @@ yaml-templates:
         cd install/operator
         VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
         export GO111MODULE=on
-        go test -mod=vendor ./pkg/...
+        go test -test.short -mod=vendor ./pkg/...
 
   compile_go_executable: &compile_go_executable
     run:
@@ -89,6 +89,11 @@ yaml-templates:
       root: ~/.m2
       paths:
         - repository/io/syndesis
+
+  ignore_cherry_pick_branches: &ignore_cherry_pick_branches
+    filters:
+      branches:
+        ignore: /cherry-pick-backport.*/
 
 common_env: &common_env
   MAVEN_OPTS: -Xmx1024m
@@ -890,206 +895,252 @@ workflows:
           filters:
             branches:
               only: master
-      - license-check
-      - ui-doc
-      - ui
-      - common
-      - operator
+      - license-check:
+          <<: *ignore_cherry_pick_branches
+      - ui-doc:
+          <<: *ignore_cherry_pick_branches
+      - ui:
+          <<: *ignore_cherry_pick_branches
+      - common:
+          <<: *ignore_cherry_pick_branches
+      - operator:
+          <<: *ignore_cherry_pick_branches
       - extension:
+          <<: *ignore_cherry_pick_branches
           requires:
             - common
       - integration:
+          <<: *ignore_cherry_pick_branches
           requires:
             - extension
       - connector-support:
+          <<: *ignore_cherry_pick_branches
           requires:
             - integration
       - connector:
           name: connector-activemq
           module: activemq
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-api-provider
           module: api-provider
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-amqp
           module: amqp
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-aws-ddb
           module: aws-ddb
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-aws-s3
           module: aws-s3
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-aws-sqs
           module: aws-sqs
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-aws-sns
           module: aws-sns
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-box
           module: box
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-dropbox
           module: dropbox
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-email
           module: email
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-ftp
           module: ftp
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-fhir
           module: fhir
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-gmail
           module: gmail
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-google-calendar
           module: google-calendar
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-google-sheets
           module: google-sheets
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-http
           module: http
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-irc
           module: irc
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-jira
           module: jira
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-kafka
           module: kafka
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-log
           module: log
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-mqtt
           module: mqtt
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-rest-swagger
           module: rest-swagger
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-salesforce
           module: salesforce
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-sftp
           module: sftp
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-slack
           module: slack
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-sql
           module: sql
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-telegram
           module: telegram
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-timer
           module: timer
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-twitter
           module: twitter
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-servicenow
           module: servicenow
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-webhook
           module: webhook
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-concur
           module: concur
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-kudu
           module: kudu
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-odata
           module: odata
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-knative
           module: knative
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-flow
           module: flow
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector:
           name: connector-mongodb
           module: mongodb
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
       - connector-catalog:
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-activemq
             - connector-api-provider
@@ -1129,14 +1180,17 @@ workflows:
             - connector-flow
             - connector-mongodb
       - meta:
+          <<: *ignore_cherry_pick_branches
           requires:
             - connector-catalog
       - server:
+          <<: *ignore_cherry_pick_branches
           requires:
             - integration
             - connector-catalog
             - common
       - s2i:
+          <<: *ignore_cherry_pick_branches
           requires:
             - server
       - upgrade:
