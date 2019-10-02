@@ -1,6 +1,7 @@
 import { Card, CardBody, CardFooter, CardHeader, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
+  Alert,
   ControlLabel,
   FormControl,
   FormGroup,
@@ -49,6 +50,7 @@ export interface IApiClientConnectorCreateSecurityProps {
    */
   i18nNoSecurity: string;
   i18nTitle: string;
+  i18nDescription: string;
 
   /**
    * The action fired when the user presses the Next button
@@ -114,6 +116,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
           <Title size="2xl">{this.props.i18nTitle}</Title>
         </CardHeader>
         <CardBody>
+          <Alert type={'info'}>
+            <span>{this.props.i18nDescription}</span>
+          </Alert>
           <FormGroup controlId={'authenticationType'} disabled={false}>
             {this.props.authenticationTypes!.map(
               (authType: IAuthenticationTypes, idx) => {
