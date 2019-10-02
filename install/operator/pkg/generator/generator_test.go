@@ -224,12 +224,12 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 
 	config, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "data", "config.json")
 	if exists {
-        var expected string
-        if (syndesis.Spec.Addons["komodo"]["enabled"] == "true") {
-            expected = "1"
-        } else {
-            expected = "0"
-        }
+		var expected string
+		if syndesis.Spec.Addons["komodo"]["enabled"] == "true" {
+			expected = "1"
+		} else {
+			expected = "0"
+		}
 		assert.True(t, strings.Contains(config, "\"enabled\": "+expected))
 	}
 
@@ -447,7 +447,7 @@ func TestImageStreams(t *testing.T) {
 		},
 		Spec: v1alpha1.SyndesisSpec{},
 	}
-	resources, _ := renderResources(t, syndesis)
+	resources, context := renderResources(t, syndesis)
 
 	var flagtests = []struct {
 		name     string
@@ -461,6 +461,7 @@ func TestImageStreams(t *testing.T) {
 		{"syndesis-s2i", syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Components.S2I.ImagePrefix, syndesis.Spec.Components.S2I.Tag},
 		{"syndesis-dv", syndesis.Spec.Components.Komodo.Registry, syndesis.Spec.Components.Komodo.ImagePrefix, syndesis.Spec.Components.Komodo.Tag},
 		{"postgres_exporter", syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Components.PostgresExporter.ImagePrefix, syndesis.Spec.Components.PostgresExporter.Tag},
+		{"prometheus", context.Images.Support.Prometheus, "", syndesis.Spec.Components.Prometheus.Tag},
 	}
 
 	for _, resource := range resources {
