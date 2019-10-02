@@ -111,7 +111,7 @@ and `message` elements, for example:
 
 .. Under *Error Response Codes*, {prodname} displays an entry for 
 each error that a connection in the flow might return. For each 
-error, accept the *500 Server Error* default return code or click to 
+error, accept the *200 All is good* default return code or click to 
 select another HTTP status return code. 
 +
 The return codes that you 
@@ -150,7 +150,7 @@ Repeat this procedure to edit another operation's flow.
 
 * *API provider integrations running on OpenShift Online or OpenShift Dedicated*
 +
-*API provider integrations running on OpenShift Container Platform when specifying API discovery is not enabled*
+*API provider integrations running on OpenShift Container Platform when API discovery is disabled*
 +
 You can use the `curl` utility to confirm that the integration is working as 
 expected. In the `curl` command, specify the external URL that {prodname} displays
@@ -160,11 +160,14 @@ For examples of doing this, see the description of the API provider quickstart.
 * *API provider integrations running on OpenShift Container Platform when specifying API discovery is enabled* 
 +
 An OCP administrator might have set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` 
-environment variable. When this environment variable is set, after you publish 
-an API provider integration for the first time, {prodname} displays the 
-*Enable discovery* button. Click *Enable discovery* if you want Red Hat 3scale 
-to control access to the integration’s API. {prodname} republishes the integration 
-and no longer provides an external URL for the integration. To test the integration, 
-open the 3scale dashboard to obtain the URL. 
+environment variable. When this environment variable is set,  Red Hat 3scale 
+publishes your API provider integration, which means that 3scale controls 
+access to the integration’s API. To test the integration, open the 3scale 
+dashboard to obtain the integration’s URL. 
++
+If you do not want Red Hat 3scale to control access to the integration’s API, 
+you can disable discovery. You do this in {prodname} by viewing the integration’s 
+summary page. On this page, click *Disable discovery*. {prodname} republishes 
+the integration and provides an external URL for invoking integration execution. 
 +
 You can enable or disable discovery for each API provider integration. 
