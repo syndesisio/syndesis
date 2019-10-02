@@ -1,12 +1,12 @@
 import {
   Alert,
   AlertActionCloseButton,
-  Button,
   Card,
   CardBody,
   CardFooter,
   Title,
 } from '@patternfly/react-core';
+import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
@@ -162,7 +162,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
         {props.i18nTitle}
       </Title>
       <Card className={'ddl-editor__card'}>
-        <CardBody>
+        <CardBody className={'ddl-editor__card-body'}>
           {props.showValidationMessage
             ? props.validationResults.map((e, idx) => (
                 <Alert
@@ -185,21 +185,21 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
             onChange={handleDdlChange}
           />
         </CardBody>
-        <CardFooter>
+        <CardFooter className={'ddl-editor__card-footer'}>
           <Button
             data-testid={'ddl-editor-done-button'}
-            variant="secondary"
+            bsStyle="default"
             className="ddl-editor__button"
-            isDisabled={props.isSaving}
+            disabled={props.isSaving}
             onClick={handleFinish}
           >
             {props.i18nDoneLabel}
           </Button>
           <Button
             data-testid={'ddl-editor-save-button'}
-            variant="primary"
+            bsStyle="primary"
             className="ddl-editor__button"
-            isDisabled={props.isSaving || !hasChanges}
+            disabled={props.isSaving || !hasChanges}
             onClick={handleSave}
           >
             {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
