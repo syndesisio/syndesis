@@ -30,7 +30,7 @@ yaml-templates:
         cd install/operator
         VERSION="${CIRCLE_TAG:-ci-${CIRCLE_BUILD_NUM}}"
         export GO111MODULE=on
-        go test -mod=vendor ./pkg/...
+        go test -test.short -mod=vendor ./pkg/...
 
   compile_go_executable: &compile_go_executable
     run:
