@@ -63,19 +63,21 @@ export const DvConnectionCard: React.FunctionComponent<
           {props.dvStatus}
         </Label>
       </CardHeader>
-      <CardBody className="dv-connection-card__content">
-        <div className="dv-connection-card__icon">{props.icon}</div>
-        <Title
-          className="dv-connection-card__title"
-          data-testid={'dv-connection-card--title'}
-          headingLevel="h2"
-          size="lg"
-        >
-          {props.name}
-        </Title>
-        <Text className="dv-connection-card__description">
-          {props.description}
-        </Text>
+      <CardBody>
+        <div className={'dv-connection-card__body'}>
+          <div className="dv-connection-card__icon">{props.icon}</div>
+          <Title
+            className="dv-connection-card__title h2"
+            data-testid={'dv-connection-card--title'}
+            headingLevel="h2"
+            size="lg"
+          >
+            {props.name}
+          </Title>
+          <Text className="dv-connection-card__description">
+            {props.description}
+          </Text>
+        </div>
       </CardBody>
     </Card>
   );
