@@ -13,7 +13,10 @@
           "io.syndesis.connector.mongo.MongoProducerFindCustomizer"
         ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "name": "Criteria",
+          "description": "Text criteria",
+          "kind": "java",
+          "type": "java.lang.String"
         },
         "outputDataShape": {
           "kind": "json-schema"
@@ -41,7 +44,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-find",
       "name": "Find",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -84,7 +90,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-insert",
       "name": "Insert",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -98,7 +107,10 @@
           "io.syndesis.connector.mongo.MongoProducerCustomizer"
         ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "name": "Criteria",
+          "description": "Counting text criteria",
+          "kind": "java",
+          "type": "java.lang.String"
         },
         "outputDataShape": {
           "name": "Upsert result",
@@ -144,7 +156,10 @@
           "io.syndesis.connector.mongo.MongoProducerUpdateCustomizer"
         ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "name": "Criteria",
+          "description": "Text criteria",
+          "kind": "java",
+          "type": "java.lang.String"
         },
         "outputDataShape": {
           "name": "Documents updated",
@@ -190,7 +205,10 @@
           "io.syndesis.connector.mongo.MongoProducerDeleteCustomizer"
         ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "name": "Criteria",
+          "description": "Text criteria",
+          "kind": "java",
+          "type": "java.lang.String"
         },
         "outputDataShape": {
           "name": "Documents deleted",
@@ -235,7 +253,10 @@
           "io.syndesis.connector.mongo.MongoProducerCustomizer"
         ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "name": "Criteria",
+          "description": "Text criteria",
+          "kind": "java",
+          "type": "java.lang.String"
         },
         "outputDataShape": {
           "name": "Documents matching",
@@ -384,7 +405,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-consumer",
       "name": "Retrieve documents",
-      "pattern": "From"
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     }
   ],
   "configuredProperties": {},

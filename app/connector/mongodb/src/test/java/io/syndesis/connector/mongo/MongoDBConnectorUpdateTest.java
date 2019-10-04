@@ -43,7 +43,7 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         String updateArguments = "[{\"_id\":11},{$set: {\"test\":\"updated!\"}}]";
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
-        List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(1);
         Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
         Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
@@ -62,7 +62,7 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(2);
         docsFound.forEach(document -> Assertions.assertThat(document.getString("test")).isEqualTo("updated!"));
         Assertions.assertThat(result).isEqualTo(2L);

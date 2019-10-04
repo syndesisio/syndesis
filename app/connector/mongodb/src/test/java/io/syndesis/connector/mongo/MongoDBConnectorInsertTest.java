@@ -48,7 +48,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         Assertions.assertThat(doc.getString("test")).isEqualTo(result.getString("test"));
         Assertions.assertThat(doc.getString("uniqueId")).isEqualTo(result.getString("uniqueId"));
 
-        List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(1);
         Assertions.assertThat(docsFound).contains(result);
     }
@@ -64,7 +64,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(iteration);
         Assertions.assertThat(result).containsAll(docsFound);
     }
@@ -92,7 +92,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsString = template.requestBody("direct:start", jsonStrings, List.class);
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(iteration);
         Assertions.assertThat(result).containsAll(docsFound);
     }

@@ -39,13 +39,13 @@ import org.junit.BeforeClass;
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
-    protected static final String CONNECTION_BEAN_NAME = "myDb";
     protected final static String HOST = "localhost";
     protected final static int PORT = 27017;
     protected final static String USER = "test-user";
     protected final static String PASSWORD = "test-pwd";
     protected final static String DATABASE = "test";
     protected final static String COLLECTION = "test";
+    protected static final String ADMIN_DB = "admin";
     // Client connections
     protected static MongoClient mongoClient;
     protected static MongoDatabase database;
@@ -61,7 +61,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     @BeforeClass
     public static void startUpMongo() throws Exception {
         // Single embedded host configuration
-        IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.Main.PRODUCTION)
+        IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.V3_6_5)
             .net(new Net(HOST, PORT, Network.localhostIsIPv6())).build();
         MongodStarter starter = MongodStarter.getDefaultInstance();
         mongodExecutable = starter.prepare(mongodConfig);
@@ -127,6 +127,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                 builder.putConfiguredProperty("host", String.format("%s:%s", HOST, PORT));
                 builder.putConfiguredProperty("user", USER);
                 builder.putConfiguredProperty("password", PASSWORD);
+                builder.putConfiguredProperty("adminDB", ADMIN_DB);
                 builder.putConfiguredProperty("database", db);
                 builder.putConfiguredProperty("collection", collection);
                 if (operation != null) {
@@ -147,6 +148,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
             builder.putConfiguredProperty("host", String.format("%s:%s", HOST, PORT));
             builder.putConfiguredProperty("user", USER);
             builder.putConfiguredProperty("password", PASSWORD);
+            builder.putConfiguredProperty("adminDB", ADMIN_DB);
             builder.putConfiguredProperty("database", db);
             builder.putConfiguredProperty("collection", collection);
             builder.putConfiguredProperty("tailTrackIncreasingField", tailTrackIncreasingField);

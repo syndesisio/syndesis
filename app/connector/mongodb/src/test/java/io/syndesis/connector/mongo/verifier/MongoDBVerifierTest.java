@@ -23,13 +23,12 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
-import org.apache.camel.component.extension.ComponentVerifierExtension;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
-    private final static String SCHEME = "mongodb3";
     private final static MongoDBVerifier VERIFIER = new MongoDBVerifier();
 
     @Override
@@ -41,18 +40,52 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionOK() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", "localhost");
+        params.put("host", HOST + ":" + PORT);
         params.put("user", USER);
         params.put("password", PASSWORD);
+        params.put("database", ADMIN_DB);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.OK, result.getStatus());
+        Assertions.assertThat(params.get("adminDB")).isEqualTo(params.get("database"));
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.OK));
+    }
+
+    @Test
+    public void verifyConnectionFallbackAdmin() {
+        //When
+        Map<String, Object> params = new HashMap<>();
+        params.put("host", HOST + ":" + PORT);
+        params.put("user", USER);
+        params.put("password", PASSWORD);
+        params.put("database", DATABASE);
+        //Given
+        List<VerifierResponse> response = VERIFIER.verify(this.context,
+            CONNECTOR_ID, params);
+        //Then
+        Assertions.assertThat(params.get("adminDB")).isEqualTo(params.get("database"));
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
+    }
+
+    @Test
+    public void verifyConnectionFullParamsOK() {
+        //When
+        Map<String, Object> params = new HashMap<>();
+        params.put("host", HOST + ":" + PORT);
+        params.put("user", USER);
+        params.put("password", PASSWORD);
+        params.put("database", DATABASE);
+        params.put("adminDB", ADMIN_DB);
+        //Given
+        List<VerifierResponse> response = VERIFIER.verify(this.context,
+            CONNECTOR_ID, params);
+        //Then
+        Assertions.assertThat(params.get("adminDB")).isNotEqualTo(params.get("database"));
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.OK));
     }
 
     @Test
@@ -62,71 +95,61 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("host", "notReachableHost");
         params.put("user", USER);
         params.put("password", PASSWORD);
+        params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
     }
 
     @Test
     public void verifyConnectionMissingParams() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", "localhost");
+        params.put("host", HOST + ":" + PORT);
         params.put("user", USER);
+        params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.ERROR, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.PARAMETERS).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
     }
 
     @Test
     public void verifyConnectionNotAuthenticated() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", "localhost");
+        params.put("host", HOST + ":" + PORT);
         params.put("user", USER);
         params.put("password", "wrongPassword");
+        params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
-        log.info(result.getErrors().get(0).getDescription());
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
     }
 
     @Test
     public void verifyConnectionAdminDBKO() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", "localhost");
+        params.put("host", HOST + ":" + PORT);
         params.put("user", USER);
         params.put("password", PASSWORD);
         params.put("adminDB", "someAdminDB");
+        params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
-        log.info(result.getErrors().get(0).getDescription());
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
     }
 
     @Test
@@ -136,15 +159,12 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         params.put("host", "localhost:12343");
         params.put("user", USER);
         params.put("password", PASSWORD);
+        params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
-        ComponentVerifierExtension.Result result = VERIFIER
-            .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
         //Then
-        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
-        assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
-        log.info(result.getErrors().get(0).getDescription());
+        response.stream().filter(verifierResponse -> verifierResponse.getScope() == Verifier.Scope.CONNECTIVITY).
+            forEach(verifierResponse -> Assertions.assertThat(verifierResponse.getStatus()).isEqualTo(Verifier.Status.ERROR));
     }
 }

@@ -100,5 +100,5 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         Assertions.assertThat(resultsAsDocs).contains(doc);
         Assertions.assertThat(resultsAsDocs).hasSize(1);
     }
-
 }
+
