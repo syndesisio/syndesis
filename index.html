@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-12889-g1af573550b,</span>
+<span id="revnumber">version 1.1.3-12891-g04f2044194,</span>
 <span id="revdate">2019-10-04</span>
 </div>
 <div id="toc" class="toc2">
@@ -544,49 +544,59 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#syndesis-ui-usage">2.2.1. Usage</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-minishift">2.3. syndesis minishift</a>
+<li><a href="#syndesis-crc">2.3. syndesis crc</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-minishift-usage">2.3.1. Usage</a></li>
+<li><a href="#syndesis-crc-usage">2.3.1. Usage</a></li>
 <li><a href="#_installing_syndesis">2.3.2. Installing Syndesis</a></li>
-<li><a href="#_resetting_minishift">2.3.3. Resetting Minishift</a></li>
+<li><a href="#_resetting_codeready_containers">2.3.3. Resetting CodeReady Containers</a></li>
 <li><a href="#_example">2.3.4. Example</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-system-test">2.4. syndesis system-test</a>
+<li><a href="#syndesis-minishift">2.4. syndesis minishift</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-system-test-usage">2.4.1. Usage</a></li>
-<li><a href="#_how_it_works">2.4.2. How it works</a></li>
+<li><a href="#syndesis-minishift-usage">2.4.1. Usage</a></li>
+<li><a href="#_installing_syndesis_2">2.4.2. Installing Syndesis</a></li>
+<li><a href="#_resetting_minishift">2.4.3. Resetting Minishift</a></li>
+<li><a href="#_example_2">2.4.4. Example</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-dev">2.5. syndesis dev</a>
+<li><a href="#syndesis-system-test">2.5. syndesis system-test</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-dev-usage">2.5.1. Usage</a></li>
+<li><a href="#syndesis-system-test-usage">2.5.1. Usage</a></li>
+<li><a href="#_how_it_works">2.5.2. How it works</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-doc">2.6. syndesis doc</a>
+<li><a href="#syndesis-dev">2.6. syndesis dev</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-doc-usage">2.6.1. Usage</a></li>
-<li><a href="#syndesis-doc-output">2.6.2. Output</a></li>
+<li><a href="#syndesis-dev-usage">2.6.1. Usage</a></li>
+<li><a href="#_enable_debug_mode">2.6.2. Enable debug mode</a></li>
+<li><a href="#_install_maven_nexus_as_mirror">2.6.3. Install Maven Nexus as mirror</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-release">2.7. syndesis release</a>
+<li><a href="#syndesis-doc">2.7. syndesis doc</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-release-usage">2.7.1. Usage</a></li>
-<li><a href="#dev-release-preparations">2.7.2. Preparations</a></li>
-<li><a href="#dev-release-steps">2.7.3. Release steps</a></li>
-<li><a href="#_minor_version_templates">2.7.4. Minor Version Templates</a></li>
-<li><a href="#_snapshot_release">2.7.5. Snapshot Release</a></li>
-<li><a href="#dev-release-troubleshooting">2.7.6. Troubleshooting</a></li>
+<li><a href="#syndesis-doc-usage">2.7.1. Usage</a></li>
+<li><a href="#syndesis-doc-output">2.7.2. Output</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-install">2.8. syndesis install</a>
+<li><a href="#syndesis-release">2.8. syndesis release</a>
 <ul class="sectlevel3">
-<li><a href="#syndesis-install-usage">2.8.1. Usage</a></li>
-<li><a href="#_initial_setup">2.8.2. Initial Setup</a></li>
-<li><a href="#_installing_syndesis_2">2.8.3. Installing Syndesis</a></li>
-<li><a href="#_development_mode">2.8.4. Development mode</a></li>
-<li><a href="#_selecting_the_version">2.8.5. Selecting the version</a></li>
-<li><a href="#_quick_installation">2.8.6. Quick installation</a></li>
+<li><a href="#syndesis-release-usage">2.8.1. Usage</a></li>
+<li><a href="#dev-release-preparations">2.8.2. Preparations</a></li>
+<li><a href="#dev-release-steps">2.8.3. Release steps</a></li>
+<li><a href="#_minor_version_templates">2.8.4. Minor Version Templates</a></li>
+<li><a href="#_snapshot_release">2.8.5. Snapshot Release</a></li>
+<li><a href="#dev-release-troubleshooting">2.8.6. Troubleshooting</a></li>
+</ul>
+</li>
+<li><a href="#syndesis-install">2.9. syndesis install</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-install-usage">2.9.1. Usage</a></li>
+<li><a href="#_initial_setup">2.9.2. Initial Setup</a></li>
+<li><a href="#_installing_syndesis_3">2.9.3. Installing Syndesis</a></li>
+<li><a href="#_development_mode">2.9.4. Development mode</a></li>
+<li><a href="#_selecting_the_version">2.9.5. Selecting the version</a></li>
+<li><a href="#_quick_installation">2.9.6. Quick installation</a></li>
 </ul>
 </li>
 </ul>
@@ -703,7 +713,8 @@ with the following commands
    dev              Syndesis developer tools
    doc              Generate Syndesis Developer Handbook (SDH)
    install          Install Syndesis to a connected OpenShift cluster
-   minishift        Initialize and manage a Minishift developer environment
+   crc              Initialize and manage a developer environment using OCP4 CodeReady Containers
+   minishift        Initialize and manage a Minishift developer environment (deprecated)
    release          Perform a release
    system-test      Run system tests
 
@@ -821,12 +832,16 @@ These options are described in detail in the next sections.</p>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Start the UI for local development <em>(not implemented yet)</em></p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-crc"><strong>crc</strong></a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start and install Syndesis on OCP4 CodeReady Containers</p></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-minishift"><strong>minishift</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Start and install Syndesis on Minishift</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Start and install Syndesis on Minishift <em>(deprecated)</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-install"><strong>install</strong></a></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Install Syndesis in a running cluster (other than Minishift)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Install Syndesis in a running OpenShift cluster (other than CodeReady Containers or Minishift)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><a href="#syndesis-system-test"><strong>system-test</strong></a></p></td>
@@ -853,7 +868,7 @@ Remember a command must be the first argument, but there are additional possibil
 <div class="ulist">
 <ul>
 <li>
-<p>You can use the form <code>--command</code> anywhere as an option, too. E.g. using  <code>--minishift</code> is the same as specifying "minishift" as the first argument.</p>
+<p>You can use the form <code>--command</code> anywhere as an option, too. E.g. using  <code>--install</code> is the same as specifying "install" as the first argument.</p>
 </li>
 <li>
 <p>A <code>--mode command</code> can be used, too (e.g. <code>--mode sytem-test</code>)</p>
@@ -1313,47 +1328,50 @@ Options for ui:
 </div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-minishift">2.3. syndesis minishift</h3>
+<h3 id="syndesis-crc">2.3. syndesis crc</h3>
 <div class="paragraph">
-<p>With <code>syndesis minishift</code> you can adequately manage a <a href="https://www.openshift.org/minishift/">minishift</a> installation for hosting Syndesis.
+<p>With <code>syndesis crc</code> you can adequately manage a <a href="https://code-ready.github.io/crc/">CodeReady Containers</a> installation for hosting Syndesis.
 This command is especially useful for a simple and self-contained development workflow.</p>
 </div>
 <div class="paragraph">
-<p><code>syndesis minishift</code> requires that you have a current minishift in your path.
-You can download it directly from <a href="https://github.com/minishift/minishift/releases">GitHub</a>.</p>
+<p><code>syndesis crc</code> requires that you have a current crc binary in your path.
+You can download it directly from <a href="https://cloud.redhat.com/openshift/install/crc/installer-provisioned">https://cloud.redhat.com</a>.</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-minishift-usage">2.3.1. Usage</h4>
+<h4 id="syndesis-crc-usage">2.3.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>--install                 Install templates to a running Minishift.
--p  --project             Install into this project.
-                          Delete this project if it already exists.
-                          By default, install into the current project (without deleting)
--c  --context             Install into this context. Default is 'minishift'
---reset                   Reset and initialize the minishift installation by
-                          'minishift delete &amp;&amp; minishift start'.
---full-reset              Full reset and initialie by
-                          'minishift stop &amp;&amp; rm -rf ~/.minishift/* &amp;&amp; minishift start'
---memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
---cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
---disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
---vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
---show-logs               Show minishift logs during startup
---openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.9.0)
---tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
-                          version from master is installed
---local                   Use the local resource files instead of fetching them from GitHub
--o  --open                Open Syndesis in the browser
--y  --yes                 Assume 'yes' automatically when asking for deleting
-                          a given project.
---memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
---memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
---test-support            Allow test support endpoint for syndesis-server
---datavirt                Install Data Virtualizations
---maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
---deploy-latest           Deploy latest tags from dockerhub.
---man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
+<pre class="CodeRay highlight"><code>    --install                 Install templates to a running OCP4 CodeReady Containers cluster.
+-p  --project                 Install into this project.
+                              Delete this project if it already exists.
+                              By default, install into the current project (without deleting)
+    --reset                   Reset and initialize the CodeReady Containers installation by
+                              'crc delete &amp;&amp; crc start'.
+    --full-reset              Full reset and initialie by
+                              'crc stop &amp;&amp; rm -rf ~/.crc/* &amp;&amp; crc start'
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
+    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
+    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
+    --pull-secret-file &lt;file&gt; File holding the OCP4 pull secret
+    --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
+    --bundle &lt;path-to-bundle&gt; Path to system bundle (required when using virtualbox vm-driver)
+    --local                   Use the local resource files instead of fetching them from GitHub
+-r  --route &lt;route&gt;           Use the given route.
+                              By default "syndesis-&lt;project_name&gt;.apps-crc.testing" is used.
+-o  --open                    Open Syndesis in the browser
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
+    --memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support            Allow test support endpoint for syndesis-server
+    --camel-k &lt;version&gt;       Install the Camel-K operator with version &lt;version&gt;
+                              (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
+    --datavirt                Install Data Virtualizations
+    --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
+    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
 </div>
@@ -1380,7 +1398,172 @@ Any existing project will be deleted first when specified with <code>--project</
 </div>
 </div>
 <div class="sect3">
-<h4 id="_resetting_minishift">2.3.3. Resetting Minishift</h4>
+<h4 id="_resetting_codeready_containers">2.3.3. Resetting CodeReady Containers</h4>
+<div class="paragraph">
+<p>The quickest way to get a fresh Syndesis setup is to use <code>--project</code> which will install Syndesis into a clean, new project.</p>
+</div>
+<div class="paragraph">
+<p>However, you can also recreate the whole CodeReady Containers installation with <code>--reset</code>. This will delete the CodeReady Containers VM (<code>crc delete</code>) and create a new one (<code>crc start</code>).
+It doesn&#8217;t harm if the CodeReady Containers VM does not exist so that you can use <code>--reset</code> also on a fresh CodeReady Containers installation.</p>
+</div>
+<div class="paragraph">
+<p>If you want to get a real clean installation use <code>--full-reset</code> which deletes the <code>~/.crc</code> directory which holds downloaded artefacts like the ISO image for the CodeReady Containers VM.
+Using <code>--full-reset</code> forces CodeReady Containers to re-download all those files.</p>
+</div>
+<div class="paragraph">
+<p>There are several options which influence the re-creation of the VM:</p>
+</div>
+<table class="tableblock frame-all grid-all spread">
+<colgroup>
+<col style="width: 29.4117%;">
+<col style="width: 58.8235%;">
+<col style="width: 11.7648%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--memory</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Memory to use for the CodeReady Containers VM.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">8 GB</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--cpus</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of CPUs used for the CodeReady Containers VM.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--pull-secret-file</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">File holding the OCP4 pull secret</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--vm-driver</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Which virtual machine driver to use. For OS X this can be 'virtualbox'.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--bundle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Path to system bundle (required when using virtualbox vm-driver)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">-</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_example">2.3.4. Example</h4>
+<div class="paragraph">
+<p>This short example performs the following actions:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Stops and deletes a running CodeReady Containers VM (if existent)</p>
+</li>
+<li>
+<p>Removes <code>~/.crc</code> (if existent)</p>
+</li>
+<li>
+<p>Install Syndesis in OpenShift modes (S2I builds &amp; image streams) in project <code>syndesis</code></p>
+</li>
+<li>
+<p>Open Syndesis UI in the default browser</p>
+</li>
+</ul>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code># Complete fresh installation in project "syndesis"
+syndesis crc --full-reset --install --project syndesis
+
+# Open Syndesis in default browser
+syndesis crc -o</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="syndesis-minishift">2.4. syndesis minishift</h3>
+<div class="paragraph">
+<p>With <code>syndesis minishift</code> you can adequately manage a <a href="https://www.openshift.org/minishift/">minishift</a> installation for hosting Syndesis.
+This command is especially useful for a simple and self-contained development workflow.</p>
+</div>
+<div class="paragraph">
+<p><code>syndesis minishift</code> requires that you have a current minishift in your path.
+You can download it directly from <a href="https://github.com/minishift/minishift/releases">GitHub</a>.</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-minishift-usage">2.4.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>    --install                 Install templates to a running Minishift.
+-p  --project                 Install into this project.
+                              Delete this project if it already exists.
+                              By default, install into the current project (without deleting)
+-c  --context                 Install into this context. Default is 'minishift'
+    --reset                   Reset and initialize the minishift installation by
+                              'minishift delete &amp;&amp; minishift start'.
+    --full-reset              Full reset and initialie by
+                              'minishift stop &amp;&amp; rm -rf ~/.minishift/* &amp;&amp; minishift start'
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
+    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
+    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
+    --disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
+    --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
+    --show-logs               Show minishift logs during startup
+    --openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.9.0)
+    --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
+    --local                   Use the local resource files instead of fetching them from GitHub
+-r  --route &lt;route&gt;           Use the given route.
+                              By default "syndesis.&lt;crc ip&gt;.apps-crc.testing" is used.
+-o  --open                    Open Syndesis in the browser
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
+    --memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support            Allow test support endpoint for syndesis-server
+    --camel-k &lt;version&gt;       Install the Camel-K operator with version &lt;version&gt;
+                              (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
+    --datavirt                Install Data Virtualizations
+    --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
+    --deploy-latest           Deploy latest tags from dockerhub.
+    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_installing_syndesis_2">2.4.2. Installing Syndesis</h4>
+<div class="paragraph">
+<p>You can easily install Syndesis with the option <code>--install</code>.
+This option triggers the creation of all relevant OpenShift resources objects in the currently connected OpenShift project.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use a different project, then use <code>--project</code> (short: <code>-p</code>) to specify this project.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Any existing project will be deleted first when specified with <code>--project</code>. This option is also an easy and quick way to recreate a Syndesis installation.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_resetting_minishift">2.4.3. Resetting Minishift</h4>
 <div class="paragraph">
 <p>The quickest way to get a fresh Syndesis setup is to use <code>--project</code> which will install Syndesis into a clean, new project.</p>
 </div>
@@ -1443,7 +1626,7 @@ Using <code>--full-reset</code> forces Minishift to re-download all those files.
 </table>
 </div>
 <div class="sect3">
-<h4 id="_example">2.3.4. Example</h4>
+<h4 id="_example_2">2.4.4. Example</h4>
 <div class="paragraph">
 <p>This short example performs the following actions:</p>
 </div>
@@ -1475,12 +1658,12 @@ syndesis minishift -o</code></pre>
 </div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-system-test">2.4. syndesis system-test</h3>
+<h3 id="syndesis-system-test">2.5. syndesis system-test</h3>
 <div class="paragraph">
 <p>The <code>system-test</code> command is for running a full blown system test of Syndesis by installing it in one of multiple projects which are managed in a pool.</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-system-test-usage">2.4.1. Usage</h4>
+<h4 id="syndesis-system-test-usage">2.5.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Usage: syndesis system-test [... options ...]
@@ -1501,7 +1684,7 @@ Options for system-test:
 </div>
 </div>
 <div class="sect3">
-<h4 id="_how_it_works">2.4.2. How it works</h4>
+<h4 id="_how_it_works">2.5.2. How it works</h4>
 <div class="admonitionblock note">
 <table>
 <tr>
@@ -1517,34 +1700,73 @@ This section needs a more detailed explanation how the systems tests are working
 </div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-dev">2.5. syndesis dev</h3>
+<h3 id="syndesis-dev">2.6. syndesis dev</h3>
 <div class="paragraph">
 <p>Dev commands are useful helpers for developing Syndesis</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-dev-usage">2.5.1. Usage</h4>
+<h4 id="syndesis-dev-usage">2.6.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Usage: syndesis dev [... options ...]
 
 Options for dev:
-    --debug &lt;name&gt;            Setup a port forwarding to &lt;name&gt; pod (default: server)</code></pre>
+    --debug &lt;name&gt;            Setup a port forwarding to &lt;name&gt; pod (default: server)
+    --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
+    --cleanup                 Removes 'Completed' pods
+    --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
+                              Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
+    --update-manifest &lt;name&gt;  Updates the json manifest for the given connector
+    --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
+    --version                 Show running version of cluster</code></pre>
 </div>
 </div>
+</div>
+<div class="sect3">
+<h4 id="_enable_debug_mode">2.6.2. Enable debug mode</h4>
 <div class="paragraph">
 <p>This command enable port-forwarding of port 5005 from a specific pod (by default: "server") to port 5005 on the localhost.
 You then can point your Java IDE to port 5005 on localhost for connecting for remote debugging.
 As argument to <code>--debug</code> "server", "meta" and "atlasmap" can be used, which are our Java based services.</p>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_install_maven_nexus_as_mirror">2.6.3. Install Maven Nexus as mirror</h4>
+<div class="paragraph">
+<p>The Syndesis S2i builds are loading dependencies from Maven central respectively Red Hat repositories. In order to improve performance and
+save some bits in transfer we recommend to use a Maven Nexus as mirror. This will decrease the amount of bits loaded from the internet every time
+a Syndesis integration is created.</p>
+</div>
+<div class="paragraph">
+<p>You can add the Maven Nexus application in a separate project namespace to the OpenShift cluster by using:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis dev --install-maven-mirror</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will create a new project on the cluster <code>nexus</code> and will install the latest Nexus Maven repository manager. You can use this Nexus instance
+when building and pushing new images to the Syndesis image streams using S2i.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis -m s2i -i --maven-mirror http://nexus-nexus.apps-crc.testing/nexus/content/groups/public</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>This will build a new base S2i image and use the Maven Nexus as mirror so all previously loaded dependencies will be loaded from the local
+Nexus instance instead of loading from the internet.</p>
+</div>
+</div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-doc">2.6. syndesis doc</h3>
+<h3 id="syndesis-doc">2.7. syndesis doc</h3>
 <div class="paragraph">
 <p>This command is used to generated and manage this documentation which you are currently reading.</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-doc-usage">2.6.1. Usage</h4>
+<h4 id="syndesis-doc-usage">2.7.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Usage: syndesis doc [... options ...]
@@ -1572,7 +1794,7 @@ But it is not the case for the Minishift exposed Docker daemon, as this daemon i
 </div>
 </div>
 <div class="sect3">
-<h4 id="syndesis-doc-output">2.6.2. Output</h4>
+<h4 id="syndesis-doc-output">2.7.2. Output</h4>
 <div class="paragraph">
 <p>Input and output has the same defaults but can be changed with the following options</p>
 </div>
@@ -1621,7 +1843,7 @@ But it is not the case for the Minishift exposed Docker daemon, as this daemon i
 </div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-release">2.7. syndesis release</h3>
+<h3 id="syndesis-release">2.8. syndesis release</h3>
 <div class="paragraph">
 <p>Use <code>syndesis release</code> for performing a release of Syndesis.
 A Syndesis release consists of:</p>
@@ -1645,7 +1867,7 @@ how to troubleshoot if something goes wrong.
 This documentation might also be interesting to you even when you do not perform a release on your own, as it might help you to understand how the various Syndesis artefacts fit together.</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-release-usage">2.7.1. Usage</h4>
+<h4 id="syndesis-release-usage">2.8.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>Perform a release
@@ -1731,7 +1953,7 @@ This log file will contain all output (and if you add <code>--verbose</code> you
 </div>
 </div>
 <div class="sect3">
-<h4 id="dev-release-preparations">2.7.2. Preparations</h4>
+<h4 id="dev-release-preparations">2.8.2. Preparations</h4>
 <div class="paragraph">
 <p>To perform a release, certain preconditions need to be given.</p>
 </div>
@@ -1792,7 +2014,7 @@ If there is an issue due to bugs in the release script itself, please fix them o
 </div>
 </div>
 <div class="sect3">
-<h4 id="dev-release-steps">2.7.3. Release steps</h4>
+<h4 id="dev-release-steps">2.8.3. Release steps</h4>
 <div class="paragraph">
 <p>A release consist of several different steps, which can be grouped into two groups:</p>
 </div>
@@ -1918,7 +2140,7 @@ We only want to have the tag with all the release preparation steps, not on the 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_minor_version_templates">2.7.4. Minor Version Templates</h4>
+<h4 id="_minor_version_templates">2.8.4. Minor Version Templates</h4>
 <div class="paragraph">
 <p>What is now the thing with this <em>minor version</em>?
 Why is the needed and how does it work?</p>
@@ -1951,7 +2173,7 @@ So when we release the next patch level release, moving the minor version tag to
 </div>
 </div>
 <div class="sect3">
-<h4 id="_snapshot_release">2.7.5. Snapshot Release</h4>
+<h4 id="_snapshot_release">2.8.5. Snapshot Release</h4>
 <div class="paragraph">
 <p>With the option <code>--snapshot-release</code> a lightweight snapshot release for the images and templates can be created.
 The tag/version is calculated automatically by picking up the latest release number (e.g. 1.3.5), increasing the patch-level by
@@ -2013,7 +2235,7 @@ According to  <a href="https://semver.org/">Semantic Versioning 2.0</a> this is 
 </div>
 </div>
 <div class="sect3">
-<h4 id="dev-release-troubleshooting">2.7.6. Troubleshooting</h4>
+<h4 id="dev-release-troubleshooting">2.8.6. Troubleshooting</h4>
 <div class="paragraph">
 <p>When you run the <code>syndesis release</code> command and when it should not succeed, you might have to perform some cleanup steps yourself
 (there is now automatic rollback).
@@ -2047,13 +2269,16 @@ But these things should take care of if this should be the case:</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="syndesis-install">2.8. syndesis install</h3>
+<h3 id="syndesis-install">2.9. syndesis install</h3>
 <div class="paragraph">
 <p>With <code>syndesis install</code> you can install Syndesis to an arbitrary OpenShift cluster.
-If you want to install to <a href="https://www.openshift.org/minishift/">Minishift</a> the <a href="#syndesis-minishift">syndesis minishift</a> command is recommended as it supports some additional features specific to Minishift.</p>
+If you want to install to <a href="https://code-ready.github.io/crc/">CodeReady Containers</a> or
+<a href="https://www.openshift.org/minishift/">Minishift</a> the <a href="#syndesis-crc">syndesis crc</a> or
+<a href="#syndesis-minishift">syndesis minishift</a> command is recommended as it supports some additional
+features specific to these local development environments.</p>
 </div>
 <div class="sect3">
-<h4 id="syndesis-install-usage">2.8.1. Usage</h4>
+<h4 id="syndesis-install-usage">2.9.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>-s  --setup               Install CRDs clusterwide. Use --grant if you want a specific user to be
@@ -2076,7 +2301,7 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
                           Syndesis images are picked up properly (implies --watch)
     --force               Override an existing "Syndesis" if present
 -r  --route &lt;route&gt;       Use the given route.
-                          By default "syndesis.&lt;minishift ip&gt;.nip.io" is used.
+                          By default "syndesis-&lt;project_name&gt;.apps-crc.testing" is used.
 -w  --watch               Wait until cluster is up
     --local               install from local Git repo when using. By default the
                           resource descriptor is downloaded from GitHub remotely.
@@ -2113,7 +2338,7 @@ You can check the status with <code>oc status</code>.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_initial_setup">2.8.2. Initial Setup</h4>
+<h4 id="_initial_setup">2.9.2. Initial Setup</h4>
 <div class="paragraph">
 <p>In the initial setup, you have to register the custom resource definition (CRD) to allow to deploy <code>Syndesis</code> resources.
 This step has to be performed by the admin.</p>
@@ -2123,7 +2348,7 @@ This step has to be performed by the admin.</p>
 </div>
 <div class="paragraph">
 <p>To perform this setup step, which needs to be performed only once per cluster, you have to run <code>syndesis</code> <strong>while being connected as a cluster admin</strong>.
-For <code>minishift</code> use <code>oc login -u system:admin</code> if you have the <code>admin-user</code> addon enabled.</p>
+For <code>crc</code> or <code>minishift</code> use <code>oc login -u system:admin</code> if you have the <code>admin-user</code> addon enabled.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2146,7 +2371,7 @@ This cluster-wide access is especially required when you plan to use the <code>-
 </div>
 </div>
 <div class="sect3">
-<h4 id="_installing_syndesis_2">2.8.3. Installing Syndesis</h4>
+<h4 id="_installing_syndesis_3">2.9.3. Installing Syndesis</h4>
 <div class="paragraph">
 <p>After the CRDs a registered, you can easily install Syndesis directly with</p>
 </div>
@@ -2159,13 +2384,10 @@ This cluster-wide access is especially required when you plan to use the <code>-
 <p>Depending on whether you have granted the current user access this step has to be done either as admin or as a regular user.</p>
 </div>
 <div class="listingblock">
-<div class="title">Example for Minishift</div>
+<div class="title">Example for CodeReady Containers</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash"># Enable the admin user on Minishift
-minishift addons enable admin-user
-
-# Create a minishift instance
-minishift start --memory 4192
+<pre class="CodeRay highlight"><code data-lang="bash"># Create a crc instance
+crc start
 
 # Switch to admin
 oc login -u system:admin
@@ -2219,9 +2441,9 @@ Don&#8217;t use <code>syndesis install --project $(oc project -q) --yes</code>. 
 </div>
 </div>
 <div class="sect3">
-<h4 id="_development_mode">2.8.4. Development mode</h4>
+<h4 id="_development_mode">2.9.4. Development mode</h4>
 <div class="paragraph">
-<p>As with <a href="#syndesis-minishift">syndesis minishift</a> you can also use this command to set up a development platform for Syndesis.
+<p>As with <a href="#syndesis-crc">syndesis crc</a> or <a href="#syndesis-minishift">syndesis minishift</a> you can also use this command to set up a development platform for Syndesis.
 <em>Development platform</em> here means that you can create Docker images on your own with <a href="#syndesis-build">syndesis build</a> and can use them with an automatic redeployment after the build.</p>
 </div>
 <div class="paragraph">
@@ -2232,7 +2454,7 @@ If you use the <code>--dev</code> option, then this update is done automatically
 </div>
 </div>
 <div class="sect3">
-<h4 id="_selecting_the_version">2.8.5. Selecting the version</h4>
+<h4 id="_selecting_the_version">2.9.5. Selecting the version</h4>
 <div class="paragraph">
 <p>With the option <code>--tag</code> you can select a specific version of Syndesis to install.
 By default, the currently checked out checked out branch is used.</p>
@@ -2252,7 +2474,7 @@ Tags prefixed with <code>fuse-ignite</code> are suited for the Fuse Online clust
 </div>
 </div>
 <div class="sect3">
-<h4 id="_quick_installation">2.8.6. Quick installation</h4>
+<h4 id="_quick_installation">2.9.6. Quick installation</h4>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -3413,8 +3635,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-12889-g1af573550b<br>
-Last updated 2019-10-04 08:04:33 UTC
+Version 1.1.3-12891-g04f2044194<br>
+Last updated 2019-10-04 08:47:06 UTC
 </div>
 </div>
 </body>
