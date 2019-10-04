@@ -31,16 +31,25 @@ a host name, a virtual host name, or an IP address. For example:
 access the database. 
 .. In the *Password* field, enter the password for the user name 
 that you specified. 
-.. Optional. In the *Administration database* field, enter the name of a MongoDB
+.. In the *Administration database* field, enter the name of a MongoDB
 administration database that is used to grant access permission. 
 A MongoDB administrator should let you know whether the database 
-that you want to access requires this. 
+that you want to access has an administration database. 
++
+If the database that you want to access does not use an administration 
+database, enter the name of the database that you want to access. 
+Be sure to enter the same value in the *Database* field below. 
 .. Optional. In the *Replica set name* field, 
 specify the name of the MongoDB replica set (cluster) that the 
 connection can access. 
 .. In the *Database* field,  enter the name of the MongoDB 
 database that contains the collection(s) that you want the 
 connection to read. 
++
+If you entered the name of the database that you want to access in the 
+*Administration database* field, then the value that you enter in the 
+*Database* field must be the same as the value that you entered in the
+*Administration database* field. 
 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
