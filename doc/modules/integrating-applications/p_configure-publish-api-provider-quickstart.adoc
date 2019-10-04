@@ -29,7 +29,7 @@ same as the simple integrations that you already published.
 
 . Import the Task API quickstart integration:
 .. Go to 
-https://github.com/syndesisio/syndesis-quickstarts/tree/master/api-provider 
+link:https://github.com/syndesisio/syndesis-quickstarts/tree/{qsversion}/api-provider
 and download `TaskAPI-export.zip`. 
 .. In {prodname}, in the left navigation panel, click *Integrations*. 
 .. In the upper right, click *Import*. 
