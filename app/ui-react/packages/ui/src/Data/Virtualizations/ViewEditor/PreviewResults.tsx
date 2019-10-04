@@ -42,16 +42,20 @@ export interface IColumn {
 
 const defaultCellFormat = (value: any) => {
   // strings over 20 chars - shorten and use tooltip
-  if (typeof value === "string" && value.length > 20) {
-    const displayedString = `${value.substring(0,15)}...${value.substring(value.length-5)}`;
-    return <OverlayTrigger
-      overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
-      placement="top"
-    >
-      <Table.Heading>{displayedString}</Table.Heading>
-    </OverlayTrigger>;
+  if (typeof value === 'string' && value.length > 20) {
+    const displayedString = `${value.substring(0, 15)}...${value.substring(
+      value.length - 5
+    )}`;
+    return (
+      <OverlayTrigger
+        overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
+        placement="top"
+      >
+        <Table.Heading>{displayedString}</Table.Heading>
+      </OverlayTrigger>
+    );
   }
-  return <Table.Heading>{value}</Table.Heading>
+  return <Table.Heading>{value}</Table.Heading>;
 };
 const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
 
@@ -71,7 +75,7 @@ export const PreviewResults: React.FunctionComponent<
       ) : (
         <>
           {props.queryResultCols.length > 0 ? (
-            <div className="generic-table_content">
+            <div style={{ overflowX: 'auto' }}>
               <GenericTable
                 columns={props.queryResultCols.map(col => ({
                   cell: {
