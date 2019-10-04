@@ -21,6 +21,16 @@ import './commands';
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
 
+// ignore uncaught exceptions
+Cypress.on('uncaught:exception', err => {
+  return false;
+});
+
+// patch Cypress top.onerror
+Object.defineProperty(top, 'onerror', {
+  value: window.onerror,
+});
+
 Cypress.on('window:before:load', win => {
   let requestNumber = 0;
   const originalFetch = win.fetch;
