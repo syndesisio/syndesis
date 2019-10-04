@@ -84,41 +84,47 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
     }
 
     public void convertToJsonProducer(Exchange exchange) {
+        List<String> result = new ArrayList<>();
         Message in = exchange.getIn();
         if (in.getBody() instanceof Document) {
-            in.setBody(in.getBody(Document.class).toJson());
+            String singleDoc = in.getBody(Document.class).toJson();
+            result.add(singleDoc);
         } else if (in.getBody() instanceof List) {
             @SuppressWarnings("unchecked")
             List<Document> list = in.getBody(List.class);
             List<String> convertedToJson = list.stream().map(Document::toJson).collect(toList());
-            in.setBody(convertedToJson);
+            result.addAll(convertedToJson);
         } else if (in.getBody() instanceof DeleteResult) {
             String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(DeleteResult.class).getDeletedCount());
-            in.setBody(jsonResult);
+            result.add(jsonResult);
         } else if (in.getBody() instanceof UpdateResult) {
             String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(UpdateResult.class).getModifiedCount());
-            in.setBody(jsonResult);
+            result.add(jsonResult);
         } else if (in.getBody() instanceof Long) {
             String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(Long.class));
-            in.setBody(jsonResult);
+            result.add(jsonResult);
         } else {
             LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
+            // return without setting the converted result
+            return;
         }
+        in.setBody(result);
     }
 
     public void convertToJsonConsumer(Exchange exchange) {
+        List<String> convertedToJson = new ArrayList<>();
         Message in = exchange.getIn();
         if (in.getBody() instanceof Document) {
-            List<String> convertedToJson = new ArrayList<>();
             convertedToJson.add(in.getBody(Document.class).toJson());
-            in.setBody(convertedToJson);
         } else if (in.getBody() instanceof List) {
             @SuppressWarnings("unchecked")
             List<Document> list = in.getBody(List.class);
-            List<String> convertedToJson = list.stream().map(Document::toJson).collect(toList());
-            in.setBody(convertedToJson);
+            convertedToJson = list.stream().map(Document::toJson).collect(toList());
         } else {
             LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
+            // return without setting the converted result
+            return;
         }
+        in.setBody(convertedToJson);
     }
 }
