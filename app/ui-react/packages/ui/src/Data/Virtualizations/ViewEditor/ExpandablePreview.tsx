@@ -91,7 +91,11 @@ export const ExpandablePreview: React.FunctionComponent<
   };
 
   return (
-    <PageSection className={'expandable-preview__section'} isFilled={expanded} variant="light">
+    <PageSection
+      className={'expandable-preview__section'}
+      isFilled={expanded}
+      variant="light"
+    >
       <Expandable
         toggleText={expanded ? i18nHidePreview : i18nShowPreview}
         onToggle={toggleExpanded}
@@ -114,7 +118,7 @@ export const ExpandablePreview: React.FunctionComponent<
             </Button>
           </SplitItem>
         </Split>
-        <Stack>
+        <Stack gutter={'sm'}>
           {queryResultRows.length > 0 && (
             <StackItem isFilled={false}>
               <TextContent>
