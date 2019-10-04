@@ -116,7 +116,7 @@ Cypress.Commands.add('createIntegration', data => {
 
   cy.get('[data-testid=describe-data-shape-form-next-button]').click();
 
-  //output configuration
+  // output configuration
 
   cy.wait(200);
 
