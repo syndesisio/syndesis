@@ -265,7 +265,7 @@ maven_mirror_url() {
             return
         fi
         echo "ERROR: Could not automatically determine MAVEN_MIRROR_URL, please make sure you run "
-        echo "'syndesis install --maven-mirror' or set maven mirror manually."
+        echo "'syndesis crc --install --maven-mirror' or 'syndesis dev --install-maven-mirror' or setup maven nexus project manually."
         return
     fi
     echo "${maven_mirror}"

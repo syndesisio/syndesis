@@ -3,7 +3,10 @@
 == syndesis install
 
 With `syndesis install` you can install Syndesis to an arbitrary OpenShift cluster.
-If you want to install to https://www.openshift.org/minishift/[Minishift] the <<syndesis-minishift,syndesis minishift>> command is recommended as it supports some additional features specific to Minishift.
+If you want to install to https://code-ready.github.io/crc/[CodeReady Containers] or
+https://www.openshift.org/minishift/[Minishift] the <<syndesis-crc,syndesis crc>> or
+<<syndesis-minishift,syndesis minishift>> command is recommended as it supports some additional
+features specific to these local development environments.
 
 [[syndesis-install-usage]]
 === Usage
@@ -30,7 +33,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
                           Syndesis images are picked up properly (implies --watch)
     --force               Override an existing "Syndesis" if present
 -r  --route <route>       Use the given route.
-                          By default "syndesis.<minishift ip>.nip.io" is used.
+                          By default "syndesis-<project_name>.apps-crc.testing" is used.
 -w  --watch               Wait until cluster is up
     --local               install from local Git repo when using. By default the
                           resource descriptor is downloaded from GitHub remotely.
@@ -64,7 +67,7 @@ This step has to be performed by the admin.
 Also, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant specific permissions to her.
 
 To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**.
-For `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled.
+For `crc` or `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled.
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
@@ -94,14 +97,11 @@ syndesis install
 
 Depending on whether you have granted the current user access this step has to be done either as admin or as a regular user.
 
-.Example for Minishift
+.Example for CodeReady Containers
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-# Enable the admin user on Minishift
-minishift addons enable admin-user
-
-# Create a minishift instance
-minishift start --memory 4192
+# Create a crc instance
+crc start
 
 # Switch to admin
 oc login -u system:admin
@@ -115,7 +115,6 @@ oc login -u developer
 # Install Syndesis
 syndesis install
 ----
-
 
 A route name can be given with `--route`.
 This step can be omitted as the operator can autodetect the route.
@@ -141,7 +140,7 @@ You can also automatically open Syndesis in the browser after the installation w
 
 === Development mode
 
-As with <<syndesis-minishift,syndesis minishift>> you can also use this command to set up a development platform for Syndesis.
+As with <<syndesis-crc,syndesis crc>> or <<syndesis-minishift,syndesis minishift>> you can also use this command to set up a development platform for Syndesis.
 _Development platform_ here means that you can create Docker images on your own with <<syndesis-build,syndesis build>> and can use them with an automatic redeployment after the build.
 
 You can switch on this mode with the option `--dev`.

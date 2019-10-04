@@ -24,6 +24,7 @@ dev::usage() {
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
     --update-manifest <name>  Updates the json manifest for the given connector
+    --install-maven-mirror    Install Maven Nexus app as mirror to current cluster.
     --version                 Show running version of cluster
 EOT
 }
@@ -157,6 +158,8 @@ dev::run() {
         echo $cookie_cached
     elif [ $(hasflag --version) ]; then
         oc get secret syndesis-global-config -o jsonpath={.data.syndesis} | base64 --decode
+    elif [ $(hasflag --install-maven-mirror) ]; then
+        install_maven_mirror
     elif [ $(hasflag --cleanup) ]; then
         echo -n Removing stale pods...
         local old_pods=$(oc get pods --field-selector=status.phase=Succeeded -o=jsonpath='{range .items[*]}{.metadata.name} ')

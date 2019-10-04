@@ -35,7 +35,8 @@ with the following commands
    dev              Syndesis developer tools
    doc              Generate Syndesis Developer Handbook (SDH)
    install          Install Syndesis to a connected OpenShift cluster
-   minishift        Initialize and manage a Minishift developer environment
+   crc              Initialize and manage a developer environment using OCP4 CodeReady Containers
+   minishift        Initialize and manage a Minishift developer environment (deprecated)
    release          Perform a release
    system-test      Run system tests
 
@@ -112,11 +113,14 @@ The following commands are available:
 | <<syndesis-ui,**ui**>>
 | Start the UI for local development _(not implemented yet)_
 
+| <<syndesis-crc,**crc**>>
+| Start and install Syndesis on OCP4 CodeReady Containers
+
 | <<syndesis-minishift,**minishift**>>
-| Start and install Syndesis on Minishift
+| Start and install Syndesis on Minishift _(deprecated)_
 
 | <<syndesis-install,**install**>>
-| Install Syndesis in a running cluster (other than Minishift)
+| Install Syndesis in a running OpenShift cluster (other than CodeReady Containers or Minishift)
 
 | <<syndesis-system-test,**system-test**>>
 | Run System test against an OpenShift cluster
@@ -134,7 +138,7 @@ The following commands are available:
 If no command is given, `build` is the default.
 Remember a command must be the first argument, but there are additional possibilities to specify commands:
 
-* You can use the form `--command` anywhere as an option, too. E.g. using  `--minishift` is the same as specifying "minishift" as the first argument.
+* You can use the form `--command` anywhere as an option, too. E.g. using  `--install` is the same as specifying "install" as the first argument.
 * A `--mode command` can be used, too (e.g. `--mode sytem-test`)
 
 The next sections describe the commands in detail.
@@ -162,6 +166,7 @@ yourscriptname::run() {
 
 include::cmd_build.adoc[]
 include::cmd_ui.adoc[]
+include::cmd_crc.adoc[]
 include::cmd_minishift.adoc[]
 include::cmd_system_test.adoc[]
 include::cmd_dev.adoc[]

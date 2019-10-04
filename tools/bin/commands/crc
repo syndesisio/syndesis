@@ -2,36 +2,31 @@
 
 DEFAULT_OPENSHIFT_VERSION="v3.11.0"
 DEFAULT_CPUS="2"
-DEFAULT_DISK_SIZE="20GB"
-DEFAULT_RAM="4912"
+DEFAULT_RAM="8GB"
 
-minishift::description() {
-    echo "Initialize and manage a Minishift developer environment"
+crc::description() {
+    echo "Initialize and manage a developer environment using OCP4 CodeReady Containers"
 }
 
-minishift::usage() {
+crc::usage() {
     cat <<EOT
-    --install                 Install templates to a running Minishift.
+    --install                 Install templates to a running OCP4 CodeReady Containers cluster.
 -p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
-    --profile <profile>       Use the given minishift profile
-    --reset                   Reset and initialize the minishift installation by
-                              'minishift delete && minishift start'.
+    --reset                   Reset and initialize the crc installation by
+                              'crc delete && crc start'.
     --full-reset              Full reset and initialie by
-                              'minishift stop && rm -rf ~/.minishift/* && minishift start'
+                              'crc stop && rm -rf ~/.crc/* && crc start'
     --operator-only           Only install the operator but no resource
                               connected cluster.
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
-    --disk-size <size>        How many disk space to use when doing a reset. Default: $DEFAULT_DISK_SIZE
+    --pull-secret-file <file> File holding the OCP4 pull secret
     --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
-    --show-logs               Show minishift logs during startup
-    --openshift-version <ver> Set OpenShift version to use when reseting (default: $DEFAULT_OPENSHIFT_VERSION)
-    --tag <tag>               Syndesis version/tag to install. If not given, then the latest
-                              version from master is installed
+    --bundle <path-to-bundle> Path to system bundle (required when using virtualbox vm-driver)
     --local                   Use the local resource files instead of fetching them from GitHub
 -r  --route <route>           Use the given route.
-                              By default "syndesis.<minishift ip>.nip.io" is used.
+                              By default "syndesis.<project_name>.apps-crc.testing" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -44,43 +39,35 @@ minishift::usage() {
                               Use quotes and start with a space before appending the options.
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
-    --deploy-latest           Deploy latest tags from dockerhub.
     --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT
 }
 
 
-minishift::run() {
+crc::run() {
     source "$(basedir)/commands/util/openshift_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
 
-    # Check that minishift is installed
-    which minishift &>/dev/null
+    # Check that crc is installed
+    which crc &>/dev/null
     if [ $? -ne 0 ]; then
-        echo "ERROR: No 'minishift' found in path."
-        echo "Please install Minishift from https://github.com/MiniShift/minishift"
+        echo "ERROR: No 'crc' found in path."
+        echo "Please install OCP4 CodeReady Containers from https://cloud.redhat.com/openshift/install/crc/installer-provisioned"
         exit 1
     fi
 
-    local profile=$(readopt --profile)
-    if [ -n "${profile}" ]; then
-        # Switch to profile
-        echo "Using profile $profile"
-        minishift profile set $profile
-    fi
-
     if [ $(hasflag --full-reset) ] || [ $(hasflag --reset) ]; then
-        delete_minishift $(hasflag --full-reset)
-        start_minishift
+        delete_crc $(hasflag --full-reset)
+        start_crc
     fi
 
-    # Start minishift if necessary
-    if [ -z "$(is_minishift_running)" ]; then
-        start_minishift
+    # Start crc if necessary
+    if [ -z "$(is_crc_running)" ]; then
+        start_crc
     fi
 
     # Ensure OC is in the path
-    eval $(minishift oc-env)
+    eval $(crc oc-env)
 
     if [ $(hasflag --maven-mirror) ]; then
         install_maven_mirror
@@ -160,7 +147,7 @@ minishift::run() {
         # Create syndesis resource
         local route=$(readopt --route -r)
         if [ -z "$route" ]; then
-            route="syndesis.$(minishift ip).nip.io"
+            route="syndesis.$(crc ip).apps-crc.testing"
         fi
 
         local dev_images="with_dev_images"
@@ -168,7 +155,7 @@ minishift::run() {
             dev_images=""
         fi
 
-        result=$(create_syndesis "$route" "https://$(minishift ip):8443/console" "$dev_images")
+        result=$(create_syndesis "$route" "https://console-openshift-console.apps-crc.testing" "$dev_images")
         check_error "$result"
 
         # Wait until everything's up and finally patch imagestreams for triggers
@@ -177,11 +164,7 @@ minishift::run() {
     fi
 
     if [ $(hasflag --open -o) ]; then
-        open_url "$(minishift openshift service syndesis-oauthproxy --url)"
-    fi
-
-    if [ $(hasflag --deploy-latest) ]; then
-        deploy_latest
+        open_url "https://$(oc get routes syndesis --template "{{.spec.host}}")"
     fi
 }
 
@@ -191,7 +174,7 @@ login_as_admin() {
     local project=$(oc project -q)
 
     # Login in as admin
-    oc login -u system:admin >/dev/null 2>&1
+    oc login -u kubeadmin >/dev/null 2>&1
 
     # Return the command to use to revert to the initial user
     if [ -n "${token}" ]; then
@@ -208,9 +191,9 @@ extract_current_token() {
     fi
 }
 
-is_minishift_running() {
+is_crc_running() {
     set +e
-    minishift status 2>&1 | grep -q "Running"
+    crc status 2>&1 | grep -q "Running"
     local stat=$?
     set -e
     if [ $stat -eq 0 ]; then
@@ -218,52 +201,41 @@ is_minishift_running() {
     fi
 }
 
-delete_minishift() {
+delete_crc() {
     local remove_all=${1:-}
 
-    if [ $(is_minishift_running) ]; then
-      minishift stop
+    if [ $(is_crc_running) ]; then
+      crc stop
     fi
 
-    minishift delete --clear-cache --force
-    if [ $remove_all ] && [ -d ~/.minishift ]; then
-        rm -rf ~/.minishift/*
+    crc delete
+    if [ $remove_all ] && [ -d ~/.crc ]; then
+        rm -rf ~/.crc/*
     fi
 }
 
-start_minishift() {
+start_crc() {
     local memory=$(readopt --memory)
     local cpus=$(readopt --cpus)
-    local disksize=$(readopt --disk-size)
-    local openshift_version=$(readopt --openshift-version)
     local extra_args=""
-    if [ $(hasflag --show-logs --show-log) ]; then
-        extra_args="--show-libmachine-logs=true "
-    fi
     local vmdriver=$(readopt --vm-driver --vmdriver)
+
     if [ -n "${vmdriver}" ]; then
         extra_args="${extra_args}--vm-driver ${vmdriver} "
     fi
 
-    minishift addons enable admin-user
+    local bundle=$(readopt --bundle)
+    if [ -n "${bundle}" ]; then
+        extra_args="${extra_args}--bundle ${bundle} "
+    fi
 
-    echo "Starting minishift ...."
-    minishift start ${extra_args:-}\
+    local pullSecretFile=$(readopt --pull-secret-file)
+    if [ -n "${pullSecretFile}" ]; then
+        extra_args="${extra_args}--pull-secret-file ${pullSecretFile} "
+    fi
+
+    echo "Starting CodeReady Containers ...."
+    crc start ${extra_args:-}\
             --memory ${memory:-$DEFAULT_RAM} \
-            --cpus ${cpus:-$DEFAULT_CPUS} \
-            --disk-size ${disksize:-$DEFAULT_DISK_SIZE} \
-            --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
-}
-
-deploy_latest() {
-    DOCKER_IMAGES="syndesis-meta syndesis-s2i syndesis-server syndesis-ui"
-    eval $(minishift docker-env)
-    docker login -u $(oc whoami) -p $(oc whoami -t) $(minishift openshift registry) >/dev/null 2>&1
-    for image in ${DOCKER_IMAGES}; do
-      docker pull syndesis/${image}
-      docker tag syndesis/${image} $(minishift openshift registry)/syndesis/${image}
-      docker push $(minishift openshift registry)/syndesis/${image}
-    done
-    docker logout $(minishift openshift registry) >/dev/null 2>&1
-    eval $(minishift docker-env -u)
+            --cpus ${cpus:-$DEFAULT_CPUS}
 }
