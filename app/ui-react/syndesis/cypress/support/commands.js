@@ -108,7 +108,7 @@ Cypress.Commands.add('createIntegration', data => {
 
   cy.get('#integration-editor-form-next-button').click();
 
-  //input
+  // input configuration
 
   cy.wait(200);
 
@@ -116,15 +116,12 @@ Cypress.Commands.add('createIntegration', data => {
 
   cy.get('[data-testid=describe-data-shape-form-next-button]').click();
 
-  //output
+  //output configuration
 
   cy.wait(200);
 
   cy.location('pathname').should('contain', 'output');
 
-  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
-
-  cy.wait(200);
   cy.get('[data-testid=describe-data-shape-form-next-button]').click();
 
   cy.wait(200);
