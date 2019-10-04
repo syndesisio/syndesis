@@ -97,9 +97,6 @@
 
 :productdocsemail: fuse-docs-support@redhat.com
 
-// Quick Start version number for Syndesis/Fuse Online
-:qsversion: 1.8
-
 // Toggle downstream content "on"
 // The 'red-hat-fuse' attribute is used to conditionalize content from the Wildfly Camel upstream project.
 // * Downstream-only content is introduced by ifdef::red-hat-fuse[]
@@ -117,6 +114,10 @@
 :springBootFullVersion: 1.5.19.RELEASE
 
 // :springBootPreviousVersion: 1.5.17.RELEASE
+
+:syndesis-version: 1.8
+
+:syndesis-quickstart-url: https://github.com/syndesisio/syndesis-quickstarts/tree/{syndesis-version}
 
 :trade: ™
 

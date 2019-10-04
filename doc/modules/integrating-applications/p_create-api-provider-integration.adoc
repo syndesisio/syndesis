@@ -16,7 +16,7 @@ process integration data according to the requirements for that operation.
 operations that you want the integration to perform. 
 +
 To experiment,
-https://github.com/syndesisio/syndesis-quickstarts/blob/master/api-provider/task-api.json[download the `task-api.json` file], 
+link:{syndesis-quickstart-url}/api-provider/task-api.json[download the `task-api.json` file], 
 which is an OpenAPI document for an API provider quickstart. You can
 upload this file when {prodname} prompts you to provide an OpenAPI
 document. 
