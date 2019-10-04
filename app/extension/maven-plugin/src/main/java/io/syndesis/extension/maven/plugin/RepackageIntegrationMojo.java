@@ -24,7 +24,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
  *
  * @author pantinor
  */
-@Mojo(name = "repackage-integration", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "repackage-integration", defaultPhase = LifecyclePhase.PACKAGE, requiresProject = true, threadSafe = true,
+    requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class RepackageIntegrationMojo extends SupportMojo {
 
     @Override

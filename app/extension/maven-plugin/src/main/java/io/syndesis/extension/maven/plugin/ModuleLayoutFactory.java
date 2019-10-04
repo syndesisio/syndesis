@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.extension.maven.plugin.layout;
+package io.syndesis.extension.maven.plugin;
 
 import java.io.File;
 import java.util.Arrays;
@@ -24,39 +24,38 @@ import org.springframework.boot.loader.tools.Layout;
 import org.springframework.boot.loader.tools.LayoutFactory;
 import org.springframework.boot.loader.tools.LibraryScope;
 
-public class ModuleLayoutFactory implements LayoutFactory {
+final class ModuleLayoutFactory implements LayoutFactory {
     private static final Set<LibraryScope> LIB_DESTINATION_SCOPES = new HashSet<>(
         Arrays.asList(
             LibraryScope.COMPILE,
             LibraryScope.RUNTIME,
-            LibraryScope.CUSTOM)
-    );
+            LibraryScope.CUSTOM));
 
     private final boolean filterDestinationScopes;
 
-    public ModuleLayoutFactory(boolean filterDestinationScopes) {
+    ModuleLayoutFactory(final boolean filterDestinationScopes) {
         this.filterDestinationScopes = filterDestinationScopes;
     }
 
     @Override
-    public Layout getLayout(File file) {
+    public Layout getLayout(final File file) {
         return new Layout() {
+            @Override
+            public String getClassesLocation() {
+                return null;
+            }
+
             @Override
             public String getLauncherClassName() {
                 return null;
             }
 
             @Override
-            public String getLibraryDestination(String libraryName, LibraryScope scope) {
+            public String getLibraryDestination(final String libraryName, final LibraryScope scope) {
                 if (!filterDestinationScopes || LIB_DESTINATION_SCOPES.contains(scope)) {
                     return "lib/";
                 }
 
-                return null;
-            }
-
-            @Override
-            public String getClassesLocation() {
                 return null;
             }
 
