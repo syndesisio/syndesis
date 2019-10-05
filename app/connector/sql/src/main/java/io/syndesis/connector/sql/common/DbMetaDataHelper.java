@@ -18,6 +18,7 @@ package io.syndesis.connector.sql.common;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.JDBCType;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
@@ -149,8 +150,8 @@ public final class DbMetaDataHelper {
     /* default */ List<SqlParam> getOutputColumnInfo(
             final String sqlSelectStatement) throws SQLException {
         List<SqlParam> paramList = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sqlSelectStatement);) {
+        try (PreparedStatement stmt = createPreparedStatement(sqlSelectStatement);
+            ResultSet resultSet = stmt.executeQuery();) {
             ResultSetMetaData metaData = resultSet.getMetaData();
             if (metaData.getColumnCount()>0){
                 for (int i=1; i<=metaData.getColumnCount(); i++) {
@@ -161,6 +162,13 @@ public final class DbMetaDataHelper {
             }
             return paramList;
         }
+    }
+
+    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION")
+    private PreparedStatement createPreparedStatement(String sqlSelectStatement) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(sqlSelectStatement);
+        ps.setMaxRows(1);
+        return ps;
     }
 
     private static List<ColumnMetaData> convert(ResultSet resultSet) throws SQLException {
