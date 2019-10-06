@@ -32,9 +32,15 @@ When you are done you should see a line from each of the source fields to
 the target field. 
 +
 In the *Mapping Details* panel, under *Sources*, the data mapper 
-displays *Concatenate* to indicate that execution of the mapping 
-concatenates the values in the selected source fields and maps 
-the concatenated value to selected target field. 
+displays the default multiplicity transformation, which is *Concatenate*.
+This indicates that execution of the mapping applies the *Concatenate*
+transformation to the values in the selected source fields and maps 
+the concatenated value to the selected target field. 
++
+[NOTE]
+For information about other transformations that you can apply to 
+multiple source values see 
+link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[]
 +
 Also under *Sources*, there is an entry for each source field that 
 you selected.
