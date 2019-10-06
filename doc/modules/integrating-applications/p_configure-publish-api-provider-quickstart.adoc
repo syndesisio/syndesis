@@ -36,15 +36,15 @@ and download `TaskAPI-export.zip`.
 .. Drag and drop the `TaskAPI-export.zip` file that you downloaded. {prodname} indicates
 that it has successfully imported the file. 
 .. In the left navigation panel, click *Integrations* to see
-an entry for the *Task API* integration that you just imported. The entry
+an entry for the *TaskAPI* integration that you just imported. The entry
 indicates that configuration is required. 
 
 . Configure the Task API integration:
-.. Click the *Task API* entry to display the integration summary. 
+.. In the *TaskAPI* entry, click *View* to display the integration's summary. 
 .. In the upper right, click *Edit Integration* to display a list
 of the operations that this API provides. 
-.. Update one step in the flow for the *Create Task* operation: 
-... In the *POST* entry for the *Create Task* operation, click *Create flow* to display 
+.. Update one step in the flow for the *Create new task* operation: 
+... In the *POST* entry for the *Create new task* operation, click *Create flow* to display 
 the visualization for that flow. 
 +
 Connections and steps have already been
@@ -119,4 +119,15 @@ API calls specify URLs that start with this base URL.
 If you are using {prodname} on OpenShift Container 
 Platform, if the external URL is not on the integration’s summary page, 
 then an administrator has set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment
-variable. To test this API provider integration, open up 3scale dashboard.
+variable. When this environment variable is set,  Red Hat 3scale 
+publishes your API provider integration, which means that 3scale 
+controls access to the integration’s API. To test the integration, 
+open the 3scale dashboard to obtain the integration’s URL. 
++
+If you do not want Red Hat 3scale to control access to the integration’s 
+API, you can disable discovery. You do this in {prodname} by viewing the 
+integration’s summary page. On this page, click *Disable discovery*. 
+{prodname} republishes the integration and provides an external URL 
+for invoking integration execution. 
++
+You can enable or disable discovery for each API provider integration. 
