@@ -212,11 +212,11 @@
         containers:
         - env:
           - name: POSTGRESQL_USER
-            value: {{.Env.POSTGRESQL_USER}}
+            value: {{.Syndesis.Spec.Components.Db.User}}
           - name: POSTGRESQL_PASSWORD
             value: {{.Env.POSTGRESQL_PASSWORD}}
           - name: POSTGRESQL_DATABASE
-            value: {{.Env.POSTGRESQL_DATABASE}}
+            value: {{.Syndesis.Spec.Components.Db.Database}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: {{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
           image: ' '
@@ -260,7 +260,7 @@
             name: syndesis-db-conf
         - env:
           - name: DATA_SOURCE_NAME
-            value: postgresql://{{.Env.POSTGRESQL_USER}}:{{.Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
+            value: postgresql://{{.Syndesis.Spec.Components.Db.User}}:{{.Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
           image: '{{ .Syndesis.Spec.Components.PostgresExporter.Image }}'

@@ -85,7 +85,7 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvPostgresqlUser:                 ConfigSpec{Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
 	EnvPostgresqlPassword:             ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL connection user"},
 	EnvPostgresqlDatabase:             ConfigSpec{Value: "syndesis", Required: true, Description: "Name of the PostgreSQL database accessed"},
-	EnvPostgresqlURL                   ConfigSpec{Value: "postgresql://syndesis-db:5432/syndesis?sslmode=disable", Required: true, Description: "Host and port of the PostgreSQL database to access"}
+	EnvPostgresqlURL:                  ConfigSpec{Value: "postgresql://syndesis-db:5432/syndesis?sslmode=disable", Required: true, Description: "Host and port of the PostgreSQL database to access"},
 	EnvPostgresqlVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
 	EnvPostgresqlSampledbPassword:     ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
 	EnvTestSupport:                    ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
