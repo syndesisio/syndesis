@@ -24,6 +24,6 @@ the integration executes that flow.
 * If no conditions evaluate to true and there is no default conditional flow, 
 the integration does not execute a conditional flow. 
 
-After executing a conditional flow, or after no expressions evaluate 
+After executing a conditional flow, or after no conditions evaluate 
 to true and there is no default conditional flow, the integration 
 executes the next step in the primary flow.  

@@ -2,12 +2,12 @@
 // as_evaluating-integration-data-to-determine-execution-flow.adoc
 
 [id='using-advanced-expression-builder_{context}']
-= Using Camel Simple Language to specify conditions
+= Using the advanced expression builder to specify conditions
 
 In a flow, add a *Conditional Flows* step when you want to evaluate
 incoming data to determine the integration's execution path. The procedure
-described here shows how to use Camel Simple Language to 
-specify conditions. 
+described here shows how to use the advanced expression builder to 
+specify conditional expressions in Camel Simple Language. 
 
 .Prerequisites
 
@@ -19,7 +19,7 @@ if the previous step's *Data Type* shows *(Collection)*, add a *Split* step.
 * You are familiar with the fields that will be in the messages that the 
 integration passes to the *Conditional Flows* step you are about to add.  
 * You are familiar with the 
-http://camel.apache.org/simple.html[Camel Simple Expression] language
+link:http://camel.apache.org/simple.html[Camel Simple Expression] language
 or you have expressions for the conditions that you want to evaluate. 
 
 .Procedure
@@ -29,7 +29,7 @@ click image:images/integrating-applications/PlusSignToAddStepOrConnection.png[ti
 . Click *Conditional Flows*.
 . Click *Select* in the *Advanced expression builder* entry. 
 . In the *Configure Conditional Flows* page, define one or more conditions: 
-.. In the initial *When* field, enter a Camel Simple Language expression. For example, 
+.. In the initial *When* field, enter a Camel Simple Language conditional expression. For example, 
 the following expression evaluates to true when the body of the message
 contains a `pto` field that is greater than `160`:
 +
@@ -53,7 +53,7 @@ In these flows, {prodname} wraps the actual message content inside a `body`
 property. This means that the input to a *Conditional Flows* step contains a 
 `body` property that contains another `body` property that contains 
 the actual message content. Consequently, in an expression that is in a 
-conditonal flows step that is in one of these kinds of flows, 
+*Conditional Flows* step that is in one of these kinds of flows, 
 you must specify two instances of `body`. For example, suppose you want 
 to evaluate content that is in the `pto` field of the input message. 
 Specify the expression like this: 
@@ -95,8 +95,7 @@ For each condition, add steps to its associated flow. If there is a default flow
 add steps to the default flow. 
 
 .Additional resources
-
-For details about Camel Simple Language operators, see  
+ 
 link:https://camel.apache.org/manual/latest/simple-language.html#_operator_support[Camel Simple Language operators]. 
 
 
