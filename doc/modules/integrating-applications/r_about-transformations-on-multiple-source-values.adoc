@@ -58,6 +58,11 @@ the data mapper inserts *4* in the target field.
 |*Divide*
 |Divides the first source value by the second source value and inserts 
 the result in the target field. 
+If there are more that two source values then execution continues to divide 
+the result by the next number. For example, consider a `numbers[]` collection 
+that contains `{1000, 100, 10}`. Execution divides `1000` by `100` to get `10`, 
+and then divides `10` by `10` to get `1`. The mapper inserts `1` in the target field. 
+
 
 |*Format*
 |Replaces placeholders in a template that you specify with values 
@@ -94,17 +99,30 @@ address, which is at index 0, in the target field.
 
 |*Maximum*
 |Evaluates the source values and inserts the highest value in the target field. 
+The source values must be numeric. 
 
 |*Minimum*
 |Evaluates the source values and inserts the lowest value in the target field. 
+The source values must be numeric. 
 
 |*Multiply*
 |Multiplies the first source value by the second source value and inserts 
 the result in the target field. 
+If there are more that two source values then execution continues to multiply 
+the result by the next number. For example, consider a `numbers[]` collection 
+that contains `{10, 100, 1000}`. Execution multiplies `10` by `100` to get `1000`, 
+and then multiplies `1000` by `1000` to get `1000000`. The mapper inserts 
+`1000000` in the target field. 
+
 
 |*Subtract*
-|Subtracts the first source value from the second source value and inserts 
+|Subtracts the second source value from the first source value and inserts 
 the result in the target field. 
+If there are more that two source values then execution continues to subtract 
+the next number from the previous result. For example, consider a `numbers[]` 
+collection that contains `{100, 90, 9}`. Execution subtracts `90` from `100` 
+to get `10`, and then subtracts `9` from `10` to get `1`. The mapper inserts 
+`1` in the target field. 
 
 |===
 
