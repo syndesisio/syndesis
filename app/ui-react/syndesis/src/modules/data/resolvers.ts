@@ -110,30 +110,8 @@ export default {
         ),
       },
     },
-    relationship: makeResolver<{ virtualization: RestDataService }>(
-      routes.virtualizations.virtualization.relationship,
-      ({ virtualization }) => ({
-        params: {
-          virtualizationId: virtualization.keng__id,
-        },
-        state: {
-          virtualization,
-        },
-      })
-    ),
     sqlClient: makeResolver<{ virtualization: RestDataService }>(
       routes.virtualizations.virtualization.sqlClient,
-      ({ virtualization }) => ({
-        params: {
-          virtualizationId: virtualization.keng__id,
-        },
-        state: {
-          virtualization,
-        },
-      })
-    ),
-    metrics: makeResolver<{ virtualization: RestDataService }>(
-      routes.virtualizations.virtualization.metrics,
       ({ virtualization }) => ({
         params: {
           virtualizationId: virtualization.keng__id,
