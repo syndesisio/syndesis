@@ -1,4 +1,4 @@
-import { Card, CardHeader, CardBody, CardFooter, Form, Title } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
