@@ -50,7 +50,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         String message = String.format("{\"test\":\"unit\",\"uniqueId\":\"%s\"}", uniqueId);
         Document doc = Document.parse(message);
         // Given
-        Document result = Document.parse(template.requestBody("direct:start", message, String.class));
+        Document result = Document.parse((String)template.requestBody("direct:start", message, List.class).get(0));
         // Then
         assertEquals(doc.getString("test"), result.getString("test"));
         assertEquals(doc.getString("uniqueId"), result.getString("uniqueId"));

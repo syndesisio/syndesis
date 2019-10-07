@@ -50,7 +50,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         assertEquals(1, docsFound.size());
         // Given
         String removeArguments = "{\"test\":\"unit\"}";
-        Document result = Document.parse(template.requestBody("direct:start", removeArguments, String.class));
+        Document result = Document.parse((String)template.requestBody("direct:start", removeArguments, List.class).get(0));
         // Then
         docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
         assertEquals(0, docsFound.size());
@@ -71,7 +71,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         // Given
         String removeArguments = "{\"test\":\"unit\"}";
         // Need the header to enable multiple updates!
-        Document result = Document.parse(template.requestBody("direct:start", removeArguments, String.class));
+        Document result = Document.parse((String)template.requestBody("direct:start", removeArguments, List.class).get(0));
         // Then
         docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());

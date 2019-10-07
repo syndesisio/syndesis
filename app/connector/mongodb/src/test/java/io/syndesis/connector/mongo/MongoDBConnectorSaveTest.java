@@ -44,7 +44,7 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         // When
         // Given
         String saveArguments = "{\"_id\":11,\"test\":\"new\"}]";
-        Document result = Document.parse(template.requestBody("direct:start", saveArguments, String.class));
+        Document result = Document.parse((String)template.requestBody("direct:start", saveArguments, List.class).get(0));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
@@ -59,7 +59,7 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         template().sendBody("direct:start", saveArguments);
         // Given
         String saveArguments2 = "{\"_id\":32,\"test\":\"save\",\"newField\":true}]";
-        Document result = Document.parse(template.requestBody("direct:start", saveArguments2, String.class));
+        Document result = Document.parse((String)template.requestBody("direct:start", saveArguments2, List.class).get(0));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 32)).into(new ArrayList<Document>());
         assertEquals(1, docsFound.size());
