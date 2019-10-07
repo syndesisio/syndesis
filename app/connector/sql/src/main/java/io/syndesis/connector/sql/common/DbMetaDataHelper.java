@@ -163,7 +163,7 @@ public final class DbMetaDataHelper {
         }
     }
 
-    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION")
+    @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION") // needed for https://github.com/spotbugs/spotbugs/issues/432
     private PreparedStatement createPreparedStatement(String sqlSelectStatement) throws SQLException {
         PreparedStatement ps = connection.prepareStatement(sqlSelectStatement);
         ps.setMaxRows(1);
