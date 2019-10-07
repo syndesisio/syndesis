@@ -20,7 +20,6 @@ OpenAPI document:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
-.. At the end of the URL, remove `dashboard` if it is present.
 .. At the end of the URL, add `*swagger.json*`.
 .. Use the `http` scheme instead of `https`.
 
@@ -43,7 +42,7 @@ and always specify secure URLs (`https`) to obtain an OpenAPI document.
 click *Next*.
 . On the *Review Actions* page, click *Next*. If you see
 a warning, you can ignore it.
-. Click *Next* again to accept *HTTP Basic Authorization*.
+. Click *Next* again to accept *HTTP Basic Authentication*.
 . On the *Review/Edit Connector Details* page: 
 .. If you want to, you can
 change the values in the *Name* and *Description* fields.
