@@ -17,9 +17,7 @@ export interface IVirtualizationNavBarProps {
  * A component that displays a nav bar with 4 items:
  *
  * 1. a link to the page that displays a list of Views
- * 2. a link to the page that displays relationships
- * 3. a link to the page that displays the SQL Query editor
- * 4. a link to the page that dispays metrics
+ * 2. a link to the page that displays the SQL Query editor
  *
  */
 export const VirtualizationNavBar: React.FunctionComponent<
@@ -42,26 +40,12 @@ export const VirtualizationNavBar: React.FunctionComponent<
             virtualization,
           })}
         />
-        {/* TD-636: Commented out for TP
-              <TabBarItem
-                label={t('data:virtualization.relationship')}
-                to={resolvers.virtualizations.relationship({
-                  virtualization,
-                })}
-              /> */}
         <TabBarItem
           label={t('data:virtualization.sqlClient')}
           to={resolvers.virtualizations.sqlClient({
             virtualization,
           })}
         />
-        {/* TD-636: Commented out for TP
-              <TabBarItem
-                label={t('data:virtualization.metrics')}
-                to={resolvers.virtualizations.metrics({
-                  virtualization,
-                })}
-              /> */}
       </TabBar>
     </Container>
   );
