@@ -7,6 +7,8 @@ This command is especially useful for a simple and self-contained development wo
 `syndesis minishift` requires that you have a current minishift in your path.
 You can download it directly from https://github.com/minishift/minishift/releases[GitHub].
 
+WARNING: `minishift` only supports up to Openshift 3.11. If you need to use Openshift 4.x please refer to https://doc.syndesis.io/#syndesis-crc[syndesis crc]
+
 [[syndesis-minishift-usage]]
 === Usage
 

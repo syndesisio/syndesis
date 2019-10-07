@@ -36,3 +36,75 @@ check_operator_requirements() {
 
     echo "OK"
 }
+
+default_binary_path() {
+    local abs_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../binaries" >/dev/null 2>&1 && pwd )"
+
+    if [[ -z "$abs_path" ]] ; then
+      # error; for some reason, the path is not accessible
+      # to the script (e.g. permissions re-evaled after suid)
+      exit 1  # fail
+    fi
+
+    echo ${abs_path}
+}
+
+# check that a given binary is in $PATH
+check_for_command() {
+    local cmd=${1:-curl}
+
+    if $(which ${cmd} >/dev/null 2>&1); then
+        return 0
+    else
+        return 1
+    fi
+}
+
+# check that the operator binary is in place
+check_operator_binary() {
+    local location=${1}
+    local binary=${2}
+
+    if [[ -x ${location}/${binary} ]]; then
+        if [[ $(${location}/${binary} -h | grep 'syndesis') ]]; then
+            return 0
+        fi
+    fi
+    return 1
+}
+
+# download the operator binary
+download_operator_binary() {
+    local location=${1:-"$(default_binary_path)"}
+    local binary=${2:-"syndesis"}
+    local base_url="https://github.com/syndesisio/syndesis/releases/download/1.8.1-20191004/syndesis-1.8.1-20191004-"
+
+    check_operator_binary ${location} ${binary} && return
+
+    echo "operator binary not found under ${location}/${binary}, attempting to download..."
+    case "$OSTYPE" in
+        darwin*)  base_url="${base_url}mac-64bit.tgz" ;;
+        linux*)   base_url="${base_url}linux-64bit.tgz" ;;
+        *)        cmd="unknown" ;;
+    esac
+
+    if [[ "${base_url}" != "unknown" ]]; then
+        curl -sL ${base_url} | tar xz -C ${location}
+        chmod +x ${location}/${binary}
+        if $(check_operator_binary ${location} ${binary}); then
+            echo "operator binary successfully downloaded"
+            return 0
+        else
+            echo "operator binary download failed. Please try manually downloading from ${base_url} into ${location}"
+            return 1
+        fi
+    else
+        echo "Unknown platform [ ${OSTYPE} ], "
+        return 1
+    fi
+}
+
+print_error_and_exit() {
+    echo $1
+    exit 1
+}

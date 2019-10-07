@@ -94,3 +94,6 @@ ui-react/*/.rts2_cache*
 
 # package-lock.json
 */ui-react/package-lock.json
+
+# operator binary
+tools/bin/commands/binaries/syndesis
