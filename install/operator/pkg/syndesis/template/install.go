@@ -3,13 +3,14 @@ package template
 import (
 	"encoding/json"
 	"fmt"
-	"k8s.io/apimachinery/pkg/api/resource"
 	"math/rand"
 	"time"
 
+	"k8s.io/apimachinery/pkg/api/resource"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	cf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	v1 "k8s.io/api/core/v1"
 )
@@ -45,8 +46,9 @@ func randomPassword(size int) string {
 	return s
 }
 
-func ifMissingGeneratePwd(config map[string]string, name configuration.SyndesisEnvVar, size int) {
+func ifMissingGeneratePwd(config map[string]string, name cf.SyndesisEnvVar) {
 	if value, found := config[string(name)]; !found || value == "" {
+		size := cf.AllConfigOptions[name].FromLen
 		config[string(name)] = randomPassword(size)
 	}
 }
@@ -68,7 +70,7 @@ func ifMissingSetResource(list v1.ResourceList, name string, value string) {
 }
 
 func GetTemplateContext() (*generator.Context, error) {
-	templateConfig, err := util.LoadJsonFromFile(configuration.TemplateConfig)
+	templateConfig, err := util.LoadJsonFromFile(cf.TemplateConfig)
 	if err != nil {
 		return nil, err
 	}
@@ -124,19 +126,19 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	config := make(map[string]string)
 	copyMap(config, env)
 
-	ifMissingGeneratePwd(config, configuration.EnvOpenShiftOauthClientSecret, 64)
-	ifMissingGeneratePwd(config, configuration.EnvPostgresqlPassword, 16)
-	ifMissingGeneratePwd(config, configuration.EnvPostgresqlSampledbPassword, 16)
-	ifMissingGeneratePwd(config, configuration.EnvOauthCookieSecret, 32)
-	ifMissingGeneratePwd(config, configuration.EnvSyndesisEncryptKey, 64)
-	ifMissingGeneratePwd(config, configuration.EnvClientStateAuthenticationKey, 32)
-	ifMissingGeneratePwd(config, configuration.EnvClientStateEncryptionKey, 32)
-	configuration.SetConfigurationFromEnvVars(config, syndesis)
+	ifMissingGeneratePwd(config, cf.EnvOpenShiftOauthClientSecret)
+	ifMissingGeneratePwd(config, cf.EnvPostgresqlPassword)
+	ifMissingGeneratePwd(config, cf.EnvPostgresqlSampledbPassword)
+	ifMissingGeneratePwd(config, cf.EnvOauthCookieSecret)
+	ifMissingGeneratePwd(config, cf.EnvSyndesisEncryptKey)
+	ifMissingGeneratePwd(config, cf.EnvClientStateAuthenticationKey)
+	ifMissingGeneratePwd(config, cf.EnvClientStateEncryptionKey)
+	cf.SetConfigurationFromEnvVars(config, syndesis)
 
-	ifMissingSet(&syndesis.Spec.OpenShiftMaster, "https://localhost:8443")
-	ifMissingSet(&syndesis.Spec.Components.Db.ImageStreamNamespace, "openshift")
-	ifMissingSet(&syndesis.Spec.Components.Db.User, "syndesis")
-	ifMissingSet(&syndesis.Spec.Components.Db.Database, "syndesis")
+	ifMissingSet(&syndesis.Spec.OpenShiftMaster, cf.DefaultValue(cf.EnvOpenShiftMaster))
+	ifMissingSet(&syndesis.Spec.Components.Db.ImageStreamNamespace, cf.DefaultValue(cf.EnvPostgresqlImageStreamNamespace))
+	ifMissingSet(&syndesis.Spec.Components.Db.User, cf.DefaultValue(cf.EnvPostgresqlUser))
+	ifMissingSet(&syndesis.Spec.Components.Db.Database, cf.DefaultValue(cf.EnvPostgresqlDatabase))
 
 	if syndesis.Spec.TestSupport == nil {
 		v := false
@@ -165,15 +167,15 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	}
 	ifMissingSet(&syndesis.Spec.ImageStreamNamespace, renderContext.SpecDefaults.ImageStreamNamespace)
 
-	ifMissingSet(&syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity, "1Gi")
-	ifMissingSet(&syndesis.Spec.Components.Meta.Resources.VolumeCapacity, "1Gi")
-	ifMissingSet(&syndesis.Spec.Components.Db.Resources.VolumeCapacity, "1Gi")
+	ifMissingSet(&syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity, cf.DefaultValue(cf.EnvPrometheusVolumeCapacity))
+	ifMissingSet(&syndesis.Spec.Components.Meta.Resources.VolumeCapacity, cf.DefaultValue(cf.EnvMetaVolumeCapacity))
+	ifMissingSet(&syndesis.Spec.Components.Db.Resources.VolumeCapacity, cf.DefaultValue(cf.EnvPostgresqlVolumeCapacity))
 
-	ifMissingSetResource(syndesis.Spec.Components.Prometheus.Resources.Resources.Limits, "memory", "512Mi")
-	ifMissingSetResource(syndesis.Spec.Components.Db.Resources.Resources.Limits, "memory", "255Mi")
-	ifMissingSetResource(syndesis.Spec.Components.Meta.Resources.Resources.Limits, "memory", "512Mi")
-	ifMissingSetResource(syndesis.Spec.Components.Server.Resources.Limits, "memory", "800Mi")
-	ifMissingSetResource(syndesis.Spec.Components.Komodo.Resources.Limits, "memory", "1024Mi")
+	ifMissingSetResource(syndesis.Spec.Components.Prometheus.Resources.Resources.Limits, "memory", cf.DefaultValue(cf.EnvPrometheusMemoryLimit))
+	ifMissingSetResource(syndesis.Spec.Components.Db.Resources.Resources.Limits, "memory", cf.DefaultValue(cf.EnvPostgresqlMemoryLimit))
+	ifMissingSetResource(syndesis.Spec.Components.Meta.Resources.Resources.Limits, "memory", cf.DefaultValue(cf.EnvMetaMemoryLimit))
+	ifMissingSetResource(syndesis.Spec.Components.Server.Resources.Limits, "memory", cf.DefaultValue(cf.EnvServerMemoryLimit))
+	ifMissingSetResource(syndesis.Spec.Components.Komodo.Resources.Limits, "memory", cf.DefaultValue(cf.EnvKomodoMemoryLimit))
 
 	if syndesis.Spec.Integration.Limit == nil {
 		maxIntegrations := 0
@@ -184,9 +186,9 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 		syndesis.Spec.Integration.StateCheckInterval = &v
 	}
 
-	ifMissingSet(&syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity, "1Gi")
+	ifMissingSet(&syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity, cf.DefaultValue(cf.EnvUpgradeVolumeCapacity))
 	if syndesis.Namespace == "" {
-		return fmt.Errorf("required config var not set: %s", configuration.EnvOpenShiftProject)
+		return fmt.Errorf("required config var not set: %s", cf.EnvOpenShiftProject)
 	}
 	if syndesis.Spec.SarNamespace == "" {
 		syndesis.Spec.SarNamespace = syndesis.Namespace
