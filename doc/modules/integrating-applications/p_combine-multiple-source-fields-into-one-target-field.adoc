@@ -40,7 +40,7 @@ the concatenated value to the selected target field.
 [NOTE]
 For information about other transformations that you can apply to 
 multiple source values see 
-link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[]
+link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values]
 +
 Also under *Sources*, there is an entry for each source field that 
 you selected.
