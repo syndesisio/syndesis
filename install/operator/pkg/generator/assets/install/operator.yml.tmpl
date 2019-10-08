@@ -34,7 +34,7 @@
     name: syndesis-operator
   spec:
     tags:
-    - name: {{.Tag}}
+    - name: "{{.Tag}}"
       from:
         name: {{.Image}}:{{.Tag}}
       {{if .DevSupport}}
