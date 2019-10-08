@@ -44,7 +44,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
     // **************************
 
     @Test
-    public void mongoInsertTest() {
+    public void mongoInsertSingleTest() {
         // When
         String uniqueId = UUID.randomUUID().toString();
         String message = String.format("{\"test\":\"unit\",\"uniqueId\":\"%s\"}", uniqueId);
@@ -61,19 +61,17 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
     }
 
     @Test
-    public void mongoInsertMultipleDocuments() {
+    public void mongoInsertArrayTest() {
         // When
-        int iteration = 10;
-        int batchId = 432;
-        List<Document> batchMessage = formatBatchMessageDocument(iteration, batchId);
+        String uniqueId1 = UUID.randomUUID().toString();
+        String uniqueId2 = UUID.randomUUID().toString();
+        String message = String.format("[{\"test\":\"array\",\"uniqueId\":\"%s\"}, {\"test\":\"array\",\"uniqueId\":\"%s\"}]", uniqueId1, uniqueId2);
         // Given
-        @SuppressWarnings("unchecked")
-        List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
-        List<Document> result = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
+        @SuppressWarnings(value="unchecked")
+        List<Document> result = template.requestBody("direct:start", message, List.class);
         // Then
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
-        assertEquals(iteration, docsFound.size());
-        assertThat(result, containsInAnyOrder(docsFound.toArray()));
+        List<Document> docsFound = collection.find(Filters.eq("test", "array")).into(new ArrayList<Document>());
+        assertEquals(2, docsFound.size());
     }
 
     private List<Document> formatBatchMessageDocument(int nDocs, int batchNo) {

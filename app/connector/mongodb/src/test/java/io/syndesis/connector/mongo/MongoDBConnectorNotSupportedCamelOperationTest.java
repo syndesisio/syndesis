@@ -17,26 +17,26 @@ package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.isA;
+
 public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Override
     @Before
-    public void setUp() {
-        try {
-            super.setUp();
-            fail("Setup should have thrown an exception!");
-        } catch (Exception e) {
-            // We do expect a failure cause the operation provided is not
-            // supported
-        }
+    public void setUp() throws Exception {
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        expectedException.expectMessage("Operation somethingNotSupported is not supported");
+        super.setUp();
+        fail("Setup should have thrown an exception!");
     }
 
     @Override
@@ -44,10 +44,6 @@ public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConne
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE,
             COLLECTION, "somethingNotSupported");
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoTest() {

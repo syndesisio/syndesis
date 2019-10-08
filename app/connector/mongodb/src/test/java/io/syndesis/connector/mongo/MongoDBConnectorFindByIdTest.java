@@ -17,6 +17,7 @@ package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -43,20 +44,28 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         // When
         String uniqueId = UUID.randomUUID().toString();
         Document doc = new Document();
-        doc.append("_id", 1);
+        doc.append("_id", "1");
         doc.append("unique", uniqueId);
         collection.insertOne(doc);
         String uniqueId2 = UUID.randomUUID().toString();
         Document doc2 = new Document();
-        doc2.append("_id", 2);
+        doc2.append("_id", "2");
         doc2.append("unique", uniqueId2);
         collection.insertOne(doc2);
+        Document doc3 = new Document();
+        String uniqueId3 = UUID.randomUUID().toString();
+        ObjectId objectId = new ObjectId();
+        doc3.append("_id", objectId);
+        doc3.append("unique", uniqueId3);
+        collection.insertOne(doc3);
         // Given
-        Document result = Document.parse((String)template.requestBody("direct:start", 1, List.class).get(0));
+        Document result = Document.parse((String)template.requestBody("direct:start", "1", List.class).get(0));
         Document result2 = Document.parse((String)template.requestBody("direct:start", 2, List.class).get(0));
+        Document result3 = Document.parse((String)template.requestBody("direct:start", objectId, List.class).get(0));
         // Then
         assertEquals(uniqueId, result.get("unique"));
         assertEquals(uniqueId2, result2.get("unique"));
+        assertEquals(uniqueId3, result3.get("unique"));
     }
 
 }

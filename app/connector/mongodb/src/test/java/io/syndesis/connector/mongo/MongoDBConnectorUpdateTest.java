@@ -68,8 +68,7 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
         // Need the header to enable multiple updates!
-        Document result = Document.parse((String)template.requestBodyAndHeader("direct:start", updateArguments,
-            "CamelMongoDbMultiUpdate", "true", List.class).get(0));
+        Document result = Document.parse((String)template.requestBody("direct:start", updateArguments, List.class).get(0));
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
         assertEquals(2, docsFound.size());
