@@ -97,6 +97,23 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     alert('Export virtualization ');
   } */
 
+  /**
+   *
+   * @param virtualization the virtualization whose description is being returned
+   * @returns the description truncated at 150 chars if necessary
+   */
+  const getDescription = (virtualization: RestDataService): string => {
+    if (virtualization.tko__description) {
+      if (virtualization.tko__description.length > 150) {
+        return virtualization.tko__description.substring(0, 150) + ' ...';
+      }
+
+      return virtualization.tko__description;
+    }
+
+    return '';
+  };
+
   const getUsedByMessage = (integrationNames: string[]): string => {
     if (integrationNames.length === 1) {
       return t('usedByOne');
@@ -201,11 +218,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             )}
                             hasViews={!virtualization.empty}
                             virtualizationName={virtualization.keng__id}
-                            virtualizationDescription={
-                              virtualization.tko__description
-                                ? virtualization.tko__description
-                                : ''
-                            }
+                            virtualizationDescription={getDescription(
+                              virtualization
+                            )}
                             odataUrl={getOdataUrl(virtualization)}
                             i18nCancelText={t('shared:Cancel')}
                             i18nDelete={t('shared:Delete')}
@@ -226,7 +241,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nError={t('shared:Error')}
                             /* TD-636: Commented out for TP
                                 i18nExport={t('shared:Export')} */
-                            i18nInUseText={getUsedByMessage(virtualization.usedBy)}
+                            i18nInUseText={getUsedByMessage(
+                              virtualization.usedBy
+                            )}
                             i18nPublish={t('shared:Publish')}
                             i18nPublished={t(
                               'virtualization.publishedDataVirtualization'

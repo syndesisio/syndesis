@@ -4,8 +4,9 @@ import {
   useVirtualization,
   useVirtualizationHelpers,
 } from '@syndesis/api';
-import { RestDataService, 
-         VirtualizationPublishingDetails
+import {
+  RestDataService,
+  VirtualizationPublishingDetails,
 } from '@syndesis/models';
 import {
   PageSection,
@@ -28,6 +29,7 @@ import {
   getOdataUrl,
   getPublishingDetails,
 } from '../shared/VirtualizationUtils';
+import './VirtualizationSqlClientPage.css';
 
 /**
  * @param virtualizationId - the ID of the virtualization shown by this page.
@@ -70,7 +72,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const [publishedState, setPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
-  const [usedBy, setUsedBy] = React.useState( state.virtualization.usedBy );
+  const [usedBy, setUsedBy] = React.useState(state.virtualization.usedBy);
 
   const {
     resource: viewDefinitionDescriptors,
@@ -98,7 +100,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
 
     return t('usedByMulti', { count: integrationNames.length });
   };
-  
+
   const doDelete = async (pVirtualizationId: string) => {
     const success = await handleDeleteVirtualization(pVirtualizationId);
     if (success) {
@@ -113,7 +115,6 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const doUnpublish = async (virtualizationName: string) => {
     await handleUnpublishVirtualization(virtualizationName);
   };
-
 
   const doSetDescription = async (newDescription: string) => {
     const previous = description;
@@ -169,7 +170,11 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           usedInIntegration={usedBy.length > 0}
         />
       </PageSection>
-      <PageSection variant={'light'} noPadding={true}>
+      <PageSection
+        className={'virtualization-sql-client-page'}
+        variant={'light'}
+        noPadding={true}
+      >
         <VirtualizationDetailsHeader
           i18nDescriptionPlaceholder={t(
             'virtualization.descriptionPlaceholder'
