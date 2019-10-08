@@ -170,7 +170,7 @@ export function massageValue(
       return typeof answer === 'string' ? JSON.parse(answer) : answer;
     }
     case 'select': {
-      if (property.multiple) {
+      if (property.fieldAttributes && property.fieldAttributes.multiple) {
         return value || defaultValue || [];
       }
       // select controls in syndesis need to default
