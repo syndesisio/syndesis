@@ -44,7 +44,7 @@
                 "order": 1,
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               },
               "batch": {
                 "defaultValue": false,
@@ -112,7 +112,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "text"
               },
               "schedulerExpression": {
                 "defaultValue": 60000,
