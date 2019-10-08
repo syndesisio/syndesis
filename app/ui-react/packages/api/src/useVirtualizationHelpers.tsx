@@ -14,10 +14,11 @@ import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
 export interface IDvNameValidationResult {
-  isError: boolean;
-  error?: string;
+  nameExists: boolean;
+  hasError: boolean;
+  message?: string;
 }
-
+  
 export const useVirtualizationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
 
@@ -244,20 +245,31 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/dataservices/nameValidation/${encodedName}`,
+      }workspace/dataservices/${encodedName}`,
     });
+    
+    // ok response - the virtualization already exists
+    if (response.ok) {
+      return {
+        hasError: false,
+        nameExists: true
+      }
+    // 403 response - the supplied name is invalid
+    // 303 response - the supplied name matches a source name
+    } else if ( !response.ok && (response.status === 403 || response.status === 303) ) {
+      const result = await response.json();
+      return {
+        hasError: true,
+        message: result.message,
+        nameExists: false
+      }
+    } 
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    // return validation result
-    const result = await response.text();
-    const hasError = result.length > 0;
+    // no validation problems
     return {
-      error: hasError ? result : '',
-      isError: hasError,
-    } as IDvNameValidationResult;
+      hasError: false,
+      nameExists: false
+    };
   };
 
   /**
@@ -275,20 +287,31 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/${virtualizationName}/views/nameValidation/${encodedName}`,
+      }workspace/dataservices/${virtualizationName}/views/${encodedName}`,
     });
 
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
+    // ok response - the virtualization view already exists
+    if (response.ok) {
+      return {
+        hasError: false,
+        nameExists: true
+      }
+    // 403 response - the supplied name is invalid
+    // 303 response - the supplied name matches a source name
+    } else if ( !response.ok && (response.status === 403 || response.status === 303) ) {
+      const result = await response.json();
+      return {
+        hasError: true,
+        message: result.message,
+        nameExists: false
+      }
+    } 
 
-    // return validation result
-    const result = await response.text();
-    const hasError = result.length > 0;
+    // no validation problems
     return {
-      error: hasError ? result : '',
-      isError: hasError,
-    } as IDvNameValidationResult;
+      hasError: false,
+      nameExists: false
+    };
   };
 
   /**

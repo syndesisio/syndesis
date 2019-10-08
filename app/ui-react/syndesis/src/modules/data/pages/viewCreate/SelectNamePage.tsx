@@ -4,14 +4,13 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
-import { ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
+import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
-import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import { ViewCreateSteps } from '../../shared';
 import { generateViewDefinition } from '../../shared/VirtualizationUtils';
@@ -48,6 +47,9 @@ export const SelectNamePage: React.FunctionComponent = () => {
     saveViewDefinition,
     validateViewName,
   } = useVirtualizationHelpers();
+  const [validationResults, setValidationResults] = React.useState<
+  IViewConfigurationFormValidationResult[]
+  >([]);
 
   const validateDescription = (desc: string): string => {
     if (desc.includes("'")) {
@@ -60,32 +62,54 @@ export const SelectNamePage: React.FunctionComponent = () => {
    * Backend name validation only occurs when attempting to create
    * @param proposedName the name to validate
    */
-  const doValidateName = async (proposedName: string): Promise<string> => {
+  const doValidateName = async (
+    proposedName: string
+  ): Promise<IViewConfigurationFormValidationResult> => {
     // make sure name has a value
     if (proposedName === '') {
-      return t('shared:requiredFieldMessage') as string;
+      return {
+        message: t(
+        'shared:requiredFieldMessage'
+      ) as string,
+      type: 'danger'
+      };
     }
-
+  
     const response: IDvNameValidationResult = await validateViewName(
       state.virtualization.keng__id,
       proposedName
     );
 
-    if (!response.isError) {
-      return '';
+    if (response.nameExists) {
+      return {
+        message: i18n.t('data:virtualization.errorViewNameExists', {
+          name: proposedName,
+        }),
+        type: 'danger'
+      }
     }
-    return (
-      t('virtualization.errorValidatingViewName') +
-      (response.error ? ' : ' + response.error : '')
-    );
+    if (response.hasError) {
+      return {
+        message: response.message ? response.message : i18n.t('data:virtualization.errorViewNameValidation'),
+        type: 'danger'
+      }
+    }
+    return {
+      message: '',
+      type: 'success'
+    }
   };
 
   const onSave = async (value: any) => {
-    let validationMsg = validateDescription(value.description);
-    if (validationMsg.length === 0) {
-      validationMsg = await doValidateName(value.name);
+    const validateDescrMsg = validateDescription(value.description);
+    let validation = {
+      message: validateDescrMsg,
+      type: 'danger'
+    } as IViewConfigurationFormValidationResult;
+    if (validateDescrMsg.length === 0) {
+      validation = await doValidateName(value.name);
     }
-    if (validationMsg.length === 0) {
+    if (validation.type === 'success') {
       // ViewDefinition for the source
       const viewDefinition = generateViewDefinition(
         state.schemaNodeInfo,
@@ -116,7 +140,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
         })
       );
     } else {
-      pushNotification(validationMsg, 'error');
+      setValidationResults([validation]);
     }
   };
 
@@ -153,21 +177,12 @@ export const SelectNamePage: React.FunctionComponent = () => {
         <ViewCreateLayout
           header={<ViewCreateSteps step={2} />}
           content={
-            <>
-              <PageTitle
-                title={i18n.t(
-                  'data:virtualization.createViewWizardSelectNameTitle'
-                )}
-              />
-              <ViewConfigurationForm
-                i18nFormTitle={i18n.t(
-                  'data:virtualization.createViewWizardSelectNameTitle'
-                )}
-                handleSubmit={handleSubmit}
-              >
-                {fields}
-              </ViewConfigurationForm>
-            </>
+            <ViewConfigurationForm
+              validationResults={validationResults}
+              handleSubmit={handleSubmit}
+            >
+              {fields}
+            </ViewConfigurationForm>
           }
           cancelHref={resolvers.data.virtualizations.views.root({
             virtualization: state.virtualization,

@@ -77,15 +77,23 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
       proposedName
     );
 
-    if (!response.isError) {
+    if (response.nameExists) {
       return {
-        message: '',
-        type: 'success'
+        message: i18n.t('data:virtualization.errorVirtualizationNameExists', {
+          name: proposedName,
+        }),
+        type: 'danger'
+      }
+    }
+    if (response.hasError) {
+      return {
+        message: response.message ? response.message : i18n.t('data:virtualization.errorVirtualizationNameValidation'),
+        type: 'danger'
       }
     }
     return {
-      message: response.error ? response.error : '',
-      type: 'danger'
+      message: '',
+      type: 'success'
     }
   };
 
