@@ -36,7 +36,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
   IVirtualizationDetailsHeaderProps
 > = props => {
   return (
-    <PageSection variant={'light'}>
+    <PageSection className={'virtualization-details-header'} variant={'light'}>
       <Stack gutter="md">
         <StackItem>
           <Split gutter="md" className={'virtualization-details-header__row'}>
@@ -79,9 +79,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                 </span>
               )}
             </SplitItem>
-            <SplitItem>
-              {props.i18nInUseText}
-            </SplitItem>
+            <SplitItem>{props.i18nInUseText}</SplitItem>
           </Split>
         </StackItem>
         <StackItem>

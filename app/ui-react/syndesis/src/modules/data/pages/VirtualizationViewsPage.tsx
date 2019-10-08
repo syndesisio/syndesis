@@ -39,6 +39,7 @@ import {
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import { AppContext, UIContext } from '../../../app';
 import resolvers from '../../resolvers';
+import './VirtualizationViewsPage.css';
 
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
@@ -117,7 +118,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const [publishedState, setPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
-  const [usedBy, setUsedBy] = React.useState( state.virtualization.usedBy );
+  const [usedBy, setUsedBy] = React.useState(state.virtualization.usedBy);
   const {
     deleteViewDefinition,
     updateVirtualizationDescription,
@@ -161,7 +162,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     if (integrationNames.length === 1) {
       return t('usedByOne');
     }
-  
+
     return t('usedByMulti', { count: integrationNames.length });
   };
 
@@ -281,7 +282,11 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 usedInIntegration={usedBy.length > 0}
               />
             </PageSection>
-            <PageSection variant={'light'} noPadding={true}>
+            <PageSection
+              className={'virtualization-views-page'}
+              variant={'light'}
+              noPadding={true}
+            >
               {virtualization ? (
                 <VirtualizationDetailsHeader
                   i18nDescriptionPlaceholder={t(

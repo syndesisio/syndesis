@@ -1,0 +1,13 @@
+.virtualization-sql-client-page .inline-text-editwidget textarea {
+  height: 8.5em;
+  font-size: 1.0em;
+  line-height: 1.25em;
+}
+
+.virtualization-sql-client-page .virtualization-details-header .inline-text-readwidget {
+  display: inline-block;
+  line-height: 1.25em;
+  max-height: 6.25em;
+  overflow: auto;
+  white-space: pre-wrap;
+}
