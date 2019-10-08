@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DEFAULT_OPENSHIFT_VERSION="v3.11.0"
-DEFAULT_CPUS="2"
-DEFAULT_RAM="8GB"
+DEFAULT_CPUS="4"
+DEFAULT_RAM="8192"
 
 crc::description() {
     echo "Initialize and manage a developer environment using OCP4 CodeReady Containers"
@@ -10,22 +10,20 @@ crc::description() {
 
 crc::usage() {
     cat <<EOT
-    --install                 Install templates to a running OCP4 CodeReady Containers cluster.
+    --install                 Install syndesis to a running OCP4 CodeReady Containers cluster.
 -p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
     --reset                   Reset and initialize the crc installation by
                               'crc delete && crc start'.
     --full-reset              Full reset and initialie by
                               'crc stop && rm -rf ~/.crc/* && crc start'
-    --operator-only           Only install the operator but no resource
-                              connected cluster.
+    --operator-only           Only install the operator but no custom resource
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
     --pull-secret-file <file> File holding the OCP4 pull secret
     --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
     --bundle <path-to-bundle> Path to system bundle (required when using virtualbox vm-driver)
     --local                   Use the local resource files instead of fetching them from GitHub
--r  --route <route>           Use the given route.
                               By default "syndesis.<project_name>.apps-crc.testing" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
@@ -47,6 +45,11 @@ EOT
 crc::run() {
     source "$(basedir)/commands/util/openshift_funcs"
     source "$(basedir)/commands/util/camel_k_funcs"
+    source "$(basedir)/commands/util/operator_funcs"
+
+    OPERATOR_BINARY="$(basedir)/commands/binaries/syndesis"
+
+    download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
     # Check that crc is installed
     which crc &>/dev/null
@@ -101,28 +104,23 @@ crc::run() {
         echo "Switching to project \"$project\""
         oc project $project
 
-        # Login as admin to install CRDs
-        local user=$(oc whoami)
-        local revert_login=$(login_as_admin)
+        # Install Syndesis CRD
+        if ! $(oc get crd | grep "syndesises.syndesis.io" >/dev/null 2>&1); then
+            echo "Installing Syndesis CRD"
+            local result=$($OPERATOR_BINARY install cluster)
+            check_error "$result"
+        fi
 
-        # Install Syndesis CRD globally (if required)
-        echo "Installing Syndesis CRD"
-        local result=$(install_syndesis_crd)
-        check_error "$result"
-
-        # Install Camel-K CRD globally (if requested)
+        # Install Camel-K CRD
         if [ $(hasflag --camel-k) ]; then
           echo "Installing Camel-K CRDs"
           result=$(install_camel_k_crds "$(readopt --camel-k)")
           check_error "$result"
         fi
 
-        # Adapt
-        add_user_permissions_for_operator "$user" "true"
-
-        # Deploy operator and wait until its up
+        # Deploy operator
         echo "Deploying Syndesis operator"
-        result=$(deploy_syndesis_operator)
+        result=$($OPERATOR_BINARY install operator)
         check_error "$result"
 
         # Deploy Camel-K operator if requested
@@ -132,31 +130,20 @@ crc::run() {
           check_error "$result"
         fi
 
-        # Relogin with original user
-        echo "Switching to project \"$project\""
-        oc project $project >/dev/null 2>&1
-        $revert_login
-
         if [ $(hasflag --operator-only) ]; then
             echo "Deployed operator."
             exit 0
+        else
+            echo "Deploying syndesis app."
+            if [ $(hasflag --nodev) ] ; then
+                result=$($OPERATOR_BINARY install app)
+            else
+                result=$($OPERATOR_BINARY install app --dev)
+            fi
+            check_error "$result"
         fi
 
         wait_for_deployments 1 syndesis-operator
-
-        # Create syndesis resource
-        local route=$(readopt --route -r)
-        if [ -z "$route" ]; then
-            route="syndesis.$(crc ip).apps-crc.testing"
-        fi
-
-        local dev_images="with_dev_images"
-        if [ $(hasflag --nodev) ] ; then
-            dev_images=""
-        fi
-
-        result=$(create_syndesis "$route" "https://console-openshift-console.apps-crc.testing" "$dev_images")
-        check_error "$result"
 
         # Wait until everything's up and finally patch imagestreams for triggers
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
