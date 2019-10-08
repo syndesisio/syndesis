@@ -849,7 +849,7 @@ jobs:
               fi
             done
             cd ${BASEDIR}
-            ghr -u ${GITHUB_USER} -t ${GITHUB_TOKEN} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace -prerelease -draft ${VERSION} "${BASEDIR}/archives"
+            ghr -u ${GITHUB_USER} -t ${GITHUB_TOKEN} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -replace ${VERSION} "${BASEDIR}/archives"
 workflows:
   version: 2
   release:
