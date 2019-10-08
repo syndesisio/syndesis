@@ -30,7 +30,7 @@
                 "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               },
               "attributes": {
                 "deprecated": false,
@@ -45,7 +45,7 @@
 
                 "secret": false,
                 "multiple": true,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -88,7 +88,7 @@
                 "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
@@ -131,7 +131,7 @@
                 "controlHint": "{\"key\" : \":#MYPARAMNAME\"}",
                 "required": true,
                 "secret": false,
-                "type": "string"
+                "type": "dataList"
               }
             }
           }
