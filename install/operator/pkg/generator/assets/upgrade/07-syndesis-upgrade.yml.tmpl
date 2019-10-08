@@ -23,7 +23,7 @@
       image: '{{ .Syndesis.Spec.Components.Upgrade.Registry }}/{{ .Syndesis.Spec.Components.Upgrade.ImagePrefix }}/{{ .Images.Syndesis.Upgrade }}:{{ .Tags.Upgrade }}'
       env:
         - name: SYNDESIS_VERSION
-          value: {{ .Tags.Syndesis }}
+          value: "{{ .Tags.Syndesis }}"
         - name: ENV_S2I_TARGET_TAG
           value: "{{ .Syndesis.Spec.Components.S2I.Tag }}"
         - name: SYNDESIS_UPGRADE_PROJECT
