@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-12911-gd9a40512b3,</span>
-<span id="revdate">2019-10-07</span>
+<span id="revnumber">version 1.1.3-12913-g19291b5aa6,</span>
+<span id="revdate">2019-10-08</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -1351,14 +1351,12 @@ You can download it directly from <a href="https://cloud.redhat.com/openshift/in
                               'crc stop &amp;&amp; rm -rf ~/.crc/* &amp;&amp; crc start'
     --operator-only           Only install the operator but no resource
                               connected cluster.
-    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
-    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
+    --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 8192
+    --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 4
     --pull-secret-file &lt;file&gt; File holding the OCP4 pull secret
     --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
     --bundle &lt;path-to-bundle&gt; Path to system bundle (required when using virtualbox vm-driver)
     --local                   Use the local resource files instead of fetching them from GitHub
--r  --route &lt;route&gt;           Use the given route.
-                              By default "syndesis-&lt;project_name&gt;.apps-crc.testing" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -1407,7 +1405,7 @@ Any existing project will be deleted first when specified with <code>--project</
 It doesn&#8217;t harm if the CodeReady Containers VM does not exist so that you can use <code>--reset</code> also on a fresh CodeReady Containers installation.</p>
 </div>
 <div class="paragraph">
-<p>If you want to get a real clean installation use <code>--full-reset</code> which deletes the <code>~/.crc</code> directory which holds downloaded artefacts like the ISO image for the CodeReady Containers VM.
+<p>If you want to get a real clean installation use <code>--full-reset</code> which deletes the <code>~/.crc</code> directory which holds downloaded artifacts like the ISO image for the CodeReady Containers VM.
 Using <code>--full-reset</code> forces CodeReady Containers to re-download all those files.</p>
 </div>
 <div class="paragraph">
@@ -1435,7 +1433,7 @@ Using <code>--full-reset</code> forces CodeReady Containers to re-download all t
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--cpus</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of CPUs used for the CodeReady Containers VM.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">2</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">4</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--pull-secret-file</code></p></td>
@@ -1496,6 +1494,18 @@ This command is especially useful for a simple and self-contained development wo
 <div class="paragraph">
 <p><code>syndesis minishift</code> requires that you have a current minishift in your path.
 You can download it directly from <a href="https://github.com/minishift/minishift/releases">GitHub</a>.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<code>minishift</code> only supports up to Openshift 3.11. If you need to use Openshift 4.x please refer to <a href="https://doc.syndesis.io/#syndesis-crc">syndesis crc</a>
+</td>
+</tr>
+</table>
 </div>
 <div class="sect3">
 <h4 id="syndesis-minishift-usage">2.4.1. Usage</h4>
@@ -3635,8 +3645,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-12911-gd9a40512b3<br>
-Last updated 2019-10-07 21:00:03 UTC
+Version 1.1.3-12913-g19291b5aa6<br>
+Last updated 2019-10-08 08:58:47 UTC
 </div>
 </div>
 </body>
