@@ -22,10 +22,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-const (
-	UpgradePodPrefix = "syndesis-upgrade-"
-)
-
 // Upgrades Syndesis to the version supported by this operator using the upgrade template.
 type upgradeAction struct {
 	baseAction
@@ -173,7 +169,7 @@ func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1
 func (a *upgradeAction) findUpgradePod(resources []runtime.Object) (*v1.Pod, error) {
 	for _, res := range resources {
 		if pod, ok := res.(*v1.Pod); ok {
-			if strings.HasPrefix(pod.Name, UpgradePodPrefix) {
+			if strings.Contains(pod.Name, "upgrade") {
 				return pod, nil
 			}
 		}
