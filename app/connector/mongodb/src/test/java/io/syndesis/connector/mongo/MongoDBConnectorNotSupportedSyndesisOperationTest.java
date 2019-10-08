@@ -17,11 +17,27 @@ package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.isA;
+
 public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBConnectorTestSupport {
+
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
+
+    @Override
+    @Before
+    public void setUp() throws Exception {
+        expectedException.expectCause(isA(IllegalArgumentException.class));
+        expectedException.expectMessage("Operation aggregate is not supported");
+        super.setUp();
+        fail("Setup should have thrown an exception!");
+    }
 
     @Override
     protected List<Step> createSteps() {
@@ -29,14 +45,9 @@ public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBCo
             COLLECTION, "aggregate");
     }
 
-    // **************************
-    // Tests
-    // **************************
-
-    @Test(expected = Exception.class)
+    @Test
     public void mongoTest() {
-        template().sendBody("direct:start","Anything....");
-        fail("Aggregate operation is not allowed, should thrown an exception!");
+        assertTrue(true);
     }
 
 }

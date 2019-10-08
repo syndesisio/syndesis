@@ -104,7 +104,7 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
             String jsonResult = String.format(JSON_COUNT_RESULT, in.getBody(Long.class));
             result.add(jsonResult);
         } else {
-            LOGGER.warn("Impossible to convert the body, type was {}", in.getBody().getClass());
+            LOGGER.warn("Impossible to convert the body, type was {}", in.getBody() == null? null : in.getBody().getClass());
             // return without setting the converted result
             return;
         }

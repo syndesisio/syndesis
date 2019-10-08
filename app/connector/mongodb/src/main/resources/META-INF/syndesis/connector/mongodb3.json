@@ -3,17 +3,17 @@
   "actions": [
     {
       "actionType": "connector",
-      "connectorCustomizers": [
-        "io.syndesis.connector.mongo.MongoProducerCustomizer"
-      ],
       "description": "Mongo DB producer",
       "descriptor": {
         "componentScheme": "mongodb3",
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+        ],
         "inputDataShape": {
-          "kind": "json-schema"
+          "kind": "json-instance"
         },
         "outputDataShape": {
-          "kind": "json-schema"
+          "kind": "json-instance"
         },
         "propertyDefinitionSteps": [
           {
@@ -91,7 +91,7 @@
           "kind": "none"
         },
         "outputDataShape": {
-          "kind": "json-schema"
+          "kind": "json-instance"
         },
         "propertyDefinitionSteps": [
           {
