@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.integration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.persistence.EntityNotFoundException;
@@ -51,6 +52,9 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Path("/integrations/{id}/deployments")
 @Api(value = "integration-deployments")
 @Component
@@ -62,12 +66,27 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     public static class TargetStateRequest {
         private IntegrationDeploymentState targetState;
 
+        @JsonCreator
+        public TargetStateRequest(@JsonProperty("targetState") IntegrationDeploymentState targetState) {
+            this.targetState = Objects.requireNonNull(targetState, "targetState");
+        }
+
         public IntegrationDeploymentState getTargetState() {
             return targetState;
         }
 
-        public void setTargetState(IntegrationDeploymentState targetState) {
-            this.targetState = targetState;
+        @Override
+        public boolean equals(Object obj) {
+            if (!(obj instanceof TargetStateRequest)) {
+                return false;
+            }
+
+            return targetState == ((TargetStateRequest) obj).targetState;
+        }
+
+        @Override
+        public int hashCode() {
+            return targetState.hashCode();
         }
     }
 
