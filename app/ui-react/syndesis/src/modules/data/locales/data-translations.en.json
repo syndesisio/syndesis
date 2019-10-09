@@ -25,7 +25,6 @@
     "publishedDataVirtualization": "Published",
     "publishInProgress": "publish in progress...",
     "unpublishInProgress": "unpublish in progress...",
-    "requiredPropertyText": "This property is required",
     "virtualizationDescriptionDisplay": "Description",
     "virtualizationNameDisplay": "Virtualization Name",
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
