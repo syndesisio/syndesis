@@ -145,9 +145,13 @@ crc::run() {
 
         wait_for_deployments 1 syndesis-operator
 
-        # Wait until everything's up and finally patch imagestreams for triggers
-        wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
-        patch_imagestreams_for_initial_image
+        if [ $(hasflag --nodev) ] ; then
+            # Wait until everything's up and finally patch image streams for triggers
+            wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
+            patch_imagestreams_for_initial_image
+        else
+            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
+        fi
     fi
 
     if [ $(hasflag --open -o) ]; then

@@ -15,27 +15,23 @@ WARNING: `minishift` only supports up to Openshift 3.11. If you need to use Open
 [source,indent=0,subs="verbatim,quotes"]
 ----
     --install                 Install templates to a running Minishift.
--p  --project                 Install into this project.
-                              Delete this project if it already exists.
+-p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
--c  --context                 Install into this context. Default is 'minishift'
+    --profile <profile>       Use the given minishift profile
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete && minishift start'.
     --full-reset              Full reset and initialie by
                               'minishift stop && rm -rf ~/.minishift/* && minishift start'
-    --operator-only           Only install the operator but no resource
-                              connected cluster.
+    --operator-only           Only install the operator but no custom resource
     --memory <mem>            How much memory to use when doing a reset. Default: 4912
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
     --disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
     --vm-driver <driver>      Which virtual machine driver to use (depends on OS)
     --show-logs               Show minishift logs during startup
-    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.9.0)
+    --openshift-version <ver> Set OpenShift version to use when reseting (default: v3.11.0)
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
--r  --route <route>           Use the given route.
-                              By default "syndesis.<crc ip>.apps-crc.testing" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -49,7 +45,7 @@ WARNING: `minishift` only supports up to Openshift 3.11. If you need to use Open
     --datavirt                Install Data Virtualizations
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
     --deploy-latest           Deploy latest tags from dockerhub.
-    --man                     Open HTML documentation in the Syndesis Developer Handbook
+    --nodev                   Do not set the devSupport flag in CR (deploys all images)
 ----
 
 === Installing Syndesis
