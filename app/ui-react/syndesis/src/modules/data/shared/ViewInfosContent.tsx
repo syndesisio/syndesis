@@ -137,15 +137,7 @@ export const ViewInfosContent: React.FunctionComponent<
             <WithLoader
               error={error !== false}
               loading={!hasSchema}
-              loaderChildren={
-                <ViewInfoListSkeleton
-                  width={800}
-                  style={{
-                    backgroundColor: '#FFF',
-                    marginTop: 30,
-                  }}
-                />
-              }
+              loaderChildren={<ViewInfoListSkeleton width={800} />}
               errorChildren={<ApiError error={error as Error} />}
             >
               {() =>

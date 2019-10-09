@@ -1,10 +1,13 @@
-import { ActionGroup, 
-         Alert, 
-         Card, 
-         CardBody, 
-         Form } from '@patternfly/react-core';
+import {
+  ActionGroup,
+  Alert,
+  Card,
+  CardBody,
+  Form,
+} from '@patternfly/react-core';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
+import './VirtualizationCreateForm.css';
 
 export interface IVirtualizationCreateValidationResult {
   message: string;
@@ -65,7 +68,7 @@ export const VirtualizationCreateForm: React.FunctionComponent<
             <Button
               data-testid={'virtualization-create-form-save-button'}
               bsStyle="primary"
-              style={{ marginRight: 0 }}
+              className={'virtualization-create-form__saveButton'}
               disabled={props.isWorking}
               onClick={props.handleSubmit}
             >
@@ -74,7 +77,7 @@ export const VirtualizationCreateForm: React.FunctionComponent<
             <Button
               data-testid={'virtualization-create-form-cancel-button'}
               bsStyle="default"
-              style={{ marginLeft: 5 }}
+              className={'virtualization-create-form__cancelButton'}
               disabled={props.isWorking}
               onClick={props.onCancel}
             >
@@ -85,4 +88,4 @@ export const VirtualizationCreateForm: React.FunctionComponent<
       </CardBody>
     </Card>
   );
-}
+};

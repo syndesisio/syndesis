@@ -28,7 +28,12 @@ function getSchemaNodeInfos(schemaNodes: SchemaNode[], connName: string) {
 }
 
 export interface IConnectionSchemaContentProps {
-  onNodeSelected: (connectionName: string, name: string, teiidName: string, nodePath: string[]) => void;
+  onNodeSelected: (
+    connectionName: string,
+    name: string,
+    teiidName: string,
+    nodePath: string[]
+  ) => void;
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
 }
 
@@ -42,7 +47,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<
     name: string,
     teiidName: string,
     nodePath: string[],
-    selected: boolean,
+    selected: boolean
   ) => {
     if (selected) {
       props.onNodeSelected(connectionName, name, teiidName, nodePath);
@@ -69,15 +74,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<
       <WithLoader
         error={error !== false}
         loading={!hasSchema}
-        loaderChildren={
-          <ConnectionSchemaListSkeleton
-            width={800}
-            style={{
-              backgroundColor: '#FFF',
-              marginTop: 30,
-            }}
-          />
-        }
+        loaderChildren={<ConnectionSchemaListSkeleton width={800} />}
         errorChildren={<ApiError error={error as Error} />}
       >
         {() =>

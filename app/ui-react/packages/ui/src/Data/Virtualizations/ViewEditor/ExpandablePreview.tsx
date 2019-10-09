@@ -101,7 +101,7 @@ export const ExpandablePreview: React.FunctionComponent<
         onToggle={toggleExpanded}
         isExpanded={expanded}
       >
-        <Split style={{ alignItems: 'center' }}>
+        <Split className={'expandable-preview__titleSection'}>
           <SplitItem isFilled={false}>
             <Title headingLevel="h5" size="lg">
               {i18nTitle}

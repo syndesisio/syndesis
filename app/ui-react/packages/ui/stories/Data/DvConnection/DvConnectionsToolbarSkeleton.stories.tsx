@@ -8,7 +8,7 @@ import {
 } from '../../../src';
 
 const stories = storiesOf(
-  'Data/DvConnection/DvConnectionsWithToolbarSkeleton',
+  'Data/DvConnection/DvConnectionsToolbarSkeleton',
   module
 );
 

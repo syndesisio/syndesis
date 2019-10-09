@@ -1,4 +1,12 @@
 .virtualization-list-item-odata-link-icon {
   margin-left: 5px;
 }
-  
+
+.virtualization-list-item__odata-anchor {
+  word-break: break-all;
+}
+
+.virtualization-list-item__odata-span {
+  margin-top: 5px;
+  text-align: left;
+}

@@ -9,3 +9,7 @@
 .expandable-preview__section.pf-c-page__main-section {
   --pf-c-page__main-section--PaddingTop: 0px;
 }
+
+.expandable-preview__titleSection {
+  align-items: center;
+}
