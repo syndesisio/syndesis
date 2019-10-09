@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-12928-g2c3a1882d9,</span>
+<span id="revnumber">version 1.1.3-12930-g8ca5034075,</span>
 <span id="revdate">2019-10-09</span>
 </div>
 <div id="toc" class="toc2">
@@ -1512,27 +1512,23 @@ You can download it directly from <a href="https://github.com/minishift/minishif
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code>    --install                 Install templates to a running Minishift.
--p  --project                 Install into this project.
-                              Delete this project if it already exists.
+-p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
--c  --context                 Install into this context. Default is 'minishift'
+    --profile &lt;profile&gt;       Use the given minishift profile
     --reset                   Reset and initialize the minishift installation by
                               'minishift delete &amp;&amp; minishift start'.
     --full-reset              Full reset and initialie by
                               'minishift stop &amp;&amp; rm -rf ~/.minishift/* &amp;&amp; minishift start'
-    --operator-only           Only install the operator but no resource
-                              connected cluster.
+    --operator-only           Only install the operator but no custom resource
     --memory &lt;mem&gt;            How much memory to use when doing a reset. Default: 4912
     --cpus &lt;nr cpus&gt;          How many CPUs to use when doing a reset. Default: 2
     --disk-size &lt;size&gt;        How many disk space to use when doing a reset. Default: 20GB
     --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
     --show-logs               Show minishift logs during startup
-    --openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.9.0)
+    --openshift-version &lt;ver&gt; Set OpenShift version to use when reseting (default: v3.11.0)
     --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
--r  --route &lt;route&gt;           Use the given route.
-                              By default "syndesis.&lt;crc ip&gt;.apps-crc.testing" is used.
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -1546,7 +1542,7 @@ You can download it directly from <a href="https://github.com/minishift/minishif
     --datavirt                Install Data Virtualizations
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
     --deploy-latest           Deploy latest tags from dockerhub.
-    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
+    --nodev                   Do not set the devSupport flag in CR (deploys all images)</code></pre>
 </div>
 </div>
 </div>
@@ -3645,8 +3641,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-12928-g2c3a1882d9<br>
-Last updated 2019-10-09 12:54:22 UTC
+Version 1.1.3-12930-g8ca5034075<br>
+Last updated 2019-10-09 13:05:57 UTC
 </div>
 </div>
 </body>
