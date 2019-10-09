@@ -28,6 +28,29 @@
   <name>Connector :: MongoDB</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <embedded-mongo.version>2.1.2</embedded-mongo.version>
+  </properties>
+
+  <!--
+    We need to explicitly override imported bom managed version from spring-boot-dependencies
+    in order to align embedded-mongo and embedded-process library to the same version.
+  -->
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>de.flapdoodle.embed</groupId>
+        <artifactId>de.flapdoodle.embed.mongo</artifactId>
+        <version>${embedded-mongo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>de.flapdoodle.embed</groupId>
+        <artifactId>de.flapdoodle.embed.process</artifactId>
+        <version>${embedded-mongo.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
@@ -121,7 +144,6 @@
     <dependency>
       <groupId>de.flapdoodle.embed</groupId>
       <artifactId>de.flapdoodle.embed.process</artifactId>
-      <version>2.1.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
