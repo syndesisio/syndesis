@@ -30,10 +30,8 @@ endif::[]
 
 The data mapper supports expressions that are similar to a Microsoft 
 Excel expressions, but does not support all Microsoft Excel expression 
-syntax. In this release, a conditional expression that refers to a field 
-that is a collection causes an error. It is expected that a future 
-release will support a conditional expression that refers to a field that 
-is a collection. 
+syntax. In this release, a conditional expression cannot refer to a 
+field that is a collection. This is expected to change in a future release.
 
 You can define zero or one condition for each mapping. 
 
