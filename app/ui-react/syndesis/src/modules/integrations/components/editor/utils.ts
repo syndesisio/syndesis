@@ -200,6 +200,7 @@ export function toUIIntegrationStepCollection(
         if (
           prev &&
           prev.stepKind !== CHOICE && // TODO: suppress this until we can also use the describe data page for a step syndesisio/syndesis#5456
+          prev.stepKind !== EXTENSION && // TODO: remove when steps/extensions can have data shapes
           prev.action &&
           prev.action.descriptor &&
           prev.action.descriptor.outputDataShape
