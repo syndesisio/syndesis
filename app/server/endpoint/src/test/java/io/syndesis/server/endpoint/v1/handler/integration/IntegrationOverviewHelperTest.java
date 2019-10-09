@@ -15,11 +15,11 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import com.google.common.collect.Sets;
-import io.syndesis.common.model.DataShape;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.Set;
+
 import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.action.Action;
-import io.syndesis.common.model.action.ActionDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -28,17 +28,11 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
-import io.syndesis.server.dao.manager.operators.ReverseFilter;
 import io.syndesis.server.openshift.ExposureHelper;
+
 import org.junit.Test;
 
-import javax.validation.constraints.NotNull;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.SortedSet;
+import com.google.common.collect.Sets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
