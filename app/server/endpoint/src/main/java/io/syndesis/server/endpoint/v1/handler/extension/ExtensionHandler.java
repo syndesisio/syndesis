@@ -325,7 +325,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     private Set<ResourceIdentifier> integrations(Extension extension) {
         final Set<String> deletedIntegrationIds = getDataManager().fetchAll(Integration.class).getItems().stream()
-            .filter(Integration::isDeleted)
             .map(i -> i.getId().get())
             .collect(Collectors.toSet());
         return getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()

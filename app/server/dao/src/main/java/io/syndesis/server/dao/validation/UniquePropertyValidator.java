@@ -20,10 +20,9 @@ import java.util.Set;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.UniqueProperty;
+import io.syndesis.server.dao.manager.DataManager;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.springframework.beans.BeanWrapperImpl;
@@ -61,10 +60,6 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         final boolean isUnique = ids.isEmpty() || value.getId().map(id -> ids.contains(id)).orElse(false);
 
         if (!isUnique) {
-            if (ids.stream().allMatch(id -> consideredValidByException(modelClass, id))) {
-                return true;
-            }
-
             context.disableDefaultConstraintViolation();
             context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", propertyValue)
                 .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
@@ -72,20 +67,6 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
         }
 
         return isUnique;
-    }
-
-    boolean consideredValidByException(@SuppressWarnings("rawtypes") final Class<WithId> modelClass,
-        final String id) {
-        @SuppressWarnings("unchecked")
-        final WithId<?> modelInstance = dataManager.fetch(modelClass, id);
-
-        // if we're looking at Integration then we need to make sure that
-        // the Integration in question is not deleted
-        if (modelInstance instanceof Integration) {
-            return ((Integration) modelInstance).isDeleted();
-        }
-
-        return false;
     }
 
 }

@@ -409,7 +409,7 @@ public class PublicApiHandlerTest {
 
         final SecurityContext securityContext = newMockSecurityContext();
 
-        when(dataManager.fetchAllByPropertyValue(Integration.class, "name", "integration-name")).thenReturn(Stream.of(integration));
+        when(dataManager.fetch(Integration.class, "integration-id")).thenReturn(integration);
 
         final IntegrationDeploymentHandler deploymentHandler = mock(IntegrationDeploymentHandler.class);
         when(deploymentHandler.update(securityContext, "integration-id")).thenReturn(new IntegrationDeployment.Builder()
@@ -420,7 +420,7 @@ public class PublicApiHandlerTest {
         // null's are not used
         final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, null, null, null);
 
-        final IntegrationDeployment deployment = handler.publishIntegration(securityContext, "integration-name");
+        final IntegrationDeployment deployment = handler.publishIntegration(securityContext, "integration-id");
 
         assertThat(deployment.getTargetState()).isEqualTo(IntegrationDeploymentState.Published);
     }
@@ -506,7 +506,7 @@ public class PublicApiHandlerTest {
 
         final SecurityContext securityContext = newMockSecurityContext();
 
-        when(dataManager.fetchAllByPropertyValue(Integration.class, "name", "integration-name")).thenReturn(Stream.of(integration));
+        when(dataManager.fetch(Integration.class, "integration-id")).thenReturn(integration);
         when(dataManager.fetchAllByPropertyValue(IntegrationDeployment.class, "integrationId", "integration-id"))
             .thenReturn(Stream.of(new IntegrationDeployment.Builder()
                 .targetState(IntegrationDeploymentState.Published)
@@ -519,7 +519,7 @@ public class PublicApiHandlerTest {
         // null's are not used
         final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, null, null, null);
 
-        handler.stopIntegration(securityContext, "integration-name");
+        handler.stopIntegration(securityContext, "integration-id");
 
         verify(deploymentHandler).updateTargetState("integration-id", 2, new TargetStateRequest(IntegrationDeploymentState.Unpublished));
     }

@@ -524,7 +524,6 @@ public class IntegrationSupportHandler {
         for (Integration integration : export.fetchAll().getItems()) {
             Integration.Builder builder = new Integration.Builder()
                 .createFrom(integration)
-                .isDeleted(false)
                 .updatedAt(System.currentTimeMillis());
 
             // Do we need to create it?
@@ -548,8 +547,8 @@ public class IntegrationSupportHandler {
 
         // check for duplicate integration name
         String integrationName = integration.getName();
-        final Set<String> names = getAllPropertyValues(Integration.class, Integration::getName, i -> !i.isDeleted());
-        names.addAll(getAllPropertyValues(IntegrationDeployment.class, d -> d.getSpec().getName(), d -> !d.getSpec().isDeleted()));
+        final Set<String> names = getAllPropertyValues(Integration.class, Integration::getName);
+        names.addAll(getAllPropertyValues(IntegrationDeployment.class, d -> d.getSpec().getName()));
         if (names.contains(integrationName)) {
             integrationName = getNextAvailableName(integrationName, names);
             builder.name(integrationName);
@@ -588,13 +587,13 @@ public class IntegrationSupportHandler {
         builder.continuousDeliveryState(newEnvironments);
     }
 
-    private <T extends WithId<T> & WithName> T renameIfNeeded(T model, Map<String, String> renames, BiFunction<T,
+    private static <T extends WithId<T> & WithName> T renameIfNeeded(T model, Map<String, String> renames, BiFunction<T,
             String, T> nameFunc) {
         final String name = renames.get(model.getId().get());
         return name != null ? nameFunc.apply(model, name) : model;
     }
 
-    private <T extends WithId<T> & WithName> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc) {
+    private <T extends WithId<T>> Set<String> getAllPropertyValues(Class<T> model, Function<T, String> propertyFunc) {
         return getAllPropertyValues(model, propertyFunc, d -> true);
     }
 

@@ -349,7 +349,6 @@ public class Equivalencer implements StringConstants {
 
         return compare(one.getName(), one.getClass(),
                        pair(one.getKind(), another.getKind(), "id"),
-                       pair(one.isDeleted(), another.isDeleted(), "is-deleted"),
                        pair(one.getResources(), another.getResources(), "resources"),
                        pair(one.getTags(), another.getTags(), "tags"),
                        pair(one.getDescription(), another.getDescription(), "description"),

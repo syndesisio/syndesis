@@ -16,16 +16,17 @@
 package io.syndesis.server.dao.validation;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.validation.UniqueProperty;
+import io.syndesis.server.dao.manager.DataManager;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
 import org.junit.Before;
@@ -36,8 +37,8 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -63,9 +64,7 @@ public class UniquePropertyValidatorTest {
         when(validator.dataManager.fetchIdsByPropertyValue(Connection.class, "name", "Existing"))
             .thenReturn(new HashSet<>(Arrays.asList("same")));
         when(validator.dataManager.fetchIdsByPropertyValue(Integration.class, "name", "Existing"))
-            .thenReturn(new HashSet<>(Arrays.asList("deleted")));
-        when(validator.dataManager.fetch(Integration.class, "deleted"))
-            .thenReturn(new Integration.Builder().name("Existing").id("deleted").isDeleted(true).build());
+            .thenReturn(Collections.emptySet());
     }
 
     @Test

@@ -25,8 +25,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import org.immutables.value.Value;
-
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithModificationTimestamps;
@@ -41,36 +39,58 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
+
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
-public interface IntegrationBase extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources {
+public interface IntegrationBase
+    extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources {
 
-    /**
-     * @deprecated fully deleted from the data manager in 7.4+.
-     *      Retained for filtering in existing installations.
-     */
-    @Deprecated
-    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
-    @Value.Default
-    default boolean isDeleted() {
-        return false;
+    default Optional<Connection> findConnectionById(final String connectionId) {
+        if (getConnections() == null) {
+            return Optional.empty();
+        }
+
+        return getConnections().stream()
+            .filter(WithId.class::isInstance)
+            .filter(connection -> connection.getId().isPresent())
+            .filter(connection -> connectionId.equals(connection.getId().get()))
+            .findFirst();
     }
 
-    /**
-     * @deprecated steps have been superseded by flows
-     */
-    @Override
-    @Deprecated
-    @Value.Default
-    default List<Step> getSteps() {
-        return Collections.emptyList();
+    default Optional<Flow> findFlowBy(final Predicate<Flow> p) {
+        return getFlows().stream()
+            .filter(p)
+            .findFirst();
     }
 
-    @Value.Default
-    default List<Flow> getFlows() {
-        return Collections.emptyList();
+    default Optional<Flow> findFlowById(final String id) {
+        if (getSteps() == null) {
+            return Optional.empty();
+        }
+
+        return getFlows().stream()
+            .filter(WithId.class::isInstance)
+            .filter(flow -> flow.getId().isPresent())
+            .filter(flow -> id.equals(flow.getId().get()))
+            .findFirst();
+    }
+
+    @JsonIgnore
+    default Set<String> getConnectionIds() {
+        return Stream.concat(
+            getConnections()
+                .stream()
+                .map(Connection::getId)
+                .filter(Optional::isPresent)
+                .map(Optional::get),
+
+            getFlows().stream()
+                .flatMap(f -> f.getConnectionIds().stream()))
+
+            .collect(Collectors.toSet());
     }
 
     @Value.Default
@@ -78,13 +98,11 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
         return Collections.emptyList();
     }
 
-    @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
-    Optional<String> getDescription();
-
     /**
-     * Map of target environment ids and continuous delivery states.
-     * Names are created/deleted on the fly in the UI (since it's just a string).
-     * Managed by release tag service and used by CD export and import service.
+     * Map of target environment ids and continuous delivery states. Names are
+     * created/deleted on the fly in the UI (since it's just a string). Managed
+     * by release tag service and used by CD export and import service.
+     *
      * @return
      */
     @Value.Default
@@ -93,14 +111,21 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
     }
 
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
+    Optional<String> getDescription();
+
+    @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getExposure();
 
     @JsonIgnore
-    default boolean isExposable() {
-        return getFlows().stream().flatMap(f -> f.getSteps().stream())
-            .flatMap(step -> Optionals.asStream(step.getAction()))
-            .flatMap(action -> action.getTags().stream())
-            .anyMatch("expose"::equals);
+    default Set<String> getExtensionIds() {
+        return getFlows().stream()
+            .flatMap(f -> f.getExtensionIds().stream())
+            .collect(Collectors.toSet());
+    }
+
+    @Value.Default
+    default List<Flow> getFlows() {
+        return Collections.emptyList();
     }
 
     @JsonIgnore
@@ -122,62 +147,17 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
                 .map(ConnectorAction.class::cast)
                 .map(ConnectorAction::getDescriptor)
                 .filter(Objects::nonNull)
-                .map(ConnectorDescriptor::getConnectorId)
-            )
-        .filter(Objects::nonNull)
-        .collect(Collectors.toSet());
-    }
-
-    @JsonIgnore
-    default Set<String> getConnectionIds() {
-        return Stream.concat(
-                getConnections()
-                    .stream()
-                    .map(Connection::getId)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get),
-
-                getFlows().stream()
-                    .flatMap(f -> f.getConnectionIds().stream()))
-
+                .map(ConnectorDescriptor::getConnectorId))
+            .filter(Objects::nonNull)
             .collect(Collectors.toSet());
     }
 
     @JsonIgnore
-    default Set<String> getExtensionIds() {
-        return getFlows().stream()
-            .flatMap(f -> f.getExtensionIds().stream())
-            .collect(Collectors.toSet());
-    }
-
-    default Optional<Connection> findConnectionById(String connectionId) {
-        if (getConnections() == null) {
-            return Optional.empty();
-        }
-
-        return getConnections().stream()
-            .filter(WithId.class::isInstance)
-            .filter(connection -> connection.getId().isPresent())
-            .filter(connection -> connectionId.equals(connection.getId().get()))
-            .findFirst();
-    }
-
-    default Optional<Flow> findFlowById(String id) {
-        if (getSteps() == null) {
-            return Optional.empty();
-        }
-
-        return getFlows().stream()
-            .filter(WithId.class::isInstance)
-            .filter(flow -> flow.getId().isPresent())
-            .filter(flow -> id.equals(flow.getId().get()))
-            .findFirst();
-    }
-
-    default Optional<Flow> findFlowBy(final Predicate<Flow> p) {
-        return getFlows().stream()
-            .filter(p)
-            .findFirst();
+    default boolean isExposable() {
+        return getFlows().stream().flatMap(f -> f.getSteps().stream())
+            .flatMap(step -> Optionals.asStream(step.getAction()))
+            .flatMap(action -> action.getTags().stream())
+            .anyMatch("expose"::equals);
     }
 
 }

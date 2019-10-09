@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
@@ -86,7 +85,6 @@ public class EnvironmentHandler extends BaseHandler {
                     .build();
         } else {
             final Map<String, Long> idCountMap = getDataManager().fetchAll(Integration.class).getItems().stream()
-                    .filter(i -> !i.isDeleted())
                     .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
                     .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
@@ -314,7 +312,6 @@ public class EnvironmentHandler extends BaseHandler {
 
         // try fetching by name first, then by id
         final Integration resource = getDataManager().fetchAllByPropertyValue(Integration.class, NAME_PROPERTY, integrationId)
-                .filter((Predicate<? super Integration>) i -> !i.isDeleted())
                 .findFirst()
                 .orElse(getDataManager().fetch(Integration.class, integrationId));
         if (resource == null) {

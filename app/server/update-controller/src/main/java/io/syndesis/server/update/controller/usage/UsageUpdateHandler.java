@@ -114,7 +114,6 @@ public final class UsageUpdateHandler implements ResourceUpdateHandler {
 
     private static Map<String, Long> computeUsage(final List<Integration> integrations, final Function<Integration, Set<String>> idFunction) {
         return integrations.stream()
-            .filter(i -> !i.isDeleted())
             .flatMap(i -> idFunction.apply(i).stream())
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
     }
