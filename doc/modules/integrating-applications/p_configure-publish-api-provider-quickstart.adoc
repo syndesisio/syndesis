@@ -2,14 +2,14 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='configure-publish-api-provider-quickstart_{context}']
-= Configuring and publishing an example API provider quickstart integration
+= Importing and publishing an example API provider quickstart integration
 
 {prodname} provides an API provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 
 an OpenAPI document for a task management API. After importing
-the quickstart integration, you configure return codes, and then publish
+the quickstart integration, you can examine the flows and then publish
 the integration. After you complete the procedure described below,
-the Task API integration is running and ready
+the *TaskAPI* integration is running and ready
 to be executed. 
 
 The API provider quickstart helps you quickly learn how to configure, publish, and
@@ -27,7 +27,7 @@ same as the simple integrations that you already published.
 
 .Procedure
 
-. Import the Task API quickstart integration:
+. Import the *TaskAPI* quickstart integration:
 .. Go to 
 link:{syndesis-quickstart-url}/api-provider[]
 and download `TaskAPI-export.zip`. 
@@ -39,75 +39,40 @@ that it has successfully imported the file.
 an entry for the *TaskAPI* integration that you just imported. The entry
 indicates that configuration is required. 
 
-. Configure the Task API integration:
-.. In the *TaskAPI* entry, click *View* to display the integration's summary. 
-.. In the upper right, click *Edit Integration* to display a list
+. In the *TaskAPI* entry, click image:images/tutorials/ThreeVerticalDotsKebab.png[Three Vertical Dots] and 
+then click *Edit* to display a list
 of the operations that this API provides. 
-.. Update one step in the flow for the *Create new task* operation: 
-... In the *POST* entry for the *Create new task* operation, click *Create flow* to display 
-the visualization for that flow. 
+
+. For each operation: 
+.. Click its *Create flow* button to display the visualization for that flow. 
 +
-Connections and steps have already been
-added to this flow. In the operation flow visualization, 
-to view the configuration for a step, click its *Configure* button. 
-Click *Cancel* or *Next* to go back to the flow visualization.
-When you are done
-examining the configuration for one step, click *Configure* for another one to examine it. When you click 
-a database connection, you can see the SQL statement that it executes. 
-... In the operation flow visualization, on the 
-*Provided API Return Path* step, which is the last step in the flow,
-click *Configure*. 
-You might have to scroll down to see it. 
-... Click in the *Return Code* input field and scroll to select 
-*201 Created*. 
-... Click *Next*.
-... In the upper right, click *Save*.
+Each flow already has a database connection, one or more data mapper
+steps, and a *Provided API Return Path* step that finishes the flow. 
 
-.. Update one step in the flow for the *Delete Task for ID* operation:
-... In the *DELETE* entry for the *Delete Task for ID* operation, 
-click *Create flow* 
-to display the visualization for that flow.  
-+
-This operation flow has a data mapper step and a connection to the
-sample database that is provided with {prodname}. 
-In the operation flow visualization, 
-click *Configure* on the database connection to view the SQL statement that it executes. 
-... Click *Next* or *Cancel*. 
-... In the operation flow visualization, on the 
-*Provided API Return Path* step, which is the last step in the flow, 
-click *Configure*. 
-... Click in the *Return Code* input field and scroll to select 
-*200 OK*. 
-... Click *Next*.
-... In the upper right, click *Save*.
+.. For the *Invoke SQL* step, click *Configure* to see the SQL statement that the 
+connection executes. Then click *Cancel* to return to that operation's visualization flow. 
 
-.. Update one step in the flow for the *Get Task by ID* operation:
+.. For a data mapper step, click *Configure* to see the mappings. Then click 
+*Cancel* to return to the visualization. 
 
-... In the *GET* entry for the *Get Task by ID* operation, 
-click *Create flow* 
-to display the visualization for that flow. 
-+
-This operation flow has two data mapper steps, a connection to the
-sample database that is provided with {prodname}, and a log step. 
+.. For the *Provided API Return Path* step, which is the last step in every
+operation's flow, click *Configure* to 
+see the HTTP return codes that the operation might send to the caller. 
+Click *Cancel* to return to the visualization. 
 
-... In the operation flow visualization, click *Configure* on a step
-to view its configuration. When you are done examining the configuration, 
-click *Next* or *Cancel*. Do this for as many steps as you want. 
+.. After examining one operation's flow, click *Save* and then click 
+*Save* again to display the list of operations. 
 
-... In the operation flow visualization, on the 
-*Provided API Return Path* step, which is the last step in the flow, 
-click *Configure*. 
-... Click in the *Return Code* input field and scroll to select 
-*200 OK*. 
-... Click *Next*.
+.. Repeat this subset of steps to examine each flow. 
 
-. In the upper right, click *Publish*, and then *Save and publish*. 
+. After examining the flows, click *Publish*, edit the integration 
+name if you want to, and then click *Save and publish*. 
 +
 {prodname} displays the summary page for this integration and shows 
 publication progress as it assembles, builds, deploys, and 
 starts the integration. 
 
-. When the *Task API* integration summary page displays *Running*, 
+. When the *TaskAPI* integration summary page displays *Running*, 
 {prodname} displays the external URL for the Task API service. 
 It looks something like this: 
 +
@@ -119,7 +84,7 @@ API calls specify URLs that start with this base URL.
 If you are using {prodname} on OpenShift Container 
 Platform, if the external URL is not on the integration’s summary page, 
 then an administrator has set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment
-variable. When this environment variable is set,  Red Hat 3scale 
+variable. When this environment variable is set, Red Hat 3scale 
 publishes your API provider integration, which means that 3scale 
 controls access to the integration’s API. To test the integration, 
 open the 3scale dashboard to obtain the integration’s URL. 

@@ -20,8 +20,8 @@ the integration.
 
 [NOTE]
 ====
-If you are running {prodname} on OpenShift Container Platform on-site, 
-you can configure the {prodname} server to enable Red Hat 3scale discovery of  
+If you are using {prodname} on OpenShift Container Platform on-site, 
+an administrator can configure the {prodname} server to enable Red Hat 3scale discovery of  
 API provider integration APIs. By default, {prodname} annotates an API 
 provider integration's API service definition for use with 3scale
 but does not expose those APIs for automatic 3scale discovery.

@@ -139,25 +139,24 @@ complete the creation of an operation's flow or each
 time that you edit an operation's flow.
 * *Save* -- To display the list of operations, in the upper right, 
 click *Save*.  
-* *Operation* -- To switch to editing another operation's flow, in the breadcrumbs at 
-the top of the page, display the *Operation* dropdown and click the
-operation whose flow you want to edit. {prodname} saves the current state
-of the flow you have been editing. 
 
 Repeat this procedure to edit another operation's flow.
 
 .Testing API provider integrations
 
-* *API provider integrations running on OpenShift Online or OpenShift Dedicated*
-+
-*API provider integrations running on OpenShift Container Platform when API discovery is disabled*
+* Testing API provider integrations running on one of these platforms:
+** OpenShift Online
+** OpenShift Dedicated
+** OpenShift Container Platform when *API discovery is disabled*
+
 +
 You can use the `curl` utility to confirm that the integration is working as 
 expected. In the `curl` command, specify the external URL that {prodname} displays
 after it publishes the API provider integration. 
 For examples of doing this, see the description of the API provider quickstart.
 
-* *API provider integrations running on OpenShift Container Platform when specifying API discovery is enabled* 
+* Testing API provider integrations running on OpenShift Container Platform 
+when specifying *API discovery is enabled*
 +
 An OCP administrator might have set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` 
 environment variable. When this environment variable is set,  Red Hat 3scale 
