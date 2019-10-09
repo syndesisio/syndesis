@@ -22,30 +22,22 @@ import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-producer";
     private final static String SCHEME = "mongodb3";
     private final static MongoDBVerifier VERIFIER = new MongoDBVerifier();
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "findAll");
+        // No need to define any route
+        return Collections.emptyList();
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void verifyConnectionOK() {
@@ -156,5 +148,24 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         assertEquals(Verifier.Status.OK, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());
         log.info(result.getErrors().get(0).getDescription());
+    }
+
+    @Test
+    public void verifyConnectionDefaultDatabase() {
+        //When
+        Map<String, Object> params = new HashMap<>();
+        params.put("host", "localhost");
+        params.put("user", USER);
+        params.put("password", PASSWORD);
+        params.put("database", "admin");
+        //Given
+        List<VerifierResponse> response = VERIFIER.verify(this.context,
+            CONNECTOR_ID, params);
+        ComponentVerifierExtension.Result result = VERIFIER
+            .resolveComponentVerifierExtension(this.context, SCHEME)
+            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+        //Then
+        assertEquals(Verifier.Status.OK, response.get(0).getStatus());
+        assertEquals(ComponentVerifierExtension.Result.Status.OK, result.getStatus());
     }
 }

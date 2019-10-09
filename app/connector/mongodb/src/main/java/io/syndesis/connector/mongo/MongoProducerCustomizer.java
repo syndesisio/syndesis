@@ -18,6 +18,7 @@ package io.syndesis.connector.mongo;
 import java.util.Arrays;
 import java.util.Map;
 
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -30,17 +31,16 @@ public class MongoProducerCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        Object operation = options.get("operation");
-        if (operation instanceof String) {
-            String textOperation = (String) operation;
-            if (!MongoProducerOperation.isValid(textOperation)) {
+        String operation = ConnectorOptions.extractOption(options, "operation");
+        if (operation != null) {
+            if (!MongoProducerOperation.isValid(operation)) {
                 throw new IllegalArgumentException(String.format("Operation %s is not supported. " +
                     "Supported operations are %s", operation, Arrays.toString(MongoProducerOperation.values())));
             }
             // Input format conversion to text
-            if (MongoProducerOperation.findById.name().equals(textOperation)){
+            if (MongoProducerOperation.findById.name().equals(operation)){
                 component.setBeforeProducer(this::inputToObjectId);
-            } else if (MongoProducerOperation.update.name().equals(textOperation)){
+            } else if (MongoProducerOperation.update.name().equals(operation)){
                 component.setBeforeProducer(exchange -> {
                     exchange.getIn().getHeaders().put("CamelMongoDbMultiUpdate","true");
                     this.inputToText(exchange);

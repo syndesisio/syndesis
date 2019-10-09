@@ -123,6 +123,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                 builder.putConfiguredProperty("database", db);
                 builder.putConfiguredProperty("collection", collection);
                 builder.putConfiguredProperty("operation", operation);
+                builder.putConfiguredProperty("adminDB", "admin");
             }));
     }
 
@@ -141,6 +142,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
             builder.putConfiguredProperty("password", PASSWORD);
             builder.putConfiguredProperty("database", db);
             builder.putConfiguredProperty("collection", collection);
+            builder.putConfiguredProperty("adminDB", "admin");
             builder.putConfiguredProperty("tailTrackIncreasingField", tailTrackIncreasingField);
             if (persistentTailTracking != null) {
                 builder.putConfiguredProperty("persistentTailTracking", persistentTailTracking.toString());

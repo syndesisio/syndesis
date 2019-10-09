@@ -23,6 +23,7 @@ import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -64,7 +65,13 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                     consumeOption(camelContext, options, "host", String.class, mongoConf::setHost);
                     consumeOption(camelContext, options, "user", String.class, mongoConf::setUser);
                     consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
-                    consumeOption(camelContext, options, "adminDB", String.class, mongoConf::setAdminDB);
+                    // Use default connection db if an admin db has not specified explicitly
+                    String adminDB = ConnectorOptions.extractOption(options, "adminDB");
+                    String defaultDB = ConnectorOptions.extractOption(options, "database");
+                    if (adminDB == null && defaultDB != null) {
+                        LOGGER.info("Using {} as administration database", defaultDB);
+                        mongoConf.setAdminDB(defaultDB);
+                    }
                     LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
                     MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
                     MongoClient mongoClient = new MongoClient(mongoClientURI);
