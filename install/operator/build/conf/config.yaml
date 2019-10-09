@@ -2,8 +2,8 @@ ProductName: syndesis
 AllowLocalHost: false
 Productized: false
 PrometheusRules: ""
-TagMinor: "1.9.0"
-TagMajor: "2.0.0"
+TagMinor: "1.9"
+TagMajor: "1.10"
 Versions:
   Camel: "2.21.0.fuse-750029"
   CamelKRuntime: "0.3.4.fuse-740008"
