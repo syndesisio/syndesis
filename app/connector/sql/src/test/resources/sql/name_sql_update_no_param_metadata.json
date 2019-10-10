@@ -9,7 +9,7 @@
   },
   "properties" : {
     "query" : [ {
-      "displayValue" : "query",
+      "displayValue" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')",
       "value" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')"
     } ]
   }

@@ -43,6 +43,7 @@ stories.add(
       handleSubmit={action(createText)}
       i18nCancelLabel={cancelLabel}
       i18nCreateLabel={createLabel}
+      isDisableCreate={boolean('isDisableCreate', false)}
       isWorking={boolean('isWorking', false)}
       validationResults={validationResults}
       onCancel={action(cancelText)}

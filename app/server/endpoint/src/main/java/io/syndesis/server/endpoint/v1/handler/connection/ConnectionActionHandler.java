@@ -207,7 +207,7 @@ public class ConnectionActionHandler {
                                             .stream()
                                             .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator);
                                 });
-                    } else if ("select".equalsIgnoreCase(property.getType())) {
+                    } else {
                         enriched.replaceConfigurationProperty(suggestions.getKey(),
                                 builder -> {
                                     if (suggestions.getValue().size() == 1) {
@@ -217,13 +217,6 @@ public class ConnectionActionHandler {
                                     builder.addAllEnum(suggestions.getValue()
                                             .stream()
                                             .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator);
-                                });
-                    } else {
-                        enriched.replaceConfigurationProperty(suggestions.getKey(),
-                                builder -> {
-                                    if (suggestions.getValue().size() == 1) {
-                                        builder.defaultValue(suggestions.getValue().get(0).value());
-                                    }
                                 });
                     }
                 }

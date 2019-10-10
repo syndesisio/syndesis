@@ -15,7 +15,7 @@
   },
   "properties" : {
     "query" : [ {
-      "displayValue" : "query",
+      "displayValue" : "SELECT * FROM NAME",
       "value" : "SELECT * FROM NAME"
     } ]
   }

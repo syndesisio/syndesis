@@ -21,7 +21,7 @@
   },
   "properties" : {
     "query" : [ {
-      "displayValue" : "query",
+      "displayValue" : "SELECT * FROM NAME WHERE ID=:#id",
       "value" : "SELECT * FROM NAME WHERE ID=:#id"
     } ]
   }
