@@ -157,15 +157,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
               <WithLoader
                 error={error !== false}
                 loading={!hasData}
-                loaderChildren={
-                  <VirtualizationListSkeleton
-                    width={800}
-                    style={{
-                      backgroundColor: '#FFF',
-                      marginTop: 30,
-                    }}
-                  />
-                }
+                loaderChildren={<VirtualizationListSkeleton width={800} />}
                 errorChildren={<ApiError error={error as Error} />}
               >
                 {() => (

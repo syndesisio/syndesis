@@ -8,6 +8,7 @@ import { OverlayTrigger, Spinner, Table, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../../src/Layout';
 import { GenericTable } from '../../../Shared/GenericTable';
+import './PreviewResults.css';
 
 export interface IPreviewResultsProps {
   /**
@@ -75,7 +76,7 @@ export const PreviewResults: React.FunctionComponent<
       ) : (
         <>
           {props.queryResultCols.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
+            <div className={'preview-results__tableSection'}>
               <GenericTable
                 columns={props.queryResultCols.map(col => ({
                   cell: {

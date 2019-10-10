@@ -5,6 +5,7 @@ import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
+import './SqlClientContent.css';
 
 export interface ISqlClientContentProps {
   /**
@@ -55,16 +56,20 @@ interface IColumn {
 
 const defaultCellFormat = (value: any) => {
   // strings over 20 chars - shorten and use tooltip
-  if (typeof value === "string" && value.length > 20) {
-    const displayedString = `${value.substring(0,15)}...${value.substring(value.length-5)}`;
-    return <OverlayTrigger
-      overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
-      placement="top"
-    >
-      <Table.Heading>{displayedString}</Table.Heading>
-    </OverlayTrigger>;
+  if (typeof value === 'string' && value.length > 20) {
+    const displayedString = `${value.substring(0, 15)}...${value.substring(
+      value.length - 5
+    )}`;
+    return (
+      <OverlayTrigger
+        overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
+        placement="top"
+      >
+        <Table.Heading>{displayedString}</Table.Heading>
+      </OverlayTrigger>
+    );
   }
-  return <Table.Heading>{value}</Table.Heading>
+  return <Table.Heading>{value}</Table.Heading>;
 };
 const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
 
@@ -82,7 +87,10 @@ export const SqlClientContent: React.FunctionComponent<
       {props.viewNames.length > 0 ? (
         <Split gutter="md">
           <SplitItem isFilled={false}>{props.formContent}</SplitItem>
-          <SplitItem isFilled={true} style={{ overflowX: 'auto' }}>
+          <SplitItem
+            isFilled={true}
+            className={'sql-client-content__resultsSection'}
+          >
             {props.queryResultCols.length > 0 ? (
               <Stack>
                 <StackItem isFilled={false}>{props.i18nResultsTitle}</StackItem>

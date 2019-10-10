@@ -325,15 +325,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
               <WithLoader
                 error={viewDefinitionDescriptorsError !== false}
                 loading={!hasViewDefinitionDescriptors}
-                loaderChildren={
-                  <ViewListSkeleton
-                    width={800}
-                    style={{
-                      backgroundColor: '#FFF',
-                      marginTop: 30,
-                    }}
-                  />
-                }
+                loaderChildren={<ViewListSkeleton width={800} />}
                 errorChildren={
                   <ApiError error={viewDefinitionDescriptorsError as Error} />
                 }

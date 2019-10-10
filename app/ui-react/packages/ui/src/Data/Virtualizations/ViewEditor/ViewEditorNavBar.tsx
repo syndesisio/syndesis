@@ -1,7 +1,8 @@
 import { Button, ButtonVariant, Grid, GridItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { Container, TabBar, TabBarItem } from '../../../Layout'
+import { Container, TabBar, TabBarItem } from '../../../Layout';
+import './ViewEditorNavBar.css';
 
 /**
  * @param i18nFinishButton - i18n text for the finish button
@@ -35,13 +36,8 @@ export interface IViewEditorNavBarProps {
 export const ViewEditorNavBar: React.FunctionComponent<
   IViewEditorNavBarProps
 > = props => {
-
   return (
-    <Container
-      style={{
-        background: '#fff',
-      }}
-    >
+    <Container className={'view-editor-nav-bar'}>
       <Grid>
         <GridItem span={10}>
           <TabBar>
@@ -49,10 +45,7 @@ export const ViewEditorNavBar: React.FunctionComponent<
               label={props.i18nViewOutputTab}
               to={props.viewOutputHref}
             />
-            <TabBarItem
-              label={props.i18nViewSqlTab}
-              to={props.viewSqlHref}
-            />
+            <TabBarItem label={props.i18nViewSqlTab} to={props.viewSqlHref} />
           </TabBar>
         </GridItem>
         <GridItem span={2}>
@@ -68,4 +61,4 @@ export const ViewEditorNavBar: React.FunctionComponent<
       </Grid>
     </Container>
   );
-}
+};

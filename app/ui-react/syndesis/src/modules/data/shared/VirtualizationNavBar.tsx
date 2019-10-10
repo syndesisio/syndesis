@@ -3,6 +3,7 @@ import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import resolvers from '../resolvers';
+import './VirtualizationNavBar.css';
 
 /**
  * @param virtualization - the virtualization whose details are being shown by this page. If
@@ -23,16 +24,11 @@ export interface IVirtualizationNavBarProps {
 export const VirtualizationNavBar: React.FunctionComponent<
   IVirtualizationNavBarProps
 > = props => {
-
   const { t } = useTranslation(['data', 'shared']);
   const virtualization = props.virtualization;
 
   return (
-    <Container
-      style={{
-        background: '#fff',
-      }}
-    >
+    <Container className={'virtualization-nav-bar'}>
       <TabBar>
         <TabBarItem
           label={t('data:virtualization.views')}
@@ -49,4 +45,4 @@ export const VirtualizationNavBar: React.FunctionComponent<
       </TabBar>
     </Container>
   );
-}
+};

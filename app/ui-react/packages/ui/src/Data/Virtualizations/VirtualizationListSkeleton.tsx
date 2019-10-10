@@ -2,22 +2,22 @@
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
+import './VirtualizationListSkeleton.css';
 
 export interface IVirtualizationListSkeletonProps {
   width: number;
-  style?: any;
 }
 
 export const VirtualizationListSkeleton: React.FunctionComponent<
   IVirtualizationListSkeletonProps
-> = ({ width, style }) => (
+> = ({ width }) => (
   <ContentLoader
+    className={'virtualization-list-skeleton'}
     height={356}
     width={width}
     speed={2}
     primaryColor="#f3f3f3"
     secondaryColor="#ecebeb"
-    style={style}
   >
     <circle cx="30" cy="40" r="16" />
     <circle cx="70" cy="40" r="16" />
