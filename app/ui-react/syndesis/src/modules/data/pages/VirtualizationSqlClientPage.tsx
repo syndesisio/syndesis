@@ -129,7 +129,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       return true;
     } catch {
       pushNotification(
-        t('virtualization.errorUpdatingDescription', {
+        t('errorUpdatingDescription', {
           name: state.virtualization.keng__id,
         }),
         'error'
@@ -151,16 +151,16 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           dataString={t('shared:Virtualizations')}
           i18nCancelText={t('shared:Cancel')}
           i18nDelete={t('shared:Delete')}
-          i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {
+          i18nDeleteModalMessage={t('deleteModalMessage', {
             name: state.virtualization.keng__id,
           })}
-          i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
+          i18nDeleteModalTitle={t('deleteModalTitle')}
           i18nPublish={t('shared:Publish')}
           i18nUnpublish={t('shared:Unpublish')}
-          i18nUnpublishModalMessage={t('virtualization.unpublishModalMessage', {
+          i18nUnpublishModalMessage={t('unpublishModalMessage', {
             name: state.virtualization.keng__id,
           })}
-          i18nUnpublishModalTitle={t('virtualization.unpublishModalTitle')}
+          i18nUnpublishModalTitle={t('unpublishModalTitle')}
           onDelete={doDelete}
           /* TD-636: Commented out for TP
             onExport={this.handleExportVirtualization} */
@@ -176,15 +176,13 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         noPadding={true}
       >
         <VirtualizationDetailsHeader
-          i18nDescriptionPlaceholder={t(
-            'virtualization.descriptionPlaceholder'
-          )}
+          i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nDraft={t('shared:Draft')}
           i18nError={t('shared:Error')}
           i18nInUseText={getUsedByMessage(usedBy)}
-          i18nPublished={t('virtualization.publishedDataVirtualization')}
-          i18nPublishInProgress={t('virtualization.publishInProgress')}
-          i18nUnpublishInProgress={t('virtualization.unpublishInProgress')}
+          i18nPublished={t('publishedDataVirtualization')}
+          i18nPublishInProgress={t('publishInProgress')}
+          i18nUnpublishInProgress={t('unpublishInProgress')}
           i18nPublishLogUrlText={t('shared:viewLogs')}
           odataUrl={getOdataUrl(virtualization)}
           publishedState={publishedState.state || 'Loading'}

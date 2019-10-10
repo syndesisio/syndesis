@@ -126,8 +126,8 @@ export const ViewInfosContent: React.FunctionComponent<
             sortTypes={sortTypes}
             resultsCount={filteredAndSorted.length}
             {...helpers}
-            i18nEmptyStateInfo={t('virtualization.emptyStateInfoMessage')}
-            i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
+            i18nEmptyStateInfo={t('emptyStateInfoMessage')}
+            i18nEmptyStateTitle={t('emptyStateTitle')}
             i18nName={t('shared:Name')}
             i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
             i18nResultsCount={t('shared:resultsCount', {

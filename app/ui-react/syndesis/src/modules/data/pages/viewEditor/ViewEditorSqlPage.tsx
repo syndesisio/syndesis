@@ -89,10 +89,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     state.viewDefinition
   );
   const [noResultsTitle, setNoResultsTitle] = React.useState(
-    t('data:virtualization.preview.resultsTableValidEmptyTitle')
+    t('preview.resultsTableValidEmptyTitle')
   );
   const [noResultsMessage, setNoResultsMessage] = React.useState(
-    t('data:virtualization.preview.resultsTableValidEmptyInfo')
+    t('preview.resultsTableValidEmptyInfo')
   );
   const ddlHasChanges = React.useRef(false);
 
@@ -135,19 +135,11 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   // Preview result empty content changes if view is invalid
   const setQueryResultEmptyContent = (isValid: boolean) => {
     if (isValid) {
-      setNoResultsTitle(
-        t('data:virtualization.preview.resultsTableValidEmptyTitle')
-      );
-      setNoResultsMessage(
-        t('data:virtualization.preview.resultsTableValidEmptyInfo')
-      );
+      setNoResultsTitle(t('preview.resultsTableValidEmptyTitle'));
+      setNoResultsMessage(t('preview.resultsTableValidEmptyInfo'));
     } else {
-      setNoResultsTitle(
-        t('data:virtualization.preview.resultsTableInvalidEmptyTitle')
-      );
-      setNoResultsMessage(
-        t('data:virtualization.preview.resultsTableInvalidEmptyInfo')
-      );
+      setNoResultsTitle(t('preview.resultsTableInvalidEmptyTitle'));
+      setNoResultsMessage(t('preview.resultsTableInvalidEmptyInfo'));
     }
   };
 
@@ -195,7 +187,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       setIsSaving(false);
       if (saveSuccess) {
         pushNotification(
-          t('virtualization.viewValidationFailed', {
+          t('viewValidationFailed', {
             details,
             name: viewDefn.name,
           }),
@@ -203,7 +195,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
         );
       } else {
         pushNotification(
-          t('virtualization.saveViewFailed', {
+          t('saveViewFailed', {
             details,
             name: viewDefn.name,
           }),
@@ -268,7 +260,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       // Show toast for refresh click
       if (refreshClick) {
         pushNotification(
-          t('virtualization.queryResultsRefreshed', {
+          t('queryResultsRefreshed', {
             name: viewDefn.name,
           }),
           'success'
@@ -280,7 +272,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       if (refreshClick) {
         const details = error.message ? error.message : '';
         pushNotification(
-          t('virtualization.queryViewFailed', {
+          t('queryViewFailed', {
             details,
             name: viewDefn.name,
           }),
@@ -331,10 +323,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     >
       {() => (
         <WithLeaveConfirmation
-          i18nTitle={t('virtualization.viewEditor.unsavedChangesTitle')}
-          i18nConfirmationMessage={t(
-            'virtualization.viewEditor.unsavedChangesMessage'
-          )}
+          i18nTitle={t('viewEditor.unsavedChangesTitle')}
+          i18nConfirmationMessage={t('viewEditor.unsavedChangesMessage')}
           shouldDisplayDialog={shouldDisplayDialog}
         >
           {() => (
@@ -357,10 +347,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
                 i18nDoneLabel={t('shared:Done')}
                 i18nSaveLabel={t('shared:Save')}
-                i18nTitle={t('data:virtualization.viewEditor.title')}
-                i18nValidationResultsTitle={t(
-                  'data:virtualization.validationResultsTitle'
-                )}
+                i18nTitle={t('viewEditor.title')}
+                i18nValidationResultsTitle={t('validationResultsTitle')}
                 showValidationMessage={validationMessageVisible}
                 isSaving={isSaving}
                 sourceTableInfos={sourceTableColumns}
@@ -373,12 +361,10 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               <ExpandablePreview
                 i18nEmptyResultsTitle={noResultsTitle}
                 i18nEmptyResultsMsg={noResultsMessage}
-                i18nHidePreview={t('data:virtualization.preview.hidePreview')}
-                i18nLoadingQueryResults={t(
-                  'data:virtualization.preview.loadingQueryResults'
-                )}
-                i18nRowTotalLabel={t('virtualization.queryResultsRowCountMsg')}
-                i18nShowPreview={t('data:virtualization.preview.showPreview')}
+                i18nHidePreview={t('preview.hidePreview')}
+                i18nLoadingQueryResults={t('preview.loadingQueryResults')}
+                i18nRowTotalLabel={t('queryResultsRowCountMsg')}
+                i18nShowPreview={t('preview.showPreview')}
                 i18nTitle={t('Refresh')}
                 initialExpanded={previewExpanded}
                 isLoadingPreview={isLoadingPreview}

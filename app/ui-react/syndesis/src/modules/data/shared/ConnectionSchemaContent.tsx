@@ -40,7 +40,7 @@ export interface IConnectionSchemaContentProps {
 export const ConnectionSchemaContent: React.FunctionComponent<
   IConnectionSchemaContentProps
 > = props => {
-  const { t } = useTranslation(['data', 'shared']);
+  const { t } = useTranslation(['data']);
 
   const handleSourceSelectionChange = async (
     connectionName: string,
@@ -67,8 +67,8 @@ export const ConnectionSchemaContent: React.FunctionComponent<
 
   return (
     <ConnectionSchemaList
-      i18nEmptyStateInfo={t('virtualization.activeConnectionsEmptyStateInfo')}
-      i18nEmptyStateTitle={t('virtualization.activeConnectionsEmptyStateTitle')}
+      i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
+      i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
       hasListData={connNames.length > 0}
     >
       <WithLoader

@@ -194,7 +194,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       return true;
     } catch {
       pushNotification(
-        t('virtualization.errorUpdatingDescription', {
+        t('errorUpdatingDescription', {
           name: state.virtualization.keng__id,
         }),
         'error'
@@ -210,7 +210,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       await deleteViewDefinition(viewId);
 
       pushNotification(
-        t('virtualization.deleteViewSuccess', {
+        t('deleteViewSuccess', {
           name: viewName,
         }),
         'success'
@@ -220,7 +220,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     } catch (error) {
       const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.deleteViewFailed', {
+        t('deleteViewFailed', {
           details,
           name: viewName,
         }),
@@ -253,24 +253,19 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 dataString={t('shared:Virtualizations')}
                 i18nCancelText={t('shared:Cancel')}
                 i18nDelete={t('shared:Delete')}
-                i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {
+                i18nDeleteModalMessage={t('deleteModalMessage', {
                   name: state.virtualization.keng__id,
                 })}
-                i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
+                i18nDeleteModalTitle={t('deleteModalTitle')}
                 /* TD-636: Commented out for TP
                    i18nExport={t('shared:Export')}
                 */
                 i18nPublish={t('shared:Publish')}
                 i18nUnpublish={t('shared:Unpublish')}
-                i18nUnpublishModalMessage={t(
-                  'virtualization.unpublishModalMessage',
-                  {
-                    name: state.virtualization.keng__id,
-                  }
-                )}
-                i18nUnpublishModalTitle={t(
-                  'virtualization.unpublishModalTitle'
-                )}
+                i18nUnpublishModalMessage={t('unpublishModalMessage', {
+                  name: state.virtualization.keng__id,
+                })}
+                i18nUnpublishModalTitle={t('unpublishModalTitle')}
                 onDelete={doDelete}
                 /* TD-636: Commented out for TP
                     onExport={
@@ -289,19 +284,13 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
             >
               {virtualization ? (
                 <VirtualizationDetailsHeader
-                  i18nDescriptionPlaceholder={t(
-                    'virtualization.descriptionPlaceholder'
-                  )}
+                  i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
                   i18nDraft={t('shared:Draft')}
                   i18nError={t('shared:Error')}
                   i18nInUseText={getUsedByMessage(usedBy)}
-                  i18nPublished={t(
-                    'virtualization.publishedDataVirtualization'
-                  )}
-                  i18nPublishInProgress={t('virtualization.publishInProgress')}
-                  i18nUnpublishInProgress={t(
-                    'virtualization.unpublishInProgress'
-                  )}
+                  i18nPublished={t('publishedDataVirtualization')}
+                  i18nPublishInProgress={t('publishInProgress')}
+                  i18nUnpublishInProgress={t('unpublishInProgress')}
                   i18nPublishLogUrlText={t('shared:viewLogs')}
                   odataUrl={getOdataUrl(virtualization)}
                   publishedState={publishedState.state || 'Loading'}
@@ -336,21 +325,12 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     sortTypes={sortTypes}
                     resultsCount={filteredAndSorted.length}
                     {...helpers}
-                    i18nDescription={t(
-                      'data:virtualization.viewsPageDescription'
-                    )}
-                    i18nEmptyStateInfo={t(
-                      'data:virtualization.viewEmptyStateInfo'
-                    )}
-                    i18nEmptyStateTitle={t(
-                      'data:virtualization.viewEmptyStateTitle'
-                    )}
-                    i18nImportViews={t('data:virtualization.importDataSource')}
-                    i18nImportViewsTip={t(
-                      'data:virtualization.importDataSourceTip'
-                    )}
-                    i18nCreateView={t('data:virtualization.createView')}
-                    i18nCreateViewTip={t('data:virtualization.createViewTip')}
+                    i18nEmptyStateInfo={t('viewEmptyStateInfo')}
+                    i18nEmptyStateTitle={t('viewEmptyStateTitle')}
+                    i18nImportViews={t('importDataSource')}
+                    i18nImportViewsTip={t('importDataSourceTip')}
+                    i18nCreateView={t('createView')}
+                    i18nCreateViewTip={t('createViewTip')}
                     i18nName={t('shared:Name')}
                     i18nNameFilterPlaceholder={t(
                       'shared:nameFilterPlaceholder'
@@ -400,16 +380,14 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                             i18nCancelText={t('shared:Cancel')}
                             i18nDelete={t('shared:Delete')}
                             i18nDeleteModalMessage={t(
-                              'virtualization.deleteViewModalMessage',
+                              'deleteViewModalMessage',
                               {
                                 name: viewDefinitionDescriptor.name,
                               }
                             )}
-                            i18nDeleteModalTitle={t(
-                              'virtualization.deleteModalTitle'
-                            )}
+                            i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
-                            i18nEditTip={t('view.editViewTip')}
+                            i18nEditTip={t('shared:Edit')}
                             onDelete={handleDeleteView}
                           />
                         )
