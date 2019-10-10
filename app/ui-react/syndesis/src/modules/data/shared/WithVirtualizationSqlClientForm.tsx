@@ -91,8 +91,8 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
     rowLimit: {
       componentProperty: true,
       deprecated: false,
-      description: t('data:virtualization.viewSqlFormRowLimitDescription'),
-      displayName: t('data:virtualization.viewSqlFormRowLimit'),
+      description: t('viewSqlFormRowLimitDescription'),
+      displayName: t('viewSqlFormRowLimit'),
       javaType: 'java.lang.Integer',
       kind: 'property',
       order: 2,
@@ -103,8 +103,8 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
     rowOffset: {
       componentProperty: true,
       deprecated: false,
-      description: t('data:virtualization.viewSqlFormRowOffsetDescription'),
-      displayName: t('data:virtualization.viewSqlFormRowOffset'),
+      description: t('viewSqlFormRowOffsetDescription'),
+      displayName: t('viewSqlFormRowOffset'),
       javaType: 'java.lang.Integer',
       kind: 'property',
       order: 3,
@@ -113,8 +113,8 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
       type: 'number',
     },
     view: {
-      description: t('virtualization.viewSqlFormViewDescription'),
-      displayName: t('virtualization.View'),
+      description: t('viewSqlFormViewDescription'),
+      displayName: t('View'),
       enum: buildViews(),
       kind: 'parameter',
       order: 1,
@@ -175,7 +175,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
     } catch (error) {
       const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.queryViewFailed', {
+        t('queryViewFailed', {
           details,
           name: value.viewName,
         }),
@@ -208,24 +208,18 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
           )}
           queryResultRows={getQueryRows(queryResults)}
           queryResultCols={getQueryColumns(queryResults)}
-          i18nResultsTitle={t('data:virtualization.queryResultsTitle')}
-          i18nResultsRowCountMsg={t(
-            'data:virtualization.queryResultsRowCountMsg'
-          )}
-          i18nEmptyStateInfo={t('data:virtualization.viewEmptyStateInfo')}
-          i18nEmptyStateTitle={t('data:virtualization.viewEmptyStateTitle')}
-          i18nImportViews={t('data:virtualization.importDataSource')}
-          i18nImportViewsTip={t('data:virtualization.importDataSourceTip')}
-          i18nCreateView={t('data:virtualization.createView')}
-          i18nCreateViewTip={t('data:virtualization.createViewTip')}
+          i18nResultsTitle={t('queryResultsTitle')}
+          i18nResultsRowCountMsg={t('queryResultsRowCountMsg')}
+          i18nEmptyStateInfo={t('viewEmptyStateInfo')}
+          i18nEmptyStateTitle={t('viewEmptyStateTitle')}
+          i18nImportViews={t('importDataSource')}
+          i18nImportViewsTip={t('importDataSourceTip')}
+          i18nCreateView={t('createView')}
+          i18nCreateViewTip={t('createViewTip')}
           linkCreateViewHRef={props.linkCreateView}
           linkImportViewsHRef={props.linkImportViews}
-          i18nEmptyResultsTitle={t(
-            'data:virtualization.queryResultsTableEmptyStateTitle'
-          )}
-          i18nEmptyResultsMsg={t(
-            'data:virtualization.queryResultsTableEmptyStateInfo'
-          )}
+          i18nEmptyResultsTitle={t('queryResultsTableEmptyStateTitle')}
+          i18nEmptyResultsMsg={t('queryResultsTableEmptyStateInfo')}
         />
       )}
     </AutoForm>

@@ -1,6 +1,6 @@
 import { WizardStep, WizardSteps } from '@syndesis/ui';
 import * as React from 'react';
-import i18n from '../../../i18n';
+import { useTranslation } from 'react-i18next';
 
 export interface IViewCreateStepsProps {
   /**
@@ -17,12 +17,12 @@ export interface IViewCreateStepsProps {
 export const ViewCreateSteps: React.FunctionComponent<
   IViewCreateStepsProps
 > = props => {
-
+  const { t } = useTranslation(['data']);
   const [active, setActive] = React.useState(false);
 
   const toggleActive = async () => {
     setActive(!active);
-  }
+  };
 
   return (
     <WizardSteps
@@ -34,14 +34,14 @@ export const ViewCreateSteps: React.FunctionComponent<
             isDisabled={props.step < 1}
             onClick={toggleActive}
             step={1}
-            title={i18n.t('data:virtualization.createViewWizardStep1')}
+            title={t('createViewWizardStep1')}
           />
           <WizardStep
             isActive={props.step === 2}
             isDisabled={props.step < 2}
             onClick={toggleActive}
             step={2}
-            title={i18n.t('data:virtualization.createViewWizardStep2')}
+            title={t('createViewWizardStep2')}
           />
         </>
       }
@@ -53,7 +53,7 @@ export const ViewCreateSteps: React.FunctionComponent<
             isAlt={true}
             onClick={toggleActive}
             step={1}
-            title={i18n.t('data:virtualization.createViewWizardStep1')}
+            title={t('createViewWizardStep1')}
           />
           <WizardStep
             isActive={props.step === 2}
@@ -61,10 +61,10 @@ export const ViewCreateSteps: React.FunctionComponent<
             isAlt={true}
             onClick={toggleActive}
             step={2}
-            title={i18n.t('data:virtualization.createViewWizardStep2')}
+            title={t('createViewWizardStep2')}
           />
         </>
       }
     />
   );
-}
+};

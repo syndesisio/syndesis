@@ -1,5 +1,13 @@
-import { useViewDefinitionDescriptors, useVirtualizationHelpers } from '@syndesis/api';
-import { ImportSources, RestDataService, ViewDefinitionDescriptor, ViewInfo } from '@syndesis/models';
+import {
+  useViewDefinitionDescriptors,
+  useVirtualizationHelpers,
+} from '@syndesis/api';
+import {
+  ImportSources,
+  RestDataService,
+  ViewDefinitionDescriptor,
+  ViewInfo,
+} from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -34,10 +42,12 @@ export const SelectViewsPage: React.FunctionComponent = () => {
   const [selectedViews, setSelectedViews] = React.useState<ViewInfo[]>([]);
   const [hasSelectedViews, setHasSelectedViews] = React.useState(false);
   const { pushNotification } = useContext(UIContext);
-  const { t } = useTranslation(['data', 'shared']);
+  const { t } = useTranslation(['data']);
   const { importSource } = useVirtualizationHelpers();
 
-  const getExistingViewNames = (defnDescriptors: ViewDefinitionDescriptor[]) => {
+  const getExistingViewNames = (
+    defnDescriptors: ViewDefinitionDescriptor[]
+  ) => {
     const viewNames: string[] = [];
     for (const descriptor of defnDescriptors) {
       viewNames.push(descriptor.name);
@@ -83,7 +93,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
     try {
       await importSource(params.virtualizationId, connName, importSources);
       pushNotification(
-        t('virtualization.importViewsSuccess', {
+        t('importViewsSuccess', {
           name: virtualization.keng__id,
         }),
         'success'
@@ -91,7 +101,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
     } catch (error) {
       const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.importViewsFailed', {
+        t('importViewsFailed', {
           details,
           name: virtualization.keng__id,
         }),

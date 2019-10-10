@@ -4,13 +4,16 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
-import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
+import {
+  IViewConfigurationFormValidationResult,
+  ViewConfigurationForm,
+  ViewCreateLayout,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
-import i18n from '../../../../i18n';
 import resolvers from '../../../resolvers';
 import { ViewCreateSteps } from '../../shared';
 import { generateViewDefinition } from '../../shared/VirtualizationUtils';
@@ -43,17 +46,14 @@ export const SelectNamePage: React.FunctionComponent = () => {
     ISelectNameRouteState
   >();
   const { pushNotification } = useContext(UIContext);
-  const {
-    saveViewDefinition,
-    validateViewName,
-  } = useVirtualizationHelpers();
+  const { saveViewDefinition, validateViewName } = useVirtualizationHelpers();
   const [validationResults, setValidationResults] = React.useState<
-  IViewConfigurationFormValidationResult[]
+    IViewConfigurationFormValidationResult[]
   >([]);
 
   const validateDescription = (desc: string): string => {
     if (desc.includes("'")) {
-      return i18n.t('data:virtualization.viewDescriptionValidationError');
+      return t('viewDescriptionValidationError');
     }
     return '';
   };
@@ -68,13 +68,11 @@ export const SelectNamePage: React.FunctionComponent = () => {
     // make sure name has a value
     if (proposedName === '') {
       return {
-        message: t(
-        'shared:requiredFieldMessage'
-      ) as string,
-      type: 'danger'
+        message: t('shared:requiredFieldMessage') as string,
+        type: 'danger',
       };
     }
-  
+
     const response: IDvNameValidationResult = await validateViewName(
       state.virtualization.keng__id,
       proposedName
@@ -82,29 +80,31 @@ export const SelectNamePage: React.FunctionComponent = () => {
 
     if (response.nameExists) {
       return {
-        message: i18n.t('data:virtualization.errorViewNameExists', {
+        message: t('errorViewNameExists', {
           name: proposedName,
         }),
-        type: 'danger'
-      }
+        type: 'danger',
+      };
     }
     if (response.hasError) {
       return {
-        message: response.message ? response.message : i18n.t('data:virtualization.errorViewNameValidation'),
-        type: 'danger'
-      }
+        message: response.message
+          ? response.message
+          : t('errorViewNameValidation'),
+        type: 'danger',
+      };
     }
     return {
       message: '',
-      type: 'success'
-    }
+      type: 'success',
+    };
   };
 
   const onSave = async (value: any) => {
     const validateDescrMsg = validateDescription(value.description);
     let validation = {
       message: validateDescrMsg,
-      type: 'danger'
+      type: 'danger',
     } as IViewConfigurationFormValidationResult;
     if (validateDescrMsg.length === 0) {
       validation = await doValidateName(value.name);
@@ -120,7 +120,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
       try {
         await saveViewDefinition(viewDefinition);
         pushNotification(
-          t('virtualization.createViewSuccess', {
+          t('createViewSuccess', {
             name: viewDefinition.name,
           }),
           'success'
@@ -128,7 +128,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
       } catch (error) {
         const details = error.message ? error.message : '';
         pushNotification(
-          t('virtualization.createViewFailed', {
+          t('createViewFailed', {
             details,
           }),
           'error'
@@ -147,14 +147,14 @@ export const SelectNamePage: React.FunctionComponent = () => {
   const definition: IFormDefinition = {
     name: {
       defaultValue: '',
-      displayName: i18n.t('data:virtualization.viewNameDisplay'),
+      displayName: t('viewNameDisplay'),
       required: true,
       type: 'string',
     },
     /* tslint:disable-next-line:object-literal-sort-keys */
     description: {
       defaultValue: '',
-      displayName: i18n.t('data:virtualization.viewDescriptionDisplay'),
+      displayName: t('viewDescriptionDisplay'),
       type: 'textarea',
     },
   };

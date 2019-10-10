@@ -134,12 +134,8 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
           >
             {() => (
               <DvConnectionsListView
-                i18nEmptyStateInfo={t(
-                  'virtualization.activeConnectionsEmptyStateInfo'
-                )}
-                i18nEmptyStateTitle={t(
-                  'virtualization.activeConnectionsEmptyStateTitle'
-                )}
+                i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
+                i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
                 linkToConnectionCreate={resolvers.connections.create.selectConnector()}
                 filterTypes={filterTypes}
                 sortTypes={sortTypes}

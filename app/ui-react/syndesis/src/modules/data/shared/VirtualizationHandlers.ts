@@ -5,7 +5,7 @@ import { UIContext } from '../../../app';
 
 export const VirtualizationHandlers = () => {
   const { pushNotification } = useContext(UIContext);
-  const { t } = useTranslation(['data', 'shared']);
+  const { t } = useTranslation(['data']);
   const {
     deleteVirtualization,
     publishVirtualization,
@@ -19,7 +19,7 @@ export const VirtualizationHandlers = () => {
     try {
       await deleteVirtualization(pVirtualizationId);
       pushNotification(
-        t('virtualization.deleteVirtualizationSuccess', {
+        t('deleteVirtualizationSuccess', {
           name: pVirtualizationId,
         }),
         'success'
@@ -28,7 +28,7 @@ export const VirtualizationHandlers = () => {
     } catch (error) {
       const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.deleteVirtualizationFailed', {
+        t('deleteVirtualizationFailed', {
           details,
           name: pVirtualizationId,
         }),
@@ -49,7 +49,7 @@ export const VirtualizationHandlers = () => {
 
         if (status.Information.error) {
           pushNotification(
-            t('virtualization.publishVirtualizationFailed', {
+            t('publishVirtualizationFailed', {
               details: status.Information.error,
               name: virtualizationId,
             }),
@@ -57,7 +57,7 @@ export const VirtualizationHandlers = () => {
           );
         } else {
           pushNotification(
-            t('virtualization.publishVirtualizationSuccess', {
+            t('publishVirtualizationSuccess', {
               name: virtualizationId,
             }),
             'success'
@@ -67,7 +67,7 @@ export const VirtualizationHandlers = () => {
       } catch (error) {
         const details = error.error ? error.error : '';
         pushNotification(
-          t('virtualization.publishVirtualizationFailed', {
+          t('publishVirtualizationFailed', {
             details,
             name: virtualizationId,
           }),
@@ -76,7 +76,7 @@ export const VirtualizationHandlers = () => {
       }
     } else {
       pushNotification(
-        t('virtualization.publishVirtualizationNoViews', {
+        t('publishVirtualizationNoViews', {
           name: virtualizationId,
         }),
         'error'
@@ -94,14 +94,14 @@ export const VirtualizationHandlers = () => {
 
       if (buildStatus.build_status === 'NOTFOUND') {
         pushNotification(
-          t('virtualization.unpublishedVirtualization', {
+          t('unpublishedVirtualization', {
             name: virtualizationName,
           }),
           'info'
         );
       } else if (buildStatus.build_status !== 'DELETE_SUBMITTED') {
         pushNotification(
-          t('virtualization.unpublishVirtualizationFailed', {
+          t('unpublishVirtualizationFailed', {
             details: buildStatus.build_status_message,
             name: virtualizationName,
           }),
@@ -109,7 +109,7 @@ export const VirtualizationHandlers = () => {
         );
       } else {
         pushNotification(
-          t('virtualization.unpublishVirtualizationSuccess', {
+          t('unpublishVirtualizationSuccess', {
             name: virtualizationName,
           }),
           'success'
@@ -119,7 +119,7 @@ export const VirtualizationHandlers = () => {
     } catch (error) {
       const details = error.message ? error.message : '';
       pushNotification(
-        t('virtualization.unpublishVirtualizationFailed', {
+        t('unpublishVirtualizationFailed', {
           details,
           name: virtualizationName,
         }),

@@ -24,20 +24,20 @@ export interface IVirtualizationNavBarProps {
 export const VirtualizationNavBar: React.FunctionComponent<
   IVirtualizationNavBarProps
 > = props => {
-  const { t } = useTranslation(['data', 'shared']);
+  const { t } = useTranslation(['data']);
   const virtualization = props.virtualization;
 
   return (
     <Container className={'virtualization-nav-bar'}>
       <TabBar>
         <TabBarItem
-          label={t('data:virtualization.views')}
+          label={t('views')}
           to={resolvers.virtualizations.views.root({
             virtualization,
           })}
         />
         <TabBarItem
-          label={t('data:virtualization.sqlClient')}
+          label={t('sqlClient')}
           to={resolvers.virtualizations.sqlClient({
             virtualization,
           })}

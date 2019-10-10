@@ -3,38 +3,40 @@ import {
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition, IFormValue } from '@syndesis/auto-form';
-import {
-  validateRequiredProperties,
-} from '@syndesis/utils';
+import { validateRequiredProperties } from '@syndesis/utils';
 
-import { Breadcrumb, IVirtualizationCreateValidationResult, PageSection, VirtualizationCreateForm } from '@syndesis/ui';
+import {
+  Breadcrumb,
+  IVirtualizationCreateValidationResult,
+  PageSection,
+  VirtualizationCreateForm,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { AppContext, UIContext } from '../../../app';
-import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 
 export const VirtualizationCreatePage: React.FunctionComponent = () => {
-
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { history } = useRouteData();
   const appContext = React.useContext(AppContext);
-  const { createVirtualization, validateVirtualizationName } = useVirtualizationHelpers();
+  const {
+    createVirtualization,
+    validateVirtualizationName,
+  } = useVirtualizationHelpers();
   const [validationResults, setValidationResults] = React.useState<
-  IVirtualizationCreateValidationResult[]
+    IVirtualizationCreateValidationResult[]
   >([]);
 
   const formDefinition = {
     virtDescription: {
       componentProperty: true,
       deprecated: false,
-      displayName: i18n.t(
-        'data:virtualization.virtualizationDescriptionDisplay'
-      ),
+      displayName: t('virtualizationDescriptionDisplay'),
       javaType: 'java.lang.String',
       kind: 'property',
       order: 1,
@@ -45,7 +47,7 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
     virtName: {
       componentProperty: true,
       deprecated: false,
-      displayName: i18n.t('data:virtualization.virtualizationNameDisplay'),
+      displayName: t('virtualizationNameDisplay'),
       javaType: 'java.lang.String',
       kind: 'property',
       order: 0,
@@ -69,41 +71,39 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
     // make sure name has a value
     if (proposedName === '') {
       return {
-        message: t(
-        'shared:requiredFieldMessage'
-      ) as string,
-      type: 'danger'
+        message: t('shared:requiredFieldMessage') as string,
+        type: 'danger',
       };
     }
-  
+
     const response: IDvNameValidationResult = await validateVirtualizationName(
       proposedName
     );
 
     if (response.nameExists) {
       return {
-        message: i18n.t('data:virtualization.errorVirtualizationNameExists', {
+        message: t('errorVirtualizationNameExists', {
           name: proposedName,
         }),
-        type: 'danger'
-      }
+        type: 'danger',
+      };
     }
     if (response.hasError) {
       return {
-        message: response.message ? response.message : i18n.t('data:virtualization.errorVirtualizationNameValidation'),
-        type: 'danger'
-      }
+        message: response.message
+          ? response.message
+          : t('errorVirtualizationNameValidation'),
+        type: 'danger',
+      };
     }
     return {
       message: '',
-      type: 'success'
-    }
+      type: 'success',
+    };
   };
 
   const handleCreate = async (value: any) => {
-    const validation = await doValidateName(
-      value.virtName
-    );
+    const validation = await doValidateName(value.virtName);
     if (validation.type === 'success') {
       const virtualization = await createVirtualization(
         appContext.user.username || 'developer',
@@ -111,12 +111,9 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
         value.virtDescription
       );
       pushNotification(
-        t(
-          'virtualization.createVirtualizationSuccess',
-          {
-            name: value.virtName,
-          }
-        ),
+        t('createVirtualizationSuccess', {
+          name: value.virtName,
+        }),
         'success'
       );
       history.push(
@@ -130,50 +127,38 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
   };
 
   const validator = (values: IFormValue) =>
-  validateRequiredProperties(
-    formDefinition,
-    (name: string) => `${name} is required`,
-    values
-  );
+    validateRequiredProperties(
+      formDefinition,
+      (name: string) => `${name} is required`,
+      values
+    );
 
   return (
     <>
       <Breadcrumb>
         <Link
-          data-testid={
-            'virtualization-create-page-home-link'
-          }
+          data-testid={'virtualization-create-page-home-link'}
           to={resolvers.dashboard.root()}
         >
           {t('shared:Home')}
         </Link>
         <Link
-          data-testid={
-            'virtualization-create-page-virtualizations-link'
-          }
+          data-testid={'virtualization-create-page-virtualizations-link'}
           to={resolvers.data.root()}
         >
           {t('shared:DataVirtualizations')}
         </Link>
-        <span>
-          {t(
-            'data:virtualization.createDataVirtualizationTitle'
-          )}
-        </span>
+        <span>{t('createDataVirtualizationTitle')}</span>
       </Breadcrumb>
       <PageSection variant={'light'}>
         <h1 className="pf-c-title pf-m-xl">
-          {t(
-            'data:virtualization.createDataVirtualizationTitle'
-          )}
+          {t('createDataVirtualizationTitle')}
         </h1>
       </PageSection>
       <PageSection>
         <AutoForm
           definition={formDefinition}
-          i18nRequiredProperty={t(
-            'shared:requiredFieldMessage'
-          )}
+          i18nRequiredProperty={t('shared:requiredFieldMessage')}
           initialValue={{
             virtDescription: '',
             virtName: '',
@@ -203,4 +188,4 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
       </PageSection>
     </>
   );
-}
+};

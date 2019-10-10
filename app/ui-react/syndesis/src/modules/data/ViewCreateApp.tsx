@@ -2,9 +2,9 @@ import { RestDataService } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
-import i18n from '../../i18n';
 import { WithClosedNavigation } from '../../shared';
 import resolvers from '../resolvers';
 import routes from '../routes';
@@ -15,6 +15,7 @@ export interface IViewCreateAppRouteState {
 }
 
 export const ViewCreateApp: React.FunctionComponent = () => {
+  const { t } = useTranslation(['data', 'shared']);
   const { state } = useRouteData<null, IViewCreateAppRouteState>();
 
   return (
@@ -24,13 +25,13 @@ export const ViewCreateApp: React.FunctionComponent = () => {
           data-testid={'view-create-app-home-link'}
           to={resolvers.dashboard.root()}
         >
-          {i18n.t('shared:Home')}
+          {t('shared:Home')}
         </Link>
         <Link
           data-testid={'view-create-app-virtualizations-link'}
           to={resolvers.data.root()}
         >
-          {i18n.t('shared:DataVirtualizations')}
+          {t('shared:DataVirtualizations')}
         </Link>
         <Link
           data-testid={'view-create-app-virtualization-link'}
@@ -40,7 +41,7 @@ export const ViewCreateApp: React.FunctionComponent = () => {
         >
           {state.virtualization.keng__id}
         </Link>
-        <span>{i18n.t('data:virtualization.createView')}</span>
+        <span>{t('createView')}</span>
       </Breadcrumb>
       <Switch>
         {/* step 1 */}

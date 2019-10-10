@@ -124,14 +124,14 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
 
   return appContext.config.datavirt.enabled === 0 ? (
     <SimplePageHeader
-      i18nTitle={t('virtualization.virtualizationsPageTitle')}
-      i18nDescription={t('virtualization.virtualizationsDisabled')}
+      i18nTitle={t('virtualizationsPageTitle')}
+      i18nDescription={t('virtualizationsDisabled')}
     />
   ) : (
     <>
       <SimplePageHeader
-        i18nTitle={t('virtualization.virtualizationsPageTitle')}
-        i18nDescription={t('virtualization.virtualizationsPageDescription')}
+        i18nTitle={t('virtualizationsPageTitle')}
+        i18nDescription={t('virtualizationsPageDescription')}
         isTechPreview={true}
         i18nTechPreview={t('shared:techPreview')}
         techPreviewPopoverHtml={
@@ -166,24 +166,18 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     sortTypes={sortTypes}
                     resultsCount={filteredAndSorted.length}
                     {...helpers}
-                    i18nCreateDataVirtualization={t(
-                      'virtualization.createDataVirtualization'
-                    )}
+                    i18nCreateDataVirtualization={t('createDataVirtualization')}
                     i18nCreateDataVirtualizationTip={t(
-                      'virtualization.createDataVirtualizationTip'
+                      'createDataVirtualizationTip'
                     )}
-                    i18nEmptyStateInfo={t(
-                      'virtualization.emptyStateInfoMessage'
-                    )}
-                    i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
+                    i18nEmptyStateInfo={t('emptyStateInfoMessage')}
+                    i18nEmptyStateTitle={t('emptyStateTitle')}
                     /* TD-636: Commented out for TP
                       i18nImport={t('shared:Import')}
                       i18nImportTip={t(
                         'virtualization.importVirtualizationTip'
                       )} */
-                    i18nLinkCreateVirtualization={t(
-                      'virtualization.createDataVirtualization'
-                    )}
+                    i18nLinkCreateVirtualization={t('createDataVirtualization')}
                     i18nName={t('shared:Name')}
                     i18nNameFilterPlaceholder={t(
                       'shared:nameFilterPlaceholder'
@@ -216,20 +210,13 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             odataUrl={getOdataUrl(virtualization)}
                             i18nCancelText={t('shared:Cancel')}
                             i18nDelete={t('shared:Delete')}
-                            i18nDeleteModalMessage={t(
-                              'virtualization.deleteModalMessage',
-                              {
-                                name: virtualization.keng__id,
-                              }
-                            )}
-                            i18nDeleteModalTitle={t(
-                              'virtualization.deleteModalTitle'
-                            )}
+                            i18nDeleteModalMessage={t('deleteModalMessage', {
+                              name: virtualization.keng__id,
+                            })}
+                            i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nDraft={t('shared:Draft')}
                             i18nEdit={t('shared:Edit')}
-                            i18nEditTip={t(
-                              'virtualization.editDataVirtualizationTip'
-                            )}
+                            i18nEditTip={t('editDataVirtualizationTip')}
                             i18nError={t('shared:Error')}
                             /* TD-636: Commented out for TP
                                 i18nExport={t('shared:Export')} */
@@ -237,19 +224,15 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               virtualization.usedBy
                             )}
                             i18nPublish={t('shared:Publish')}
-                            i18nPublished={t(
-                              'virtualization.publishedDataVirtualization'
-                            )}
+                            i18nPublished={t('publishedDataVirtualization')}
                             i18nUnpublish={t('shared:Unpublish')}
                             i18nUnpublishModalMessage={t(
-                              'virtualization.unpublishModalMessage',
+                              'unpublishModalMessage',
                               {
                                 name: virtualization.keng__id,
                               }
                             )}
-                            i18nUnpublishModalTitle={t(
-                              'virtualization.unpublishModalTitle'
-                            )}
+                            i18nUnpublishModalTitle={t('unpublishModalTitle')}
                             onDelete={handleDeleteVirtualization}
                             /* TD-636: Commented out for TP
                                 onExport={
@@ -263,12 +246,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             publishingCurrentStep={publishingDetails.stepNumber}
                             publishingTotalSteps={publishingDetails.stepTotal}
                             publishingStepText={publishingDetails.stepText}
-                            i18nPublishInProgress={t(
-                              'virtualization.publishInProgress'
-                            )}
-                            i18nUnpublishInProgress={t(
-                              'virtualization.unpublishInProgress'
-                            )}
+                            i18nPublishInProgress={t('publishInProgress')}
+                            i18nUnpublishInProgress={t('unpublishInProgress')}
                             i18nPublishLogUrlText={t('shared:viewLogs')}
                             usedBy={virtualization.usedBy}
                           />

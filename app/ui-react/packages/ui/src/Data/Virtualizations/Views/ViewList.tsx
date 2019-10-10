@@ -16,15 +16,11 @@ export interface IViewsListProps extends IListViewToolbarProps {
   linkImportViewsHRef: H.LocationDescriptor;
   i18nCreateViewTip?: string;
   i18nCreateView: string;
-  i18nDescription: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
 }
 
-export const ViewList: React.FunctionComponent<
-  IViewsListProps
-> = props => {
-
+export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
   const getCreateViewTooltip = (): JSX.Element => {
     return (
       <Tooltip id="createTip">
@@ -33,7 +29,7 @@ export const ViewList: React.FunctionComponent<
           : props.i18nCreateView}
       </Tooltip>
     );
-  }
+  };
 
   const getImportViewsTooltip = (): JSX.Element => {
     return (
@@ -43,17 +39,14 @@ export const ViewList: React.FunctionComponent<
           : props.i18nImportViews}
       </Tooltip>
     );
-  }
+  };
 
   return (
     <>
       <PageSection noPadding={true} variant={'light'}>
         <ListViewToolbar {...props}>
           <div className="form-group">
-            <OverlayTrigger
-              overlay={getImportViewsTooltip()}
-              placement="top"
-            >
+            <OverlayTrigger overlay={getImportViewsTooltip()} placement="top">
               <ButtonLink
                 data-testid={'view-list-import-views-button'}
                 href={props.linkImportViewsHRef}
@@ -62,10 +55,7 @@ export const ViewList: React.FunctionComponent<
                 {props.i18nImportViews}
               </ButtonLink>
             </OverlayTrigger>
-            <OverlayTrigger
-              overlay={getCreateViewTooltip()}
-              placement="top"
-            >
+            <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
               <ButtonLink
                 data-testid={'view-list-create-view-button'}
                 href={props.linkCreateViewHRef}
@@ -81,18 +71,18 @@ export const ViewList: React.FunctionComponent<
         {props.hasListData ? (
           <ListView>{props.children}</ListView>
         ) : (
-            <EmptyViewsState
-              i18nEmptyStateTitle={props.i18nEmptyStateTitle}
-              i18nEmptyStateInfo={props.i18nEmptyStateInfo}
-              i18nCreateView={props.i18nCreateView}
-              i18nCreateViewTip={props.i18nCreateViewTip}
-              i18nImportViews={props.i18nImportViews}
-              i18nImportViewsTip={props.i18nImportViewsTip}
-              linkCreateViewHRef={props.linkCreateViewHRef}
-              linkImportViewsHRef={props.linkImportViewsHRef}
-            />
-          )}
+          <EmptyViewsState
+            i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+            i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+            i18nCreateView={props.i18nCreateView}
+            i18nCreateViewTip={props.i18nCreateViewTip}
+            i18nImportViews={props.i18nImportViews}
+            i18nImportViewsTip={props.i18nImportViewsTip}
+            linkCreateViewHRef={props.linkCreateViewHRef}
+            linkImportViewsHRef={props.linkImportViewsHRef}
+          />
+        )}
       </PageSection>
     </>
   );
-}
+};
