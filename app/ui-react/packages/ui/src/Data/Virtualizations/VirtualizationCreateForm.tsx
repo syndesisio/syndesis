@@ -23,6 +23,11 @@ export interface IVirtualizationCreateFormProps {
   i18nCreateLabel: string;
 
   /**
+   * `true` if create should be disabled.
+   */
+  isDisableCreate: boolean;
+
+  /**
    * `true` if work in progress and this form should disable user input.
    */
   isWorking: boolean;
@@ -66,7 +71,7 @@ export const VirtualizationCreateForm: React.FunctionComponent<
               data-testid={'virtualization-create-form-save-button'}
               bsStyle="primary"
               style={{ marginRight: 0 }}
-              disabled={props.isWorking}
+              disabled={props.isWorking || props.isDisableCreate}
               onClick={props.handleSubmit}
             >
               {props.i18nCreateLabel}

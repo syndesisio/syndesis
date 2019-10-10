@@ -2,7 +2,10 @@ import {
   IDvNameValidationResult,
   useVirtualizationHelpers,
 } from '@syndesis/api';
-import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { AutoForm, IFormDefinition, IFormValue } from '@syndesis/auto-form';
+import {
+  validateRequiredProperties,
+} from '@syndesis/utils';
 
 import { Breadcrumb, IVirtualizationCreateValidationResult, PageSection, VirtualizationCreateForm } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -126,6 +129,13 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
     }
   };
 
+  const validator = (values: IFormValue) =>
+  validateRequiredProperties(
+    formDefinition,
+    (name: string) => `${name} is required`,
+    values
+  );
+
   return (
     <>
       <Breadcrumb>
@@ -161,21 +171,27 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
       <PageSection>
         <AutoForm
           definition={formDefinition}
-          initialValue={''}
           i18nRequiredProperty={t(
-            'data:virtualization.requiredPropertyText'
+            'shared:requiredFieldMessage'
           )}
+          initialValue={{
+            virtDescription: '',
+            virtName: '',
+          }}
+          validate={validator}
+          validateInitial={validator}
           onSave={(properties, actions) => {
             handleCreate(properties).finally(() => {
               actions.setSubmitting(false);
             });
           }}
         >
-          {({ fields, handleSubmit, isSubmitting, isValidating }) => (
+          {({ fields, handleSubmit, isSubmitting, isValid, isValidating }) => (
             <VirtualizationCreateForm
               handleSubmit={handleSubmit}
               i18nCancelLabel={t('shared:Cancel')}
               i18nCreateLabel={t('shared:Create')}
+              isDisableCreate={!isValid}
               isWorking={isSubmitting || isValidating}
               validationResults={validationResults}
               onCancel={doCancel}
