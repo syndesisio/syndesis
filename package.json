@@ -1,21 +1,26 @@
 {
   "private": true,
   "devDependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "husky": "^3.0.8",
-    "npm-run-all": "^4.1.5"
+    "@commitlint/cli": "~8",
+    "@commitlint/config-conventional": "~8",
+    "husky": "~3",
+    "lint-staged": "~9",
+    "npm-run-all": "~4"
   },
-  "dependencies": {},
   "husky": {
     "hooks": {
       "pre-commit": "npm-run-all pre-commit:*",
-      "pre-push": "npm-run-all pre-push:*"
+      "pre-push": "npm-run-all pre-push:*",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "scripts": {
+    "pre-commit:lint-staged": "lint-staged",
     "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
     "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
+  },
+  "lint-staged": {
+    "*.go": ["go fmt", "git add"],
+    "*.{java,properties,xml}": ["./tools/misc/format-license.sh", "git add"]
   }
 }
-
