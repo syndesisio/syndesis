@@ -40,7 +40,7 @@ import org.apache.commons.lang3.StringUtils;
 
 public final class JsonSchemaHelper {
 
-    private static final String JSON_SCHEMA_URI = "http://json-schema.org/schema#";
+    private static final String JSON_SCHEMA_URI = "http://json-schema.org/draft-04/schema#";
 
     private JsonSchemaHelper() {
         // utility class
