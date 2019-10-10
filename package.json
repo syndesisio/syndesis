@@ -5,6 +5,7 @@
     "@commitlint/config-conventional": "~8",
     "husky": "~3",
     "lint-staged": "~9",
+    "ngo": "~2",
     "npm-run-all": "~4"
   },
   "husky": {
@@ -20,7 +21,13 @@
     "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
   },
   "lint-staged": {
-    "*.go": ["go fmt", "git add"],
-    "*.{java,properties,xml}": ["./tools/misc/format-license.sh", "git add"]
+    "*.go": [
+      "ngo fmt",
+      "git add"
+    ],
+    "*.{java,properties,xml}": [
+      "./tools/misc/format-license.sh",
+      "git add"
+    ]
   }
 }
