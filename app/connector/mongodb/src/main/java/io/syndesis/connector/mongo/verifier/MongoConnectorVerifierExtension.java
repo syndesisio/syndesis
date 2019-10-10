@@ -15,12 +15,15 @@
  */
 package io.syndesis.connector.mongo.verifier;
 
+import java.util.Map;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
 import com.mongodb.MongoSecurityException;
 import com.mongodb.MongoSocketException;
 import io.syndesis.connector.mongo.MongoConfiguration;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -28,8 +31,6 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 import static org.apache.camel.util.CastUtils.cast;
 
@@ -68,6 +69,11 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         MongoConfiguration mongoConf = new MongoConfiguration(cast(parameters));
+        String adminDB = ConnectorOptions.extractOption(parameters, "adminDB");
+        String defaultDB = ConnectorOptions.extractOption(parameters, "database");
+        if (adminDB == null && defaultDB != null) {
+            mongoConf.setAdminDB(defaultDB);
+        }
         MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
         // Avoid retry and long timeout
         optionsBuilder.connectTimeout(CONNECTION_TIMEOUT);
