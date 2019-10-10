@@ -15,7 +15,7 @@
   },
   "properties" : {
     "query" : [ {
-      "displayValue" : "query",
+      "displayValue" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)",
       "value" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)"
     } ]
   }
