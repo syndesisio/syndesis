@@ -1,5 +1,6 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
+import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IIntegrationActionSelectorCardProps {
@@ -10,8 +11,10 @@ export interface IIntegrationActionSelectorCardProps {
 export const IntegrationActionSelectorCard: React.FunctionComponent<
   IIntegrationActionSelectorCardProps
 > = ({ content, title }) => (
-  <div className="card-pf">
-    <div className="card-pf-title">{title}</div>
-    <div className="card-pf-body">{content}</div>
-  </div>
+  <Card>
+    <CardHeader>
+      <Title className="syn-card__title" headingLevel="h2" size="md">{title}</Title>
+    </CardHeader>
+    <CardBody>{content}</CardBody>
+  </Card>
 );

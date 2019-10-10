@@ -1,4 +1,4 @@
-import { Text } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, Text } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../Layout';
@@ -26,16 +26,16 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
       <PageSection>
         <Container>
           <div className="row row-cards-pf">
-            <div className="card-pf">
-              <div className="card-pf-body">
+            <Card>
+              <CardBody>
                 <Container>
                   <Text className="alert alert-info">
                     <span className="pficon pficon-info" />
                     {this.props.i18nAlert}
                   </Text>
                 </Container>
-              </div>
-              <div className="card-pf-footer">
+              </CardBody>
+              <CardFooter className="syn-card__footer">
                 <ButtonLink
                   data-testid={
                     'integration-editor-nothing-to-configure-back-button'
@@ -55,8 +55,8 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 >
                   {this.props.i18nNext}
                 </ButtonLink>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           </div>
         </Container>
       </PageSection>

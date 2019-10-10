@@ -1,4 +1,4 @@
-import { Form } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
@@ -39,23 +39,25 @@ export class IntegrationEditorForm extends React.Component<
       <PageSection>
         <Container>
           <div className="row row-cards-pf">
-            <div className="card-pf">
+            <Card>
               {this.props.i18nFormTitle && (
-                <div className="card-pf-title">{this.props.i18nFormTitle}</div>
+                <CardHeader>
+                  <Title className="syn-card__title" headingLevel="h2" size="md">{this.props.i18nFormTitle}</Title>
+                </CardHeader>
               )}
               {this.props.error ? (
                 <Alert type={'warning'}>
                   <span>{this.props.error}</span>
                 </Alert>
               ) : null}
-              <div className="card-pf-body">
+              <CardBody>
                 <Container>
                   <Form isHorizontal={true} onSubmit={this.props.handleSubmit}>
                     {this.props.children}
                   </Form>
                 </Container>
-              </div>
-              <div className="card-pf-footer">
+              </CardBody>
+              <CardFooter className="syn-card__footer">
                 {this.props.backActionHref && (
                   <>
                     <ButtonLink
@@ -82,8 +84,8 @@ export class IntegrationEditorForm extends React.Component<
                     </>
                   ) : null}
                 </ButtonLink>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           </div>
         </Container>
       </PageSection>

@@ -1,4 +1,4 @@
-import { Form } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, CardHeader, Form } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 
@@ -15,16 +15,16 @@ export class EditorPageCard extends React.Component<IEditorPageCardProps> {
       <PageSection>
         <Container>
           <div className="row row-cards-pf">
-            <div className="card-pf">
+            <Card>
               {this.props.header && (
-                <div className="card-pf-header">{this.props.header}</div>
+                <CardHeader>{this.props.header}</CardHeader>
               )}
-              <div className="card-pf-body">
+              <CardBody>
                 <Container>
                   <Form isHorizontal={true}>{this.props.children}</Form>
                 </Container>
-              </div>
-              <div className="card-pf-footer">
+              </CardBody>
+              <CardFooter className="syn-card__footer">
                 <ButtonLink
                   data-testid={'editor-page-card-done-button'}
                   onClick={this.props.submitForm}
@@ -33,8 +33,8 @@ export class EditorPageCard extends React.Component<IEditorPageCardProps> {
                 >
                   {this.props.i18nDone}
                 </ButtonLink>
-              </div>
-            </div>
+              </CardFooter>
+            </Card>
           </div>
         </Container>
       </PageSection>

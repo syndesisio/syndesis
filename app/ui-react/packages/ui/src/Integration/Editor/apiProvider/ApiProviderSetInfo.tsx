@@ -1,3 +1,4 @@
+import { Card, CardBody } from '@patternfly/react-core';
 import * as React from 'react';
 import { Container } from '../../../Layout';
 
@@ -21,9 +22,9 @@ export class ApiProviderSetInfo extends React.Component<
           onSubmit={this.props.handleSubmit}
         >
           <div className="row row-cards-pf">
-            <div className="card-pf">
-              <div className="card-pf-body">{this.props.children}</div>
-            </div>
+            <Card>
+              <CardBody>{this.props.children}</CardBody>
+            </Card>
           </div>
         </form>
       </Container>
