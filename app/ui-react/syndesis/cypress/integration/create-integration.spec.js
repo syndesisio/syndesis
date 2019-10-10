@@ -1,46 +1,6 @@
+const constants = require('../fixtures/constants');
+
 describe('Create an Integration', () => {
-  const randomInteger = () => {
-    return Math.floor(Math.random() * (100 + 1));
-  };
-  const nameInt = randomInteger();
-  const connectionName = 'E2E Todo Connection';
-  const integrationName = 'E2E Todo Integration ' + nameInt;
-  const connectionSlug = 'e2e-todo-connection';
-  const integrationSlug = 'e2e-todo-integration-' + nameInt;
-
-  /**
-   * SETUP
-   *
-   * Runs once before all tests in the block
-   * Check that at least one E2E connection is available,
-   * otherwise create one.
-   */
-  before(function() {
-    cy.visit('/connections');
-
-    cy.get('.form-control').type(connectionName + '{enter}');
-    const testCnx = Cypress.$(
-      '[data-testid|=connection-card-' + connectionSlug + ']'
-    );
-    if (testCnx.length === 0) {
-      cy.createConnection({ name: connectionName, slug: connectionSlug });
-    }
-  });
-
-  /**
-   * TEARDOWN
-   *
-   * Runs once after all tests in the block
-   * Delete items created in this test
-   */
-  after(function() {
-    /**
-     * TODO: We need to keep these for now until db snapshot & restore is implemented from tests.
-     */
-    //cy.deleteIntegration({ slug: integrationSlug });
-    //cy.deleteConnection({ slug: connectionSlug });
-  });
-
   /**
    * Happy Path
    *
@@ -147,9 +107,9 @@ describe('Create an Integration', () => {
 
   it('prompts users to add a step', () => {
     /**
-     * Use connection created earlier
+     * Use pre-existing connection seeded to the db
      */
-    cy.get('[data-testid|=connection-card-' + connectionSlug + ']')
+    cy.get('[data-testid|=connection-card-' + constants.CONNECTION_SLUG + ']')
       .should('be.visible')
       .click();
 

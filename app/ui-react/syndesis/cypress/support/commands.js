@@ -26,12 +26,9 @@
 
 /**
  * CREATE CONNECTION
+ * HTTP Connection
  */
 Cypress.Commands.add('createConnection', cnx => {
-  /**
-   * Create To Do Connection
-   * NOTE: This will break if a Connection with the same name already exists.
-   */
   cy.visit('/');
 
   cy.get('[data-testid=dashboard-create-connection-button]').click();
@@ -41,19 +38,13 @@ Cypress.Commands.add('createConnection', cnx => {
     '/connections/create/connection-basics'
   );
 
-  cy.get('[data-testid=connection-card-todo-app-api-card]').click();
+  cy.get('[data-testid=connection-card-http-card]').click();
 
   cy.location('pathname').should('contain', '/configure-fields');
 
-  cy.get('[data-testid=username]')
-    .clear()
-    .type(Cypress.env('connectorTodoUser'))
-    .should('have.value', Cypress.env('connectorTodoUser'));
-
-  cy.get('[data-testid=password]')
-    .clear()
-    .type(Cypress.env('connectorTodoPassword'))
-    .should('have.value', Cypress.env('connectorTodoPassword'));
+  cy.get('[data-testid=baseurl]')
+    .type('www.redhat.com')
+    .should('have.value', 'www.redhat.com');
 
   cy.get('[data-testid=connection-creator-layout-next-button]')
     .should('not.be.disabled')
@@ -73,6 +64,79 @@ Cypress.Commands.add('createConnection', cnx => {
 
   cy.get('.form-control').type(cnx.name + '{enter}');
   cy.get('[data-testid|=connection-card-' + cnx.slug + ']').should('exist');
+});
+
+/**
+ * CREATE INTEGRATION
+ */
+Cypress.Commands.add('createIntegration', data => {
+  cy.visit('/');
+
+  cy.get('[data-testid=dashboard-create-integration-button]').click();
+  cy.get('[data-testid=connection-card-timer-card]').click();
+
+  /**
+   * Select the Simple Timer action
+   */
+  cy.get(
+    '[data-testid=integration-editor-actions-list-item-cron-list-item]'
+  ).within(() => {
+    cy.get('[data-testid=select-action-page-select-button]').click();
+  });
+
+  cy.get('button#integration-editor-form-next-button').click();
+
+  /**
+   * Select Log connection
+   */
+  cy.wait(200);
+  cy.get('[data-testid=connection-card-log-card]').click();
+
+  cy.get('[data-testid=bodyloggingenabled]').check();
+  cy.get('button#integration-editor-form-next-button').click();
+
+  cy.get('[data-testid=integration-flow-add-step-add-step-link]').click();
+
+  /**
+   * Use connection created earlier
+   */
+  cy.get(
+    '[data-testid=connection-card-' + data.connectionSlug + '-card]'
+  ).click();
+
+  cy.get('[data-testid=select-action-page-select-button]').click();
+
+  cy.get('#integration-editor-form-next-button').click();
+
+  // input configuration
+
+  cy.wait(200);
+
+  cy.location('pathname').should('contain', 'input');
+
+  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
+
+  // output configuration
+
+  cy.wait(200);
+
+  cy.location('pathname').should('contain', 'output');
+
+  cy.get('[data-testid=describe-data-shape-form-next-button]').click();
+
+  cy.wait(200);
+  cy.get('#integration-editor-publish-button').click();
+
+  /**
+   * Set name and description
+   */
+  cy.get('[data-testid=name]')
+    .clear()
+    .type(data.integrationName);
+  cy.get('[data-testid=description]')
+    .clear()
+    .type('This was created from an E2E test.');
+  cy.get('#integration-editor-publish-button').click();
 });
 
 /**

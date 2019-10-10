@@ -1,3 +1,5 @@
+const constants = require('../fixtures/constants');
+
 describe('The Home Page', () => {
   beforeEach(function() {
     cy.visit('/');
@@ -106,16 +108,14 @@ describe('The Home Page', () => {
    * Alternative Path: User clicks on a Connection from the Connections widget
    */
   it('should render the Connection detail page', () => {
-    cy.get('.connection-card')
-      .eq(0)
+    cy.get(
+      '[data-testid=connection-card-' + constants.CONNECTION_SLUG + '-card]'
+    )
+      .should('exist')
       .click();
 
     cy.get('.pf-c-breadcrumb').should('contain', 'Connection Details');
-    /**
-     * Not available until next release of Cypress
-     * https://github.com/cypress-io/cypress/issues/3684
-    cy.location('pathname').should('contain', '/connections/');
-     **/
+    cy.location('pathname').should('contain', 'connections');
   });
 
   /**
@@ -123,7 +123,7 @@ describe('The Home Page', () => {
    */
   it('should render the Connections list page', () => {
     cy.get('[data-testid=dashboard-connections-link]').click();
-    cy.location('pathname').should('eq', '/connections/');
+    cy.location('pathname').should('contain', 'connections');
   });
 
   /**

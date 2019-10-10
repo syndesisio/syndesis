@@ -681,42 +681,51 @@ cy.get('[data-testid=username]').type(Cypress.env('username'))
 Where `username` would just be a property in your `cypress.env.json` file or `export CYPRESS_username=example`.
 
 _Running Tests_
-To run all E2E tests: `$ yarn e2e`
 
-To run E2E tests directly in the terminal, no browser: `$ yarn e2e:terminal`
+1. Have your dev server running using the tapes: `$ BACKEND=https://syndesis-e2e-tests.b6ff.rh-idev.openshiftapps.com yarn replay`
+2. To run all E2E tests: `$ yarn e2e`. To run E2E tests directly in the terminal, no browser: `$ yarn e2e:terminal`.
 
-Cypress will check the `baseUrl` you have configured, which should be your app server. If it cannot load it, it will not validate and will not run. The `baseUrl` is defined in [`./syndesis/cypress.json`](syndesis/cypress.json), though this should already be pre-configured for you.
+Note: These tests do not make requests to the backend, they use existing tapes, so they won't test the creating, editing, or deletion of anything--they simply ensure the UI loads as expected.
 
 E2E tests are written using [Cypress](https://www.cypress.io/) and live in the [`syndesis/cypress/integration`](syndesis/cypress/integration) directory. You can find the configuration settings for Cypress under [`syndesis/cypress.json`](syndesis/cypress.json).
 
+Cypress will check the `baseUrl` you have configured, which should be your app server. If it cannot load it, it will not validate and will not run. The `baseUrl` is defined in [`./syndesis/cypress.json`](syndesis/cypress.json), though this should already be pre-configured for you. Cypress expects your server to be running when you run the tests.
+
 _E2E Test Writing Flow:_
 
-1. Run the dev server as usual.
-2. Define the happy path and use cases.
-3. Write your test in `/syndesis/cypress/integration`. It must end in `.spec.js` or `.spec.ts` for Cypress to find it.
-4. There are snapshots of BE responses in JSON 5 format available in [`syndesis/tapes`](syndesis/tapes), which can be used as mock data. Read more below in "Data for E2E & Integration Testing".
-
+1. Define the happy path and use cases.
+2. Write your test in `/syndesis/cypress/integration`. It must end in `.spec.js` or `.spec.ts` for Cypress to find it.
+3. There are snapshots of BE responses in JSON 5 format available in [`syndesis/tapes`](syndesis/tapes), which can be used as mock data. Read more below in "Data for E2E & Integration Testing".
 
 ### Data for E2E & Integration Testing
 
 In order to avoid extensive mocking of the app and countless server requests, we instead have a recorder for network fetch payload that will resemble E2E and integration tests as closely as possible, and can later be replayed for testing. These "tapes" are essentially snapshots of selected API responses and can be used to provide contract-compliant mock data from a specific time, which can be used for both E2E and integration tests, so long as they are used with Cypress.
 
-The way it works is that the `syndesis` dev server interacts with a given API via a proxy set up by CRA, records the responses, and allows you to replay those responses for later use (i.e. in tests). Recordings are stored in [`syndesis/tapes/[value of the syndesis-mock-session request header]/api/v1/path/xxx.json5`](syndesis/tapes), where the value of the mock-session request header should match the name of the test file (e.g. `homepage.spec.js`).
-
 **NOTE: Only record a session if you think you need it (e.g. writing a new test for which there are no tapes), otherwise you can create unnecessary tapes.** If a tape for your test exists but isn't working properly, record a new one.
 
-To see this in action, you can record a session:
+First, to create new data and set up the DB:
+
+1. Run your dev server normally.
+2. In the terminal, run Syndesis with `$ BACKEND=https://syndesis-e2e-tests.b6ff.rh-idev.openshiftapps.com yarn start`.
+3. In a separate tab, run Cypress with `yarn e2e:setup`.
+4. Run each test manually, in order. There should be one to reset the database, one to create the data, another to take a snapshot of the database, and the last one to optionally restore a snapshot.  
+
+
+Next, record a session:
 
 1. Make sure that in the browser you don't have any tabs open that make requests to the BE.
-2. In the terminal, run `$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn record`. Wait for the development server to start.
-3. In a separate tab, run Cypress with `yarn e2e`.
-4. In the browser window, select each test to run for which you want to record the network request payload. You should see a log of this recording in the terminal tab from step 2, and a newly generated `.json5` file in `syndesis/tapes/<name of test you have selected>`.
+2. Kill the previous Syndesis and Cypress processes (steps 2 and 3 from above).
+3. In the terminal, run `$ BACKEND=https://syndesis-e2e-tests.b6ff.rh-idev.openshiftapps.com yarn record`. Wait for the development server to start.
+4. In a separate tab, run Cypress with `yarn e2e`.
+5. In the new window, select each test to run for which you want to record the network request payload. You should see a log of this recording in the terminal, and a newly generated `.json5` file in `syndesis/tapes/<name of test you have selected>`.
 
 To replay a session (run Cypress tests using the tapes, disallowing outbound requests to the API server):
 
 `$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn replay` or `$ yarn replay <session-name>`
 
 NOTE: These tapes are just like typical test snapshots, and should be treated as code. They are ultimately committed with the rest of your code.
+
+The way it works is that the `syndesis` dev server interacts with a given API via a proxy set up by CRA, records the responses, and allows you to replay those responses for later use (i.e. in tests). Recordings are stored in [`syndesis/tapes/[value of the syndesis-mock-session request header]/api/v1/path/xxx.json5`](syndesis/tapes), where the value of the mock-session request header should match the name of the test file (e.g. `homepage.spec.js`).
 
 For more information on the BE recorder/replayer, please see [this](https://github.com/syndesisio/syndesis-react/pull/106) PR.
 
