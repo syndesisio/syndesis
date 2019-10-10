@@ -88,7 +88,7 @@ public class ConnectionActionHandlerTest {
                         .displayName("Salesforce object type")//
                         .group("common")//
                         .required(true)//
-                        .type("select")//
+                        .type("string")//
                         .javaType("java.lang.String")//
                         .componentProperty(false)//
                         .description("Salesforce object type to create")//
