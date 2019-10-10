@@ -647,7 +647,6 @@
         <plugin>
           <groupId>com.mycila</groupId>
           <artifactId>license-maven-plugin</artifactId>
-          <inherited>false</inherited>
           <configuration>
             <header>license/syndesis-license.txt</header>
             <skipExistingHeaders>false</skipExistingHeaders>
