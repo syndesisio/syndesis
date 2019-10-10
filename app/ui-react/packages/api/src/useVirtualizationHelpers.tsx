@@ -163,6 +163,31 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
+   * Get ViewDefinition for the supplied virtualization and view name
+   * @param virtualizationName the name of the virtualization
+   * @param viewName the name of the view
+   */
+  const getView = async (
+    virtualizationName: string,
+    viewName: string
+  ): Promise<ViewDefinition> => {
+    const encodedName = encodeURIComponent(viewName);
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${
+        apiContext.dvApiUri
+      }workspace/dataservices/${virtualizationName}/views/${encodedName}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return (await response.json()) as ViewDefinition;
+  };
+
+  /**
    * Get ViewDefinition for the supplied id
    * @param viewDefinitionId the id of the view definition
    */
@@ -401,6 +426,7 @@ export const useVirtualizationHelpers = () => {
     deleteViewDefinition,
     deleteVirtualization,
     getSourceInfoForView,
+    getView,
     getViewDefinition,
     importSource,
     publishVirtualization,

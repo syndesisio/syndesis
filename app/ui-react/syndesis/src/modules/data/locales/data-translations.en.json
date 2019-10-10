@@ -6,7 +6,6 @@
   "createDataVirtualizationTitle": "Create New $t(shared:DataVirtualization)",
   "createView": "Create a View",
   "createViewFailed": "Create view failed. Details: {{details}}",
-  "createViewSuccess": "Created view named: {{name}}.",
   "createViewTip": "Create a new View for this virtualization",
   "createViewWizardStep1": "Select Sources",
   "createViewWizardStep2": "Select Name",
