@@ -44,7 +44,7 @@
                 "order": 1,
                 "required": true,
                 "secret": false,
-                "type": "text"
+                "type": "dataList"
               },
               "batch": {
                 "defaultValue": false,
@@ -112,7 +112,7 @@
                 "order": "1",
                 "required": true,
                 "secret": false,
-                "type": "text"
+                "type": "dataList"
               },
               "schedulerExpression": {
                 "defaultValue": 60000,

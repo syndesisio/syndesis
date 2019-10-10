@@ -83,7 +83,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
         final SqlStatementMetaData sqlStatementMetaData = (SqlStatementMetaData) metadata.getPayload();
 
         if (sqlStatementMetaData != null) {
-            enrichedProperties.put(QUERY, Collections.singletonList(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY)));
+            enrichedProperties.put(QUERY, Collections.singletonList(new PropertyPair(sqlStatementMetaData.getSqlStatement())));
 
             // build the input and output schemas
             final JsonSchema specIn;
