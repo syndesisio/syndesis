@@ -18,6 +18,7 @@ to an Amazon web service. For details, see:
 * xref:connecting-to-amazon-sns_{context}[]
 * xref:connecting-to-amazon-sqs_{context}[]
 * xref:connecting-to-amazon-s3_{context}[]
+* xref:connecting-to-amazon-dynamodb_{context}[]
 
 include::../../modules/connecting/p_obtaining-aws-credentials.adoc[leveloffset=+1]
 
@@ -26,5 +27,7 @@ include::../../assemblies/connecting/as_connecting-to-amazon-sns.adoc[leveloffse
 include::../../assemblies/connecting/as_connecting-to-amazon-sqs.adoc[leveloffset=+1]
 
 include::../../assemblies/connecting/as_connecting-to-amazon-s3.adoc[leveloffset=+1]
+
+include::../../assemblies/connecting/as_connecting-to-amazon-dynamodb.adoc[leveloffset=+1]
 
 :context: connectors
