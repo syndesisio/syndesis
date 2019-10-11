@@ -27,8 +27,9 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.ProducerTemplate;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
@@ -36,91 +37,102 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
     abstract String getCustomizer();
 
+    abstract String getElement();
 
     @Override
     protected List<Step> createSteps() {
         final ConnectorAction action = new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                        .componentScheme("aws-ddb")
-                        .connectorId(getConnectorId())
-                        .build())
-                .build();
+            .descriptor(new ConnectorDescriptor.Builder()
+                .componentScheme("aws-ddb")
+                .connectorId(getConnectorId())
+                .build())
+            .build();
 
         final Connection connection = new Connection.Builder()
-                .putConfiguredProperty(AWSDDBConfiguration.ACCESSKEY,
-                        AWSDDBConfiguration.ACCESSKEY_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.SECRETKEY,
-                        AWSDDBConfiguration.SECRETKEY_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.REGION,
-                        AWSDDBConfiguration.REGION_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
-                        AWSDDBConfiguration.TABLENAME_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.ELEMENT,
-                        AWSDDBConfiguration.ELEMENT_VALUE)
-                .connector(new Connector.Builder()
-                        .putProperty(
-                                AWSDDBConfiguration.ACCESSKEY,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.ACCESSKEY)
-                                        .secret(true)
-                                        .raw(true)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.SECRETKEY,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.SECRETKEY)
-                                        .secret(true)
-                                        .raw(true)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.REGION,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.REGION)
-                                        .secret(false)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.TABLENAME,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.TABLENAME)
-                                        .secret(false)
-                                        .componentProperty(true)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.ELEMENT,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.ELEMENT)
-                                        .secret(false)
-                                        .componentProperty(true)
-                                        .build())
-                        .addConnectorCustomizer(getCustomizer())
+            .putConfiguredProperty(AWSDDBConfiguration.ACCESSKEY,
+                AWSDDBConfiguration.ACCESSKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.SECRETKEY,
+                AWSDDBConfiguration.SECRETKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.REGION,
+                AWSDDBConfiguration.REGION_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
+                AWSDDBConfiguration.TABLENAME_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.ELEMENT,
+                getElement())
+            .putConfiguredProperty(AWSDDBConfiguration.ATTRIBUTES,
+                AWSDDBConfiguration.ATTRIBUTES_VALUE)
+            .connector(new Connector.Builder()
+                .putProperty(
+                    AWSDDBConfiguration.ACCESSKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ACCESSKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
                         .build())
-                .build();
+                .putProperty(
+                    AWSDDBConfiguration.SECRETKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.SECRETKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.REGION,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.REGION)
+                        .secret(false)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.TABLENAME,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.TABLENAME)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.ELEMENT,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ELEMENT)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.ATTRIBUTES,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ATTRIBUTES)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .addConnectorCustomizer(getCustomizer())
+                .build())
+            .build();
 
         Step step = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .connection(connection)
-                .action(action)
-                .build();
+            .stepKind(StepKind.endpoint)
+            .connection(connection)
+            .action(action)
+            .build();
 
         List<Step> result = new ArrayList<Step>();
 
         result.add(
-                newSimpleEndpointStep(
-                        "direct",
-                        builder -> builder.putConfiguredProperty("name", "start")));
+            newSimpleEndpointStep(
+                "direct",
+                builder -> builder.putConfiguredProperty("name", "start")));
         result.add(step);
         result.add(newSimpleEndpointStep(
-                "mock",
-                builder -> builder.putConfiguredProperty("name", "result"))
+            "mock",
+            builder -> builder.putConfiguredProperty("name", "result"))
         );
 
         return result;
     }
 
-    protected void addExtraOperation(List<Step> result, String operation, String customizer, Integer order) {
+    protected void addExtraOperation(List<Step> result, String operation,
+                                     String customizer, Integer order, String element) {
         final ConnectorAction action = new ConnectorAction.Builder()
             .descriptor(new ConnectorDescriptor.Builder()
                 .componentScheme("aws-ddb")
@@ -138,7 +150,7 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
             .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
                 AWSDDBConfiguration.TABLENAME_VALUE)
             .putConfiguredProperty(AWSDDBConfiguration.ELEMENT,
-                AWSDDBConfiguration.ELEMENT_VALUE)
+                element)
             .connector(new Connector.Builder()
                 .putProperty(
                     AWSDDBConfiguration.ACCESSKEY,
@@ -189,6 +201,7 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
         result.add(order, step);
     }
+
     @Test
     /**
      * To run this test you need to change the values of the parameters for real values of an
@@ -200,10 +213,12 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
 
         try {
             ProducerTemplate template = context().createProducerTemplate();
+            @SuppressWarnings("unchecked")
             String result = template.requestBody("direct:start",
-                    AWSDDBConfiguration.ELEMENT_VALUE, String.class);
+                AWSDDBConfiguration.ELEMENT_VALUE, String.class);
 
-            Assertions.assertThat(result).isEqualTo(AWSDDBConfiguration.ELEMENT_VALUE);
+            JSONAssert.assertEquals(AWSDDBConfiguration.ELEMENT_VALUE, result,
+                JSONCompareMode.STRICT);
 
         } catch (Exception e) {
             throw new RuntimeException(e);

@@ -19,11 +19,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-
+import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
+import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
+import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
+import com.amazonaws.services.dynamodbv2.model.TableDescription;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -32,13 +36,6 @@ import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import com.amazonaws.services.dynamodbv2.model.AttributeDefinition;
-import com.amazonaws.services.dynamodbv2.model.DescribeTableResult;
-import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
-import com.amazonaws.services.dynamodbv2.model.TableDescription;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
 public class AWSDDBMetadataAdapterTest {
 
     @Test
@@ -46,7 +43,7 @@ public class AWSDDBMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         AWSDDBConnectorMetaDataExtension ext = new AWSDDBConnectorMetaDataExtension(camelContext);
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("element", "{\"clave\" : \":#KEY\"}");
+        parameters.put("element", "{\"clave\" : \":#KEY\", \"atributo\": \"attribute\"}");
         parameters.put("attributes", "clave, atributo");
         parameters.put(AWSDDBConfiguration.REGION, AWSDDBConfiguration.REGION_VALUE);
         parameters.put(AWSDDBConfiguration.SECRETKEY, AWSDDBConfiguration.SECRETKEY_VALUE);

@@ -27,6 +27,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.aws.ddb.DdbConstants;
+import org.apache.camel.component.aws.ddb.DdbOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DDBConnectorCustomizer.class);
+    protected static final Logger LOG = LoggerFactory.getLogger(DDBConnectorCustomizer.class);
     //Store options to customize the connector
     private Map<String, Object> options;
 
@@ -58,39 +59,46 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
      *
      * @param exchange
      */
+    @SuppressWarnings("unchecked")
     protected void doAfterProducer(Exchange exchange) {
-
         final Message in = exchange.getIn();
-        final Message out = exchange.getOut();
-        final Object item = in.getHeader(DdbConstants.ATTRIBUTES);
+        Map<String, AttributeValue> attributes = (Map<String, AttributeValue>) in.getHeader(DdbConstants.ATTRIBUTES);
+        String op = in.getHeader(DdbConstants.OPERATION).toString();
 
-        if (item != null) {
-            out.setBody(item);
-        } else if (in.getHeader(DdbConstants.ITEM) != null) {
-            out.setBody(in.getHeader(DdbConstants.ITEM));
+        if (attributes != null) {
+            in.setBody(mapToJSON(attributes));
+        } else if (op.equals(DdbOperations.PutItem.name())) {
+            //Use input. If we are here, we know it went well (or so DDB says)
+            //But attributes may be empty due to caching issues (DDB side)
+            Map<String, AttributeValue> items =
+                (Map<String, AttributeValue>) exchange.getIn().getHeader(DdbConstants.ITEM);
+            in.setBody(mapToJSON(items));
         } else {
-            out.setBody(in.getHeader(DdbConstants.ITEMS));
+            //Something went wrong, we always return something
+            throw new IllegalArgumentException("DynamoDB operation failed: " + in.getHeaders());
+        }
+    }
+
+    private String mapToJSON(Map<String, AttributeValue> item) {
+        Set<Map.Entry<String, AttributeValue>> elements = item.entrySet();
+        Map<String, Object> output = new HashMap<String, Object>();
+
+        for (Map.Entry<String, AttributeValue> element : elements) {
+            output.put(element.getKey(), Util.getValue(element.getValue()).toString());
         }
 
-        if (out.getBody() instanceof Map) {
-            @SuppressWarnings("unchecked")
-            Set<Map.Entry<String, AttributeValue>> elements = ((Map<String, AttributeValue>) out.getBody()).entrySet();
-            Map<String, Object> output = new HashMap<String, Object>();
+        String json = "{}";
 
-            for (Map.Entry<String, AttributeValue> element : elements) {
-                output.put(element.getKey(), Util.getValue(element.getValue()).toString());
-            }
-
-            try {
-                //Convert Map to JSON
-                String json = mapper.writeValueAsString(output);
-
-                out.setBody(json);
-            } catch (Exception e) {
-                throw new IllegalStateException(e);
-            }
+        try {
+            //Convert Map to JSON
+            json = mapper.writeValueAsString(output);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Error parsing json output.", e);
         }
 
+        LOG.trace("Executing: " + this.getClass() + " with output body: " + json);
+
+        return json;
     }
 
 
@@ -104,12 +112,11 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
         exchange.getIn().setHeader(DdbConstants.CONSISTENT_READ, "true");
         exchange.getIn().setHeader(DdbConstants.RETURN_VALUES, "ALL_OLD");
 
-
         LOG.trace("pre this.options: " + this.options);
 
         //Do we have variables from atlas?
-        if (exchange.getIn().getBody() != null) {
-            Object body = exchange.getIn().getBody();
+        Object body = exchange.getIn().getBody();
+        if (body != null) {
             Map<String, Object> map = null;
 
             if (body instanceof Map) {
@@ -118,13 +125,13 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
                 try {
                     map = (Map<String, Object>) mapper.readValue(body.toString(), Map.class);
                 } catch (Exception e) {
-                    LOG.trace("Couldn't parse parameters." + e);
+                    LOG.error("Couldn't parse parameters." + e);
                 }
             }
 
             if (map != null && !map.isEmpty()) {
                 for (Map.Entry<String, Object> entry : map.entrySet()) {
-                    if (entry.getKey().startsWith("#")) {
+                    if (entry.getKey().startsWith("#") && entry.getValue() != null) {
                         final String searchKey = ":" + entry.getKey();
                         final String replacement = entry.getValue().toString();
                         for (Map.Entry<String, Object> option : options.entrySet()) {

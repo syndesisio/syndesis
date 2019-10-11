@@ -31,9 +31,13 @@ public class AWSDDBInsertItemTest extends AWSDDBGenericOperation {
     @Override
     String getCustomizer() {
         return "io.syndesis.connector.aws.ddb.customizer" +
-                ".DDBConnectorCustomizerPutItem";
+            ".DDBConnectorCustomizerPutItem";
     }
 
+    @Override
+    String getElement() {
+        return AWSDDBConfiguration.ELEMENT_VALUE;
+    }
 
     /**
      * Extend the steps to add an intermediate putitem
@@ -46,7 +50,7 @@ public class AWSDDBInsertItemTest extends AWSDDBGenericOperation {
         List<Step> result = super.createSteps();
 
         addExtraOperation(result, "io.syndesis:aws-ddb-removeitem-to-connector", "io.syndesis.connector.aws.ddb" +
-            ".customizer.DDBConnectorCustomizerRemoveItem", 3);
+            ".customizer.DDBConnectorCustomizerRemoveItem", 3, AWSDDBConfiguration.KEY_VALUE);
 
         return result;
     }

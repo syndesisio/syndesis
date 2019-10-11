@@ -37,11 +37,15 @@ public final class AWSDDBConfiguration {
     public static final String REGION = "region";
     public static final String TABLENAME = "tableName";
     public static final String ELEMENT = "element";
+    public static final String ATTRIBUTES = "attributes";
 
     public static final Long RANDOM_ID = System.currentTimeMillis();
 
     //TODO change this to your table constraints
-    public static final String ELEMENT_VALUE = "{\"clave\":\"" + RANDOM_ID + "\"}";
+
+    public static final String ELEMENT_VALUE = "{\"clave\":\"" + RANDOM_ID + "\", \"attr\":\"attribute\"}";
+    public static final String KEY_VALUE = "{\"clave\":\"" + RANDOM_ID + "\"}";
+    public static final String ATTRIBUTES_VALUE = "clave, attr";
     //TODO change this to your table constraints
 
     private AWSDDBConfiguration() {
