@@ -7,10 +7,12 @@
   spec:
     build:
       baseImage: '{{ .Images.CamelKBaseImagePrefix }}:{{ .Tags.CamelKBase }}'
+      {{- if (not .Productized)}}
       camelVersion: {{.Versions.Camel}}
+      runtimeVersion: {{.Versions.CamelKRuntime}}
+      {{- end}}
       maven:
         settings:
           configMapKeyRef:
             key: settings.xml
             name: camel-k-maven-settings
-      runtimeVersion: {{.Versions.CamelKRuntime}}
