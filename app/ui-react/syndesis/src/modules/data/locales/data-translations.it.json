@@ -6,7 +6,6 @@
   "createDataVirtualizationTitle": "Crea Nuova $t(shared:DataVirtualization)",
   "createView": "Crea una Vista",
   "createViewFailed": "Creazione vista non riuscita. Dettagli: {{details}}",
-  "createViewSuccess": "Vista creata denominata: {{name}}.",
   "createViewTip": "Crea una nuova Vista per questa virtualizzazione",
   "createViewWizardStep1": "Seleziona Fonti",
   "createViewWizardStep2": "Seleziona il Nome",

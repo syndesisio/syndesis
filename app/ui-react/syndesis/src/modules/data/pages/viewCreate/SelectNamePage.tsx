@@ -3,12 +3,8 @@ import {
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
-import {
-  IViewConfigurationFormValidationResult,
-  ViewConfigurationForm,
-  ViewCreateLayout,
-} from '@syndesis/ui';
+import { QueryResults, RestDataService, SchemaNodeInfo } from '@syndesis/models';
+import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
@@ -46,10 +42,19 @@ export const SelectNamePage: React.FunctionComponent = () => {
     ISelectNameRouteState
   >();
   const { pushNotification } = useContext(UIContext);
-  const { saveViewDefinition, validateViewName } = useVirtualizationHelpers();
+  const {
+    getView,
+    saveViewDefinition,
+    validateViewName,
+  } = useVirtualizationHelpers();
   const [validationResults, setValidationResults] = React.useState<
     IViewConfigurationFormValidationResult[]
   >([]);
+
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
+  };
 
   const validateDescription = (desc: string): string => {
     if (desc.includes("'")) {
@@ -119,11 +124,16 @@ export const SelectNamePage: React.FunctionComponent = () => {
       );
       try {
         await saveViewDefinition(viewDefinition);
-        pushNotification(
-          t('createViewSuccess', {
-            name: viewDefinition.name,
-          }),
-          'success'
+        const newView = await getView(state.virtualization.keng__id, viewDefinition.name);
+        history.push(
+          resolvers.data.virtualizations.views.edit.sql({
+            virtualization: state.virtualization,
+            // tslint:disable-next-line: object-literal-sort-keys
+            viewDefinitionId: newView.id!,  // id should be defined
+            viewDefinition: undefined,
+            previewExpanded: true,
+            queryResults: queryResultsEmpty,
+          })
         );
       } catch (error) {
         const details = error.message ? error.message : '';
@@ -133,12 +143,12 @@ export const SelectNamePage: React.FunctionComponent = () => {
           }),
           'error'
         );
+        history.push(
+          resolvers.data.virtualizations.views.root({
+            virtualization: state.virtualization,
+          })
+        );
       }
-      history.push(
-        resolvers.data.virtualizations.views.root({
-          virtualization: state.virtualization,
-        })
-      );
     } else {
       setValidationResults([validation]);
     }
