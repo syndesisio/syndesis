@@ -49,8 +49,7 @@ public class JsonSchemaInspector implements Inspector {
         try {
             schema = MAPPER.readerFor(JsonSchema.class).readValue(specification);
         } catch (final IOException e) {
-            LOG.warn(
-                "Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed");
+            LOG.warn("Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed", e);
             LOG.debug(specification);
 
             return Collections.emptyList();
@@ -102,7 +101,10 @@ public class JsonSchemaInspector implements Inspector {
                 fetchPaths(path, paths, subschema.asObjectSchema().getProperties());
             } else if (subschema.isArraySchema()) {
                 COLLECTION_PATHS.stream().map(p -> path + "." + p).forEach(paths::add);
-                fetchPaths(path + ARRAY_CONTEXT, paths, getItemSchema(subschema.asArraySchema()).getProperties());
+                ObjectSchema itemSchema = getItemSchema(subschema.asArraySchema());
+                if (itemSchema != null) {
+                    fetchPaths(path + ARRAY_CONTEXT, paths, itemSchema.getProperties());
+                }
             }
         }
     }

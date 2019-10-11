@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -42,6 +43,13 @@ public class JsonSchemaInspectorTest {
     public void shouldCollectPathsFromJsonSchema() throws IOException {
         final List<String> paths = inspector.getPaths(JSON_SCHEMA_KIND, "", IOStreams.readText(getSalesForceContactSchema()), Optional.empty());
         assertSalesforceContactProperties(paths);
+        assertThat(paths).doesNotContainAnyElementsOf(JsonSchemaInspector.COLLECTION_PATHS);
+    }
+
+    @Test
+    public void shouldCollectPathsFromUnifiedJsonSchema() throws IOException {
+        final List<String> paths = inspector.getPaths(JSON_SCHEMA_KIND, "", IOStreams.readText(getPetstoreUnifiedSchema()), Optional.empty());
+        assertPetstoreProperties(paths);
         assertThat(paths).doesNotContainAnyElementsOf(JsonSchemaInspector.COLLECTION_PATHS);
     }
 
@@ -70,6 +78,10 @@ public class JsonSchemaInspectorTest {
 
         assertThat(paths).hasSize(4);
         assertThat(paths).containsAll(Arrays.asList("Id", "PhoneNumbers.size()", "PhoneNumbers[].Name", "PhoneNumbers[].Number"));
+    }
+
+    private InputStream getPetstoreUnifiedSchema() {
+        return JsonSchemaInspectorTest.class.getResourceAsStream("/petstore-unified-schema.json");
     }
 
     private InputStream getSalesForceContactSchema() {
@@ -116,5 +128,19 @@ public class JsonSchemaInspectorTest {
         assertThat(paths).containsAll(expectedPaths.stream()
                                                     .map(item -> Optional.ofNullable(context).map(path -> path + ".").orElse("") + item)
                                                     .collect(Collectors.toList()));
+    }
+
+    private void assertPetstoreProperties(List<String> paths) {
+        List<String> expectedParameters = Collections.singletonList("version");
+        List<String> expectedBodyPaths = Arrays.asList("id", "name", "category.id", "category.name", "photoUrls.size()",
+                "tags[].id", "tags[].name", "tags.size()", "status");
+
+        assertThat(paths).containsAll(expectedBodyPaths.stream()
+                .map(item -> "body." + item)
+                .collect(Collectors.toList()));
+
+        assertThat(paths).containsAll(expectedParameters.stream()
+                .map(item -> "parameters." + item)
+                .collect(Collectors.toList()));
     }
 }
