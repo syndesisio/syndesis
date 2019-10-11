@@ -77,7 +77,10 @@ public interface ListResult<T> extends Iterable<T> {
     }
 
     static <T> Collector<T, Builder<T>, Builder<T>> collector() {
-        return Collector.of(Builder::new, Builder::addItem, (b1, b2) -> b1.addAllItems(b2.build().getItems()));
+        return Collector.of(Builder::new,
+            Builder::addItem,
+            (b1, b2) -> b1.addAllItems(b2.build().getItems()),
+            b -> b.totalCount(b.build().getItems().size()));
     }
 
 }

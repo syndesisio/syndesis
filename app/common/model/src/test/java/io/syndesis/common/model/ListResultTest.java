@@ -29,6 +29,7 @@ public class ListResultTest {
         final ListResult<Object> collected = Stream.of().collect(ListResult.collector()).build();
         assertThat(collected).isNotNull();
         assertThat(collected.getItems()).isEmpty();
+        assertThat(collected.getTotalCount()).isZero();
     }
 
     @Test
@@ -36,6 +37,7 @@ public class ListResultTest {
         final ListResult<String> collected = Stream.of("item").collect(ListResult.collector()).build();
         assertThat(collected).isNotNull();
         assertThat(collected.getItems()).containsExactly("item");
+        assertThat(collected.getTotalCount()).isOne();
     }
 
     @Test
@@ -44,5 +46,6 @@ public class ListResultTest {
             .collect(ListResult.collector()).build();
         assertThat(collected).isNotNull();
         assertThat(collected.getItems()).containsExactly("1", "2", "3", "4", "5", "6", "7", "8", "9", "10");
+        assertThat(collected.getTotalCount()).isEqualTo(10);
     }
 }

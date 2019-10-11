@@ -391,8 +391,7 @@ public class PublicApiHandler {
     public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
 
         final Integration integration = getIntegration(integrationId);
-        IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler.TargetStateRequest();
-        targetState.setTargetState(IntegrationDeploymentState.Unpublished);
+        IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler.TargetStateRequest(IntegrationDeploymentState.Unpublished);
 
         // find current deployment
         final String id = integration.getId().get();
