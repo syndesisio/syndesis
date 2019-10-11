@@ -1,0 +1,42 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-dynamodb.adoc
+
+[id='adding-dynamodb-connection-query_{context}']
+= Obtaining data from an Amazon DynamoDB table
+
+In an integration flow, to obtain data from an Amazon DynamoDB table, 
+add an Amazon DynamoDB connection to the middle of the flow.
+
+A DynamoDB connection cannot start a simple integration. If you want 
+to periodically obtain data from a DynamoDB table then start a simple integration
+with a timer followed by a DynamoDB connection that queries a table. 
+
+.Prerequisites
+* You created an Amazon DynamoDB connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to add to the integration. 
+
+.Procedure
+
+. In the flow visualization, click the plus sign where you want 
+to add an Amazon DynamoDB connection. 
+
+. On the *Choose a connection* page, click the Amazon DynamoDB connection that
+is configured to access that table that you want to obtain data from.
+
+. On the *Choose an action* page, select the *Query* action. 
+
+. In the *Filter* field, identify the data that the connection should 
+return. Specification of a key is required. You can specify input
+parameters with `:#`. 
+
+. Optional. In the *Attributes to query* field, enter a comma-separated list of
+the columns that contain the data that you want the connection to return. 
+For example: `attribute1,attribute2,attribute3`. 
+ 
+. Click *Next*. 
+
+.Result
+The integration now has a DynamoDB connection that obtains data. At runtime, 
+the connection returns a JSON instance document that contains the result
+of the query. 
