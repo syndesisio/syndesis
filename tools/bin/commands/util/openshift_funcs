@@ -13,6 +13,8 @@ check_oc_version()
     if [ "$test" = "" ]; then
         local test=$(oc version | grep 'Client Version' | sed "s/^.*GitVersion:\"v\(.*\)\", GitCommit.*$/\1/")
     fi
+    # make sure version only has numbers and periods
+    test=`echo "$test" | sed -E "s/[^0-9]*([0-9]+[0-9.]+).*/\1/"`
 
     echo $(compare_version $test $minimum)
 }
