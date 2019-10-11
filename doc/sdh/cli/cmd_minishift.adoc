@@ -7,6 +7,8 @@ This command is especially useful for a simple and self-contained development wo
 `syndesis minishift` requires that you have a current minishift in your path.
 You can download it directly from https://github.com/minishift/minishift/releases[GitHub].
 
+`syndesis minishift` will attempt to download the latest syndesis cli from the https://github.com/syndesisio/syndesis/releases/latest[syndesis release page]. If this fails, you can try downloading the right binary for your distribution and placing it under `tools/bin/commands/binaries`.
+
 WARNING: `minishift` only supports up to Openshift 3.11. If you need to use Openshift 4.x please refer to https://doc.syndesis.io/#syndesis-crc[syndesis crc]
 
 [[syndesis-minishift-usage]]
@@ -32,6 +34,9 @@ WARNING: `minishift` only supports up to Openshift 3.11. If you need to use Open
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.

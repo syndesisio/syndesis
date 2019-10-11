@@ -29,6 +29,9 @@ minishift::usage() {
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -52,8 +55,11 @@ minishift::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    OPERATOR_BINARY="$(basedir)/commands/binaries/syndesis"
-
+    if [ $(hasflag -f --force-binary-download) ]; then
+        if [[ -f ${OPERATOR_BINARY} ]]; then
+            rm ${OPERATOR_BINARY}
+        fi
+    fi
     download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
     # Check that minishift is installed

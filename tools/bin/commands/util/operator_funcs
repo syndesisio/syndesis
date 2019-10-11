@@ -1,6 +1,7 @@
 #!/bin/bash
 
 OPERATOR_GO_PACKAGE="github.com/syndesisio/syndesis/install/operator"
+OPERATOR_BINARY=$HOME/.syndesis/bin/syndesis
 
 operatorsdk_is_available() {
     set +e
@@ -37,16 +38,12 @@ check_operator_requirements() {
     echo "OK"
 }
 
-default_binary_path() {
-    local abs_path="$( cd "$( dirname "${BASH_SOURCE[0]}" )/../binaries" >/dev/null 2>&1 && pwd )"
-
-    if [[ -z "$abs_path" ]] ; then
-      # error; for some reason, the path is not accessible
-      # to the script (e.g. permissions re-evaled after suid)
-      exit 1  # fail
+# Make sure the binary path exists
+prepare_operator_binary_path() {
+    local path=$(dirname ${OPERATOR_BINARY})
+    if [[ ! -d ${path} ]]; then
+        mkdir -p ${path}
     fi
-
-    echo ${abs_path}
 }
 
 # check that a given binary is in $PATH
@@ -62,11 +59,8 @@ check_for_command() {
 
 # check that the operator binary is in place
 check_operator_binary() {
-    local location=${1}
-    local binary=${2}
-
-    if [[ -x ${location}/${binary} ]]; then
-        if [[ $(${location}/${binary} -h | grep 'syndesis') ]]; then
+    if [[ -x ${OPERATOR_BINARY} ]]; then
+        if [[ $(${OPERATOR_BINARY} -h | grep 'syndesis') ]]; then
             return 0
         fi
     fi
@@ -75,27 +69,41 @@ check_operator_binary() {
 
 # download the operator binary
 download_operator_binary() {
-    local location=${1:-"$(default_binary_path)"}
-    local binary=${2:-"syndesis"}
-    local base_url="https://github.com/syndesisio/syndesis/releases/download/1.8.1-20191004/syndesis-1.8.1-20191004-"
+    local pattern=""
 
-    check_operator_binary ${location} ${binary} && return
+    prepare_operator_binary_path
+    check_operator_binary && return
+    echo "operator binary not found under ${OPERATOR_BINARY}, attempting to download..."
 
-    echo "operator binary not found under ${location}/${binary}, attempting to download..."
+    if ! check_for_command curl; then
+        echo "curl is required to download the operator binary, but it wasn't found in the system"
+        return 1
+    fi
+
     case "$OSTYPE" in
-        darwin*)  base_url="${base_url}mac-64bit.tgz" ;;
-        linux*)   base_url="${base_url}linux-64bit.tgz" ;;
-        *)        cmd="unknown" ;;
+        darwin*)  pattern="mac-64" ;;
+        linux*)   pattern="linux-64" ;;
+        *)        pattern="unknown" ;;
     esac
 
-    if [[ "${base_url}" != "unknown" ]]; then
-        curl -sL ${base_url} | tar xz -C ${location}
-        chmod +x ${location}/${binary}
-        if $(check_operator_binary ${location} ${binary}); then
+    if [[ "${pattern}" != "unknown" ]]; then
+        url=$(curl -s https://api.github.com/repos/syndesisio/syndesis/releases/latest \
+                | grep browser_download_url \
+                | grep ${pattern} \
+                | cut -d '"' -f 4)
+
+        if $(curl -sL ${url} | tar xz -C $(dirname ${OPERATOR_BINARY})); then
+            chmod +x ${OPERATOR_BINARY}
+        else
+            echo "unable to download operator from ${url}"
+            return 1
+        fi
+
+        if $(check_operator_binary); then
             echo "operator binary successfully downloaded"
             return 0
         else
-            echo "operator binary download failed. Please try manually downloading from ${base_url} into ${location}"
+            echo "operator binary download failed. Please try manually downloading from ${url} into $(dirname ${OPERATOR_BINARY})"
             return 1
         fi
     else
