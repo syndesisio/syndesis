@@ -1,4 +1,4 @@
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import { useApiResource } from './useApiResource';
 import { usePolling } from './usePolling';
 
@@ -6,7 +6,7 @@ export const useVirtualization = (
   virtualizationName: string,
   disableUpdates: boolean = false
 ) => {
-  const { read, ...rest } = useApiResource<RestDataService>({
+  const { read, ...rest } = useApiResource<Virtualization>({
     defaultValue: {
       empty: true,
       id: '',
@@ -16,7 +16,7 @@ export const useVirtualization = (
       tko__description: '',
       usedBy: []
     },
-    url: `workspace/dataservices/${virtualizationName}`,
+    url: `virtualizations/${virtualizationName}`,
     useDvApiUrl: true,
   });
 

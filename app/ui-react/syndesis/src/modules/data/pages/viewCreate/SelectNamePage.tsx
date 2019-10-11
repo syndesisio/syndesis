@@ -3,7 +3,7 @@ import {
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
+import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
 import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -31,7 +31,7 @@ export interface ISelectNameRouteParams {
  * @param schemaNodeInfo - the selected schema node
  */
 export interface ISelectNameRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
   schemaNodeInfo: SchemaNodeInfo[];
 }
 

@@ -3,13 +3,13 @@ import {
   useVirtualization,
   useVirtualizationHelpers,
 } from '@syndesis/api';
+import { TableColumns } from '@syndesis/models';
 import {
   QueryResults,
-  RestDataService,
   ViewDefinition,
   ViewSourceInfo,
+  Virtualization,
 } from '@syndesis/models';
-import { TableColumns } from '@syndesis/models';
 import { Breadcrumb, DdlEditor, IViewEditValidationResult } from '@syndesis/ui';
 import { ExpandablePreview, PageLoader } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -42,7 +42,7 @@ export interface IViewEditorSqlRouteParams {
  * @param viewDefinition - the ViewDefinition
  */
 export interface IViewEditorSqlRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
   viewDefinition: ViewDefinition;
 }
 
@@ -76,7 +76,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     getSourceInfoForView,
     queryVirtualization,
     saveViewDefinition,
-    validateViewDefinition,
   } = useVirtualizationHelpers();
   const [previewExpanded, setPreviewExpanded] = React.useState(true);
   const [queryResults, setQueryResults] = React.useState(queryResultsEmpty);
@@ -106,57 +105,40 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   };
 
   /**
-   * Validate the view and update preview results
-   * @param view the view definiton
+   * Update the view status and results
+   * @param view the view definition
    */
-  const handleValidateView = async (view: ViewDefinition) => {
-    // Validate the View
-    const validationResponse = await validateViewDefinition(view);
+  const updateViewStatusAndResults = (view: ViewDefinition) => {
+    const isValid = view.status === 'SUCCESS';
     let validationResult = null;
-    if (validationResponse.status === 'SUCCESS') {
+    if (isValid) {
       validationResult = {
-        message: 'Validation successful',
+        message: '',
         type: 'success',
       } as IViewEditValidationResult;
-    } else {
-      validationResult = {
-        message: validationResponse.message,
-        type: 'danger',
-      } as IViewEditValidationResult;
-    }
-    const isValid = validationResult.type === 'success';
-    setQueryResultEmptyContent(isValid);
-    setDdlValidationInfo(validationResult, isValid);
-    updateQueryResults(isValid);
-  };
-
-  // Preview result empty content changes if view is invalid
-  const setQueryResultEmptyContent = (isValid: boolean) => {
-    if (isValid) {
+      // Update no results title and message
       setNoResultsTitle(t('preview.resultsTableValidEmptyTitle'));
       setNoResultsMessage(t('preview.resultsTableValidEmptyInfo'));
     } else {
+      validationResult = {
+        message: view.message ? view.message : 'Validation Error',
+        type: 'danger',
+    } as IViewEditValidationResult;
+      // Update no results title and message
       setNoResultsTitle(t('preview.resultsTableInvalidEmptyTitle'));
       setNoResultsMessage(t('preview.resultsTableInvalidEmptyInfo'));
     }
-  };
-
-  // Update info for the DDL editor
-  const setDdlValidationInfo = (
-    validationResult: IViewEditValidationResult,
-    isValid: boolean
-  ) => {
     setValidationResults([validationResult]);
     setValidationMessageVisible(!isValid);
     setViewValid(isValid);
+    updateQueryResults(isValid);
   };
 
   /**
-   * Saves View with the new DDL value.  The View is also validated, and preview results updated
+   * Saves View with the new DDL value.  View validation state and results are updated
    */
   const handleSaveView = async (ddlValue: string): Promise<boolean> => {
     setIsSaving(true);
-    let saveSuccess = false;
 
     // View Definition
     const view: ViewDefinition = {
@@ -166,41 +148,31 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       isComplete: viewDefn.isComplete,
       isUserDefined: true,
       keng__description: viewDefn.keng__description,
+      message: '',
       name: viewDefn.name,
       sourcePaths: viewDefn.sourcePaths,
+      status: 'ERROR',
     };
 
     try {
       // Save the View
-      await saveViewDefinition(view);
-      saveSuccess = true;
+      const newView = await saveViewDefinition(view);
 
-      // Validate the View
-      await handleValidateView(view);
+      // Updates view validation state and results
+      updateViewStatusAndResults(newView);
 
       setIsSaving(false);
       return true;
     } catch (error) {
-      const details = error.message ? error.message : '';
       setIsSaving(false);
-      if (saveSuccess) {
-        pushNotification(
-          t('viewValidationFailed', {
-            details,
-            name: viewDefn.name,
-          }),
-          'error'
-        );
-      } else {
-        pushNotification(
-          t('saveViewFailed', {
-            details,
-            name: viewDefn.name,
-          }),
-          'error'
-        );
-      }
-      return saveSuccess;
+      pushNotification(
+        t('saveViewFailed', {
+          details: error.message ? error.message : '',
+          name: viewDefn.name,
+        }),
+        'error'
+      );
+      return false;
     }
   };
 
@@ -276,8 +248,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     if (
       !isMetadataLoaded &&
       virtualization !== null &&
-      (virtualization as RestDataService).keng__id !== null &&
-      (virtualization as RestDataService).keng__id.length > 0
+      (virtualization as Virtualization).keng__id !== null &&
+      (virtualization as Virtualization).keng__id.length > 0
     ) {
       // load source table/column info by retrieving the view source info from
       // the server and converting to TableColumn objects
@@ -297,7 +269,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       handleMetadataLoaded();
     }
     // eslint-disable-next-line
-  }, [virtualization as RestDataService]);
+  }, [virtualization as Virtualization]);
 
   // initial load of query results
   React.useEffect(() => {
@@ -307,7 +279,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       (viewDefn as ViewDefinition).name !== null &&
       (viewDefn as ViewDefinition).name.length > 0
     ) {
-      handleValidateView(viewDefn);
+      updateViewStatusAndResults(viewDefn);
       handleQueryResultsLoaded();
     }
     // eslint-disable-next-line

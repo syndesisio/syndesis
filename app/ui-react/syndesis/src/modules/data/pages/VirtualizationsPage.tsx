@@ -1,5 +1,5 @@
 import { useVirtualizations } from '@syndesis/api';
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import {
   IActiveFilter,
   IFilterType,
@@ -24,7 +24,7 @@ import {
 } from '../shared/VirtualizationUtils';
 
 function getFilteredAndSortedVirtualizations(
-  virtualizations: RestDataService[],
+  virtualizations: Virtualization[],
   activeFilters: IActiveFilter[],
   isSortAscending: boolean
 ) {
@@ -32,7 +32,7 @@ function getFilteredAndSortedVirtualizations(
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSorted = filteredAndSorted.filter(
-      (virtualization: RestDataService) =>
+      (virtualization: Virtualization) =>
         virtualization.keng__id.toLowerCase().includes(valueToLower)
     );
   });
@@ -102,7 +102,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
    * @param virtualization the virtualization whose description is being returned
    * @returns the description truncated at 150 chars if necessary
    */
-  const getDescription = (virtualization: RestDataService): string => {
+  const getDescription = (virtualization: Virtualization): string => {
     if (virtualization.tko__description) {
       if (virtualization.tko__description.length > 150) {
         return virtualization.tko__description.substring(0, 150) + ' ...';
@@ -191,7 +191,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     hasListData={data.length > 0}
                   >
                     {filteredAndSorted.map(
-                      (virtualization: RestDataService, index: number) => {
+                      (virtualization: Virtualization, index: number) => {
                         const publishingDetails = getPublishingDetails(
                           appContext.config.consoleUrl,
                           virtualization

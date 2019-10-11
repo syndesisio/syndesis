@@ -1,4 +1,4 @@
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -11,7 +11,7 @@ import routes from '../routes';
 import { SelectNamePage, SelectSourcesPage } from './pages/viewCreate';
 
 export interface IViewCreateAppRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 export const ViewCreateApp: React.FunctionComponent = () => {

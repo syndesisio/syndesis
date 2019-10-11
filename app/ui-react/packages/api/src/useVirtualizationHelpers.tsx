@@ -3,11 +3,10 @@ import {
   ImportSources,
   ImportSourcesStatus,
   QueryResults,
-  RestDataService,
   TeiidStatus,
   ViewDefinition,
-  ViewDefinitionStatus,
   ViewSourceInfo,
+  Virtualization,
 } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
@@ -32,18 +31,18 @@ export const useVirtualizationHelpers = () => {
     username: string,
     virtName: string,
     virtDesc?: string
-  ): Promise<RestDataService> => {
+  ): Promise<Virtualization> => {
     const newVirtualization = {
       keng__id: `${virtName}`,
       tko__description: virtDesc ? `${virtDesc}` : '',
       usedBy: [] as string[]
-    } as RestDataService;
+    } as Virtualization;
 
     const response = await callFetch({
       body: newVirtualization,
       headers: {},
       method: 'POST',
-      url: `${apiContext.dvApiUri}workspace/dataservices/${virtName}`,
+      url: `${apiContext.dvApiUri}virtualizations`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -66,13 +65,13 @@ export const useVirtualizationHelpers = () => {
     const updatedVirtualization = {
       keng__id: `${virtName}`,
       tko__description: virtDesc,
-    } as RestDataService;
+    } as Virtualization;
 
     const response = await callFetch({
       body: updatedVirtualization,
       headers: {},
       method: 'PUT',
-      url: `${apiContext.dvApiUri}workspace/dataservices/${virtName}`,
+      url: `${apiContext.dvApiUri}virtualizations/${virtName}`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
@@ -91,7 +90,7 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
-      url: `${apiContext.dvApiUri}workspace/dataservices/${virtualizationName}`,
+      url: `${apiContext.dvApiUri}virtualizations/${virtualizationName}`,
     });
 
     if (!response.ok) {
@@ -117,7 +116,7 @@ export const useVirtualizationHelpers = () => {
       body: pubVirtualization,
       headers: {},
       method: 'POST',
-      url: `${apiContext.dvApiUri}metadata/publish`,
+      url: `${apiContext.dvApiUri}virtualizations/publish`,
     });
 
     if (!response.ok) {
@@ -177,7 +176,7 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/dataservices/${virtualizationName}/views/${encodedName}`,
+      }virtualizations/${virtualizationName}/views/${encodedName}`,
     });
 
     if (!response.ok) {
@@ -199,7 +198,7 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }service/userProfile/viewEditorState/${viewDefinitionId}`,
+      }editors/${viewDefinitionId}`,
     });
 
     if (!response.ok) {
@@ -226,7 +225,7 @@ export const useVirtualizationHelpers = () => {
       method: 'PUT',
       url: `${
         apiContext.dvApiUri
-      }workspace/dataservices/${virtualizationName}/import/${sourceName}`,
+      }virtualizations/${virtualizationName}/import/${sourceName}`,
     });
 
     if (!response.ok) {
@@ -234,27 +233,6 @@ export const useVirtualizationHelpers = () => {
     }
 
     return (await response.json()) as ImportSourcesStatus;
-  };
-
-  /**
-   * Validate the supplied ViewDefinition
-   * @param viewDefinition the view definition
-   */
-  const validateViewDefinition = async (
-    viewDefinition: ViewDefinition
-  ): Promise<ViewDefinitionStatus> => {
-    const response = await callFetch({
-      body: viewDefinition,
-      headers: {},
-      method: 'POST',
-      url: `${apiContext.dvApiUri}service/userProfile/validateViewDefinition`,
-    });
-
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-
-    return (await response.json()) as ViewDefinitionStatus;
   };
 
   /**
@@ -270,7 +248,7 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/dataservices/${encodedName}`,
+      }virtualizations/${encodedName}`,
     });
     
     // ok response - the virtualization already exists
@@ -312,7 +290,7 @@ export const useVirtualizationHelpers = () => {
       method: 'GET',
       url: `${
         apiContext.dvApiUri
-      }workspace/dataservices/${virtualizationName}/views/${encodedName}`,
+      }virtualizations/${virtualizationName}/views/${encodedName}`,
     });
 
     // ok response - the virtualization view already exists
@@ -350,7 +328,7 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
-      url: `${apiContext.dvApiUri}metadata/publish/${virtualizationName}`,
+      url: `${apiContext.dvApiUri}virtualizations/publish/${virtualizationName}`,
     });
 
     if (!response.ok) {
@@ -372,7 +350,7 @@ export const useVirtualizationHelpers = () => {
       method: 'DELETE',
       url: `${
         apiContext.dvApiUri
-      }service/userProfile/viewEditorState/${viewDefinitionId}`,
+      }editors/${viewDefinitionId}`,
     });
 
     if (!response.ok) {
@@ -388,17 +366,17 @@ export const useVirtualizationHelpers = () => {
    */
   const saveViewDefinition = async (
     viewDefinition: ViewDefinition
-  ): Promise<void> => {
+  ): Promise<ViewDefinition> => {
     const response = await callFetch({
       body: viewDefinition,
       headers: {},
       method: 'PUT',
-      url: `${apiContext.dvApiUri}service/userProfile/viewEditorState`,
+      url: `${apiContext.dvApiUri}editors`,
     });
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-    return Promise.resolve();
+    return (await response.json()) as ViewDefinition;
   };
 
   /**
@@ -406,7 +384,7 @@ export const useVirtualizationHelpers = () => {
    * @param virtualalization the virtualization
    */
   const getSourceInfoForView = async (
-    virtualization: RestDataService
+    virtualization: Virtualization
   ): Promise<ViewSourceInfo> => {
     const response = await callFetch({
       headers: {},
@@ -434,7 +412,6 @@ export const useVirtualizationHelpers = () => {
     saveViewDefinition,
     unpublishVirtualization,
     updateVirtualizationDescription,
-    validateViewDefinition,
     validateViewName,
     validateVirtualizationName,
   };

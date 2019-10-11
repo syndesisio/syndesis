@@ -1,4 +1,4 @@
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import './VirtualizationNavBar.css';
  */
 
 export interface IVirtualizationNavBarProps {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 /**

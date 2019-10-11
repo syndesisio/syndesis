@@ -8,7 +8,7 @@ import {
   ViewDefinitionDescriptor,
   VirtualizationPublishingDetails,
 } from '@syndesis/models';
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import {
   Loader,
   PageSection,
@@ -53,7 +53,7 @@ export interface IVirtualizationViewsPageRouteParams {
  */
 
 export interface IVirtualizationViewsPageRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 function getFilteredAndSortedViewDefns(

@@ -10,11 +10,13 @@ export const useViewDefinition = (
       isComplete: false,
       isUserDefined: false,
       keng__description: '',
+      message: '',
       name: '',
       sourcePaths: [],
+      status: 'ERROR'
     },
     initialValue: initialDefn,
-    url: `service/userProfile/viewEditorState/${viewDefinitionId}`,
+    url: `editors/${viewDefinitionId}`,
     useDvApiUrl: true,
   });
 };
