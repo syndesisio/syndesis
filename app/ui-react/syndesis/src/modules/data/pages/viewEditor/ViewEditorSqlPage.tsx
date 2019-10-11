@@ -40,20 +40,21 @@ export interface IViewEditorSqlRouteParams {
 /**
  * @param virtualization - the Virtualization
  * @param viewDefinition - the ViewDefinition
- * @param previewExpanded - the state of preview component expansion
- * @param queryResults - the current query results in the preview component
  */
 export interface IViewEditorSqlRouteState {
   virtualization: RestDataService;
   viewDefinition: ViewDefinition;
-  previewExpanded: boolean;
-  queryResults: QueryResults;
 }
 
 export const ViewEditorSqlPage: React.FunctionComponent = () => {
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
+  };
   const [isSaving, setIsSaving] = React.useState(false);
   const [isLoadingPreview, setIsLoadingPreview] = React.useState(false);
   const [isMetadataLoaded, setMetadataLoaded] = React.useState(false);
+  const [isQueryResultsLoaded, setQueryResultsLoaded] = React.useState(false);
   const [sourceTableColumns, setSourceTableColumns] = React.useState<
     TableColumns[]
   >([]);
@@ -77,10 +78,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     saveViewDefinition,
     validateViewDefinition,
   } = useVirtualizationHelpers();
-  const [previewExpanded, setPreviewExpanded] = React.useState(
-    state.previewExpanded
-  );
-  const [queryResults, setQueryResults] = React.useState(state.queryResults);
+  const [previewExpanded, setPreviewExpanded] = React.useState(true);
+  const [queryResults, setQueryResults] = React.useState(queryResultsEmpty);
   const { resource: virtualization } = useVirtualization(
     params.virtualizationId
   );
@@ -96,15 +95,14 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   );
   const ddlHasChanges = React.useRef(false);
 
-  const queryResultsEmpty: QueryResults = {
-    columns: [],
-    rows: [],
-  };
-
   const handleMetadataLoaded = async (): Promise<void> => {
     if (sourceTableColumns != null && sourceTableColumns.length > 0) {
       setMetadataLoaded(true);
     }
+  };
+
+  const handleQueryResultsLoaded = async (): Promise<void> => {
+    setQueryResultsLoaded(true);
   };
 
   /**
@@ -257,15 +255,6 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       }
       setIsLoadingPreview(false);
       setQueryResults(queryResult);
-      // Show toast for refresh click
-      if (refreshClick) {
-        pushNotification(
-          t('queryResultsRefreshed', {
-            name: viewDefn.name,
-          }),
-          'success'
-        );
-      }
     } catch (error) {
       setQueryResults(queryResult);
       setIsLoadingPreview(false);
@@ -309,6 +298,20 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     }
     // eslint-disable-next-line
   }, [virtualization as RestDataService]);
+
+  // initial load of query results
+  React.useEffect(() => {
+    if (
+      !isQueryResultsLoaded &&
+      viewDefn !== null &&
+      (viewDefn as ViewDefinition).name !== null &&
+      (viewDefn as ViewDefinition).name.length > 0
+    ) {
+      handleValidateView(viewDefn);
+      handleQueryResultsLoaded();
+    }
+    // eslint-disable-next-line
+  }, [viewDefn as ViewDefinition]);
 
   const shouldDisplayDialog = React.useCallback(() => {
     return ddlHasChanges.current;

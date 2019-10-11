@@ -13,14 +13,12 @@ import {
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AppContext, UIContext } from '../../../app';
+import { AppContext } from '../../../app';
 import resolvers from '../../resolvers';
 
 export const VirtualizationCreatePage: React.FunctionComponent = () => {
-  const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const { history } = useRouteData();
   const appContext = React.useContext(AppContext);
@@ -109,12 +107,6 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
         appContext.user.username || 'developer',
         value.virtName,
         value.virtDescription
-      );
-      pushNotification(
-        t('createVirtualizationSuccess', {
-          name: value.virtName,
-        }),
-        'success'
       );
       history.push(
         resolvers.data.virtualizations.views.root({
