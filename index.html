@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-12987-g6300d803d6,</span>
+<span id="revnumber">version 1.1.3-12989-g9b204ca552,</span>
 <span id="revdate">2019-10-11</span>
 </div>
 <div id="toc" class="toc2">
@@ -1337,6 +1337,9 @@ This command is especially useful for a simple and self-contained development wo
 <p><code>syndesis crc</code> requires that you have a current crc binary in your path.
 You can download it directly from <a href="https://cloud.redhat.com/openshift/install/crc/installer-provisioned">https://cloud.redhat.com</a>.</p>
 </div>
+<div class="paragraph">
+<p><code>syndesis crc</code> will attempt to download the latest syndesis cli from the <a href="https://github.com/syndesisio/syndesis/releases/latest">syndesis release page</a>. If this fails, you can try downloading the right binary for your distribution and placing it under <code>tools/bin/commands/binaries</code>.</p>
+</div>
 <div class="sect3">
 <h4 id="syndesis-crc-usage">2.3.1. Usage</h4>
 <div class="listingblock">
@@ -1357,6 +1360,9 @@ You can download it directly from <a href="https://cloud.redhat.com/openshift/in
     --vm-driver &lt;driver&gt;      Which virtual machine driver to use (depends on OS)
     --bundle &lt;path-to-bundle&gt; Path to system bundle (required when using virtualbox vm-driver)
     --local                   Use the local resource files instead of fetching them from GitHub
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -1495,6 +1501,9 @@ This command is especially useful for a simple and self-contained development wo
 <p><code>syndesis minishift</code> requires that you have a current minishift in your path.
 You can download it directly from <a href="https://github.com/minishift/minishift/releases">GitHub</a>.</p>
 </div>
+<div class="paragraph">
+<p><code>syndesis minishift</code> will attempt to download the latest syndesis cli from the <a href="https://github.com/syndesisio/syndesis/releases/latest">syndesis release page</a>. If this fails, you can try downloading the right binary for your distribution and placing it under <code>tools/bin/commands/binaries</code>.</p>
+</div>
 <div class="admonitionblock warning">
 <table>
 <tr>
@@ -1529,6 +1538,9 @@ You can download it directly from <a href="https://github.com/minishift/minishif
     --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --local                   Use the local resource files instead of fetching them from GitHub
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
@@ -3641,8 +3653,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-12987-g6300d803d6<br>
-Last updated 2019-10-11 07:57:40 UTC
+Version 1.1.3-12989-g9b204ca552<br>
+Last updated 2019-10-11 09:19:12 UTC
 </div>
 </div>
 </body>
