@@ -29,8 +29,8 @@ var assets = func() http.FileSystem {
 			name:    "camelk",
 			modTime: time.Time{},
 		},
-		"/addons/camelk/camel-catalog-2.21.0.fuse-750029.yaml.tmpl": &vfsgen۰CompressedFileInfo{
-			name:             "camel-catalog-2.21.0.fuse-750029.yaml.tmpl",
+		"/addons/camelk/camel-catalog-2.21.0.fuse-750033.yaml.tmpl": &vfsgen۰CompressedFileInfo{
+			name:             "camel-catalog-2.21.0.fuse-750033.yaml.tmpl",
 			modTime:          time.Time{},
 			uncompressedSize: 46542,
 
@@ -382,7 +382,7 @@ var assets = func() http.FileSystem {
 		fs["/addons/todo"].(os.FileInfo),
 	}
 	fs["/addons/camelk"].(*vfsgen۰DirInfo).entries = []os.FileInfo{
-		fs["/addons/camelk/camel-catalog-2.21.0.fuse-750029.yaml.tmpl"].(os.FileInfo),
+		fs["/addons/camelk/camel-catalog-2.21.0.fuse-750033.yaml.tmpl"].(os.FileInfo),
 		fs["/addons/camelk/maven-settings.yml.tmpl"].(os.FileInfo),
 		fs["/addons/camelk/platform.yml.tmpl"].(os.FileInfo),
 	}
