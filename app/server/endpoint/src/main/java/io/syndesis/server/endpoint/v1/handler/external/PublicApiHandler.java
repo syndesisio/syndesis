@@ -96,9 +96,9 @@ public class PublicApiHandler {
     private final IntegrationHandler integrationHandler;
 
     protected PublicApiHandler(DataManager dataMgr, EncryptionComponent encryptionComponent,
-                               IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler,
-                               MonitoringProvider monitoringProvider, EnvironmentHandler environmentHandler,
-                               IntegrationSupportHandler handler, IntegrationHandler integrationHandler) {
+        IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler,
+        MonitoringProvider monitoringProvider, EnvironmentHandler environmentHandler,
+        IntegrationSupportHandler handler, IntegrationHandler integrationHandler) {
         this.dataMgr = dataMgr;
         this.encryptionComponent = encryptionComponent;
         this.deploymentHandler = deploymentHandler;
@@ -148,7 +148,7 @@ public class PublicApiHandler {
     @Path("environments/{env}")
     @Consumes(MediaType.APPLICATION_JSON)
     public void renameEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-                                  @NotNull @ApiParam(required = true) String newEnvironment) {
+        @NotNull @ApiParam(required = true) String newEnvironment) {
         environmentHandler.renameEnvironment(environment, newEnvironment);
     }
 
@@ -158,8 +158,7 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required =
-            true) String integrationId) {
+    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
         return environmentHandler.getReleaseTags(integrationId);
     }
 
@@ -168,19 +167,21 @@ public class PublicApiHandler {
      */
     @DELETE
     @Path("integrations/{id}/tags/{env}")
-    public void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId, @NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+    public void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
+        @NotNull @PathParam("env") @ApiParam(required = true) String environment) {
         environmentHandler.deleteReleaseTag(integrationId, environment);
     }
 
     /**
-     * Set tags on an integration for release to target environments. Also deletes other tags.
+     * Set tags on an integration for release to target environments. Also
+     * deletes other tags.
      */
     @PUT
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Map<String, ContinuousDeliveryEnvironment> putTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-                                                             @NotNull @ApiParam(required = true) List<String> environments) {
+        @NotNull @ApiParam(required = true) List<String> environments) {
         return environmentHandler.putTagsForRelease(integrationId, environments);
     }
 
@@ -192,7 +193,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public Map<String, ContinuousDeliveryEnvironment> patchTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-                                                             @NotNull @ApiParam(required = true) List<String> environments) {
+        @NotNull @ApiParam(required = true) List<String> environments) {
         return environmentHandler.patchTagsForRelease(integrationId, environments);
     }
 
@@ -203,7 +204,7 @@ public class PublicApiHandler {
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-                                    @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
+        @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
 
         // validate environment
         EnvironmentHandler.validateEnvironment("environment", environment);
@@ -248,8 +249,8 @@ public class PublicApiHandler {
         }
 
         final List<String> ids = integrations.getItems().stream()
-                .map(integration -> integration.getId().get())
-                .collect(Collectors.toList());
+            .map(integration -> integration.getId().get())
+            .collect(Collectors.toList());
 
         if (ids.isEmpty()) {
             return Response.status(Response.Status.NO_CONTENT.getStatusCode(), "No integrations to export").build();
@@ -279,7 +280,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
-                                                    @NotNull @MultipartForm @ApiParam(required = true) ImportFormDataInput formInput) {
+        @NotNull @MultipartForm @ApiParam(required = true) ImportFormDataInput formInput) {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
@@ -290,9 +291,9 @@ public class PublicApiHandler {
         final boolean deploy = Boolean.TRUE.equals(formInput.getDeploy());
         final Environment env = environmentHandler.getEnvironment(environment);
 
-        try {
-            // actual import data created using the exportResources endpoint above
-            final InputStream importFile = formInput.getData();
+        try (InputStream importFile = formInput.getData(); InputStream properties = formInput.getProperties()) {
+            // actual import data created using the exportResources endpoint
+            // above
             if (importFile == null) {
                 throw new ClientErrorException("Missing file 'data' in multipart request", Response.Status.BAD_REQUEST);
             }
@@ -311,7 +312,6 @@ public class PublicApiHandler {
             environmentHandler.updateCDEnvironments(integrations, env.getId().get(), lastImportedAt, b -> b.lastImportedAt(lastImportedAt));
 
             // optional connection properties configuration file
-            final InputStream properties = formInput.getProperties();
             if (properties != null) {
 
                 // update connection fields using properties
@@ -332,13 +332,13 @@ public class PublicApiHandler {
             }
 
             return new ContinuousDeliveryImportResults.Builder()
-                    .lastImportedAt(lastImportedAt)
-                    .results(results)
-                    .build();
+                .lastImportedAt(lastImportedAt)
+                .results(results)
+                .build();
 
         } catch (IOException e) {
             throw new ClientErrorException(String.format("Error processing multipart request: %s", e.getMessage()),
-                    Response.Status.BAD_REQUEST, e);
+                Response.Status.BAD_REQUEST, e);
         }
     }
 
@@ -350,7 +350,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
-                                           @NotNull @ApiParam(required = true) Map<String, String> properties) {
+        @NotNull @ApiParam(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
         final Connection connection = getResource(Connection.class, connectionId, WithResourceId::hasId);
@@ -378,7 +378,8 @@ public class PublicApiHandler {
     @POST
     @Path("integrations/{id}/deployments")
     @Produces(MediaType.APPLICATION_JSON)
-    public IntegrationDeployment publishIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
+    public IntegrationDeployment publishIntegration(@Context final SecurityContext sec,
+        @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
         return publishIntegration(sec, getIntegration(integrationId));
     }
 
@@ -396,9 +397,9 @@ public class PublicApiHandler {
         // find current deployment
         final String id = integration.getId().get();
         final IntegrationDeployment deployment = dataMgr.fetchAllByPropertyValue(IntegrationDeployment.class, PROPERTY_INTEGRATION_ID, id)
-                .filter(d -> d.getTargetState() == IntegrationDeploymentState.Published)
-                .findFirst()
-                .orElse(null);
+            .filter(d -> d.getTargetState() == IntegrationDeploymentState.Published)
+            .findFirst()
+            .orElse(null);
         if (deployment != null) {
             deploymentHandler.updateTargetState(id, deployment.getVersion(), targetState);
         } else {
@@ -418,35 +419,36 @@ public class PublicApiHandler {
         // encrypt properties
         final Connector connector = dataMgr.fetch(Connector.class, c.getConnectorId());
         final Map<String, String> encryptedValues = encryptionComponent.encryptPropertyValues(values,
-                connector.getProperties());
+            connector.getProperties());
 
         // update connection properties
         final HashMap<String, String> map = new HashMap<>(c.getConfiguredProperties());
         map.putAll(encryptedValues);
 
         // TODO how can credential flow be handled without a user session??
-        // is there any way to determine which connections require manual intervention??
+        // is there any way to determine which connections require manual
+        // intervention??
         dataMgr.update(c.builder()
-                .configuredProperties(map)
-                .lastUpdated(lastImportedAt)
-                .build());
+            .configuredProperties(map)
+            .lastUpdated(lastImportedAt)
+            .build());
     }
 
     private Integration getIntegration(String integrationId) {
         validateParam(PROPERTY_INTEGRATION_ID, integrationId);
-        return getResource(Integration.class, integrationId, i -> !i.isDeleted());
+        return dataMgr.fetch(Integration.class, integrationId);
     }
 
     private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId, Predicate<? super T> operator) {
         // try fetching by name first, then by id
         final T resource = dataMgr.fetchAllByPropertyValue(resourceClass, "name", nameOrId)
-                .filter(operator)
-                .findFirst()
-                .orElse(dataMgr.fetch(resourceClass, nameOrId));
+            .filter(operator)
+            .findFirst()
+            .orElse(dataMgr.fetch(resourceClass, nameOrId));
         if (resource == null) {
             throw new ClientErrorException(
-                    String.format("Missing %s with name/id %s", Kind.from(resourceClass).getModelName(), nameOrId),
-                    Response.Status.NOT_FOUND);
+                String.format("Missing %s with name/id %s", Kind.from(resourceClass).getModelName(), nameOrId),
+                Response.Status.NOT_FOUND);
         }
         return resource;
     }
@@ -479,13 +481,15 @@ public class PublicApiHandler {
 
     private <T> List<T> getResourcesOfType(List<WithResourceId> resources, Class<T> type) {
         return resources.stream()
-                        .filter(type::isInstance)
-                        .map(type::cast)
-                        .collect(Collectors.toList());
+            .filter(type::isInstance)
+            .map(type::cast)
+            .collect(Collectors.toList());
     }
 
     /**
-     * DTO for {@link org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput} for importResources.
+     * DTO for
+     * {@link org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput}
+     * for importResources.
      */
     public static class ImportFormDataInput {
         @FormParam("data")
@@ -539,7 +543,7 @@ public class PublicApiHandler {
         private IntegrationDeploymentStateDetails stateDetails;
 
         public IntegrationState(IntegrationDeploymentState currentState,
-                                IntegrationDeploymentStateDetails stateDetails) {
+            IntegrationDeploymentStateDetails stateDetails) {
             this.currentState = currentState;
             this.stateDetails = stateDetails;
         }

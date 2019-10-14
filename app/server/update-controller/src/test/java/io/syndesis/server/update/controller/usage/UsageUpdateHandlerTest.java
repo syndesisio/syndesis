@@ -157,20 +157,6 @@ public class UsageUpdateHandlerTest {
     }
 
     @Test
-    public void shouldNotCountUsedExtensionsInDeletedIntegrations() {
-
-        when(dataManager.fetchAll(Integration.class))
-            .thenReturn(ListResult.of(new Integration.Builder().createFrom(integrationWithExtension).isDeleted(true).build()));
-
-        handler.processInternal(NOT_USED);
-
-        verify(dataManager).fetchAll(Integration.class);
-        verify(dataManager).fetchAll(Connection.class);
-        verify(dataManager).fetchAll(Extension.class);
-        verifyNoMoreInteractions(dataManager);
-    }
-
-    @Test
     public void someStepsDoNotUseConnectionsAndShouldNotBeConsidered() {
         final Step stepWithoutConnection = new Step.Builder().build();
         final Integration integration = testIntegration().withFlowConnections(c1, c2).withFlowStepsUsingConnections(c1, c3)

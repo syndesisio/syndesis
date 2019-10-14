@@ -19,13 +19,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import org.immutables.value.Value;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.WithKind;
-import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.util.IndexedProperty;
+
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @IndexedProperty.Multiple({
@@ -36,25 +35,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeployment.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId<IntegrationDeployment>, WithKind, WithResourceId  {
+public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId<IntegrationDeployment> {
 
     String COMPOSITE_ID_SEPARATOR = ":";
-
-    static String compositeId(String integrationId, int version) {
-        return integrationId + COMPOSITE_ID_SEPARATOR + version;
-    }
-
-    @Override
-    default Kind getKind() {
-        return Kind.IntegrationDeployment;
-    }
-
-    @Value.Default
-    default Optional<String> getIntegrationId() {
-        return getSpec().getId();
-    }
-
-    Integration getSpec();
 
     class Builder extends ImmutableIntegrationDeployment.Builder {
         // allow access to ImmutableIntegrationDeployment.Builder
@@ -64,34 +47,40 @@ public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId
         return new Builder().createFrom(this);
     }
 
-    default IntegrationDeployment withCurrentState(IntegrationDeploymentState state) {
-        return builder().currentState(state).build();
+    @Value.Default
+    default Optional<String> getIntegrationId() {
+        return getSpec().getId();
     }
 
-    default IntegrationDeployment withTargetState(IntegrationDeploymentState state) {
-        return builder().targetState(state).build();
+    @Override
+    default Kind getKind() {
+        return Kind.IntegrationDeployment;
     }
+
+    Integration getSpec();
 
     default IntegrationDeployment unpublished() {
-        Map<String, String> stepsDone = new HashMap<>(getStepsDone());
+        final Map<String, String> stepsDone = new HashMap<>(getStepsDone());
         stepsDone.remove("deploy");
         return builder().currentState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
     }
 
     default IntegrationDeployment unpublishing() {
-        Map<String, String> stepsDone = new HashMap<>(getStepsDone());
+        final Map<String, String> stepsDone = new HashMap<>(getStepsDone());
         stepsDone.remove("deploy");
         return builder().targetState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
     }
 
-    /**
-     * @deprecated fully deleted from the data manager in 7.4+
-     *      Retained for filtering in existing installations.
-     */
-    @Deprecated
-    default IntegrationDeployment deleted() {
-        final Integration integration = new Integration.Builder().createFrom(getSpec()).isDeleted(true).build();
-        return builder().spec(integration).build();
+    default IntegrationDeployment withCurrentState(final IntegrationDeploymentState state) {
+        return builder().currentState(state).build();
+    }
+
+    default IntegrationDeployment withTargetState(final IntegrationDeploymentState state) {
+        return builder().targetState(state).build();
+    }
+
+    static String compositeId(final String integrationId, final int version) {
+        return integrationId + COMPOSITE_ID_SEPARATOR + version;
     }
 
 }

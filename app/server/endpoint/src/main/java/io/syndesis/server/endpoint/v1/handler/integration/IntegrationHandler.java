@@ -137,16 +137,6 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public IntegrationOverview get(final String id) {
         final Integration integration = getIntegration(id);
 
-        if (integration.isDeleted()) {
-            // Not sure if we need to do that for both current and desired
-            // status,
-            // but If we don't do include the desired state, IntegrationITCase
-            // is not going to pass anytime soon. Why?
-            // Cause that test, is using NoopHandlerProvider, so that means no
-            // controllers.
-            throw new EntityNotFoundException(String.format("Integration %s has been deleted", integration.getId()));
-        }
-
         return integrationOverviewHelper.toCurrentIntegrationOverview(integration);
     }
 
@@ -195,7 +185,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Override
     public ListResult<IntegrationOverview> list(final UriInfo uriInfo) {
         final DataManager dataManager = getDataManager();
-        final ListResult<Integration> integrations = dataManager.fetchAll(Integration.class, new DeletedFilter(),
+        final ListResult<Integration> integrations = dataManager.fetchAll(Integration.class,
             new ReflectiveSorter<>(Integration.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo)));
 

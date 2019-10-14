@@ -17,16 +17,19 @@ package io.syndesis.server.dao.validation.integration;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.validation.integration.IntegrationWithDomain;
 import io.syndesis.common.model.validation.integration.NoDuplicateIntegration;
 import io.syndesis.server.dao.manager.DataManager;
+
+import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDuplicateIntegration, Integration> {
 
@@ -36,34 +39,6 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
     @Override
     public void initialize(final NoDuplicateIntegration validIntegration) {
         // The annotation has no useful values
-    }
-
-    private boolean searchName(final String name, final Set<String> names, final ConstraintValidatorContext context) {
-        final boolean exists = names.contains(name);
-        if (exists) {
-            context.disableDefaultConstraintViolation();
-            context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", name)
-                    .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
-                    .addPropertyNode("name").addConstraintViolation();
-        }
-
-        return !exists;
-    }
-
-    private boolean isValid(final IntegrationWithDomain value, final ConstraintValidatorContext context) {
-        Integration target = value.getTarget();
-        final String name = target.getName();
-        if (name == null) {
-            return true;
-        }
-
-        // name should be unique among all other draft and deployed integrations
-        final Set<String> names = value.getDomain().stream()
-                .filter(i -> !i.isDeleted() && !i.getId().equals(target.getId()))
-                .map(WithName::getName)
-                .collect(Collectors.toSet());
-
-        return searchName(name, names, context);
     }
 
     @Override
@@ -79,14 +54,42 @@ public class NoDuplicateIntegrationValidator implements ConstraintValidator<NoDu
 
         // name should be unique among all other draft and deployed integrations
         final Set<String> names = dataManager.fetchAll(Integration.class).getItems().stream()
-                        .filter(i -> !i.isDeleted() && !i.getId().equals(value.getId()))
-                         .map(WithName::getName)
-                         .collect(Collectors.toSet());
-                names.addAll(dataManager.fetchAll(IntegrationDeployment.class).getItems().stream()
-                        .filter(d -> !d.getSpec().isDeleted() && !d.getSpec().getId().equals(value.getId()))
-                        .map(d -> d.getSpec().getName())
-                        .collect(Collectors.toSet()));
+            .filter(i -> !i.getId().equals(value.getId()))
+            .map(WithName::getName)
+            .collect(Collectors.toSet());
+        names.addAll(dataManager.fetchAll(IntegrationDeployment.class).getItems().stream()
+            .filter(d -> !d.getSpec().getId().equals(value.getId()))
+            .map(d -> d.getSpec().getName())
+            .collect(Collectors.toSet()));
 
-       return searchName(name, names, context);
+        return searchName(name, names, context);
+    }
+
+    private static boolean isValid(final IntegrationWithDomain value, final ConstraintValidatorContext context) {
+        final Integration target = value.getTarget();
+        final String name = target.getName();
+        if (name == null) {
+            return true;
+        }
+
+        // name should be unique among all other draft and deployed integrations
+        final Set<String> names = value.getDomain().stream()
+            .filter(i -> !i.getId().equals(target.getId()))
+            .map(WithName::getName)
+            .collect(Collectors.toSet());
+
+        return searchName(name, names, context);
+    }
+
+    private static boolean searchName(final String name, final Set<String> names, final ConstraintValidatorContext context) {
+        final boolean exists = names.contains(name);
+        if (exists) {
+            context.disableDefaultConstraintViolation();
+            context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", name)
+                .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
+                .addPropertyNode("name").addConstraintViolation();
+        }
+
+        return !exists;
     }
 }
