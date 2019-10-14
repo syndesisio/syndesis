@@ -45,7 +45,7 @@ public class JsonSchemaInspector implements Inspector {
         final Optional<byte[]> exemplar) {
         final JsonSchema schema;
         try {
-            schema = Json.defaultJsonSchemaReader().forType(JsonSchema.class).readValue(specification);
+            schema = Json.defaultJsonSchemaReader().readValue(specification);
         } catch (final IOException e) {
             LOG.warn("Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed", e);
             LOG.debug(specification);

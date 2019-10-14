@@ -17,8 +17,6 @@ package io.syndesis.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -29,15 +27,15 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
-import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
+import io.syndesis.common.util.json.JsonSchemaMixIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -103,7 +101,7 @@ public final class Json {
      * This method creates a copy of the default ObjectMapper configuration and adds special Json schema compatibility handlers
      * for supporting draft-03, draft-04 and draft-06 level at the same time.
      *
-     * Auto converts "$id" to "id" property for draft-4 compatibility.
+     * Auto converts "$id" to "id" property for draft-04 compatibility.
      *
      * In case the provided schema specification to read uses draft-04 and draft-06 specific features such as "examples" or a list of "required"
      * properties as array these information is more or less lost and auto converted to draft-03 compatible defaults. This way we can
@@ -114,37 +112,22 @@ public final class Json {
         return copyObjectMapperConfiguration()
                 .addHandler(new DeserializationProblemHandler() {
                     @Override
-                    public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
-                        if ("$id".equals(propertyName)) {
-                            try {
-                                Method setId = beanOrClass.getClass().getMethod("setId", String.class);
-                                setId.invoke(beanOrClass, new StringDeserializer().deserialize(p, ctxt));
-                                return true;
-                            } catch (NoSuchMethodException e) {
-                                LOG.warn("Failed to auto convert Json schema draft-6 \"$id\" property - missing id property on schema object", e);
-                            } catch (IllegalAccessException | InvocationTargetException e) {
-                                LOG.warn("Failed to auto convert Json schema draft-6 \"$id\" property", e);
-                            }
-                        }
-
-                        return super.handleUnknownProperty(ctxt, p, deserializer, beanOrClass, propertyName);
-                    }
-
-                    @Override
                     public Object handleUnexpectedToken(DeserializationContext ctxt, Class<?> targetType, JsonToken t,
                                                         JsonParser p, String failureMsg) throws IOException {
                         if (t == JsonToken.START_ARRAY && targetType.equals(Boolean.class)) {
-                            // handle Json schema draft-4 array type for required field and resolve to default value (required=true).
+                            // handle Json schema draft-04 array type for required field and resolve to default value (required=true).
                             String[] requiredProps = new StringArrayDeserializer().deserialize(p, ctxt);
-                            LOG.warn(String.format("Auto convert Json schema draft-4 \"required\" array value '%s' " +
-                                    "to default \"required=false\" value for draft-3 parser compatibility reasons", Arrays.toString(requiredProps)));
+                            LOG.warn(String.format("Auto convert Json schema draft-04 \"required\" array value '%s' " +
+                                    "to default \"required=false\" value for draft-03 parser compatibility reasons", Arrays.toString(requiredProps)));
                             return null;
                         }
 
                         return super.handleUnexpectedToken(ctxt, targetType, t, p, failureMsg);
                     }
                 })
-                .reader();
+                .addMixIn(JsonSchema.class, JsonSchemaMixIn.Draft6.class)
+                .reader()
+                .forType(JsonSchema.class);
     }
 
     public static String toString(Object value) {
