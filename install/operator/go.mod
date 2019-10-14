@@ -7,7 +7,6 @@ module github.com/syndesisio/syndesis/install/operator
 // replace github.com/chirino/hawtgo => /Users/chirino/sandbox/hawtgo
 
 require (
-	github.com/NYTimes/gziphandler v1.0.1 // indirect
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.2
@@ -18,6 +17,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/shurcooL/httpfs v0.0.0-20190527155220-6a4d4a70508b
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
+	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.3
 	github.com/stretchr/testify v1.4.0

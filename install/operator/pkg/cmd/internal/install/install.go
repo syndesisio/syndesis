@@ -20,6 +20,7 @@ package install
 import (
 	"encoding/json"
 	"fmt"
+
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
@@ -107,6 +108,18 @@ func New(parent *internal.Options) *cobra.Command {
 	standalone.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	standalone.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
 	cmd.AddCommand(standalone)
+
+	forge := &cobra.Command{
+		Use:   "forge",
+		Short: "forge the resource configuration into an openshift template <deprecated>",
+		Run: func(cmd *cobra.Command, args []string) {
+			err := o.installForge()
+			util.ExitOnError(err)
+		},
+	}
+	forge.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
+	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
+	cmd.AddCommand(forge)
 
 	cmd.PersistentFlags().StringVarP(&o.eject, "eject", "e", "", "eject configuration that would be applied to the cluster in the specified format instead of installing the configuration. One of: json|yaml")
 	cmd.PersistentFlags().StringVarP(&o.image, "image", "", pkg.DefaultOperatorImage, "sets operator image that gets installed")
