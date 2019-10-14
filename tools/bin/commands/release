@@ -133,7 +133,8 @@ release::run() {
     # Tag the release version
     git_tag_release "$release_version"
 
-    # Create template versions for the minor tags (without patchlevels)
+    # Create operator deploy YAMLs, image versions for the minor tags (without patchlevels)
+    # and commit to git
     create_moving_tag_release "$topdir" "$release_version" "$moving_tag"
 
     # Pushing to Docker Hub
@@ -154,6 +155,7 @@ create_moving_tag_release() {
     if [ ! $(hasflag --snapshot-release) ]; then
         generate_versioned_files "$topdir" "$moving_tag" "$release_version"
 
+        docker image tag "syndesis/syndesis-operator:$release_version" "syndesis/syndesis-operator:$moving_tag"
         docker push "syndesis/syndesis-operator:$moving_tag"
 
         echo "==== Git commit for templates and syndesis-operator.yml, $moving_tag"
