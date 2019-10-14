@@ -17,23 +17,37 @@ package io.syndesis.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.JsonToken;
+import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
+import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
+import com.fasterxml.jackson.databind.deser.std.StringDeserializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * JSON helper class.
  */
 public final class Json {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(Json.class);
 
     private static final ObjectMapper OBJECT_MAPPER;
     private static final ObjectWriter OBJECT_WRITER;
@@ -42,7 +56,7 @@ public final class Json {
     static {
         OBJECT_MAPPER = new ObjectMapper()
             .registerModules(new Jdk8Module())
-            .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
+            .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
@@ -83,6 +97,54 @@ public final class Json {
      */
     public static ObjectMapper copyObjectMapperConfiguration() {
         return OBJECT_MAPPER.copy();
+    }
+
+    /**
+     * This method creates a copy of the default ObjectMapper configuration and adds special Json schema compatibility handlers
+     * for supporting draft-03, draft-04 and draft-06 level at the same time.
+     *
+     * Auto converts "$id" to "id" property for draft-4 compatibility.
+     *
+     * In case the provided schema specification to read uses draft-04 and draft-06 specific features such as "examples" or a list of "required"
+     * properties as array these information is more or less lost and auto converted to draft-03 compatible defaults. This way we can
+     * read the specification to draft-03 compatible objects and use those.
+     * @return
+     */
+    public static ObjectReader defaultJsonSchemaReader() {
+        return copyObjectMapperConfiguration()
+                .addHandler(new DeserializationProblemHandler() {
+                    @Override
+                    public boolean handleUnknownProperty(DeserializationContext ctxt, JsonParser p, JsonDeserializer<?> deserializer, Object beanOrClass, String propertyName) throws IOException {
+                        if ("$id".equals(propertyName)) {
+                            try {
+                                Method setId = beanOrClass.getClass().getMethod("setId", String.class);
+                                setId.invoke(beanOrClass, new StringDeserializer().deserialize(p, ctxt));
+                                return true;
+                            } catch (NoSuchMethodException e) {
+                                LOG.warn("Failed to auto convert Json schema draft-6 \"$id\" property - missing id property on schema object", e);
+                            } catch (IllegalAccessException | InvocationTargetException e) {
+                                LOG.warn("Failed to auto convert Json schema draft-6 \"$id\" property", e);
+                            }
+                        }
+
+                        return super.handleUnknownProperty(ctxt, p, deserializer, beanOrClass, propertyName);
+                    }
+
+                    @Override
+                    public Object handleUnexpectedToken(DeserializationContext ctxt, Class<?> targetType, JsonToken t,
+                                                        JsonParser p, String failureMsg) throws IOException {
+                        if (t == JsonToken.START_ARRAY && targetType.equals(Boolean.class)) {
+                            // handle Json schema draft-4 array type for required field and resolve to default value (required=true).
+                            String[] requiredProps = new StringArrayDeserializer().deserialize(p, ctxt);
+                            LOG.warn(String.format("Auto convert Json schema draft-4 \"required\" array value '%s' " +
+                                    "to default \"required=false\" value for draft-3 parser compatibility reasons", Arrays.toString(requiredProps)));
+                            return null;
+                        }
+
+                        return super.handleUnexpectedToken(ctxt, targetType, t, p, failureMsg);
+                    }
+                })
+                .reader();
     }
 
     public static String toString(Object value) {

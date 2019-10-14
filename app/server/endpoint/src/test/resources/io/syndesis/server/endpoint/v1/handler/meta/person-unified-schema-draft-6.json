@@ -1,0 +1,30 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$id": "io:syndesis:webhook",
+  "type": "object",
+  "properties": {
+    "parameters": {
+      "type": "object",
+      "required": ["version"],
+      "properties": {
+        "version": {
+          "type": "string"
+        }
+      }
+    },
+    "body": {
+      "type": "object",
+      "$schema": "http://json-schema.org/schema#",
+      "required": [],
+      "properties": {
+        "name": {
+          "type": "string",
+          "examples": ["foo", "bar"]
+        },
+        "age": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

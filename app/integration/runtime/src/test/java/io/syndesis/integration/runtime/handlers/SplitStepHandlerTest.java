@@ -16,6 +16,7 @@
 package io.syndesis.integration.runtime.handlers;
 
 import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +30,15 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
@@ -43,6 +47,7 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,6 +63,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
+@RunWith(JUnitParamsRunner.class)
 public class SplitStepHandlerTest extends IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitStepHandlerTest.class);
 
@@ -335,7 +341,10 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
     }
 
     @Test
-    public void testSplitUnifiedJsonStep() throws Exception {
+    @Parameters({"/person-unified-schema.json",
+                 "/person-unified-schema-draft-4.json",
+                 "/person-unified-schema-draft-6.json"})
+    public void testSplitUnifiedJsonStep(final String schemaPath) throws Exception {
         final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
@@ -358,27 +367,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                                             .outputDataShape(new DataShape.Builder()
                                                     .kind(DataShapeKinds.JSON_SCHEMA)
                                                     .putMetadata(DataShapeMetaData.UNIFIED, "true")
-                                                    .specification("{" +
-                                                            "\"$schema\": \"http://json-schema.org/schema#\"," +
-                                                            "\"id\": \"io:syndesis:webhook\"," +
-                                                            "\"type\": \"object\"," +
-                                                            "\"properties\": {" +
-                                                                "\"parameters\": {" +
-                                                                    " \"type\": \"object\"," +
-                                                                    " \"properties\": {" +
-                                                                        "\"a\":{\"type\":\"string\",\"required\":true}" +
-                                                                        "\"b\":{\"type\":\"string\",\"required\":true}" +
-                                                                    "}" +
-                                                                "}," +
-                                                                "\"body\": {" +
-                                                                    "\"type\": \"object\"," +
-                                                                    "\"properties\": {" +
-                                                                        "\"id\":{\"type\":\"string\",\"required\":true}" +
-                                                                        "\"name\":{\"type\":\"string\",\"required\":true}" +
-                                                                    "}" +
-                                                                "}" +
-                                                            "}" +
-                                                        "}")
+                                                    .specification(IOStreams.readText(getPersonUnifiedSchema(schemaPath)))
                                                     .build())
                                             .build())
                                     .build())
@@ -434,6 +423,10 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         } finally {
             context.stop();
         }
+    }
+
+    private InputStream getPersonUnifiedSchema(String schemaPath) {
+        return SplitStepHandlerTest.class.getResourceAsStream(schemaPath);
     }
 
     private void verifyActivityStepTracking(String stepId, int times) {

@@ -103,7 +103,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                 String specification = collectionShape.getSpecification();
                 if (StringUtils.hasText(specification)) {
                     if (collectionShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
-                        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+                        JsonSchema schema = Json.defaultJsonSchemaReader().forType(JsonSchema.class).readValue(specification);
 
                         if (schema.isArraySchema()) {
                             ArraySchema.Items items = schema.asArraySchema().getItems();
@@ -167,7 +167,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
      * @throws IOException
      */
     private String extractUnifiedJsonBodySpec(String specification) throws IOException {
-        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+        JsonSchema schema = Json.defaultJsonSchemaReader().forType(JsonSchema.class).readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
             if (bodySchema != null) {

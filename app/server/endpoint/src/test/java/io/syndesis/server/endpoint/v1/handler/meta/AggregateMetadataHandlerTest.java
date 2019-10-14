@@ -29,15 +29,19 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  */
+@RunWith(JUnitParamsRunner.class)
 public class AggregateMetadataHandlerTest {
 
     private AggregateMetadataHandler metadataHandler = new AggregateMetadataHandler();
@@ -531,11 +535,14 @@ public class AggregateMetadataHandlerTest {
     }
 
     @Test
-    public void shouldAutoConvertAndExtractJsonUnifiedSchemaVariants() throws IOException {
+    @Parameters({"person-list-unified-response-schema.json, person-unified-response-schema.json",
+                 "person-list-unified-response-schema-draft-4.json, person-unified-response-schema-draft-4.json",
+                 "person-list-unified-response-schema-draft-6.json, person-unified-response-schema-draft-6.json"})
+    public void shouldAutoConvertAndExtractJsonUnifiedSchemaVariants(final String collectionSchemaPath, final String schemaPath) throws IOException {
         DynamicActionMetadata metadata = new DynamicActionMetadata.Builder()
                 .inputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
-                        .specification(getSpecification("person-list-unified-response-schema.json"))
+                        .specification(getSpecification(collectionSchemaPath))
                         .putMetadata(DataShapeMetaData.UNIFIED, "true")
                         .description("person-list-schema")
                         .collectionType("List")
@@ -545,7 +552,7 @@ public class AggregateMetadataHandlerTest {
                         .build())
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
-                        .specification(getSpecification("person-unified-response-schema.json"))
+                        .specification(getSpecification(schemaPath))
                         .putMetadata(DataShapeMetaData.UNIFIED, "true")
                         .description("person-schema")
                         .type(Person.class.getName())

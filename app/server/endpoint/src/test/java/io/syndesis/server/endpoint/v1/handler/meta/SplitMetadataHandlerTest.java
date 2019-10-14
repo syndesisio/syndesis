@@ -30,15 +30,19 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.apache.commons.io.IOUtils;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
  */
+@RunWith(JUnitParamsRunner.class)
 public class SplitMetadataHandlerTest {
 
     private SplitMetadataHandler metadataHandler = new SplitMetadataHandler();
@@ -351,12 +355,15 @@ public class SplitMetadataHandlerTest {
     }
 
     @Test
-    public void shouldAutoConvertAndExtractUnifiedJsonSchemaElement() throws IOException {
+    @Parameters({"person-unified-schema.json",
+                 "person-unified-schema-draft-4.json",
+                 "person-unified-schema-draft-6.json"})
+    public void shouldAutoConvertAndExtractUnifiedJsonSchemaElement(final String schemaPath) throws IOException {
         DynamicActionMetadata metadata = new DynamicActionMetadata.Builder()
                 .inputShape(StepMetadataHelper.NO_SHAPE)
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
-                        .specification(getSpecification("person-unified-schema.json"))
+                        .specification(getSpecification(schemaPath))
                         .putMetadata(DataShapeMetaData.UNIFIED, "true")
                         .description("person-unified-schema")
                         .type(Person.class.getName())
@@ -376,12 +383,15 @@ public class SplitMetadataHandlerTest {
     }
 
     @Test
-    public void shouldAutoConvertAndExtractUnifiedJsonArraySchemaElement() throws IOException {
+    @Parameters({"person-list-unified-schema.json",
+                 "person-list-unified-schema-draft-4.json",
+                 "person-list-unified-schema-draft-6.json"})
+    public void shouldAutoConvertAndExtractUnifiedJsonArraySchemaElement(final String schemaPath) throws IOException {
         DynamicActionMetadata metadata = new DynamicActionMetadata.Builder()
                 .inputShape(StepMetadataHelper.NO_SHAPE)
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
-                        .specification(getSpecification("person-list-unified-schema.json"))
+                        .specification(getSpecification(schemaPath))
                         .putMetadata(DataShapeMetaData.UNIFIED, "true")
                         .description("person-list-unified-schema")
                         .type(Person.class.getName())
