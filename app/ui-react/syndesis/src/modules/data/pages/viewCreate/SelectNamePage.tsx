@@ -3,7 +3,7 @@ import {
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { QueryResults, RestDataService, SchemaNodeInfo } from '@syndesis/models';
+import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
 import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -50,11 +50,6 @@ export const SelectNamePage: React.FunctionComponent = () => {
   const [validationResults, setValidationResults] = React.useState<
     IViewConfigurationFormValidationResult[]
   >([]);
-
-  const queryResultsEmpty: QueryResults = {
-    columns: [],
-    rows: [],
-  };
 
   const validateDescription = (desc: string): string => {
     if (desc.includes("'")) {
@@ -131,8 +126,6 @@ export const SelectNamePage: React.FunctionComponent = () => {
             // tslint:disable-next-line: object-literal-sort-keys
             viewDefinitionId: newView.id!,  // id should be defined
             viewDefinition: undefined,
-            previewExpanded: true,
-            queryResults: queryResultsEmpty,
           })
         );
       } catch (error) {

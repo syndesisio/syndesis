@@ -1,6 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import {
-  QueryResults,
   RestDataService,
   SchemaNodeInfo,
   ViewDefinition,
@@ -58,21 +57,17 @@ export default {
         sql: makeResolver<{
           virtualization: RestDataService;
           viewDefinitionId: string;
-          previewExpanded: boolean;
           viewDefinition?: ViewDefinition;
-          queryResults: QueryResults;
         }>(
           routes.virtualizations.virtualization.views.edit.sql,
-          ({ virtualization, viewDefinitionId, viewDefinition, previewExpanded, queryResults }) => ({
+          ({ virtualization, viewDefinitionId, viewDefinition }) => ({
             params: {
               virtualizationId: virtualization.keng__id,
               viewDefinitionId,
             },
             state: {
               virtualization,
-              previewExpanded,
-              viewDefinition,
-              queryResults
+              viewDefinition
             },
           })
         ),
