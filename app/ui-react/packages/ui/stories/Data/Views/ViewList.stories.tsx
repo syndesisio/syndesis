@@ -165,7 +165,6 @@ stories
           i18nCreateView={text('i18nLinkCreateView', createView)}
           i18nImportViews={importViews}
           i18nImportViewsTip={importViewsTip}
-          i18nDescription={text('i18nDescription', 'Name')}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
@@ -221,7 +220,6 @@ stories
           i18nImportViews={importViews}
           i18nImportViewsTip={importViewsTip}
           i18nName={text('i18nName', 'Name')}
-          i18nDescription={text('i18nDescription', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
             'Filter by Name...'

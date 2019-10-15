@@ -1,4 +1,5 @@
 import * as H from '@syndesis/history';
+import { usePrevious } from '@syndesis/utils';
 import {
   DropdownKebab,
   Icon,
@@ -19,17 +20,32 @@ import {
   ConfirmationIconType,
 } from '../../Shared';
 import {
-  BUILDING,
-  CONFIGURING,
-  DEPLOYING,
+  DELETE_SUBMITTED,
+  FAILED,
+  NOTFOUND,
   RUNNING,
+  SUBMITTED,
   VirtualizationPublishState,
 } from './models';
 import { PublishStatusWithProgress } from './PublishStatusWithProgress';
-
 import './VirtualizationListItem.css';
 
 export interface IVirtualizationListItemProps {
+  /**
+   * `true` if a publish step is in progress
+   */
+  isProgressWithLink: boolean;
+  i18nDeleteInProgressText: string;
+  i18nPublishInProgressText: string;
+  i18nUnpublishInProgressText: string;
+  i18nPublishState: string;
+  /**
+   * The type of label that shows to the left of the `Edit` button.
+   */
+  labelType: 'danger' | 'primary' | 'default';
+  /**
+   * The publish state returned from the backend.
+   */
   currentPublishedState: VirtualizationPublishState;
   detailsPageLink: H.LocationDescriptor;
   hasViews: boolean;
@@ -37,26 +53,36 @@ export interface IVirtualizationListItemProps {
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
-  i18nDraft: string;
-  i18nError: string;
   i18nEdit: string;
   i18nEditTip?: string;
   i18nExport: string;
   i18nInUseText: string;
   i18nPublish: string;
-  i18nPublished: string;
   i18nPublishLogUrlText: string;
-  i18nPublishInProgress: string;
   i18nUnpublish: string;
-  i18nUnpublishInProgress: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
   icon?: string;
   odataUrl?: string;
-  onDelete: (virtualizationName: string) => void;
+
+  /**
+   * @param virtualizationName the name of the virtualization being deleted
+   * @returns 'FAILED' if the publish operation threw an error; otherwise 'DELETED'
+   */
+  onDelete: (virtualizationName: string) => Promise<string>;
   onExport: (virtualizationName: string) => void;
-  onPublish: (virtualizationName: string, hasViews: boolean) => void;
-  onUnpublish: (virtualizationName: string) => void;
+
+  /**
+   * @param virtualizationName the name of the virtualization being published
+   * @returns 'FAILED' if the publish operation threw an error; otherwise the Teidd status
+   */
+  onPublish: (virtualizationName: string, hasViews: boolean) => Promise<string>;
+
+  /**
+   * @param virtualizationName the name of the virtualization being unpublished
+   * @returns 'FAILED' if the unpublish operation threw an error; otherwise the build status
+   */
+  onUnpublish: (virtualizationName: string) => Promise<string>;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -72,6 +98,49 @@ export const VirtualizationListItem: React.FunctionComponent<
   const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(
     false
   );
+  const [labelType, setLabelType] = React.useState(props.labelType);
+  const [publishStateText, setPublishStateText] = React.useState(props.i18nPublishState);
+  const prevPublishedState = usePrevious(props.currentPublishedState);
+  const [working, setWorking] = React.useState(false);
+
+  /**
+   * Side effects of setting `props.i18nPublishState`.
+   */
+  React.useEffect(() => {
+    let changeText = true;
+
+    if (props.i18nPublishState) {
+      if (
+        (props.currentPublishedState === RUNNING && prevPublishedState === DELETE_SUBMITTED)
+        || (props.currentPublishedState === NOTFOUND && prevPublishedState === SUBMITTED)
+      ) {
+        changeText = false;
+      } else if (
+        props.currentPublishedState !== NOTFOUND
+        && props.currentPublishedState !== RUNNING
+        && props.currentPublishedState !== FAILED
+      ) {
+        changeText = false;
+      }
+    }
+
+    if (changeText) {
+      setPublishStateText(props.i18nPublishState);
+    }
+
+    // check to see if no longer in-progress
+    if (
+      props.currentPublishedState === NOTFOUND
+      || props.currentPublishedState === RUNNING
+      || props.currentPublishedState === FAILED
+    ) {
+      setWorking(false);
+    }
+  }, [props.i18nPublishState]);
+
+  React.useEffect(() => {
+    setLabelType(props.labelType);
+  }, [props.labelType]);
 
   const doCancel = () => {
     setShowConfirmationDialog(false);
@@ -85,33 +154,99 @@ export const VirtualizationListItem: React.FunctionComponent<
     );
   };
 
-  const doDelete = () => {
-    if (props.usedBy.length < 1) {
-      setShowConfirmationDialog(false);
+  // Here are the publish state transitions returned from server for when an unpublish is initiated:
+  //   DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
+  // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug.
+  //
+  // Here are the publish state transitions returned from server for when a publish is initiated:
+  //   SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
+  // The transitiong from SUBMITTED to NOTFOUND seems to be a bug.
+  //
+  // The following code is a workaround.
+  const applyInProgressWorkaround = () => {
+    let isInProgress = false;
 
-      // TODO: disable components while delete is processing
-      props.onDelete(props.virtualizationName);
+    if (
+      (props.currentPublishedState === RUNNING &&
+        prevPublishedState === DELETE_SUBMITTED) ||
+      (props.currentPublishedState === NOTFOUND &&
+        prevPublishedState === SUBMITTED)
+    ) {
+      isInProgress = true;
+    } else if (
+      props.currentPublishedState !== NOTFOUND &&
+      props.currentPublishedState !== RUNNING &&
+      props.currentPublishedState !== FAILED
+    ) {
+      isInProgress = true;
     }
+
+    if (working !== isInProgress) {
+      setWorking(isInProgress);
+    }
+  }
+
+  const doDelete = async () => {
+    setWorking(true);
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+    setLabelType('default');
+    setPublishStateText(props.i18nDeleteInProgressText);
+    setShowConfirmationDialog(false);
+    const result = await props.onDelete(props.virtualizationName);
+
+    // restore previous settings when delete fails
+    if (result === 'FAILED') {
+      setWorking(false);
+      setPublishStateText(saveText);
+      setLabelType(saveLabelType);
+    }
+
+    applyInProgressWorkaround();
   };
 
   const doExport = () => {
     props.onExport(props.virtualizationName);
   }
 
-  const doPublish = () => {
-    if (props.virtualizationName && props.hasViews) {
-      props.onPublish(props.virtualizationName, props.hasViews);
+  const doPublish = async () => {
+    setWorking(true);
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+    setLabelType('default');
+    setPublishStateText(props.i18nPublishInProgressText);
+    const result = await props.onPublish(
+      props.virtualizationName,
+      props.hasViews
+    );
+
+    // restore previous settings when publish fails
+    if (result === 'FAILED') {
+      setWorking(false);
+      setPublishStateText(saveText);
+      setLabelType(saveLabelType);
     }
+
+    applyInProgressWorkaround();
   };
 
-  const doUnpublish = () => {
-    if (props.usedBy.length < 1) {
-      setShowConfirmationDialog(false);
+  const doUnpublish = async () => {
+    setWorking(true);
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+    setLabelType('default');
+    setPublishStateText(props.i18nUnpublishInProgressText);
+    setShowConfirmationDialog(false);
+    const result = await props.onUnpublish(props.virtualizationName);
 
-      if (props.virtualizationName) {
-        props.onUnpublish(props.virtualizationName);
-      }
+    // restore previous settings when unpublish fails
+    if (result === 'FAILED') {
+      setWorking(false);
+      setPublishStateText(saveText);
+      setLabelType(saveLabelType);
     }
+
+    applyInProgressWorkaround();
   };
 
   const showConfirmDialog = () => {
@@ -121,14 +256,9 @@ export const VirtualizationListItem: React.FunctionComponent<
   };
 
   // Determine published state
-  const isPublished = props.currentPublishedState === RUNNING ? true : false;
-
-  const publishInProgress =
-    props.currentPublishedState === BUILDING ||
-    props.currentPublishedState === CONFIGURING ||
-    props.currentPublishedState === DEPLOYING
-      ? true
-      : false;
+  const isPublished =
+    props.currentPublishedState === RUNNING &&
+    prevPublishedState !== DELETE_SUBMITTED;
 
   return (
     <>
@@ -168,12 +298,9 @@ export const VirtualizationListItem: React.FunctionComponent<
         actions={
           <div className="form-group">
             <PublishStatusWithProgress
-              publishedState={props.currentPublishedState}
-              i18nError={props.i18nError}
-              i18nPublished={props.i18nPublished}
-              i18nUnpublished={props.i18nDraft}
-              i18nPublishInProgress={props.i18nPublishInProgress}
-              i18nUnpublishInProgress={props.i18nUnpublishInProgress}
+              isProgressWithLink={props.isProgressWithLink}
+              i18nPublishState={publishStateText}
+              labelType={labelType}
               i18nPublishLogUrlText={props.i18nPublishLogUrlText}
               publishingCurrentStep={props.publishingCurrentStep}
               publishingLogUrl={props.publishingLogUrl}
@@ -197,8 +324,14 @@ export const VirtualizationListItem: React.FunctionComponent<
               }-dropdown-kebab`}
             >
               <MenuItem
+                className={'virtualization-list-item__menuItem'}
                 onClick={showConfirmDialog}
-                disabled={props.usedBy.length > 0}
+                disabled={
+                  props.usedBy.length > 0 ||
+                  working ||
+                  props.isProgressWithLink ||
+                  isPublished
+                }
                 data-testid={`virtualization-list-item-${
                   props.virtualizationName
                 }-delete`}
@@ -210,14 +343,16 @@ export const VirtualizationListItem: React.FunctionComponent<
                   {props.i18nExport}
                 </MenuItem> */}
               <MenuItem
-                onClick={
-                  isPublished || publishInProgress ? doUnpublish : doPublish
+                className={'virtualization-list-item__menuItem'}
+                onClick={isPublished ? doUnpublish : doPublish}
+                disabled={
+                  props.usedBy.length > 0 ||
+                  working ||
+                  props.isProgressWithLink ||
+                  !props.virtualizationName
                 }
-                disabled={props.usedBy.length > 0}
               >
-                {isPublished || publishInProgress
-                  ? props.i18nUnpublish
-                  : props.i18nPublish}
+                {isPublished ? props.i18nUnpublish : props.i18nPublish}
               </MenuItem>
               <MenuItem
                 data-testid={`virtualization-list-item-${

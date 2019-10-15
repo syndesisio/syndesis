@@ -1,5 +1,6 @@
 import * as H from '@syndesis/history';
-import { Button, DropdownKebab } from 'patternfly-react';
+import { usePrevious } from '@syndesis/utils';
+import { DropdownKebab, MenuItem } from 'patternfly-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,9 +13,16 @@ import {
 } from '../../../Shared';
 
 import {
+  BUILDING,
+  CONFIGURING,
+  DELETE_DONE,
+  DELETE_REQUEUE,
+  DELETE_SUBMITTED,
+  DEPLOYING,
   FAILED,
   NOTFOUND,
   RUNNING,
+  SUBMITTED,
   VirtualizationPublishState,
 } from '../models';
 
@@ -32,14 +40,30 @@ export interface IViewHeaderBreadcrumbProps {
   i18nDeleteModalTitle: string;
   i18nExport: string;
   i18nPublish: string;
-  i18nResolving: string;
+  i18nPublishInProgress: string;
   i18nUnpublish: string;
+  i18nUnpublishInProgress: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
-  onDelete: (virtualizationName: string) => Promise<boolean>;
+
+  /**
+   * @param virtualizationName the name of the virtualization being deleted
+   * @returns 'FAILED' if the publish operation threw an error; otherwise 'DELETED'
+   */
+  onDelete: (virtualizationName: string) => Promise<string>;
   onExport: (virtualizationName: string) => void;
-  onPublish: (virtualizationName: string, hasViews: boolean) => void;
-  onUnpublish: (virtualizationName: string) => void;
+
+  /**
+   * @param virtualizationName the name of the virtualization being published
+   * @returns 'FAILED' if the publish operation threw an error; otherwise the Teidd status
+   */
+  onPublish: (virtualizationName: string, hasViews: boolean) => Promise<string>;
+
+  /**
+   * @param virtualizationName the name of the virtualization being unpublished
+   * @returns 'FAILED' if the unpublish operation threw an error; otherwise the build status
+   */
+  onUnpublish: (virtualizationName: string) => Promise<string>;
   virtualizationName: string;
   hasViews: boolean;
   usedInIntegration: boolean;
@@ -52,26 +76,71 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
     false
   );
   const [inProgress, setInProgress] = React.useState(false);
-  const [buttonText, setButtonText] = React.useState(props.i18nResolving);
+  const [buttonText, setButtonText] = React.useState();
+  const prevPublishedState = usePrevious(props.currentPublishedState);
 
+  // Effect to update `inProgress` state.
   React.useEffect(() => {
-    const updated =
+    let currentInProgress = false;
+
+    // see effects notes below on why this first check is needed
+    if (
+      (props.currentPublishedState === RUNNING &&
+        prevPublishedState === DELETE_SUBMITTED) ||
+      (props.currentPublishedState === NOTFOUND &&
+        prevPublishedState === SUBMITTED)
+    ) {
+      currentInProgress = true;
+    } else if (
       props.currentPublishedState !== NOTFOUND &&
       props.currentPublishedState !== RUNNING &&
-      props.currentPublishedState !== FAILED;
+      props.currentPublishedState !== FAILED
+    ) {
+      currentInProgress = true;
+    }
 
-    if (inProgress !== updated) {
-      setInProgress(updated);
+    if (inProgress !== currentInProgress) {
+      setInProgress(currentInProgress);
     }
   }, [props.currentPublishedState]);
 
+  // Effect to update `buttonText` state.
   React.useEffect(() => {
     if (props.currentPublishedState === RUNNING) {
-      setButtonText(props.i18nUnpublish);
+      // Here are the publish state transitions returned from server for when an unpublish is initiated:
+      // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
+      // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
+      // workaround.
+      if (prevPublishedState !== DELETE_SUBMITTED) {
+        setButtonText(props.i18nUnpublish);
+      }
     } else if (props.currentPublishedState === NOTFOUND) {
-      setButtonText(props.i18nPublish);
+      // Here are the publish state transitions returned from server for when a publish is initiated:
+      // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
+      // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
+      // workaround.
+      if (prevPublishedState !== SUBMITTED) {
+        setButtonText(props.i18nPublish);
+      }
+    } else if (
+      props.currentPublishedState === SUBMITTED ||
+      props.currentPublishedState === BUILDING ||
+      props.currentPublishedState === CONFIGURING ||
+      props.currentPublishedState === DEPLOYING
+    ) {
+      setButtonText(props.i18nPublishInProgress);
+    } else if (
+      props.currentPublishedState === DELETE_DONE ||
+      props.currentPublishedState === DELETE_REQUEUE ||
+      props.currentPublishedState === DELETE_SUBMITTED
+    ) {
+      setButtonText(props.i18nUnpublishInProgress);
     } else if (!props.currentPublishedState) {
-      setButtonText(props.i18nResolving);
+      if (isPublished) {
+        setButtonText(props.i18nUnpublish);
+      } else {
+        setButtonText(props.i18nPublish);
+      }
     }
   }, [props.currentPublishedState]);
 
@@ -79,18 +148,13 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
     setShowConfirmationDialog(false);
   };
 
-  const doDelete = () => {
+  const doDelete = async () => {
     setShowConfirmationDialog(false);
-
-    // TODO: disable components while delete is processing
-    if (props.virtualizationName) {
-      setInProgress(true);
-      const save = buttonText;
-
-      // restore button text if delete fails
-      if (!props.onDelete(props.virtualizationName)) {
-        setButtonText(save);
-      }
+    setInProgress(true);
+    const result = await props.onDelete(props.virtualizationName);
+    if (result === 'FAILED') {
+      setInProgress(false);
+      setButtonText(props.i18nPublish);
     }
   };
 
@@ -98,19 +162,31 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
     props.onExport(props.virtualizationName);
   }
 
-  const doPublish = () => {
-    if (props.virtualizationName) {
-      setInProgress(true);
-      props.onPublish(props.virtualizationName, props.hasViews);
+  const doPublish = async () => {
+    setInProgress(true);
+    const result = await props.onPublish(
+      props.virtualizationName,
+      props.hasViews
+    );
+
+    // Check to see if unpublish failed. If it didn't fail, the publish state will be updated
+    // by the properties and effects.
+    if (result === 'FAILED') {
+      setInProgress(false);
+      setButtonText(props.i18nPublish);
     }
   };
 
-  const doUnpublish = () => {
+  const doUnpublish = async () => {
     setShowConfirmationDialog(false);
+    setInProgress(true);
+    const result = await props.onUnpublish(props.virtualizationName);
 
-    if (props.virtualizationName) {
-      setInProgress(true);
-      props.onUnpublish(props.virtualizationName);
+    // Check to see if unpublish failed. If it didn't fail, the publish state will be updated
+    // by the properties and effects.
+    if (result === 'FAILED') {
+      setInProgress(false);
+      setButtonText(props.i18nUnpublish);
     }
   };
 
@@ -120,40 +196,38 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
     }
   };
 
-  const isPublished = () => {
-    return props.currentPublishedState === RUNNING;
-  };
+  const isPublished = props.currentPublishedState === RUNNING;
 
   return (
     <>
       <ConfirmationDialog
         buttonStyle={
-          isPublished()
+          isPublished
             ? ConfirmationButtonStyle.WARNING
             : ConfirmationButtonStyle.DANGER
         }
         i18nCancelButtonText={props.i18nCancelText}
         i18nConfirmButtonText={
-          isPublished() ? props.i18nUnpublish : props.i18nDelete
+          isPublished ? props.i18nUnpublish : props.i18nDelete
         }
         i18nConfirmationMessage={
-          isPublished()
+          isPublished
             ? props.i18nUnpublishModalMessage
             : props.i18nDeleteModalMessage
         }
         i18nTitle={
-          isPublished()
+          isPublished
             ? props.i18nUnpublishModalTitle
             : props.i18nDeleteModalTitle
         }
         icon={
-          isPublished()
+          isPublished
             ? ConfirmationIconType.WARNING
             : ConfirmationIconType.DANGER
         }
         showDialog={showConfirmationDialog}
         onCancel={doCancel}
-        onConfirm={isPublished() ? doUnpublish : doDelete}
+        onConfirm={isPublished ? doUnpublish : doDelete}
       />
       <Breadcrumb
         actions={
@@ -169,7 +243,7 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
             <ButtonLink
               data-testid={'virtualization-detail-breadcrumb-publish-button'}
               className="btn btn-primary"
-              onClick={isPublished() ? doUnpublish : doPublish}
+              onClick={isPublished ? doUnpublish : doPublish}
               disabled={props.usedInIntegration || inProgress}
             >
               {buttonText}
@@ -177,16 +251,16 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
             <DropdownKebab
               id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}
+              data-testid={'view-header-breadcrumb-dropdown-kebab'}
             >
-              <Button
-                bsStyle={'default'}
-                className={'view-header-breadcrumb__menuItem'}
-                data-testid={'view-header-breadcrumb-delete-button'}
-                disabled={props.usedInIntegration || inProgress}
+              <MenuItem
+                className={'virtualization-list-item__menuItem'}
                 onClick={showConfirmDialog}
+                disabled={props.usedInIntegration || inProgress || isPublished}
+                data-testid={'view-header-breadcrumb-delete-button'}
               >
                 {props.i18nDelete}
-              </Button>
+              </MenuItem>
             </DropdownKebab>
           </>
         }

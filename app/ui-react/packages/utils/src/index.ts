@@ -5,6 +5,7 @@ export * from './key';
 export * from './makeResolver';
 export * from './WithListViewToolbarHelpers';
 export * from './OptionalIntUtil';
+export * from './usePrevious';
 export * from './useRouteData';
 export * from './WithLoader';
 export * from './WithRouteData';

@@ -17,7 +17,7 @@ export interface IDvNameValidationResult {
   hasError: boolean;
   message?: string;
 }
-  
+
 export const useVirtualizationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
 
@@ -33,7 +33,7 @@ export const useVirtualizationHelpers = () => {
     const newVirtualization = {
       description: virtDesc ? `${virtDesc}` : '',
       name: `${virtName}`,
-      usedBy: [] as string[]
+      usedBy: [] as string[],
     } as Virtualization;
 
     const response = await callFetch({
@@ -79,10 +79,11 @@ export const useVirtualizationHelpers = () => {
   /**
    * Deletes the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being deleted
+   * @returns `true` if virtualization was successfully deleted
    */
   const deleteVirtualization = async (
     virtualizationName: string
-  ): Promise<void> => {
+  ): Promise<boolean> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
@@ -90,10 +91,10 @@ export const useVirtualizationHelpers = () => {
     });
 
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(new Error(response.statusText));
     }
 
-    return Promise.resolve();
+    return true;
   };
 
   /**
@@ -178,10 +179,15 @@ export const useVirtualizationHelpers = () => {
     });
 
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(new Error(response.statusText));
     }
 
-    return (await response.json()) as TeiidStatus;
+    const status = (await response.json()) as TeiidStatus;
+    if (status.attributes.error) {
+      return Promise.reject(new Error(status.attributes.error));
+    }
+
+    return status;
   };
 
   /**
@@ -254,9 +260,7 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${
-        apiContext.dvApiUri
-      }editors/${viewDefinitionId}`,
+      url: `${apiContext.dvApiUri}editors/${viewDefinitionId}`,
     });
 
     if (!response.ok) {
@@ -304,32 +308,33 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
-      url: `${
-        apiContext.dvApiUri
-      }virtualizations/${encodedName}`,
+      url: `${apiContext.dvApiUri}virtualizations/${encodedName}`,
     });
-    
+
     // ok response - the virtualization already exists
     if (response.ok) {
       return {
         hasError: false,
-        nameExists: true
-      }
-    // 403 response - the supplied name is invalid
-    // 303 response - the supplied name matches a source name
-    } else if ( !response.ok && (response.status === 403 || response.status === 303) ) {
+        nameExists: true,
+      };
+      // 403 response - the supplied name is invalid
+      // 303 response - the supplied name matches a source name
+    } else if (
+      !response.ok &&
+      (response.status === 403 || response.status === 303)
+    ) {
       const result = await response.json();
       return {
         hasError: true,
         message: result.message,
-        nameExists: false
-      }
-    } 
+        nameExists: false,
+      };
+    }
 
     // no validation problems
     return {
       hasError: false,
-      nameExists: false
+      nameExists: false,
     };
   };
 
@@ -355,29 +360,32 @@ export const useVirtualizationHelpers = () => {
     if (response.ok) {
       return {
         hasError: false,
-        nameExists: true
-      }
-    // 403 response - the supplied name is invalid
-    // 303 response - the supplied name matches a source name
-    } else if ( !response.ok && (response.status === 403 || response.status === 303) ) {
+        nameExists: true,
+      };
+      // 403 response - the supplied name is invalid
+      // 303 response - the supplied name matches a source name
+    } else if (
+      !response.ok &&
+      (response.status === 403 || response.status === 303)
+    ) {
       const result = await response.json();
       return {
         hasError: true,
         message: result.message,
-        nameExists: false
-      }
-    } 
+        nameExists: false,
+      };
+    }
 
     // no validation problems
     return {
       hasError: false,
-      nameExists: false
+      nameExists: false,
     };
   };
 
   /**
    * Unpublish the virtualization with the specified name
-   * @param virtualizationName the name of the virtualization
+   * @param virtualizationName the name of the virtualization being unpublished
    * @returns the `BuildStatus` model object
    */
   const unpublishVirtualization = async (
@@ -386,14 +394,27 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
-      url: `${apiContext.dvApiUri}virtualizations/publish/${virtualizationName}`,
+      url: `${
+        apiContext.dvApiUri
+      }virtualizations/publish/${virtualizationName}`,
     });
 
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return Promise.reject(new Error(response.statusText));
     }
 
-    return (await response.json()) as BuildStatus;
+    const status = (await response.json()) as BuildStatus;
+    if (status.status === 'NOTFOUND') {
+      const e = new Error('Already unpublished');
+      e.name = 'AlreadyUnpublished';
+      return Promise.reject(e);
+    }
+
+    if (status.status !== 'DELETE_SUBMITTED') {
+      return Promise.reject(new Error(status.statusMessage));
+    }
+
+    return status;
   };
 
   /**
@@ -406,9 +427,7 @@ export const useVirtualizationHelpers = () => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
-      url: `${
-        apiContext.dvApiUri
-      }editors/${viewDefinitionId}`,
+      url: `${apiContext.dvApiUri}editors/${viewDefinitionId}`,
     });
 
     if (!response.ok) {

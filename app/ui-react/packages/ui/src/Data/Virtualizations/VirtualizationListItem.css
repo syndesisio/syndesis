@@ -10,3 +10,8 @@
   margin-top: 5px;
   text-align: left;
 }
+
+/* Disable click events when MenuItem is disabled */
+.virtualization-list-item__menuItem.disabled {
+  pointer-events: none;
+}

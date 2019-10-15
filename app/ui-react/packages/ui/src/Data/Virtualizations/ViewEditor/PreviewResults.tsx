@@ -78,7 +78,7 @@ export const PreviewResults: React.FunctionComponent<
           {props.queryResultCols.length > 0 ? (
             <div className={'preview-results__tableSection'}>
               <GenericTable
-                columns={props.queryResultCols.map(col => ({
+                columns={props.queryResultCols.map((col, index) => ({
                   cell: {
                     formatters: [defaultCellFormat],
                   },

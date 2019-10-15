@@ -1,9 +1,10 @@
+import { Bullseye } from '@patternfly/react-core';
 import { action } from '@storybook/addon-actions';
-import { select, text } from '@storybook/addon-knobs';
+import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
+import { BrowserRouter as Router } from 'react-router-dom';
 import { VirtualizationListItem } from '../../../src';
 
 const stories = storiesOf(
@@ -81,109 +82,87 @@ stories
   .add(
     'sample virtualization item',
     withNotes(publishedVirtualizationNotes)(() => (
-      <VirtualizationListItem
-        hasViews={true}
-        virtualizationName={virtualizationName}
-        virtualizationDescription={virtualizationDescription}
-        i18nCancelText={cancelText}
-        i18nDelete={deleteText}
-        i18nDeleteModalMessage={confirmDeleteMessage}
-        i18nDeleteModalTitle={confirmDeleteTitle}
-        i18nDraft={draftText}
-        i18nError={errorText}
-        icon={text('icon', virtualizationIconData)}
-        i18nEdit={editText}
-        i18nEditTip={editTip}
-        /* TD-636: Commented out for TP 
+    <Router>
+      <Bullseye>
+        <VirtualizationListItem
+          isProgressWithLink={true}
+          i18nDeleteInProgressText={'Deleting...'}
+          i18nPublishInProgressText={publishInProgressText}
+          i18nUnpublishInProgressText={unpublishInProgressText}
+          i18nPublishState={'Unpublishing...'}
+          labelType={'default'}
+          publishingStepText={'Building'}
+          hasViews={true}
+          virtualizationName={virtualizationName}
+          virtualizationDescription={virtualizationDescription}
+          i18nCancelText={cancelText}
+          i18nDelete={deleteText}
+          i18nDeleteModalMessage={confirmDeleteMessage}
+          i18nDeleteModalTitle={confirmDeleteTitle}
+          icon={text('icon', virtualizationIconData)}
+          i18nEdit={editText}
+          i18nEditTip={editTip}
+          /* TD-636: Commented out for TP 
         i18nExport={'Export'} */
-        i18nInUseText={'The virtualization is in use by an integration.'}
-        i18nPublished={publishedText}
-        i18nUnpublish={unpublishText}
-        i18nPublish={publishText}
-        i18nPublishInProgress={publishInProgressText}
-        i18nPublishLogUrlText={publishLogUrlText}
-        i18nUnpublishInProgress={unpublishInProgressText}
-        i18nUnpublishModalMessage={confirmUnpublishMessage}
-        i18nUnpublishModalTitle={confirmUnpublishTitle}
-        detailsPageLink={''}
-        onDelete={action(deleteText)}
-        /* TD-636: Commented out for TP 
+          i18nInUseText={'The virtualization is in use by an integration.'}
+          i18nUnpublish={unpublishText}
+          i18nPublish={publishText}
+          i18nPublishLogUrlText={publishLogUrlText}
+          i18nUnpublishModalMessage={confirmUnpublishMessage}
+          i18nUnpublishModalTitle={confirmUnpublishTitle}
+          detailsPageLink={'/details/page/link'}
+          onDelete={action(deleteText)}
+          /* TD-636: Commented out for TP 
         onExport={action(exportText)} */
-        onUnpublish={action(unpublishText)}
-        onPublish={action(publishText)}
-        currentPublishedState={select(
-          'currentState',
-          [
-            'BUILDING',
-            'CANCELLED',
-            'CONFIGURING',
-            'DEPLOYING',
-            'FAILED',
-            'NOTFOUND',
-            'RUNNING',
-            'SUBMITTED',
-            'DELETE_SUBMITTED',
-            'DELETE_REQUEUE',
-            'DELETE_DONE',
-          ],
-          'NOTFOUND'
-        )}
-        publishingLogUrl={text('publishLogUrl', publishLogUrl)}
-        usedBy={['stuff']}
-      />
-    ))
-  )
+          onUnpublish={action(unpublishText)}
+          onPublish={action(publishText)}
+          currentPublishedState={'BUILDING'}
+          publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+          usedBy={['stuff']}
+        />
+      </Bullseye>
+    </Router>
+  )))
 
   .add('virtualization item with odata', () => (
-    <VirtualizationListItem
-      hasViews={true}
-      virtualizationName={virtualizationName}
-      virtualizationDescription={virtualizationDescription}
-      i18nCancelText={cancelText}
-      i18nDelete={deleteText}
-      i18nDeleteModalMessage={confirmDeleteMessage}
-      i18nDeleteModalTitle={confirmDeleteTitle}
-      i18nDraft={draftText}
-      i18nError={errorText}
-      icon={text('icon', virtualizationIconData)}
-      odataUrl={'http://redhat.com'}
-      i18nEdit={editText}
-      i18nEditTip={editTip}
-      /* TD-636: Commented out for TP 
-        i18nExport={'Export'} */
-      i18nInUseText={'The virtualization is in use by an integration.'}
-      i18nPublished={publishedText}
-      i18nUnpublish={unpublishText}
-      i18nPublish={publishText}
-      i18nPublishInProgress={publishInProgressText}
-      i18nPublishLogUrlText={publishLogUrlText}
-      i18nUnpublishInProgress={unpublishInProgressText}
-      i18nUnpublishModalMessage={confirmUnpublishMessage}
-      i18nUnpublishModalTitle={confirmUnpublishTitle}
-      detailsPageLink={''}
-      onDelete={action(deleteText)}
-      /* TD-636: Commented out for TP 
-        onExport={action(exportText)} */
-      onUnpublish={action(unpublishText)}
-      onPublish={action(publishText)}
-      currentPublishedState={select(
-        'currentState',
-        [
-          'BUILDING',
-          'CANCELLED',
-          'CONFIGURING',
-          'DEPLOYING',
-          'FAILED',
-          'NOTFOUND',
-          'RUNNING',
-          'SUBMITTED',
-          'DELETE_SUBMITTED',
-          'DELETE_REQUEUE',
-          'DELETE_DONE',
-        ],
-        'NOTFOUND'
-      )}
-      publishingLogUrl={text('publishLogUrl', publishLogUrl)}
-      usedBy={['stuff']}
-    />
+    <Router>
+      <Bullseye>
+        <VirtualizationListItem
+          isProgressWithLink={false}
+          i18nDeleteInProgressText={'Deleting...'}
+          i18nPublishInProgressText={publishInProgressText}
+          i18nUnpublishInProgressText={unpublishInProgressText}
+          i18nPublishState={publishedText}
+          labelType={'primary'}
+          hasViews={true}
+          virtualizationName={virtualizationName}
+          virtualizationDescription={virtualizationDescription}
+          i18nCancelText={cancelText}
+          i18nDelete={deleteText}
+          i18nDeleteModalMessage={confirmDeleteMessage}
+          i18nDeleteModalTitle={confirmDeleteTitle}
+          icon={text('icon', virtualizationIconData)}
+          odataUrl={'http://redhat.com'}
+          i18nEdit={editText}
+          i18nEditTip={editTip}
+          /* TD-636: Commented out for TP 
+            i18nExport={'Export'} */
+          i18nInUseText={'The virtualization is not in use by an integration.'}
+          i18nUnpublish={unpublishText}
+          i18nPublish={publishText}
+          i18nPublishLogUrlText={publishLogUrlText}
+          i18nUnpublishModalMessage={confirmUnpublishMessage}
+          i18nUnpublishModalTitle={confirmUnpublishTitle}
+          detailsPageLink={'/details/page/link'}
+          onDelete={action(deleteText)}
+          /* TD-636: Commented out for TP 
+            onExport={action(exportText)} */
+          onUnpublish={action(unpublishText)}
+          onPublish={action(publishText)}
+          currentPublishedState={'RUNNING'}
+          publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+          usedBy={[]}
+        />
+      </Bullseye>
+    </Router>
   ));

@@ -11,6 +11,7 @@ import {
   VirtualizationSourceStatus,
 } from '@syndesis/models';
 import { ITableInfo } from '@syndesis/ui';
+import i18n from '../../../i18n';
 
 interface IColumn {
   id: string;
@@ -386,6 +387,182 @@ export function getPublishingDetails(
     );
   }
   return publishStepDetails;
+}
+
+/**
+ *
+ * @param currDetails the current publishing details
+ * @param prevDetails the previous publishing details if available
+ * @returns a suitable `Label` style for the publishing state
+ */
+export function getStateLabelStyle(
+  currDetails: VirtualizationPublishingDetails,
+  prevDetails?: VirtualizationPublishingDetails
+): 'primary' | 'danger' | 'default' {
+  let isInProgress = false;
+
+  if (prevDetails) {
+    // Here are the publish state transitions returned from server for when a publish is initiated:
+    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
+    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
+    // workaround.
+    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
+      isInProgress = true;
+    }
+
+    // Here are the publish state transitions returned from server for when an unpublish is initiated:
+    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
+    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
+    // workaround.
+    if (
+      prevDetails.state === 'DELETE_SUBMITTED' &&
+      currDetails.state === 'RUNNING'
+    ) {
+      isInProgress = true;
+    }
+  }
+
+  if (isInProgress) {
+    return 'default';
+  }
+
+  let result: 'primary' | 'danger' | 'default';
+  switch (currDetails.state) {
+    case 'RUNNING':
+      result = 'primary';
+      break;
+    case 'FAILED':
+      result = 'danger';
+      break;
+    default:
+      result = 'default';
+      break;
+  }
+  return result;
+}
+
+/**
+ * @param currDetails the current publishing details
+ * @param prevDetails the previous publishing details if available
+ * @returns the `Label` text representing the publish state
+ */
+export function getStateLabelText(
+  currDetails: VirtualizationPublishingDetails,
+  prevDetails?: VirtualizationPublishingDetails
+): string {
+  if (prevDetails) {
+    // Here are the publish state transitions returned from server for when a publish is initiated:
+    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
+    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
+    // workaround.
+    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
+      return i18n.t('data:publishInProgress');
+    }
+
+    // Here are the publish state transitions returned from server for when an unpublish is initiated:
+    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
+    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
+    // workaround.
+    if (
+      prevDetails.state === 'DELETE_SUBMITTED' &&
+      currDetails.state === 'RUNNING'
+    ) {
+      return i18n.t('data:unpublishInProgress');
+    }
+  }
+
+  let result = '';
+  switch (currDetails.state) {
+    case 'RUNNING':
+      result = i18n.t('data:publishedDataVirtualization');
+      break;
+    case 'FAILED':
+      result = i18n.t('shared:Error');
+      break;
+    case 'NOTFOUND':
+      result = i18n.t('shared:Draft');
+      break;
+    case 'BUILDING':
+    case 'CONFIGURING':
+    case 'DEPLOYING':
+    case 'SUBMITTED':
+      result = i18n.t('data:publishInProgress');
+      break;
+    case 'CANCELLED':
+    case 'DELETE_SUBMITTED':
+    case 'DELETE_REQUEUE':
+    case 'DELETE_DONE':
+      result = i18n.t('data:unpublishInProgress');
+      break;
+    default: // should not get here as exhausted all cases
+      break;
+  }
+  return result;
+}
+
+/**
+ * @param publishStepDetails the publishing details being checked
+ * @returns `true` if state is a publishing step
+ */
+export function isPublishStep(
+  publishStepDetails: VirtualizationPublishingDetails
+): boolean {
+  if (
+    publishStepDetails.state === 'CONFIGURING' ||
+    publishStepDetails.state === 'BUILDING' ||
+    publishStepDetails.state === 'DEPLOYING'
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Checks to see if a delete, publish, or unpublish operation is in-progress. When the state is a
+ * publish step state, `false` is returned.
+ * @param currDetails the current publishing details
+ * @param prevDetails the previous publishing details if available
+ * @returns `true` if a state operation is in-progress
+ */
+export function isStateOperationInProgress(
+  currDetails: VirtualizationPublishingDetails,
+  prevDetails?: VirtualizationPublishingDetails
+): boolean {
+  if (prevDetails) {
+    // Here is the publish state transitions returned from server for when a publish is initiated:
+    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
+    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
+    // workaround.
+    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
+      return true;
+    }
+
+    // Here is the publish state transitions returned from server for when an unpublish is initiated:
+    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
+    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
+    // workaround.
+    if (
+      prevDetails.state === 'DELETE_SUBMITTED' &&
+      currDetails.state === 'RUNNING'
+    ) {
+      return true;
+    }
+  }
+
+  let result = false;
+  switch (currDetails.state) {
+    case 'SUBMITTED':
+    case 'CANCELLED':
+    case 'DELETE_SUBMITTED':
+    case 'DELETE_REQUEUE':
+    case 'DELETE_DONE':
+      result = true;
+      break;
+    default:
+      break;
+  }
+  return result;
 }
 
 /**
