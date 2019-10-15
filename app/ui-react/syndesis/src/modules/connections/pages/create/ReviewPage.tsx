@@ -8,7 +8,11 @@ import {
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
-import { useRouteData, validateRequiredProperties, WithLoader } from '@syndesis/utils';
+import {
+  useRouteData,
+  validateRequiredProperties,
+  WithLoader,
+} from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
@@ -44,7 +48,11 @@ export const ReviewPage: React.FunctionComponent = () => {
     state.connector
   );
   const { pushNotification } = React.useContext(UIContext);
-  const { createConnection, saveConnection } = useConnectionHelpers();
+  const {
+    createConnection,
+    saveConnection,
+    validateName,
+  } = useConnectionHelpers();
 
   const definition: IFormDefinition = {
     name: {
@@ -96,13 +104,24 @@ export const ReviewPage: React.FunctionComponent = () => {
             actions.setSubmitting(false);
           }
         };
-        const validator = (values: ISaveForm) =>
+        const initialValidator = (values: ISaveForm) =>
           validateRequiredProperties(
             definition,
             (name: string) => `${name} is required`,
             values
           );
-
+        const validator = async (values: ISaveForm) => {
+          const errors = initialValidator(values);
+          if (Object.keys(errors).length > 0) {
+            return errors;
+          }
+          const response = await validateName({ name: '' }, values.name);
+          if (response.isError) {
+            const validationError = { [response.property!]: response.message! };
+            throw validationError;
+          }
+          return errors;
+        };
         return (
           <WithLoader
             loading={!hasData}
@@ -120,13 +139,14 @@ export const ReviewPage: React.FunctionComponent = () => {
                 }}
                 onSave={onSave}
                 validate={validator}
-                validateInitial={validator}
+                validateInitial={initialValidator}
               >
                 {({
                   fields,
                   handleSubmit,
                   isSubmitting,
                   isValid,
+                  isValidating,
                   submitForm,
                 }) => (
                   <>
@@ -146,7 +166,7 @@ export const ReviewPage: React.FunctionComponent = () => {
                             })}
                             onNext={submitForm}
                             isNextDisabled={!isValid}
-                            isNextLoading={isSubmitting}
+                            isNextLoading={isSubmitting || isValidating}
                             isValidating={false}
                             isLastStep={true}
                             i18nSave={t('shared:Save')}
