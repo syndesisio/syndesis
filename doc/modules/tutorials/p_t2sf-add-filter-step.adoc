@@ -22,7 +22,7 @@ displays the steps that you can add to the integration.
 . In the *Property Name* field, start to enter 
 `*text*` and when `text`
 appears below the field, click it. 
-The Twitter `text` field, which contain a tweet, 
+The Twitter `text` field, which contains a tweet, 
 is the data that you want the filter to evaluate.
 
 . In the *Operator* field, accept *contains* as the condition to be met for the integration to
