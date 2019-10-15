@@ -39,7 +39,7 @@ account, then only one integration at a time can be running.
 If you already created one of the other sample integrations and that
 integration is running then this integration is automatically in the
 *Stopped* state. You must stop the running integration and
-then you can then publish this integration.  
+then you can publish this integration.  
 
 . If you are already running the maximum number of integrations, follow
 these steps to stop an integration:
