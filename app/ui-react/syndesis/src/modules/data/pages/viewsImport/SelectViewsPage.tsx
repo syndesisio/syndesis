@@ -4,9 +4,9 @@ import {
 } from '@syndesis/api';
 import {
   ImportSources,
-  RestDataService,
   ViewDefinitionDescriptor,
   ViewInfo,
+  Virtualization,
 } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -29,7 +29,7 @@ export interface ISelectViewsRouteParams {
  * @param connectionId - the id of the selected connection
  */
 export interface ISelectViewsRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
   connectionId: string;
 }
 

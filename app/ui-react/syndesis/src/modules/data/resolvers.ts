@@ -1,8 +1,8 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import {
-  RestDataService,
   SchemaNodeInfo,
   ViewDefinition,
+  Virtualization,
 } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
@@ -11,7 +11,7 @@ import routes from './routes';
 export default {
   virtualizations: {
     views: {
-      root: makeResolver<{ virtualization: RestDataService }>(
+      root: makeResolver<{ virtualization: Virtualization }>(
         routes.virtualizations.virtualization.views.root,
         ({ virtualization }) => ({
           params: {
@@ -26,7 +26,7 @@ export default {
         root: makeResolverNoParams(
           routes.virtualizations.virtualization.views.createView.root
         ),
-        selectSources: makeResolver<{ virtualization: RestDataService }>(
+        selectSources: makeResolver<{ virtualization: Virtualization }>(
           routes.virtualizations.virtualization.views.createView.selectSources,
           ({ virtualization }) => ({
             params: {
@@ -39,7 +39,7 @@ export default {
         ),
         selectName: makeResolver<{
           schemaNodeInfo: SchemaNodeInfo[];
-          virtualization: RestDataService;
+          virtualization: Virtualization;
         }>(
           routes.virtualizations.virtualization.views.createView.selectName,
           ({ schemaNodeInfo, virtualization }) => ({
@@ -55,7 +55,7 @@ export default {
       },
       edit: {
         sql: makeResolver<{
-          virtualization: RestDataService;
+          virtualization: Virtualization;
           viewDefinitionId: string;
           viewDefinition?: ViewDefinition;
         }>(
@@ -76,7 +76,7 @@ export default {
         root: makeResolverNoParams(
           routes.virtualizations.virtualization.views.importSource.root
         ),
-        selectConnection: makeResolver<{ virtualization: RestDataService }>(
+        selectConnection: makeResolver<{ virtualization: Virtualization }>(
           routes.virtualizations.virtualization.views.importSource
             .selectConnection,
           ({ virtualization }) => ({
@@ -90,7 +90,7 @@ export default {
         ),
         selectViews: makeResolver<{
           connectionId: string;
-          virtualization: RestDataService;
+          virtualization: Virtualization;
         }>(
           routes.virtualizations.virtualization.views.importSource.selectViews,
           ({ connectionId, virtualization }) => ({
@@ -105,7 +105,7 @@ export default {
         ),
       },
     },
-    sqlClient: makeResolver<{ virtualization: RestDataService }>(
+    sqlClient: makeResolver<{ virtualization: Virtualization }>(
       routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({
         params: {

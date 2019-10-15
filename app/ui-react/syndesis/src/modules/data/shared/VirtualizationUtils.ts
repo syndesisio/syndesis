@@ -1,12 +1,12 @@
 import {
   Connection,
   QueryResults,
-  RestDataService,
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
   ViewInfo,
   ViewSourceInfo,
+  Virtualization,
   VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
 } from '@syndesis/models';
@@ -220,8 +220,10 @@ function getViewDefinition(
     isComplete: true,
     isUserDefined: userDefined,
     keng__description: description ? description : '',
+    message: '',
     name,
     sourcePaths: srcPaths,
+    status: 'SUCCESS'
   };
 
   return viewDefn;
@@ -316,9 +318,9 @@ export function isDvConnectionLoading(conn: Connection) {
 
 /**
  * Get the OData url from the virtualization, if available
- * @param virtualization the RestDataService
+ * @param virtualization the Virtualization
  */
-export function getOdataUrl(virtualization: RestDataService): string {
+export function getOdataUrl(virtualization: Virtualization): string {
   return virtualization.odataHostName
     ? 'https://' + virtualization.odataHostName + '/odata'
     : '';
@@ -343,11 +345,11 @@ export function getPodLogUrl(
 /**
  * Get publishing state details for the specified virtualization
  * @param consoleUrl the console url
- * @param virtualization the RestDataService
+ * @param virtualization the Virtualization
  */
 export function getPublishingDetails(
   consoleUrl: string,
-  virtualization: RestDataService
+  virtualization: Virtualization
 ): VirtualizationPublishingDetails {
   // Determine published state
   const publishStepDetails: VirtualizationPublishingDetails = {

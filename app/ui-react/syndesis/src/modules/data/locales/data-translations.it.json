@@ -84,7 +84,6 @@
   "viewSqlFormViewDescription": "La vista da interrogare",
   "viewSqlFormSqlStatement": "Dichiarazione SQL",
   "viewSqlFormSqlStatementDescription": "Immettere la query SQL e fare clic su INVIA (cioè, SELECT a, b FROM view1)",
-  "viewValidationFailed": "Visualizza la convalida \"{{name}}\" non riuscita, quindi non sono disponibili risultati. Dettagli: {{details}}",
   "virtualizationDescriptionDisplay": "Descrizione",
   "virtualizationNameDisplay": "Nome di Virtualizzazione",
   "virtualizationsDisabled": "Le virtualizzazioni non sono abilitate nella tua installazione. Fare riferimento alla documentazione per istruzioni su come abilitarli.",

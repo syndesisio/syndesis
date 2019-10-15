@@ -1,5 +1,5 @@
 import { useVirtualizationConnectionStatuses } from '@syndesis/api';
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -17,7 +17,7 @@ export interface ISelectConnectionRouteParams {
  * @param virtualization - the virtualization for the wizard.
  */
 export interface ISelectConnectionRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 export const SelectConnectionPage: React.FunctionComponent = () => {

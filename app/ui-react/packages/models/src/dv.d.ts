@@ -1,5 +1,5 @@
 // TODO remove when these values are advertised by the swagger
-export interface RestDataService {
+export interface Virtualization {
   empty: boolean;
   id: string;
   keng__id: string;
@@ -68,6 +68,8 @@ export interface ViewDefinition {
   name: string;
   dataVirtualizationName: string;
   keng__description: string;
+  status: 'SUCCESS' | 'ERROR';
+  message: string;
   isComplete: boolean;
   isUserDefined: boolean;
   sourcePaths: string[];

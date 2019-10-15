@@ -1,4 +1,4 @@
-import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
+import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
 import { ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -16,7 +16,7 @@ export interface ISelectSourcesRouteParams {
  * @param virtualization - the virtualization for the wizard.
  */
 export interface ISelectSourcesRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 export const SelectSourcesPage: React.FunctionComponent = () => {

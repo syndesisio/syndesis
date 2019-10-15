@@ -84,7 +84,6 @@
   "viewSqlFormViewDescription": "The view to query",
   "viewSqlFormSqlStatement": "SQL Statement",
   "viewSqlFormSqlStatementDescription": "Enter SQL query and click SUBMIT (i.e. SELECT a, b FROM view1)",
-  "viewValidationFailed": "View \"{{name}}\" failed validation so no results are available. Details: {{details}}",
   "virtualizationDescriptionDisplay": "Description",
   "virtualizationNameDisplay": "Virtualization Name",
   "virtualizationsDisabled": "Virtualizations are not enabled in your installation. Refer to documentation for instructions on how to enable them.",

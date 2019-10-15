@@ -5,7 +5,7 @@ import {
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import {
-  RestDataService,
+  Virtualization,
   VirtualizationPublishingDetails,
 } from '@syndesis/models';
 import {
@@ -43,7 +43,7 @@ export interface IVirtualizationSqlClientPageRouteParams {
  * exists, it must equal to the [virtualizationId]{@link IVirtualizationSqlClientPageRouteParams#virtualizationId}.
  */
 export interface IVirtualizationSqlClientPageRouteState {
-  virtualization: RestDataService;
+  virtualization: Virtualization;
 }
 
 /**

@@ -1,11 +1,11 @@
-import { RestDataService } from '@syndesis/models';
+import { Virtualization } from '@syndesis/models';
 import { useApiResource } from './useApiResource';
 import { usePolling } from './usePolling';
 
 export const useVirtualizations = (disableUpdates: boolean = false) => {
-  const { read, ...rest } = useApiResource<RestDataService[]>({
+  const { read, ...rest } = useApiResource<Virtualization[]>({
     defaultValue: [],
-    url: 'workspace/dataservices', // TODO: add in ?per_page=50?
+    url: 'virtualizations', // TODO: add in ?per_page=50?
     useDvApiUrl: true,
   });
 
