@@ -30,6 +30,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -127,7 +128,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
         String specification = collectionShape.getSpecification();
         if (StringUtils.hasText(specification)) {
             if (collectionShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
-                JsonSchema schema = Json.defaultJsonSchemaReader().readValue(specification);
+                JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
 
                 if (schema.isArraySchema()) {
                     ArraySchema.Items items = schema.asArraySchema().getItems();
@@ -191,7 +192,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
         String specification = singleElementShape.getSpecification();
         if (StringUtils.hasText(specification)) {
             if (singleElementShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
-                JsonSchema schema = Json.defaultJsonSchemaReader().readValue(specification);
+                JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
 
                 if (schema.isArraySchema()) {
                     return new DataShape.Builder().createFrom(singleElementShape)
@@ -237,7 +238,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * @throws IOException
      */
     private String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
-        JsonSchema schema = Json.defaultJsonSchemaReader().readValue(specification);
+        JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
             if (bodySchema != null && bodySchema.isArraySchema()) {
@@ -262,7 +263,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * @throws IOException
      */
     private String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
-        JsonSchema schema = Json.defaultJsonSchemaReader().readValue(specification);
+        JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
             if (bodySchema != null && bodySchema.isObjectSchema()) {

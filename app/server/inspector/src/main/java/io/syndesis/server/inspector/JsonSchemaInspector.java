@@ -26,7 +26,7 @@ import java.util.Optional;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -45,7 +45,7 @@ public class JsonSchemaInspector implements Inspector {
         final Optional<byte[]> exemplar) {
         final JsonSchema schema;
         try {
-            schema = Json.defaultJsonSchemaReader().readValue(specification);
+            schema = JsonSchemaUtils.reader().readValue(specification);
         } catch (final IOException e) {
             LOG.warn("Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed", e);
             LOG.debug(specification);

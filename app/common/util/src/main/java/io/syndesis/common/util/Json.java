@@ -17,35 +17,23 @@ package io.syndesis.common.util;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.JsonToken;
-import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
-import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import io.syndesis.common.util.json.JsonSchemaMixIn;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * JSON helper class.
  */
 public final class Json {
-
-    /** Logger */
-    private static final Logger LOG = LoggerFactory.getLogger(Json.class);
 
     private static final ObjectMapper OBJECT_MAPPER;
     private static final ObjectWriter OBJECT_WRITER;
@@ -95,39 +83,6 @@ public final class Json {
      */
     public static ObjectMapper copyObjectMapperConfiguration() {
         return OBJECT_MAPPER.copy();
-    }
-
-    /**
-     * This method creates a copy of the default ObjectMapper configuration and adds special Json schema compatibility handlers
-     * for supporting draft-03, draft-04 and draft-06 level at the same time.
-     *
-     * Auto converts "$id" to "id" property for draft-04 compatibility.
-     *
-     * In case the provided schema specification to read uses draft-04 and draft-06 specific features such as "examples" or a list of "required"
-     * properties as array these information is more or less lost and auto converted to draft-03 compatible defaults. This way we can
-     * read the specification to draft-03 compatible objects and use those.
-     * @return
-     */
-    public static ObjectReader defaultJsonSchemaReader() {
-        return copyObjectMapperConfiguration()
-                .addHandler(new DeserializationProblemHandler() {
-                    @Override
-                    public Object handleUnexpectedToken(DeserializationContext ctxt, Class<?> targetType, JsonToken t,
-                                                        JsonParser p, String failureMsg) throws IOException {
-                        if (t == JsonToken.START_ARRAY && targetType.equals(Boolean.class)) {
-                            // handle Json schema draft-04 array type for required field and resolve to default value (required=true).
-                            String[] requiredProps = new StringArrayDeserializer().deserialize(p, ctxt);
-                            LOG.warn(String.format("Auto convert Json schema draft-04 \"required\" array value '%s' " +
-                                    "to default \"required=false\" value for draft-03 parser compatibility reasons", Arrays.toString(requiredProps)));
-                            return null;
-                        }
-
-                        return super.handleUnexpectedToken(ctxt, targetType, t, p, failureMsg);
-                    }
-                })
-                .addMixIn(JsonSchema.class, JsonSchemaMixIn.Draft6.class)
-                .reader()
-                .forType(JsonSchema.class);
     }
 
     public static String toString(Object value) {
