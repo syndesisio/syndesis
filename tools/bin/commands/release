@@ -319,7 +319,7 @@ release_staging_repo() {
 
     echo "==== Releasing Sonatype staging repo"
     cd $topdir/app
-    ./mvnw ${maven_opts} -Prelease nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
+    ./mvnw ${maven_opts} -Prelease -pl \!:syndesis-docs,\!:test-parent,\!:ui-react nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
 }
 
 git_commit_files() {
