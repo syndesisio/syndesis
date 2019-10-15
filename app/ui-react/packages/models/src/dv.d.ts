@@ -2,7 +2,7 @@
 export interface Virtualization {
   empty: boolean;
   id: string;
-  keng__id: string;
+  name: string;
   odataHostName?: string;
   podNamespace?: string;
   publishPodName?: string;
@@ -19,7 +19,7 @@ export interface Virtualization {
     | 'RUNNING'
     | 'SUBMITTED';
   serviceViewModel: string;
-  tko__description: string;
+  description: string;
   usedBy: string[];
 }
 
@@ -67,11 +67,11 @@ export interface ViewDefinition {
   id?: string;
   name: string;
   dataVirtualizationName: string;
-  keng__description: string;
+  description: string;
   status: 'SUCCESS' | 'ERROR';
   message: string;
-  isComplete: boolean;
-  isUserDefined: boolean;
+  complete: boolean;
+  userDefined: boolean;
   sourcePaths: string[];
   ddl?: string;
   createdAt?: number;
@@ -125,7 +125,7 @@ export interface ViewDefinitionStatus {
 }
 
 export interface ImportSourcesStatus {
-  Title: string;
+  title: string;
 }
 
 export interface ImportSources {
@@ -152,10 +152,10 @@ export interface VirtualizationPublishingDetails {
 }
 
 export interface TeiidStatus {
-  Information: {
+  attributes: {
     error?: string;
     log?: string;
-    Publishing?: string;
+    publishing?: string;
     'Build Status'?:
       | 'BUILDING'
       | 'CANCELLED'
@@ -172,12 +172,12 @@ export interface TeiidStatus {
     'OpenShift Name'?: string;
     [name: string]: any;
   };
-  Title?: string;
+  title?: string;
 }
 
 export interface BuildStatus {
-  build_name?: string;
-  build_status?:
+  name?: string;
+  status?:
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
@@ -189,10 +189,10 @@ export interface BuildStatus {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
-  build_status_message?: string;
+  statusMessage?: string;
   dataVirtualizationName?: string;
-  deployment_name?: string;
-  last_updated?: number;
+  deploymentName?: string;
+  lastUpdated?: number;
   namespace?: string;
   openShiftName: string;
   routes?: {

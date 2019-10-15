@@ -47,10 +47,10 @@ export const VirtualizationHandlers = () => {
       try {
         const status = await publishVirtualization(virtualizationId);
 
-        if (status.Information.error) {
+        if (status.attributes.error) {
           pushNotification(
             t('publishVirtualizationFailed', {
-              details: status.Information.error,
+              details: status.attributes.error,
               name: virtualizationId,
             }),
             'error'
@@ -92,17 +92,17 @@ export const VirtualizationHandlers = () => {
     try {
       const buildStatus = await unpublishVirtualization(virtualizationName);
 
-      if (buildStatus.build_status === 'NOTFOUND') {
+      if (buildStatus.status === 'NOTFOUND') {
         pushNotification(
           t('unpublishedVirtualization', {
             name: virtualizationName,
           }),
           'info'
         );
-      } else if (buildStatus.build_status !== 'DELETE_SUBMITTED') {
+      } else if (buildStatus.status !== 'DELETE_SUBMITTED') {
         pushNotification(
           t('unpublishVirtualizationFailed', {
-            details: buildStatus.build_status_message,
+            details: buildStatus.statusMessage,
             name: virtualizationName,
           }),
           'error'

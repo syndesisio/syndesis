@@ -39,7 +39,7 @@ export const ViewCreateApp: React.FunctionComponent = () => {
             virtualization: state.virtualization,
           })}
         >
-          {state.virtualization.keng__id}
+          {state.virtualization.name}
         </Link>
         <span>{t('createView')}</span>
       </Breadcrumb>

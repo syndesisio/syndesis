@@ -142,16 +142,16 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
 
     // View Definition
     const view: ViewDefinition = {
+      complete: viewDefn.complete,
       dataVirtualizationName: viewDefn.dataVirtualizationName,
       ddl: ddlValue,
+      description: viewDefn.description,
       id: viewDefn.id,
-      isComplete: viewDefn.isComplete,
-      isUserDefined: true,
-      keng__description: viewDefn.keng__description,
       message: '',
       name: viewDefn.name,
       sourcePaths: viewDefn.sourcePaths,
       status: 'ERROR',
+      userDefined: true,
     };
 
     try {
@@ -248,8 +248,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     if (
       !isMetadataLoaded &&
       virtualization !== null &&
-      (virtualization as Virtualization).keng__id !== null &&
-      (virtualization as Virtualization).keng__id.length > 0
+      (virtualization as Virtualization).name !== null &&
+      (virtualization as Virtualization).name.length > 0
     ) {
       // load source table/column info by retrieving the view source info from
       // the server and converting to TableColumn objects
@@ -314,7 +314,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                     virtualization,
                   })}
                 >
-                  {virtualization.keng__id}
+                  {virtualization.name}
                 </Link>
                 <span>{viewDefn.name}</span>
               </Breadcrumb>

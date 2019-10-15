@@ -112,7 +112,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     params.virtualizationId
   );
   const [description, setDescription] = React.useState(
-    state.virtualization.tko__description
+    state.virtualization.description
   );
   const [publishedState, setPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
@@ -180,16 +180,15 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     setDescription(newDescription); // this sets InlineTextEdit component to new value
     try {
       await updateVirtualizationDescription(
-        appContext.user.username || 'developer',
         params.virtualizationId,
         newDescription
       );
-      virtualization.tko__description = newDescription;
+      virtualization.description = newDescription;
       return true;
     } catch {
       pushNotification(
         t('errorUpdatingDescription', {
-          name: state.virtualization.keng__id,
+          name: state.virtualization.name,
         }),
         'error'
       );
@@ -240,7 +239,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
             <PageSection variant={'light'} noPadding={true}>
               <ViewHeaderBreadcrumb
                 currentPublishedState={publishedState.state}
-                virtualizationName={state.virtualization.keng__id}
+                virtualizationName={state.virtualization.name}
                 dashboardHref={resolvers.dashboard.root()}
                 dashboardString={t('shared:Home')}
                 dataHref={resolvers.data.root()}
@@ -248,7 +247,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 i18nCancelText={t('shared:Cancel')}
                 i18nDelete={t('shared:Delete')}
                 i18nDeleteModalMessage={t('deleteModalMessage', {
-                  name: state.virtualization.keng__id,
+                  name: state.virtualization.name,
                 })}
                 i18nDeleteModalTitle={t('deleteModalTitle')}
                 /* TD-636: Commented out for TP
@@ -257,7 +256,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 i18nPublish={t('shared:Publish')}
                 i18nUnpublish={t('shared:Unpublish')}
                 i18nUnpublishModalMessage={t('unpublishModalMessage', {
-                  name: state.virtualization.keng__id,
+                  name: state.virtualization.name,
                 })}
                 i18nUnpublishModalTitle={t('unpublishModalTitle')}
                 onDelete={doDelete}
@@ -293,7 +292,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                   publishingTotalSteps={publishedState.stepTotal}
                   publishingStepText={publishedState.stepText}
                   virtualizationDescription={description}
-                  virtualizationName={state.virtualization.keng__id}
+                  virtualizationName={state.virtualization.name}
                   isWorking={false}
                   onChangeDescription={doSetDescription}
                 />

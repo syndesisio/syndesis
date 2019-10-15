@@ -4,7 +4,7 @@ import { useApiResource } from './useApiResource';
 export const useVirtualizationConnectionSchema = (teiidSourceName?: string) => {
   const url = teiidSourceName
     ? `metadata/${teiidSourceName}/schema`
-    : `metadata/connection-schema`;
+    : `metadata/connectionSchema`;
 
   return useApiResource<SchemaNode[]>({
     defaultValue: [],

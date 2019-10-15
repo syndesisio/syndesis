@@ -23,18 +23,16 @@ export const useVirtualizationHelpers = () => {
 
   /**
    * Creates a virtualization with the specified name and description
-   * @param username the username (used to define the workspace path)
    * @param virtName the name of the virtualization to create
    * @param virtDesc the description (optional) of the virtualization to create
    */
   const createVirtualization = async (
-    username: string,
     virtName: string,
     virtDesc?: string
   ): Promise<Virtualization> => {
     const newVirtualization = {
-      keng__id: `${virtName}`,
-      tko__description: virtDesc ? `${virtDesc}` : '',
+      description: virtDesc ? `${virtDesc}` : '',
+      name: `${virtName}`,
       usedBy: [] as string[]
     } as Virtualization;
 
@@ -53,18 +51,16 @@ export const useVirtualizationHelpers = () => {
 
   /**
    * Updates a virtualization.  Currently this will just update the description
-   * @param username the username (used to define the workspace path)
    * @param virtName the name of the virtualization
    * @param virtDesc the description of the virtualization
    */
   const updateVirtualizationDescription = async (
-    username: string,
     virtName: string,
     virtDesc: string
   ): Promise<void> => {
     const updatedVirtualization = {
-      keng__id: `${virtName}`,
-      tko__description: virtDesc,
+      description: virtDesc,
+      name: `${virtName}`,
     } as Virtualization;
 
     const response = await callFetch({
@@ -390,7 +386,7 @@ export const useVirtualizationHelpers = () => {
       headers: {},
       method: 'GET',
       url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${
-        virtualization.keng__id
+        virtualization.name
       }`,
     });
     if (!response.ok) {

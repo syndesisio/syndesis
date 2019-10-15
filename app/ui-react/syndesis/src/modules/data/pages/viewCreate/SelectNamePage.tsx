@@ -74,7 +74,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
     }
 
     const response: IDvNameValidationResult = await validateViewName(
-      state.virtualization.keng__id,
+      state.virtualization.name,
       proposedName
     );
 
@@ -119,7 +119,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
       );
       try {
         await saveViewDefinition(viewDefinition);
-        const newView = await getView(state.virtualization.keng__id, viewDefinition.name);
+        const newView = await getView(state.virtualization.name, viewDefinition.name);
         history.push(
           resolvers.data.virtualizations.views.edit.sql({
             virtualization: state.virtualization,

@@ -33,21 +33,21 @@ function getFilteredAndSortedVirtualizations(
     const valueToLower = filter.value.toLowerCase();
     filteredAndSorted = filteredAndSorted.filter(
       (virtualization: Virtualization) =>
-        virtualization.keng__id.toLowerCase().includes(valueToLower)
+        virtualization.name.toLowerCase().includes(valueToLower)
     );
   });
 
   filteredAndSorted = filteredAndSorted.sort(
     (thisVirtualization, thatVirtualization) => {
       if (isSortAscending) {
-        return thisVirtualization.keng__id.localeCompare(
-          thatVirtualization.keng__id
+        return thisVirtualization.name.localeCompare(
+          thatVirtualization.name
         );
       }
 
       // sort descending
-      return thatVirtualization.keng__id.localeCompare(
-        thisVirtualization.keng__id
+      return thatVirtualization.name.localeCompare(
+        thisVirtualization.name
       );
     }
   );
@@ -103,12 +103,12 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
    * @returns the description truncated at 150 chars if necessary
    */
   const getDescription = (virtualization: Virtualization): string => {
-    if (virtualization.tko__description) {
-      if (virtualization.tko__description.length > 150) {
-        return virtualization.tko__description.substring(0, 150) + ' ...';
+    if (virtualization.description) {
+      if (virtualization.description.length > 150) {
+        return virtualization.description.substring(0, 150) + ' ...';
       }
 
-      return virtualization.tko__description;
+      return virtualization.description;
     }
 
     return '';
@@ -203,7 +203,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               { virtualization }
                             )}
                             hasViews={!virtualization.empty}
-                            virtualizationName={virtualization.keng__id}
+                            virtualizationName={virtualization.name}
                             virtualizationDescription={getDescription(
                               virtualization
                             )}
@@ -211,7 +211,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nCancelText={t('shared:Cancel')}
                             i18nDelete={t('shared:Delete')}
                             i18nDeleteModalMessage={t('deleteModalMessage', {
-                              name: virtualization.keng__id,
+                              name: virtualization.name,
                             })}
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nDraft={t('shared:Draft')}
@@ -229,7 +229,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nUnpublishModalMessage={t(
                               'unpublishModalMessage',
                               {
-                                name: virtualization.keng__id,
+                                name: virtualization.name,
                               }
                             )}
                             i18nUnpublishModalTitle={t('unpublishModalTitle')}

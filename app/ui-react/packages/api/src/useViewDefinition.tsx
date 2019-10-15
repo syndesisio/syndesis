@@ -6,14 +6,14 @@ export const useViewDefinition = (
 ) => {
   return useApiResource<ViewDefinition>({
     defaultValue: {
+      complete: false,
       dataVirtualizationName: '',
-      isComplete: false,
-      isUserDefined: false,
-      keng__description: '',
+      description: '',
       message: '',
       name: '',
       sourcePaths: [],
-      status: 'ERROR'
+      status: 'ERROR',
+      userDefined: false,
     },
     initialValue: initialDefn,
     url: `editors/${viewDefinitionId}`,
