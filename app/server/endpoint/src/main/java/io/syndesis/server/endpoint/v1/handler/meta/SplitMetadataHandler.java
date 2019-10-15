@@ -30,6 +30,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -103,7 +104,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                 String specification = collectionShape.getSpecification();
                 if (StringUtils.hasText(specification)) {
                     if (collectionShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
-                        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+                        JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
 
                         if (schema.isArraySchema()) {
                             ArraySchema.Items items = schema.asArraySchema().getItems();
@@ -167,7 +168,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
      * @throws IOException
      */
     private String extractUnifiedJsonBodySpec(String specification) throws IOException {
-        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+        JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
             if (bodySchema != null) {

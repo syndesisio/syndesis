@@ -379,7 +379,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .addFlow(oAuthAuthorizationFlow())
             .addFlow(testFlow("getPetById", "unifiedResponse", JSON_SCHEMA_SHAPE, new DataShape.Builder()
                 .kind(DataShapeKinds.JSON_SCHEMA)
-                .specification("{\"id\":\"io:syndesis:wrapped\"}")
+                .specification("{\"$id\":\"io:syndesis:wrapped\"}")
                 .build()))
             .addFlow(oAuthRefreshFlow())
             .addFlow(oAuthRetryFlow())

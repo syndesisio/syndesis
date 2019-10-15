@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "id": "io:syndesis:wrapped",
   "properties": {
@@ -13,7 +13,10 @@
     },
     "body": {
       "type": "object",
-      "required": true,
+      "required": [
+        "name",
+        "photoUrls"
+      ],
       "properties": {
         "id": {
           "type": "integer"

@@ -1,10 +1,11 @@
 {
-  "$schema": "http://json-schema.org/schema#",
+  "$schema": "http://json-schema.org/draft-06/schema#",
   "type": "object",
-  "id": "io:syndesis:wrapped",
+  "$id": "io:syndesis:wrapped",
   "properties": {
     "parameters": {
       "type": "object",
+      "required": [],
       "properties": {
         "version": {
           "type": "string"
@@ -13,7 +14,10 @@
     },
     "body": {
       "type": "object",
-      "required": true,
+      "required": [
+        "name",
+        "photoUrls"
+      ],
       "properties": {
         "id": {
           "type": "integer"
@@ -30,7 +34,8 @@
           }
         },
         "name": {
-          "type": "string"
+          "type": "string",
+          "examples": ["doggie"]
         },
         "photoUrls": {
           "type": "array",

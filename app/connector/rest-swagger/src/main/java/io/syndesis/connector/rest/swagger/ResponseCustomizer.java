@@ -81,7 +81,7 @@ public final class ResponseCustomizer implements ComponentProxyCustomizer, Outpu
             return false;
         }
 
-        final JsonNode id = jsonSchema.get("id");
+        final JsonNode id = jsonSchema.get("$id");
 
         return !isNullNode(id) && "io:syndesis:wrapped".equals(id.asText());
     }

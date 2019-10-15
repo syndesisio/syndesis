@@ -23,10 +23,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
+import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -37,8 +37,6 @@ public class JsonSchemaInspector implements Inspector {
 
     private static final Logger LOG = LoggerFactory.getLogger(JsonSchemaInspector.class);
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     private static final String ARRAY_CONTEXT = "[]";
     static final List<String> COLLECTION_PATHS = Collections.singletonList("size()");
 
@@ -47,7 +45,7 @@ public class JsonSchemaInspector implements Inspector {
         final Optional<byte[]> exemplar) {
         final JsonSchema schema;
         try {
-            schema = MAPPER.readerFor(JsonSchema.class).readValue(specification);
+            schema = JsonSchemaUtils.reader().readValue(specification);
         } catch (final IOException e) {
             LOG.warn("Unable to parse the given JSON schema, increase log level to DEBUG to see the schema being parsed", e);
             LOG.debug(specification);

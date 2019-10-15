@@ -1,0 +1,19 @@
+{
+  "type": "object",
+  "id": "io:syndesis:webhook",
+  "$schema": "http://json-schema.org/schema#",
+  "properties": {
+    "body": {
+      "type": "object",
+      "required": ["name", "age"],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "age": {
+          "type": "integer"
+        }
+      }
+    }
+  }
+}

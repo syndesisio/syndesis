@@ -27,10 +27,14 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.util.IOStreams;
+import junitparams.JUnitParamsRunner;
+import junitparams.Parameters;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@RunWith(JUnitParamsRunner.class)
 public class JsonSchemaInspectorTest {
 
     private final String JSON_SCHEMA_KIND = "json-schema";
@@ -47,8 +51,11 @@ public class JsonSchemaInspectorTest {
     }
 
     @Test
-    public void shouldCollectPathsFromUnifiedJsonSchema() throws IOException {
-        final List<String> paths = inspector.getPaths(JSON_SCHEMA_KIND, "", IOStreams.readText(getPetstoreUnifiedSchema()), Optional.empty());
+    @Parameters({"/petstore-unified-schema.json",
+                 "/petstore-unified-schema-draft-4.json",
+                 "/petstore-unified-schema-draft-6.json"})
+    public void shouldCollectPathsFromUnifiedJsonSchema(final String schemaPath) throws IOException {
+        final List<String> paths = inspector.getPaths(JSON_SCHEMA_KIND, "", IOStreams.readText(getPetstoreUnifiedSchema(schemaPath)), Optional.empty());
         assertPetstoreProperties(paths);
         assertThat(paths).doesNotContainAnyElementsOf(JsonSchemaInspector.COLLECTION_PATHS);
     }
@@ -80,8 +87,8 @@ public class JsonSchemaInspectorTest {
         assertThat(paths).containsAll(Arrays.asList("Id", "PhoneNumbers.size()", "PhoneNumbers[].Name", "PhoneNumbers[].Number"));
     }
 
-    private InputStream getPetstoreUnifiedSchema() {
-        return JsonSchemaInspectorTest.class.getResourceAsStream("/petstore-unified-schema.json");
+    private InputStream getPetstoreUnifiedSchema(String schemaPath) {
+        return JsonSchemaInspectorTest.class.getResourceAsStream(schemaPath);
     }
 
     private InputStream getSalesForceContactSchema() {
