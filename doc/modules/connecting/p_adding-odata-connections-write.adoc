@@ -52,8 +52,6 @@ you added it.
 .Next steps
 Add a data mapper step before the OData connection. You must map 
 source fields that provide the data that is required to create a new entity, 
-to update an entity, or to delete an entity. If you map a collection to a 
-target field, the default behavior is that the content in the last element 
-that is in the source collection is mapped to the target field. 
+to update an entity, or to delete an entity. 
  
  
