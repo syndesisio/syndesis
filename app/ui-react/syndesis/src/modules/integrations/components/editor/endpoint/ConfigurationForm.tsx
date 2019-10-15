@@ -90,6 +90,10 @@ export const ConfigurationForm: React.FunctionComponent<
         (name: string) => `${name} is required`,
         values
       );
+    const formTitle =
+      typeof step.description === 'undefined'
+        ? action.name
+        : `${action.name} - ${step.description}`;
     return (
       <AutoForm<IFormValue>
         i18nRequiredProperty={t('shared:requiredFieldMessage')}
@@ -105,7 +109,7 @@ export const ConfigurationForm: React.FunctionComponent<
         {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => (
           <>
             <IntegrationEditorForm
-              i18nFormTitle={`${action.name} - ${step.description}`}
+              i18nFormTitle={formTitle}
               i18nBackAction={'Choose Action'}
               i18nNext={'Next'}
               isValid={isValid}
