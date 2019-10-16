@@ -4,11 +4,11 @@
 [id='adding-dynamodb-connection-query_{context}']
 = Obtaining data from an Amazon DynamoDB table
 
-In an integration flow, to obtain data from an Amazon DynamoDB table, 
+In an integration flow, to obtain an element from an Amazon DynamoDB table, 
 add an Amazon DynamoDB connection to the middle of the flow.
 
 A DynamoDB connection cannot start a simple integration. If you want 
-to periodically obtain data from a DynamoDB table then start a simple integration
+to periodically obtain data from a DynamoDB table, start a simple integration
 with a timer followed by a DynamoDB connection that queries a table. 
 
 .Prerequisites
@@ -26,13 +26,14 @@ is configured to access that table that you want to obtain data from.
 
 . On the *Choose an action* page, select the *Query* action. 
 
-. In the *Filter* field, identify the data that the connection should 
+. In the *Filter* field, specify JSON notation that identifies the element that the connection should 
 return. Specification of a key is required. You can specify input
 parameters with `:#`. 
 
 . Optional. In the *Attributes to query* field, enter a comma-separated list of
 the columns that contain the data that you want the connection to return. 
-For example: `attribute1,attribute2,attribute3`. 
+For example: `attribute1,attribute2,attribute3`. If you do not specify 
+attributes, the query returns the whole element. 
  
 . Click *Next*. 
 
