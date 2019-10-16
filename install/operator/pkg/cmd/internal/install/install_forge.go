@@ -89,7 +89,7 @@ func (o *Install) installForge() error {
 	//
 	// Applies the placeholder config to the syndesis CR
 	//
-	if err := template.SetupRenderContext(gen, syndesis, createConfig()); err != nil {
+	if err := template.SetupRenderContext(gen, syndesis, template.ResourceParams{}, createConfig()); err != nil {
 		return err
 	}
 
@@ -198,7 +198,12 @@ func convertToParam(name string) string {
 func createConfig() map[string]string {
 	config := map[string]string{}
 
-	for k, _ := range conf.AllConfigOptions {
+	for k, cs := range conf.AllConfigOptions {
+		if (conf.ConfigSpec{} == cs) {
+			// Ignore empty parameters as these should
+			// not be converted to variables
+			continue
+		}
 		config[string(k)] = convertToParam(string(k))
 	}
 
