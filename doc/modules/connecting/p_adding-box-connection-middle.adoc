@@ -38,6 +38,9 @@ Alternatively, you can add a data mapper step before this connection
 and map the file ID from a previous step to this connection. 
 +
 In this release, you can download only a single file. 
+However, mapping the file ID from a previous step can make identification of 
+the file dynamic, for example, the ID can come from a database table. 
+This means each execution might download a different file. 
 
 +
 To *upload* a file: 
@@ -48,13 +51,14 @@ upload the file to.
 Box folder IDs are at the end of the URL when you view the content of a folder in Box.
 In this example: `\https://app.box.com/folder/89490291417`, the folder 
 ID is `89490291417`. In this release, you can upload only a single file. 
-.. Optional. In the *File name* field, enter the name for a new file or 
-an existing file. If you specify the name of a file that is already
-in the specified Box folder, the connection appends content to that file.
+.. Optional. In the *File name* field, enter the name for a new file.
+If you specify the name of a file that is already
+in the specified Box folder, it is a runtime error.
 +
 The input to the connection must be a file that you want to upload 
 to Box. If you do not specify a file name, the connection uploads a file 
-that has the same name as the input file to the connection. 
+that has the same name as the input file to the connection as long as 
+file with that name is not already present. 
 .. Click *Next* to specify the upload action's input type. 
 .. In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 

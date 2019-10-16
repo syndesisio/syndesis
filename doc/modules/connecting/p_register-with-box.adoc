@@ -39,12 +39,6 @@ and do the following:
 and then *Next*. 
 .. Enter an app name, for example, *{prodname} Client* and click *Create App*. 
 .. Click *View Your App*. 
-.. Scroll down to *OAuth 2.0 Redirect URI*. 
-.. In the *Redirect URI* field, paste the {prodname} callback URL that 
-you copied to the clipboard in the first step of this procedure. 
-For example, the URL that you paste is something like this:
-`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
-.. Under *Advanced Features*, select *Perform Actions as Users*. 
 .. Optional. In the *OAuth 2.0 Credentials* section, copy the client
 ID and the client secret to a safe location. These values are 
 needed to create a connection to Box. 
