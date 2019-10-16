@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"sort"
 	"strings"
 	"unicode"
 
@@ -175,6 +176,13 @@ func (o *Install) installForge() error {
 }
 
 func convertToParam(name string) string {
+	//
+	// Exceptional situation where the
+	// ENDPOINTS_TEST_SUPPORT_ENABLED var
+	// is renamed to TEST_SUPPORT_ENABLED
+	//
+	name = strings.TrimPrefix(name, "ENDPOINTS_")
+
 	evar := "${" + name + "}"
 	if _, ok := params[evar]; !ok {
 		displayName := strings.ToLower(name)
@@ -435,6 +443,13 @@ func exportTo(resources []unstructured.Unstructured, format string) error {
 
 		paramList = append(paramList, m)
 	}
+
+	sort.Slice(paramList,
+		func(i, j int) bool {
+			f := paramList[i].(map[string]interface{})
+			g := paramList[j].(map[string]interface{})
+			return f["name"].(string) < g["name"].(string)
+		})
 	unstructured.SetNestedSlice(exportTemplate.UnstructuredContent(), paramList, "parameters")
 
 	//
