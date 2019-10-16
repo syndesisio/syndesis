@@ -9,6 +9,9 @@
 In an integration, you can download files from Box or upload files
 to Box. 
 
+A connection to Box cannot start a simple integration. In other words, 
+you cannot use a Box connection to trigger integration execution. 
+
 
 ifeval::["{location}" == "downstream"]
 [IMPORTANT]

@@ -57,7 +57,7 @@ in the specified Box folder, it is a runtime error.
 +
 The input to the connection must be a file that you want to upload 
 to Box. If you do not specify a file name, the connection uploads a file 
-that has the same name as the input file to the connection as long as 
+that has the same name as the input file to the connection as long as a 
 file with that name is not already present. 
 .. Click *Next* to specify the upload action's input type. 
 .. In the *Select Type* field, if the data type does not need to be known, 
