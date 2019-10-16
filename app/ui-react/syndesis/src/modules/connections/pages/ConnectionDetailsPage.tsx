@@ -109,11 +109,9 @@ export const ConnectionDetailsPage: React.FunctionComponent<
   const getUsedByMessage = (c: IConnectionOverview): string => {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
     const numUsedBy = c.uses as number;
-
     if (numUsedBy === 1) {
       return i18n.t('connections:usedByOne');
     }
-
     return i18n.t('connections:usedByMulti', { count: numUsedBy });
   };
 
@@ -136,11 +134,6 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     );
     try {
       await saveConnection(updatedConnection);
-      history.push(
-        resolvers.connections.connection.details({
-          connection: updatedConnection,
-        })
-      );
       return true;
     } catch (error) {
       pushNotification(t('errorSavingConnection'), 'error');
@@ -264,7 +257,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
             initialValue={connection.configuredProperties}
             disabled={!edit}
             onSave={saveConnector}
-            key={location.key}
+            key={`${location.key} - ${connection.lastUpdated}`}
           >
             {({
               fields,

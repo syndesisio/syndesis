@@ -7,6 +7,8 @@ import {
 } from './helpers';
 import { useApiResource } from './useApiResource';
 import { transformConnectorResponse } from './useConnector';
+import { useServerEvents } from './useServerEvents';
+import { IChangeEvent } from './WithServerEvents';
 
 export const transformConnectionResponse = (
   connection: IConnectionOverview
@@ -27,9 +29,10 @@ export const transformConnectionResponse = (
 
 export const useConnection = (
   connectionId: string,
-  initialValue?: IConnectionOverview
+  initialValue?: IConnectionOverview,
+  disableUpdates: boolean = false
 ) => {
-  return useApiResource<IConnectionOverview>({
+  const { read, ...rest } = useApiResource<IConnectionOverview>({
     defaultValue: {
       isConfigRequired: false,
       isTechPreview: false,
@@ -42,4 +45,13 @@ export const useConnection = (
     },
     url: `/connections/${connectionId}`,
   });
+  useServerEvents({
+    disableUpdates,
+    filter: (change: IChangeEvent) => change.id === connectionId,
+    read,
+  });
+  return {
+    ...rest,
+    read,
+  };
 };
