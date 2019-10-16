@@ -5,11 +5,9 @@ import {
   DataListItemCells,
   DataListItemRow,
   FormGroup,
-  Popover,
   Text,
   TextVariants,
 } from '@patternfly/react-core';
-import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import {
   IFormControlProps,
@@ -19,6 +17,8 @@ import {
 } from '../models';
 import { useFormBuilder } from '../useFormBuilder';
 import { getValidationState, toValidHtmlId } from './helpers';
+
+import './FormMapsetComponent.css';
 
 export const FormMapsetComponent: React.FunctionComponent<
   IFormControlProps
@@ -36,30 +36,14 @@ export const FormMapsetComponent: React.FunctionComponent<
   return (
     <>
       <FormGroup
-        label={
-          props.property.displayName ? (
-            <>
-              {props.property.displayName}
-              {props.property.labelHint && (
-                <Popover
-                  aria-label={props.property.labelHint}
-                  bodyContent={props.property.labelHint}
-                >
-                  <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
-                </Popover>
-              )}
-            </>
-          ) : (
-            undefined
-          )
-        }
         {...props.property.formGroupAttributes}
+        className={'form-mapset-component__form-group'}
         fieldId={id}
         isValid={getValidationState(props)}
-        helperText={props.property.description}
+        helperText={''}
         helperTextInvalid={props.form.errors[props.field.name]}
       />
-        <DataList id={id} aria-label={field.name}>
+        <DataList id={id} aria-label={field.name} className={'form-mapset-component__data-list'}>
           <DataListItem aria-labelledby={'key-label'}>
             <DataListItemRow>
               <DataListItemCells
@@ -100,7 +84,7 @@ export const FormMapsetComponent: React.FunctionComponent<
                           </Text>
                         </DataListCell>,
                         <DataListCell key={'secondary'}>
-                          <div className="pf-c-form">
+                          <div className="form-mapset-component__data-list-cell-secondary pf-c-form">
                             {getField({
                               allFieldsRequired: false,
                               property: {
