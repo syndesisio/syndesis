@@ -5,7 +5,7 @@
 = Creating Amazon DynamoDB connections
 
 You must create an Amazon DynamoDB connection before you can 
-connect Amazon DynamoDB in an integration.
+connect to Amazon DynamoDB in an integration.
 
 .Prerequisites
 
@@ -23,7 +23,7 @@ connects to DynamoDB.
 display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
-. Click the *AWS DBD* connector.
+. Click the *AWS DDB* connector.
 . In the *Access Key* field, enter an Amazon access key ID that is 
 part of a user access key in the AWS account that manages 
 the DynamoDB table that you want the connection to access. 
@@ -43,7 +43,7 @@ details as needed and try again.
 . When validation is successful, click *Next*.
 . In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, enter `DynomoDB West`.
+For example, enter `DynamoDB West`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample DynamoDB connection
