@@ -1,5 +1,10 @@
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
@@ -34,9 +39,23 @@ export const DvConnectionsListView: React.FunctionComponent<
           <PageSection>{props.children}</PageSection>
         </PageSection>
       ) : (
-        <EmptyState>
-          <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
-          <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
+        <EmptyState variant={EmptyStateVariant.full}>
+          <Title headingLevel="h5" size="lg">
+            {props.i18nEmptyStateTitle}
+          </Title>
+          <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
+          <ButtonLink
+            className={
+              'dv-connections-list-view-empty-create-connection-button'
+            }
+            data-testid={
+              'dv-connections-list-view-empty-create-connection-button'
+            }
+            href={props.linkToConnectionCreate}
+            as={'primary'}
+          >
+            {props.i18nLinkCreateConnection}
+          </ButtonLink>
         </EmptyState>
       )}
     </PageSection>

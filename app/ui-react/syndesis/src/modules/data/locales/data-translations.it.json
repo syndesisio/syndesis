@@ -1,5 +1,5 @@
 {
-  "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Riprova.",
+  "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Fai clic su Crea connessione per una nuova connessione.",
   "activeConnectionsEmptyStateTitle": "Nessuna Connessione Attiva",
   "createDataVirtualization": "Crea $t(shared:DataVirtualization)",
   "createDataVirtualizationTip": "Creare una virtualizzazione dei dati",

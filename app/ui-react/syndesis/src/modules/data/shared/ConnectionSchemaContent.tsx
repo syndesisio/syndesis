@@ -10,6 +10,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../../shared';
+import resolvers from '../../resolvers';
 import { generateSchemaNodeInfos } from './VirtualizationUtils';
 
 function getConnectionNames(schemaNodes: SchemaNode[]) {
@@ -69,7 +70,9 @@ export const ConnectionSchemaContent: React.FunctionComponent<
     <ConnectionSchemaList
       i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
       i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
+      i18nLinkCreateConnection={t('shared:linkCreateConnection')}
       hasListData={connNames.length > 0}
+      linkToConnectionCreate={resolvers.connections.create.selectConnector()}
     >
       <WithLoader
         error={error !== false}
