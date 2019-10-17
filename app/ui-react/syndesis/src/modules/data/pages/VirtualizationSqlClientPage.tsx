@@ -59,7 +59,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     params.virtualizationId
   );
   const [description, setDescription] = React.useState(
-    state.virtualization.tko__description
+    state.virtualization.description
   );
   const appContext = React.useContext(AppContext);
   const { pushNotification } = React.useContext(UIContext);
@@ -121,16 +121,15 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     setDescription(newDescription); // this sets InlineTextEdit component to new value
     try {
       await updateVirtualizationDescription(
-        appContext.user.username || 'developer',
         params.virtualizationId,
         newDescription
       );
-      state.virtualization.tko__description = newDescription;
+      state.virtualization.description = newDescription;
       return true;
     } catch {
       pushNotification(
         t('errorUpdatingDescription', {
-          name: state.virtualization.keng__id,
+          name: state.virtualization.name,
         }),
         'error'
       );
@@ -144,7 +143,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       <PageSection variant={'light'} noPadding={true}>
         <ViewHeaderBreadcrumb
           currentPublishedState={publishedState.state}
-          virtualizationName={state.virtualization.keng__id}
+          virtualizationName={state.virtualization.name}
           dashboardHref={resolvers.dashboard.root()}
           dashboardString={t('shared:Home')}
           dataHref={resolvers.data.root()}
@@ -152,13 +151,13 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           i18nCancelText={t('shared:Cancel')}
           i18nDelete={t('shared:Delete')}
           i18nDeleteModalMessage={t('deleteModalMessage', {
-            name: state.virtualization.keng__id,
+            name: state.virtualization.name,
           })}
           i18nDeleteModalTitle={t('deleteModalTitle')}
           i18nPublish={t('shared:Publish')}
           i18nUnpublish={t('shared:Unpublish')}
           i18nUnpublishModalMessage={t('unpublishModalMessage', {
-            name: state.virtualization.keng__id,
+            name: state.virtualization.name,
           })}
           i18nUnpublishModalTitle={t('unpublishModalTitle')}
           onDelete={doDelete}
@@ -191,7 +190,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           publishingTotalSteps={publishedState.stepTotal}
           publishingStepText={publishedState.stepText}
           virtualizationDescription={description}
-          virtualizationName={state.virtualization.keng__id}
+          virtualizationName={state.virtualization.name}
           isWorking={false}
           onChangeDescription={doSetDescription}
         />

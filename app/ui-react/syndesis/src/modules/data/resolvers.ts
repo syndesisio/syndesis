@@ -15,7 +15,7 @@ export default {
         routes.virtualizations.virtualization.views.root,
         ({ virtualization }) => ({
           params: {
-            virtualizationId: virtualization.keng__id,
+            virtualizationId: virtualization.name,
           },
           state: {
             virtualization,
@@ -30,7 +30,7 @@ export default {
           routes.virtualizations.virtualization.views.createView.selectSources,
           ({ virtualization }) => ({
             params: {
-              virtualizationId: virtualization.keng__id,
+              virtualizationId: virtualization.name,
             },
             state: {
               virtualization,
@@ -44,7 +44,7 @@ export default {
           routes.virtualizations.virtualization.views.createView.selectName,
           ({ schemaNodeInfo, virtualization }) => ({
             params: {
-              virtualizationId: virtualization.keng__id,
+              virtualizationId: virtualization.name,
             },
             state: {
               schemaNodeInfo,
@@ -62,7 +62,7 @@ export default {
           routes.virtualizations.virtualization.views.edit.sql,
           ({ virtualization, viewDefinitionId, viewDefinition }) => ({
             params: {
-              virtualizationId: virtualization.keng__id,
+              virtualizationId: virtualization.name,
               viewDefinitionId,
             },
             state: {
@@ -81,7 +81,7 @@ export default {
             .selectConnection,
           ({ virtualization }) => ({
             params: {
-              virtualizationId: virtualization.keng__id,
+              virtualizationId: virtualization.name,
             },
             state: {
               virtualization,
@@ -95,7 +95,7 @@ export default {
           routes.virtualizations.virtualization.views.importSource.selectViews,
           ({ connectionId, virtualization }) => ({
             params: {
-              virtualizationId: virtualization.keng__id,
+              virtualizationId: virtualization.name,
             },
             state: {
               connectionId,
@@ -109,7 +109,7 @@ export default {
       routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({
         params: {
-          virtualizationId: virtualization.keng__id,
+          virtualizationId: virtualization.name,
         },
         state: {
           virtualization,
