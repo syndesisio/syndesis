@@ -5,7 +5,6 @@
     "@commitlint/config-conventional": "~8",
     "husky": "~3",
     "lint-staged": "~9",
-    "ngo": "~2",
     "npm-run-all": "~4"
   },
   "husky": {
@@ -17,17 +16,8 @@
   },
   "scripts": {
     "pre-commit:lint-staged": "lint-staged",
+    "pre-commit:add-operator-assets-vfsdata": "git add install/operator/pkg/generator/assets_vfsdata.go",
     "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
     "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
-  },
-  "lint-staged": {
-    "*.go": [
-      "ngo fmt",
-      "git add"
-    ],
-    "*.{java,properties,xml}": [
-      "./tools/misc/format-license.sh",
-      "git add"
-    ]
   }
 }
