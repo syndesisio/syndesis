@@ -24,7 +24,7 @@ spec-defaults:
       image: docker.io/syndesis/syndesis-meta:latest
     db:
       imageStreamNamespace: openshift
-      image: postgresql:9.5
+      image: postgresql:9.6
     komodo:
       image: docker.io/teiid/syndesis-dv:latest
     oauth:
