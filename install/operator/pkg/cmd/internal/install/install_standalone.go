@@ -72,10 +72,10 @@ func (o *Install) installStandalone() error {
 		return err
 	}
 
-    // create custom resource
-	syndesis := &v1alpha1.Syndesis{ }
+	// create custom resource
+	syndesis := &v1alpha1.Syndesis{}
 
-	if(o.customResource == "") {
+	if o.customResource == "" {
 		syndesis = &v1alpha1.Syndesis{
 			ObjectMeta: metav1.ObjectMeta{
 				Namespace: o.Namespace,
