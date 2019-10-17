@@ -595,50 +595,6 @@
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>syndesis-git-mvn-repo</id>
-      <activation>
-        <file>
-          <exists>/tmp/syndesis-maven-repo/README.md</exists>
-        </file>
-      </activation>
-      <repositories>
-        <repository>
-          <id>syndesis-git-mvn-repo</id>
-          <url>https://media.githubusercontent.com/media/syndesisio/maven-repo/master</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </repository>
-      </repositories>
-      <pluginRepositories>
-        <pluginRepository>
-          <id>syndesis-git-mvn-repo</id>
-          <url>https://media.githubusercontent.com/media/syndesisio/maven-repo/master</url>
-          <releases>
-            <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </pluginRepository>
-      </pluginRepositories>
-      <distributionManagement>
-        <snapshotRepository>
-          <id>syndesis-git-mvn-repo</id>
-          <name>syndesis-git-mvn-repo</name>
-          <url>file:///tmp/syndesis-maven-repo</url>
-        </snapshotRepository>
-        <repository>
-          <id>syndesis-git-mvn-repo</id>
-          <name>syndesis-git-mvn-repo</name>
-          <url>file:///tmp/syndesis-maven-repo</url>
-        </repository>
-      </distributionManagement>
-    </profile>
   </profiles>
 
   <build>
