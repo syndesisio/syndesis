@@ -99,4 +99,8 @@ public interface OAuth2CredentialFlowState extends CredentialFlowState {
         return new OAuth2CredentialFlowState.Builder().createFrom(this).code(code).build();
     }
 
+    @Override
+    default boolean isApplicable() {
+        return getAccessGrant() != null;
+    }
 }

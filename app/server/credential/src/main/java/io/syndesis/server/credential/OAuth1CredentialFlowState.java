@@ -94,4 +94,9 @@ public interface OAuth1CredentialFlowState extends CredentialFlowState {
 
         return new OAuth1CredentialFlowState.Builder().createFrom(this).verifier(verifier).build();
     }
+
+    @Override
+    default boolean isApplicable() {
+        return getAccessToken() != null;
+    }
 }
