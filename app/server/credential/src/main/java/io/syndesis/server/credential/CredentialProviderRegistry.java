@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.manager.DataManager;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.core.io.support.SpringFactoriesLoader;
 import org.springframework.util.ClassUtils;
 

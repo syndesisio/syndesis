@@ -15,12 +15,11 @@
  */
 package io.syndesis.server.credential.salesforce;
 
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.server.credential.Applicator;
 import io.syndesis.server.credential.OAuth2Applicator;
-import io.syndesis.common.model.connection.Connection;
-
+import io.syndesis.server.credential.SocialProperties;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.salesforce.api.Salesforce;
