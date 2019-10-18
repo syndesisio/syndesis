@@ -15,13 +15,15 @@
  */
 package io.syndesis.server.runtime;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-
 import java.util.Arrays;
 import java.util.List;
+
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableConfigurationProperties
@@ -37,4 +39,23 @@ public class SyndesisCorsConfiguration {
     public void setAllowedOrigins(List<String> allowedOrigins) {
         this.allowedOrigins = allowedOrigins;
     }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        return new CorsFilter(request -> {
+            String pathInfo = request.getPathInfo();
+            if (pathInfo != null &&
+                (pathInfo.endsWith("/swagger.json") ||
+                 pathInfo.endsWith("/swagger.yaml"))) {
+                return new CorsConfiguration().applyPermitDefaultValues();
+            }
+
+            CorsConfiguration config = new CorsConfiguration();
+            config.setAllowedOrigins(allowedOrigins);
+            config.setAllowedMethods(Arrays.asList("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH"));
+            config.applyPermitDefaultValues();
+            return config;
+        });
+    }
+
 }

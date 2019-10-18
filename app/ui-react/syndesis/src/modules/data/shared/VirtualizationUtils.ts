@@ -201,29 +201,29 @@ function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
  * @param name the view name
  * @param dataVirtName the name of the virtualization
  * @param srcPaths paths for the sources used in the view
- * @param userDefined specifies if the ddl has been altered from defaults
- * @param description the (optional) view description
+ * @param userDef specifies if the ddl has been altered from defaults
+ * @param descr the (optional) view description
  * @param viewDdl the (optional) view DDL
  */
 function getViewDefinition(
   name: string,
   dataVirtName: string,
   srcPaths: string[],
-  userDefined: boolean,
-  description?: string,
+  userDef: boolean,
+  descr?: string,
   viewDdl?: string
 ) {
   // View Definition
   const viewDefn: ViewDefinition = {
+    complete: true,
     dataVirtualizationName: dataVirtName,
     ddl: viewDdl ? viewDdl : '',
-    isComplete: true,
-    isUserDefined: userDefined,
-    keng__description: description ? description : '',
+    description: descr ? descr : '',
     message: '',
     name,
     sourcePaths: srcPaths,
-    status: 'SUCCESS'
+    status: 'SUCCESS',
+    userDefined: userDef,
   };
 
   return viewDefn;

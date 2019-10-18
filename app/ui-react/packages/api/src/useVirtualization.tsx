@@ -8,12 +8,12 @@ export const useVirtualization = (
 ) => {
   const { read, ...rest } = useApiResource<Virtualization>({
     defaultValue: {
+      description: '',
       empty: true,
       id: '',
-      keng__id: '',
+      name: '',
       publishedState: 'NOTFOUND',
       serviceViewModel: '',
-      tko__description: '',
       usedBy: []
     },
     url: `virtualizations/${virtualizationName}`,

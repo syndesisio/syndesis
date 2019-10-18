@@ -79,7 +79,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
 
   const virtualization = state.virtualization;
   const { resource: viewDefinitionDescriptors } = useViewDefinitionDescriptors(
-    virtualization.keng__id
+    virtualization.name
   );
 
   const handleCreateViews = async () => {
@@ -94,7 +94,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
       await importSource(params.virtualizationId, connName, importSources);
       pushNotification(
         t('importViewsSuccess', {
-          name: virtualization.keng__id,
+          name: virtualization.name,
         }),
         'success'
       );
@@ -103,7 +103,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
       pushNotification(
         t('importViewsFailed', {
           details,
-          name: virtualization.keng__id,
+          name: virtualization.name,
         }),
         'error'
       );

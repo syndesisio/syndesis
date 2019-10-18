@@ -39,7 +39,7 @@ export const ViewsImportApp: React.FunctionComponent = () => {
             virtualization: state.virtualization,
           })}
         >
-          {state.virtualization.keng__id}
+          {state.virtualization.name}
         </Link>
         <span>{t('importDataSource')}</span>
       </Breadcrumb>
