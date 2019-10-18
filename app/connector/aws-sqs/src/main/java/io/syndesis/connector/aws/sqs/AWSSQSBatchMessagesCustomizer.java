@@ -21,13 +21,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.component.aws.sqs.SqsConstants;
-import org.apache.camel.component.aws.sqs.SqsOperations;
-
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
 
 public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
 
@@ -49,6 +46,5 @@ public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
             }
         }
         in.setBody(messageList);
-        in.setHeader(SqsConstants.SQS_OPERATION, SqsOperations.sendBatchMessage);
     }
 }

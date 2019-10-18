@@ -65,8 +65,8 @@ public class GmailVerifierExtension extends DefaultComponentVerifierExtension {
             GoogleMailConfiguration configuration = setProperties(new GoogleMailConfiguration(), parameters);
             GoogleMailClientFactory clientFactory = new BatchGoogleMailClientFactory();
             Gmail client = clientFactory.makeClient(configuration.getClientId(), configuration.getClientSecret(),
-                                                    configuration.getScopes(), configuration.getApplicationName(),
-                                                    configuration.getRefreshToken(), configuration.getAccessToken());
+                                                    configuration.getApplicationName(), configuration.getRefreshToken(),
+                                                    configuration.getAccessToken());
             client.users().getProfile(profile).execute();
         } catch (Exception e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())

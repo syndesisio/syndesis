@@ -247,7 +247,8 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
             }
 
             configuration.setQueryParams(queryParams);
-            configuration.setFilterAlreadySeen(isFilterAlreadySeen());
+            //TODO: Backport https://github.com/jboss-fuse/camel/commit/aef5e1ae9386b3ad74681b51ebcbe660bd4a9d0a#diff-bf0286fb993e0269f87f5f1db4355aec to 2.23.x.redhat-7-x
+            //configuration.setFilterAlreadySeen(isFilterAlreadySeen());
         }
 
         component.setConfiguration(configuration);
