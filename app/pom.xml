@@ -736,6 +736,9 @@
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
               <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
             </ignoredResourcePatterns>
+            <ignoredClassPatterns>
+              <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
+            </ignoredClassPatterns>
             <exceptions>
               <exception>
                 <conflictingDependencies>
@@ -1663,8 +1666,8 @@
         <version>${spring.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jcl</artifactId>
           </exclusion>
           <exclusion>
             <groupId>aopalliance</groupId>
