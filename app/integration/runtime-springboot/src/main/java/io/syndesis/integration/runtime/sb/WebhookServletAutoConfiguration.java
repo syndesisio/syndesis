@@ -28,8 +28,8 @@ import org.springframework.context.annotation.Configuration;
 public class WebhookServletAutoConfiguration {
 
     @Bean
-    public ServletRegistrationBean servletRegistrationBean() {
-        ServletRegistrationBean mapping = new ServletRegistrationBean();
+    public ServletRegistrationBean<CamelHttpTransportServlet> servletRegistrationBean() {
+        ServletRegistrationBean<CamelHttpTransportServlet> mapping = new ServletRegistrationBean<>();
         mapping.setServlet(new CamelHttpTransportServlet());
         mapping.addUrlMappings("/webhook/*");
         mapping.setName("CamelServlet");
