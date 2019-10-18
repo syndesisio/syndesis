@@ -17,8 +17,11 @@ package io.syndesis.server.cli.command;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import com.kakawait.spring.boot.picocli.autoconfigure.ExitStatus;
+import com.kakawait.spring.boot.picocli.autoconfigure.HelpAwarePicocliCommand;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.boot.env.YamlPropertySourceLoader;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -27,10 +30,6 @@ import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.core.env.PropertySource;
 import org.springframework.core.env.StandardEnvironment;
-
-import com.kakawait.spring.boot.picocli.autoconfigure.ExitStatus;
-import com.kakawait.spring.boot.picocli.autoconfigure.HelpAwarePicocliCommand;
-
 import picocli.CommandLine.Command;
 
 public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
@@ -64,9 +63,9 @@ public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
         final AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
         final YamlPropertySourceLoader propertySourceLoader = new YamlPropertySourceLoader();
-        final PropertySource<?> propertySource;
+        final List<PropertySource<?>> yamlPropertySources;
         try {
-            propertySource = propertySourceLoader.load(name, context.getResource("classpath:" + name + ".yml"), null);
+            yamlPropertySources = propertySourceLoader.load(name, context.getResource("classpath:" + name + ".yml"));
         } catch (final IOException e) {
             throw new IllegalStateException(e);
         }
@@ -74,7 +73,7 @@ public abstract class SyndesisCommand extends HelpAwarePicocliCommand {
         final StandardEnvironment environment = new StandardEnvironment();
         final MutablePropertySources propertySources = environment.getPropertySources();
         propertySources.addFirst(new MapPropertySource("parameters", parameters));
-        propertySources.addLast(propertySource);
+        yamlPropertySources.forEach(propertySources::addLast);
 
         context.setEnvironment(environment);
 
