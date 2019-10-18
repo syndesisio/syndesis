@@ -19,9 +19,8 @@ import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth1Applicator;
 import io.syndesis.server.credential.OAuth1CredentialProvider;
+import io.syndesis.server.credential.SocialProperties;
 import io.syndesis.server.credential.UnconfiguredProperties;
-
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.twitter.connect.TwitterConnectionFactory;
 
 public final class TwitterCredentialProviderFactory implements CredentialProviderFactory {

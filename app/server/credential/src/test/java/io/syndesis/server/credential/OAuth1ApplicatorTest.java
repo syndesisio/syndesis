@@ -18,7 +18,6 @@ package io.syndesis.server.credential;
 import io.syndesis.common.model.connection.Connection;
 
 import org.junit.Test;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.oauth1.OAuthToken;
 
 import static org.assertj.core.api.Assertions.assertThat;

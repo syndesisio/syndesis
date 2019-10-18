@@ -21,9 +21,8 @@ import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
-
+import io.syndesis.server.credential.SocialProperties;
 import org.mockito.ArgumentMatchers;
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 import org.springframework.social.oauth2.OAuth2Operations;
