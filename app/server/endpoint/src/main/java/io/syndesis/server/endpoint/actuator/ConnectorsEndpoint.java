@@ -15,31 +15,50 @@
  */
 package io.syndesis.server.endpoint.actuator;
 
+import java.util.List;
+
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.dao.manager.DataManager;
-import org.springframework.boot.actuate.endpoint.AbstractEndpoint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.actuate.endpoint.annotation.Endpoint;
+import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
+import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.List;
+import org.springframework.http.ResponseEntity;
 
 /**
  * Defines methods for refreshing connectors without restarting the server.
  */
 @Configuration
-@ConditionalOnProperty(value = "endpoints.connectors.enabled", havingValue = "true", matchIfMissing = true)
-public class ConnectorsEndpoint extends AbstractEndpoint<List<Connector>> {
+@Endpoint(id = "connectors")
+@ConditionalOnProperty(value = "management.endpoints.connectors.enabled", havingValue = "true", matchIfMissing = true)
+public class ConnectorsEndpoint {
+
+    /** Logger */
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectorsEndpoint.class);
 
     private final DataManager dataManager;
 
     public ConnectorsEndpoint(DataManager dataManager) {
-        super("connectors", false, true);
         this.dataManager = dataManager;
     }
 
-    @Override
-    public List<Connector> invoke() {
+    @ReadOperation
+    public List<Connector> connectors() {
         return dataManager.fetchAll(Connector.class).getItems();
+    }
+
+    @WriteOperation
+    public Object connector(Connector connector) {
+        try {
+            updateConnector(connector);
+            return ResponseEntity.ok().build();
+        } catch (Exception ex) {
+            LOG.error("Error while updating the connector", ex);
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     public void updateConnector(Connector value) {
