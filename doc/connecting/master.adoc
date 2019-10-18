@@ -25,6 +25,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-aws_{context}>>
 * <<connecting-to-amq_{context}>>
 * <<connecting-to-amqp_{context}>>
+* <<connecting-to-box_{context}>>
 * <<connecting-to-dropbox_{context}>>
 * <<connecting-to-fhir_{context}>>
 * <<connecting-to-ftp_{context}>>
@@ -53,6 +54,8 @@ include::assemblies/connecting/as_connecting-to-aws.adoc[leveloffset=+1]
 include::assemblies/connecting/as_connecting-to-amq.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-amqp.adoc[leveloffset=+1]
+
+include::assemblies/connecting/as_connecting-to-box.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-dropbox.adoc[leveloffset=+1]
 

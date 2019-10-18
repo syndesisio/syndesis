@@ -1,0 +1,65 @@
+// This module is included in the following assemblies:
+// as_connecting-to-box.adoc
+
+[id='creating-box-connections_{context}']
+= Creating a Box connection
+
+In an integration, to download or upload Box files, create a 
+Box connection, which you can add
+to an integration. You can add the same connection to any number of
+integrations. 
+
+.Prerequisites
+
+* There is a Box client application that registers your
+{prodname} environment as an application that can
+access Box. 
+
+* You can log in to the Box developer account that created that 
+application, or you have the Box client ID and Box client 
+secret for that application. 
+
+* You know the user name and password for the Box account that 
+you want this connection to use to access Box.
+
+.Procedure
+
+. If you already have the Box client ID and the client secret,
+skip to the next step. Otherwise, to obtain those values, in 
+a new browser tab, go to 
+link:https://app.box.com/developers/console[] 
+and do the following:
+.. Sign in to the Box account in which you created the app that
+registers access to Box from your {prodname} environment. 
+.. On the *My Apps* page, click the {prodname} app to display its settings.
+.. On the left, click *Configuration*. 
+.. In the *OAuth 2.0 Credentials* section, copy the client ID to the clipboard.
+
+. In a different browser tab, in {prodname}:
+.. Click *Connections*.
+.. Click *Create Connection*. 
+.. Click the Box connector. 
+.. In the *User name* field, enter the user name for the Box account that
+you want this connection to use to download or upload Box files. 
+.. In the *User password* field, enter the password for that account. 
+.. In the *Client ID* field, paste the Box client ID.
+
+. Optional. If you need to, go back to the *OAuth 2.0 Credentials* for the Box app, copy
+the client secret to the clipboard and then return to {prodname}. 
+. In the *Client secret* field, paste the Box client secret string. 
+
+. Click *Validate*. {prodname} displays a message that indicates whether
+it can validate this connection. If validation fails, try again and 
+be sure to enter the correct values. 
+. When validation is successful, click *Next*.
+. In the *Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `*Box Sales Account*`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample Box connection
+that can access content in our company sales Box account.*`
+. Click *Save* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *Box Sales Account* appears as a connection that you can 
+choose to add to an integration.
