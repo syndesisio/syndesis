@@ -93,15 +93,17 @@ build_operator()
 
             if [ "$source_gen" == "verify-none" ]; then
         	    echo "verifying no sources have been generated"
-                if [ "$(git diff)" != "" ] ; then
-                    echo ===========================================
-                    echo   Looks like some generated source code
-                    echo   not previously checked in.  See diff:
-                    echo ===========================================
-                    echo
-                    git diff
-                    exit 1
-                fi
+        	    for file in pkg/apis/syndesis/v1alpha1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
+                    if [ "$(git diff $file)" != "" ] ; then
+                        echo ===========================================
+                        echo   Looks like some generated source code
+                        echo   not previously checked in.  See diff:
+                        echo ===========================================
+                        echo
+                        git diff $file
+                        exit 1
+                    fi
+                done
             fi
         else
         	echo "skipping source generation"
