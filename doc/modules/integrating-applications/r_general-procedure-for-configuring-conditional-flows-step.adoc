@@ -1,0 +1,35 @@
+// This module is included in the following assemblies:
+// as_evaluating-integration-data-to-determine-execution-flow.adoc
+
+[id='general-procedure-for-configuring-conditional-flows-step_{context}']
+= General procedure for configuring a *Conditional Flows* step 
+
+After you add a *Conditional Flows* step to a flow, the main
+tasks for configuring the step are: 
+
+. Choose between using the basic expression builder or the advanced expression builder. 
++
+* The basic expression builder prompts you for the property that contains the 
+content that you want to evaluate, and the condition and value that you want 
+to test for. The basic expression builder is suitable for most *Conditional Flows* steps. 
+* The advanced expression builder lets you specify a conditional 
+expression in Camel Simple Language. 
+
++
+You must use the same expression builder for all conditions. 
+In other words, to configure a *Conditional Flows* step, you must use the 
+basic expression builder or the advanced expression builder. You cannot use both.
+
+. By using the basic expression builder or the advanced expression builder, 
+define each condition for evaluating incoming data.
+
+. Ensure that the conditions are in the order in which you want 
+the *Conditional Flows* step to evaluate them. 
+. Optional. Indicate that there is a default conditional flow. 
+. For each condition that you specified, add steps to the conditional flow
+that is associated with that condition. 
++
+In a conditional flow, you cannot add a *Conditional Flows* step.
+
+. Optional. If there is a default flow, add steps to the 
+default conditional flow. 

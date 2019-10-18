@@ -4,7 +4,7 @@
 
 :context: create
 [id='how-to-process-a-collection-in-a-flow_{context}']
-= How to process a collection in a flow
+= Integration behavior when the data is in a collection
 :context: collection
 
 Sometimes, a connection returns a collection, which contains 

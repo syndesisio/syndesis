@@ -1,0 +1,37 @@
+// This module is included in the following assemblies:
+// as_evaluating-integration-data-to-determine-execution-flow.adoc
+
+[id='example-of-a-conditional-flows-step_{context}']
+= Example of a *Conditional Flows* step 
+
+Suppose that an integration connects to a SQL database to 
+obtain information about how much paid-time-off (PTO) each
+employee has. The returned data indicates:
+
+* Some employees might lose PTO if they do not use it by a certain date.
+* Other employees already used more PTO than they earned.
+* The rest of the employees have PTO that they can use without time restrictions. 
+
+In a *Conditional Flows* step, this example integration can define two 
+conditions, an execution flow for each condition, and a default 
+execution flow: 
+
+* When PTO is greater than some number, it indicates that some PTO 
+might be lost if not used by a certain date. When this condition
+evaluates to true, the integration executes 
+a flow that sends email to affected employees. The email contains the 
+amount of PTO that must be used and the date by which it must
+be used. 
+
+* When PTO is a negative number, it indicates that some PTO has been 
+used but not earned. When this condition evaluates to true, the  
+integration executes a flow that sends 
+an email to affected employees. The email contains the amount of PTO that the
+employee has overdrawn and specifies the date on which the employee begins
+to accrue PTO again. 
+
+* When neither of the two conditions evaluates to true, the integration
+executes the default flow. This example integration executes the default conditional flow for 
+employees whose PTO is neither a negative number nor above some specified number. 
+The default flow sends an email to those employees with a statement of the 
+amount of PTO that the employee has. 
