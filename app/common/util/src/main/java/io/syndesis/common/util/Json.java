@@ -42,7 +42,8 @@ public final class Json {
     static {
         OBJECT_MAPPER = new ObjectMapper()
             .registerModules(new Jdk8Module())
-            .setDefaultPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
+            // keep using the deprecated method here in order to align with the jackson version (2.8.11) being used at integration runtime
+            .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
