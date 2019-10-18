@@ -750,6 +750,9 @@
               <ignoredResourcePattern>resource-handler.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-operation.vm</ignoredResourcePattern>
             </ignoredResourcePatterns>
+            <ignoredClassPatterns>
+              <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
+            </ignoredClassPatterns>
             <exceptions>
               <exception>
                 <conflictingDependencies>
@@ -1691,8 +1694,8 @@
         <version>${spring.version}</version>
         <exclusions>
           <exclusion>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jcl</artifactId>
           </exclusion>
           <exclusion>
             <groupId>aopalliance</groupId>
