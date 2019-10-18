@@ -13,12 +13,37 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.credential.salesforce;
 
-import io.syndesis.server.credential.SocialProperties;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+package io.syndesis.server.credential;
 
-@ConfigurationProperties(prefix = "spring.social.salesforce")
-public final class SalesforceProperties extends SocialProperties {
-    // specialization of the SocialProperties used with Salesforce OAuth
+/**
+ * Basic configuration properties for spring social.
+ */
+public abstract class SocialProperties {
+
+    /**
+     * Application id.
+     */
+    private String appId;
+
+    /**
+     * Application secret.
+     */
+    private String appSecret;
+
+    public String getAppId() {
+        return this.appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getAppSecret() {
+        return this.appSecret;
+    }
+
+    public void setAppSecret(String appSecret) {
+        this.appSecret = appSecret;
+    }
 }

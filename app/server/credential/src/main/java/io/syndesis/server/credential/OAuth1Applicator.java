@@ -19,7 +19,6 @@ import java.util.Date;
 
 import io.syndesis.common.model.connection.Connection;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.oauth1.OAuthToken;
 
 public class OAuth1Applicator implements Applicator<OAuthToken> {

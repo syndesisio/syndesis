@@ -20,9 +20,8 @@ import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
 import io.syndesis.server.credential.OAuth2ConnectorProperties;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
+import io.syndesis.server.credential.SocialProperties;
 import io.syndesis.server.credential.UnconfiguredProperties;
-
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.GenericOAuth2ServiceProvider;
 import org.springframework.social.oauth2.OAuth2ServiceProvider;

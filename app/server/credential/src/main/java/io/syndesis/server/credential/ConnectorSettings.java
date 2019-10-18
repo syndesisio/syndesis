@@ -19,8 +19,6 @@ import java.util.Optional;
 
 import io.syndesis.common.model.connection.Connector;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-
 class ConnectorSettings extends SocialProperties {
 
     ConnectorSettings(final Connector connector) {

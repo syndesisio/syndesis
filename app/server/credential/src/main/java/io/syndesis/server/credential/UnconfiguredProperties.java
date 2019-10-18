@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.credential;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-
 public final class UnconfiguredProperties extends SocialProperties {
     public static final SocialProperties INSTANCE = new UnconfiguredProperties();
 
