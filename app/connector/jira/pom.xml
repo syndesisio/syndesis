@@ -32,11 +32,18 @@
         <!-- The 5.1.0 version uses an old guava 20 version incompatible with the default guava set on syndesis -->
         <atlassian-jira-rest-java-client-version>5.1.6</atlassian-jira-rest-java-client-version>
         <atlassian-util-concurrent-version>4.0.1</atlassian-util-concurrent-version>
+
+        <!-- TODO: Remove when using Camel 3 bits in Syndesis -->
+        <atlassian-fugue-version>3.0.0</atlassian-fugue-version>
+        <google-api-client-version>1.22.0</google-api-client-version>
+        <jackson-version>1.9.13.jdk17-redhat-00001</jackson-version>
+        <!-- End: Remove when using Camel 3 bits in Syndesis -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <dependency>
+            <!-- TODO: Enable when using Camel 3 bits in Syndesis -->
+            <!--dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jira</artifactId>
                 <version>${camel.version}</version>
@@ -46,7 +53,7 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
+            </dependency-->
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-rest-java-client-api</artifactId>
@@ -71,6 +78,24 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
+                    <!-- TODO: Remove when using Camel 3 bits in Syndesis -->
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-core-asl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-mapper-asl</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-jaxrs</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.codehaus.jackson</groupId>
+                        <artifactId>jackson-xc</artifactId>
+                    </exclusion>
+                    <!-- End: Remove when using Camel 3 bits in Syndesis -->
                 </exclusions>
             </dependency>
         </dependencies>
@@ -99,10 +124,46 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
         </dependency>
-        <dependency>
+        <!-- TODO: Enable when using Camel 3 bits in Syndesis -->
+        <!--dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jira</artifactId>
+        </dependency-->
+        <!-- TODO: Remove when using Camel 3 bits in Syndesis -->
+        <dependency>
+            <groupId>com.google.oauth-client</groupId>
+            <artifactId>google-oauth-client</artifactId>
+            <version>${google-api-client-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-core-asl</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-mapper-asl</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-jaxrs</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.jackson</groupId>
+            <artifactId>jackson-xc</artifactId>
+            <version>${jackson-version}</version>
+        </dependency>
+        <!-- Camel annotations in provided scope to avoid compile errors in IDEs -->
+        <dependency>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>spi-annotations</artifactId>
+            <version>${camel.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- End: Remove when using Camel 3 bits in Syndesis -->
+
         <dependency>
             <groupId>io.syndesis.integration</groupId>
             <artifactId>integration-component-proxy</artifactId>
@@ -126,6 +187,14 @@
             <artifactId>jira-rest-java-client-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- TODO: Remove when using Camel 3 bits in Syndesis -->
+        <dependency>
+            <groupId>io.atlassian.fugue</groupId>
+            <artifactId>fugue</artifactId>
+            <version>${atlassian-fugue-version}</version>
+        </dependency>
+        <!-- End: Remove when using Camel 3 bits in Syndesis -->
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
