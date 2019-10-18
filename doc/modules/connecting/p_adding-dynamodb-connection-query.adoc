@@ -27,17 +27,25 @@ is configured to access that table that you want to obtain data from.
 . On the *Choose an action* page, select the *Query* action. 
 
 . In the *Filter* field, specify JSON notation that identifies the element that the connection should 
-return. Specification of a key is required. You can specify input
+return, and optionally, the element attributes (columns) to return. 
+Specification of a key is required. You can specify input
 parameters with `:#`. 
 
 . Optional. In the *Attributes to query* field, enter a comma-separated list of
 the columns that contain the data that you want the connection to return. 
-For example: `attribute1,attribute2,attribute3`. If you do not specify 
-attributes, the query returns the whole element. 
- 
+For example: `attribute1,attribute2,attribute3`. 
++
+If you do not specify attributes, the query returns the attributes that you 
+define in the *Filter* field. 
+
 . Click *Next*. 
 
 .Result
 The integration now has a DynamoDB connection that obtains data. At runtime, 
 the connection returns a JSON instance document that contains the result
 of the query. 
+
+.Next step
+If you specified placeholder parameters in the *Filter* field, add a data 
+mapper step before this connection. In the data mapper step, map source fields 
+to the target placeholder fields in the DynamoDB connection. 
