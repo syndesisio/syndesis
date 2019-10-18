@@ -119,6 +119,8 @@ type DbConfiguration struct {
 	User                 string              `json:"user,omitempty"`
 	Database             string              `json:"database,omitempty"`
 	ImageStreamNamespace string              `json:"imageStreamNamespace,omitempty"`
+	// Options for configuring an external database instead of deploying one
+	ExternalDbURL string `json:"externalDbURL,omitempty"`
 }
 
 type PrometheusConfiguration struct {

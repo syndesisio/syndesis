@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
+	"net/url"
 	"os"
 	"time"
 
@@ -101,6 +102,31 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 	}
 	config[string(configuration.EnvOpenShiftOauthClientSecret)] = token
 
+	// Handle an external database being defined
+	if syndesis.Spec.Components.Db.ExternalDbURL != "" {
+		// check to see if password is already provided, check to see if merge is done
+		globalCfgSec := &corev1.Secret{}
+		if err := a.client.Get(ctx, types.NamespacedName{Name: "syndesis-global-config", Namespace: syndesis.Namespace}, globalCfgSec); err != nil {
+			// the secret doesn't already exist, but it must for external databases
+			return err
+		}
+		postgresPass := string(globalCfgSec.Data["POSTGRESQL_PASSWORD"])
+		if postgresPass == "" {
+			return errors.New("failed to find postgresql password in global config")
+		}
+
+		// setup connection string from provided url
+		externalDbURL, err := url.Parse(syndesis.Spec.Components.Db.ExternalDbURL)
+		if err != nil {
+			return err
+		}
+		if externalDbURL.Path == "" {
+			externalDbURL.Path = syndesis.Spec.Components.Db.Database
+		}
+		config[string(configuration.EnvPostgresqlURL)] = externalDbURL.String()
+		config[string(configuration.EnvPostgresqlPassword)] = postgresPass
+	}
+
 	renderContext, err := syndesistemplate.GetTemplateContext()
 	if err != nil {
 		return err
@@ -152,6 +178,15 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 	all, err = generator.RenderDir("./infrastructure/", renderContext)
 	if err != nil {
 		return err
+	}
+
+	// Render the database resource if needed...
+	if syndesis.Spec.Components.Db.ExternalDbURL == "" {
+		dbResources, err := generator.RenderDir("./database/", renderContext)
+		if err != nil {
+			return err
+		}
+		all = append(all, dbResources...)
 	}
 
 	for addon, properties := range syndesis.Spec.Addons {

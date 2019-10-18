@@ -139,6 +139,9 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.Db.ImageStreamNamespace, cf.DefaultValue(cf.EnvPostgresqlImageStreamNamespace))
 	ifMissingSet(&syndesis.Spec.Components.Db.User, cf.DefaultValue(cf.EnvPostgresqlUser))
 	ifMissingSet(&syndesis.Spec.Components.Db.Database, cf.DefaultValue(cf.EnvPostgresqlDatabase))
+	if config[string(cf.EnvPostgresqlURL)] == "" {
+		config[string(cf.EnvPostgresqlURL)] = cf.DefaultValue(cf.EnvPostgresqlURL)
+	}
 
 	if syndesis.Spec.TestSupport == nil {
 		v := false

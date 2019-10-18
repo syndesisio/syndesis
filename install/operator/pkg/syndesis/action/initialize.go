@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -30,7 +31,6 @@ func (a *initializeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 }
 
 func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
-
 	list := v1alpha1.SyndesisList{}
 	err := a.client.List(ctx, &client.ListOptions{Namespace: syndesis.Namespace}, &list)
 	if err != nil {
