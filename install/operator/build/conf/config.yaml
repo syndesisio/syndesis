@@ -35,7 +35,7 @@ Tags:
   Komodo: latest
   OAuthProxy: v4.0.0
   PostgresExporter: v0.4.7
-  Postgresql: "9.5"
+  Postgresql: "9.6"
   Prometheus: v2.13.0
   Syndesis: latest
   Upgrade: latest
