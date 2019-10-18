@@ -24,9 +24,20 @@ is configured to access the table that contains the element that you want to rem
 . In the *JSON filter of the element* field, enter JSON notation that 
 identifies the element that you want to remove. You must enter the 
 element key. Input parameters prefixed with `:#` are allowed. 
+In the following example input, `userID` is the key: 
++
+----
+{"userID":"aslan"}
+----
 
 . Click *Next*. 
 
 .Result
 The connection appears in the flow visualization
 where you added it. 
+
+
+.Next step
+If you specified placeholder parameters in the *JSON filter of the element* field, add a data 
+mapper step before this connection. In the data mapper step, map a source field to each 
+target placeholder field in the DynamoDB connection. 

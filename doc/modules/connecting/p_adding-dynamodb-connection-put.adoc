@@ -23,8 +23,10 @@ is configured to access the table that you want to add to or update.
 
 . In the *JSON definition of the element* field, enter JSON notation 
 that defines the table element to be added or updated. You must specify 
-the element key. Input parameters prefixed 
-with `:#` are allowed. In the following example, `userID` is the key: 
+the element key. Input parameter placeholders prefixed 
+with `:#` are allowed. If you are adding a new element, be sure to specify 
+all attributes/values that you want to store.
+In the following example, `userID` is the key: 
 +
 ----
 {"userID":"aslan","attr1":"some-value","attr2":"another-value"}
@@ -36,3 +38,8 @@ with `:#` are allowed. In the following example, `userID` is the key:
 The connection appears in the integration visualization at the location
 you added it. During execution, the connection adds or updates the defined JSON
 element in the DynamoDB table that the connection is configured to access. 
+
+.Next step
+If you specified placeholder parameters in the JSON definition of the element, add a data 
+mapper step before this connection. In the data mapper step, map source fields 
+to the target placeholder fields in the DynamoDB connection. 
