@@ -136,6 +136,8 @@ crc::run() {
           check_error "$result"
         fi
 
+        wait_for_deployments 1 syndesis-operator
+
         if [ $(hasflag --operator-only) ]; then
             echo "Deployed operator."
             exit 0
@@ -145,22 +147,19 @@ crc::run() {
                 result=$($OPERATOR_BINARY install app)
             else
                 result=$($OPERATOR_BINARY install app --dev)
+                echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
             fi
             check_error "$result"
         fi
 
-        wait_for_deployments 1 syndesis-operator
-
-        if [ $(hasflag --nodev) ] ; then
-            # Wait until everything's up and finally patch image streams for triggers
-            wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
-            patch_imagestreams_for_initial_image
-        else
-            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
-        fi
+        echo "Install finished."
     fi
 
     if [ $(hasflag --open -o) ]; then
+        while ! (oc get routes | grep syndesis >/dev/null 2>&1); do
+            echo "Sleeping 5s ..."
+            sleep 5
+        done
         open_url "https://$(oc get routes syndesis --template "{{.spec.host}}")"
     fi
 }
