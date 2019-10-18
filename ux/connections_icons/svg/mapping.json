@@ -16,6 +16,10 @@
     "icon": "connectionicons_AWS-S3.svg"
   },
   {
+    "connectorId": "aws-ddb",
+    "icon": "connectionicons_AWS-DDB.svg"
+  },
+  {
     "connectorId": "aws-sns",
     "icon": "connectionicons_sns.svg"
   },

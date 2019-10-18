@@ -153,7 +153,7 @@
     }
   ],
 "description": "Interact with a Dynamo DB instance.",
-  "icon": "assets:sql.svg",
+  "icon": "assets:aws-ddb.svg",
   "id": "aws-ddb",
   "name": "AWS-DDB",
   "metadata": {
