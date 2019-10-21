@@ -21,6 +21,7 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.component.jira.JiraEndpoint;
+import org.apache.camel.util.ObjectHelper;
 
 /**
  * Consumes new JIRA issues.
@@ -43,9 +44,9 @@ public class NewIssuesConsumer extends AbstractJiraConsumer {
         super.doStart();
         // read the actual issues, the next poll outputs only the new issues added after the route start
         // grab only the top
-        List<Issue> issues = getIssues(jql, 0, 1, 1);
+        List<Issue> issues = getIssues(jql, 1, 1);
         // in case there aren't any issues...
-        if (issues.size() >= 1) {
+        if (ObjectHelper.isNotEmpty(issues)) {
             latestIssueId = issues.get(0).getId();
         }
     }
@@ -72,8 +73,8 @@ public class NewIssuesConsumer extends AbstractJiraConsumer {
     private List<Issue> getNewIssues() {
         // search only for issues created after the latest id
         String jqlFilter = "id > " + latestIssueId + " AND " + jql;
-        List<Issue> issues = getIssues(jqlFilter, 0, 50, ((JiraEndpoint) getEndpoint()).getMaxResults());
-        if (issues.size() > 0) {
+        List<Issue> issues = getIssues(jqlFilter, 50, ((JiraEndpoint) getEndpoint()).getMaxResults());
+        if (ObjectHelper.isNotEmpty(issues)) {
             latestIssueId = issues.get(0).getId();
         }
         return issues;

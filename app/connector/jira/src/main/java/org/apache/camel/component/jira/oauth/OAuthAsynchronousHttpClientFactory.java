@@ -55,10 +55,12 @@ public class OAuthAsynchronousHttpClientFactory {
 
                     @Override
                     public void setThreadLocalContext(Void context) {
+                        //noop
                     }
 
                     @Override
                     public void clearThreadLocalContext() {
+                        //noop
                     }
                 });
 
@@ -75,18 +77,22 @@ public class OAuthAsynchronousHttpClientFactory {
     private static class NoOpEventPublisher implements EventPublisher {
         @Override
         public void publish(Object o) {
+            //noop
         }
 
         @Override
         public void register(Object o) {
+            //noop
         }
 
         @Override
         public void unregister(Object o) {
+            //noop
         }
 
         @Override
         public void unregisterAll() {
+            //noop
         }
     }
 
@@ -97,7 +103,7 @@ public class OAuthAsynchronousHttpClientFactory {
 
         private final String baseUrl;
 
-        private RestClientApplicationProperties(URI jiraURI) {
+        RestClientApplicationProperties(URI jiraURI) {
             this.baseUrl = jiraURI.getPath();
         }
 

@@ -24,14 +24,21 @@ import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.BasicIssue;
 import com.atlassian.jira.rest.client.api.domain.Issue;
-import com.atlassian.jira.rest.client.api.domain.IssueType;
-import com.atlassian.jira.rest.client.api.domain.Priority;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.util.ObjectHelper;
 
-import static org.apache.camel.component.jira.JiraConstants.*;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_ASSIGNEE;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_COMPONENTS;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_PRIORITY_ID;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_PRIORITY_NAME;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_PROJECT_KEY;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_SUMMARY;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_TYPE_ID;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_TYPE_NAME;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_WATCHERS_ADD;
 
 public class AddIssueProducer extends DefaultProducer {
 
@@ -40,55 +47,38 @@ public class AddIssueProducer extends DefaultProducer {
     }
 
     @Override
-    @SuppressWarnings("FutureReturnValueIgnored")
     public void process(Exchange exchange) {
-        JiraRestClient client = ((JiraEndpoint) getEndpoint()).getClient();
         // required fields
         String projectKey = exchange.getIn().getHeader(ISSUE_PROJECT_KEY, String.class);
-        Long issueTypeId = exchange.getIn().getHeader(ISSUE_TYPE_ID, Long.class);
-        String issueTypeName = exchange.getIn().getHeader(ISSUE_TYPE_NAME, String.class);
-        String summary = exchange.getIn().getHeader(ISSUE_SUMMARY, String.class);
-        // optional fields
-        String assigneeName = exchange.getIn().getHeader(ISSUE_ASSIGNEE, String.class);
-        String priorityName = exchange.getIn().getHeader(ISSUE_PRIORITY_NAME, String.class);
-        Long priorityId = exchange.getIn().getHeader(ISSUE_PRIORITY_ID, Long.class);
-        List<?> components = exchange.getIn().getHeader(ISSUE_COMPONENTS, List.class);
-        List<?> watchers = exchange.getIn().getHeader(ISSUE_WATCHERS_ADD, List.class);
-        // search for issueTypeId from an issueTypeName
-        if (issueTypeId == null && issueTypeName != null) {
-            Iterable<IssueType> issueTypes = client.getMetadataClient().getIssueTypes().claim();
-            for (IssueType type: issueTypes) {
-                if (issueTypeName.equals(type.getName())) {
-                    issueTypeId = type.getId();
-                    break;
-                }
-            }
-        }
-        // search for priorityId from an priorityName
-        if (priorityId == null && priorityName != null) {
-            Iterable<Priority> priorities = client.getMetadataClient().getPriorities().claim();
-            for (Priority pri: priorities) {
-                if (priorityName.equals(pri.getName())) {
-                    priorityId = pri.getId();
-                    break;
-                }
-            }
-        }
         if (projectKey == null) {
             throw new IllegalArgumentException("A valid project key is required.");
         }
-        if (issueTypeId == null) {
-            throw new IllegalArgumentException("A valid issue type id is required, actual: id(" + issueTypeId + "), name(" + issueTypeName + ")");
+
+        String summary = exchange.getIn().getHeader(ISSUE_SUMMARY, String.class);
+        if (summary == null) {
+            throw new IllegalArgumentException("A summary field is required, actual value is null.");
         }
 
-        if (summary == null) {
-            throw new IllegalArgumentException("A summary field is required, actual value: " + summary);
+        JiraRestClient client = ((JiraEndpoint) getEndpoint()).getClient();
+        String issueTypeName = exchange.getIn().getHeader(ISSUE_TYPE_NAME, String.class);
+        Long issueTypeId = Optional.ofNullable(exchange.getIn().getHeader(ISSUE_TYPE_ID, Long.class))
+                                   .orElseGet(() -> IssueProducerHelper.getIssueTypeIdByName(client, issueTypeName));
+        if (issueTypeId == null) {
+            throw new IllegalArgumentException("A valid issue type id is required, actual: id is null, name(" + issueTypeName + ")");
         }
+
+        // optional fields
+        String assigneeName = exchange.getIn().getHeader(ISSUE_ASSIGNEE, String.class);
+        String priorityName = exchange.getIn().getHeader(ISSUE_PRIORITY_NAME, String.class);
+        Long priorityId = Optional.ofNullable(exchange.getIn().getHeader(ISSUE_PRIORITY_ID, Long.class))
+                                  .orElseGet(() -> IssueProducerHelper.getPriorityIdByName(client, priorityName));
+        List<?> components = exchange.getIn().getHeader(ISSUE_COMPONENTS, List.class);
+        List<?> watchers = exchange.getIn().getHeader(ISSUE_WATCHERS_ADD, List.class);
 
         IssueInputBuilder builder = new IssueInputBuilder(projectKey, issueTypeId);
         builder.setDescription(exchange.getIn().getBody(String.class));
         builder.setSummary(summary);
-        if (components != null && components.size() > 0) {
+        if (ObjectHelper.isNotEmpty(components)) {
             builder.setComponentsNames(components.stream()
                     .filter(Objects::nonNull)
                     .map(Object::toString)
@@ -104,13 +94,7 @@ public class AddIssueProducer extends DefaultProducer {
         IssueRestClient issueClient = client.getIssueClient();
         BasicIssue issueCreated = issueClient.createIssue(builder.build()).claim();
         Issue issue = issueClient.getIssue(issueCreated.getKey()).claim();
-        if (watchers != null && watchers.size() > 0) {
-            for (Object watcher: watchers) {
-                issueClient.addWatcher(issue.getWatchers().getSelf(), Optional.ofNullable(watcher)
-                        .map(Object::toString)
-                        .orElse(""));
-            }
-        }
+        addWatchers(issue, issueClient, watchers);
 
         // support InOut
         if (exchange.getPattern().isOutCapable()) {
@@ -122,4 +106,14 @@ public class AddIssueProducer extends DefaultProducer {
         }
     }
 
+    @SuppressWarnings("FutureReturnValueIgnored")
+    private void addWatchers(Issue issue, IssueRestClient issueClient, List<?> watchers) {
+        if (ObjectHelper.isNotEmpty(watchers) && issue.getWatchers() != null) {
+            for (Object watcher: watchers) {
+                issueClient.addWatcher(issue.getWatchers().getSelf(), Optional.ofNullable(watcher)
+                        .map(Object::toString)
+                        .orElse(""));
+            }
+        }
+    }
 }

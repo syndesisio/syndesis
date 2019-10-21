@@ -78,24 +78,6 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
-                    <!-- TODO: Remove when using Camel 3 bits in Syndesis -->
-                    <exclusion>
-                        <groupId>org.codehaus.jackson</groupId>
-                        <artifactId>jackson-core-asl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.codehaus.jackson</groupId>
-                        <artifactId>jackson-mapper-asl</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.codehaus.jackson</groupId>
-                        <artifactId>jackson-jaxrs</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>org.codehaus.jackson</groupId>
-                        <artifactId>jackson-xc</artifactId>
-                    </exclusion>
-                    <!-- End: Remove when using Camel 3 bits in Syndesis -->
                 </exclusions>
             </dependency>
         </dependencies>
@@ -136,30 +118,44 @@
             <version>${google-api-client-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client</artifactId>
+            <version>${google-api-client-version}</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-jaxrs</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>com.atlassian.event</groupId>
+            <artifactId>atlassian-event</artifactId>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-xc</artifactId>
-            <version>${jackson-version}</version>
+            <groupId>com.atlassian.httpclient</groupId>
+            <artifactId>atlassian-httpclient-api</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.httpclient</groupId>
+            <artifactId>atlassian-httpclient-library</artifactId>
+            <version>2.0.0</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.atlassian.sal</groupId>
+            <artifactId>sal-api</artifactId>
+            <version>3.0.7</version>
         </dependency>
         <!-- Camel annotations in provided scope to avoid compile errors in IDEs -->
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>spi-annotations</artifactId>
-            <version>${camel.version}</version>
             <scope>provided</scope>
         </dependency>
         <!-- End: Remove when using Camel 3 bits in Syndesis -->
@@ -192,6 +188,7 @@
             <groupId>io.atlassian.fugue</groupId>
             <artifactId>fugue</artifactId>
             <version>${atlassian-fugue-version}</version>
+            <scope>provided</scope>
         </dependency>
         <!-- End: Remove when using Camel 3 bits in Syndesis -->
 

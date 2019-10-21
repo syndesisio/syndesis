@@ -15,12 +15,10 @@
  */
 package io.syndesis.connector.odata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -34,7 +32,12 @@ import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.core.ODataClientFactory;
+import org.junit.Ignore;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class BaseOlingo4Test extends AbstractODataTest {
 
@@ -72,6 +75,8 @@ public class BaseOlingo4Test extends AbstractODataTest {
     }
 
     @Test
+    //TODO: Backport https://github.com/jboss-fuse/camel/commit/aef5e1ae9386b3ad74681b51ebcbe660bd4a9d0a#diff-bf0286fb993e0269f87f5f1db4355aec to 2.23.x.redhat-7-x
+    @Ignore
     public void testExpectations() throws Exception {
         URI httpURI = URI.create(defaultTestServer.servicePlainUri() + FORWARD_SLASH + defaultTestServer.resourcePath());
         String camelURI = "olingo4://read/" + defaultTestServer.resourcePath();
