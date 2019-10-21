@@ -68,10 +68,12 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                     // Use default connection db if an admin db has not specified explicitly
                     String adminDB = ConnectorOptions.extractOption(options, "adminDB");
                     String defaultDB = ConnectorOptions.extractOption(options, "database");
-                    if (adminDB == null && defaultDB != null) {
-                        LOGGER.info("Using {} as administration database", defaultDB);
-                        mongoConf.setAdminDB(defaultDB);
+                    if (adminDB == null) {
+                        // database parameter is mandatory, we must have it
+                        LOGGER.info("Using connection database {} as administration database", defaultDB);
+                        adminDB = defaultDB;
                     }
+                    mongoConf.setAdminDB(adminDB);
                     LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
                     MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
                     MongoClient mongoClient = new MongoClient(mongoClientURI);
