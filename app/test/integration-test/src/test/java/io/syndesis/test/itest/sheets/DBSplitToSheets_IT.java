@@ -54,7 +54,7 @@ public class DBSplitToSheets_IT extends GoogleSheetsTestSupport {
             .fromExport(DBSplitToSheets_IT.class.getResource("DBSplitToSheets-export"))
             .customize("$..configuredProperties.schedulerExpression", "5000")
             .customize("$..rootUrl.defaultValue",
-                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, googleSheetsServerPort))
+                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, GOOGLE_SHEETS_SERVER_PORT))
             .build()
             .withNetwork(getSyndesisDb().getNetwork())
             .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));

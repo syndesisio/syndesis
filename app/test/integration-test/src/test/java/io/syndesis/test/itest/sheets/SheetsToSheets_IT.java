@@ -43,7 +43,7 @@ public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
             .name("named-columns")
             .fromExport(SheetsToSheets_IT.class.getResource("SheetsToSheets-export"))
             .customize("$..rootUrl.defaultValue",
-                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, googleSheetsServerPort))
+                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, GOOGLE_SHEETS_SERVER_PORT))
             .customize("$..configuredProperties.spreadsheetId", "testSheetId")
             .customize("$..configuredProperties.schedulerExpression", "5000");
 
