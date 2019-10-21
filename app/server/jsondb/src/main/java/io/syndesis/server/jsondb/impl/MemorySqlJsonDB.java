@@ -32,7 +32,7 @@ import io.syndesis.server.jsondb.NativeJsonDB;
 /**
  * Used to create in memory version impl of JsonDB
  */
-public class MemorySqlJsonDB {
+public final class MemorySqlJsonDB {
 
     private static class ClosableSqlJsonDB extends SqlJsonDB implements NativeJsonDB {
 
@@ -59,6 +59,10 @@ public class MemorySqlJsonDB {
         public DBI database() {
             return dbi;
         }
+    }
+
+    private MemorySqlJsonDB() {
+      // utility class
     }
 
     public static CloseableJsonDB create(Collection<Index> indexes) {

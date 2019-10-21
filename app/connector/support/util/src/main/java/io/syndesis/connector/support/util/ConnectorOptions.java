@@ -26,6 +26,10 @@ public final class ConnectorOptions {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConnectorOptions.class);
 
+    private ConnectorOptions() {
+        // utility class
+    }
+
     /**
      * Gets the value mapped to the given key,
      * converts to {@link String} & returns or defaultValue otherwise.
@@ -122,7 +126,7 @@ public final class ConnectorOptions {
      * @throws any exception that may result from the mapping function
      */
     public static <T> T extractOptionAndMap(Map<String, ?> options, String key,
-                                                                    Function<? super String, T> mappingFn) throws IllegalArgumentException {
+                                                                    Function<? super String, T> mappingFn) {
         if (options == null) {
             return null;
         }

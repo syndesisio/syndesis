@@ -15,17 +15,17 @@
  */
 package io.syndesis.connector.sql.stored;
 
-public class SampleStoredProcedures {
+public final class SampleStoredProcedures {
 
     /**
      * SQL to create the DEMO_ADD procedure in Apache Derby
      */
-    public static String DERBY_DEMO_ADD_SQL =
+    public static final String DERBY_DEMO_ADD_SQL =
             "CREATE PROCEDURE DEMO_ADD( IN A INTEGER, IN B INTEGER, OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +
             "EXTERNAL NAME '" + SampleStoredProcedures.class.getName() + ".demo_add'";
-    public static String DERBY_DEMO_OUT_SQL =
+    public static final String DERBY_DEMO_OUT_SQL =
             "CREATE PROCEDURE DEMO_OUT( OUT C INTEGER ) " +
             "PARAMETER STYLE JAVA " +
             "LANGUAGE JAVA " +
@@ -34,7 +34,7 @@ public class SampleStoredProcedures {
     /**
      * SQL to create the DEMO_ADD procedure in Oracle
      */
-    public static String ORACLE_DEMO_ADD_SQL =
+    public static final String ORACLE_DEMO_ADD_SQL =
             "create or replace PROCEDURE DEMO_ADD \n" +
             "(\n" +
             "  A IN INTEGER\n" +
@@ -47,7 +47,7 @@ public class SampleStoredProcedures {
     /**
      * SQL to create the DEMO_APP procedure in Postgresql
      */
-    public static String POSTGRES_DEMO_ADD_SQL =
+    public static final String POSTGRES_DEMO_ADD_SQL =
             "CREATE OR REPLACE FUNCTION public.demo_add(\n" +
             "    a numeric,\n" +
             "    b numeric,\n" +
@@ -88,5 +88,9 @@ public class SampleStoredProcedures {
             int[] c /* OUT parameter */) {
 
         c[0] = 60;
+    }
+
+    private SampleStoredProcedures() {
+        // holds constants
     }
 }

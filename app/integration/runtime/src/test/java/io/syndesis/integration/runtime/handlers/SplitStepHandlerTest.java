@@ -32,7 +32,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
@@ -52,6 +51,9 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -62,16 +64,15 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 @RunWith(JUnitParamsRunner.class)
-public class SplitStepHandlerTest extends IntegrationTestSupport {
+public class SplitStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitStepHandlerTest.class);
 
     private static final String START_STEP = "start-step";
     private static final String SPLIT_STEP = "split-step";
     private static final String MOCK_STEP = "mock-step";
 
-    private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
+    private final ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
     @Before
     public void setupMocks() {
@@ -425,7 +426,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         }
     }
 
-    private InputStream getPersonUnifiedSchema(String schemaPath) {
+    private static InputStream getPersonUnifiedSchema(String schemaPath) {
         return SplitStepHandlerTest.class.getResourceAsStream(schemaPath);
     }
 

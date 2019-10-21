@@ -28,9 +28,13 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisConnectorException;
 
-public class ErrorMapper {
+public final class ErrorMapper {
 
     private static final Logger LOG = LoggerFactory.getLogger(ErrorMapper.class);
+
+    private ErrorMapper() {
+        // utility class
+    }
 
     public static Map<String, String> jsonToMap(String property) {
 

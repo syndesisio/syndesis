@@ -20,7 +20,7 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -28,8 +28,10 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 
-@SuppressWarnings("PMD.ExcessiveImports")
-public class HeadersStepHandlerTest extends IntegrationTestSupport {
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
+public class HeadersStepHandlerTest {
 
     @Test
     public void testSetHeadersStepHandler() throws Exception {

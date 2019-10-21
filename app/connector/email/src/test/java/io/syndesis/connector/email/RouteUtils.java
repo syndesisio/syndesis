@@ -44,7 +44,7 @@ import io.syndesis.connector.email.server.EMailTestServer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 
-public class RouteUtils {
+public final class RouteUtils {
 
     public static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
@@ -54,6 +54,10 @@ public class RouteUtils {
     }
 
     private static Step mockStep;
+
+    private RouteUtils() {
+      // utility class, with state?!
+    }
 
     public static String componentScheme(EMailTestServer server) {
         String protocolId = server.getProtocol();

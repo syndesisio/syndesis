@@ -16,9 +16,12 @@
 
 package org.apache.camel.component.kudu;
 
-public class KuduDbOperations {
+public final class KuduDbOperations {
     public static final String INSERT = "insert";
     public static final String CREATE_TABLE = "create_table";
     public static final String SCAN = "scan";
 
+    private KuduDbOperations() {
+      // holds constants
+    }
 }

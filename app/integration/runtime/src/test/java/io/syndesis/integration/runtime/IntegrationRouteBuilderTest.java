@@ -20,10 +20,11 @@ import java.util.List;
 
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicy;
-import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicy;
+import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
+
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.LogDefinition;
@@ -36,13 +37,15 @@ import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
+public class IntegrationRouteBuilderTest {
 
-    private ActivityTracker tracker = new ActivityTracker.SysOut();
-    private List<ActivityTrackingPolicyFactory> policyFactories = Arrays.asList(new IntegrationActivityTrackingPolicyFactory(tracker),
+    private final ActivityTracker tracker = new ActivityTracker.SysOut();
+    private final List<ActivityTrackingPolicyFactory> policyFactories = Arrays.asList(new IntegrationActivityTrackingPolicyFactory(tracker),
                                                                                 new FlowActivityTrackingPolicyFactory(tracker));
 
     @Test

@@ -25,6 +25,10 @@ final class PayloadConverterHelper {
 
     private static final CamelContext CONTEXT = new DefaultCamelContext();
 
+    private PayloadConverterHelper() {
+        // utility class
+    }
+
     static Exchange createExhangeWithBody(final String contentType, final String payload) {
         final Exchange exchange = new DefaultExchange(CONTEXT);
 

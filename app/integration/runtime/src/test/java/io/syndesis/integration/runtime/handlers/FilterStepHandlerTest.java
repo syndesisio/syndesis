@@ -29,11 +29,11 @@ import io.syndesis.common.model.filter.FilterPredicate;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
@@ -46,6 +46,9 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -57,15 +60,14 @@ import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class FilterStepHandlerTest extends IntegrationTestSupport {
+public class FilterStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilterStepHandlerTest.class);
 
     private static final String START_STEP = "start-step";
     private static final String FILTER_STEP = "filter-step";
     private static final String MOCK_STEP = "mock-step";
 
-    private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
+    private final ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
     @Before
     public void setupMocks() {
@@ -592,23 +594,23 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
         }
     }
 
-    private String buildPersonJson(String name) {
+    private static String buildPersonJson(String name) {
         return "{ \"name\": \"" + name + "\" }";
     }
 
-    private String buildPersonJsonArray(String ... names) {
+    private static String buildPersonJsonArray(String ... names) {
         return "[" + Stream.of(names)
-                        .map(this::buildPersonJson)
+                        .map(FilterStepHandlerTest::buildPersonJson)
                         .collect(Collectors.joining(",")) + "]";
     }
 
-    private String buildUserJson(String ... names) {
+    private static String buildUserJson(String ... names) {
         return Stream.of(names)
                 .map(name -> "{ \"user\": " + buildPersonJson(name) + " }")
                 .collect(Collectors.joining(","));
     }
 
-    private String buildUserJsonArray(String ... names) {
+    private static String buildUserJsonArray(String ... names) {
         return "[" + buildUserJson(names) + "]";
     }
 

@@ -32,9 +32,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility class for common procedures.
  */
-public class Util {
+public final class Util {
     public static final ObjectMapper MAPPER = new ObjectMapper();
     private static final Logger LOG = LoggerFactory.getLogger(Util.class);
+
+    private Util() {
+        // utility class
+     }
 
     /**
      * Extract a map from a JSON in a header as AttributeValue. Useful for the headers.

@@ -53,7 +53,7 @@ import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorTest {
+abstract class BaseSwaggerGeneratorExampleTest {
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
@@ -74,7 +74,7 @@ abstract class BaseSwaggerGeneratorExampleTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final Connector generated = generator().generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector generated = generator().generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         final Map<String, String> generatedConfiguredProperties = generated.getConfiguredProperties();
         final String generatedSpecification = generatedConfiguredProperties.get("specification");

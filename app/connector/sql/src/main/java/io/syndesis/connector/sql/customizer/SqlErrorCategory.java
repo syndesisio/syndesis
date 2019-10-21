@@ -15,10 +15,13 @@
  */
 package io.syndesis.connector.sql.customizer;
 
-public class SqlErrorCategory {
+public final class SqlErrorCategory {
 
     public static final String SQL_CONNECTOR_ERROR        = "SQL_CONNECTOR_ERROR";
     public static final String SQL_DATA_ACCESS_ERROR      = "SQL_DATA_ACCESS_ERROR";
     public static final String SQL_ENTITY_NOT_FOUND_ERROR = "SQL_ENTITY_NOT_FOUND_ERROR";
 
+    private SqlErrorCategory() {
+        // holds constants
+    }
 }

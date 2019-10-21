@@ -54,7 +54,7 @@ import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorTest {
+public class BaseSwaggerConnectorGeneratorTest {
 
     private final BaseSwaggerConnectorGenerator generator;
 
@@ -76,7 +76,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     @Test
     public void includesRestSwaggerConnectorCustomizers() throws IOException {
         final ConnectorSettings connectorSettings = createReverbSettings();
-        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector connector = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(connector.getConnectorCustomizers()).isNotEmpty();
         assertThat(connector.getConnectorCustomizers()).contains(
@@ -89,7 +89,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     @Test
     public void includesRestSwaggerConnectorDependency() throws IOException {
         final ConnectorSettings connectorSettings = createReverbSettings();
-        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector connector = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(connector.getDependencies()).isNotEmpty();
         assertThat(connector.getDependencies())
@@ -99,7 +99,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     @Test
     public void includesRestSwaggerConnectorFactory() throws IOException {
         final ConnectorSettings connectorSettings = createReverbSettings();
-        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector connector = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(connector.getConnectorFactory()).isPresent();
         assertThat(connector.getConnectorFactory()).hasValue("io.syndesis.connector.rest.swagger.ConnectorFactory");
@@ -143,7 +143,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:concur_oauth2")
             .build();
 
-        final Connector generated = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector generated = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
             "clientSecret", "tokenStrategy", "authorizeUsingParameters");
@@ -163,7 +163,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:oauth2")
             .build();
 
-        final Connector generated = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector generated = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
             "clientSecret");
@@ -175,28 +175,31 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     public void shouldDetermineConnectorDescription() {
         final Swagger swagger = new Swagger();
 
-        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+            .isEqualTo("unspecified");
 
         final Info info = new Info();
         swagger.info(info);
-        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+            .isEqualTo("unspecified");
 
         info.description("description");
-        assertThat(generator.determineConnectorDescription(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("description");
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+            .isEqualTo("description");
     }
 
     @Test
     public void shouldDetermineConnectorName() {
         final Swagger swagger = new Swagger();
 
-        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
 
         final Info info = new Info();
         swagger.info(info);
-        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
 
         info.title("title");
-        assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("title");
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("title");
     }
 
     @Test
@@ -211,7 +214,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "apiKey:two")
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(summary.getConfiguredProperties())
             .containsEntry("specification", specification)
@@ -233,7 +236,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", specification)//
             .putConfiguredProperty("tokenEndpoint", "http://some.token.url").build();
 
-        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+        final Connector connector = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(connector.getConfiguredProperties()).containsEntry("tokenEndpoint", "http://some.token.url");
     }
@@ -243,7 +246,8 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         final Swagger swagger = new Swagger().path("/path", new Path().get(new Operation().operationId("foo"))
             .post(new Operation().operationId("foo")).put(new Operation().operationId("bar")));
 
-        final Connector generated = generator.configureConnector(SWAGGER_TEMPLATE, new Connector.Builder().id("connector1").build(),
+        final Connector generated = generator.configureConnector(ApiConnectorTemplate.SWAGGER_TEMPLATE,
+            new Connector.Builder().id("connector1").build(),
             createSettingsFrom(swagger));
         final List<ConnectorAction> actions = generated.getActions();
         assertThat(actions).hasSize(3);
@@ -258,7 +262,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", "{}")//
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
         assertThat(summary).isNotNull();
     }
 
@@ -269,7 +273,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
                 "{\"swagger\": \"2.0\",\"info\": {\"version\": \"0.0.0\",\"title\": \"title\",\"description\": \"description\"},\"paths\": {\"/operation\": {\"get\": {\"responses\": {\"200\": {\"description\": \"OK\"}}}}}}")//
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
         assertThat(summary).isNotNull();
     }
 
@@ -284,7 +288,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", specification)
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(summary.getProperties().keySet()).containsOnly(PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
     }
@@ -318,7 +322,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         final ActionsSummary actionsSummary = new ActionsSummary.Builder().totalActions(20).putActionCountByTag("store", 4)
             .putActionCountByTag("user", 8).putActionCountByTag("pet", 8).build();
@@ -344,7 +348,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
             .putConfiguredProperty("specification", specification)//
             .build();
 
-        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+        final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(summary.getErrors()).hasSize(1);
         assertThat(summary.getWarnings()).hasSize(1);

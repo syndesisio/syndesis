@@ -22,8 +22,8 @@ import java.util.List;
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.logging.BodyLogger;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
@@ -33,10 +33,11 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class SplitStepHandlerJsonTest extends IntegrationTestSupport {
+public class SplitStepHandlerJsonTest {
 
     /**
      * Test split to the very end of the integration - no aggregate
@@ -399,7 +400,7 @@ public class SplitStepHandlerJsonTest extends IntegrationTestSupport {
         }
     }
 
-    private void addBodyLogger(DefaultCamelContext context) {
+    private static void addBodyLogger(DefaultCamelContext context) {
         SimpleRegistry beanRegistry = new SimpleRegistry();
         beanRegistry.put("bodyLogger", new BodyLogger.Default());
         context.setRegistry(beanRegistry);

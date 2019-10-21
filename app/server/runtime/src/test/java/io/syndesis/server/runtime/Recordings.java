@@ -15,7 +15,10 @@
  */
 package io.syndesis.server.runtime;
 
-import java.lang.reflect.*;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,7 +33,7 @@ import org.springframework.cglib.proxy.Enhancer;
  * method invocation done on those objects so that your test cases
  * can assert the your object has been called as expected.
  */
-public class Recordings {
+public final class Recordings {
 
     public static class Invocation {
         private final Method method;
@@ -103,6 +106,10 @@ public class Recordings {
     public interface RecordingProxy {
         // Use a weird method name to avoid conflicts with other methods the proxied class might declare.
         RecordingInvocationHandler getInvocationHandler$$$();
+    }
+
+    private Recordings() {
+        // utility class
     }
 
     static public <T> T recorder(Object object, Class<T> as) {

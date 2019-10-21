@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class HttpStatus {
+public final class HttpStatus {
 
     private static final Map<Integer, String> HTTP_STATUS_MAP =
         Stream.of(new Object[][] {
@@ -86,6 +86,10 @@ public class HttpStatus {
                 { 510, "510 Not Extended" },
                 { 522, "511 Network Authentication Required" },
         }).collect(Collectors.toMap(data -> (Integer) data[0], data -> (String) data[1]));
+
+    private HttpStatus() {
+      // utility class
+    }
 
     public static String message(Integer statusCode) {
         return HTTP_STATUS_MAP.get(statusCode);
