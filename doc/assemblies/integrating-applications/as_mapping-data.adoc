@@ -26,6 +26,7 @@ Details for mapping data fields are in the following topics:
 * xref:applying-conditions-to-mappings_{context}[]
 * xref:view-mappings-in-a-step_{context}[]
 * xref:available-transformations_{context}[]
+* xref:about-transformations-on-multiple-source-values_{context}[]
 * xref:troubleshooting-data-mapping_{context}[]
 
 include::../../modules/integrating-applications/p_identify-where-data-mapping-is-needed.adoc[leveloffset=+1]
@@ -51,6 +52,8 @@ include::../../modules/integrating-applications/p_applying-conditions-to-mapping
 include::../../modules/integrating-applications/p_view-mappings-in-a-step.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/r_available-transformations.adoc[leveloffset=+1]
+
+include::../../modules/integrating-applications/r_about-transformations-on-multiple-source-values.adoc[leveloffset=+1]
 
 include::../../modules/integrating-applications/r_troubleshooting-data-mapping.adoc[leveloffset=+1]
 
