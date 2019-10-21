@@ -17,16 +17,16 @@ package org.apache.camel.component.jira.producer;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
-import com.atlassian.jira.rest.client.api.domain.IssueType;
-import com.atlassian.jira.rest.client.api.domain.Priority;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.util.ObjectHelper;
 
 import static org.apache.camel.component.jira.JiraConstants.ISSUE_ASSIGNEE;
 import static org.apache.camel.component.jira.JiraConstants.ISSUE_COMPONENTS;
@@ -46,36 +46,23 @@ public class UpdateIssueProducer extends DefaultProducer {
     @Override
     @SuppressWarnings("FutureReturnValueIgnored")
     public void process(Exchange exchange) {
-        JiraRestClient client = ((JiraEndpoint) getEndpoint()).getClient();
         String issueKey = exchange.getIn().getHeader(ISSUE_KEY, String.class);
         if (issueKey == null) {
             throw new IllegalArgumentException("Missing exchange input header named \'IssueKey\', it should specify the issue key.");
         }
-        Long issueTypeId = exchange.getIn().getHeader(ISSUE_TYPE_ID, Long.class);
+
+        JiraRestClient client = ((JiraEndpoint) getEndpoint()).getClient();
         String issueTypeName = exchange.getIn().getHeader(ISSUE_TYPE_NAME, String.class);
+        Long issueTypeId = Optional.ofNullable(exchange.getIn().getHeader(ISSUE_TYPE_ID, Long.class))
+                                   .orElseGet(() -> IssueProducerHelper.getIssueTypeIdByName(client, issueTypeName));
         String summary = exchange.getIn().getHeader(ISSUE_SUMMARY, String.class);
         String assigneeName = exchange.getIn().getHeader(ISSUE_ASSIGNEE, String.class);
         String priorityName = exchange.getIn().getHeader(ISSUE_PRIORITY_NAME, String.class);
-        Long priorityId = exchange.getIn().getHeader(ISSUE_PRIORITY_ID, Long.class);
+        Long priorityId = Optional.ofNullable(exchange.getIn().getHeader(ISSUE_PRIORITY_ID, Long.class))
+                                  .orElseGet(() -> IssueProducerHelper.getPriorityIdByName(client, priorityName));
+
         List<?> components = exchange.getIn().getHeader(ISSUE_COMPONENTS, List.class);
-        if (issueTypeId == null && issueTypeName != null) {
-            Iterable<IssueType> issueTypes = client.getMetadataClient().getIssueTypes().claim();
-            for (IssueType type: issueTypes) {
-                if (issueTypeName.equals(type.getName())) {
-                    issueTypeId = type.getId();
-                    break;
-                }
-            }
-        }
-        if (priorityId == null && priorityName != null) {
-            Iterable<Priority> priorities = client.getMetadataClient().getPriorities().claim();
-            for (Priority pri: priorities) {
-                if (priorityName.equals(pri.getName())) {
-                    priorityId = pri.getId();
-                    break;
-                }
-            }
-        }
+
         IssueInputBuilder builder = new IssueInputBuilder();
         if (issueTypeId != null) {
             builder.setIssueTypeId(issueTypeId);
@@ -87,7 +74,7 @@ public class UpdateIssueProducer extends DefaultProducer {
         if (description != null) {
             builder.setDescription(description);
         }
-        if (components != null && components.size() > 0) {
+        if (ObjectHelper.isNotEmpty(components)) {
             builder.setComponentsNames(components.stream()
                     .filter(Objects::nonNull)
                     .map(Object::toString)
@@ -102,5 +89,4 @@ public class UpdateIssueProducer extends DefaultProducer {
         IssueRestClient issueClient = client.getIssueClient();
         issueClient.updateIssue(issueKey, builder.build()).claim();
     }
-
 }

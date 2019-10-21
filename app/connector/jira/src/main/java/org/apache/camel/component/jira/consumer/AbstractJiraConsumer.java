@@ -41,13 +41,14 @@ public abstract class AbstractJiraConsumer extends ScheduledPollConsumer {
     }
 
     protected List<Issue> getIssues() {
-        return getIssues(endpoint.getJql(), 0, 50, endpoint.getMaxResults());
+        return getIssues(endpoint.getJql(), 50, endpoint.getMaxResults());
     }
 
     // Ignore maxResults if it's <= 0.
-    protected List<Issue> getIssues(String jql, int start, int maxPerQuery, int maxResults) {
+    protected List<Issue> getIssues(String jql, int maxPerQuery, int maxResults) {
         LOG.debug("Start indexing current JIRA issues...");
 
+        int start = 0;
         List<Issue> issues = new ArrayList<>();
         while (true) {
             SearchRestClient searchRestClient = endpoint.getClient().getSearchClient();

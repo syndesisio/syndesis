@@ -15,27 +15,31 @@
  */
 package org.apache.camel.component.jira;
 
-public interface JiraConstants {
+public final class JiraConstants {
 
-    String JIRA = "jira";
-    String ACCESS_TOKEN = "accessToken";
-    String VERIFICATION_CODE = "verificationCode";
-    String JIRA_URL = "jiraUrl";
-    String PRIVATE_KEY = "privateKey";
-    String CONSUMER_KEY = "consumerKey";
-    String ISSUE_ASSIGNEE = "IssueAssignee";
-    String ISSUE_COMPONENTS = "IssueComponents";
-    String ISSUE_COMMENT = "IssueComment";
-    String ISSUE_KEY = "IssueKey";
-    String ISSUE_PRIORITY_ID = "IssuePriorityId";
-    String ISSUE_PRIORITY_NAME = "IssuePriorityName";
-    String ISSUE_PROJECT_KEY = "ProjectKey";
-    String ISSUE_SUMMARY = "IssueSummary";
-    String ISSUE_TRANSITION_ID = "IssueTransitionId";
-    String ISSUE_TYPE_ID = "IssueTypeId";
-    String ISSUE_TYPE_NAME = "IssueTypeName";
-    String ISSUE_WATCHERS_ADD = "IssueWatchersAdd";
-    String ISSUE_WATCHERS_REMOVE = "IssueWatchersRemove";
-    String JIRA_REST_CLIENT_FACTORY = "JiraRestClientFactory";
+    public static final String JIRA = "jira";
+    public static final String ACCESS_TOKEN = "accessToken";
+    public static final String VERIFICATION_CODE = "verificationCode";
+    public static final String JIRA_URL = "jiraUrl";
+    public static final String PRIVATE_KEY = "privateKey";
+    public static final String CONSUMER_KEY = "consumerKey";
+    public static final String ISSUE_ASSIGNEE = "IssueAssignee";
+    public static final String ISSUE_COMPONENTS = "IssueComponents";
+    public static final String ISSUE_COMMENT = "IssueComment";
+    public static final String ISSUE_KEY = "IssueKey";
+    public static final String ISSUE_PRIORITY_ID = "IssuePriorityId";
+    public static final String ISSUE_PRIORITY_NAME = "IssuePriorityName";
+    public static final String ISSUE_PROJECT_KEY = "ProjectKey";
+    public static final String ISSUE_SUMMARY = "IssueSummary";
+    public static final String ISSUE_TRANSITION_ID = "IssueTransitionId";
+    public static final String ISSUE_TYPE_ID = "IssueTypeId";
+    public static final String ISSUE_TYPE_NAME = "IssueTypeName";
+    public static final String ISSUE_WATCHERS_ADD = "IssueWatchersAdd";
+    public static final String ISSUE_WATCHERS_REMOVE = "IssueWatchersRemove";
+    public static final String JIRA_REST_CLIENT_FACTORY = "JiraRestClientFactory";
+
+    private JiraConstants() {
+        // prevent instantiation of utility class.
+    }
 
 }
