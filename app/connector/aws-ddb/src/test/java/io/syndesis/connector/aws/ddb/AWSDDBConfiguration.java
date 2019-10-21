@@ -18,8 +18,6 @@ package io.syndesis.connector.aws.ddb;
 
 import com.amazonaws.regions.Regions;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-
 /**
  * To be able to run these integration tests you have to provide valid credentials, region
  * and a valid table name.
@@ -27,7 +25,7 @@ import com.amazonaws.regions.Regions;
  * These tests (at the moment) do write and read contents on your tables, so make sure
  * you use a table specifically for testing.
  */
-public class AWSDDBConfiguration {
+public final class AWSDDBConfiguration {
 
     public static final String ACCESSKEY_VALUE = "INVALID_KEY";
     public static final String SECRETKEY_VALUE = "INVALID_KEY";
@@ -40,9 +38,13 @@ public class AWSDDBConfiguration {
     public static final String TABLENAME = "tableName";
     public static final String ELEMENT = "element";
 
-    public static final Long randomId = System.currentTimeMillis();
+    public static final Long RANDOM_ID = System.currentTimeMillis();
 
     //TODO change this to your table constraints
-    public static final String ELEMENT_VALUE = "{\"clave\":\"" + randomId + "\"}";
+    public static final String ELEMENT_VALUE = "{\"clave\":\"" + RANDOM_ID + "\"}";
     //TODO change this to your table constraints
+
+    private AWSDDBConfiguration() {
+        // holds constants
+    }
 }

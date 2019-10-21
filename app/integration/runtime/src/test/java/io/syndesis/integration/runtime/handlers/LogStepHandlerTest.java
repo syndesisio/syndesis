@@ -24,12 +24,12 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
 import org.apache.camel.ProducerTemplate;
@@ -44,6 +44,9 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -56,7 +59,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 
-public class LogStepHandlerTest extends IntegrationTestSupport {
+public class LogStepHandlerTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(LogStepHandlerTest.class);
 
@@ -66,7 +69,7 @@ public class LogStepHandlerTest extends IntegrationTestSupport {
 
     final LogStepHandler handler = new LogStepHandler();
 
-    final IntegrationRouteBuilder NOT_USED = null;
+    private static final IntegrationRouteBuilder NOT_USED = null;
 
     final ProcessorDefinition<?> route = spy(new RouteDefinition());
 

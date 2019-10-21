@@ -25,8 +25,8 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -41,12 +41,14 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
-public class DataMapperStepHandlerTest extends IntegrationTestSupport {
+public class DataMapperStepHandlerTest {
 
-    private CamelContext camelContext = new DefaultCamelContext();
+    private final CamelContext camelContext = new DefaultCamelContext();
 
     @Test
     public void testDataMapperStep() throws Exception {
@@ -217,11 +219,11 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         }
     }
 
-    private Step[] getTestSteps() {
+    private static Step[] getTestSteps() {
         return getTestSteps("{}");
     }
 
-    private Step[] getTestSteps(String atlasMapping) {
+    private static Step[] getTestSteps(String atlasMapping) {
         return new Step[]{
                 new Step.Builder()
                         .id("step-1")

@@ -31,8 +31,12 @@ import org.slf4j.LoggerFactory;
 import static org.assertj.core.api.Assertions.fail;
 
 
-public class SqlStoredCommon {
+public final class SqlStoredCommon {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStoredCommon.class);
+
+    private SqlStoredCommon() {
+        // utility class
+    }
 
     public static void setupStoredProcedure(Connection connection, Properties properties) throws Exception {
 

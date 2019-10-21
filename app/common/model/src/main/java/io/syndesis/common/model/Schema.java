@@ -18,7 +18,11 @@ package io.syndesis.common.model;
 /**
  * This class is used to track the current model schema version.
  */
-public class Schema {
+public final class Schema {
     // changing this will reset all the DB data.
     public static final int VERSION = 32;
+
+    private Schema() {
+      // quasi utility class
+    }
 }

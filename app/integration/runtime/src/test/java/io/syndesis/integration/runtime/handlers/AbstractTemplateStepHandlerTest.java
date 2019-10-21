@@ -15,28 +15,13 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.Dependency;
@@ -50,15 +35,41 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
-import io.syndesis.common.util.StringConstants;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSupport {
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-    private DirectEndpoint directEndpoint = new DirectEndpoint();
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-    private static ObjectMapper mapper = new ObjectMapper();
+import static io.syndesis.common.util.StringConstants.CLOSE_BRACKET;
+import static io.syndesis.common.util.StringConstants.EMPTY_STRING;
+import static io.syndesis.common.util.StringConstants.NEW_LINE;
+import static io.syndesis.common.util.StringConstants.OPEN_BRACKET;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.data;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dataPair;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.Assert.assertTrue;
+
+public abstract class AbstractTemplateStepHandlerTest {
+
+    private final DirectEndpoint directEndpoint = new DirectEndpoint();
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     protected CamelContext context;
 
@@ -73,7 +84,7 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
         context = null;
     }
 
-    private String createSpec(Collection<Symbol> symbols) throws JsonProcessingException {
+    private static String createSpec(Collection<Symbol> symbols) throws JsonProcessingException {
         final ObjectNode schema = JsonNodeFactory.instance.objectNode();
         schema.put("$schema", "http://json-schema.org/schema#");
         schema.put("type", "object");
@@ -86,7 +97,7 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
             properties.set(symbol.id, property);
         }
         schema.set("properties", properties);
-        String inSpec = mapper.writeValueAsString(schema);
+        String inSpec = MAPPER.writeValueAsString(schema);
         return inSpec;
     }
 
@@ -164,10 +175,10 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
         }
     }
 
-    protected String toJson(String message) throws Exception {
-        ObjectNode node = mapper.createObjectNode();
+    protected static String toJson(String message) throws Exception {
+        ObjectNode node = MAPPER.createObjectNode();
         node.put("message", message);
-        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(node);
+        return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(node);
     }
 
     protected void checkDynamicDependency(Integration integration) {
@@ -359,25 +370,25 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
         }
     }
 
-    private static class DirectEndpoint implements StringConstants {
-        private String schema = "direct";
-        private String name = "start";
+    private static class DirectEndpoint {
+        private final String schema = "direct";
+        private final String name = "start";
 
         public String id() {
-            return schema + HYPHEN + name;
+            return schema + "-" + name;
         }
 
         @Override
         public String toString() {
-            return schema + COLON + name;
+            return schema + ":" + name;
         }
     }
 
     protected class Symbol {
-        public String id;
-        public String type;
-        private String openSymbol;
-        private String closeSymbol;
+        public final String id;
+        public final String type;
+        private final String openSymbol;
+        private final String closeSymbol;
 
         public Symbol(String id, String type, String openSymbol, String closeSymbol) {
             this.id = id;

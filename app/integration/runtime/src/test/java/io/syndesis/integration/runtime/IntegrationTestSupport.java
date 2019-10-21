@@ -15,25 +15,21 @@
  */
 package io.syndesis.integration.runtime;
 
-import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import javax.xml.bind.JAXBException;
+
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.Resources;
-import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
-import org.apache.camel.Body;
+import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.SimpleRegistry;
@@ -44,21 +40,30 @@ import org.apache.camel.model.RoutesDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IntegrationTestSupport implements StringConstants {
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+public final class IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
 
-    protected ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    protected static CamelContext getDefaultCamelContextWithMyBeanInRegistry(){
+    private IntegrationTestSupport() {
+      // utility class
+    }
+
+    public static CamelContext getDefaultCamelContextWithMyBeanInRegistry(){
         SimpleRegistry sr = new SimpleRegistry();
         sr.put("myBean", new MyBean());
         DefaultCamelContext ctx = new DefaultCamelContext(sr);
         return ctx;
     }
 
-    protected static class DataPair {
-        private String key;
-        private Object value;
+    public static class DataPair {
+        private final String key;
+        private final Object value;
 
         public DataPair(String key, Object value) {
             this.key = key;
@@ -66,7 +71,7 @@ public class IntegrationTestSupport implements StringConstants {
         }
     }
 
-    protected void dumpRoutes(CamelContext context, RoutesDefinition definition) {
+    public static void dumpRoutes(CamelContext context, RoutesDefinition definition) {
         try {
             LOGGER.info("Routes: \n{}",ModelHelper.dumpModelAsXml(context, definition));
         } catch (JAXBException e) {
@@ -74,26 +79,26 @@ public class IntegrationTestSupport implements StringConstants {
         }
     }
 
-    protected void dumpRoutes(CamelContext context) {
+    public static void dumpRoutes(CamelContext context) {
         RoutesDefinition definition = new RoutesDefinition();
         definition.setRoutes(context.getRouteDefinitions());
 
         dumpRoutes(context, definition);
     }
 
-    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(ActivityTracker activityTracker, Step... steps) {
+    public static IntegrationRouteBuilder newIntegrationRouteBuilder(ActivityTracker activityTracker, Step... steps) {
         return newIntegrationRouteBuilder(newIntegration(steps), activityTracker);
     }
 
-    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
+    public static IntegrationRouteBuilder newIntegrationRouteBuilder(Step... steps) {
         return newIntegrationRouteBuilder(null, steps);
     }
 
-    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
+    public static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
         return newIntegrationRouteBuilder(integration, null);
     }
 
-    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
+    public static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
         List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories = Collections.emptyList();
         if(activityTracker!=null) {
             activityTrackingPolicyFactories = Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
@@ -108,7 +113,7 @@ public class IntegrationTestSupport implements StringConstants {
         };
     }
 
-    protected static Integration newIntegration(Step... steps) {
+    public static Integration newIntegration(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i] = new Step.Builder().createFrom(steps[i]).build();
         }
@@ -123,7 +128,7 @@ public class IntegrationTestSupport implements StringConstants {
             .build();
     }
 
-    protected ProcessorDefinition<?> getOutput(RouteDefinition definition, int... indices) {
+    public static ProcessorDefinition<?> getOutput(RouteDefinition definition, int... indices) {
         ProcessorDefinition<?> output = definition;
         for (int index : indices) {
             output = output.getOutputs().get(index);
@@ -132,19 +137,19 @@ public class IntegrationTestSupport implements StringConstants {
         return output;
     }
 
-    protected DataPair dataPair(String key, String value) {
+    public static DataPair dataPair(String key, String value) {
         return new DataPair(key, value);
     }
 
-    protected DataPair dataPair(String key, DataPair... values) {
+    public static DataPair dataPair(String key, DataPair... values) {
         if (values.length == 1)
             return new DataPair(key, values[0]);
 
         return new DataPair(key, values);
     }
 
-    private JsonNode jsonData(DataPair... snippets) {
-        ObjectNode node = mapper.createObjectNode();
+    private static JsonNode jsonData(DataPair... snippets) {
+        ObjectNode node = MAPPER.createObjectNode();
 
         for (DataPair snippet : snippets) {
             String key = snippet.key.toString();
@@ -152,11 +157,11 @@ public class IntegrationTestSupport implements StringConstants {
             if (snippet.value instanceof String) {
                 node.put(key, snippet.value.toString());
             } else if (snippet.value instanceof String[]) {
-                ArrayNode array = mapper.createArrayNode();
+                ArrayNode array = MAPPER.createArrayNode();
                 Arrays.stream((String[]) snippet.value).forEach(array::add);
                 node.set(key, array);
             } else if (snippet.value instanceof DataPair[]) {
-                ArrayNode array = mapper.createArrayNode();
+                ArrayNode array = MAPPER.createArrayNode();
                 Arrays.stream((DataPair[]) snippet.value).forEach(me -> {
                     JsonNode element = jsonData(me);
                     array.add(element);
@@ -171,16 +176,10 @@ public class IntegrationTestSupport implements StringConstants {
         return node;
     }
 
-    protected String data(DataPair... snippets) throws Exception {
+    public static String data(DataPair... snippets) throws Exception {
         JsonNode jsonNode = jsonData(snippets);
-        String json = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
-        return json;
+
+        return MAPPER.writerWithDefaultPrettyPrinter().writeValueAsString(jsonNode);
     }
 
-    public static final class MyBean {
-        @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
-        public String myProcessor(@Body String body) {
-            return body.toUpperCase();
-        }
-    }
 }

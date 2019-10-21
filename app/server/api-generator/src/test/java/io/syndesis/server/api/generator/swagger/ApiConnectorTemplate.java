@@ -26,9 +26,13 @@ import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 
-public abstract class AbstractSwaggerConnectorTest {
+final class ApiConnectorTemplate {
 
     static final ConnectorTemplate SWAGGER_TEMPLATE = fetchSwaggerConnectorTemplateFromDeployment();
+
+    private ApiConnectorTemplate() {
+        // needed for loading the template
+    }
 
     private static ConnectorTemplate fetchSwaggerConnectorTemplateFromDeployment() {
         final Configuration configuration = Configuration.builder()//
@@ -37,7 +41,7 @@ public abstract class AbstractSwaggerConnectorTest {
             .build();
 
         final List<ConnectorTemplate> templates = JsonPath.using(configuration)
-            .parse(AbstractSwaggerConnectorTest.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json"))
+            .parse(ApiConnectorTemplate.class.getResourceAsStream("/io/syndesis/server/dao/deployment.json"))
             .read("$..[?(@['id'] == 'swagger-connector-template')]", new TypeRef<List<ConnectorTemplate>>() {
                 // type token pattern
             });

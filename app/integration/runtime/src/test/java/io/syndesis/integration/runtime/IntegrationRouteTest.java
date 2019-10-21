@@ -23,6 +23,7 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Resources;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
@@ -35,10 +36,14 @@ import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 
 import static java.util.Collections.singleton;
+
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD")
-public class IntegrationRouteTest extends IntegrationTestSupport {
+public class IntegrationRouteTest {
     @Test
     public void integrationWithSchedulerTest() throws Exception {
         final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {

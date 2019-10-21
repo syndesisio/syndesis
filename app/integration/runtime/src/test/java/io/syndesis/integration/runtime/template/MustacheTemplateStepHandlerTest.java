@@ -15,17 +15,24 @@
  */
 package io.syndesis.integration.runtime.template;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Test;
+
 import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
+
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.junit.Test;
+
+import static io.syndesis.integration.runtime.IntegrationTestSupport.data;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dataPair;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest implements TemplateStepConstants {
 

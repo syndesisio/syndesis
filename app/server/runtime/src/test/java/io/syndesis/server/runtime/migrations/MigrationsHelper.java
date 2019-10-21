@@ -24,6 +24,10 @@ import io.syndesis.server.jsondb.JsonDB;
 
 final class MigrationsHelper {
 
+    private MigrationsHelper() {
+        // utility class
+    }
+
     static <T> List<T> load(final JsonDB jsondb, final String path, final Class<T> type) throws IOException {
         final List<T> items = new ArrayList<>();
         final String raw = jsondb.getAsString(path);

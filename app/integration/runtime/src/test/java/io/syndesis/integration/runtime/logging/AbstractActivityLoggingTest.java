@@ -26,8 +26,8 @@ import java.util.stream.Stream;
 
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
 import io.syndesis.integration.runtime.util.JsonSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -36,11 +36,7 @@ import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @author Christoph Deppisch
- */
-@SuppressWarnings({"PMD.AvoidThrowingRawExceptionTypes"})
-public abstract class AbstractActivityLoggingTest extends IntegrationTestSupport {
+public abstract class AbstractActivityLoggingTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityLoggingTest.class);
 

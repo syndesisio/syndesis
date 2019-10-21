@@ -25,11 +25,27 @@ public final class Strings {
     private Strings() {
     }
 
-    public static String utf8(byte[] data) {
-        return new String(data, StandardCharsets.UTF_8);
+    public static boolean isEmptyOrBlank(final String given) {
+        if (given == null || given.isEmpty()) {
+            return true;
+        }
+
+        final int len = given.length();
+        for (int i = 0; i < len; i++) {
+            final char ch = given.charAt(i);
+            if (!Character.isWhitespace(ch)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
-    public static String truncate(String name, int max) {
-          return name.length() > max ? name.substring(0, max) : name;
+    public static String truncate(final String name, final int max) {
+        return name.length() > max ? name.substring(0, max) : name;
+    }
+
+    public static String utf8(final byte[] data) {
+        return new String(data, StandardCharsets.UTF_8);
     }
 }

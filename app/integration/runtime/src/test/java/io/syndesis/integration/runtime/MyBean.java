@@ -13,9 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.syndesis.integration.runtime;
 
-package org.apache.camel.component.kudu;
+import java.util.Locale;
 
-public class KuduClientIntegrationTest {
+import org.apache.camel.Body;
 
+public final class MyBean {
+    @SuppressWarnings("static-method")
+    public String myProcessor(@Body String body) {
+        return body.toUpperCase(Locale.US);
+    }
 }

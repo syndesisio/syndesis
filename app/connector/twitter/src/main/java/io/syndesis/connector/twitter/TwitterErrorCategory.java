@@ -15,9 +15,13 @@
  */
 package io.syndesis.connector.twitter;
 
-public class TwitterErrorCategory {
+public final class TwitterErrorCategory {
 
     public static final String TWITTER_CONNECTOR_ERROR    = "TWITTER_CONNECTOR_ERROR";
 
     public static final String SERVER_ERROR               = "SERVER_ERROR";
+
+    private TwitterErrorCategory() {
+      // holds constants
+    }
 }

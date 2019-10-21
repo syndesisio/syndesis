@@ -25,7 +25,7 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.extension.api.Step;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -39,10 +39,12 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings({"PMD.ExcessiveImports", "PMD.JUnitTestContainsTooManyAsserts"})
-public class ExtensionStepHandlerTest extends IntegrationTestSupport {
+public class ExtensionStepHandlerTest {
 
     @Test
     public void testEndpointExtensionStepHandler() throws Exception {

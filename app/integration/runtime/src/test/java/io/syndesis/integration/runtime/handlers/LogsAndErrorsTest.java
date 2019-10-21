@@ -25,7 +25,7 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.extension.api.Step;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
@@ -36,13 +36,15 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Handy class to test logging of log messages and errors
  */
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-public class LogsAndErrorsTest extends IntegrationTestSupport {
+public class LogsAndErrorsTest {
 
     @Test
     public void testRoute() throws Exception {

@@ -32,7 +32,11 @@ import org.apache.olingo.server.api.uri.UriParameter;
 import org.apache.olingo.server.api.uri.UriResource;
 import org.apache.olingo.server.api.uri.UriResourceEntitySet;
 
-public class Util {
+public final class Util {
+
+    private Util() {
+        // utility class
+    }
 
     public static EdmEntitySet getEdmEntitySet(UriInfoResource uriInfo) throws ODataApplicationException {
         List<UriResource> resourcePaths = uriInfo.getUriResourceParts();

@@ -32,7 +32,7 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Handler;
@@ -43,10 +43,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
-public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
+public class ActivityTracingWithSplitTest {
     protected CamelContext context;
     protected ArrayList<JaegerSpan> activityEvents;
 

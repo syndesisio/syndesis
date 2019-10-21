@@ -66,7 +66,7 @@ public class SqlParam {
         }
     }
 
-    public static class SqlSampleValue {
+    public static final class SqlSampleValue {
         public static final List<String> ARRAY_VALUE = Collections.unmodifiableList(Arrays.asList("1","2","3"));
         public static final byte[] BINARY_VALUE = {1,2,3};
         public static final String STRING_VALUE = "abc";
@@ -80,6 +80,10 @@ public class SqlParam {
         public static final Integer INTEGER_VALUE = 0;
         public static final Long LONG_VALUE = 0L;
         public static final Float FLOAT_VALUE = 0f;
+
+        private SqlSampleValue() {
+            // holds constants
+        }
     }
 
     @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})

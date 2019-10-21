@@ -15,8 +15,11 @@
  */
 package io.syndesis.common.util;
 
-public class ErrorCategory {
+public final class ErrorCategory {
 
-    public static final String SERVER_ERROR               = "SERVER_ERROR";
+    public static final String SERVER_ERROR = "SERVER_ERROR";
 
+    private ErrorCategory() {
+        // quasi utility class
+    }
 }

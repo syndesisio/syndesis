@@ -47,6 +47,10 @@ public final class ApiGeneratorHelper {
     private static final String API_PROVIDER_END_ACTION_ID = "io.syndesis:api-provider-end";
     private static final String API_PROVIDER_START_ACTION_ID = "io.syndesis:api-provider-start";
 
+    private ApiGeneratorHelper() {
+        // utility class
+    }
+
     public static APIIntegration generateIntegrationFrom(final APIFormData apiFormData, final DataManager dataManager, final APIGenerator apiGenerator) {
         Connection apiProviderConnection = dataManager.fetch(Connection.class, API_PROVIDER_CONNECTION_ID);
         if (apiProviderConnection == null) {

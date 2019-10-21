@@ -29,7 +29,6 @@ import io.swagger.models.auth.In;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.AbstractSwaggerConnectorTest;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 
@@ -46,7 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.entry;
 
-public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
+public class SwaggerHelperTest {
 
     @Test
     public void convertingToJsonShouldNotLooseSecurityDefinitions() throws JsonProcessingException, IOException {
