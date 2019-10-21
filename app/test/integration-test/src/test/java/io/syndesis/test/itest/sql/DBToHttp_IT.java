@@ -44,9 +44,9 @@ import org.testcontainers.containers.GenericContainer;
 @ContextConfiguration(classes = DBToHttp_IT.EndpointConfig.class)
 public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
 
-    private static int httpTestServerPort = SocketUtils.findAvailableTcpPort();
+    private static final int HTTP_TEST_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(httpTestServerPort);
+        Testcontainers.exposeHostPorts(HTTP_TEST_SERVER_PORT);
     }
 
     @Autowired
@@ -65,7 +65,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
             .fromExport(DBToHttp_IT.class.getResource("DBToHttp-export"))
             .customize("$..configuredProperties.schedulerExpression", "5000")
             .customize("$..configuredProperties.baseUrl",
-                    String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, httpTestServerPort))
+                    String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, HTTP_TEST_SERVER_PORT))
             .build()
             .withNetwork(getSyndesisDb().getNetwork());
 
@@ -102,7 +102,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         public HttpServer httpTestServer() {
             return CitrusEndpoints.http()
                     .server()
-                    .port(httpTestServerPort)
+                    .port(HTTP_TEST_SERVER_PORT)
                     .autoStart(true)
                     .timeout(60000L)
                     .build();

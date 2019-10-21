@@ -52,7 +52,7 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
             .customize("$..configuredProperties.directoryName", "public")
             .customize("$..configuredProperties.fileName", "todo.json")
             .customize("$..configuredProperties.host", GenericContainer.INTERNAL_HOST_HOSTNAME)
-            .customize("$..configuredProperties.port", ftpTestServerPort)
+            .customize("$..configuredProperties.port", FTP_TEST_SERVER_PORT)
             .build()
             .withNetwork(getSyndesisDb().getNetwork());
 
@@ -89,7 +89,7 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
         public DataConnectionConfiguration dataConnectionConfiguration() {
             DataConnectionConfigurationFactory dataConnectionFactory = new DataConnectionConfigurationFactory();
             dataConnectionFactory.setPassiveExternalAddress(integrationContainer.getInternalHostIp());
-            dataConnectionFactory.setPassivePorts(String.valueOf(passivePort));
+            dataConnectionFactory.setPassivePorts(String.valueOf(PASSIVE_PORT));
             return dataConnectionFactory.createDataConnectionConfiguration();
         }
     }

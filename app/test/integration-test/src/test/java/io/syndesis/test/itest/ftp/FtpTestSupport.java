@@ -52,11 +52,11 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(FtpTestSupport.class);
 
-    static int ftpTestServerPort = SocketUtils.findAvailableTcpPort();
-    static int passivePort = SocketUtils.findAvailableTcpPort(35000);
+    static final int FTP_TEST_SERVER_PORT = SocketUtils.findAvailableTcpPort();
+    static final int PASSIVE_PORT = SocketUtils.findAvailableTcpPort(35000);
     static {
-        Testcontainers.exposeHostPorts(ftpTestServerPort);
-        Testcontainers.exposeHostPorts(passivePort);
+        Testcontainers.exposeHostPorts(FTP_TEST_SERVER_PORT);
+        Testcontainers.exposeHostPorts(PASSIVE_PORT);
     }
 
     @Autowired
@@ -85,7 +85,7 @@ public abstract class FtpTestSupport extends SyndesisIntegrationTestSupport {
                             FTPCmd.NLST.getCommand(),
                             FTPCmd.QUIT.getCommand(),
                             FTPCmd.TYPE.getCommand()));
-            endpointConfiguration.setPort(ftpTestServerPort);
+            endpointConfiguration.setPort(FTP_TEST_SERVER_PORT);
 
             FtpServer ftpServer = new FtpServer(endpointConfiguration);
             ftpServer.setUserManagerProperties(new ClassPathResource("ftp.server.properties", FtpTestSupport.class));

@@ -40,9 +40,9 @@ import org.testcontainers.Testcontainers;
 @ContextConfiguration(classes = GoogleSheetsTestSupport.EndpointConfig.class)
 public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
 
-    static int googleSheetsServerPort = SocketUtils.findAvailableTcpPort();
+    static final int GOOGLE_SHEETS_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(googleSheetsServerPort);
+        Testcontainers.exposeHostPorts(GOOGLE_SHEETS_SERVER_PORT);
     }
 
     @Configuration
@@ -57,7 +57,7 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
 
             return CitrusEndpoints.http()
                     .server()
-                    .port(googleSheetsServerPort)
+                    .port(GOOGLE_SHEETS_SERVER_PORT)
                     .autoStart(true)
                     .timeout(60000L)
                     .filters(filterMap)

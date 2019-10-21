@@ -50,9 +50,9 @@ import org.testcontainers.containers.GenericContainer;
 @ContextConfiguration(classes = SendMail_IT.EndpointConfig.class)
 public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
-    private static int mailServerPort = SocketUtils.findAvailableTcpPort();
+    private static final int MAIL_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(mailServerPort);
+        Testcontainers.exposeHostPorts(MAIL_SERVER_PORT);
     }
 
     @Autowired
@@ -75,7 +75,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                             .name("send-mail")
                             .fromExport(SendMail_IT.class.getResource("SendMail-export"))
                             .customize("$..configuredProperties.host", GenericContainer.INTERNAL_HOST_HOSTNAME)
-                            .customize("$..configuredProperties.port", mailServerPort)
+                            .customize("$..configuredProperties.port", MAIL_SERVER_PORT)
                             .build()
                             .withNetwork(getSyndesisDb().getNetwork())
                             .withExposedPorts(SyndesisTestEnvironment.getServerPort());
@@ -166,7 +166,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                     .timeout(60000L)
                     .autoStart(true)
                     .autoAccept(true)
-                    .port(mailServerPort)
+                    .port(MAIL_SERVER_PORT)
                     .build();
         }
 
