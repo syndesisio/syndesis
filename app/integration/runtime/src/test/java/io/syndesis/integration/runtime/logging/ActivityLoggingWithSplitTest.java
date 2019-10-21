@@ -25,9 +25,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.util.ObjectHelper;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
 
@@ -74,7 +74,7 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
     public void testLoggingWithSuccessStep() throws Exception {
         final MockEndpoint result = context.getEndpoint("mock:end", MockEndpoint.class);
         result.expectedBodiesReceived("Hello", "World");
-        context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "World"});
+        context.createProducerTemplate().sendBody("direct:start", new String[] {"Hello", "World"});
         result.assertIsSatisfied();
 
         // There should be 1 exchanges logged.
@@ -97,12 +97,10 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
 
     @Test
     public void testLoggingWithErrorStep() {
-        try {
-            context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello", "error"});
-            fail("Expected exception");
-        } catch (CamelExecutionException e) {
-            // expected.
-        }
+        assertThatExceptionOfType(CamelExecutionException.class)
+            .isThrownBy(() -> context.createProducerTemplate().sendBody("direct:start", new String[] {"Hello", "error"}))
+            .withMessageStartingWith("Exception occurred during execution on the exchange: Exchange")
+            .withCause(new RuntimeException("Bean Error"));
 
         // There should be 1 exchanges logged.
         assertEquals(1, findExchangesLogged().size());

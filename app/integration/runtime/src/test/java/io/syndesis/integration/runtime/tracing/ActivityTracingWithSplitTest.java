@@ -42,13 +42,10 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.AvoidThrowingRawExceptionTypes"})
 public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
     protected CamelContext context;
     protected ArrayList<JaegerSpan> activityEvents;
@@ -69,12 +66,8 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
             }
         }).withSampler(new ConstSampler(true)).build();
 
-//        Tracer tracer = new io.jaegertracing.Configuration(getClass().getName())
-//            .withSampler(io.jaegertracing.Configuration.SamplerConfiguration.fromEnv().withType("const").withParam(1))
-//            .withReporter(io.jaegertracing.Configuration.ReporterConfiguration.fromEnv())
-//            .getTracer();
-
-        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), Arrays.asList( new TracingActivityTrackingPolicyFactory(tracer))) {
+        final RouteBuilder routeBuilder = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class),
+            Arrays.asList(new TracingActivityTrackingPolicyFactory(tracer))) {
 
             @Override
             protected Integration loadIntegration() {
@@ -125,7 +118,6 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
             }
         };
 
-
         context = new DefaultCamelContext();
         context.setUuidGenerator(KeyGenerator::createKey);
         context.addLogListener(new TracingLogListener(tracer));
@@ -137,7 +129,6 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
         dumpRoutes(context, routeBuilder.getRouteCollection());
     }
 
-
     @After
     public void after() throws Exception {
         context.stop();
@@ -145,41 +136,22 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
 
     @Test
     public void testLoggingWithSuccessStep() throws Exception {
-
         final MockEndpoint result = context.getEndpoint("mock:end", MockEndpoint.class);
         result.expectedBodiesReceived("Hello World");
-        context.createProducerTemplate().sendBody("direct:start", new String[]{"Hello"});
+        context.createProducerTemplate().sendBody("direct:start", new String[] {"Hello"});
         result.assertIsSatisfied();
 
-        // System.out.println(Json.writer().writeValueAsString(activityEvents));
-        assertEquals(6, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
-
-//        // There should be 1 exchanges logged.
-//        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
-//        // There should be 1 "status":"begin"
-//        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "begin".equals(x)).collect(Collectors.toList()).size());
-//        // There should be 1 "status":"done"
-//        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "done".equals(x)).collect(Collectors.toList()).size());
-
+        assertEquals(6, activityEvents.size());
     }
 
     @Test
     public void testLoggingWithErrorStep() throws Exception {
+        assertThatExceptionOfType(CamelExecutionException.class)
+            .isThrownBy(() -> context.createProducerTemplate().sendBody("direct:start", new String[] {"error"}))
+            .withMessageStartingWith("Exception occurred during execution on the exchange: Exchange")
+            .withCause(new RuntimeException("Bean Error"));
 
-        try {
-            context.createProducerTemplate().sendBody("direct:start", new String[]{"error"});
-            fail("Expected exception");
-        } catch (CamelExecutionException e) {
-            // expected.
-        }
-
-//        // There should be 1 exchanges logged.
-        assertEquals(4, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
-//        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
-//        // There should be 1 "status":"begin"
-//        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "begin".equals(x)).collect(Collectors.toList()).size());
-//        // There should be 1 "status":"done"
-//        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "done".equals(x)).collect(Collectors.toList()).size());
+        assertEquals(4, activityEvents.size());
     }
 
     public static class TestBean {

@@ -16,19 +16,16 @@
 
 package io.syndesis.integration.component.proxy;
 
+import java.io.IOException;
+
 import org.apache.camel.catalog.DefaultCamelCatalog;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
-import java.io.IOException;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ComponentDefinitionTest {
 
-    @Rule
-    public ExpectedException exceptionRule = ExpectedException.none();
-    
     @Test
     public void testForScheme() throws IOException {
         ComponentDefinition definition = ComponentDefinition.forScheme(new DefaultCamelCatalog(), "direct");
@@ -37,10 +34,8 @@ public class ComponentDefinitionTest {
     }
 
     @Test
-    public void testForSchemeNotFound() throws IOException {
-        exceptionRule.expect(IllegalArgumentException.class);
-        exceptionRule.expectMessage("Failed to find component definition for scheme 'unknown'");
-        
-        ComponentDefinition.forScheme(new DefaultCamelCatalog(), "unknown");
+    public void testForSchemeNotFound() {
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> ComponentDefinition.forScheme(new DefaultCamelCatalog(), "unknown"))
+            .withMessage("Failed to find component definition for scheme 'unknown'. Missing component definition in classpath 'org/apache/camel/catalog/components/unknown.json'");
     }
 }

@@ -22,6 +22,8 @@ import org.junit.Assert;
 import org.junit.ClassRule;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 public class SqlParserTest {
 
     @ClassRule
@@ -261,10 +263,12 @@ public class SqlParserTest {
         Assert.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
     }
 
-    @Test(expected=SQLException.class)
+    @Test
     public void parseSelectFromNoneExistingTable() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection,
             "SELECT FIRSTNAME, LASTNAME FROM NAME-NOTEXIST WHERE FIRSTNAME LIKE :#first");
-        parser.parse();
+
+        assertThatExceptionOfType(SQLException.class).isThrownBy(() -> parser.parse())
+            .withMessage("Table 'NAME-NOTEXIST' does not exist in schema 'SA'");
     }
 }

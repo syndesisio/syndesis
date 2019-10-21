@@ -39,8 +39,8 @@ import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.ResourceLoader;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.entry;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -180,15 +180,16 @@ public class DataManagerTest {
             "prop2", "value2")).isEmpty();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void multiplePropertyValuePairsShouldCheckInput() {
         @SuppressWarnings("unchecked")
         final DataAccessObject<Extension> extensionDao = mock(DataAccessObject.class);
         when(extensionDao.getType()).thenReturn(Extension.class);
         dataManager.registerDataAccessObject(extensionDao);
 
-        dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1","prop2");
-        fail("Should fail before getting here");
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> dataManager.fetchIdsByPropertyValue(Extension.class, "prop1", "value1", "prop2"))
+            .withMessage("You must provide a even number of additional property/value pairs. Found: 1");
     }
 
     @Test

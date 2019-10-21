@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.skife.jdbi.v2.DBI;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -62,18 +62,14 @@ public class SqlJsonDBIntegrationTest {
 
     @Test
     public void shouldNotCommitWhenIssuesArise() {
-        try {
-            jsonDB.withGlobalTransaction(checkpointed -> {
-                checkpointed.set("failed", JSON);
+        assertThatExceptionOfType(SyndesisServerException.class).isThrownBy(() -> jsonDB.withGlobalTransaction(checkpointed -> {
+            checkpointed.set("failed", JSON);
 
-                assertThat(checkpointed.getAsString("failed")).isNotNull();
+            assertThat(checkpointed.getAsString("failed")).isNotNull();
 
-                throw new SyndesisServerException("expected");
-            });
-            fail("No SyndesisServerException was propagated");
-        } catch (final SyndesisServerException e) {
-            assertThat(e.getMessage()).isEqualTo("expected");
-        }
+            throw new SyndesisServerException("expected");
+        }))
+            .withMessage("expected");
 
         assertThat(jsonDB.getAsString("failed")).isNull();
         verifyNoMoreInteractions(bus);

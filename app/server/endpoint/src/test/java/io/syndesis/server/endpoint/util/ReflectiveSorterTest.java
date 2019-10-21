@@ -23,6 +23,7 @@ import java.util.function.Function;
 import io.syndesis.common.model.ListResult;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -74,14 +75,18 @@ public class ReflectiveSorterTest {
         }
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidType() {
-        getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("blub", "asc")));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("blub", "asc"))))
+            .withMessage("Cannot find field blub in io.syndesis.server.endpoint.util.ReflectiveSorterTest$TestPersonInterface as int or String field");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void invalidDirection() {
-        getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "blub")));
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "blub"))))
+            .withMessage("No enum constant io.syndesis.server.endpoint.util.SortOptions.SortDirection.BLUB");
     }
 
     @Test
@@ -105,7 +110,7 @@ public class ReflectiveSorterTest {
 
     }
 
-    private SortOptions getOptions(String type, String direction) {
+    private static SortOptions getOptions(String type, String direction) {
         return new SortOptions() {
             @Override
             public String getSortField() {
@@ -119,7 +124,7 @@ public class ReflectiveSorterTest {
         };
     }
 
-    private List<TestPersonInterface> getTestData() {
+    private static List<TestPersonInterface> getTestData() {
         return Arrays.asList(
 
             new TestPerson( "Erwin", "Schrödinger", 1887),
@@ -141,9 +146,9 @@ public class ReflectiveSorterTest {
 
     static class TestPerson implements TestPersonInterface {
 
-        private String firstName;
-        private String lastName;
-        private int birthYear;
+        private final String firstName;
+        private final String lastName;
+        private final int birthYear;
 
         TestPerson(String firstName, String lastName, int birthYear) {
             this.firstName = firstName;

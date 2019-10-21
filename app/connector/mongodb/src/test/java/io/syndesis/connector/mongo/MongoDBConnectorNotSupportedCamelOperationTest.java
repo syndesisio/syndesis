@@ -16,8 +16,12 @@
 package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
+
+import org.apache.camel.FailedToCreateRouteException;
 import org.junit.Before;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.List;
 
@@ -30,13 +34,9 @@ public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConne
     @Override
     @Before
     public void setUp() {
-        try {
-            super.setUp();
-            fail("Setup should have thrown an exception!");
-        } catch (Exception e) {
-            // We do expect a failure cause the operation provided is not
-            // supported
-        }
+        assertThatExceptionOfType(FailedToCreateRouteException.class).isThrownBy(() -> super.setUp())
+            .withMessageContaining("Failed to resolve endpoint")
+            .withMessageContaining("Operation not supported");
     }
 
     @Override

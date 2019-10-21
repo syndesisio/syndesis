@@ -15,25 +15,27 @@
  */
 package io.syndesis.server.credential;
 
-import io.syndesis.server.credential.TestCredentialProviderFactory.TestCredentialProvider;
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.credential.TestCredentialProviderFactory.TestCredentialProvider;
+import io.syndesis.server.dao.manager.DataManager;
 
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class CredentialProviderRegistryTest {
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldComplainAboutUnregisteredProviders() {
         final DataManager dataManager = mock(DataManager.class);
         final CredentialProviderRegistry registry = new CredentialProviderRegistry(dataManager);
 
-        registry.providerWithId("unregistered");
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> registry.providerWithId("unregistered"))
+            .withMessage("Unable to find connector with id: unregistered");
     }
 
     @Test
