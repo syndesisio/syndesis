@@ -16,11 +16,12 @@
 package io.syndesis.common.model.metrics;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationDeploymentMetrics.Builder.class)
@@ -40,11 +41,11 @@ public interface IntegrationDeploymentMetrics extends Serializable {
      * @return most recent (re-) start Date of the integration, empty if no live pods
      * are found for this integration, which would mean that the integration is currently down.
      */
-    Optional<Date> getStart();
+    Optional<Instant> getStart();
     /**
      * @return the TimeStamp of when the last message for processed
      */
-    Optional<Date> getLastProcessed();
+    Optional<Instant> getLastProcessed();
     /**
      * @return the duration this deployment is up and running.
      */

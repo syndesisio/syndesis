@@ -21,7 +21,7 @@ import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.common.util.Json;
 
 import java.io.IOException;
-import java.util.Date;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -115,7 +115,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
                     //add to existing history
                     RawMetrics history = metrics.get(historyKey);
                     RawMetrics dead = entry.getValue();
-                    Date lastProcessed = history.getLastProcessed().orElse(new Date(0)).after(dead.getLastProcessed().orElse(new Date(0)))
+                    Instant lastProcessed = history.getLastProcessed().orElse(Instant.EPOCH).isAfter(dead.getLastProcessed().orElse(Instant.EPOCH))
                             ? history.getLastProcessed().orElse(null) : dead.getLastProcessed().orElse(null);
                     RawMetrics updatedHistoryMetrics = new RawMetrics.Builder()
                             .integrationId(integrationId)

@@ -15,32 +15,26 @@
  */
 package io.syndesis.server.endpoint.metrics;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.stereotype.Component;
-
-import io.syndesis.server.dao.manager.DataManager;
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
-import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.dao.manager.DataManager;
+
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Component;
 
 @Component
 @ConditionalOnProperty(value = "metrics.kind", havingValue = "sql")
 public class SQLMetricsProviderImpl implements MetricsProvider {
 
-    private final DateFormat dateFormat = //2018-03-14T23:34:09Z
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'",Locale.US);
     static final Map<String,String> LABELS = new HashMap<>();
     static {
         LABELS.put("app", "syndesis");
@@ -72,35 +66,31 @@ public class SQLMetricsProviderImpl implements MetricsProvider {
     private IntegrationMetricsSummary rollup(List<IntegrationMetricsSummary> metricsSummaryList) {
         Long totalMessages = 0L;
         Long totalErrors = 0L;
-        Optional<Date> totalLastProcessed = Optional.empty();
-        Optional<Date> totalStart = Optional.empty();
+        Optional<Instant> totalLastProcessed = Optional.empty();
+        Optional<Instant> totalStart = Optional.empty();
         for (IntegrationMetricsSummary summary : metricsSummaryList) {
             totalMessages += summary.getMessages();
             totalErrors += summary.getErrors();
             if (totalLastProcessed.isPresent()) {
                 totalLastProcessed = summary.getLastProcessed().isPresent() &&
-                        totalLastProcessed.get().before(summary.getLastProcessed().get()) ?
+                        totalLastProcessed.get().isBefore(summary.getLastProcessed().get()) ?
                                 totalLastProcessed : summary.getLastProcessed();
             } else {
                 totalLastProcessed = summary.getLastProcessed();
             }
-            try {
-                totalStart = Optional.of(dateFormat.parse(
-                    openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
-                        .get(0)
-                        .getStatus()
-                        .getStartTime()));
 
-            } catch (ParseException e) {
-                throw new SyndesisServerException(e.getMessage(),e);
-            }
+            totalStart = Optional.of(Instant.parse(
+                openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems()
+                    .get(0)
+                    .getStatus()
+                    .getStartTime()));
         }
         return new IntegrationMetricsSummary.Builder()
                 .metricsProvider("sql")
                 .messages(totalMessages)
                 .errors(totalErrors)
                 .lastProcessed(totalLastProcessed)
-                .uptimeDuration(totalStart.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
+                .uptimeDuration(totalStart.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
                 .start(totalStart)
                 .build();
     }

@@ -16,57 +16,67 @@
 package io.syndesis.common.model.metrics;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
+
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = IntegrationMetricsSummary.Builder.class)
 @SuppressWarnings("immutables")
-public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSummary>, Serializable{
+public interface IntegrationMetricsSummary extends WithId<IntegrationMetricsSummary>, Serializable {
+
+    class Builder extends ImmutableIntegrationMetricsSummary.Builder {
+        // allow access to ImmutablIntegrationMetricsSummary.Builder
+    }
+
+    /**
+     * @return Number of messages that resulted in error
+     */
+    Long getErrors();
+
+    Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
 
     @Override
     default Kind getKind() {
         return Kind.IntegrationMetricsSummary;
     }
-    String getMetricsProvider();
+
+    /**
+     * @return the TimeStamp of when the last message for processed
+     */
+    Optional<Instant> getLastProcessed();
+
     /**
      * @return Number of successful messages
      */
     Long getMessages();
+
+    String getMetricsProvider();
+
     /**
-     * @return Number of messages that resulted in error
+     * @return most recent (re-) start Date of the integration, empty if no live
+     *         pods are found for this integration, which would mean that the
+     *         integration is currently down.
      */
-    Long getErrors();
+    Optional<Instant> getStart();
+
     /**
-     * @return most recent (re-) start Date of the integration, empty if no live pods
-     * are found for this integration, which would mean that the integration is currently down.
+     * @return Map of top 'N' (configured in metrics service, default 5)
+     *         integrations by total messages. Only valid when retrieving total
+     *         metrics summary.
      */
-    Optional<Date> getStart();
-    /**
-     * @return the TimeStamp of when the last message for processed
-     */
-    Optional<Date> getLastProcessed();
+    Optional<Map<String, Long>> getTopIntegrations();
+
     /**
      * @return the duration this application is up and running.
      */
     Long getUptimeDuration();
-
-    Optional<List<IntegrationDeploymentMetrics>> getIntegrationDeploymentMetrics();
-
-    /**
-     * @return Map of top 'N' (configured in metrics service, default 5) integrations by total messages.
-     * Only valid when retrieving total metrics summary.
-     */
-    Optional<Map<String, Long>> getTopIntegrations();
-
-    class Builder extends ImmutableIntegrationMetricsSummary.Builder {
-        // allow access to ImmutablIntegrationMetricsSummary.Builder
-    }
 }

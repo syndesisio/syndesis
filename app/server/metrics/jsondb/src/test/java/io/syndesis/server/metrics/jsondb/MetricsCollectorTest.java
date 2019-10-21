@@ -19,10 +19,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
@@ -56,7 +60,6 @@ public class MetricsCollectorTest {
     private DataManager dataManager;
     private JsonDBRawMetrics jsondbRM;
     private IntegrationMetricsHandler intMH;
-    private SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
 
     @Before
     public void before() throws IOException, ParseException {
@@ -86,7 +89,7 @@ public class MetricsCollectorTest {
         intMH = new IntegrationMetricsHandler(dataManager);
     }
 
-    private void load() throws IOException, ParseException {
+    private void load() {
         jsondbRM.persist(raw("intId1","1","pod1",3L, "31-01-2018 10:20:56"));
         jsondbRM.persist(raw("intId1","1","pod2",3L, "31-01-2018 10:22:56"));
         jsondbRM.persist(raw("intId1","1","HISTORY1",3L, "22-01-2015 10:20:56"));
@@ -95,8 +98,10 @@ public class MetricsCollectorTest {
         jsondbRM.persist(raw("intId3","1","pod5",3L, "31-01-2018 10:20:56"));
     }
 
-    private RawMetrics raw(String integrationId, String version, String podName, Long messages, String startDateString) throws ParseException { //NOPMD
-        Date startDate = sdf.parse(startDateString);
+    private static RawMetrics raw(String integrationId, String version, String podName, Long messages, String startDateString) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        LocalDateTime localStartDate = LocalDateTime.parse(startDateString, formatter);
+        Instant startDate = localStartDate.toInstant(ZoneOffset.UTC);
         return new RawMetrics.Builder()
                 .integrationId(integrationId)
                 .version(version)
@@ -105,7 +110,7 @@ public class MetricsCollectorTest {
                 .errors(1L)
                 .startDate(startDate)
                 .resetDate(Optional.empty())
-                .lastProcessed(new Date())
+                .lastProcessed(Instant.now())
                 .build();
     }
 
@@ -148,7 +153,7 @@ public class MetricsCollectorTest {
         assertThat(summary.getMessages()).isEqualTo(9);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod
-        assertThat(summary.getStart().get()).isEqualTo(sdf.parse("31-01-2018 10:20:56"));
+        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 20, 56, 0, ZoneId.of("Z")).toInstant());
 
         //Update pod2, add 6 messages
         jsondb.update(JsonDBRawMetrics.path("intId1","pod2"), Json.writer().writeValueAsString(raw("intId1","2","pod2",9L,"31-01-2018 10:22:56")));
@@ -175,7 +180,7 @@ public class MetricsCollectorTest {
         assertThat(summary.getMessages()).isEqualTo(18);
         assertThat(summary.getErrors()).isEqualTo(3);
         //Oldest living pod is now pod2
-        assertThat(summary.getStart().get()).isEqualTo(sdf.parse("31-01-2018 10:22:56"));
+        assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 22, 56, 0, ZoneId.of("Z")).toInstant());
 
         collector.close();
     }

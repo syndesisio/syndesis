@@ -17,13 +17,10 @@ package io.syndesis.server.metrics.prometheus;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
@@ -36,7 +33,6 @@ import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.syndesis.common.model.metrics.IntegrationDeploymentMetrics;
 import io.syndesis.common.model.metrics.IntegrationMetricsSummary;
 import io.syndesis.common.util.CollectionsUtils;
-import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.endpoint.metrics.MetricsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,9 +57,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null
         ? aLong2
         : aLong2 == null ? aLong : aLong + aLong2;
-    private static final BinaryOperator<Date> MAX_DATE = (date1, date2) -> date1 == null
+    private static final BinaryOperator<Instant> MAX_DATE = (date1, date2) -> date1 == null
         ? date2
-        : date2 == null ? date1 : date1.after(date2) ? date1 : date2;
+        : date2 == null ? date1 : date1.isAfter(date2) ? date1 : date2;
     public static final String OPERATOR_TOPK = "topk";
 
     private final String serviceName;
@@ -75,8 +71,6 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private final int topIntegrationsCount;
 
     private final NamespacedOpenShiftClient openShiftClient;
-    private final DateFormat dateFormat = //2018-03-14T23:34:09Z
-            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US);
 
     static final Map<String,String> LABELS = CollectionsUtils.immutableMapOf(
         "syndesis.io/app", "syndesis",
@@ -121,27 +115,27 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL, deploymentVersionLabel, Long.class, SUM_LONGS);
         final Map<String, Long> failedMessagesMap = getMetricValues(integrationId, METRIC_FAILED, deploymentVersionLabel, Long.class, SUM_LONGS);
 
-        final Map<String, Date> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
+        final Map<String, Instant> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
 
         // compute last processed time from lastCompleted and lastFailure times
-        final Map<String, Date> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Date.class, MAX_DATE);
-        final Map<String, Date> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
+        final Map<String, Instant> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
+        final Map<String, Instant> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
+        final Map<String, Instant> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, MAX_DATE));
 
-        final Optional<Date> startTime = getAggregateMetricValue(integrationId, METRIC_START_TIMESTAMP, Date.class, "min");
+        final Optional<Instant> startTime = getAggregateMetricValue(integrationId, METRIC_START_TIMESTAMP, Instant.class, "min");
 
-        final Optional<Date> lastCompletedTime = getAggregateMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
-        final Optional<Date> lastFailureTime = getAggregateMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Date.class, "max");
-        final Date lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
+        final Optional<Instant> lastFailureTime = getAggregateMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
+        final Instant lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
             startTimeMap, lastProcessedTimeMap, startTime, Optional.ofNullable(lastProcessedTime));
     }
 
-    private IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap, Map<String, Long> failedMessagesMap,
-                                                                      Map<String, Date> startTimeMap, Map<String, Date> lastProcessingTimeMap,
-                                                                      Optional<Date> startTime, Optional<Date> lastProcessedTime) {
+    private static IntegrationMetricsSummary createIntegrationMetricsSummary(Map<String, Long> totalMessagesMap, Map<String, Long> failedMessagesMap,
+                                                                      Map<String, Instant> startTimeMap, Map<String, Instant> lastProcessingTimeMap,
+                                                                      Optional<Instant> startTime, Optional<Instant> lastProcessedTime) {
 
         final long[] totalMessages = {0L};
         final long[] totalErrors = {0L};
@@ -151,8 +145,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             final Long messages = entry.getValue();
 
             final Long errors = failedMessagesMap.get(version);
-            final Optional<Date> start = Optional.ofNullable(startTimeMap.get(version));
-            final Optional<Date> lastProcessed = Optional.ofNullable(lastProcessingTimeMap.get(version));
+            final Optional<Instant> start = Optional.ofNullable(startTimeMap.get(version));
+            final Optional<Instant> lastProcessed = Optional.ofNullable(lastProcessingTimeMap.get(version));
 
             // aggregate values while we are at it
             totalMessages[0] = SUM_LONGS.apply(totalMessages[0], messages);
@@ -164,7 +158,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .errors(errors)
                 .start(start)
                 .lastProcessed(lastProcessed)
-                .uptimeDuration(start.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
+                .uptimeDuration(start.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
                 .build();
         }).sorted(Comparator.comparing(IntegrationDeploymentMetrics::getVersion)).collect(Collectors.toList());
 
@@ -173,7 +167,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .integrationDeploymentMetrics(deploymentMetrics)
                 .start(startTime)
                 .lastProcessed(lastProcessedTime)
-                .uptimeDuration(startTime.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
+                .uptimeDuration(startTime.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
                 .messages(totalMessages[0])
                 .errors(totalErrors[0])
                 .build();
@@ -184,36 +178,32 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         final Optional<Long> totalMessages = getSummaryMetricValue(METRIC_TOTAL, Long.class, "sum");
         final Optional<Long> failedMessages = getSummaryMetricValue(METRIC_FAILED, Long.class, "sum");
 
-         try {
-             final List<Pod> serverList = openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems();
-             final Optional<Date> startTime;
-             if (!serverList.isEmpty()) {
-                 startTime = Optional.of(dateFormat.parse(serverList.get(0).getStatus().getStartTime()));
-             } else {
-                 if (LOG.isWarnEnabled()) {
-                     LOG.warn("Missing syndesis-server pod in lookup with selector " + LABELS);
-                 }
-                 startTime = Optional.empty();
-             }
+        final List<Pod> serverList = openShiftClient.pods().withLabelSelector(SELECTOR).list().getItems();
+        final Optional<Instant> startTime;
+        if (!serverList.isEmpty()) {
+            startTime = Optional.of(Instant.parse(serverList.get(0).getStatus().getStartTime()));
+        } else {
+            if (LOG.isWarnEnabled()) {
+                LOG.warn("Missing syndesis-server pod in lookup with selector " + LABELS);
+            }
+            startTime = Optional.empty();
+        }
 
-            // compute last processed time
-            final Optional<Date> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Date.class, "max");
-            final Optional<Date> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Date.class, "max");
-            final Optional<Date> lastProcessedTime = Optional.ofNullable(MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
+        // compute last processed time
+        final Optional<Instant> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
+        final Optional<Instant> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
+        final Optional<Instant> lastProcessedTime = Optional.ofNullable(MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
 
-            // get top 5 integrations by total messages
-            return new IntegrationMetricsSummary.Builder()
-                .metricsProvider("prometheus")
-                .start(startTime)
-                .lastProcessed(lastProcessedTime)
-                .uptimeDuration(startTime.map(date -> System.currentTimeMillis() - date.getTime()).orElse(0L))
-                .messages(totalMessages.orElse(0L))
-                .errors(failedMessages.orElse(0L))
-                .topIntegrations(getTopIntegrations())
-                .build();
-         } catch (ParseException e) {
-             throw new SyndesisServerException(e.getMessage(),e);
-         }
+        // get top 5 integrations by total messages
+        return new IntegrationMetricsSummary.Builder()
+            .metricsProvider("prometheus")
+            .start(startTime)
+            .lastProcessed(lastProcessedTime)
+            .uptimeDuration(startTime.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
+            .messages(totalMessages.orElse(0L))
+            .errors(failedMessages.orElse(0L))
+            .topIntegrations(getTopIntegrations())
+            .build();
     }
 
     private <T> Map<String, T> getMetricValues(String integrationId, String metric, String label, Class<? extends T> clazz, BinaryOperator<T> mergeFunction) {
@@ -244,8 +234,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return QueryResult.getFirstValue(response, clazz);
     }
 
-    @SuppressWarnings("unchecked")
-    private <T> Map<String, Long> getTopIntegrations() {
+    private Map<String, Long> getTopIntegrations() {
         HttpQuery queryTotalMessages = new HttpQuery.Builder().createFrom(createInstantHttpQuery(METRIC_TOTAL, OPERATOR_TOPK))
                 .addAggregationOperatorParameters(Integer.toString(topIntegrationsCount))
                 .addByLabels(integrationIdLabel)
