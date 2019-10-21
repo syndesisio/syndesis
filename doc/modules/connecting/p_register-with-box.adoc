@@ -1,0 +1,51 @@
+// This module is included in the following assemblies:
+// as_connecting-to_box.adoc
+
+[id='register-with-box_{context}']
+= Registering {prodname} as a Box client
+
+You must register your {prodname} environment as a client application
+that can access Box.
+This lets you create any number of integrations that connect
+to Box. In other words, you need to register a particular
+{prodname} environment with Box only once.
+
+In each {prodname} environment, there can be only one registration
+of {prodname} as a Box client application. However, while each Box 
+connection uses the same registration, it can use different user
+credentials. 
+
+.Prerequisites
+
+* You have a Box developer account, which you can obtain at 
+link:https://app.box.com/developers/console[].
+
+.Procedure
+
+. In {prodname}:
+.. In the left panel, click *Settings*.
+.. On the *Settings* page, near the top, to the right of the callback URL, 
+click 
+image:images/tutorials/CopyCallback.png[Copy Callback URL] to 
+copy the callback URL for your {prodname} environment to the clipboard. 
+You will need this URL toward the end of this procedure. 
+. In another browser tab, go to the Box developer portal at 
+link:https://app.box.com/developers/console[]
+and do the following:
+.. Sign in.
+.. Click *Create New App*.
+.. Click *Custom App* and then *Next*. 
+.. For *Authentication Method*, click *Standard OAuth 2.0 (User Authentication)* 
+and then *Next*. 
+.. Enter an app name, for example, *{prodname} Client* and click *Create App*. 
+.. Click *View Your App*. 
+.. Optional. In the *OAuth 2.0 Credentials* section, copy the client
+ID and the client secret to a safe location. These values are 
+needed to create a connection to Box. 
+.. Click *Save Changes*. 
+ 
+.Result 
+
+Your {prodname} environment is now registered as a Box client, which 
+means that {prodname} can access content in the Box account that
+you signed into.

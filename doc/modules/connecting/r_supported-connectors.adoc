@@ -29,6 +29,10 @@ a Red Hat AMQ (Apache ActiveMQ) broker.
 |Obtain messages from an Advanced Message Queue Protocol broker or
 publish messages to an AMQP broker.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-box_connectors[Box]
+|Download files from Box or upload files to Box.
+
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
 |Download files from Dropbox or upload files to Dropbox.
 

@@ -1,0 +1,44 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-box_{context}']
+= Connecting to Box
+:context: box
+
+In an integration, you can download files from Box or upload files
+to Box. 
+
+A connection to Box cannot start a simple integration. In other words, 
+you cannot use a Box connection to trigger integration execution. 
+
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Connecting to Box is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+
+The following topics provide the details:
+
+* xref:register-with-box_{context}[]
+* xref:creating-box-connections_{context}[]
+* xref:adding-box-connection-middle_{context}[]
+* xref:adding-box-connection-finish_{context}[]
+
+include::../../modules/connecting/p_register-with-box.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_creating-box-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-box-connection-middle.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-box-connection-finish.adoc[leveloffset=+1]
+
+:context: connectors
