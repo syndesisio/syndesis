@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.metrics.jsondb;
 
-import java.util.Date;
+import java.time.Instant;
 import java.util.Optional;
 
 import org.immutables.value.Value;
@@ -27,17 +27,23 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @SuppressWarnings("immutables")
 public interface RawMetrics {
 
-    String getIntegrationId();
-    String getVersion();
-    String getPod();
-
-    Long getMessages();
-    Long getErrors();
-    Optional<Date> getStartDate();
-    Optional<Date> getResetDate();
-    Optional<Date> getLastProcessed();
-
     class Builder extends ImmutableRawMetrics.Builder {
         // allow access to ImmutableRawMetrics.Builder
     }
+
+    Long getErrors();
+
+    String getIntegrationId();
+
+    Optional<Instant> getLastProcessed();
+
+    Long getMessages();
+
+    String getPod();
+
+    Optional<Instant> getResetDate();
+
+    Optional<Instant> getStartDate();
+
+    String getVersion();
 }

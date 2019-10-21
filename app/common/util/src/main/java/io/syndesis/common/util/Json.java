@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * JSON helper class.
@@ -41,7 +42,7 @@ public final class Json {
 
     static {
         OBJECT_MAPPER = new ObjectMapper()
-            .registerModules(new Jdk8Module())
+            .registerModules(new Jdk8Module(), new JavaTimeModule())
             // keep using the deprecated method here in order to align with the jackson version (2.8.11) being used at integration runtime
             .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)

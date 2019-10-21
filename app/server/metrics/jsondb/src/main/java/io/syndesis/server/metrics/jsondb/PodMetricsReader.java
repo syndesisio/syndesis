@@ -22,6 +22,7 @@ import io.syndesis.common.util.SyndesisServerException;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.jolokia.client.J4pClient;
 import org.jolokia.client.J4pClientBuilder;
+import org.jolokia.client.exception.J4pException;
 import org.jolokia.client.request.J4pReadRequest;
 import org.jolokia.client.request.J4pReadResponse;
 import org.jolokia.client.request.J4pSearchRequest;
@@ -29,22 +30,20 @@ import org.jolokia.client.request.J4pSearchResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-@SuppressWarnings("PMD") // uff
 public class PodMetricsReader implements Runnable {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PodMetricsReader.class);
@@ -67,7 +66,6 @@ public class PodMetricsReader implements Runnable {
     private final RawMetricsHandler handler;
 
     private final Map<String, ObjectName> cache = new HashMap<>();
-    private final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public PodMetricsReader(KubernetesClient kubernetes, String pod, String integration, String integrationId, String version,
             RawMetricsHandler handler) {
@@ -90,16 +88,16 @@ public class PodMetricsReader implements Runnable {
 
                     long messages = toLong(m.getOrDefault(EXCHANGES_TOTAL, "0"));
                     long errors = toLong(m.getOrDefault(EXCHANGES_FAILED, "0"));
-                    Date lastCompleted = toDate(m.get(LAST_COMPLETED_TIMESTAMP));
-                    Date lastFailed = toDate(m.get(LAST_FAILED_TIMESTAMP));
-                    Date lastMessage =
+                    Instant lastCompleted = toInstant(m.get(LAST_COMPLETED_TIMESTAMP));
+                    Instant lastFailed = toInstant(m.get(LAST_FAILED_TIMESTAMP));
+                    Instant lastMessage =
                             (lastCompleted == null && lastFailed != null) ||
-                            (lastCompleted != null && lastFailed != null && lastFailed.after(lastCompleted))
+                            (lastCompleted != null && lastFailed != null && lastFailed.isAfter(lastCompleted))
                         ? lastFailed
                         : lastCompleted;
 
-                    Date resetDate = toDate(m.get(RESET_TIMESTAMP));
-                    Date startDate = toDate(m.get(START_TIMESTAMP));
+                    Instant resetDate = toInstant(m.get(RESET_TIMESTAMP));
+                    Instant startDate = toInstant(m.get(START_TIMESTAMP));
 
 
                     handler.persist(new RawMetrics.Builder()
@@ -115,13 +113,14 @@ public class PodMetricsReader implements Runnable {
                 }
             );
 
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (MalformedObjectNameException | J4pException e) {
             LOGGER.error("Collecting stats from integrationId: {}", integrationId);
+            LOGGER.debug("Collecting stats from integrationId: {}", integrationId, e);
         }
     }
 
 
-    private Long toLong(String s) {
+    private static Long toLong(String s) {
         if (s == null) {
             return 0L;
         }
@@ -132,15 +131,12 @@ public class PodMetricsReader implements Runnable {
         }
     }
 
-    private Date toDate(String s) {
+    private static Instant toInstant(String s) {
         if (s == null) {
             return null;
         }
-        try {
-            return DATE_FORMAT.parse(s);
-        } catch (ParseException e) {
-            return null;
-        }
+
+        return Instant.parse(s);
     }
 
 
@@ -148,8 +144,10 @@ public class PodMetricsReader implements Runnable {
      * Code borrowed from the DefaultCamelController: https://github.com/apache/camel/blob/master/platforms/commands/commands-jolokia/src/main/java/org/apache/camel/commands/jolokia/DefaultJolokiaCamelController.java
      * Slight modifications have been applied.
      * Credits to: Claus & Tomo
+     * @throws J4pException
+     * @throws MalformedObjectNameException
      */
-    private ObjectName lookupCamelContext(String camelContextName) throws Exception {
+    private ObjectName lookupCamelContext(String camelContextName) throws MalformedObjectNameException, J4pException {
         ObjectName on = cache.get(camelContextName);
         if (on == null) {
             ObjectName found = null;
@@ -172,7 +170,7 @@ public class PodMetricsReader implements Runnable {
         return on;
     }
 
-    public List<Map<String, String>> getRoutes(String camelContextName, String filter) throws Exception {
+    public List<Map<String, String>> getRoutes(String camelContextName, String filter) throws MalformedObjectNameException, J4pException {
         if (jolokia == null) {
             throw new IllegalStateException("Need to connect to remote jolokia first");
         }
