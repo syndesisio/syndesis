@@ -35,6 +35,7 @@ release::usage() {
     --log <log-file>          Write full log to <log-file>, only print progress to screen
     --skip-tests              Do not run tests
     --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
+-q  --quiet                   Adds quiet option to Maven options - only show errors
 EOT
 }
 
@@ -393,7 +394,11 @@ drop_staging_repo() {
 # Helper
 
 extract_maven_opts() {
-    local maven_opts="-Dmaven.repo.local=$1 --batch-mode -q -V -e"
+    local maven_opts="-Dmaven.repo.local=$1 --batch-mode -V -e"
+
+    if [ $(hasflag --quiet -q) ]; then
+        maven_opts="$maven_opts -q"
+    fi
 
     local settings_xml=$(readopt --settings-xml --settings)
     if [ -n "${settings_xml}" ]; then
