@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.state;
 
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,12 +34,13 @@ import javax.ws.rs.core.NewCookie;
 
 import io.syndesis.common.util.immutable.ImmutablesStyle;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import org.immutables.value.Value.Immutable;
 import org.junit.Test;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class ClientSideStateTest {
 
@@ -87,10 +89,11 @@ public class ClientSideStateTest {
         String getString();
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldComplainAboutStalePickles() {
+        final long time = ClientSideState.currentTimestmpUtc() - ClientSideState.DEFAULT_TIMEOUT - 100;
         final ClientSideState clientSideStateOld = new ClientSideState(RFC_EDITION,
-            () -> ClientSideState.currentTimestmpUtc() - ClientSideState.DEFAULT_TIMEOUT - 100,
+            () -> time,
             ClientSideState.DEFAULT_TIMEOUT);
 
         final ClientSideState clientSideStateCurrent = new ClientSideState(RFC_EDITION,
@@ -98,17 +101,19 @@ public class ClientSideStateTest {
 
         final NewCookie persisted = clientSideStateOld.persist("key", "/path", "value");
 
-        clientSideStateCurrent.restoreFrom(persisted, String.class);
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> clientSideStateCurrent.restoreFrom(persisted, String.class))
+            .withMessage("Given value has timed out at: " + Instant.ofEpochSecond(time));
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void shouldComplainAboutTidMismatch() {
         final ClientSideState clientSideState1 = new ClientSideState(RFC_EDITION);
         final ClientSideState clientSideState2 = new ClientSideState(withCustomTid(new byte[] {2}));
 
         final NewCookie persisted = clientSideState1.persist("key", "/path", "value");
 
-        clientSideState2.restoreFrom(persisted, String.class);
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> clientSideState2.restoreFrom(persisted, String.class))
+            .withMessage("Given TID `746964`, mismatches current TID `2`");
     }
 
     @Test

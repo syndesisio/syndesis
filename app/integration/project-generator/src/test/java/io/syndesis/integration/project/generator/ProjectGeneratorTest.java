@@ -16,6 +16,7 @@
 package io.syndesis.integration.project.generator;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.entry;
 import static org.awaitility.Awaitility.await;
 import static org.junit.Assert.assertEquals;
@@ -335,7 +336,7 @@ public class ProjectGeneratorTest {
         );
     }
 
-    @Test(expected = UnsupportedOperationException.class)
+    @Test
     public void testGenerateApplicationPropertiesOldStyle() throws IOException {
 
         // ******************
@@ -391,7 +392,9 @@ public class ProjectGeneratorTest {
             .createFrom(resourceManager.newIntegration(s1))
             .putConfiguredProperty("integration", "property")
             .build();
-        generator.generateApplicationProperties(integration);
+
+        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() ->  generator.generateApplicationProperties(integration))
+            .withMessage("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
     }
 
 
@@ -582,14 +585,6 @@ public class ProjectGeneratorTest {
         assertThat(errors).isEmpty();
     }
 
-    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        Path destination = testFolder.newFolder("integration-project").toPath();
-
-        generate(destination, integration, generatorConfiguration, resourceManager);
-
-        return destination;
-    }
-
     private void assertFileContents(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
@@ -642,9 +637,13 @@ public class ProjectGeneratorTest {
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
 
-    // ***************************
-    // Tests
-    // ***************************
+    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+        Path destination = testFolder.newFolder("integration-project").toPath();
+
+        generate(destination, integration, generatorConfiguration, resourceManager);
+
+        return destination;
+    }
 
     private void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,TestConstants.MAVEN_PROPERTIES);

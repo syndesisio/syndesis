@@ -18,7 +18,7 @@ package io.syndesis.server.jsondb.impl;
 
 import static io.syndesis.common.util.Resources.getResourceAsText;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -48,10 +48,10 @@ import io.syndesis.server.jsondb.JsonDBException;
 public class JsonDBTest {
 
     private SqlJsonDB jsondb;
-    private ObjectMapper mapper = new ObjectMapper()
+    private final ObjectMapper mapper = new ObjectMapper()
         .setSerializationInclusion(JsonInclude.Include.ALWAYS);
 
-    private GetOptions prettyPrint = new GetOptions().prettyPrint(true);
+    private final GetOptions prettyPrint = new GetOptions().prettyPrint(true);
 
     @Before
     public void before() {
@@ -78,25 +78,15 @@ public class JsonDBTest {
     public void testInvalidKeys() throws IOException {
 
         for (String s : Arrays.asList("[", "]", ".", "%", "$", "#", "\n")) {
-            try {
-                jsondb.set("/test"+s, mapper.writeValueAsString(map(
-                    "key", "Hiram Chirino"
-                )));
-                fail("Excpected JsonDBException");
-            } catch (JsonDBException e) {
-                assertThat(e.getMessage()).startsWith("Invalid key.");
-            }
+            assertThatExceptionOfType(JsonDBException.class).isThrownBy(() -> jsondb.set("/test" + s, mapper.writeValueAsString(map(
+                "key", "Hiram Chirino"))))
+                .withMessageStartingWith("Invalid key.");
         }
 
         for (String s : Arrays.asList("[", "]", ".", "%", "$", "#", "/", "\n")) {
-            try {
-                jsondb.set("/test", mapper.writeValueAsString(map(
-                    "bad"+s+"key", "Hiram Chirino"
-                )));
-                fail("Excpected JsonDBException");
-            } catch (JsonDBException e) {
-                assertThat(e.getMessage()).startsWith("Invalid key.");
-            }
+            assertThatExceptionOfType(JsonDBException.class).isThrownBy(() -> jsondb.set("/test", mapper.writeValueAsString(map(
+                "bad" + s + "key", "Hiram Chirino"))))
+                .withMessageStartingWith("Invalid key.");
         }
 
     }

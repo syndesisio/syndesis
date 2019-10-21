@@ -17,32 +17,38 @@ package io.syndesis.server.runtime;
 
 import javax.persistence.EntityExistsException;
 
-import org.junit.Test;
-
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.Connection;
 
+import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+
 public class DataManagerITCase extends BaseITCase {
 
-    @Test(expected=EntityExistsException.class)
+    @Test
     public void createDuplicateConnection() {
-        ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        Connection c = connections.getItems().get(0);
-        Connection connection = new Connection.Builder()
-                .id(c.getId())
-                .name(c.getName())
-                .build();
-        dataManager.create(connection);
+        final ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
+        final Connection c = connections.getItems().get(0);
+        final Connection connection = new Connection.Builder()
+            .id(c.getId())
+            .name(c.getName())
+            .build();
+
+        assertThatExceptionOfType(EntityExistsException.class).isThrownBy(() -> dataManager.create(connection))
+            .withMessage("There already exists a connection with id 5");
     }
 
-    @Test(expected=EntityExistsException.class)
+    @Test
     public void createDuplicateName() {
-        ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
-        Connection c = connections.getItems().get(0);
-        Connection connection = new Connection.Builder()
-                .name(c.getName())
-                .build();
-        dataManager.create(connection);
+        final ListResult<Connection> connections = dataManager.fetchAll(Connection.class);
+        final Connection c = connections.getItems().get(0);
+        final Connection connection = new Connection.Builder()
+            .name(c.getName())
+            .build();
+
+        assertThatExceptionOfType(EntityExistsException.class).isThrownBy(() -> dataManager.create(connection))
+            .withMessage("There already exists a Connection with name PostgresDB");
     }
 
 }

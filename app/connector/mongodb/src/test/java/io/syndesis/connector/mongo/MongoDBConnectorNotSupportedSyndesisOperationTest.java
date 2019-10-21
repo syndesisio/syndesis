@@ -16,8 +16,12 @@
 package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
-import org.junit.Before;
+
+import org.apache.camel.CamelExecutionException;
+import org.apache.camel.component.mongodb3.CamelMongoDbException;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 import java.util.List;
 
@@ -33,10 +37,11 @@ public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBCo
     // Tests
     // **************************
 
-    @Test(expected = Exception.class)
+    @Test
     public void mongoTest() {
-        template().sendBody("direct:start","Anything....");
-        fail("Aggregate operation is not allowed, should thrown an exception!");
+        assertThatExceptionOfType(CamelExecutionException.class).isThrownBy(() -> template().sendBody("direct:start","Anything...."))
+            .withMessageContaining("Exception occurred during execution on the exchange")
+            .withCause(new CamelMongoDbException("Invalid payload for aggregate"));
     }
 
 }

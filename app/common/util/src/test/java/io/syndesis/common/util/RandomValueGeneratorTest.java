@@ -15,12 +15,13 @@
  */
 package io.syndesis.common.util;
 
-import org.junit.Test;
-
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 /**
  * Unit tests for RandomValueGenerator
@@ -28,26 +29,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RandomValueGeneratorTest {
 
     @Test
+    public void testNegativeValue() {
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> RandomValueGenerator.generate("alphanum:-1"))
+            .withMessage("Cannot generate a string of negative length");
+    }
+
+    @Test
     public void testPatternRespectedWithDefault() {
-        for (int i=0; i<20; i++) {
-            String value = RandomValueGenerator.generate("alphanum");
+        for (int i = 0; i < 20; i++) {
+            final String value = RandomValueGenerator.generate("alphanum");
             assertThat(value).matches("[A-Za-z0-9]{40}");
         }
     }
 
     @Test
     public void testPatternRespectedWithLength() {
-        for (int i=0; i<20; i++) {
-            String value = RandomValueGenerator.generate("alphanum:12");
+        for (int i = 0; i < 20; i++) {
+            final String value = RandomValueGenerator.generate("alphanum:12");
             assertThat(value).matches("[A-Za-z0-9]{12}");
         }
     }
 
     @Test
     public void testTrueRandom() {
-        Set<String> gen = new HashSet<>();
-        for (int i=0; i<20; i++) {
-            String value = RandomValueGenerator.generate("alphanum:80");
+        final Set<String> gen = new HashSet<>();
+        for (int i = 0; i < 20; i++) {
+            final String value = RandomValueGenerator.generate("alphanum:80");
             assertThat(value).matches("[A-Za-z0-9]{80}");
             gen.add(value);
         }
@@ -56,24 +63,21 @@ public class RandomValueGeneratorTest {
     }
 
     @Test
-    public void testZeroValue() {
-        String value = RandomValueGenerator.generate("alphanum:0");
-        assertThat(value).isEqualTo("");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
     public void testUnknownGenerator() {
-        RandomValueGenerator.generate("alphanumx");
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> RandomValueGenerator.generate("alphanumx"))
+            .withMessage("Unsupported generator scheme: alphanumx");
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testWrongValueType() {
-        RandomValueGenerator.generate("alphanum:aa");
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> RandomValueGenerator.generate("alphanum:aa"))
+            .withMessage("Unexpected string after the alphanum scheme: expected length");
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNegativeValue() {
-        RandomValueGenerator.generate("alphanum:-1");
+    @Test
+    public void testZeroValue() {
+        final String value = RandomValueGenerator.generate("alphanum:0");
+        assertThat(value).isEqualTo("");
     }
 
 }

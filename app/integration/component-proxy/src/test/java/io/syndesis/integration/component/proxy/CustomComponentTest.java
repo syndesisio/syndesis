@@ -15,43 +15,53 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import com.acme.corp.AcmeComponent;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.CollectionHelper;
 import org.junit.Test;
 
+import com.acme.corp.AcmeComponent;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 
 public class CustomComponentTest {
-    @Test(expected = IllegalArgumentException.class)
+
+    @Test
     public void testCustomComponent() {
-        new ComponentProxyComponent("acme-1", "acme");
-    }
-
-    @Test
-    public void testCustomComponentWithClass() {
-        new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class);
-    }
-
-    @Test
-    public void testCustomComponentWithClassName() {
-        new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class.getName());
+        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> new ComponentProxyComponent("acme-1", "acme"))
+            .withMessage(
+                "Failed to find component definition for scheme 'acme'. Missing component definition in classpath 'org/apache/camel/catalog/components/acme.json'");
     }
 
     @Test
     public void testCustomComponentEndpoint() throws Exception {
-        CamelContext context = new DefaultCamelContext();
+        final CamelContext context = new DefaultCamelContext();
 
-        ComponentProxyComponent component = new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class);
+        final ComponentProxyComponent component = new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class);
         component.setCamelContext(context);
         component.setOptions(CollectionHelper.mapOf("name", "test", "param", "p1"));
         component.start();
 
-        Endpoint endpoint = component.createEndpoint("acme");
+        final Endpoint endpoint = component.createEndpoint("acme");
 
         assertThat(endpoint).isInstanceOf(ComponentProxyEndpoint.class);
         assertThat(endpoint).hasFieldOrPropertyWithValue("delegateEndpointUri", "acme://test?param=p1");
     }
+
+    @Test
+    public void testCustomComponentWithClass() {
+        final ComponentProxyComponent proxyComponent = new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class);
+        assertThat(proxyComponent.getComponentId()).isEqualTo("acme-1");
+        assertThat(proxyComponent.getComponentScheme()).isEqualTo("acme");
+    }
+
+    @Test
+    public void testCustomComponentWithClassName() {
+        final ComponentProxyComponent proxyComponent = new ComponentProxyComponent("acme-1", "acme", AcmeComponent.class.getName());
+        assertThat(proxyComponent.getComponentId()).isEqualTo("acme-1");
+        assertThat(proxyComponent.getComponentScheme()).isEqualTo("acme");
+    }
+
 }

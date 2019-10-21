@@ -25,9 +25,9 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.util.ObjectHelper;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 public class ActivityLoggingTest extends AbstractActivityLoggingTest {
 
@@ -93,12 +93,9 @@ public class ActivityLoggingTest extends AbstractActivityLoggingTest {
 
     @Test
     public void testLoggingWithErrorStep() {
-        try {
-            context.createProducerTemplate().sendBody("direct:start", "Hello Error");
-            fail("Expected exception");
-        } catch (CamelExecutionException e) {
-            // expected.
-        }
+        assertThatExceptionOfType(CamelExecutionException.class).isThrownBy(() -> context.createProducerTemplate().sendBody("direct:start", "Hello Error"))
+            .withMessageStartingWith("Exception occurred during execution on the exchange: Exchange")
+            .withCause(new RuntimeException("Bean Error"));
 
         // There should be 1 exchanges logged
         assertEquals(1, findExchangesLogged().size());
