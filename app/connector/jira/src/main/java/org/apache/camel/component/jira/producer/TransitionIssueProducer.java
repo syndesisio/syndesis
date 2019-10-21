@@ -39,12 +39,12 @@ public class TransitionIssueProducer extends DefaultProducer {
     @SuppressWarnings("FutureReturnValueIgnored")
     public void process(Exchange exchange) {
         String issueKey = exchange.getIn().getHeader(ISSUE_KEY, String.class);
-        String commentStr = exchange.getIn().getBody(String.class);
-        // the list of transitions is available in /rest/api/2/issue/{issueIdOrKey}/transitions
-        Integer transitionId = exchange.getIn().getHeader(ISSUE_TRANSITION_ID, Integer.class);
         if (issueKey == null) {
             throw new IllegalArgumentException("Missing exchange input header named \'IssueKey\', it should specify the issue key to add the comment to.");
         }
+
+        // the list of transitions is available in /rest/api/2/issue/{issueIdOrKey}/transitions
+        Integer transitionId = exchange.getIn().getHeader(ISSUE_TRANSITION_ID, Integer.class);
         if (transitionId == null) {
             throw new IllegalArgumentException("Missing exchange input header named \'IssueTransitionId\', it should specify the transition id.");
         }
@@ -53,6 +53,8 @@ public class TransitionIssueProducer extends DefaultProducer {
         Issue issue = issueClient.getIssue(issueKey).claim();
         TransitionInput transitionInput = new TransitionInput(transitionId);
         issueClient.transition(issue, transitionInput);
+
+        String commentStr = exchange.getIn().getBody(String.class);
         // add a comment in an additional operation as using the TransitionInput doesn't add the comment.
         if (commentStr != null) {
             URI commentsUri = issue.getCommentsUri();

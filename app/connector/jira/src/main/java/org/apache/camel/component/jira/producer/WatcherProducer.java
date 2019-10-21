@@ -24,8 +24,11 @@ import com.atlassian.jira.rest.client.api.domain.Issue;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.jira.JiraEndpoint;
 import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.util.ObjectHelper;
 
-import static org.apache.camel.component.jira.JiraConstants.*;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_KEY;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_WATCHERS_ADD;
+import static org.apache.camel.component.jira.JiraConstants.ISSUE_WATCHERS_REMOVE;
 
 public class WatcherProducer extends DefaultProducer {
 
@@ -37,14 +40,15 @@ public class WatcherProducer extends DefaultProducer {
     @SuppressWarnings("FutureReturnValueIgnored")
     public void process(Exchange exchange) {
         String issueKey = exchange.getIn().getHeader(ISSUE_KEY, String.class);
-        List<?> watchersAdd = exchange.getIn().getHeader(ISSUE_WATCHERS_ADD, List.class);
-        List<?> watchersRemove = exchange.getIn().getHeader(ISSUE_WATCHERS_REMOVE, List.class);
         if (issueKey == null) {
             throw new IllegalArgumentException("Missing exchange input header named \'IssueKey\', it should specify the issue key to add/remove watchers to.");
         }
+
+        List<?> watchersAdd = exchange.getIn().getHeader(ISSUE_WATCHERS_ADD, List.class);
+        List<?> watchersRemove = exchange.getIn().getHeader(ISSUE_WATCHERS_REMOVE, List.class);
         JiraRestClient client = ((JiraEndpoint) getEndpoint()).getClient();
-        boolean hasWatchersToAdd = watchersAdd != null && watchersAdd.size() > 0;
-        boolean hasWatchersToRemove = watchersRemove != null && watchersRemove.size() > 0;
+        boolean hasWatchersToAdd = ObjectHelper.isNotEmpty(watchersAdd);
+        boolean hasWatchersToRemove = ObjectHelper.isNotEmpty(watchersRemove);
         if (hasWatchersToAdd || hasWatchersToRemove) {
             IssueRestClient issueClient = client.getIssueClient();
             Issue issue = issueClient.getIssue(issueKey).claim();

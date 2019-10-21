@@ -16,6 +16,7 @@
 package org.apache.camel.component.jira;
 
 import java.net.URI;
+import java.util.Locale;
 
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClientFactory;
@@ -140,7 +141,7 @@ public class JiraEndpoint extends DefaultEndpoint {
     @Override
     public Consumer createConsumer(Processor processor) {
         if (type == JiraType.NEWCOMMENT || type == JiraType.NEWISSUE) {
-            String deprecatedType = type.name().toLowerCase();
+            String deprecatedType = type.name().toLowerCase(Locale.ENGLISH);
             LOG.warn("Jira endpoint type \"{}\" is deprecated. Use {}s instead.", deprecatedType, deprecatedType);
         }
         if (type == JiraType.NEWCOMMENTS || type == JiraType.NEWCOMMENT) {
