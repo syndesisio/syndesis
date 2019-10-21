@@ -152,6 +152,8 @@ minishift::run() {
           check_error "$result"
         fi
 
+        wait_for_deployments 1 syndesis-operator
+
         # Relogin with original user
         echo "Switching to project \"$project\""
         oc project $project >/dev/null 2>&1
@@ -166,25 +168,20 @@ minishift::run() {
                 result=$($OPERATOR_BINARY install app)
             else
                 result=$($OPERATOR_BINARY install app --dev)
+                echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
             fi
             check_error "$result"
         fi
 
-        wait_for_deployments 1 syndesis-operator
-
-        if [ $(hasflag --nodev) ] ; then
-            # Wait until everything's up and finally patch image streams for triggers
-            wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
-            patch_imagestreams_for_initial_image
-        else
-            echo "Install finished."
-            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
-        fi
-
+        echo "Install finished."
     fi
 
     if [ $(hasflag --open -o) ]; then
-        open_url "$(minishift openshift service syndesis-oauthproxy --url)"
+        while ! (oc get routes | grep syndesis >/dev/null 2>&1); do
+            echo "Sleeping 5s ..."
+            sleep 5
+        done
+        open_url "https://$(oc get routes syndesis --template "{{.spec.host}}")"
     fi
 
     if [ $(hasflag --deploy-latest) ]; then
