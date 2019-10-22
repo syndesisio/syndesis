@@ -45,7 +45,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     // This is the schema supported by current jackson API for {@link ObjectSchema}
     private static final String JSON_SCHEMA_URI = "http://json-schema.org/draft-03/schema#";
 
-    private JsonSchemaFactory factory = new JsonSchemaFactory();
+    private final JsonSchemaFactory factory = new JsonSchemaFactory();
 
     @Override
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
@@ -88,7 +88,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         return SyndesisMetadata.of(enrichedProperties);
     }
 
-    private SyndesisMetadata createSyndesisMetadata(
+    private static SyndesisMetadata createSyndesisMetadata(
                                        Map<String, List<PropertyPair>> enrichedProperties,
                                        DataShape.Builder inDataShapeBuilder,
                                        DataShape.Builder outDataShapeBuilder) {
@@ -96,7 +96,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                                     inDataShapeBuilder.build(), outDataShapeBuilder.build());
     }
 
-    private ObjectSchema createEntitySchema() {
+    private static ObjectSchema createEntitySchema() {
         ObjectSchema entitySchema = new ObjectSchema();
         entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
         entitySchema.set$schema(JSON_SCHEMA_URI);
@@ -113,12 +113,12 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         }
     }
 
-    private boolean isSplit(Map<String, Object> properties) {
+    private static boolean isSplit(Map<String, Object> properties) {
         Object splitProp = ConnectorOptions.extractOption(properties, SPLIT_RESULT);
         return splitProp != null && Boolean.parseBoolean(splitProp.toString());
     }
 
-    private String serializeSpecification(ContainerTypeSchema schema) {
+    private static String serializeSpecification(ContainerTypeSchema schema) {
         try {
             return Json.writer().writeValueAsString(schema);
         } catch (JsonProcessingException e) {
@@ -126,7 +126,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         }
     }
 
-    private void applyEntitySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
+    private static void applyEntitySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
         final String specification = serializeSpecification(schema);
 
         dataShapeBuilder

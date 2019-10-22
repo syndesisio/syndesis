@@ -76,7 +76,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @param dataSources
      * @return
      */
-    private void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+    private static void addJsonTypeSourceProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         List<Map<String, Object>> sourceDocuments = dataSources.stream()
                                             .filter(s -> "SOURCE".equals(s.get("dataSourceType")))
                                             .collect(Collectors.toList());
@@ -99,7 +99,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @param dataSources
      * @return
      */
-    private void addJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
+    private static void addJsonTypeTargetProcessor(ProcessorDefinition<?> route, List<Map<String, Object>> dataSources) {
         boolean isJsonTypeTarget = dataSources.stream()
                 .anyMatch(s -> ATLASMAP_JSON_DATA_SOURCE.equals(s.get("jsonType")) && "TARGET".equals(s.get("dataSourceType")));
 
@@ -114,7 +114,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
      * @return
      */
     @SuppressWarnings("unchecked")
-    private List<Map<String, Object>> getAtlasmapDataSources(Map<String, String> configuredProperties) {
+    private static List<Map<String, Object>> getAtlasmapDataSources(Map<String, String> configuredProperties) {
         List<Map<String, Object>> sources = new ArrayList<>();
 
         try {
@@ -164,7 +164,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
          * Convert list typed message body to Json array String representation.
          * @param message
          */
-        private void convertMessageJsonTypeBody(Exchange exchange, Message message) {
+        private static void convertMessageJsonTypeBody(Exchange exchange, Message message) {
             if (message != null && message.getBody() instanceof List) {
                 List<?> jsonBeans = message.getBody(List.class);
                 message.setBody(JsonUtils.jsonBeansToArray(jsonBeans));

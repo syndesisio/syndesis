@@ -53,7 +53,7 @@ public class MixedTest {
         assertEquals("{\"label\": \"label\", \"value\": \"value\"}", serialize(create(val)), true);
     }
 
-    private Mixed create(final Object... parts) {
+    private static Mixed create(final Object... parts) {
         return new Mixed(parts) {
             // test object
         };

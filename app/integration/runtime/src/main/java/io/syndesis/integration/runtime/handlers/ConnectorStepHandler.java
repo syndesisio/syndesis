@@ -153,7 +153,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
     // Helpers
     // *************************
 
-    private ComponentProxyComponent resolveComponent(String componentId, String componentScheme, CamelContext context, Connector connector, ConnectorDescriptor descriptor) {
+    private static ComponentProxyComponent resolveComponent(String componentId, String componentScheme, CamelContext context, Connector connector, ConnectorDescriptor descriptor) {
         ComponentProxyFactory factory = ComponentProxyComponent::new;
 
         if (descriptor.getConnectorFactory().isPresent()) {
@@ -165,7 +165,7 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         return factory.newInstance(componentId, componentScheme);
     }
 
-    private Optional<ComponentProxyFactory> resolveComponentProxyFactory(CamelContext context, Optional<String> componentProxyFactory) {
+    private static Optional<ComponentProxyFactory> resolveComponentProxyFactory(CamelContext context, Optional<String> componentProxyFactory) {
         ComponentProxyFactory factory = null;
 
         if (componentProxyFactory.isPresent()) {

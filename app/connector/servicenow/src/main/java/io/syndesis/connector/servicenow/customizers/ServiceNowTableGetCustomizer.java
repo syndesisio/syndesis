@@ -57,7 +57,7 @@ public class ServiceNowTableGetCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> properties) {
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(ServiceNowTableGetCustomizer::afterProducer);
     }
 
     //
@@ -92,7 +92,7 @@ public class ServiceNowTableGetCustomizer implements ComponentProxyCustomizer {
         }
     }
 
-    private void afterProducer(final Exchange exchange) {
+    private static void afterProducer(final Exchange exchange) {
         final Message message = exchange.getIn();
         final Object body = message.getBody();
 

@@ -62,11 +62,11 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
     @Override
     public Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-            .error(parameters, this::verifyCredentials)
+            .error(parameters, MongoConnectorVerifierExtension::verifyCredentials)
             .build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         MongoConfiguration mongoConf = new MongoConfiguration(cast(parameters));
         MongoClientOptions.Builder optionsBuilder = MongoClientOptions.builder();
         // Avoid retry and long timeout

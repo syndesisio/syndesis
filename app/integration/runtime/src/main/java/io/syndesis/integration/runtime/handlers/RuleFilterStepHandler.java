@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -55,7 +56,7 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     // Helpers
     // *******************************
 
-    private List<FilterRule> extractRules(String rulesString) {
+    private static List<FilterRule> extractRules(String rulesString) {
         try {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
@@ -66,10 +67,9 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
         }
     }
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
-    private FilterPredicate getPredicate(String predicate) {
+    private static FilterPredicate getPredicate(String predicate) {
         if (predicate != null) {
-            return FilterPredicate.valueOf(predicate.toUpperCase());
+            return FilterPredicate.valueOf(predicate.toUpperCase(Locale.US));
         }
         return FilterPredicate.OR;
     }

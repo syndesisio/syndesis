@@ -78,7 +78,7 @@ public class DriverUploadEndpoint {
         return isDeleted;
     }
 
-    private void storeFile(String location, MultipartFormDataInput dataInput) {
+    private static void storeFile(String location, MultipartFormDataInput dataInput) {
         // Store the artifact into /deployments/ext
         try (InputStream is = getBinaryArtifact(dataInput)) {
             final File file = new File(location);
@@ -90,7 +90,7 @@ public class DriverUploadEndpoint {
         }
     }
 
-    private String getFileName(MultipartFormDataInput input) {
+    private static String getFileName(MultipartFormDataInput input) {
         if (input == null || input.getParts() == null || input.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");
         }
@@ -105,7 +105,7 @@ public class DriverUploadEndpoint {
         }
     }
 
-    private InputStream getBinaryArtifact(MultipartFormDataInput input) {
+    private static InputStream getBinaryArtifact(MultipartFormDataInput input) {
         if (input == null || input.getParts() == null || input.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");
         }

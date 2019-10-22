@@ -605,7 +605,7 @@ public class IntegrationSupportHandler {
                 .collect(Collectors.toSet());
     }
 
-    private String getNextAvailableName(String name, Set<String> names) {
+    private static String getNextAvailableName(String name, Set<String> names) {
         String newName = null;
         for (int i = 1; newName == null; i++) {
             final String candidate = name + IMPORTED_SUFFIX + i;

@@ -18,7 +18,6 @@ package io.syndesis.server.runtime;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
@@ -355,7 +354,7 @@ public class ExtensionsITCase extends BaseITCase {
 
     // ===========================================================
 
-    private byte[] extensionData(final int prg) throws IOException {
+    private static byte[] extensionData(final int prg) throws IOException {
         try (ByteArrayOutputStream data = new ByteArrayOutputStream();
             JarOutputStream jar = new JarOutputStream(data)) {
 
@@ -380,13 +379,13 @@ public class ExtensionsITCase extends BaseITCase {
         }
     }
 
-    private MultiValueMap<String, Object> multipartBody(final byte[] data) {
+    private static MultiValueMap<String, Object> multipartBody(final byte[] data) {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("file", new InputStreamResource(new ByteArrayInputStream(data)));
         return multipartData;
     }
 
-    private HttpHeaders multipartHeaders() {
+    private static HttpHeaders multipartHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return headers;

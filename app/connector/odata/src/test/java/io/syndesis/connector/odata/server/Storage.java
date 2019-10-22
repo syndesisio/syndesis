@@ -38,24 +38,18 @@ import org.assertj.core.util.Arrays;
 
 public class Storage implements ODataServerConstants {
 
-    private static Object storageLock = new Object();
-
-    private static Storage storage;
+    private static class Lazy {
+        private static final Storage INSTANCE = new Storage();
+    }
 
     private List<Entity> productList;
 
     public static Storage getInstance() {
-        synchronized(storageLock) {
-            if (storage == null) {
-                storage = new Storage();
-            }
-        }
-
-        return storage;
+        return Lazy.INSTANCE;
     }
 
     public static void dispose() {
-        storage = null;
+        Lazy.INSTANCE.productList.clear();
     }
 
     private Storage() {
@@ -76,7 +70,7 @@ public class Storage implements ODataServerConstants {
     public EntityCollection readEntitySetData(EdmEntitySet edmEntitySet) throws ODataApplicationException {
 
         // actually, this is only required if we have more than one Entity Sets
-        if (edmEntitySet.getName().equals(ProductsEdmProvider.ES_PRODUCTS_NAME)) {
+        if (edmEntitySet.getName().equals(ODataServerConstants.ES_PRODUCTS_NAME)) {
             return getProducts();
         }
 
@@ -88,7 +82,7 @@ public class Storage implements ODataServerConstants {
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
-        if (edmEntityType.getName().equals(ProductsEdmProvider.ET_PRODUCT_NAME)) {
+        if (edmEntityType.getName().equals(ODataServerConstants.ET_PRODUCT_NAME)) {
             return getProduct(edmEntityType, keyParams);
         }
 
@@ -99,7 +93,7 @@ public class Storage implements ODataServerConstants {
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
-        if (edmEntityType.getName().equals(ProductsEdmProvider.ET_PRODUCT_NAME)) {
+        if (edmEntityType.getName().equals(ODataServerConstants.ET_PRODUCT_NAME)) {
             return createProduct(entityToCreate);
         }
 
@@ -116,7 +110,7 @@ public class Storage implements ODataServerConstants {
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
-        if (edmEntityType.getName().equals(ProductsEdmProvider.ET_PRODUCT_NAME)) {
+        if (edmEntityType.getName().equals(ODataServerConstants.ET_PRODUCT_NAME)) {
             updateProduct(edmEntityType, keyParams, updateEntity, httpMethod);
         }
     }
@@ -125,7 +119,7 @@ public class Storage implements ODataServerConstants {
         EdmEntityType edmEntityType = edmEntitySet.getEntityType();
 
         // actually, this is only required if we have more than one Entity Type
-        if (edmEntityType.getName().equals(ProductsEdmProvider.ET_PRODUCT_NAME)) {
+        if (edmEntityType.getName().equals(ODataServerConstants.ET_PRODUCT_NAME)) {
             deleteProduct(edmEntityType, keyParams);
         }
     }
@@ -159,7 +153,7 @@ public class Storage implements ODataServerConstants {
         return requestedEntity;
     }
 
-    private URI createId(String entitySetName, Object id) {
+    private static URI createId(String entitySetName, Object id) {
         try {
             return new URI(entitySetName + OPEN_BRACKET + String.valueOf(id) + CLOSE_BRACKET);
         } catch (URISyntaxException e) {
@@ -248,7 +242,7 @@ public class Storage implements ODataServerConstants {
 
     /* HELPER */
 
-    private boolean isKey(EdmEntityType edmEntityType, String propertyName) {
+    private static boolean isKey(EdmEntityType edmEntityType, String propertyName) {
         List<EdmKeyPropertyRef> keyPropertyRefs = edmEntityType.getKeyPropertyRefs();
         for (EdmKeyPropertyRef propRef : keyPropertyRefs) {
             String keyPropertyName = propRef.getName();
@@ -259,7 +253,7 @@ public class Storage implements ODataServerConstants {
         return false;
     }
 
-    private ComplexValue createSpec(String productType, String detail1, String detail2, int powerType) {
+    private static ComplexValue createSpec(String productType, String detail1, String detail2, int powerType) {
         ComplexValue complexValue = new ComplexValue();
         List<Property> complexValueValue = complexValue.getValue();
         complexValueValue.add(new Property(
@@ -277,7 +271,7 @@ public class Storage implements ODataServerConstants {
         return complexValue;
     }
 
-    private Entity createEntity(int id, String name, String description, String[] serials, ComplexValue spec) {
+    private static Entity createEntity(int id, String name, String description, String[] serials, ComplexValue spec) {
         Entity e = new Entity()
             .addProperty(new Property(
                                   EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString(),

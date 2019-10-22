@@ -154,7 +154,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
          * will be stored AS the body of the exchange which is then inserted
          * into a mustache map keyed with "body".
          */
-        private void refactorKeys(Map<String, Object> map) {
+        private static void refactorKeys(Map<String, Object> map) {
             ArrayList<String> keys = new ArrayList<String>(map.keySet());
             keys.stream().forEach(key -> {
                 Object value = map.remove(key);
@@ -175,7 +175,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
 
             try {
                 // Map the json body to a Map
-                Map<String, Object> map = (Map<String, Object>) MAPPER.readValue(body.toString(), HashMap.class);
+                Map<String, Object> map = MAPPER.readValue(body.toString(), HashMap.class);
 
                 // Refactor the keys of the map to remove any "body." notation since this
                 // is no longer required during actual exchange processing

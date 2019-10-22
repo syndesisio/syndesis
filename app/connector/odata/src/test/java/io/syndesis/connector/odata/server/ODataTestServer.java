@@ -159,7 +159,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         initServer(sslContext, userName);
     }
 
-    private int extractPort(String property) {
+    private static int extractPort(String property) {
         String portProperty = System.getProperty(property);
         if (portProperty == null) {
             LOG.warn("Server port option requested but no port specified using property {}. "
@@ -224,13 +224,13 @@ public class ODataTestServer extends Server implements ODataConstants {
         return store;
     }
 
-    private KeyManager[] serverKeyManagers(KeyStore store, final char[] password) throws Exception {
+    private static KeyManager[] serverKeyManagers(KeyStore store, final char[] password) throws Exception {
            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
            keyManagerFactory.init(store, password);
            return keyManagerFactory.getKeyManagers();
        }
 
-    private TrustManager[] serverTrustManagers(KeyStore store) throws Exception {
+    private static TrustManager[] serverTrustManagers(KeyStore store) throws Exception {
         TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
         trustManagerFactory.init(store);
         return trustManagerFactory.getTrustManagers();

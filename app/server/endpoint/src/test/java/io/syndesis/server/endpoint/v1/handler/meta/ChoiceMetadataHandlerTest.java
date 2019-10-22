@@ -133,7 +133,7 @@ public class ChoiceMetadataHandlerTest {
         Assert.assertEquals(metadata, enrichedMetadata);
     }
 
-    private DataShape testShape(String name) {
+    private static DataShape testShape(String name) {
         return new DataShape.Builder()
                 .kind(DataShapeKinds.JSON_INSTANCE)
                 .description(name)

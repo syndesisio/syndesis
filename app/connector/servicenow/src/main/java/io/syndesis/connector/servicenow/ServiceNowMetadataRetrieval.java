@@ -81,14 +81,14 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
             }
 
             return super.fetch(context, componentId, actionId, props);
-        } else {
-            Map<String, Object> props = new HashMap<>(properties);
-            props.put("objectType", ServiceNowConstants.RESOURCE_TABLE);
-            props.put("objectName", table);
-            props.put("metaType", "definition");
-
-            return super.fetch(context, componentId, actionId, props);
         }
+
+        Map<String, Object> props = new HashMap<>(properties);
+        props.put("objectType", ServiceNowConstants.RESOURCE_TABLE);
+        props.put("objectName", table);
+        props.put("metaType", "definition");
+
+        return super.fetch(context, componentId, actionId, props);
     }
 
     @Override
@@ -111,7 +111,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
         return SyndesisMetadata.EMPTY;
     }
 
-    private SyndesisMetadata adaptTableDefinitionMetadata(String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
+    private static SyndesisMetadata adaptTableDefinitionMetadata(String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         try {
             final Object table = ConnectorOptions.extractOption(properties, "table");
             final ObjectNode schema = (ObjectNode) metadata.getPayload();
@@ -140,7 +140,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
         return SyndesisMetadata.EMPTY;
     }
 
-    private SyndesisMetadata adaptTableListMetadata(MetaDataExtension.MetaData metadata) {
+    private static SyndesisMetadata adaptTableListMetadata(MetaDataExtension.MetaData metadata) {
         try {
             final JsonNode payload = metadata.getPayload(JsonNode.class);
             final List<PropertyPair> tables = new ArrayList<>();

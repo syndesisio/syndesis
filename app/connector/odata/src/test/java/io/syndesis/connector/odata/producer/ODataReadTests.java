@@ -19,7 +19,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import java.util.Map;
-import org.apache.camel.Endpoint;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
@@ -105,7 +104,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
         return odataAction;
     }
 
-    private Step createDirectStep() {
+    private static Step createDirectStep() {
         Step directStep = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(new ConnectorAction.Builder()

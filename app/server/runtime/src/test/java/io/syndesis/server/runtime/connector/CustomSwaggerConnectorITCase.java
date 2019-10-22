@@ -114,7 +114,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
             JSONCompareMode.LENIENT);
     }
 
-    private MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)
+    private static MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)
         throws IOException {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("connectorSettings", connectorSettings);
@@ -122,7 +122,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         return multipartData;
     }
 
-    private HttpHeaders multipartHeaders() {
+    private static HttpHeaders multipartHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return headers;

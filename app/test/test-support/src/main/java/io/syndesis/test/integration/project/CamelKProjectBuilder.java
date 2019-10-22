@@ -198,7 +198,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         );
     }
 
-    private void extractSources(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Path projectPath) throws IOException {
+    private static void extractSources(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Path projectPath) throws IOException {
         for (SourceSpec sourceSpec : integrationCR.getSpec().getSources()) {
             DataSpec sourceData = sourceSpec.getDataSpec();
             if (sourceData != null &&
@@ -210,7 +210,7 @@ public class CamelKProjectBuilder extends AbstractMavenProjectBuilder<CamelKProj
         }
     }
 
-    private void extractResources(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Path projectPath) throws IOException {
+    private static void extractResources(io.syndesis.server.controller.integration.camelk.crd.Integration integrationCR, Path projectPath) throws IOException {
         for (ResourceSpec resourceSpec : integrationCR.getSpec().getResources()) {
             DataSpec resourceData = resourceSpec.getDataSpec();
             if (resourceData != null &&

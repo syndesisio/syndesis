@@ -109,7 +109,7 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
         verifyRecordInDb(runner, "Meet Joanna from Red Hat");
     }
 
-    private String contact(String firstName, String company) {
+    private static String contact(String firstName, String company) {
         return String.format("{\"first_name\":\"%s\",\"company\":\"%s\"}", firstName, company);
     }
 

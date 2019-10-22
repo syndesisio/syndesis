@@ -52,11 +52,11 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-            .error(parameters, this::verifyCredentials)
+            .error(parameters, MqttVerifierExtension::verifyCredentials)
             .build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         String brokerUrl = ConnectorOptions.extractOption(parameters, "brokerUrl");
         String username = ConnectorOptions.extractOption(parameters, "userName");
         String password = ConnectorOptions.extractOption(parameters, "password");

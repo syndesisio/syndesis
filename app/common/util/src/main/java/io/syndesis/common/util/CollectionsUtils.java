@@ -38,18 +38,6 @@ public final class CollectionsUtils {
             .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
 
-    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source) {
-        return removeNullValues(source, HashMap::new);
-    }
-
-    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source, Supplier<Map<K, V>> supplier) {
-        final Map<K, V> answer = supplier.get();
-        answer.putAll(source);
-        answer.values().removeIf(Objects::isNull);
-
-        return answer;
-    }
-
     @SafeVarargs
     @SuppressWarnings("varargs")
     public static <C extends Collection<T>, T> C aggregate(Supplier<C> collectionFactory, Collection<T>... collections) {
@@ -60,6 +48,18 @@ public final class CollectionsUtils {
         }
 
         return result;
+    }
+
+    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source) {
+        return removeNullValues(source, HashMap::new);
+    }
+
+    public static <K, V> Map<K, V> removeNullValues(Map<K, V> source, Supplier<Map<K, V>> supplier) {
+        final Map<K, V> answer = supplier.get();
+        answer.putAll(source);
+        answer.values().removeIf(Objects::isNull);
+
+        return answer;
     }
 
     public static <K, V> Stream<Map.Entry<K, V>> filter(Map<K, V> map, Predicate<Map.Entry<K, V>> predicate) {
@@ -85,15 +85,15 @@ public final class CollectionsUtils {
     }
 
     @SuppressWarnings("unchecked")
+    public static <K, V> Map<K, V> mapOf(K key, V value, Object... keyVals) {
+        return mapOf(HashMap::new, key, value, keyVals);
+    }
+
+    @SuppressWarnings("unchecked")
     public static <K, V> Map<K, V> immutableMapOf(Supplier<Map<K, V>> creator, K key, V value, Object... keyVals) {
         return Collections.unmodifiableMap(
             mapOf(creator, key, value, keyVals)
         );
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <K, V> Map<K, V> mapOf(K key, V value, Object... keyVals) {
-        return mapOf(HashMap::new, key, value, keyVals);
     }
 
     @SuppressWarnings("unchecked")

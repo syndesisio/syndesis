@@ -54,7 +54,7 @@ public class ConnectorTemplateITCase extends BaseITCase {
         private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 
         @Bean("connector-template")
-        public static final ConnectorGenerator testGenerator() {
+        public ConnectorGenerator testGenerator() {
             return new ConnectorGenerator(new Connector.Builder()
                 .addTags("from-connector")
                 .build()) {

@@ -177,7 +177,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             .query("sysparm_exclude_reference_link", "true")
             .query("sysparm_fields", "name%2Csys_id")
             .query("sysparm_query", "name=sys_import_set_row")
-            .trasform(HttpMethod.GET, this::findResultNode);
+            .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
         if (response.isPresent()) {
             final JsonNode node = response.get();
@@ -196,7 +196,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
                 .query("sysparm_exclude_reference_link", "true")
                 .query("sysparm_fields", "name%2Csys_name")
                 .queryF("sysparm_query", "super_class=%s", sysId.textValue())
-                .trasform(HttpMethod.GET, this::findResultNode);
+                .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
                 final ObjectNode root = context.getConfiguration().getOrCreateMapper().createObjectNode();
@@ -234,7 +234,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             .query("sysparm_exclude_reference_link", "true")
             .query("sysparm_fields", "name%2Csys_id")
             .query("sysparm_query", "name=sys_import_set_row")
-            .trasform(HttpMethod.GET, this::findResultNode);
+            .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
         if (response.isPresent()) {
             final JsonNode node = response.get();
@@ -248,7 +248,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
                 .path("sys_db_object")
                 .query("sysparm_exclude_reference_link", "true")
                 .query("sysparm_fields", "name%2Csys_name%2Csuper_class")
-                .trasform(HttpMethod.GET, this::findResultNode);
+                .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
                 final ObjectNode root = context.getConfiguration().getOrCreateMapper().createObjectNode();
@@ -342,7 +342,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     // ********************************
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private void loadDictionary(MetaContext context, String name, ObjectNode root) throws Exception {
+    private static void loadDictionary(MetaContext context, String name, ObjectNode root) throws Exception {
         String offset = "0";
 
         while (true) {
@@ -371,7 +371,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
     }
 
     @SuppressWarnings({"PMD.ExcessiveMethodLength", "PMD.NPathComplexity"})
-    private void processDictionaryNode(MetaContext context, ObjectNode root, JsonNode node) {
+    private static void processDictionaryNode(MetaContext context, ObjectNode root, JsonNode node) {
         if (node.hasNonNull("element")) {
             final String id = node.get("element").asText();
 
@@ -490,7 +490,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
      * Determine the hierarchy of a table by inspecting the super_class attribute.
      */
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private List<String> getObjectHierarchy(MetaContext context) throws Exception {
+    private static List<String> getObjectHierarchy(MetaContext context) throws Exception {
         List<String> hierarchy = new ArrayList<>();
         String query = String.format("name=%s", context.getObjectName());
 
@@ -504,7 +504,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
                 .query("sysparm_exclude_reference_link", "true")
                 .query("sysparm_fields", "name%2Csuper_class")
                 .query("sysparm_query", query)
-                .trasform(HttpMethod.GET, this::findResultNode);
+                .trasform(HttpMethod.GET, ServiceNowMetaDataExtension::findResultNode);
 
             if (response.isPresent()) {
                 final JsonNode node = response.get();
@@ -525,7 +525,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         return hierarchy;
     }
 
-    private void processResult(JsonNode node, Consumer<JsonNode> consumer) {
+    private static void processResult(JsonNode node, Consumer<JsonNode> consumer) {
         if (node.isArray()) {
             Iterator<JsonNode> it = node.elements();
             while (it.hasNext()) {
@@ -536,7 +536,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
         }
     }
 
-    private Optional<JsonNode> findResultNode(Response response) {
+    private static Optional<JsonNode> findResultNode(Response response) {
         if (ObjectHelper.isNotEmpty(response.getHeaderString(HttpHeaders.CONTENT_TYPE))) {
             JsonNode root = response.readEntity(JsonNode.class);
             if (root != null) {

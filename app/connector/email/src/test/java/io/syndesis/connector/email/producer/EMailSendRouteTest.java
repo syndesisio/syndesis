@@ -106,7 +106,7 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         return emailAction;
     }
 
-    private Step createDirectStep() {
+    private static Step createDirectStep() {
         Step directStep = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(new ConnectorAction.Builder()

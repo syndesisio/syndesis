@@ -59,7 +59,7 @@ public class NoDuplicateExtensionValidator implements ConstraintValidator<NoDupl
         return true;
     }
 
-    private boolean isValid(final ExtensionWithDomain value) {
+    private static boolean isValid(final ExtensionWithDomain value) {
         Extension target = value.getTarget();
         if (target.getExtensionId() == null) {
             return true;

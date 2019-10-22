@@ -59,12 +59,12 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-            .error(parameters, this::verifyFhirVersion)
-            .error(parameters, this::verifyConnection)
+            .error(parameters, FhirVerifierExtension::verifyFhirVersion)
+            .error(parameters, FhirVerifierExtension::verifyConnection)
             .build();
     }
 
-    private void verifyFhirVersion(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyFhirVersion(ResultBuilder builder, Map<String, Object> parameters) {
         try {
             final FhirVersionEnum fhirVersionEnum = ConnectorOptions.extractOptionAndMap(
                 parameters, "fhirVersion", FhirVersionEnum::valueOf);
@@ -77,7 +77,7 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
         }
     }
 
-    private void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }

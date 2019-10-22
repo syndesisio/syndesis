@@ -41,7 +41,7 @@ public class Equivalencer implements StringConstants {
     private Deque<EquivContext> failureContext;
 
     @SuppressWarnings("PMD.CompareObjectsWithEquals")
-    private boolean isSameRef(Object one, Object another) {
+    private static boolean isSameRef(Object one, Object another) {
         return one == another;
     }
 
@@ -66,7 +66,7 @@ public class Equivalencer implements StringConstants {
         return false;
     }
 
-    private EquivPair pair(Object a, Object b, String name) {
+    private static EquivPair pair(Object a, Object b, String name) {
         return EquivPair.create(a, b, name);
     }
 

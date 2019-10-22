@@ -26,11 +26,11 @@ import org.apache.camel.Exchange;
 public final class SqlStoredConnectorCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeProducer(this::doBeforeProducer);
-        component.setAfterProducer(this::doAfterProducer);
+        component.setBeforeProducer(SqlStoredConnectorCustomizer::doBeforeProducer);
+        component.setAfterProducer(SqlStoredConnectorCustomizer::doAfterProducer);
     }
 
-    private void doBeforeProducer(Exchange exchange) {
+    private static void doBeforeProducer(Exchange exchange) {
         final String body = exchange.getIn().getBody(String.class);
         if (body != null) {
             final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
@@ -38,7 +38,7 @@ public final class SqlStoredConnectorCustomizer implements ComponentProxyCustomi
         }
     }
 
-    private void doAfterProducer(Exchange exchange) {
+    private static void doAfterProducer(Exchange exchange) {
         @SuppressWarnings("unchecked")
         final Map<String, Object> body = exchange.getIn().getBody(Map.class);
         final String jsonBean = JSONBeanUtil.toJSONBean(body);

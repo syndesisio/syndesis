@@ -110,7 +110,7 @@ public class WebHookSplitToDB_IT extends SyndesisIntegrationTestSupport {
         verifyRecordsInDb(runner, 0);
     }
 
-    private String contacts(String company, String ... firstNames) {
+    private static String contacts(String company, String ... firstNames) {
         StringJoiner joiner = new StringJoiner(",", "[", "]");
 
         Stream.of(firstNames)

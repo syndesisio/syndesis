@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.http.HttpStatus;
@@ -54,7 +53,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
@@ -155,7 +153,7 @@ public class ODataSerializerTest extends AbstractODataTest {
         checkEntity(entity, TEST_ENUM);
     }
 
-    private String fetchReferenceEntity(String uri) throws Exception {
+    private static String fetchReferenceEntity(String uri) throws Exception {
         URI httpURI = URI.create(uri);
         ClientEntity olEntity = null;
         ODataRetrieveResponse<ClientEntity> response = null;
@@ -192,7 +190,7 @@ public class ODataSerializerTest extends AbstractODataTest {
         return outputShape.getSpecification();
     }
 
-    private void validateResultAgainstSchema(JsonNode jsonResultNode, JsonNode schemaNode) throws ProcessingException {
+    private static void validateResultAgainstSchema(JsonNode jsonResultNode, JsonNode schemaNode) throws ProcessingException {
         String schemaURI = "http://json-schema.org/schema#";
         LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
                 .preloadSchema(schemaURI, schemaNode)

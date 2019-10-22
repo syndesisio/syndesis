@@ -527,7 +527,7 @@ public class StepActionHandlerTest {
         assertThat(enriched.get(2).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).contains(StepMetadataHelper.ANY_SHAPE);
     }
 
-    private DataShape dummyShape() {
+    private static DataShape dummyShape() {
         return new DataShape.Builder()
                 .kind(DataShapeKinds.JAVA)
                 .specification("{}")

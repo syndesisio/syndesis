@@ -28,7 +28,7 @@ public class ODataReadFromCustomizer extends AbstractODataCustomizer {
      * options map & makes them available via a getter, hence the need to look
      * at the component rather than the options
      */
-    private boolean shouldSplitResult(ComponentProxyComponent component) {
+    private static boolean shouldSplitResult(ComponentProxyComponent component) {
         if (! (component instanceof ODataComponent)) {
             return false;
         }

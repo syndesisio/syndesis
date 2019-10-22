@@ -28,10 +28,10 @@ public class GmailReceiveEmailCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeConsumer(this::beforeConsumer);
+        component.setBeforeConsumer(GmailReceiveEmailCustomizer::beforeConsumer);
     }
 
-    private void beforeConsumer(Exchange exchange) {
+    private static void beforeConsumer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final GmailMessageModel mail = new GmailMessageModel();

@@ -391,7 +391,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
         return key;
     }
 
-    class BatchManager {
+    static class BatchManager {
 
         private final Handle dbi;
         private long batchSize;
@@ -510,7 +510,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
     }
 
 
-    private int deleteJsonRecords(Handle dbi, String baseDBPath, String like) {
+    private static int deleteJsonRecords(Handle dbi, String baseDBPath, String like) {
 
         ArrayList<String> expressions = new ArrayList<>();
         ArrayList<String> queryParams = new ArrayList<>();
@@ -541,7 +541,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
         return  params;
     }
 
-    private int countJsonRecords(Handle dbi, String like) {
+    private static int countJsonRecords(Handle dbi, String like) {
         Integer result = dbi.createQuery("SELECT COUNT(*) from jsondb where path LIKE ?")
             .bind(0, like)
             .map(IntegerColumnMapper.PRIMITIVE).first();

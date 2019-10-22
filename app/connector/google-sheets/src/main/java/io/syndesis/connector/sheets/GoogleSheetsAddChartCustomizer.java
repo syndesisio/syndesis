@@ -98,7 +98,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         AddChartRequest addChartRequest = new AddChartRequest();
         batchUpdateRequest.getRequests().add(new Request().setAddChart(addChartRequest));
 
-        ChartSpec chartSpec = createChartSpec();
+        ChartSpec chartSpec = createChartSpec(title, subtitle);
         if (model != null) {
             addChartRequest.setChart(createEmbeddedChart(model, chartSpec));
             if (model.getBasicChart() != null) {
@@ -114,7 +114,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", batchUpdateRequest);
     }
 
-    private ChartSpec createChartSpec() {
+    private static ChartSpec createChartSpec(String title, String subtitle) {
         ChartSpec chartSpec = new ChartSpec();
         if (ObjectHelper.isNotEmpty(title)) {
             chartSpec.setTitle(title);
@@ -125,7 +125,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         return chartSpec;
     }
 
-    private EmbeddedChart createEmptyChart(ChartSpec chartSpec) {
+    private static EmbeddedChart createEmptyChart(ChartSpec chartSpec) {
         EmbeddedChart embeddedChart = new EmbeddedChart();
         EmbeddedObjectPosition position = new EmbeddedObjectPosition();
         position.setNewSheet(true);
@@ -135,7 +135,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         return embeddedChart;
     }
 
-    private EmbeddedChart createEmbeddedChart(GoogleChart model, ChartSpec chartSpec) {
+    private static EmbeddedChart createEmbeddedChart(GoogleChart model, ChartSpec chartSpec) {
         Integer sourceSheetId = Optional.ofNullable(model.getSourceSheetId())
                                     .orElse(0);
 
@@ -162,7 +162,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         return embeddedChart;
     }
 
-    private void addPieChart(ChartSpec chartSpec, GoogleChart model) {
+    private static void addPieChart(ChartSpec chartSpec, GoogleChart model) {
         Integer sheetId = Optional.ofNullable(model.getSheetId())
                                   .orElse(0);
 
@@ -190,7 +190,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         chartSpec.setPieChart(pieChartSpec);
     }
 
-    private void addBasicChart(ChartSpec chartSpec, GoogleChart model) {
+    private static void addBasicChart(ChartSpec chartSpec, GoogleChart model) {
         Integer sheetId = Optional.ofNullable(model.getSheetId())
                 .orElse(0);
 
@@ -242,7 +242,7 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
         chartSpec.setBasicChart(basicChartSpec);
     }
 
-    private ChartSourceRange getDomainSourceRange(int sourceSheetId, String domainRange) {
+    private static ChartSourceRange getDomainSourceRange(int sourceSheetId, String domainRange) {
         ChartSourceRange domainSourceRange = new ChartSourceRange();
         GridRange domainGridRange = new GridRange();
         domainGridRange.setSheetId(sourceSheetId);

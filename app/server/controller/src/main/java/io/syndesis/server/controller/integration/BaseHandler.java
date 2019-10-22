@@ -87,11 +87,11 @@ public class BaseHandler {
         }
     }
 
-    private String getLabel(Integration integration) {
+    private static String getLabel(Integration integration) {
         return String.format("Integration [%s]", Names.sanitize(integration.getName()));
     }
 
-    private String getLabel(IntegrationDeployment integrationDeployment) {
+    private static String getLabel(IntegrationDeployment integrationDeployment) {
         return String.format("Integration [%s]", Names.sanitize(integrationDeployment.getSpec().getName()));
     }
 

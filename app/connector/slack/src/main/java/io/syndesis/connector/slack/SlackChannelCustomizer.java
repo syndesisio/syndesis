@@ -26,11 +26,11 @@ public class SlackChannelCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeProducer(this::beforeProducer);
+        component.setBeforeProducer(SlackChannelCustomizer::beforeProducer);
         sanitizeUserOrChannel(options);
     }
 
-    private void sanitizeUserOrChannel(Map<String, Object> options) {
+    private static void sanitizeUserOrChannel(Map<String, Object> options) {
         String username = ConnectorOptions.extractOption(options, "receiver");
         String channel = ConnectorOptions.popOption(options, "channel");
 
@@ -49,7 +49,7 @@ public class SlackChannelCustomizer implements ComponentProxyCustomizer {
         }
     }
 
-    private void beforeProducer(Exchange exchange) {
+    private static void beforeProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final SlackPlainMessage message = in.getBody(SlackPlainMessage.class);

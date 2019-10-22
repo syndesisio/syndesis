@@ -334,13 +334,13 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         Assert.assertNull(pivotTable.getValues().get(0).getSourceColumnOffset());
     }
 
-    private GooglePivotTable.ValueGroup sampleValueGroup() {
+    private static GooglePivotTable.ValueGroup sampleValueGroup() {
         GooglePivotTable.ValueGroup valueGroup = new GooglePivotTable.ValueGroup();
         valueGroup.setSourceColumn("C");
         return valueGroup;
     }
 
-    private void assertSampleValueGroup(PivotTable pivotTable) {
+    private static void assertSampleValueGroup(PivotTable pivotTable) {
         Assert.assertEquals(1, pivotTable.getValues().size());
         Assert.assertEquals("SUM", pivotTable.getValues().get(0).getSummarizeFunction());
         Assert.assertEquals(Integer.valueOf(2), pivotTable.getValues().get(0).getSourceColumnOffset());

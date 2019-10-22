@@ -152,7 +152,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
       }
   }
 
-    private Object evaluateBooleanOperation(BinaryOperatorKind operator, Object left, Object right)
+    private static Object evaluateBooleanOperation(BinaryOperatorKind operator, Object left, Object right)
         throws ODataApplicationException {
 
       // First check that both operands are of type Boolean
@@ -173,7 +173,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
       }
     }
 
-  private Object evaluateComparisonOperation(BinaryOperatorKind operator, Object left, Object right)
+  private static Object evaluateComparisonOperation(BinaryOperatorKind operator, Object left, Object right)
       throws ODataApplicationException {
 
     // All types in our tutorial supports all logical operations, but we have to make sure that the types are equals
@@ -212,7 +212,7 @@ public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
     }
   }
 
-  private Object evaluateArithmeticOperation(BinaryOperatorKind operator, Object left,
+  private static Object evaluateArithmeticOperation(BinaryOperatorKind operator, Object left,
       Object right) throws ODataApplicationException {
 
       // First check if the type of both operands is numerical

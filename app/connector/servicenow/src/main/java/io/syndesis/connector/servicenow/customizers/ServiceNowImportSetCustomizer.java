@@ -26,7 +26,7 @@ import org.apache.camel.component.servicenow.model.ImportSetResult;
 public class ServiceNowImportSetCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> properties) {
-        component.setBeforeProducer(this::beforeProducer);
+        component.setBeforeProducer(ServiceNowImportSetCustomizer::beforeProducer);
     }
 
     //
@@ -35,7 +35,7 @@ public class ServiceNowImportSetCustomizer implements ComponentProxyCustomizer {
     //
     // https://github.com/syndesisio/syndesis/issues/2819
     //
-    private void beforeProducer(final Exchange exchange) {
+    private static void beforeProducer(final Exchange exchange) {
         exchange.getIn().setHeader(ServiceNowConstants.RESOURCE, ServiceNowConstants.RESOURCE_IMPORT);
         exchange.getIn().setHeader(ServiceNowConstants.ACTION, ServiceNowConstants.ACTION_CREATE);
         exchange.getIn().setHeader(ServiceNowConstants.RETRIEVE_TARGET_RECORD, false);

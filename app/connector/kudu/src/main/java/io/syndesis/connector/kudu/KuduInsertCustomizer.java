@@ -33,16 +33,16 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setOptions(options);
-        component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setBeforeProducer(KuduInsertCustomizer::beforeProducer);
+        component.setAfterProducer(KuduInsertCustomizer::afterProducer);
     }
 
-    private void setOptions(Map<String, Object> options) {
+    private static void setOptions(Map<String, Object> options) {
         options.put("operation", KuduDbOperations.INSERT);
         options.put("type", KuduDbOperations.INSERT);
     }
 
-    private void beforeProducer(Exchange exchange) throws IOException {
+    private static void beforeProducer(Exchange exchange) throws IOException {
         final Message in = exchange.getIn();
         final String body = in.getBody(String.class);
 
@@ -53,7 +53,7 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
         }
     }
 
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
         final String body = in.getBody(String.class);
 

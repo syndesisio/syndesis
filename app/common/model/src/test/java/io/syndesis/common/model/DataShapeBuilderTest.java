@@ -184,7 +184,7 @@ public class DataShapeBuilderTest {
         Assert.assertEquals(variantSpecification, shape.decompress().decompress().build().getVariants().get(0).getSpecification());
     }
 
-    private void assertCompressedSpecification(String expected, String compressed) throws IOException {
+    private static void assertCompressedSpecification(String expected, String compressed) throws IOException {
         byte[] data = Base64.getDecoder().decode(compressed);
 
         try (InputStream is = new GZIPInputStream(new ByteArrayInputStream(data))) {

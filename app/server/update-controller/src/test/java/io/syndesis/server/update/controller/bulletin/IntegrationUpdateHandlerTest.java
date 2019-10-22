@@ -70,7 +70,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
 
     final Validator validator = mock(Validator.class);
 
-    private Connector newSqlConnector() {
+    private static Connector newSqlConnector() {
         ConnectorAction action1 = new ConnectorAction.Builder()
             .id(SQL_CONNECTOR_ACTION_ID)
             .actionType("connector")
@@ -87,7 +87,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
            .build();
     }
 
-    private Connection newSqlConnection(Connector connector) {
+    private static Connection newSqlConnection(Connector connector) {
         assertNotNull(connector);
 
         Map<String, String> configuredProperties = new HashMap<>();
@@ -108,7 +108,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
     }
 
-    private Step newSqlStep(Connection connection) {
+    private static Step newSqlStep(Connection connection) {
         ConnectorAction action = new ConnectorAction.Builder()
             .actionType("connector")
             .id(SQL_CONNECTOR_ACTION_ID)
@@ -124,7 +124,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
     }
 
-    private Integration newSqlIntegration(String id, Connection connection) {
+    private static Integration newSqlIntegration(String id, Connection connection) {
         return new Integration.Builder()
             .id(id)
             .name(id)
@@ -134,7 +134,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
     }
 
-    private IntegrationDeployment newIntegrationDeployment(String id, int version, Integration integration, boolean published) {
+    private static IntegrationDeployment newIntegrationDeployment(String id, int version, Integration integration, boolean published) {
         Map<String, String> stepsDone = new HashMap<>();
         stepsDone.put("buildv1", "ip:port/syndesis/buildName");
         stepsDone.put("deploy", "2");

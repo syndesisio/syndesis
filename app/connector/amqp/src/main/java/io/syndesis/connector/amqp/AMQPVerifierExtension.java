@@ -64,11 +64,11 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials)
+                .error(parameters, AMQPVerifierExtension::verifyCredentials)
                 .build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         final String connectionUri = ConnectorOptions.extractOption(parameters, "connectionUri");
         final String username = ConnectorOptions.extractOption(parameters, "username");

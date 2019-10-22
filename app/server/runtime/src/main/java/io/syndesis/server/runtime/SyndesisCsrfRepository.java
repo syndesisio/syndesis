@@ -55,7 +55,7 @@ public class SyndesisCsrfRepository implements CsrfTokenRepository {
         return token.map(val -> new DefaultCsrfToken(XSRF_HEADER_NAME, XSRF_HEADER_NAME, val)).orElse(null);
     }
 
-    private Optional<String> extractToken(HttpServletRequest request) {
+    private static Optional<String> extractToken(HttpServletRequest request) {
         String token = request.getHeader(XSRF_HEADER_NAME);
         return Optional.ofNullable(token);
     }

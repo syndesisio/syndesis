@@ -266,7 +266,7 @@ public class PublicApiHandler {
         return Response.ok(output).build();
     }
 
-    private void validateParam(String name, String param) {
+    private static void validateParam(String name, String param) {
         if (param == null || param.isEmpty()) {
             throw new ClientErrorException("Missing parameter " + name, Response.Status.BAD_REQUEST);
         }
@@ -453,7 +453,7 @@ public class PublicApiHandler {
         return resource;
     }
 
-    private Map<String, Map<String, String>> getParams(InputStream paramFile) throws IOException {
+    private static Map<String, Map<String, String>> getParams(InputStream paramFile) throws IOException {
         Properties properties = new Properties();
         properties.load(paramFile);
 
@@ -479,7 +479,7 @@ public class PublicApiHandler {
         return result;
     }
 
-    private <T> List<T> getResourcesOfType(List<WithResourceId> resources, Class<T> type) {
+    private static <T> List<T> getResourcesOfType(List<WithResourceId> resources, Class<T> type) {
         return resources.stream()
             .filter(type::isInstance)
             .map(type::cast)

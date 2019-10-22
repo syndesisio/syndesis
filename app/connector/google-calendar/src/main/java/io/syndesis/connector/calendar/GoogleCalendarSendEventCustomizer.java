@@ -51,7 +51,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(GoogleCalendarSendEventCustomizer::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -106,7 +106,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);
@@ -151,7 +151,7 @@ public class GoogleCalendarSendEventCustomizer implements ComponentProxyCustomiz
         in.setBody(model);
     }
 
-    private Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws ParseException {
+    private static Event createGoogleEvent(String summary, String description, String attendees, String startDate, String startTime, String endDate, String endTime, String location) throws ParseException {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
         Event event = new Event();
         event.setSummary(summary);

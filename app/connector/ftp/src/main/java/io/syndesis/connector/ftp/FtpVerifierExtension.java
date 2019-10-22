@@ -52,11 +52,11 @@ public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials).build();
+                .error(parameters, FtpVerifierExtension::verifyCredentials).build();
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         final String host = ConnectorOptions.extractOption(parameters, "host");
         final Integer port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt, 21);

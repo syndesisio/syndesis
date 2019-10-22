@@ -134,7 +134,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption", valueInputOption);
     }
 
-    private ObjectSchema getItemSchema(JsonSchema spec) {
+    private static ObjectSchema getItemSchema(JsonSchema spec) {
         ObjectSchema itemSpec = null;
         if (spec.isObjectSchema()) {
             itemSpec = (ObjectSchema) spec;

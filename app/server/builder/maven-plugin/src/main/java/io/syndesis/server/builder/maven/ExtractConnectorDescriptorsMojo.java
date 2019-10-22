@@ -117,7 +117,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         }
     }
 
-    private URLClassLoader createClassLoader(File jar) throws MalformedURLException {
+    private static URLClassLoader createClassLoader(File jar) throws MalformedURLException {
         return AccessController.doPrivileged(new PrivilegedAction<URLClassLoader>() {
             @Override
             public URLClassLoader run() {
@@ -130,7 +130,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         });
     }
 
-    private void addConnectorMeta(ObjectNode root, ClassLoader classLoader) {
+    private static void addConnectorMeta(ObjectNode root, ClassLoader classLoader) {
         ObjectNode node = new ObjectNode(JsonNodeFactory.instance);
         addOptionalNode(classLoader, node, "meta", "camel-connector.json");
         addOptionalSchemaAsString(classLoader, node, "schema", "camel-connector-schema.json");
@@ -214,7 +214,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
 
     // TODO: Should return an ObjectNode, but because of
     // Camels' JSonSchemaHelper being very picky on the format, we use it as plain string directly
-    private String loadComponentJSonSchema(ClassLoader classLoader, String scheme, String javaType) {
+    private static String loadComponentJSonSchema(ClassLoader classLoader, String scheme, String javaType) {
         int pos = javaType.lastIndexOf('.');
         String path = javaType.substring(0, pos);
         path = path.replace('.', '/');
@@ -233,7 +233,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         mapper.writerWithDefaultPrettyPrinter().writeValue(new File(target), root);
     }
 
-    private void addOptionalSchemaAsString(ClassLoader cl, ObjectNode node, String key, String path) {
+    private static void addOptionalSchemaAsString(ClassLoader cl, ObjectNode node, String key, String path) {
         // We can't use real JSON here as
         // https://github.com/apache/camel/blob/master/camel-core/src/main/java/org/apache/camel/runtimecatalog/JSonSchemaHelper.java#L44-L123
         // can parse proper JSON. We need to do it as an opaque sting
@@ -243,14 +243,14 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         }
     }
 
-    private void addOptionalNode(ClassLoader cl, ObjectNode node, String key, String path) {
+    private static void addOptionalNode(ClassLoader cl, ObjectNode node, String key, String path) {
         JsonNode result = getJson(cl, path);
         if (result != null) {
             node.set(key, result);
         }
     }
 
-    private void addGav(ObjectNode node, Artifact artifact) {
+    private static void addGav(ObjectNode node, Artifact artifact) {
         TextNode gavNode = new TextNode(
             String.format("%s:%s:%s",
                           artifact.getGroupId(),
@@ -259,7 +259,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         node.set("gav", gavNode);
     }
 
-    private JsonNode getJson(ClassLoader classLoader, String path) {
+    private static JsonNode getJson(ClassLoader classLoader, String path) {
         try {
             InputStream is = classLoader.getResourceAsStream(path);
             if (is == null) {
@@ -271,7 +271,7 @@ public class ExtractConnectorDescriptorsMojo extends AbstractMojo {
         }
     }
 
-    private String getOpaqueJsonString(ClassLoader classLoader, String path) {
+    private static String getOpaqueJsonString(ClassLoader classLoader, String path) {
         try {
             InputStream is = classLoader.getResourceAsStream(path);
             if (is == null) {

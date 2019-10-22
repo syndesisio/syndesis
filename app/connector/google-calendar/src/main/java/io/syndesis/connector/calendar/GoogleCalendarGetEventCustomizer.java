@@ -40,7 +40,7 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(GoogleCalendarGetEventCustomizer::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -61,7 +61,7 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);

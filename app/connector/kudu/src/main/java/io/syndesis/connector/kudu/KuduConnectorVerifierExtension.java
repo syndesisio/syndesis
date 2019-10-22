@@ -43,11 +43,11 @@ public class KuduConnectorVerifierExtension extends DefaultComponentVerifierExte
     @Override
     public Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyConnection)
+                .error(parameters, KuduConnectorVerifierExtension::verifyConnection)
                 .build();
     }
 
-    private void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
         try {
             KuduClient c = KuduSupport.createConnection(parameters);
             c.getTablesList();

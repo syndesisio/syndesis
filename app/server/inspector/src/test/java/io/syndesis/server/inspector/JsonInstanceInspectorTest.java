@@ -60,7 +60,7 @@ public class JsonInstanceInspectorTest {
         assertThat(paths).isEqualTo(JsonInstanceInspector.COLLECTION_PATHS);
     }
 
-    private String getJsonInstance() {
+    private static String getJsonInstance() {
         return "{" +
                     "\"id\": \"" + UUID.randomUUID().toString() + "\"," +
                     "\"firstName\": \"Foo\"," +
@@ -93,19 +93,19 @@ public class JsonInstanceInspectorTest {
                 "}";
     }
 
-    private String getJsonArrayInstance() {
+    private static String getJsonArrayInstance() {
         return "[" + getJsonInstance() + "]";
     }
 
-    private void assertProperties(List<String> paths) {
+    private static void assertProperties(List<String> paths) {
         assertProperties(paths, null);
     }
 
-    private void assertArrayProperties(List<String> paths) {
+    private static void assertArrayProperties(List<String> paths) {
         assertProperties(paths, "[]");
     }
 
-    private void assertProperties(List<String> paths, String context) {
+    private static void assertProperties(List<String> paths, String context) {
         List<String> expectedPaths = Arrays.asList("id", "isAlive",
                 "firstName", "lastName", "address.city", "address.state",
                 "phoneNumbers[].type", "phoneNumbers.size()", "phoneNumbers[].number",

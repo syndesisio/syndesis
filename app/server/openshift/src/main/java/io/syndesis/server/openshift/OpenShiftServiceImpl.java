@@ -212,7 +212,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         return new UserBuilder().withNewMetadata().withName(username).and().build();
     }
 
-    private int nullSafe(Integer nr) {
+    private static int nullSafe(Integer nr) {
         return nr != null ? nr : 0;
     }
 

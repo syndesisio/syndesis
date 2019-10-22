@@ -45,7 +45,7 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(GoogleSheetsCreateSpreadsheetCustomizer::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -100,7 +100,7 @@ public class GoogleSheetsCreateSpreadsheetCustomizer implements ComponentProxyCu
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "content", spreadsheet);
     }
 
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
         final Spreadsheet spreadsheet = in.getBody(Spreadsheet.class);
 

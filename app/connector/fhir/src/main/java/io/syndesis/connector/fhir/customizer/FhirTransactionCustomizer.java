@@ -103,7 +103,7 @@ public class FhirTransactionCustomizer implements ComponentProxyCustomizer {
         in.setBody(transaction.toString());
     }
 
-    private Document toDocument(Node resourceNode, DocumentBuilderFactory dbf) throws ParserConfigurationException {
+    private static Document toDocument(Node resourceNode, DocumentBuilderFactory dbf) throws ParserConfigurationException {
         Document document = dbf.newDocumentBuilder().newDocument();
         Element elementNS = document.createElementNS("http://hl7.org/fhir", resourceNode.getNodeName());
         elementNS.setPrefix("tns");
@@ -117,7 +117,7 @@ public class FhirTransactionCustomizer implements ComponentProxyCustomizer {
         return document;
     }
 
-    private String toXml(Document document) throws TransformerException {
+    private static String toXml(Document document) throws TransformerException {
         StringWriter buf = new StringWriter();
         Transformer xform = TransformerFactory.newInstance().newTransformer();
         xform.transform(new DOMSource(document), new StreamResult(buf));

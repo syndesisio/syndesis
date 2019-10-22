@@ -155,7 +155,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         return odataAction;
     }
 
-    private Step createDirectStep() {
+    private static Step createDirectStep() {
         Step directStep = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(new ConnectorAction.Builder()
@@ -168,7 +168,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         return directStep;
     }
 
-    private String getPropertyFromEntity(String keyPredicate, String propertyName) {
+    private static String getPropertyFromEntity(String keyPredicate, String propertyName) {
         ClientEntity resultEntity = defaultTestServer.getData(keyPredicate);
         assertNotNull(resultEntity);
         ClientProperty property = resultEntity.getProperty(propertyName);
@@ -337,7 +337,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
             .hasMessageContaining("No Key Predicate available");
     }
 
-    private String queryProperty(String serviceURI, String resourcePath, String keyPredicate, String property) {
+    private static String queryProperty(String serviceURI, String resourcePath, String keyPredicate, String property) {
         ClientEntity olEntity = null;
         ODataRetrieveResponse<ClientEntity> response = null;
         try {
@@ -359,7 +359,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         }
     }
 
-    private void updateProperty(String serviceURI, String resourcePath, String keyPredicate, String property, String value) throws Exception {
+    private static void updateProperty(String serviceURI, String resourcePath, String keyPredicate, String property, String value) throws Exception {
         URI httpURI = URI.create(serviceURI + FORWARD_SLASH +
                                  resourcePath + OPEN_BRACKET +
                                  QUOTE_MARK + keyPredicate + QUOTE_MARK +

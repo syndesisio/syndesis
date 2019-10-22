@@ -61,11 +61,11 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials)
+                .error(parameters, KafkaVerifierExtension::verifyCredentials)
                 .build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
 
         LOG.debug("Validating Kafka connection to {}", brokers);

@@ -32,7 +32,7 @@ class DefaultExtensionConverter implements ExtensionConverter {
      *
      * Version of the public model is assumed to be latest ({@link ExtensionConverter#getCurrentSchemaVersion()}).
      */
-    private ObjectNode convertInternalToPublicModel(ObjectNode tree) {
+    private static ObjectNode convertInternalToPublicModel(ObjectNode tree) {
         return tree;
     }
 
@@ -41,7 +41,7 @@ class DefaultExtensionConverter implements ExtensionConverter {
      *
      * Version of the public model is assumed to be latest ({@link ExtensionConverter#getCurrentSchemaVersion()}).
      */
-    private ObjectNode convertPublicToInternalModel(ObjectNode tree) {
+    private static ObjectNode convertPublicToInternalModel(ObjectNode tree) {
         return tree;
     }
 
@@ -50,7 +50,7 @@ class DefaultExtensionConverter implements ExtensionConverter {
      *
      * Normally public versions are backward compatible, so this method is likely to remain empty.
      */
-    private ObjectNode convertToLatestSchemaVersion(ObjectNode tree, String sourceVersion) {
+    private static ObjectNode convertToLatestSchemaVersion(ObjectNode tree, String sourceVersion) {
         if ("v0".equals(sourceVersion)) {
             // Custom transformations here
             return tree;
@@ -72,7 +72,7 @@ class DefaultExtensionConverter implements ExtensionConverter {
         return updateToLatestVersion(publicTree);
     }
 
-    private ObjectNode updateToLatestVersion(ObjectNode tree) {
+    private static ObjectNode updateToLatestVersion(ObjectNode tree) {
         Optional<String> treeVersion = getSchemaVersion(tree);
         if (treeVersion.isPresent() && !ExtensionConverter.getCurrentSchemaVersion().equals(treeVersion.get())) {
             ObjectNode converted = convertToLatestSchemaVersion(tree, treeVersion.get());
@@ -84,23 +84,23 @@ class DefaultExtensionConverter implements ExtensionConverter {
         return tree;
     }
 
-    private Optional<String> getSchemaVersion(ObjectNode tree) {
+    private static Optional<String> getSchemaVersion(ObjectNode tree) {
         return Optional.ofNullable(tree)
                 .flatMap(t -> Optional.ofNullable(t.get(SCHEMA_VERSION_FIELD)))
                 .flatMap(t -> Optional.ofNullable(t.textValue()));
     }
 
-    private Extension unmarshal(JsonNode node) throws IOException {
+    private static Extension unmarshal(JsonNode node) throws IOException {
         byte[] bytes = Json.writer().writeValueAsBytes(node);
         return Json.reader().forType(Extension.class).readValue(bytes);
     }
 
-    private ObjectNode marshal(Extension extension) throws IOException {
+    private static ObjectNode marshal(Extension extension) throws IOException {
         byte[] bytes = Json.writer().writeValueAsBytes(extension);
         return Json.reader().forType(ObjectNode.class).readValue(bytes);
     }
 
-    private ObjectNode toObjectNode(JsonNode tree) {
+    private static ObjectNode toObjectNode(JsonNode tree) {
         if (!(tree instanceof ObjectNode)) {
             throw new IllegalArgumentException("The JSON document is not an object: " + tree);
         }

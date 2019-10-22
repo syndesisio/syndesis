@@ -78,7 +78,7 @@ public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
         }
     }
 
-    private List<String> getScopes(String scopesString) {
+    private static List<String> getScopes(String scopesString) {
        return Splitter.on(',').splitToList(scopesString);
     }
 }

@@ -96,7 +96,7 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
         in.setHeader("CamelGoogleMail.userId", userId);
     }
 
-    private com.google.api.services.gmail.model.Message createMessage(String to, String from, String subject,
+    private static com.google.api.services.gmail.model.Message createMessage(String to, String from, String subject,
             String bodyText, String cc, String bcc) throws MessagingException, IOException {
 
         if (ObjectHelper.isEmpty(to)) {
@@ -140,7 +140,7 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
         return message;
     }
 
-    private Address[] getAddressesList(String addressString) throws AddressException {
+    private static Address[] getAddressesList(String addressString) throws AddressException {
         List<String> recipientList = Splitter.on(',').splitToList(addressString);
         Address[] recipientAddress = new InternetAddress[recipientList.size()];
         int counter = 0;

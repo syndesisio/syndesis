@@ -113,7 +113,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", batchUpdateRequest);
     }
 
-    private GridCoordinate getStartCoordinate(PivotTable pivotTable, GooglePivotTable model) {
+    private static GridCoordinate getStartCoordinate(PivotTable pivotTable, GooglePivotTable model) {
         Integer sheetId = Optional.ofNullable(model)
                                     .map(GooglePivotTable::getSheetId)
                                     .orElse(0);
@@ -141,7 +141,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         }
     }
 
-    private void addRowGroups(PivotTable pivotTable, GooglePivotTable model) {
+    private static void addRowGroups(PivotTable pivotTable, GooglePivotTable model) {
         if (ObjectHelper.isEmpty(model.getRowGroups())) {
             return;
         }
@@ -152,7 +152,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         }
     }
 
-    private void addColumnGroups(PivotTable pivotTable, GooglePivotTable model) {
+    private static void addColumnGroups(PivotTable pivotTable, GooglePivotTable model) {
         if (ObjectHelper.isEmpty(model.getColumnGroups())) {
             return;
         }
@@ -163,7 +163,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         }
     }
 
-    private List<PivotGroup> getPivotGroups(List<GooglePivotTable.PivotGroup> model) {
+    private static List<PivotGroup> getPivotGroups(List<GooglePivotTable.PivotGroup> model) {
         List<PivotGroup> groups = new ArrayList<>();
         model.forEach(group -> {
             PivotGroup pivotGroup = new PivotGroup();
@@ -186,7 +186,7 @@ public class GoogleSheetsAddPivotTableCustomizer implements ComponentProxyCustom
         return groups;
     }
 
-    private void addValueGroups(PivotTable pivotTable, GooglePivotTable model) {
+    private static void addValueGroups(PivotTable pivotTable, GooglePivotTable model) {
         List<PivotValue> values = new ArrayList<>();
         model.getValueGroups().forEach(group -> {
             PivotValue pivotValue = new PivotValue();

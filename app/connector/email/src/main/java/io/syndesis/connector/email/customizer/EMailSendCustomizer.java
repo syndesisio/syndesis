@@ -106,7 +106,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
         setContentType(content, in);
     }
 
-    private boolean isHtml(String content) {
+    private static boolean isHtml(String content) {
         if (ObjectHelper.isEmpty(content)) {
             return false;
         }
@@ -115,7 +115,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
         return htmlMatch.find();
     }
 
-    private void setContentType(Object content, Message in) {
+    private static void setContentType(Object content, Message in) {
         if (content instanceof String) {
 
             if (isHtml(content.toString())) {

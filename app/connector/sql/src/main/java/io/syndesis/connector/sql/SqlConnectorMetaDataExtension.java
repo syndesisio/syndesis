@@ -67,7 +67,7 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
     // Helpers
     // *********************************
 
-    private SqlStatementMetaData parseStatement(SqlStatementParser parser) throws SQLException {
+    private static SqlStatementMetaData parseStatement(SqlStatementParser parser) throws SQLException {
         return parser.parse();
     }
 }

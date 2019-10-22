@@ -80,7 +80,7 @@ public class CustomConnectorITCase extends BaseITCase {
         private static final ConfigurationProperty PROPERTY_1 = new ConfigurationProperty.Builder().displayName("Property 1").build();
 
         @Bean(TEMPLATE_ID)
-        public static ConnectorGenerator testGenerator() {
+        public ConnectorGenerator testGenerator() {
             return new ConnectorGenerator(new Connector.Builder()
                 .addTags("from-connector")
                 .build()) {
@@ -217,14 +217,21 @@ public class CustomConnectorITCase extends BaseITCase {
         assertThat(responseForNonCustomConnector.getBody().getActionsSummary()).isNotPresent();
     }
 
-    private MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon) {
+    private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
+        return new ConnectorTemplate.Builder()//
+            .id(id)//
+            .name(name)//
+            .build();
+    }
+
+    private static MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon) {
         final LinkedMultiValueMap<String, Object> multipartData = new LinkedMultiValueMap<>();
         multipartData.add("connectorSettings", connectorSettings);
         multipartData.add("icon", new InputStreamResource(icon));
         return multipartData;
     }
 
-    private MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon,
+    private static MultiValueMap<String, Object> multipartBody(final ConnectorSettings connectorSettings, final InputStream icon,
         final InputStream specification) {
         final MultiValueMap<String, Object> multipartData = multipartBody(connectorSettings, icon);
         multipartData.add("specification", new InputStreamResource(specification));
@@ -232,16 +239,9 @@ public class CustomConnectorITCase extends BaseITCase {
         return multipartData;
     }
 
-    private HttpHeaders multipartHeaders() {
+    private static HttpHeaders multipartHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return headers;
-    }
-
-    private static ConnectorTemplate createConnectorTemplate(final String id, final String name) {
-        return new ConnectorTemplate.Builder()//
-            .id(id)//
-            .name(name)//
-            .build();
     }
 }
