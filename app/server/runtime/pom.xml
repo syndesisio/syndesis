@@ -114,7 +114,7 @@
               <excludes>
                 <exclude>static/**</exclude>
                 <exclude>application.yml</exclude>
-                <exclude>messages.properties</exclude>
+                <exclude>validation-messages.properties</exclude>
               </excludes>
             </configuration>
           </execution>
@@ -834,6 +834,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.squareup.okhttp3</groupId>
       <artifactId>okhttp</artifactId>
     </dependency>
@@ -932,7 +938,6 @@
     <dependency>
       <groupId>com.github.tomakehurst</groupId>
       <artifactId>wiremock-standalone</artifactId>
-      <version>2.24.1</version>
       <scope>test</scope>
     </dependency>
 
@@ -993,11 +998,6 @@
     <dependency>
       <groupId>io.micrometer</groupId>
       <artifactId>micrometer-registry-prometheus</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-spring-legacy</artifactId>
     </dependency>
 
   </dependencies>

@@ -1,4 +1,3 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
     io.syndesis.server.endpoint.v1.V1Configuration,\
-    io.syndesis.server.endpoint.actuator.ConnectorsMvcEndpoint,\
     io.syndesis.server.endpoint.actuator.ConnectorsEndpoint
