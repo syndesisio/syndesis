@@ -9,7 +9,7 @@ This REST API service is defined by an OpenAPI 2.0
 document that you provide when you create an API provider integration. 
 After you publish an API provider integration,
 {prodname} deploys the REST API service on OpenShift. 
-The benefit of a API provider integration
+The benefit of an API provider integration
 is that REST API clients can invoke calls that trigger execution of the integration. 
 
 .Multiple execution flows
@@ -46,7 +46,7 @@ For each operation, you can edit its flow by:
    
 * Adding connections to the applications that need to process the data.
 * Adding steps between connections, including split, aggregate, and data mapping steps.
-* Altering the return code in the HTTP response that finishes the flow. The 
+* Mapping connection error messages to return codes in the HTTP response that finishes the flow. The 
 response goes to the application that invoked the call that triggered
 execution of the integration. 
 

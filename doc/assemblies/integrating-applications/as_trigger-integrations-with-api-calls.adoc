@@ -9,7 +9,7 @@
 :context: api-provider
 
 To trigger execution of an integration on demand, start the integration
-with a REST API service that you provide. 
+with a REST API description document that you provide. 
 Integrations that start this way are referred to as _API provider integrations_. 
 An API provider integration allows REST API clients to invoke 
 commands that trigger execution of the integration. 
@@ -20,8 +20,8 @@ the integration.
 
 [NOTE]
 ====
-If you are running {prodname} on OpenShift Container Platform on-site, 
-you can configure the {prodname} server to enable Red Hat 3scale discovery of  
+If you are using {prodname} on OpenShift Container Platform on-site, 
+an administrator can configure the {prodname} server to enable Red Hat 3scale discovery of  
 API provider integration APIs. By default, {prodname} annotates an API 
 provider integration's API service definition for use with 3scale
 but does not expose those APIs for automatic 3scale discovery.
@@ -45,6 +45,10 @@ instructions for creating API provider integrations:
 * xref:create-integration-operation-flows_{context}[]
 * xref:configure-publish-api-provider-quickstart_{context}[]
 * xref:try-api-provider-quickstart_{context}[]
+
+For a video that shows how to create, publish and test an API provider integration, see 
+link:https://youtu.be/sox8SSqJ0zQ[].
+
 
 include::../../modules/integrating-applications/c_overview-benefit-api-provider-integrations.adoc[leveloffset=+1]
 
