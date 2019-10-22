@@ -47,8 +47,8 @@ public class IntegrationTestSupport implements StringConstants {
     protected ObjectMapper mapper = new ObjectMapper();
 
     protected static class DataPair {
-        private String key;
-        private Object value;
+        private final String key;
+        private final Object value;
 
         public DataPair(String key, Object value) {
             this.key = key;

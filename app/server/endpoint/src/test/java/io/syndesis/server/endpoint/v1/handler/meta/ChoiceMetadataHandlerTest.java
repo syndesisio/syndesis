@@ -33,9 +33,9 @@ import org.junit.Test;
  */
 public class ChoiceMetadataHandlerTest {
 
-    private ChoiceMetadataHandler metadataHandler = new ChoiceMetadataHandler();
+    private final ChoiceMetadataHandler metadataHandler = new ChoiceMetadataHandler();
 
-    private Step choiceStep = new Step.Builder()
+    private final Step choiceStep = new Step.Builder()
             .stepKind(StepKind.choice)
             .build();
 

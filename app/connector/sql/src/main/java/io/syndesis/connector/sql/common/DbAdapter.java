@@ -28,7 +28,7 @@ import io.syndesis.connector.sql.db.DbTeiid;
 
 public class DbAdapter {
 
-    private Db db;
+    private final Db db;
 
     public DbAdapter(Connection conn) throws SQLException {
         this.db = getDb(conn);

@@ -129,7 +129,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
         private ProjectBuilder projectBuilder;
         private IntegrationSource integrationSource;
 
-        private List<IntegrationCustomizer> customizers = new ArrayList<>();
+        private final List<IntegrationCustomizer> customizers = new ArrayList<>();
 
         public SyndesisIntegrationRuntimeContainer build() {
             CustomizedIntegrationSource source = new CustomizedIntegrationSource(integrationSource, customizers);

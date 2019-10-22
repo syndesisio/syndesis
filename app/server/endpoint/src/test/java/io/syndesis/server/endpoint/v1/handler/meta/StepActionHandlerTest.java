@@ -41,7 +41,7 @@ public class StepActionHandlerTest {
 
     private final StepActionHandler handler;
 
-    private DataShape elementShape = new DataShape.Builder()
+    private final DataShape elementShape = new DataShape.Builder()
                                         .kind(DataShapeKinds.JAVA)
                                         .specification("person-element-spec")
                                         .description("person")
@@ -49,7 +49,7 @@ public class StepActionHandlerTest {
                                         .putMetadata("variant", "element")
                                     .build();
 
-    private DataShape collectionShape = new DataShape.Builder()
+    private final DataShape collectionShape = new DataShape.Builder()
                                         .kind(DataShapeKinds.JAVA)
                                         .specification("person-collection-spec")
                                         .description("person-collection")

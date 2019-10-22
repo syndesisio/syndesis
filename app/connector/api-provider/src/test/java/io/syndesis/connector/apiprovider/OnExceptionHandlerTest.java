@@ -34,15 +34,15 @@ public class OnExceptionHandlerTest {
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
     private static final String ERROR_RESPONSE_BODY                = "returnBody";
 
-    
-    static final String errorResponseCodes="{\"SQL_CONNECTOR_ERROR\":\"500\",\"SERVER_ERROR\":\"500\",\"SQL_DATA_ACCESS_ERROR\":\"400\",\"SQL_ENTITY_NOT_FOUND_ERROR\":\"404\"}";
+
+    static final String ERROR_RESPONSE_CODES = "{\"SQL_CONNECTOR_ERROR\":\"500\",\"SERVER_ERROR\":\"500\",\"SQL_DATA_ACCESS_ERROR\":\"400\",\"SQL_ENTITY_NOT_FOUND_ERROR\":\"404\"}";
 
     @Test
     public void testEmptyResponseBodyOnError() {
  
         Map<String,String> configuredProperties = new HashMap<>();
         configuredProperties.put(HTTP_RESPONSE_CODE_PROPERTY       , "200");
-        configuredProperties.put(HTTP_ERROR_RESPONSE_CODES_PROPERTY, errorResponseCodes);
+        configuredProperties.put(HTTP_ERROR_RESPONSE_CODES_PROPERTY, ERROR_RESPONSE_CODES);
         configuredProperties.put(ERROR_RESPONSE_BODY               , "false");
 
         Exception e = new SyndesisConnectorException(
@@ -68,7 +68,7 @@ public class OnExceptionHandlerTest {
 
         Map<String,String> configuredProperties = new HashMap<>();
         configuredProperties.put(HTTP_RESPONSE_CODE_PROPERTY       , "200");
-        configuredProperties.put(HTTP_ERROR_RESPONSE_CODES_PROPERTY, errorResponseCodes);
+        configuredProperties.put(HTTP_ERROR_RESPONSE_CODES_PROPERTY, ERROR_RESPONSE_CODES);
         configuredProperties.put(ERROR_RESPONSE_BODY               , "true");
 
         Exception e = new SyndesisConnectorException(

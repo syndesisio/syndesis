@@ -99,7 +99,7 @@ public class DeploymentStateMonitorControllerTest {
     public IntegrationDeploymentStateDetails expectedDetails;
 
     private DataManager dataManager;
-    private static NamespacedOpenShiftClient client;
+    private static final NamespacedOpenShiftClient client;
 
     private static final String TEST_NAMESPACE = "test-namespace";
 

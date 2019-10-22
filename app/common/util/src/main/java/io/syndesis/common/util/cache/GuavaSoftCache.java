@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class GuavaSoftCache<K, V> implements Cache<K, V> {
 
-    private com.google.common.cache.Cache<K, V> cache;
+    private final com.google.common.cache.Cache<K, V> cache;
 
     public GuavaSoftCache(int maxElements) {
         this.cache = CacheBuilder.newBuilder()

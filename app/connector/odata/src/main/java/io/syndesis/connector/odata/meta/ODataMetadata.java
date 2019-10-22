@@ -42,8 +42,8 @@ public class ODataMetadata implements ODataConstants {
             }
         }
 
-        private String name;
-        private TypeClass type;
+        private final String name;
+        private final TypeClass type;
         private boolean array;
         private boolean required;
         private Set<PropertyMetadata> chilldProperties;

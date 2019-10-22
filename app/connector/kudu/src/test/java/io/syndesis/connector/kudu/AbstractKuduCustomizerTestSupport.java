@@ -17,14 +17,14 @@
 package io.syndesis.connector.kudu;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+
 import org.apache.camel.test.junit4.CamelTestSupport;
 
 public class AbstractKuduCustomizerTestSupport extends CamelTestSupport {
-    private ComponentProxyComponent component = new ComponentProxyComponent("kudu-1", "kudu");
+    private final ComponentProxyComponent component = new ComponentProxyComponent("kudu-1", "kudu");
 
-    @Override
-    public boolean isUseRouteBuilder() {
-        return false;
+    public ComponentProxyComponent getComponent() {
+        return component;
     }
 
     @Override
@@ -33,7 +33,8 @@ public class AbstractKuduCustomizerTestSupport extends CamelTestSupport {
         return true;
     }
 
-    public ComponentProxyComponent getComponent() {
-        return component;
+    @Override
+    public boolean isUseRouteBuilder() {
+        return false;
     }
 }

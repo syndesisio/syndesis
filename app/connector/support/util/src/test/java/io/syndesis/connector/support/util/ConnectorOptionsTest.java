@@ -29,9 +29,9 @@ import org.junit.Test;
 
 public class ConnectorOptionsTest {
 
-    private String key = "myKey";
-    private String missingKey = "missingKey";
-    private String value = "myValue";
+    private final String key = "myKey";
+    private final String missingKey = "missingKey";
+    private final String value = "myValue";
 
     private enum Colours {
         RED,

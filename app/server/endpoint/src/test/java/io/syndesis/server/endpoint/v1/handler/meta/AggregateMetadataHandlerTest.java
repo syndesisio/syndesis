@@ -44,9 +44,9 @@ import org.springframework.util.StringUtils;
 @RunWith(JUnitParamsRunner.class)
 public class AggregateMetadataHandlerTest {
 
-    private AggregateMetadataHandler metadataHandler = new AggregateMetadataHandler();
+    private final AggregateMetadataHandler metadataHandler = new AggregateMetadataHandler();
 
-    private Step aggregateStep = new Step.Builder()
+    private final Step aggregateStep = new Step.Builder()
             .stepKind(StepKind.aggregate)
             .build();
 

@@ -26,7 +26,7 @@ import java.util.Collection;
 @RunWith(Parameterized.class)
 public class LRUCacheManagerTest {
 
-    private boolean soft;
+    private final boolean soft;
 
 
     public LRUCacheManagerTest(boolean soft) {

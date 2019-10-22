@@ -35,7 +35,7 @@ public class ControllersConfigurationProperties {
     private int integrationStateCheckInterval = 60;
 
     @NestedConfigurationProperty
-    private CamelK camelk = new CamelK();
+    private final CamelK camelk = new CamelK();
 
     public int getMaxIntegrationsPerUser() {
         return maxIntegrationsPerUser;
@@ -68,8 +68,8 @@ public class ControllersConfigurationProperties {
     public static class CamelK {
         private boolean compression;
         private boolean prettyPrint;
-        private Map<String, String> environment = new HashMap<>();
-        private List<String> customizers = new ArrayList<>();
+        private final Map<String, String> environment = new HashMap<>();
+        private final List<String> customizers = new ArrayList<>();
 
         public Map<String, String> getEnvironment() {
             return environment;

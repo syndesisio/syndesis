@@ -62,7 +62,7 @@ public class ActivityTrackingControllerTest {
     private static final class StubbedController extends ActivityTrackingController {
         private final InputStream podLogs;
 
-        private long time;
+        private final long time;
 
         private StubbedController(JsonDB jsondb, DBI dbi, KubernetesClient client, InputStream podLogs, long time) {
             super(jsondb, dbi, client);

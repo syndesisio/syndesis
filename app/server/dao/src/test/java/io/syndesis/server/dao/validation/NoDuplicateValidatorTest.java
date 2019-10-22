@@ -70,13 +70,13 @@ public class NoDuplicateValidatorTest implements StringConstants {
 
     private final DataManager dataManager = mock(DataManager.class);
 
-    private Validator validator;
+    private final Validator validator;
 
     private class InjectionConstraintValidatorFactory implements ConstraintValidatorFactory {
 
-        private NoDuplicateIntegrationValidator noDupIntValidator = new NoDuplicateIntegrationValidator();
+        private final NoDuplicateIntegrationValidator noDupIntValidator = new NoDuplicateIntegrationValidator();
 
-        private NoDuplicateExtensionValidator noDupExtValidator = new NoDuplicateExtensionValidator();
+        private final NoDuplicateExtensionValidator noDupExtValidator = new NoDuplicateExtensionValidator();
 
         public InjectionConstraintValidatorFactory(DataManager dataManager) {
             setDataManager(noDupIntValidator, dataManager);
@@ -113,7 +113,7 @@ public class NoDuplicateValidatorTest implements StringConstants {
         }
     }
 
-    private InjectionConstraintValidatorFactory constraintValidatorFactory = new InjectionConstraintValidatorFactory(dataManager);
+    private final InjectionConstraintValidatorFactory constraintValidatorFactory = new InjectionConstraintValidatorFactory(dataManager);
 
     public NoDuplicateValidatorTest() {
 

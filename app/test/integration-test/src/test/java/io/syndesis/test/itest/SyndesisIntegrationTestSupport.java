@@ -31,7 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 @ContextConfiguration(classes = SyndesisIntegrationTestSupport.EndpointConfig.class)
 public abstract class SyndesisIntegrationTestSupport extends JUnit4CitrusTest {
 
-    private static SyndesisDbContainer syndesisDb;
+    private static final SyndesisDbContainer syndesisDb;
 
     static {
         syndesisDb = new SyndesisDbContainer();

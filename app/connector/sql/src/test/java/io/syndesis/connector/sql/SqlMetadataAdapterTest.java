@@ -61,15 +61,15 @@ public class SqlMetadataAdapterTest {
             "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
 
     private static Connection conn;
-    private static Properties props = new Properties();
+    private static final Properties PROPS = new Properties();
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
         try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("test-options.properties")) {
-            props.load(is);
-            String user     = props.getProperty("sql-connector.user");
-            String password = props.getProperty("sql-connector.password");
-            String url      = props.getProperty("sql-connector.url");
+            PROPS.load(is);
+            String user     = PROPS.getProperty("sql-connector.user");
+            String password = PROPS.getProperty("sql-connector.password");
+            String url      = PROPS.getProperty("sql-connector.url");
 
             conn = DriverManager.getConnection(url,user,password);
             String dbProductName = conn.getMetaData().getDatabaseProductName();
@@ -105,8 +105,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
         }
         parameters.put("query", "SELECT * FROM NAME WHERE ID=:#id");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -125,8 +125,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
         }
         parameters.put("query", "SELECT * FROM NAME");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -144,8 +144,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
         }
         parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -163,8 +163,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
         }
         parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
         parameters.put("batch", true);
@@ -183,8 +183,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), PROPS.getProperty(name));
         }
         parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -202,8 +202,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: props.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf(".")+1), props.getProperty(name));
+        for (final String name: PROPS.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf(".")+1), PROPS.getProperty(name));
         }
         Optional<MetaData> metadata = ext.meta(parameters);
 

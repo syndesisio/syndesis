@@ -35,7 +35,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
     private final Applicator<AccessGrant> applicator;
 
-    private boolean configured;
+    private final boolean configured;
 
     private final OAuth2ConnectionFactory<S> connectionFactory;
 

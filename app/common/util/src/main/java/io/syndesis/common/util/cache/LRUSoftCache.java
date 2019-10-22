@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class LRUSoftCache<K, V> implements Cache<K, V> {
 
-    private Cache<K, Reference<V>> cache;
+    private final Cache<K, Reference<V>> cache;
 
     public LRUSoftCache(int maxElements) {
         this.cache = new LRUDefaultCache<>(maxElements);

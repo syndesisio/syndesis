@@ -23,8 +23,8 @@ import java.util.UUID;
 
 public abstract class AbstractGoogleSheetsCustomizerTestSupport extends CamelTestSupport {
 
-    private ComponentProxyComponent component = new ComponentProxyComponent("google-sheets-1", "google-sheets");
-    private String spreadsheetId = UUID.randomUUID().toString();
+    private final ComponentProxyComponent component = new ComponentProxyComponent("google-sheets-1", "google-sheets");
+    private final String spreadsheetId = UUID.randomUUID().toString();
 
     @Override
     public boolean isUseRouteBuilder() {

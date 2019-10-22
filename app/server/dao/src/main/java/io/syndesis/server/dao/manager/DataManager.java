@@ -79,11 +79,11 @@ public class DataManager implements DataAccessObjectRegistry {
     private final EventBus eventBus;
     private final EncryptionComponent encryptionComponent;
     private final ResourceLoader resourceLoader;
-    private ConfigurableEnvironment environment;
+    private final ConfigurableEnvironment environment;
 
     @Value("${deployment.file:io/syndesis/server/dao/deployment.json}")
-    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
-    private String dataFileName = "io/syndesis/server/dao/deployment.json";
+    @SuppressWarnings({"PMD.ImmutableField", "PMD.FinalFieldCouldBeStatic"}) // @Value cannot be applied to final properties
+    private final String dataFileName = "io/syndesis/server/dao/deployment.json";
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
     private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new ConcurrentHashMap<>();

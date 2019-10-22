@@ -40,7 +40,7 @@ import org.apache.olingo.server.api.uri.queryoption.expression.UnaryOperatorKind
  */
 public class FilterExpressionVisitor implements ExpressionVisitor<Object> {
 
-    private Entity currentEntity;
+    private final Entity currentEntity;
 
   public FilterExpressionVisitor(Entity currentEntity) {
     this.currentEntity = currentEntity;

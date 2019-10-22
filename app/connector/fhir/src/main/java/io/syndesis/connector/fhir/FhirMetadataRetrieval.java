@@ -47,7 +47,7 @@ import java.util.Set;
 
 public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
-    final ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
+    static final ObjectMapper MAPPER = io.atlasmap.v2.Json.mapper();
 
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
@@ -210,12 +210,12 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
     String includeResources(String specification, String... resourceTypes) throws IOException {
         if (resourceTypes != null && resourceTypes.length != 0) {
-            XmlDocument document = mapper.readValue(specification, XmlDocument.class);
+            XmlDocument document = MAPPER.readValue(specification, XmlDocument.class);
             includeResources(null, document, resourceTypes);
-            return mapper.writer((PrettyPrinter) null).writeValueAsString(document);
-        } else {
-            return specification;
+            return MAPPER.writer((PrettyPrinter) null).writeValueAsString(document);
         }
+
+        return specification;
     }
 
     private void includeResources(String rootPath, XmlDocument resource, String... resourceTypes) throws IOException {
@@ -250,7 +250,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 }
                 inspectionToInclude = inspectionToInclude.replaceAll("\\\"path\\\"[\\s]*:[\\s]*\\\"", "\"path\":\"/" + pathToReplace);
 
-                XmlDocument resourceToInclude = mapper.readValue(inspectionToInclude, XmlDocument.class);
+                XmlDocument resourceToInclude = MAPPER.readValue(inspectionToInclude, XmlDocument.class);
                 if (rootPath == null) {
                     includeResources(pathToReplace, resourceToInclude, resourceTypes);
                 }
@@ -274,9 +274,9 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
                 if (xmlComplexType.getName().equals(path[depth])) {
                     if (depth == path.length - 1) {
                         return xmlComplexType;
-                    } else {
-                        return getElement(xmlComplexType, depth + 1, path);
                     }
+
+                    return getElement(xmlComplexType, depth + 1, path);
                 }
             }
         }

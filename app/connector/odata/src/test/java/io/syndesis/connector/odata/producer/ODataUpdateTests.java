@@ -92,9 +92,9 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
     private static class Property {
 
-        private String name;
-        private String original;
-        private String value;
+        private final String name;
+        private final String original;
+        private final String value;
 
         public Property(String name, String value, String original) {
             this.name = name;
@@ -105,8 +105,8 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
     private static class KeyedProperty {
 
-        private String keyPredicate;
-        private Property property;
+        private final String keyPredicate;
+        private final Property property;
 
         public KeyedProperty(String keyPredicate, Property property) {
             this.keyPredicate = keyPredicate;

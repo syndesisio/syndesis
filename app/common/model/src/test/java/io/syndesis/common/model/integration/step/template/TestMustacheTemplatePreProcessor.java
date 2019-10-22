@@ -24,7 +24,7 @@ import io.syndesis.common.util.StringConstants;
 
 public class TestMustacheTemplatePreProcessor implements StringConstants {
 
-    private MustacheTemplatePreProcessor processor = new MustacheTemplatePreProcessor();
+    private final MustacheTemplatePreProcessor processor = new MustacheTemplatePreProcessor();
 
     @After
     public void tearDown() {

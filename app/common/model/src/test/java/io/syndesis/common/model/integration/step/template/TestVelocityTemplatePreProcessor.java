@@ -24,7 +24,7 @@ import io.syndesis.common.util.StringConstants;
 
 public class TestVelocityTemplatePreProcessor implements StringConstants {
 
-    private VelocityTemplatePreProcessor processor = new VelocityTemplatePreProcessor();
+    private final VelocityTemplatePreProcessor processor = new VelocityTemplatePreProcessor();
 
     @After
     public void tearDown() {

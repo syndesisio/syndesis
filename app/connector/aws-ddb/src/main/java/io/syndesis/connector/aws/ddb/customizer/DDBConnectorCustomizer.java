@@ -40,7 +40,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
     //Store options to customize the connector
     private Map<String, Object> options;
 
-    private ObjectMapper mapper = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {

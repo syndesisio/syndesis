@@ -26,7 +26,7 @@ import java.util.Set;
  */
 public class LRUDefaultCache<K, V> implements Cache<K, V> {
 
-    private  Map<K, V> map;
+    private final Map<K, V> map;
 
     public LRUDefaultCache(int maxElements) {
         this.map = Collections.synchronizedMap(new LinkedHashMap<K, V>() {

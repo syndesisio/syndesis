@@ -31,10 +31,10 @@ import org.junit.Test;
  */
 public class DataShapeBuilderTest {
 
-    private String specification = "some uncompressed data";
-    private String compressedSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUUhJLEkEALZP9NQWAAAA";
-    private String variantSpecification = "some uncompressed variant data";
-    private String compressedVariantSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUShLLMpMzCtRSEksSQQAQv1meR4AAAA=";
+    private final String specification = "some uncompressed data";
+    private final String compressedSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUUhJLEkEALZP9NQWAAAA";
+    private final String variantSpecification = "some uncompressed variant data";
+    private final String compressedVariantSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUShLLMpMzCtRSEksSQQAQv1meR4AAAA=";
 
     @Test
     public void shouldNotCompressBasedOnMetadata() {
