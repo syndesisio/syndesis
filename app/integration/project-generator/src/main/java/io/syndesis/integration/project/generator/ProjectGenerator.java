@@ -43,6 +43,8 @@ import io.swagger.models.Swagger;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
+import io.syndesis.common.model.WithConfiguredProperties;
+import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -58,6 +60,7 @@ import io.syndesis.common.util.Json;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
+import io.syndesis.common.util.Strings;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.integration.api.IntegrationErrorHandler;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
@@ -76,7 +79,6 @@ import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.a
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
 
-@SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGenerator implements IntegrationProjectGenerator {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGenerator.class);
 
@@ -114,7 +116,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         return is;
     }
 
-    @SuppressWarnings("PMD")
     @Override
     public Properties generateApplicationProperties(final Integration integrationDefinition) {
         final Integration integration = resourceManager.sanitize(integrationDefinition);
@@ -122,62 +123,86 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
         properties.putAll(integration.getConfiguredProperties());
 
+        addPropertiesFrom(properties, integration, resourceManager);
+
+        return properties;
+    }
+
+    private static void addPropertiesFrom(final Properties properties, final Integration integration, final IntegrationResourceManager resourceManager) {
         final List<Flow> flows = integration.getFlows();
-        for (int f = 0; f < flows.size(); f++) {
-            final Flow flow = flows.get(f);
-            final int flowIndex = f;
+        for (int flowIndex = 0; flowIndex < flows.size(); flowIndex++) {
+            final Flow flow = flows.get(flowIndex);
             final List<Step> steps = flow.getSteps();
 
-            for (int s = 0; s < steps.size(); s++) {
-                final Step step = steps.get(s);
-                final int stepIndex = s;
+            for (int stepIndex = 0; stepIndex < steps.size(); stepIndex++) {
+                final Step step = steps.get(stepIndex);
 
                 // Check if a step is of supported type.
-                if(StepKind.endpoint != step.getStepKind()) {
+                if (StepKind.endpoint != step.getStepKind()) {
                     continue;
                 }
 
+                final Optional<Action> maybeAction = step.getAction();
+
+                final boolean isConnectorAction = maybeAction.map(a -> a instanceof ConnectorAction).orElse(Boolean.FALSE);
+                final boolean usesConnection = step.getConnection().isPresent();
+
                 // Check if a step has the required options
-                if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
-                    final Connection connection = step.getConnection().get();
-                    final ConnectorAction action = (ConnectorAction) step.getAction().get();
-                    final ConnectorDescriptor descriptor = action.getDescriptor();
-                    final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
-                        () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId())
-                    );
+                if (!isConnectorAction || !usesConnection) {
+                    continue;
+                }
 
-                    if (connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()) {
-                        // Grab the component scheme from the component descriptor or
-                        // from the connector
-                        final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
-                        final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
+                final Connection connection = step.getConnection().get();
+                final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
+                    () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId()));
 
-                        // Workaround for https://github.com/syndesisio/syndesis/issues/1713
-                        for (Map.Entry<String, ConfigurationProperty> entry: configurationProperties.entrySet()) {
-                            if (entry.getValue() != null && entry.getValue().getDefaultValue() != null && !entry.getValue().getDefaultValue().isEmpty()) {
-                                if (connector.isSecret(entry.getKey()) || action.isSecret(entry.getKey())) {
-                                    addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue().getDefaultValue());
-                                }
-                            }
-                        }
-                        for (Map.Entry<String, String> entry: connection.getConfiguredProperties().entrySet()) {
-                            if (connector.isSecret(entry) || action.isSecret(entry)) {
-                                addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue());
-                            }
-                        }
-                        for (Map.Entry<String, String> entry: step.getConfiguredProperties().entrySet()) {
-                            if (connector.isSecret(entry) || action.isSecret(entry)) {
-                                addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, entry.getKey(), entry.getValue());
-                            }
-                        }
-                    } else {
-                        throw new UnsupportedOperationException("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
+                final ConnectorAction action = (ConnectorAction) maybeAction.get();
+                final ConnectorDescriptor actionDescriptor = action.getDescriptor();
+
+                final Optional<String> maybeComponentScheme = Optionals.first(actionDescriptor.getComponentScheme(), connector.getComponentScheme());
+                boolean hasComponentScheme = maybeComponentScheme.isPresent();
+                if (!hasComponentScheme) {
+                    throw new UnsupportedOperationException(
+                        "Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
+                }
+
+                // Grab the component scheme from the component descriptor or
+                // from the connector
+                final String componentScheme = maybeComponentScheme.get();
+                final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(),
+                    action.getProperties());
+
+                // Workaround for
+                // https://github.com/syndesisio/syndesis/issues/1713
+                for (Map.Entry<String, ConfigurationProperty> entry : configurationProperties.entrySet()) {
+                    final String propertyName = entry.getKey();
+                    final ConfigurationProperty configurationProperty = entry.getValue();
+
+                    final String defaultValue = configurationProperty.getDefaultValue();
+                    boolean isSecret = connector.isSecret(propertyName) || action.isSecret(propertyName);
+
+                    if (Strings.isEmptyOrBlank(defaultValue) && isSecret) {
+                        addDecryptedKeyProperty(resourceManager, properties, flowIndex, stepIndex, componentScheme, propertyName, defaultValue);
                     }
                 }
+
+                addConfiguredPropertiesFrom(connector, action, connection, resourceManager, properties, flowIndex, stepIndex, componentScheme);
+
+                addConfiguredPropertiesFrom(connector, action, step, resourceManager, properties, flowIndex, stepIndex, componentScheme);
             }
         }
+    }
 
-        return properties;
+    private static void addConfiguredPropertiesFrom(final Connector connector, final ConnectorAction action, final WithConfiguredProperties holdsConfiguredProperties,
+        final IntegrationResourceManager resourceManager, final Properties properties, int flowIndex, int stepIndex, final String componentScheme) {
+        for (Map.Entry<String, String> entry: holdsConfiguredProperties.getConfiguredProperties().entrySet()) {
+            final String propertyName = entry.getKey();
+
+            if (connector.isSecret(propertyName) || action.isSecret(propertyName)) {
+                final String configuredValue = entry.getValue();
+                addDecryptedKeyProperty(resourceManager, properties, flowIndex, stepIndex, componentScheme, propertyName, configuredValue);
+            }
+        }
     }
 
     @Override
@@ -200,8 +225,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         );
     }
 
-    @SuppressWarnings("PMD.ExcessiveParameterList")
-    private void addDecryptedKeyProperty(Properties properties, Integer flowIndex, int stepIndex, String propKeyPrefix, String propertyKey, String propertyVal) {
+    private static void addDecryptedKeyProperty(IntegrationResourceManager resourceManager, Properties properties, int flowIndex, int stepIndex, String propKeyPrefix, String propertyKey, String propertyVal) {
         String key = String.format("flow-%d.%s-%d.%s", flowIndex, propKeyPrefix, stepIndex, propertyKey);
         String val = mandatoryDecrypt(resourceManager, propertyKey, propertyVal);
 
@@ -254,7 +278,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
-    @SuppressWarnings("PMD.DoNotUseThreads")
     private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os, IntegrationErrorHandler errorHandler) {
         return () -> {
             try (
@@ -312,7 +335,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
-    private void addMappingRules(TarArchiveOutputStream tos, Integration integration) throws IOException {
+    private static void addMappingRules(TarArchiveOutputStream tos, Integration integration) throws IOException {
         final List<Flow> flows = integration.getFlows();
         for (int f = 0; f < flows.size(); f++) {
             final Flow flow = flows.get(f);
@@ -370,7 +393,6 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         addTarEntry(tos, "src/main/resources/openapi.json", openApiBytes);
     }
 
-    @SuppressWarnings("PMD.UnusedPrivateMethod")
     private byte[] generateExtensionLoader(Set<String> extensions) {
         if (!extensions.isEmpty()) {
             return new StringBuilder()
