@@ -1,6 +1,7 @@
 import { IConnectionOverview } from '@syndesis/models';
 import {
   getActionsWithFrom,
+  getActionsWithPipe,
   getActionsWithTo,
   isConfigRequired,
   isDerived,
@@ -19,6 +20,7 @@ export const transformConnectionResponse = (
   return {
     ...connection,
     actionsWithFrom: getActionsWithFrom(connector ? connector.actions : []),
+    actionsWithPipe: getActionsWithPipe(connector ? connector.actions : []),
     actionsWithTo: getActionsWithTo(connector ? connector.actions : []),
     connector,
     derived: isDerived(connection),

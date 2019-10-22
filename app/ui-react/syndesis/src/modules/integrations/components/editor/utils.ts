@@ -436,7 +436,7 @@ export function filterStepsByPosition(
     if ((step.connection || (step as Connection)).connector) {
       return (step.connection || (step as Connection)).connector!.actions.some(
         (action: ConnectorAction) => {
-          return action.pattern === 'To';
+          return action.pattern === 'To' || action.pattern === 'Pipe';
         }
       );
     }

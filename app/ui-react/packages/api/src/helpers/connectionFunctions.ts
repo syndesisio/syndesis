@@ -19,6 +19,10 @@ export function getActionsWithTo(actions: Action[] = []) {
   return actions.filter(a => a.pattern === 'To');
 }
 
+export function getActionsWithPipe(actions: Action[] = []) {
+  return actions.filter(a => a.pattern === 'Pipe');
+}
+
 export function getConnectionMetadataValue(
   connection: Connection,
   key: string
