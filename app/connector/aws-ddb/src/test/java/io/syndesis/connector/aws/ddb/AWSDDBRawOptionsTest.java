@@ -16,6 +16,11 @@
 package io.syndesis.connector.aws.ddb;
 
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -31,12 +36,6 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 @Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
@@ -45,65 +44,83 @@ public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
 
         //Create a connection for DDB
         final ConnectorAction putItemAction = new ConnectorAction.Builder()
-                .descriptor(new ConnectorDescriptor.Builder()
-                        .componentScheme("aws-ddb")
-                        .connectorId("io.syndesis:aws-ddb-putitem-to-connector")
-                        .build())
-                .build();
+            .descriptor(new ConnectorDescriptor.Builder()
+                .componentScheme("aws-ddb")
+                .connectorId("io.syndesis:aws-ddb-putitem-to-connector")
+                .build())
+            .build();
 
         final Connection ddbConnection = new Connection.Builder()
-                .putConfiguredProperty(AWSDDBConfiguration.ACCESSKEY,
-                        AWSDDBConfiguration.ACCESSKEY_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.SECRETKEY,
-                        AWSDDBConfiguration.SECRETKEY_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.REGION, AWSDDBConfiguration.REGION_VALUE)
-                .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
-                        AWSDDBConfiguration.TABLENAME_VALUE)
-                .connector(new Connector.Builder()
-                        .putProperty(
-                                AWSDDBConfiguration.ACCESSKEY,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.ACCESSKEY)
-                                        .secret(true)
-                                        .raw(true)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.SECRETKEY,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.SECRETKEY)
-                                        .secret(true)
-                                        .raw(true)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.REGION,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.REGION)
-                                        .secret(false)
-                                        .componentProperty(false)
-                                        .build())
-                        .putProperty(
-                                AWSDDBConfiguration.TABLENAME,
-                                new ConfigurationProperty.Builder()
-                                        .kind(AWSDDBConfiguration.TABLENAME)
-                                        .secret(false)
-                                        .componentProperty(true)
-                                        .build())
+            .putConfiguredProperty(AWSDDBConfiguration.ACCESSKEY,
+                AWSDDBConfiguration.ACCESSKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.SECRETKEY,
+                AWSDDBConfiguration.SECRETKEY_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.REGION, AWSDDBConfiguration.REGION_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.TABLENAME,
+                AWSDDBConfiguration.TABLENAME_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.ELEMENT,
+                AWSDDBConfiguration.ELEMENT_VALUE)
+            .putConfiguredProperty(AWSDDBConfiguration.ATTRIBUTES,
+                AWSDDBConfiguration.ATTRIBUTES_VALUE)
+            .connector(new Connector.Builder()
+                .putProperty(
+                    AWSDDBConfiguration.ACCESSKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ACCESSKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
                         .build())
-                .build();
+                .putProperty(
+                    AWSDDBConfiguration.SECRETKEY,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.SECRETKEY)
+                        .secret(true)
+                        .raw(true)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.REGION,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.REGION)
+                        .secret(false)
+                        .componentProperty(false)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.TABLENAME,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.TABLENAME)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.ELEMENT,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ELEMENT)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .putProperty(
+                    AWSDDBConfiguration.ATTRIBUTES,
+                    new ConfigurationProperty.Builder()
+                        .kind(AWSDDBConfiguration.ATTRIBUTES)
+                        .secret(false)
+                        .componentProperty(true)
+                        .build())
+                .build())
+            .build();
 
         Step ddbPutItemStep = new Step.Builder()
-                .stepKind(StepKind.endpoint)
-                .connection(ddbConnection)
-                .action(putItemAction)
-                .build();
+            .stepKind(StepKind.endpoint)
+            .connection(ddbConnection)
+            .action(putItemAction)
+            .build();
 
         return Arrays.asList(
-                newSimpleEndpointStep(
-                        "direct",
-                        builder -> builder.putConfiguredProperty("name", "start")),
-                ddbPutItemStep
+            newSimpleEndpointStep(
+                "direct",
+                builder -> builder.putConfiguredProperty("name", "start")),
+            ddbPutItemStep
         );
     }
 
@@ -112,13 +129,14 @@ public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
         assertNotNull(context());
 
         Optional<Endpoint> endpoint =
-                context.getEndpoints().stream().filter(e -> e instanceof DdbEndpoint).findFirst();
+            context.getEndpoints().stream().filter(e -> e instanceof DdbEndpoint).findFirst();
+
+        String expected = "aws-ddb-aws-ddb-0-1://" + AWSDDBConfiguration.TABLENAME_VALUE +
+            "?accessKey=RAW(" + AWSDDBConfiguration.ACCESSKEY_VALUE + ")&region=" +
+            AWSDDBConfiguration.REGION_VALUE + "&secretKey=RAW(" + AWSDDBConfiguration.SECRETKEY_VALUE + ")";
 
         assertTrue(endpoint.isPresent());
-        assertEquals("aws-ddb://" + AWSDDBConfiguration.TABLENAME_VALUE +
-                        "?accessKey=RAW(" + AWSDDBConfiguration.ACCESSKEY_VALUE + ")&region=" +
-                        AWSDDBConfiguration.REGION_VALUE + "&secretKey=RAW(" + AWSDDBConfiguration.SECRETKEY_VALUE + ")",
-                endpoint.get().getEndpointUri());
+        assertEquals(expected, endpoint.get().getEndpointUri());
     }
 
     @Test
@@ -138,13 +156,14 @@ public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
         parameters.put(AWSDDBConfiguration.REGION, AWSDDBConfiguration.REGION_VALUE);
         parameters.put(AWSDDBConfiguration.TABLENAME, AWSDDBConfiguration.TABLENAME_VALUE);
         ComponentVerifierExtension.Result result =
-                verifier.verify(ComponentVerifierExtension.Scope.PARAMETERS
-                        , parameters);
+            verifier.verify(ComponentVerifierExtension.Scope.PARAMETERS
+                , parameters);
+
 
         assertTrue(result.getErrors().isEmpty());
         result =
-                verifier.verify(ComponentVerifierExtension.Scope.CONNECTIVITY
-                        , parameters);
+            verifier.verify(ComponentVerifierExtension.Scope.CONNECTIVITY
+                , parameters);
 
         assertTrue(result.getErrors().isEmpty());
     }
