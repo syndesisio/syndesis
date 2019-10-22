@@ -67,7 +67,7 @@ public class ApiDocumentationEndpoint {
         return Response.ok(resource("/static/swagger." + type), mediaTypeFor(type)).build();
     }
 
-    private MediaType mediaTypeFor(final String type) {
+    private static MediaType mediaTypeFor(final String type) {
         if ("json".equals(type)) {
             return MediaType.APPLICATION_JSON_TYPE;
         }

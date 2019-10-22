@@ -269,7 +269,7 @@ public abstract class BaseITCase {
         return processResponse(expectedStatus, response);
     }
 
-    private <T> ResponseEntity<T> processResponse(HttpStatus expectedStatus, ResponseEntity<T> response) {
+    private static <T> ResponseEntity<T> processResponse(HttpStatus expectedStatus, ResponseEntity<T> response) {
         if( expectedStatus!=null ) {
             if( !response.getStatusCode().equals(expectedStatus) ) {
                 LOG.warn("Got unexpected status code: {}, body: {}", response.getStatusCode(), response.getBody());
@@ -279,7 +279,7 @@ public abstract class BaseITCase {
         return response;
     }
 
-    private void prepareHeaders(Object body, HttpHeaders headers, String token) {
+    private static void prepareHeaders(Object body, HttpHeaders headers, String token) {
         if( body!=null && !headers.containsKey(HttpHeaders.CONTENT_TYPE) ) {
             headers.set(HttpHeaders.CONTENT_TYPE, "application/json");
         }

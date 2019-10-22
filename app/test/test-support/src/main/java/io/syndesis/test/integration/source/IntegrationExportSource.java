@@ -95,11 +95,11 @@ public class IntegrationExportSource implements IntegrationSource {
         return openApis;
     }
 
-    private JsonNode readModel(Path exportDirectory) throws IOException {
+    private static JsonNode readModel(Path exportDirectory) throws IOException {
         return Json.reader().readTree(Files.newInputStream(exportDirectory.resolve("model.json")));
     }
 
-    private JsonNode readModelFromZip(InputStream export) {
+    private static JsonNode readModelFromZip(InputStream export) {
         try (ZipInputStream zis = new ZipInputStream(export)) {
             while (true) {
                 ZipEntry entry = zis.getNextEntry();

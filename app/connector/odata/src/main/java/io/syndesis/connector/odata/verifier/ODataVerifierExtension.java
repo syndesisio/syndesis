@@ -72,10 +72,10 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyConnection).build();
+                .error(parameters, ODataVerifierExtension::verifyConnection).build();
     }
 
-    private void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyConnection(ResultBuilder builder, Map<String, Object> parameters) {
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }

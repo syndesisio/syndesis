@@ -39,16 +39,16 @@ public class KuduScanCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setOptions(options);
-        component.setBeforeConsumer(this::processBody);
-        component.setAfterProducer(this::processBody);
+        component.setBeforeConsumer(KuduScanCustomizer::processBody);
+        component.setAfterProducer(KuduScanCustomizer::processBody);
     }
 
-    private void setOptions(Map<String, Object> options) {
+    private static void setOptions(Map<String, Object> options) {
         options.put("operation", KuduDbOperations.SCAN);
         options.put("type", KuduDbOperations.SCAN);
     }
 
-    private void processBody(Exchange exchange) throws KuduException, JsonProcessingException {
+    private static void processBody(Exchange exchange) throws KuduException, JsonProcessingException {
         final Message in = exchange.getIn();
         final KuduScanner scanner = in.getBody(KuduScanner.class);
 

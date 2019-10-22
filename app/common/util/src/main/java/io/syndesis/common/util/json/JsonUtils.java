@@ -24,6 +24,7 @@ import java.util.StringJoiner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.Strings;
 
 /**
  * Utilities for working with Json.
@@ -53,29 +54,33 @@ public final class JsonUtils {
     }
 
     /**
-     * Checks given value to be a proper Json object string.
+     * Checks given value could be JSON object string.
      * @param value
      * @return
      */
     public static boolean isJsonObject(String value) {
-        if (value == null) {
+        if (Strings.isEmptyOrBlank(value)) {
             return false;
         }
 
-        return value.trim().startsWith("{") && value.trim().endsWith("}");
+        final String trimmed = value.trim();
+
+        return trimmed.charAt(0) == '{' && trimmed.charAt(trimmed.length() - 1) == '}';
     }
 
     /**
-     * Checks given value to be a proper Json array string.
+     * Checks given value could be JSON array string.
      * @param value
      * @return
      */
     public static boolean isJsonArray(String value) {
-        if (value == null) {
+        if (Strings.isEmptyOrBlank(value)) {
             return false;
         }
 
-        return value.trim().startsWith("[") && value.trim().endsWith("]");
+        final String trimmed = value.trim();
+
+        return trimmed.charAt(0) == '[' && trimmed.charAt(trimmed.length() - 1) == ']';
     }
 
     /**

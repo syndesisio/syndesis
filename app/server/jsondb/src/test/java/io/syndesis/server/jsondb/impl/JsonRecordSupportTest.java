@@ -72,7 +72,7 @@ public class JsonRecordSupportTest {
         }
     }
 
-    private String rtrim(String value, String suffix) {
+    private static String rtrim(String value, String suffix) {
         return value.replaceAll("("+Pattern.quote(suffix)+")+$", "");
     }
 }

@@ -141,7 +141,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
         verifyRecordsInDb(runner, 0, "New hire for ${first_name} from ${company}");
     }
 
-    private String getWebhookPayload() {
+    private static String getWebhookPayload() {
         return "{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}";
     }
 

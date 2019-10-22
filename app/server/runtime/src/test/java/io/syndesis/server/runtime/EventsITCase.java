@@ -15,31 +15,38 @@
  */
 package io.syndesis.server.runtime;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.launchdarkly.eventsource.EventHandler;
-import com.launchdarkly.eventsource.EventSource;
-import com.launchdarkly.eventsource.MessageEvent;
-import io.syndesis.common.model.ChangeEvent;
-import io.syndesis.common.model.EventMessage;
-import io.syndesis.common.model.integration.Integration;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
-import org.junit.Test;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import static io.syndesis.server.runtime.Recordings.*;
+import io.syndesis.common.model.ChangeEvent;
+import io.syndesis.common.model.EventMessage;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.server.runtime.Recordings.Invocation;
+
+import org.junit.Test;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.launchdarkly.eventsource.EventHandler;
+import com.launchdarkly.eventsource.EventSource;
+import com.launchdarkly.eventsource.MessageEvent;
+
+import static io.syndesis.server.runtime.Recordings.recordedInvocations;
+import static io.syndesis.server.runtime.Recordings.recorder;
+import static io.syndesis.server.runtime.Recordings.resetRecorderLatch;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.WebSocket;
+import okhttp3.WebSocketListener;
 
 /**
  * Used to test the SimpleEventBus
@@ -95,7 +102,7 @@ public class EventsITCase extends BaseITCase {
     }
 
 
-    private void reorderEventSourceInvocations(List<Invocation> invocations) {
+    private static void reorderEventSourceInvocations(List<Invocation> invocations) {
         // The EventSource is using a thread pool to emmit events.. so we get non-deterministic results.
         // lets reorder stuff so that the onOpen is the first event.
         for (int i = 1; i < invocations.size(); i++) {

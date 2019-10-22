@@ -73,11 +73,11 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
         }
     }
 
-    private String getMethod(ContainerRequestContext requestContext) {
+    private static String getMethod(ContainerRequestContext requestContext) {
         return requestContext.getRequest().getMethod();
     }
 
-    private String getStatus(ContainerResponseContext responseContext) {
+    private static String getStatus(ContainerResponseContext responseContext) {
         return Integer.toString(responseContext.getStatus());
     }
 

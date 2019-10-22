@@ -130,7 +130,7 @@ public class ProductsEntityCollectionProcessor implements EntityCollectionProces
         response.setHeader(HttpHeader.CONTENT_TYPE, responseFormat.toContentTypeString());
     }
 
-    private EntityCollection applyQueryOptions(UriInfo uriInfo, List<Entity> entityList, EntityCollection returnEntityCollection) throws ODataApplicationException {
+    private static EntityCollection applyQueryOptions(UriInfo uriInfo, List<Entity> entityList, EntityCollection returnEntityCollection) throws ODataApplicationException {
         // handle $skip
         SkipOption skipOption = uriInfo.getSkipOption();
         if (skipOption != null) {
@@ -210,7 +210,7 @@ public class ProductsEntityCollectionProcessor implements EntityCollectionProces
         return returnEntityCollection;
     }
 
-    private void applyOrderby(UriInfo uriInfo, EntityCollection entityCollection) {
+    private static void applyOrderby(UriInfo uriInfo, EntityCollection entityCollection) {
         List<Entity> entityList = entityCollection.getEntities();
 
         OrderByOption orderByOption = uriInfo.getOrderByOption();

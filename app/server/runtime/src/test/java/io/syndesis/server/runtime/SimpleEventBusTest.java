@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class SimpleEventBusTest {
 
-    private SimpleEventBus createEventBus() {
+    private static SimpleEventBus createEventBus() {
         return new SimpleEventBus();
     }
 

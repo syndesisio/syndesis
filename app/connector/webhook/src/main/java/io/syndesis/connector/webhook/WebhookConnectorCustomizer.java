@@ -80,10 +80,10 @@ public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, Cam
         component.setBeforeConsumer(Pipeline.newInstance(camelContext, beforeConsumers));
 
         // Unconditionally we remove output in 7.1 release
-        component.setAfterConsumer(this::removeOutput);
+        component.setAfterConsumer(WebhookConnectorCustomizer::removeOutput);
     }
 
-    private void removeOutput(final Exchange exchange) {
+    private static void removeOutput(final Exchange exchange) {
         exchange.getOut().setBody("");
         exchange.getOut().removeHeaders("*");
 

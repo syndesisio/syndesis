@@ -281,7 +281,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     @Nonnull
     @SuppressWarnings("PMD.CyclomaticComplexity")
-    private InputStream getBinaryArtifact(MultipartFormDataInput input) {
+    private static InputStream getBinaryArtifact(MultipartFormDataInput input) {
         if (input == null || input.getParts() == null || input.getParts().isEmpty()) {
             throw new IllegalArgumentException("Multipart request is empty");
         }
@@ -329,12 +329,12 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             .collect(Collectors.toSet());
         return getDataManager().fetchAll(IntegrationDeployment.class).getItems().stream()
             .filter(integrationDeployment -> isIntegrationActiveAndUsingExtension(integrationDeployment, deletedIntegrationIds, extension))
-            .map(this::toIntegrationResourceIdentifier)
+            .map(ExtensionHandler::toIntegrationResourceIdentifier)
             .distinct()
             .collect(Collectors.toSet());
     }
 
-    private ResourceIdentifier toIntegrationResourceIdentifier(IntegrationDeployment integrationDeployment) {
+    private static ResourceIdentifier toIntegrationResourceIdentifier(IntegrationDeployment integrationDeployment) {
         return new ResourceIdentifier.Builder()
             .id(integrationDeployment.getIntegrationId())
             .kind(Kind.Integration)

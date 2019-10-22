@@ -79,7 +79,7 @@ public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer
         component.setAfterProducer(statusCodeUpdater(httpResponseStatus, errorResponseCodeMappings, isReturnBody));
     }
 
-    private Processor statusCodeUpdater(Integer responseCode, Map<String, String> errorResponseCodeMappings,
+    private static Processor statusCodeUpdater(Integer responseCode, Map<String, String> errorResponseCodeMappings,
             Boolean isReturnBody) {
         return exchange -> {
             if (exchange.getException() != null) {

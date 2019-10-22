@@ -59,12 +59,6 @@ public final class SyndesisMetadata {
     // Helpers
     // *********************
 
-    public static SyndesisMetadata of(Map<String, List<PropertyPair>> properties) {
-        ObjectHelper.notNull(properties, "Properties");
-
-        return new SyndesisMetadata(properties, null, null);
-    }
-
     public static SyndesisMetadata inOnly(DataShape dataShape) {
         ObjectHelper.notNull(dataShape, "DataShape");
 
@@ -75,6 +69,12 @@ public final class SyndesisMetadata {
         ObjectHelper.notNull(dataShape, "DataShape");
 
         return new SyndesisMetadata(Collections.emptyMap(), null, dataShape);
+    }
+
+    public static SyndesisMetadata of(Map<String, List<PropertyPair>> properties) {
+        ObjectHelper.notNull(properties, "Properties");
+
+        return new SyndesisMetadata(properties, null, null);
     }
 
     public static SyndesisMetadata of(DataShape dataShape) {

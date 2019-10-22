@@ -31,8 +31,6 @@ import java.nio.file.Path;
 
 public class FhirMetadataRetrievalTest {
 
-    private FhirMetadataRetrieval fhirMetadataRetrieval = new FhirMetadataRetrieval();
-
     @Test
     public void includeResourcesInBundle() throws Exception {
         Path bundle = FileSystems.getDefault().getPath("target/classes/META-INF/syndesis/schemas/dstu3/bundle.json");
@@ -42,7 +40,7 @@ public class FhirMetadataRetrievalTest {
             inspection = IOUtils.toString(fileIn, StandardCharsets.UTF_8);
         }
 
-        String inspectionWithResources = fhirMetadataRetrieval.includeResources(inspection, "patient", "account");
+        String inspectionWithResources = FhirMetadataRetrieval.includeResources(inspection, "patient", "account");
 
         ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
         XmlDocument xmlDocument = mapper.readValue(inspectionWithResources, XmlDocument.class);
@@ -68,7 +66,7 @@ public class FhirMetadataRetrievalTest {
             inspection = IOUtils.toString(fileIn, StandardCharsets.UTF_8);
         }
 
-        String inspectionWithResources = new FhirMetadataRetrieval().includeResources(inspection, "person", "account");
+        String inspectionWithResources = FhirMetadataRetrieval.includeResources(inspection, "person", "account");
 
         ObjectMapper mapper = io.atlasmap.v2.Json.mapper();
         XmlDocument xmlDocument = mapper.readValue(inspectionWithResources, XmlDocument.class);
@@ -84,7 +82,7 @@ public class FhirMetadataRetrievalTest {
     }
 
     public String getPath(XmlComplexType fields, String... path) {
-        XmlComplexType element = fhirMetadataRetrieval.getElement(fields, 0, path);
+        XmlComplexType element = FhirMetadataRetrieval.getElement(fields, 0, path);
         return element != null ? element.getPath() : null;
     }
 

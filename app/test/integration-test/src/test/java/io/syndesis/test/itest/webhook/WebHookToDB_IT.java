@@ -120,7 +120,7 @@ public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
         verifyRecordsInDb(runner, 0);
     }
 
-    private String contact(String firstName, String company) {
+    private static String contact(String firstName, String company) {
         return String.format("{\"first_name\":\"%s\",\"company\":\"%s\"}", firstName, company);
     }
 

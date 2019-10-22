@@ -34,10 +34,10 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, EMailCo
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeConsumer(this::beforeConsumer);
+        component.setBeforeConsumer(EMailReceiveCustomizer::beforeConsumer);
     }
 
-    private void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
+    private static void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
 
         final Message in = exchange.getIn();
         final EMailMessageModel mail = new EMailMessageModel();
@@ -63,7 +63,7 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, EMailCo
         exchange.getIn().setBody(mail);
     }
 
-    private String getPlainTextFromMultipart(Multipart multipart)  throws MessagingException, IOException {
+    private static String getPlainTextFromMultipart(Multipart multipart)  throws MessagingException, IOException {
         StringBuilder result = new StringBuilder();
         int count = multipart.getCount();
         for (int i = 0; i < count; i++) {
@@ -92,7 +92,7 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, EMailCo
         return result.toString();
     }
 
-    private void textFromMessage(Message camelMessage, EMailMessageModel model) throws MessagingException, IOException {
+    private static void textFromMessage(Message camelMessage, EMailMessageModel model) throws MessagingException, IOException {
         Object content = camelMessage.getBody();
 
         if (content instanceof String) {

@@ -399,13 +399,13 @@ public class ComponentProxyComponent extends DefaultComponent {
         return endpointOptions;
     }
 
-    private <T> void doAddOptions(Map<String, T> destination, Map<String, T> options) {
+    private static <T> void doAddOptions(Map<String, T> destination, Map<String, T> options) {
         options.forEach(
             (k, v) -> doAddOption(destination, k, v)
         );
     }
 
-    private <T> void doAddOption(Map<String, T> options, String name, T value) {
+    private static <T> void doAddOption(Map<String, T> options, String name, T value) {
         LOGGER.trace("Adding option: {}={}", name, value);
         T val = options.put(name, value);
         if (val != null) {

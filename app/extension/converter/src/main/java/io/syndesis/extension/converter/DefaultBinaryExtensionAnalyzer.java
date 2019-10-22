@@ -82,7 +82,7 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
         return allowedIconPaths.get(path);
     }
 
-    private Extension doGetExtension(InputStream binaryExtension) throws IOException {
+    private static Extension doGetExtension(InputStream binaryExtension) throws IOException {
         Optional<InputStream> entry = readPath(binaryExtension, MANIFEST_LOCATION);
         if (!entry.isPresent()) {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
@@ -97,7 +97,7 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
     }
 
     @SuppressWarnings("PMD.EmptyCatchBlock")
-    private Optional<InputStream> readPath(InputStream binaryExtension, String path) {
+    private static Optional<InputStream> readPath(InputStream binaryExtension, String path) {
         JarInputStream jar;
         try {
             jar = new JarInputStream(binaryExtension);

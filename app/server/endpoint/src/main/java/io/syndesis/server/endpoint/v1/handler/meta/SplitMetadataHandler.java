@@ -167,7 +167,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
      * @return
      * @throws IOException
      */
-    private String extractUnifiedJsonBodySpec(String specification) throws IOException {
+    private static String extractUnifiedJsonBodySpec(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");

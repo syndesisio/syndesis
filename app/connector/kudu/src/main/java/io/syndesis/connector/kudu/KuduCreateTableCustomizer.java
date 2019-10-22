@@ -40,7 +40,7 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setOptions(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(KuduCreateTableCustomizer::afterProducer);
     }
 
     private void setOptions(Map<String, Object> options) {
@@ -97,7 +97,7 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
         in.setHeader("TableOptions", new CreateTableOptions().setRangePartitionColumns(rangeKeys));
     }
 
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
         final KuduTable table = exchange.getIn().getBody(KuduTable.class);
 
@@ -111,7 +111,7 @@ public class KuduCreateTableCustomizer implements ComponentProxyCustomizer {
         in.setBody(model);
     }
 
-    private Type convertType(String type) {
+    private static Type convertType(String type) {
         switch (type) {
             case "String":
                 return Type.STRING;

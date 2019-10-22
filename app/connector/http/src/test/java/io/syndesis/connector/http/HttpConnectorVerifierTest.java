@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 
 import io.syndesis.connector.http.util.BasicValidationHandler;
-import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.CamelContext;
@@ -61,7 +60,7 @@ public class HttpConnectorVerifierTest {
         }
     }
 
-    private HttpProcessor getHttpProcessor() {
+    private static HttpProcessor getHttpProcessor() {
         return new ImmutableHttpProcessor(
             Arrays.asList(
                 new RequestBasicAuth()

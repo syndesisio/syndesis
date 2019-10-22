@@ -34,11 +34,11 @@ public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer 
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeConsumer(this::beforeConsumer);
+        component.setBeforeConsumer(GoogleCalendarEventsCustomizer::beforeConsumer);
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    private void beforeConsumer(Exchange exchange) {
+    private static void beforeConsumer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);

@@ -51,7 +51,7 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
         component.setBeforeProducer(this::beforeProducer);
-        component.setAfterProducer(this::afterProducer);
+        component.setAfterProducer(GoogleSheetsUpdateSpreadsheetCustomizer::afterProducer);
     }
 
     private void setApiMethod(Map<String, Object> options) {
@@ -114,7 +114,7 @@ public class GoogleSheetsUpdateSpreadsheetCustomizer implements ComponentProxyCu
         in.setHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "batchUpdateSpreadsheetRequest", batchUpdateRequest);
     }
 
-    private void afterProducer(Exchange exchange) {
+    private static void afterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
         final BatchUpdateSpreadsheetResponse batchUpdateResponse = in.getBody(BatchUpdateSpreadsheetResponse.class);
 

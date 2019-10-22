@@ -147,7 +147,7 @@ class IntegrationOverviewHelper {
         return builder.build();
     }
 
-    private boolean computeDraft(final Integration current, final Integration deployed) {
+    private static boolean computeDraft(final Integration current, final Integration deployed) {
         final List<Flow> currentFlows = current.getFlows();
         final List<Flow> deployedFlows = deployed.getFlows();
 

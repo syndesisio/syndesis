@@ -37,16 +37,16 @@ public class GoogleSheetsGetSpreadsheetCustomizer implements ComponentProxyCusto
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         setApiMethod(options);
-        component.setBeforeConsumer(this::beforeConsumer);
+        component.setBeforeConsumer(GoogleSheetsGetSpreadsheetCustomizer::beforeConsumer);
     }
 
-    private void setApiMethod(Map<String, Object> options) {
+    private static void setApiMethod(Map<String, Object> options) {
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());
         options.put("methodName", "get");
     }
 
-    private void beforeConsumer(Exchange exchange) {
+    private static void beforeConsumer(Exchange exchange) {
         final Message in = exchange.getIn();
         final Spreadsheet spreadsheet = exchange.getIn().getBody(Spreadsheet.class);
 

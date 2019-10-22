@@ -40,7 +40,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
     // Flag if the symbol is a declaration for a velocity-only symbol
     private boolean vSymbolDeclaration;
 
-    public VelocityTemplatePreProcessor() {
+    VelocityTemplatePreProcessor() {
         super(
               new SymbolSyntax(DOLLAR_SIGN + OPEN_BRACE, CLOSE_BRACE),
               new SymbolSyntax(DOLLAR_SIGN, EMPTY_STRING));

@@ -238,7 +238,7 @@ public class ConnectorsITCase extends BaseITCase {
         assertThat(dataManager.fetch(Connection.class, "test-connection")).isNull();
     }
 
-    private HttpHeaders multipartHeaders() {
+    private static HttpHeaders multipartHeaders() {
         final HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         return headers;

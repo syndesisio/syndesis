@@ -347,7 +347,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             .setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
     }
 
-    private String getStepId(String stepId) {
+    private static String getStepId(String stepId) {
         return String.format("step:%s", stepId);
     }
 
@@ -374,9 +374,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 flow.getId().ifPresent(route::setId);
 
                 return route;
-            } else {
-                throw new IllegalArgumentException("Unsupported scheduler type: " + scheduler.getType());
             }
+
+            throw new IllegalArgumentException("Unsupported scheduler type: " + scheduler.getType());
         }
 
         return null;
@@ -422,7 +422,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         throw new IllegalStateException("Unsupported step kind: " + step.getStepKind());
     }
 
-    private Object mandatoryLoadResource(CamelContext context, String resource) {
+    private static Object mandatoryLoadResource(CamelContext context, String resource) {
         Object instance = null;
 
         if (resource.startsWith("classpath:")) {
@@ -445,7 +445,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return instance;
     }
 
-    private RoutesDefinition mandatoryConvertToRoutesDefinition(String resource, Object instance)  {
+    private static RoutesDefinition mandatoryConvertToRoutesDefinition(String resource, Object instance)  {
         final RoutesDefinition definitions;
 
         if (instance instanceof RoutesDefinition) {

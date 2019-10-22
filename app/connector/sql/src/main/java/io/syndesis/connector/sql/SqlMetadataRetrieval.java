@@ -229,7 +229,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
      * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
-    private List<PropertyPair> obtainToProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
+    private static List<PropertyPair> obtainToProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
         final List<PropertyPair> ppList = new ArrayList<>();
         for (final String storedProcedureName : procedureMap.keySet()) {
             final PropertyPair pp = new PropertyPair(storedProcedureName, storedProcedureName);
@@ -244,7 +244,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
      * @param procedureMap
      * @return list of property pairs containing the stored procedure names
      */
-    private List<PropertyPair> obtainFromProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
+    private static List<PropertyPair> obtainFromProcedureList (Map<String, StoredProcedureMetadata> procedureMap) {
         final List<PropertyPair> ppList = new ArrayList<>();
         for (final StoredProcedureMetadata storedProcedure : procedureMap.values() ) {
             if (! containsInputParams(storedProcedure)) {
@@ -260,7 +260,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
      * @param storedProcedure
      * @return boolean - true if input params present, false if no input params.
      */
-    private boolean containsInputParams(StoredProcedureMetadata storedProcedure) {
+    private static boolean containsInputParams(StoredProcedureMetadata storedProcedure) {
         if (storedProcedure.getColumnList() != null && !storedProcedure.getColumnList().isEmpty()) {
             for (final StoredProcedureColumn column : storedProcedure.getColumnList()) {
                 if (column.getMode().equals(ColumnMode.IN) || column.getMode().equals(ColumnMode.INOUT)) {

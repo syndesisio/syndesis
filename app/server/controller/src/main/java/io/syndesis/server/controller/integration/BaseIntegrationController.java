@@ -198,7 +198,7 @@ public abstract class BaseIntegrationController implements BackendController {
         }
     }
 
-    private String getLabel(IntegrationDeployment integrationDeployment) {
+    private static String getLabel(IntegrationDeployment integrationDeployment) {
         return "Integration " + integrationDeployment.getIntegrationId().orElse("[none]");
     }
 
@@ -272,13 +272,13 @@ public abstract class BaseIntegrationController implements BackendController {
         );
     }
 
-    private String getIntegrationMarkerKey(IntegrationDeployment integrationDeployment) {
+    private static String getIntegrationMarkerKey(IntegrationDeployment integrationDeployment) {
         return integrationDeployment.getTargetState() +
                ":" +
                integrationDeployment.getId().orElseThrow(() -> new IllegalArgumentException("No id set in integration " + integrationDeployment));
     }
 
-    private boolean stale(StateChangeHandler handler, IntegrationDeployment integrationDeployment) {
+    private static boolean stale(StateChangeHandler handler, IntegrationDeployment integrationDeployment) {
         if (integrationDeployment == null || handler == null) {
             return true;
         }

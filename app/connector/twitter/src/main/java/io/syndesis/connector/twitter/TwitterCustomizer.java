@@ -27,12 +27,12 @@ public class TwitterCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setAfterProducer(this::doAfterProducer);
+        component.setAfterProducer(TwitterCustomizer::doAfterProducer);
     }
 
-	private void doAfterProducer(Exchange exchange) {
+    private static void doAfterProducer(Exchange exchange) {
         if (exchange.getException() != null) {
-        	throw SyndesisConnectorException.wrap(TwitterErrorCategory.TWITTER_CONNECTOR_ERROR, exchange.getException());
+            throw SyndesisConnectorException.wrap(TwitterErrorCategory.TWITTER_CONNECTOR_ERROR, exchange.getException());
         }
     }
 }

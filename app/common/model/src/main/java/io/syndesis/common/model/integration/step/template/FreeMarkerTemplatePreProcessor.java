@@ -30,7 +30,7 @@ class FreeMarkerTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
     private static final Pattern SYMBOL_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z0-9_@\\$\\.]+");
 
-    public FreeMarkerTemplatePreProcessor() {
+    FreeMarkerTemplatePreProcessor() {
         super(new SymbolSyntax(DOLLAR_SIGN + OPEN_BRACE, CLOSE_BRACE));
     }
 

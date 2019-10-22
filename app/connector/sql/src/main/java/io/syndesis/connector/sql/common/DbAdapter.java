@@ -38,7 +38,7 @@ public class DbAdapter {
         return this.db;
     }
 
-    private Db getDb(Connection conn) throws SQLException {
+    private static Db getDb(Connection conn) throws SQLException {
         DbEnum dbEnum =  DbEnum.fromName(conn.getMetaData().getDatabaseProductName());
         switch (dbEnum) {
 

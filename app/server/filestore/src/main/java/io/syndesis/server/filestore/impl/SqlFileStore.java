@@ -182,12 +182,12 @@ public class SqlFileStore {
         }
     }
 
-    private void doWriteStandard(Handle h, String path, InputStream file) {
+    private static void doWriteStandard(Handle h, String path, InputStream file) {
         doDelete(h, path);
         h.insert("INSERT INTO filestore(path, data) values (?,?)", path, file);
     }
 
-    private void doWritePostgres(Handle h, String path, InputStream file) {
+    private static void doWritePostgres(Handle h, String path, InputStream file) {
         doDelete(h, path);
         try {
             LargeObjectManager lobj = getPostgresConnection(h.getConnection()).getLargeObjectAPI();
@@ -203,7 +203,7 @@ public class SqlFileStore {
         }
     }
 
-    private void doWriteDerby(Handle h, String path, InputStream file) {
+    private static void doWriteDerby(Handle h, String path, InputStream file) {
         doDelete(h, path);
         try {
             Blob blob = h.getConnection().createBlob();
@@ -217,7 +217,7 @@ public class SqlFileStore {
         }
     }
 
-    private InputStream doReadStandard(Handle h, String path) {
+    private static InputStream doReadStandard(Handle h, String path) {
         List<Map<String, Object>> res = h.select("SELECT data FROM filestore WHERE path=?", path);
 
         Optional<Blob> blob = res.stream()
@@ -304,18 +304,18 @@ public class SqlFileStore {
         }
     }
 
-    private boolean doDelete(Handle h, String path) {
+    private static boolean doDelete(Handle h, String path) {
         return h.update("DELETE FROM filestore WHERE path=?", path) > 0;
     }
 
-    private PGConnection getPostgresConnection(Connection conn) throws SQLException {
+    private static PGConnection getPostgresConnection(Connection conn) throws SQLException {
         if (conn instanceof PGConnection) {
             return PGConnection.class.cast(conn);
         }
         return conn.unwrap(PGConnection.class);
     }
 
-    private String newRandomTempFilePath() {
+    private static String newRandomTempFilePath() {
         SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd-HH-mm", Locale.ROOT);
         return "/tmp/" + fmt.format(new Date()) + "_" + UUID.randomUUID();
     }
@@ -348,7 +348,7 @@ public class SqlFileStore {
      */
     static class HandleCloserInputStream extends FilterInputStream {
 
-        private Handle handle;
+        private final Handle handle;
 
         HandleCloserInputStream(Handle handle, InputStream in) {
             super(in);

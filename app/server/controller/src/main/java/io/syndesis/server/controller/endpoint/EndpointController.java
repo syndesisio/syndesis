@@ -158,7 +158,7 @@ public class EndpointController implements BackendController {
         }
     }
 
-    private Optional<IntegrationEndpoint> expectedEndpoint(IntegrationDeployment integrationDeployment, Optional<String> host) {
+    private static Optional<IntegrationEndpoint> expectedEndpoint(IntegrationDeployment integrationDeployment, Optional<String> host) {
         if (!host.isPresent()) {
             return Optional.empty();
         }
@@ -174,21 +174,21 @@ public class EndpointController implements BackendController {
                     .build());
     }
 
-    private Optional<String> serverBasePath(Integration integration) {
+    private static Optional<String> serverBasePath(Integration integration) {
         return allSteps(integration)
             .findFirst()
             .flatMap(Step::getAction)
             .flatMap(action -> action.getMetadata("serverBasePath"));
     }
 
-    private Optional<String> contextPath(Integration integration) {
+    private static Optional<String> contextPath(Integration integration) {
         return allSteps(integration)
             .findFirst()
             .flatMap(step -> step.getAction().flatMap(action -> action.propertyTaggedWith(step.getConfiguredProperties(), "context-path")));
     }
 
     @SafeVarargs
-    private final String join(Optional<String>... paths) {
+    private static final String join(Optional<String>... paths) {
         StringBuilder res = new StringBuilder();
         for (Optional<String> path : paths) {
             if (path.isPresent()) {

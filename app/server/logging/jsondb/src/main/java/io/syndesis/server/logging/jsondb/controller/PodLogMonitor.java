@@ -248,7 +248,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         }
     }
 
-    private void processLogLineStep(Map<String, Object> json, InflightData inflightData, String step, String id) throws IOException {
+    private static void processLogLineStep(Map<String, Object> json, InflightData inflightData, String step, String id) throws IOException {
         ActivityStep as = inflightData.getStep(step, id);
         String message = (String) json.remove("message");
         if (message != null) {

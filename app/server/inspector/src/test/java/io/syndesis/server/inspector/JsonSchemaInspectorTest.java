@@ -87,19 +87,19 @@ public class JsonSchemaInspectorTest {
         assertThat(paths).containsAll(Arrays.asList("Id", "PhoneNumbers.size()", "PhoneNumbers[].Name", "PhoneNumbers[].Number"));
     }
 
-    private InputStream getPetstoreUnifiedSchema(String schemaPath) {
+    private static InputStream getPetstoreUnifiedSchema(String schemaPath) {
         return JsonSchemaInspectorTest.class.getResourceAsStream(schemaPath);
     }
 
-    private InputStream getSalesForceContactSchema() {
+    private static InputStream getSalesForceContactSchema() {
         return JsonSchemaInspectorTest.class.getResourceAsStream("/salesforce.Contact.jsonschema");
     }
 
-    private String getSalesForceContactArraySchema() throws IOException {
+    private static String getSalesForceContactArraySchema() throws IOException {
         return "{\"type\":\"array\",\"$schema\":\"" + JSON_SCHEMA_ORG_SCHEMA + "\",\"items\":" + IOStreams.readText(getSalesForceContactSchema()) + "}";
     }
 
-    private String getSchemaWithNestedArray() {
+    private static String getSchemaWithNestedArray() {
         return "{" +
                     "\"type\":\"object\"," +
                 "\"$schema\":\"" + JSON_SCHEMA_ORG_SCHEMA + "\", " +
@@ -119,15 +119,15 @@ public class JsonSchemaInspectorTest {
                 "}";
     }
 
-    private void assertSalesforceContactProperties(List<String> paths) {
+    private static void assertSalesforceContactProperties(List<String> paths) {
         assertSalesforceContactProperties(paths, null);
     }
 
-    private void assertSalesforceContactArrayProperties(List<String> paths) {
+    private static void assertSalesforceContactArrayProperties(List<String> paths) {
         assertSalesforceContactProperties(paths, "[]");
     }
 
-    private void assertSalesforceContactProperties(List<String> paths, String context) {
+    private static void assertSalesforceContactProperties(List<String> paths, String context) {
         List<String> expectedPaths = Arrays.asList("Id",
                 "IsDeleted", "MasterRecordId", "AccountId", "LastName",
                 "FirstName", "OtherAddress.latitude", "MailingAddress.city");
@@ -137,7 +137,7 @@ public class JsonSchemaInspectorTest {
                                                     .collect(Collectors.toList()));
     }
 
-    private void assertPetstoreProperties(List<String> paths) {
+    private static void assertPetstoreProperties(List<String> paths) {
         List<String> expectedParameters = Collections.singletonList("version");
         List<String> expectedBodyPaths = Arrays.asList("id", "name", "category.id", "category.name", "photoUrls.size()",
                 "tags[].id", "tags[].name", "tags.size()", "status");

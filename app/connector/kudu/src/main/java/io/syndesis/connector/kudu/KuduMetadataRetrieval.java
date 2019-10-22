@@ -92,7 +92,7 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
         return new KuduMetaDataExtension(context);
     }
 
-    private ObjectSchema createSpec(KuduMetaData kuduMetaData) {
+    private static ObjectSchema createSpec(KuduMetaData kuduMetaData) {
         // build the input and output schemas
         ObjectSchema spec = new ObjectSchema();
 

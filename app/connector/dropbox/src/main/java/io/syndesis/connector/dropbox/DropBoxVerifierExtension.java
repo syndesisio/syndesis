@@ -53,10 +53,10 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
     @Override
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-                .error(parameters, this::verifyCredentials).build();
+                .error(parameters, DropBoxVerifierExtension::verifyCredentials).build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         String token = ConnectorOptions.extractOption(parameters, "accessToken");
         String clientId = ConnectorOptions.extractOption(parameters, "clientIdentifier");

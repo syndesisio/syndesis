@@ -90,7 +90,7 @@ public class VerifierEndpoint {
         return answer;
     }
 
-    private List<VerifierResponse> filterExceptions(List<VerifierResponse> responses) {
+    private static List<VerifierResponse> filterExceptions(List<VerifierResponse> responses) {
         for (VerifierResponse response : responses) {
             List<VerifierResponse.Error> errors = response.getErrors();
             if (errors != null) {
@@ -113,7 +113,7 @@ public class VerifierEndpoint {
         return responses;
     }
 
-    private VerifierResponse createUnsupportedResponse(String connectorId) {
+    private static VerifierResponse createUnsupportedResponse(String connectorId) {
         return new VerifierResponse.Builder(Verifier.Status.UNSUPPORTED, Verifier.Scope.PARAMETERS)
             .error("unknown-connector", String.format("No connector for ID %s registered", connectorId))
             .build();

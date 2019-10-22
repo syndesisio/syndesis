@@ -78,7 +78,7 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
         return Optional.of(route);
     }
 
-    private Predicate getPredicate(String conditionExpression, CamelContext context) {
+    private static Predicate getPredicate(String conditionExpression, CamelContext context) {
         return new JsonSimplePredicate(conditionExpression, context);
     }
 
@@ -94,11 +94,11 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
      * @param flowId
      * @return
      */
-    private String getEndpointUri(String routingScheme, String flowId) {
+    private static String getEndpointUri(String routingScheme, String flowId) {
         return routingScheme + ":" + flowId;
     }
 
-    private List<FlowOption> extractFlows(String flowMappings) {
+    private static List<FlowOption> extractFlows(String flowMappings) {
         try {
             if (flowMappings == null || flowMappings.isEmpty()) {
                 return Collections.emptyList();

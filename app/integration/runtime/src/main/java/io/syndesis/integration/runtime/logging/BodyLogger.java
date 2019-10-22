@@ -61,7 +61,7 @@ public interface BodyLogger {
                                  .evaluate(exchange, String.class);
         }
 
-        private String convertToString(Exchange exchange, Object o) {
+        private static String convertToString(Exchange exchange, Object o) {
             CamelContext camelContext = Optional.ofNullable(exchange.getContext())
                                                 .orElseGet(DefaultCamelContext::new);
 

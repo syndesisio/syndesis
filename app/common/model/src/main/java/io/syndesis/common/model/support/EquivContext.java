@@ -33,7 +33,7 @@ class EquivContext implements StringConstants {
 
     private String b;
 
-    public EquivContext(String name, Class<?> klazz) {
+    EquivContext(String name, Class<?> klazz) {
         this.name = name;
         this.type = klazz.getSimpleName().replaceAll("Immutable", EMPTY_STRING);
     }
@@ -64,7 +64,7 @@ class EquivContext implements StringConstants {
                         TAB + "=> " + QUOTE_MARK + this.b + QUOTE_MARK + NEW_LINE;
     }
 
-    private String truncate(String fullText, String diffText, int diffIndex) {
+    private static String truncate(String fullText, String diffText, int diffIndex) {
         StringBuilder truncated = new StringBuilder();
 
         //
@@ -107,7 +107,7 @@ class EquivContext implements StringConstants {
         this.b = truncate(bStr, bDiff, diffPos);
     }
 
-    private String toString(Object value) {
+    private static String toString(Object value) {
         if (value instanceof Optional) {
             Optional<?> ov = (Optional<?>) value;
             Object v = ov.orElse(null);

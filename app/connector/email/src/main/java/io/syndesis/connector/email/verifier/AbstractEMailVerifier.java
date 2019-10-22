@@ -75,7 +75,7 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         }
     }
 
-    private void setJavaMailProperty(MailConfiguration configuration, String key, String value) {
+    private static void setJavaMailProperty(MailConfiguration configuration, String key, String value) {
         configuration.getAdditionalJavaMailProperties().setProperty(key, value);
     }
 
@@ -113,8 +113,7 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         return setProperties(new MailConfiguration(), new HashMap<>(parameters));
     }
 
-    protected JavaMailSender createJavaMailSender(MailConfiguration configuration) throws NoSuchMethodException, SecurityException, IllegalAccessException,
-        IllegalArgumentException, InvocationTargetException {
+    protected JavaMailSender createJavaMailSender(MailConfiguration configuration) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
             Method method = MailConfiguration.class.getDeclaredMethod("createJavaMailSender");
             method.setAccessible(true);
             return (JavaMailSender) method.invoke(configuration);

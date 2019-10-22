@@ -59,7 +59,7 @@ public class ODataUtilTests extends AbstractODataTest {
         }
     }
 
-    private Edm requestEdm(String serviceUri) {
+    private static Edm requestEdm(String serviceUri) {
         ODataClient client = ODataClientFactory.getClient();
         HttpClientFactory factory = ODataUtil.newHttpFactory(new HashMap<>());
         client.getConfiguration().setHttpClientFactory(factory);

@@ -410,7 +410,7 @@ public class SplitMetadataHandlerTest {
         Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
-    private DataShape dummyShape(DataShapeKinds kind) {
+    private static DataShape dummyShape(DataShapeKinds kind) {
         return new DataShape.Builder()
                 .kind(kind)
                 .specification("{}")
@@ -419,7 +419,7 @@ public class SplitMetadataHandlerTest {
                 .build();
     }
 
-    private String getSpecification(String path) throws IOException {
+    private static String getSpecification(String path) throws IOException {
         return IOUtils.toString(new ClassPathResource(path, SplitMetadataHandlerTest.class).getInputStream(), StandardCharsets.UTF_8);
     }
 }

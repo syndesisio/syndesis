@@ -62,7 +62,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         }
     }
 
-    private Map<String, JsonSchema> checkShape(DataShape dataShape, Class<? extends ContainerTypeSchema> expectedShapeClass) throws IOException, JsonParseException, JsonMappingException {
+    private static Map<String, JsonSchema> checkShape(DataShape dataShape, Class<? extends ContainerTypeSchema> expectedShapeClass) throws IOException, JsonParseException, JsonMappingException {
         assertNotNull(dataShape);
 
         assertEquals(DataShapeKinds.JSON_SCHEMA, dataShape.getKind());
@@ -82,7 +82,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         return propSchemaMap;
     }
 
-    private void checkTestServerSchemaMap(Map<String, JsonSchema> schemaMap) {
+    private static void checkTestServerSchemaMap(Map<String, JsonSchema> schemaMap) {
         JsonSchema descSchema = schemaMap.get("Description");
         JsonSchema specSchema = schemaMap.get("Specification");
 

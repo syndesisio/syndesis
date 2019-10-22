@@ -98,7 +98,7 @@ public class ODataCreateTests extends AbstractODataRouteTest {
         return odataAction;
     }
 
-    private Step createDirectStep() {
+    private static Step createDirectStep() {
         Step directStep = new Step.Builder()
             .stepKind(StepKind.endpoint)
             .action(new ConnectorAction.Builder()

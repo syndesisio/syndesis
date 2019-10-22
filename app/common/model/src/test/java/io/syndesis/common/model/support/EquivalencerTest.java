@@ -52,7 +52,7 @@ public class EquivalencerTest implements StringConstants {
         return new NameTypePair(name, type);
     }
 
-    private ConnectorAction connectorAction(String name) {
+    private static ConnectorAction connectorAction(String name) {
         return new ConnectorAction.Builder()
                      .id("sql-connector")
                      .actionType("connector")
@@ -63,7 +63,7 @@ public class EquivalencerTest implements StringConstants {
                      .build();
     }
 
-    private Connector connector(ConnectorAction connectorAction) {
+    private static Connector connector(ConnectorAction connectorAction) {
         return new Connector.Builder()
                       .id("5")
                       .name("sql")
@@ -71,7 +71,7 @@ public class EquivalencerTest implements StringConstants {
                       .build();
     }
 
-    private Connector connectorWithDescription(ConnectorAction connectorAction, String description) {
+    private static Connector connectorWithDescription(ConnectorAction connectorAction, String description) {
         return new Connector.Builder()
                       .id("5")
                       .name("sql")
@@ -80,7 +80,7 @@ public class EquivalencerTest implements StringConstants {
                       .build();
     }
 
-    private Connection connection(Connector connector) {
+    private static Connection connection(Connector connector) {
         Map<String, String> configuredProperties = new HashMap<>();
         configuredProperties.put("password", "password");
         configuredProperties.put("user", "developer");
@@ -123,7 +123,7 @@ public class EquivalencerTest implements StringConstants {
         assertTrue(equiv.failureMessage().isEmpty());
     }
 
-    private String expectedMessage(String property, Object  value1, Object value2, NameTypePair... ctx) {
+    private static String expectedMessage(String property, Object  value1, Object value2, NameTypePair... ctx) {
         StringBuilder msg = new StringBuilder();
         msg.append(
             "Reason: '" + property + "' is different" + NEW_LINE +

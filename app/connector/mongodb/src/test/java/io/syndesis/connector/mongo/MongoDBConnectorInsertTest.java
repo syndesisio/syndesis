@@ -76,7 +76,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
 
-    private List<Document> formatBatchMessageDocument(int batchNo) {
+    private static List<Document> formatBatchMessageDocument(int batchNo) {
         List<Document> list = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             Document next = new Document();

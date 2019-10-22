@@ -60,7 +60,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         return Optional.of(new DefaultMetaData(null, null, odataMetadata));
     }
 
-    private ODataMetadata buildMetadata(Map<String, Object> parameters) {
+    private static ODataMetadata buildMetadata(Map<String, Object> parameters) {
         ODataMetadata odataMetadata = new ODataMetadata();
 
         String serviceUrl = ConnectorOptions.extractOption(parameters, SERVICE_URI);
@@ -93,7 +93,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         return odataMetadata;
     }
 
-    private void extractEdmMetadata(ODataMetadata odataMetadata, Edm edm, String resourcePath) {
+    private static void extractEdmMetadata(ODataMetadata odataMetadata, Edm edm, String resourcePath) {
         if (ObjectHelper.isEmpty(resourcePath)) {
             LOG.warn("No method name with which to query OData service.");
             return;
@@ -112,7 +112,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         odataMetadata.setEntityProperties(properties);
     }
 
-    private void extractEdmNames(ODataMetadata odataMetadata, Edm edm) {
+    private static void extractEdmNames(ODataMetadata odataMetadata, Edm edm) {
         Set<EdmNamed> namedList = new HashSet<>();
         EdmEntityContainer container = edm.getEntityContainer();
         namedList.addAll(container.getEntitySets());
@@ -133,7 +133,7 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
         odataMetadata.setEntityNames(names);
     }
 
-    private Edm requestEdm(Map<String, Object> parameters, String serviceUrl) {
+    private static Edm requestEdm(Map<String, Object> parameters, String serviceUrl) {
         ODataClient client = ODataClientFactory.getClient();
         HttpClientFactory factory = ODataUtil.newHttpFactory(parameters);
         client.getConfiguration().setHttpClientFactory(factory);

@@ -46,16 +46,16 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
     private boolean inSectionSymbol;
 
-    public MustacheTemplatePreProcessor() {
+    MustacheTemplatePreProcessor() {
         super(new SymbolSyntax(OPEN_BRACE + OPEN_BRACE, CLOSE_BRACE + CLOSE_BRACE));
     }
 
-    private boolean isOpeningSectionSymbol(String literal) {
+    private static boolean isOpeningSectionSymbol(String literal) {
         Matcher m = SYMBOL_OPEN_SECTION_PATTERN.matcher(literal);
         return m.matches();
     }
 
-    private boolean isClosingSectionSymbol(String literal) {
+    private static boolean isClosingSectionSymbol(String literal) {
         Matcher m = SYMBOL_CLOSE_SECTION_PATTERN.matcher(literal);
         return m.matches();
     }

@@ -111,7 +111,7 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private ResourceSpec generateOpenAPIResource(OpenApi openApi) throws Exception {
+    private static ResourceSpec generateOpenAPIResource(OpenApi openApi) throws Exception {
         final byte[] openApiBytes = openApi.getDocument();
 //        final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(openApiBytes) : new String(openApiBytes, UTF_8);
 

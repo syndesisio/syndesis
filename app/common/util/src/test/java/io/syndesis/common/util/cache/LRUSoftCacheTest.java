@@ -47,7 +47,7 @@ public class LRUSoftCacheTest {
      * This test requires a cap of 200MB on the Java heap to work (it's set on surefire).
      * Run it with: "-Xmx200m"
      */
-    private void doTest(Cache<String, byte[]> cache) {
+    private static void doTest(Cache<String, byte[]> cache) {
         // Initial tests on the cache
         byte[] payload = new byte[]{1, 2, 3, 4, 5};
         cache.put("key", payload);

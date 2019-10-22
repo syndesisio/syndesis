@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -186,7 +185,7 @@ public class IntegrationResourceManagerTest {
     }
 
 
-    private Integration newIntegration(Step... steps) {
+    private static Integration newIntegration(Step... steps) {
         return new Integration.Builder()
             .id("test-integration")
             .name("Test Integration")
@@ -197,7 +196,7 @@ public class IntegrationResourceManagerTest {
             .build();
     }
 
-    private Connector getHttpConnector() {
+    private static Connector getHttpConnector() {
         return new Connector.Builder()
             .id("http")
             .putProperty(
@@ -233,7 +232,7 @@ public class IntegrationResourceManagerTest {
 
     }
 
-    private ConnectorAction getHttpPostAction() {
+    private static ConnectorAction getHttpPostAction() {
 
         return new ConnectorAction.Builder()
             .id("http-post-action")
@@ -244,7 +243,7 @@ public class IntegrationResourceManagerTest {
             .build();
     }
 
-    private ConnectorAction getHttpGetAction() {
+    private static ConnectorAction getHttpGetAction() {
         return new ConnectorAction.Builder()
             .id("http-get-action")
             .descriptor(new ConnectorDescriptor.Builder()
@@ -255,7 +254,7 @@ public class IntegrationResourceManagerTest {
             .build();
     }
 
-    private Action getPeriodicTimerAction() {
+    private static Action getPeriodicTimerAction() {
         return new ConnectorAction.Builder()
             .id("periodic-timer-action")
             .descriptor(new ConnectorDescriptor.Builder()
@@ -265,7 +264,7 @@ public class IntegrationResourceManagerTest {
             .build();
     }
 
-    private Connector getTimerConnector() {
+    private static Connector getTimerConnector() {
         return new Connector.Builder()
             .id("timer")
             .putProperty(
@@ -278,8 +277,7 @@ public class IntegrationResourceManagerTest {
             .build();
     }
 
-
-    private IntegrationResourceManager createResourceManager() {
+    private static IntegrationResourceManager createResourceManager() {
         return new IntegrationResourceManager() {
             @Override
             public Optional<Connector> loadConnector(String id) {

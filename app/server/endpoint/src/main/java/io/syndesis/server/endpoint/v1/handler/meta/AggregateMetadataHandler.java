@@ -237,7 +237,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * @return
      * @throws IOException
      */
-    private String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
+    private static String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
@@ -262,7 +262,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
      * @return
      * @throws IOException
      */
-    private String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
+    private static String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
         JsonSchema schema = JsonSchemaUtils.reader().readValue(specification);
         if (schema.isObjectSchema()) {
             JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");

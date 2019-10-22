@@ -579,7 +579,7 @@ public class AggregateMetadataHandlerTest {
         Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
-    private DataShape dummyShape(DataShapeKinds kind) {
+    private static DataShape dummyShape(DataShapeKinds kind) {
         return new DataShape.Builder()
                 .kind(kind)
                 .description("dummyShape")
@@ -588,7 +588,7 @@ public class AggregateMetadataHandlerTest {
                 .build();
     }
 
-    private String getSpecification(String path) throws IOException {
+    private static String getSpecification(String path) throws IOException {
         return IOUtils.toString(new ClassPathResource(path, AggregateMetadataHandlerTest.class).getInputStream(), StandardCharsets.UTF_8);
     }
 }

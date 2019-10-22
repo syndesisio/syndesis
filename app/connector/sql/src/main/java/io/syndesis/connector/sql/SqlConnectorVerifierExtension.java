@@ -110,11 +110,11 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
     @Override
     public Result verifyConnectivity(Map<String, Object> parameters) {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY)
-            .error(parameters, this::verifyCredentials)
+            .error(parameters, SqlConnectorVerifierExtension::verifyCredentials)
             .build();
     }
 
-    private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
+    private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         try ( Connection connection = SqlSupport.createConnection(parameters)) {
             if (connection == null) {
                 throw new SQLException("No Connection");

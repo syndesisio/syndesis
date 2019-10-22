@@ -81,12 +81,12 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
 
         if (ObjectHelper.isNotEmpty(ConnectorOptions.extractOption(properties, "resourceType"))) {
             return createSyndesisMetadata(actionId, properties, enrichedProperties);
-        } else {
-            return SyndesisMetadata.of(enrichedProperties);
         }
+
+        return SyndesisMetadata.of(enrichedProperties);
     }
 
-    private SyndesisMetadata createSyndesisMetadata(String actionId, Map<String, Object> properties, Map<String, List<PropertyPair>> enrichedProperties) {
+    private static SyndesisMetadata createSyndesisMetadata(String actionId, Map<String, Object> properties, Map<String, List<PropertyPair>> enrichedProperties) {
         String containedResourceTypes = ConnectorOptions.extractOption(properties, "containedResourceTypes");
         String type = ConnectorOptions.extractOption(properties, "resourceType");
 
@@ -169,7 +169,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    private String newPatchSpecification(Integer operationNumber) {
+    private static String newPatchSpecification(Integer operationNumber) {
         final JsonSchemaFactory factory = new JsonSchemaFactory();
         final ObjectSchema patchSchema = factory.objectSchema();
         patchSchema.set$schema("http://json-schema.org/schema#");
@@ -191,7 +191,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         return schema;
     }
 
-    private String newResourceSpecification(String type, String containedResourceTypes) {
+    private static String newResourceSpecification(String type, String containedResourceTypes) {
         String specification;
         String resourcePath = type.toLowerCase(Locale.ENGLISH);
         try {
@@ -208,7 +208,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         return specification;
     }
 
-    String includeResources(String specification, String... resourceTypes) throws IOException {
+    static String includeResources(String specification, String... resourceTypes) throws IOException {
         if (resourceTypes != null && resourceTypes.length != 0) {
             XmlDocument document = MAPPER.readValue(specification, XmlDocument.class);
             includeResources(null, document, resourceTypes);
@@ -218,7 +218,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         return specification;
     }
 
-    private void includeResources(String rootPath, XmlDocument resource, String... resourceTypes) throws IOException {
+    private static void includeResources(String rootPath, XmlDocument resource, String... resourceTypes) throws IOException {
         XmlComplexType resourceElement = (XmlComplexType) resource.getFields().getField().get(0);
         switch (resourceElement.getName()) {
             case "tns:Bundle":
@@ -237,7 +237,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    private void includeResourcesInPath(String rootPath, XmlComplexType resourceElement, String[] resourceTypes, String... path) throws IOException {
+    private static void includeResourcesInPath(String rootPath, XmlComplexType resourceElement, String[] resourceTypes, String... path) throws IOException {
         XmlComplexType element = getElement(resourceElement, 0, path);
         if (element != null) {
             List<XmlField> elements = new ArrayList<>();
@@ -263,7 +263,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    XmlComplexType getElement(XmlComplexType field, int depth, String... path) {
+    static XmlComplexType getElement(XmlComplexType field, int depth, String... path) {
         if (path.length == 0) {
             return field;
         }

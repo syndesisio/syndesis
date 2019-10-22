@@ -103,7 +103,7 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
         }
     }
 
-    private void applyMetadata(DataShape.Builder builder, JsonSchema spec) {
+    private static void applyMetadata(DataShape.Builder builder, JsonSchema spec) {
         if (spec.isObjectSchema()) {
             builder.putMetadata("variant", "element");
         }

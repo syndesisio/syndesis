@@ -133,7 +133,7 @@ public class ExtensionActivator {
         }
     }
 
-    private Connector migrateOldConnectorData(Connector existingConnector, Connector newConnector) {
+    private static Connector migrateOldConnectorData(Connector existingConnector, Connector newConnector) {
         Map<String, String> propValues = new TreeMap<>(existingConnector.getConfiguredProperties());
         propValues.keySet().retainAll(newConnector.getProperties().keySet());
 
@@ -163,7 +163,7 @@ public class ExtensionActivator {
         return Optional.ofNullable(dataManager.fetch(Connector.class, getConnectorIdForExtension(extension)));
     }
 
-    private Connector toConnector(Extension extension) {
+    private static Connector toConnector(Extension extension) {
         List<ConnectorAction> connectorActions = extension.getActions(ConnectorAction.class);
 
         return new Connector.Builder()

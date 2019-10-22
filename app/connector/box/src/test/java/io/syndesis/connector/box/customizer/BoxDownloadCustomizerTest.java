@@ -62,7 +62,7 @@ public class BoxDownloadCustomizerTest extends CamelTestSupport {
         assertEquals(size, file.getSize());
     }
 
-    private void setBody(Exchange inbound, String content, String encoding) throws Exception {
+    private static void setBody(Exchange inbound, String content, String encoding) throws Exception {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         output.write(content.getBytes(encoding));
         inbound.getIn().setBody(output);
