@@ -25,7 +25,7 @@ public class ResourceUpdateConfiguration {
     private boolean enabled;
 
     // Interval between check
-    private Scheduler scheduler = new Scheduler();
+    private final Scheduler scheduler = new Scheduler();
 
     public boolean isEnabled() {
         return enabled;

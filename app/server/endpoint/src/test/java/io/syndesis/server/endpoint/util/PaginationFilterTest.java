@@ -20,16 +20,18 @@ import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.common.model.ListResult;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @RunWith(Parameterized.class)
 public class PaginationFilterTest {
 
-    private static List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
+    private static final List<Integer> ints = Arrays.asList(1, 2, 3, 4, 5);
     private final Parameter parameter;
 
     public PaginationFilterTest(Parameter parameter) {

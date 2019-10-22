@@ -40,7 +40,7 @@ public class BaseOlingo4Test extends AbstractODataTest {
 
     private static class MyRouteBuilder extends RouteBuilder {
 
-        private String olingoURI;
+        private final String olingoURI;
 
         public MyRouteBuilder(String olingoURI) {
             this.olingoURI = olingoURI;

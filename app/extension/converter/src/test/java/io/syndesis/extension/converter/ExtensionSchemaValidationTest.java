@@ -15,6 +15,19 @@
  */
 package io.syndesis.extension.converter;
 
+import java.io.IOException;
+
+import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.util.Json;
+
+import org.junit.Ignore;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -23,25 +36,16 @@ import com.github.fge.jsonschema.core.exceptions.ProcessingException;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.model.action.Action;
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.action.StepDescriptor;
-import io.syndesis.common.model.extension.Extension;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 
 public class ExtensionSchemaValidationTest {
 
-    private final ObjectMapper OBJECT_MAPPER = Json.copyObjectMapperConfiguration();
+    private static final Logger LOG = LoggerFactory.getLogger(ExtensionSchemaValidationTest.class);
 
-    Logger LOG = LoggerFactory.getLogger(ExtensionSchemaValidationTest.class);
+    private static final ObjectMapper OBJECT_MAPPER = Json.copyObjectMapperConfiguration();
 
     @Test
     @Ignore("Used to generate the initial extension definition")

@@ -41,8 +41,8 @@ public class SqlStatementParser {
      * table name
      */
     private final Connection connection;
-    private String schema;
-    private DbMetaDataHelper dbHelper;
+    private final String schema;
+    private final DbMetaDataHelper dbHelper;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
     private final List<String> sqlArrayUpperCase = new ArrayList<>();

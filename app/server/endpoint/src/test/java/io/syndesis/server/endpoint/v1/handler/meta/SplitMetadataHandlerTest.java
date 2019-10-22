@@ -45,9 +45,9 @@ import org.springframework.util.StringUtils;
 @RunWith(JUnitParamsRunner.class)
 public class SplitMetadataHandlerTest {
 
-    private SplitMetadataHandler metadataHandler = new SplitMetadataHandler();
+    private final SplitMetadataHandler metadataHandler = new SplitMetadataHandler();
 
-    private Step splitStep = new Step.Builder()
+    private final Step splitStep = new Step.Builder()
             .stepKind(StepKind.split)
             .build();
 

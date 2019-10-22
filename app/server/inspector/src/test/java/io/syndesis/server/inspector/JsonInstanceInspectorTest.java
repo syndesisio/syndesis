@@ -31,8 +31,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 public class JsonInstanceInspectorTest {
 
-    private final String JSON_INSTANCE_KIND = "json-instance";
-    private JsonInstanceInspector inspector = new JsonInstanceInspector();
+    private static final String JSON_INSTANCE_KIND = "json-instance";
+    private final JsonInstanceInspector inspector = new JsonInstanceInspector();
 
     @Test
     public void shouldCollectPathsFromJsonObject() {

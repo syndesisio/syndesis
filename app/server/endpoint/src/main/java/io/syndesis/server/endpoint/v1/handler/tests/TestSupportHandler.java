@@ -62,9 +62,9 @@ public class TestSupportHandler {
 
     private final DBI dbi;
 
-    private CacheManager cacheManager;
+    private final CacheManager cacheManager;
 
-    private Collection<BackendController> controllers;
+    private final Collection<BackendController> controllers;
 
     public TestSupportHandler(DBI dbi, DataManager dataMgr, CacheManager cacheManager, List<DataAccessObject<?>> daos, OpenShiftService openShiftService, Collection<BackendController> controllers) {
         this.dbi = dbi;

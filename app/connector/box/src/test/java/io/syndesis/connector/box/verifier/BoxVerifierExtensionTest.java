@@ -32,7 +32,7 @@ public class BoxVerifierExtensionTest extends CamelTestSupport {
 
     private BoxVerifierExtension verifier;
 
-    private static Map<String, Object> parameters = new HashMap<>();
+    private static final Map<String, Object> parameters = new HashMap<>();
 
     @BeforeClass
     public static void testConditions() {

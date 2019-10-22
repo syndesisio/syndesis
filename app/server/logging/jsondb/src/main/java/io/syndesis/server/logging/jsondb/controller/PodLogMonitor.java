@@ -54,7 +54,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     // matches log lines like: 2018-06-06T21:54:36.30603486Z {"exchange":"i-LEM51uGKc6IuIjvR95Vz","status":"begin"}
     private static final Pattern LOG_LINE_REGEX = Pattern.compile("^(\\d\\d\\d\\d\\-\\d\\d\\-\\d\\dT\\d\\d:\\d\\d:\\d\\d\\.\\d+Z) (\\{.*\\})\\s*");
 
-    private AtomicBoolean running = new AtomicBoolean(false);
+    private final AtomicBoolean running = new AtomicBoolean(false);
     private final ActivityTrackingController logsController;
     protected final AtomicBoolean markInOpenshift = new AtomicBoolean(true);
     protected final AtomicBoolean keepTrying = new AtomicBoolean(true);

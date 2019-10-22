@@ -37,7 +37,7 @@ public class ConnectorsMvcEndpoint extends EndpointMvcAdapter {
 
     private static final Logger LOG = LoggerFactory.getLogger(ConnectorsMvcEndpoint.class);
 
-    private ConnectorsEndpoint delegate;
+    private final ConnectorsEndpoint delegate;
 
     public ConnectorsMvcEndpoint(ConnectorsEndpoint delegate) {
         super(delegate);

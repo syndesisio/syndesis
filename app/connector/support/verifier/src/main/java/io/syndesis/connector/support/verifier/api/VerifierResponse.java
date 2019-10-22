@@ -32,8 +32,8 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 @JsonDeserialize
 public class VerifierResponse {
 
-    private Verifier.Scope scope;
-    private Verifier.Status status;
+    private final Verifier.Scope scope;
+    private final Verifier.Status status;
     private List<Error> errors;
 
     VerifierResponse(Verifier.Status status, Verifier.Scope scope) {

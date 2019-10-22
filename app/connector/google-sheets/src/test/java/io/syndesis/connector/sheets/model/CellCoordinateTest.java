@@ -30,10 +30,10 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class CellCoordinateTest {
 
-    private String cellId;
-    private String columnName;
-    private int rowIndexCheck;
-    private int columnIndexCheck;
+    private final String cellId;
+    private final String columnName;
+    private final int rowIndexCheck;
+    private final int columnIndexCheck;
 
     public CellCoordinateTest(String columnName, String rowIndex, int rowIndexCheck, int columnIndexCheck) {
         this.cellId = columnName + rowIndex;

@@ -24,29 +24,29 @@ import java.util.Random;
  */
 public final class RandomValueGenerator {
 
-    private static final String ALPHANUM_SCHEME = "alphanum";
-    private static final String ALPHANUM_DOMAIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     private static final int ALPHANUM_DEFAULT_LENGTH = 40;
+    private static final String ALPHANUM_DOMAIN = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    private static final String ALPHANUM_SCHEME = "alphanum";
 
     private static final Random RANDOMIZER = new Random();
 
     private RandomValueGenerator() {
     }
 
-    public static String generate(String generator) {
+    public static String generate(final String generator) {
         if (generator == null) {
             throw new IllegalArgumentException("Generator cannot be null");
         }
 
-        int split = generator.indexOf(':');
+        final int split = generator.indexOf(':');
         if (split < 0) {
             return generate(generator, null);
-        } else {
-            return generate(generator.substring(0, split), generator.substring(split + 1));
         }
+
+        return generate(generator.substring(0, split), generator.substring(split + 1));
     }
 
-    private static String generate(String scheme, String remaining) {
+    private static String generate(final String scheme, final String remaining) {
         if (ALPHANUM_SCHEME.equals(scheme)) {
             return generateAlphanum(remaining);
         }
@@ -54,12 +54,12 @@ public final class RandomValueGenerator {
         throw new IllegalArgumentException("Unsupported generator scheme: " + scheme);
     }
 
-    private static String generateAlphanum(String remaining) {
+    private static String generateAlphanum(final String remaining) {
         int length = ALPHANUM_DEFAULT_LENGTH;
-        if (remaining != null && remaining.trim().length() > 0) {
+        if (!Strings.isEmptyOrBlank(remaining)) {
             try {
                 length = Integer.parseInt(remaining.trim());
-            } catch (NumberFormatException ex) {
+            } catch (final NumberFormatException ex) {
                 throw new IllegalArgumentException("Unexpected string after the " + ALPHANUM_SCHEME + " scheme: expected length", ex);
             }
         }
@@ -68,9 +68,9 @@ public final class RandomValueGenerator {
             throw new IllegalArgumentException("Cannot generate a string of negative length");
         }
 
-        StringBuilder res = new StringBuilder();
-        for (int i=0; i<length; i++) {
-            int offset = RANDOMIZER.nextInt(ALPHANUM_DOMAIN.length());
+        final StringBuilder res = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            final int offset = RANDOMIZER.nextInt(ALPHANUM_DOMAIN.length());
             res.append(ALPHANUM_DOMAIN.charAt(offset));
         }
 

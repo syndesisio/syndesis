@@ -32,7 +32,7 @@ import java.util.List;
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
-    private static int ID = 1;
+    private static int globalId = 1;
 
     // **************************
     // Set up
@@ -69,7 +69,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 int id = jsonNode.get("id").asInt();
                 String value = jsonNode.get("someKey").asText();
-                return id <= ID && "someValue".equals(value);
+                return id <= globalId && "someValue".equals(value);
             } catch (IOException ex) {
                 log.error("Test failed because: ",ex);
                 return false;
@@ -77,7 +77,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
         });
         // Given
         Document doc = new Document();
-        doc.append("id", ID++);
+        doc.append("id", globalId++);
         doc.append("someKey", "someValue");
         collection.insertOne(doc);
         // Then

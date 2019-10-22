@@ -65,7 +65,7 @@ public class SyndesisServerContainer extends GenericContainer<SyndesisServerCont
 
         private String serverJarPath;
 
-        private Map<String, String> javaOptions = new HashMap<>();
+        private final Map<String, String> javaOptions = new HashMap<>();
 
         public Builder() {
             javaOptions.put("encrypt.key", "supersecret");

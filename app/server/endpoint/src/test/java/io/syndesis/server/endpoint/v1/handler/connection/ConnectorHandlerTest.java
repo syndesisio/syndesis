@@ -22,7 +22,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
@@ -79,9 +78,9 @@ public class ConnectorHandlerTest {
 
     private final DataManager dataManager = mock(DataManager.class);
 
-    private final IconDao NO_ICON_DAO = null;
+    private static final IconDao NO_ICON_DAO = null;
 
-    private final FileDataManager NO_EXTENSION_DATA_MANAGER = null;
+    private static final FileDataManager NO_EXTENSION_DATA_MANAGER = null;
 
     private final io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler handler = new io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
                                                                                                                                                                       NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER);
@@ -117,9 +116,8 @@ public class ConnectorHandlerTest {
                     final ImageReader reader = readers.next();
                     try {
                         reader.setInput(iis);
-                        final Dimension dimensions = new Dimension(reader.getWidth(0), reader.getHeight(0));
-                        assertThat(dimensions.getHeight()).as("Wrong image height").isEqualTo(106d);
-                        assertThat(dimensions.getWidth()).as("Wrong image width").isEqualTo(106d);
+                        assertThat(reader.getHeight(0)).as("Wrong image height").isEqualTo(106d);
+                        assertThat(reader.getWidth(0)).as("Wrong image width").isEqualTo(106d);
                     } finally {
                         reader.dispose();
                     }

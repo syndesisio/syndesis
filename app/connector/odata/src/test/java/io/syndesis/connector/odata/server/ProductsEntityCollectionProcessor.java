@@ -63,7 +63,7 @@ public class ProductsEntityCollectionProcessor implements EntityCollectionProces
 
     private OData odata;
     private ServiceMetadata serviceMetadata;
-    private Storage storage;
+    private final Storage storage;
 
     public ProductsEntityCollectionProcessor(Storage storage) {
         this.storage = storage;

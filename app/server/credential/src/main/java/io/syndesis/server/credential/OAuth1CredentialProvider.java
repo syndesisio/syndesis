@@ -31,7 +31,7 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
 
     private final Applicator<OAuthToken> applicator;
 
-    private boolean configured;
+    private final boolean configured;
 
     private final OAuth1ConnectionFactory<A> connectionFactory;
 

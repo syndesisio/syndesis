@@ -58,7 +58,7 @@ public class EMailTestServer implements StringConstants {
         SMTP, SMTPS
     }
 
-    private List<Options> optionsList;
+    private final List<Options> optionsList;
 
     private GreenMail greenMail;
 
@@ -236,7 +236,7 @@ public class EMailTestServer implements StringConstants {
         return greenMail.getReceivedMessages().length;
     }
 
-    private EMailMessageModel createMessageModel(Message msg) throws MessagingException, IOException {
+    private static EMailMessageModel createMessageModel(Message msg) throws MessagingException, IOException {
         EMailMessageModel model = new EMailMessageModel();
         model.setFrom(msg.getFrom()[0].toString());
         model.setTo(msg.getRecipients(RecipientType.TO)[0].toString());

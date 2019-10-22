@@ -30,7 +30,7 @@ import java.util.List;
 @ConditionalOnProperty(value = "endpoints.connectors.enabled", havingValue = "true", matchIfMissing = true)
 public class ConnectorsEndpoint extends AbstractEndpoint<List<Connector>> {
 
-    private DataManager dataManager;
+    private final DataManager dataManager;
 
     public ConnectorsEndpoint(DataManager dataManager) {
         super("connectors", false, true);

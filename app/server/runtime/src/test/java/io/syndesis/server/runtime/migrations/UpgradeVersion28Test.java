@@ -49,7 +49,7 @@ public class UpgradeVersion28Test {
     private static final int SCHEMA_VERSION = 28;
     private static final String INTEGRATIONS_PATH = "/integrations";
 
-    private Migrator migrator = new DefaultMigrator(new DefaultResourceLoader());
+    private final Migrator migrator = new DefaultMigrator(new DefaultResourceLoader());
 
     @Test
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
@@ -145,7 +145,7 @@ public class UpgradeVersion28Test {
         return new StepAction.Builder().build();
     }
 
-    private void assertStepsOnFlow(Flow flow, StepKind ... steps) {
+    private static void assertStepsOnFlow(Flow flow, StepKind ... steps) {
         Assert.assertEquals(steps.length, flow.getSteps().size());
 
         for (int i = 0; i < steps.length; i++) {

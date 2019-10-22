@@ -51,7 +51,7 @@ public class ProductEntityProcessor implements EntityProcessor {
 
     private OData odata;
 	private ServiceMetadata serviceMetadata;
-	private Storage storage;
+	private final Storage storage;
 
 	public ProductEntityProcessor(Storage storage) {
 		this.storage = storage;

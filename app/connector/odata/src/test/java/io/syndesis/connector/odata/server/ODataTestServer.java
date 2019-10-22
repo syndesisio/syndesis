@@ -117,7 +117,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         return certificate(REF_SERVICE_CERTIFICATE);
     }
 
-    private List<Options> optionsList;
+    private final List<Options> optionsList;
 
     private int httpPort;
     private int httpsPort;

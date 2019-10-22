@@ -30,11 +30,11 @@ import org.junit.runners.Parameterized;
 @RunWith(Parameterized.class)
 public class RangeCoordinateTest {
 
-    private String range;
-    private int rowStartIndex;
-    private int rowEndIndex;
-    private int columnStartIndex;
-    private int columnEndIndex;
+    private final String range;
+    private final int rowStartIndex;
+    private final int rowEndIndex;
+    private final int columnStartIndex;
+    private final int columnEndIndex;
 
     public RangeCoordinateTest(String range, int rowStartIndex, int rowEndIndex, int columnStartIndex, int columnEndIndex) {
         this.range = range;

@@ -27,7 +27,7 @@ public abstract class AbstractEmailServerTest extends AbstractEmailTest {
     protected static final String TEST_ADDRESS = TEST_USER_NAME + AT + TEST_HOST_NAME;
     protected static final String TEST_FOLDER = "testFolder";
 
-    private static Options[] serverTypes = {
+    private static final Options[] serverTypes = {
             Options.IMAP,
             Options.IMAPS,
             Options.POP3,
@@ -36,7 +36,7 @@ public abstract class AbstractEmailServerTest extends AbstractEmailTest {
             Options.SMTPS
             };
 
-    private static Map<Options, EMailTestServer> mailServers = new HashMap<>();
+    private static final Map<Options, EMailTestServer> mailServers = new HashMap<>();
 
     @BeforeClass
     public static void scaffold() throws Exception {

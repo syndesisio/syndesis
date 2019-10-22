@@ -37,9 +37,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(JUnitParamsRunner.class)
 public class JsonSchemaInspectorTest {
 
-    private final String JSON_SCHEMA_KIND = "json-schema";
-    private final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
-    private JsonSchemaInspector inspector = new JsonSchemaInspector();
+    private static final String JSON_SCHEMA_KIND = "json-schema";
+    private static final String JSON_SCHEMA_ORG_SCHEMA = "http://json-schema.org/schema#";
+    private final JsonSchemaInspector inspector = new JsonSchemaInspector();
 
     private final ObjectMapper mapper = new ObjectMapper();
 

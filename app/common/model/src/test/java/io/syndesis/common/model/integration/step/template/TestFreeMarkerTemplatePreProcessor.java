@@ -24,7 +24,7 @@ import io.syndesis.common.util.StringConstants;
 
 public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
 
-    private FreeMarkerTemplatePreProcessor processor = new FreeMarkerTemplatePreProcessor();
+    private final FreeMarkerTemplatePreProcessor processor = new FreeMarkerTemplatePreProcessor();
 
     @After
     public void tearDown() {
