@@ -63,7 +63,7 @@
     <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
     <spring-social.version>1.1.6.RELEASE</spring-social.version>
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
-    <spring-cloud.version>Dalston.SR5</spring-cloud.version>
+    <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
@@ -135,7 +135,7 @@
     <jdbi.version>2.78</jdbi.version>
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
-    <micrometer.version>1.2.0</micrometer.version>
+    <micrometer.version>1.2.2</micrometer.version>
     <teiid.version>12.2.1</teiid.version>
     <aws-java-sdk-core.version>1.11.269</aws-java-sdk-core.version>
 
@@ -752,7 +752,6 @@
               <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
-              <ignoredResourcePattern>messages.properties</ignoredResourcePattern>
               <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
               <!-- see https://github.com/fabric8io/kubernetes-client/issues/1847 -->
               <ignoredResourcePattern>resource-handler-services.vm</ignoredResourcePattern>
@@ -1662,11 +1661,11 @@
       <dependency>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-servlet</artifactId>
-        <version>1.4.26.Final</version>
+        <version>2.0.21.Final</version>
         <exclusions>
           <exclusion>
             <groupId>org.jboss.spec.javax.servlet</groupId>
-            <artifactId>jboss-servlet-api_3.1_spec</artifactId>
+            <artifactId>jboss-servlet-api_4.0_spec</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1778,9 +1777,17 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-starter-zipkin</artifactId>
-        <version>1.2.6.RELEASE</version>
+        <version>2.1.3.RELEASE</version>
         <scope>runtime</scope>
         <exclusions>
+          <exclusion>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-sleuth</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-sleuth-zipkin</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
@@ -2424,6 +2431,13 @@
       </dependency>
 
       <dependency>
+        <groupId>com.github.tomakehurst</groupId>
+        <artifactId>wiremock-standalone</artifactId>
+        <version>2.25.1</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-core</artifactId>
         <version>2.6.3</version>
@@ -2442,13 +2456,6 @@
         <groupId>io.micrometer</groupId>
         <artifactId>micrometer-registry-prometheus</artifactId>
         <version>${micrometer.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.micrometer</groupId>
-        <artifactId>micrometer-spring-legacy</artifactId>
-        <version>${micrometer.version}</version>
-        <scope>runtime</scope>
       </dependency>
 
       <!-- ::::::::::: test :::::::::::: -->
@@ -2603,6 +2610,11 @@
             <artifactId>json</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client</artifactId>
+        <version>${kubernetes.client.version}</version>
       </dependency>
 
       <!-- AWS -->
