@@ -16,8 +16,13 @@
 
 package org.apache.camel.component.kudu;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.apache.camel.CamelContext;
-import org.apache.camel.CamelExecutionException;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.spring.SpringCamelContext;
 import org.apache.camel.test.junit4.CamelTestSupport;
@@ -33,9 +38,6 @@ import org.apache.kudu.client.PartialRow;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
-
 public class AbstractKuduTest extends CamelTestSupport {
 
     protected ApplicationContext applicationContext;
@@ -44,67 +46,42 @@ public class AbstractKuduTest extends CamelTestSupport {
     protected CamelContext createCamelContext() throws Exception {
         applicationContext = new AnnotationConfigApplicationContext(MockedKuduConfiguration.class);
 
-        CamelContext ctx = new SpringCamelContext(applicationContext);
-        PropertiesComponent pc = new PropertiesComponent("classpath:test-options.properties");
+        final CamelContext ctx = new SpringCamelContext(applicationContext);
+        final PropertiesComponent pc = new PropertiesComponent("classpath:test-options.properties");
         ctx.addComponent("properties", pc);
         return ctx;
     }
 
-    @SuppressWarnings("unchecked")
-    protected Object requestBodyAndHeaders(String endpointUri, Object body, Map<String, Object> headers)
-            throws CamelExecutionException {
-        return template().requestBodyAndHeaders(endpointUri, body, headers);
-    }
+    protected void createTestTable(final String tableName, final String connection) throws KuduException {
+        try (KuduClient client = new KuduClient.KuduClientBuilder(connection).build()) {
 
-    @SuppressWarnings("unchecked")
-    protected Object requestBody(String endpoint, Object body) throws CamelExecutionException {
-        return template().requestBody(endpoint, body);
-    }
+            final List<ColumnSchema> columns = new ArrayList<>(5);
+            final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");
 
-    protected void deleteTestTable(String tableName, String connection) {
-        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
-        try {
-            client.deleteTable(tableName);
-        } catch (Exception e) {
-
-        }
-    }
-
-    protected void createTestTable(String tableName, String connection) {
-        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
-
-        List<ColumnSchema> columns = new ArrayList<>(5);
-        final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");
-
-        for (int i = 0; i < columnNames.size(); i++) {
-            Type type = i == 0 ? Type.INT32 : Type.STRING;
-            columns.add(
+            for (int i = 0; i < columnNames.size(); i++) {
+                final Type type = i == 0 ? Type.INT32 : Type.STRING;
+                columns.add(
                     new ColumnSchema.ColumnSchemaBuilder(columnNames.get(i), type)
-                            .key(i == 0)
-                            .build()
-            );
-        }
+                        .key(i == 0)
+                        .build());
+            }
 
-        List<String> rangeKeys = new ArrayList<>();
-        rangeKeys.add("id");
+            final List<String> rangeKeys = new ArrayList<>();
+            rangeKeys.add("id");
 
-        try {
             client.createTable(tableName,
-                    new Schema(columns),
-                    new CreateTableOptions().setRangePartitionColumns(rangeKeys));
-        } catch (Exception e) {
-
+                new Schema(columns),
+                new CreateTableOptions().setRangePartitionColumns(rangeKeys));
         }
     }
 
-    protected void insertRowInTestTable(String tableName, String connection) {
-        KuduClient client = new KuduClient.KuduClientBuilder(connection).build();
+    protected void insertRowInTestTable(final String tableName, final String connection) throws KuduException {
+        try (KuduClient client = new KuduClient.KuduClientBuilder(connection).build()) {
 
-        try{
-            KuduTable table = client.openTable(tableName);
+            final KuduTable table = client.openTable(tableName);
 
-            Insert insert = table.newInsert();
-            PartialRow row = insert.getRow();
+            final Insert insert = table.newInsert();
+            final PartialRow row = insert.getRow();
 
             row.addInt("id", ThreadLocalRandom.current().nextInt(1, 99));
             row.addString("title", "Mr.");
@@ -113,8 +90,20 @@ public class AbstractKuduTest extends CamelTestSupport {
             row.addString("address", "4359  Plainfield Avenue");
 
             client.newSession().apply(insert);
-        } catch (KuduException e) {
+        }
+    }
 
+    protected Object requestBody(final String endpoint, final Object body) {
+        return template().requestBody(endpoint, body);
+    }
+
+    protected Object requestBodyAndHeaders(final String endpointUri, final Object body, final Map<String, Object> headers) {
+        return template().requestBodyAndHeaders(endpointUri, body, headers);
+    }
+
+    protected static void deleteTestTable(final String tableName, final String connection) throws KuduException {
+        try (KuduClient client = new KuduClient.KuduClientBuilder(connection).build()) {
+            client.deleteTable(tableName);
         }
     }
 }
