@@ -1,0 +1,131 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='about-transformations-on-multiple-source-values_{context}']
+= About transformations on multiple source values before mapping to one target field
+
+There are some transformations that you can apply to multiple source fields 
+or to the values in a source field that contains multiple values, such as a 
+collection. The data mapper inserts the result of the transformation into 
+the target field. The following table describes these multiplicity transformations. 
+
+[options="header"]
+[cols="1,3"]
+|===
+|Multiplicity transformation
+|Description
+
+|*Add*
+|Adds the numeric source values and inserts the sum into the target field. 
+The values in the selected source fields or in the selected collection must be numeric. 
+
+|*Average*
+|Calculates the average of the numeric source values and inserts the result into the target field. The values in the selected source fields or in the selected collection must be numeric. 
+
+|*Concatenate*
+|Joins the source values and inserts the result into the target field. 
+You can accept a space as the delimiter or specify another character. 
+The data mapper inserts this character in the target field between the source 
+values. A common use of this transformation is to combine multiple source 
+field values, for example, *FirstName*, *MiddleName*, and *LastName*, 
+in one target field, for example, *CustomerName*. 
+
+|*Contains*
+|Evaluates the source values to determine whether any value contains 
+a parameter value that you specify. If any source value contains the 
+specified parameter value, the data mapper inserts *true* into the target field. 
+If no source value contains the parameter value then the data mapper 
+inserts *false* into the target field. 
+
+For example, suppose you want to track activity related to a particular 
+customer. You can select a source collection field where each 
+collection member contains customer information. For the *Value* parameter, 
+you specify a particular email address. When the data mapper finds the 
+specified email address in the collection, it inserts *true* in the target field. 
+
+|*Count*
+|Inserts the number of source values in the target field. This is useful 
+when the source field is a collection. The data mapper inserts the size 
+of the collection in the target field. 
+
+For example, suppose you select an *Order* source field that is a 
+collection of item objects. Applying the *Count* transformation inserts the 
+number of items that are in the order into the target field. 
+
+As another example, if you select 4 individual source fields, 
+the data mapper inserts *4* in the target field. 
+
+|*Divide*
+|Divides the first source value by the second source value and inserts 
+the result in the target field. 
+If there are more that two source values then execution continues to divide 
+the result by the next number. For example, consider a `numbers[]` collection 
+that contains `{1000, 100, 10}`. Execution divides `1000` by `100` to get `10`, 
+and then divides `10` by `10` to get `1`. The mapper inserts `1` in the target field. 
+
+
+|*Format*
+|Replaces placeholders in a template that you specify with values 
+from the source fields that you select. The data mapper inserts the 
+resulting string in the target field. For example, suppose you select 
+three source fields: 
+
+*time* +
+*name* +
+*text* +
+
+You select the *Format* transformation and in the *Template* parameter 
+you could specify: 
+
+`*At $time, $name tweeted: $text*`
+
+In the target field, the result would be something like: 
+
+*At 8:00 AM, Aslan tweeted: ROAR!*
+
+This is similar to mechanisms that are available in programming languages 
+such as Java and C.
+
+|*Item At*
+|For the source field that you select, the data mapper finds the value at 
+the index that you specify and inserts that value in the target field. 
+The source field must be a collection or a field that 
+contains multiple values with delimiters. 
+
+For example, suppose the selected source field is a collection of customer 
+email addresses. After you select the *Item At* transformation, in the *Index* 
+parameter field, you specify *0.* The data mapper inserts the first email 
+address, which is at index 0, in the target field. 
+
+|*Maximum*
+|Evaluates the source values and inserts the highest value in the target field. 
+The source values must be numeric. 
+
+|*Minimum*
+|Evaluates the source values and inserts the lowest value in the target field. 
+The source values must be numeric. 
+
+|*Multiply*
+|Multiplies the first source value by the second source value and inserts 
+the result in the target field. 
+If there are more that two source values then execution continues to multiply 
+the result by the next number. For example, consider a `numbers[]` collection 
+that contains `{10, 100, 1000}`. Execution multiplies `10` by `100` to get `1000`, 
+and then multiplies `1000` by `1000` to get `1000000`. The mapper inserts 
+`1000000` in the target field. 
+
+
+|*Subtract*
+|Subtracts the second source value from the first source value and inserts 
+the result in the target field. 
+If there are more that two source values then execution continues to subtract 
+the next number from the previous result. For example, consider a `numbers[]` 
+collection that contains `{100, 90, 9}`. Execution subtracts `90` from `100` 
+to get `10`, and then subtracts `9` from `10` to get `1`. The mapper inserts 
+`1` in the target field. 
+
+|===
+
+.Additional resources
+* link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field]
+* link:{LinkFuseOnlineIntegrationGuide}#example-missing-unwanted-data_map[Separating one source field into multiple target fields]
