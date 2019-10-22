@@ -15,6 +15,25 @@
  */
 package io.syndesis.server.dao.manager;
 
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -46,25 +65,6 @@ import org.springframework.expression.ParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
-
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 @Service
 @SuppressWarnings({"PMD.GodClass", "PMD.TooManyMethods"})
@@ -140,7 +140,7 @@ public class DataManager implements DataAccessObjectRegistry {
         if (this.environment != null && modelData.getCondition() != null) {
             ExpressionParser parser = new SpelExpressionParser();
             Expression ex = parser.parseExpression(modelData.getCondition(), ParserContext.TEMPLATE_EXPRESSION);
-            return ex.getValue(this.environment, Boolean.class);
+            return Optional.ofNullable(ex.getValue(this.environment, Boolean.class)).orElse(false);
         }
         return true;
     }
@@ -149,31 +149,29 @@ public class DataManager implements DataAccessObjectRegistry {
         try {
             final ResourcePatternResolver resolver = ResourcePatternUtils.getResourcePatternResolver(resourceLoader);
             final Resource[] resources = resolver.getResources("classpath:/META-INF/syndesis/connector/*.json");
-            if (resources != null) {
-                ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
+            ReadApiClientData reader = new ReadApiClientData(encryptionComponent);
 
-                for (Resource resource: resources) {
-                    try (InputStream is = resource.getInputStream()) {
-                        // Replace placeholders
-                        final String text = reader.findAndReplaceTokens(
-                            StreamUtils.copyToString(is, StandardCharsets.UTF_8),
-                            System.getenv()
-                        );
+            for (Resource resource: resources) {
+                try (InputStream is = resource.getInputStream()) {
+                    // Replace placeholders
+                    final String text = reader.findAndReplaceTokens(
+                        StreamUtils.copyToString(is, StandardCharsets.UTF_8),
+                        System.getenv()
+                    );
 
-                        Connector connector = JsonUtils.reader().forType(Connector.class).readValue(text);
+                    Connector connector = JsonUtils.reader().forType(Connector.class).readValue(text);
 
-                        if (connector != null) {
-                            LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());
-                            final String id = connector.getId().get();
-                            final Connector existing = fetch(Connector.class, id);
-                            if (existing != null) {
-                                // the only mutable part of the Connector
-                                final Map<String, String> configuredProperties = existing.getConfiguredProperties();
+                    if (connector != null) {
+                        LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());
+                        final String id = connector.getId().get();
+                        final Connector existing = fetch(Connector.class, id);
+                        if (existing != null) {
+                            // the only mutable part of the Connector
+                            final Map<String, String> configuredProperties = existing.getConfiguredProperties();
 
-                                connector = connector.builder().configuredProperties(configuredProperties).build();
-                            }
-                            store(connector, Connector.class);
+                            connector = connector.builder().configuredProperties(configuredProperties).build();
                         }
+                        store(connector, Connector.class);
                     }
                 }
             }

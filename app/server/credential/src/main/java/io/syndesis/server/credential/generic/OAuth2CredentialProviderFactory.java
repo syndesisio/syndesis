@@ -36,6 +36,11 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
             return new OAuth2CredentialProvider<>("oauth2");
         }
 
+        if (!(properties instanceof OAuth2ConnectorProperties)) {
+            throw new IllegalArgumentException(String.format("Unsupported social properties instance - " +
+                    "expected properties of type %s, but found %s", OAuth2ConnectorProperties.class, properties.getClass()));
+        }
+
         final OAuth2ConnectorProperties oauth2Properties = (OAuth2ConnectorProperties) properties;
 
         final String appId = oauth2Properties.getAppId();

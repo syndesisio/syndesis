@@ -15,11 +15,14 @@
  */
 package io.syndesis.server.credential;
 
+import java.util.Arrays;
+
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.server.credential.CredentialsIntegrationTest.TestConfiguration;
 import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 import org.junit.ClassRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,11 +31,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.FacebookAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.LinkedInAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.SocialWebAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,8 +42,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.rules.SpringClassRule;
 import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
-import java.util.Arrays;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -53,13 +49,11 @@ import static org.mockito.Mockito.when;
 @RunWith(Parameterized.class)
 @ContextConfiguration(classes = {CredentialConfiguration.class, TestConfiguration.class})
 @SpringBootTest
-@EnableAutoConfiguration(exclude = {TwitterAutoConfiguration.class, FacebookAutoConfiguration.class,
-    LinkedInAutoConfiguration.class, SocialWebAutoConfiguration.class})
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 @Configuration
 public class CredentialsIntegrationTest {
 
-    @Parameter(0)
+    @Parameter
     public static String PROVIDER;
 
     @ClassRule
@@ -77,6 +71,11 @@ public class CredentialsIntegrationTest {
         @Bean
         public TextEncryptor getTextEncryptor() {
             return Encryptors.noOpText();
+        }
+
+        @Bean
+        public EncryptionComponent encryptionComponent() {
+            return new EncryptionComponent(getTextEncryptor());
         }
 
         @Bean

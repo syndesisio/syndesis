@@ -735,6 +735,7 @@
               <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>messages.properties</ignoredResourcePattern>
               <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
@@ -1631,6 +1632,19 @@
       </dependency>
 
       <dependency>
+        <groupId>org.eclipse</groupId>
+        <artifactId>yasson</artifactId>
+        <version>1.0.1</version>
+        <scope>runtime</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-servlet</artifactId>
         <version>1.4.26.Final</version>
@@ -1715,6 +1729,18 @@
 
       <dependency>
         <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-web</artifactId>
         <version>${spring-boot.version}</version>
         <scope>runtime</scope>
@@ -1726,6 +1752,10 @@
           <exclusion>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
