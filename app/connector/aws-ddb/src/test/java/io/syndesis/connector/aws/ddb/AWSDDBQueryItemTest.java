@@ -20,7 +20,6 @@ import java.util.List;
 import io.syndesis.common.model.integration.Step;
 import org.junit.Ignore;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 @Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBQueryItemTest extends AWSDDBGenericOperation {
 

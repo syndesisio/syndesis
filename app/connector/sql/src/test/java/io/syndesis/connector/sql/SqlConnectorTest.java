@@ -33,7 +33,6 @@ import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 @RunWith(Parameterized.class)
 public class SqlConnectorTest extends SqlConnectorTestSupport {
 

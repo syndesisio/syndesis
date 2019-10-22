@@ -48,7 +48,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         "logging.level.io.syndesis.integration.runtime = DEBUG"
     }
 )
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class CamelContextMetadataMBeanTest {
 
     private static final String[] ATTRIBUTES = {

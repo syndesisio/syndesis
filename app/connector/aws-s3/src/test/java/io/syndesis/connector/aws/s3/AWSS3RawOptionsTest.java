@@ -38,7 +38,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class AWSS3RawOptionsTest extends ConnectorTestSupport {
     @Override
     protected List<Step> createSteps() {

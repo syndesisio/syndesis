@@ -18,6 +18,7 @@ package io.syndesis.integration.component.proxy;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.Map;
+import java.util.Locale;
 
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
@@ -55,7 +56,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxyCustomizerTest.json"
     }
 )
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.UseLocaleWithCaseConversions"})
 public class ComponentProxyCustomizerTest {
 
     @Autowired
@@ -74,7 +74,7 @@ public class ComponentProxyCustomizerTest {
         final ProducerTemplate template = camelContext.createProducerTemplate();
         final String body = "hello";
         final String result = template.requestBody("direct:start", body, String.class);
-        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes(StandardCharsets.US_ASCII));
+        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".getBytes(StandardCharsets.US_ASCII));
 
         assertThat(result).isEqualTo(expected);
     }
@@ -86,7 +86,7 @@ public class ComponentProxyCustomizerTest {
         final ProducerTemplate template = camelContext.createProducerTemplate();
         final MockEndpoint mock = camelContext.getEndpoint("mock:result", MockEndpoint.class);
         final String body = "hello";
-        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".toUpperCase().getBytes(StandardCharsets.US_ASCII));
+        final String expected = Base64.getEncoder().encodeToString("HELLO WORLD!".getBytes(StandardCharsets.US_ASCII));
 
         mock.expectedMessageCount(1);
         mock.expectedBodiesReceived(expected);
@@ -107,7 +107,7 @@ public class ComponentProxyCustomizerTest {
     @Component("my-bean")
     public static class MyBean {
         public String process(@Body String body) {
-            return body.toUpperCase();
+            return body.toUpperCase(Locale.US);
         }
     }
 

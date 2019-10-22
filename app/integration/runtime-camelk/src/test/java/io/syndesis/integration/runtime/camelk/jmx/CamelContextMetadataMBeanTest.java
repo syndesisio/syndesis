@@ -33,7 +33,6 @@ import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class CamelContextMetadataMBeanTest {
 
     private static final String[] ATTRIBUTES = {

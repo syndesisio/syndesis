@@ -45,7 +45,6 @@ import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
         "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxySplitTokenizeTest.json"
     }
 )
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class ComponentProxySplitTokenizeTest {
     @Autowired
     private CamelContext camelContext;

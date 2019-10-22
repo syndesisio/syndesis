@@ -34,7 +34,6 @@ import org.apache.camel.processor.Pipeline;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class DataShapeCustomizerTest extends SalesforceTestSupport {
     private static final Processor BEFORE_PROCESSOR = exchange -> {
         // nop

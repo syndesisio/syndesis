@@ -26,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-producer";

@@ -65,7 +65,6 @@ public class DeploymentDescriptorIT {
     }
 
     @Test
-    @SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.JUnitTestContainsTooManyAsserts"})
     public void deploymentDescriptorTakeCueFromConnectorDescriptor() {
         for (final JsonNode entry : deployment) {
             if ("connector".equals(entry.get("kind").asText())) {

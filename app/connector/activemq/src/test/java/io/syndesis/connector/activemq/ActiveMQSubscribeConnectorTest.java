@@ -24,7 +24,6 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport {
 
     // **************************
