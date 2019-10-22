@@ -17,6 +17,7 @@ package io.syndesis.integration.component.proxy;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Locale;
 
 import org.apache.camel.Body;
 import org.apache.camel.RoutesBuilder;
@@ -27,7 +28,6 @@ import org.apache.camel.test.junit4.CamelTestSupport;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 public class ComponentProxyComponentTest extends CamelTestSupport {
 
     // ***************************
@@ -65,23 +65,21 @@ public class ComponentProxyComponentTest extends CamelTestSupport {
     // Test
     // ***************************
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     @Test
     public void testRequest() {
         final String body = "hello";
         final String result = template().requestBody("direct:start", body, String.class);
 
-        Assertions.assertThat(result).isEqualTo(body.toUpperCase());
+        Assertions.assertThat(result).isEqualTo(body.toUpperCase(Locale.US));
     }
 
-    @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
     @Test
     public void testSend() throws Exception {
         final MockEndpoint mock = getMockEndpoint("mock:result");
         final String body = "hello";
 
         mock.expectedMessageCount(1);
-        mock.expectedBodiesReceived(body.toUpperCase());
+        mock.expectedBodiesReceived(body.toUpperCase(Locale.US));
 
         template().sendBody("direct:start", body);
 
@@ -93,9 +91,8 @@ public class ComponentProxyComponentTest extends CamelTestSupport {
     // ***************************
 
     public static class MyBean {
-        @SuppressWarnings("PMD.UseLocaleWithCaseConversions")
         public String process(@Body String body) {
-            return body.toUpperCase();
+            return body.toUpperCase(Locale.US);
         }
     }
 }

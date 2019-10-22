@@ -400,7 +400,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testODataRouteWithCountQuery() throws Exception {
         String queryParams = "$count=true";
@@ -425,7 +424,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testODataRouteWithMoreComplexQuery() throws Exception {
         String queryParams = "$filter=ID le 2&$orderby=ID desc";
@@ -532,7 +530,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         assertEquals(initialDelayValue, consumerProperties.get(INITIAL_DELAY));
     }
 
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testODataRouteAlreadySeen() throws Exception {
         String backoffIdleThreshold = "1";
@@ -597,7 +594,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
     }
 
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testReferenceODataRouteAlreadySeenWithKeyPredicate() throws Exception {
         String resourcePath = "Airports";

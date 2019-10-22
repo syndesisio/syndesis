@@ -34,7 +34,6 @@ import org.junit.Test;
 import org.junit.rules.TestName;
 import org.springframework.jms.core.JmsTemplate;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class ActiveMQConnectionTest extends ConnectorTestSupport {
     @Rule
     public TestName testName = new TestName();

@@ -30,7 +30,6 @@ import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import org.junit.Assert;
 import org.junit.Test;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
 
     private final String sqlQuery = "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)";

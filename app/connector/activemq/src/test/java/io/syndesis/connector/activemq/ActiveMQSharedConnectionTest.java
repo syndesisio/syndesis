@@ -27,7 +27,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.springframework.jms.core.JmsTemplate;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class ActiveMQSharedConnectionTest extends ActiveMQConnectorTestSupport {
 
     // **************************

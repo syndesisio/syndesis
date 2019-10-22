@@ -26,7 +26,6 @@ import org.junit.Test;
 
 import static io.syndesis.connector.sql.stored.SqlStoredCommon.setupStoredProcedure;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class SqlStartStoredConnectorTest extends SqlConnectorTestSupport {
 
     // **************************

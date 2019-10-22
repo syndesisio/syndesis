@@ -24,7 +24,6 @@ import org.apache.camel.ProducerTemplate;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class SqlStoredConnectorTest extends SqlConnectorTestSupport {
 
     // **************************

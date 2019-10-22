@@ -24,11 +24,11 @@ import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-@SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
 public class FhirMetadataRetrievalTest {
 
     private FhirMetadataRetrieval fhirMetadataRetrieval = new FhirMetadataRetrieval();
@@ -39,7 +39,7 @@ public class FhirMetadataRetrievalTest {
 
         String inspection;
         try (InputStream fileIn = Files.newInputStream(bundle)) {
-            inspection = IOUtils.toString(fileIn);
+            inspection = IOUtils.toString(fileIn, StandardCharsets.UTF_8);
         }
 
         String inspectionWithResources = fhirMetadataRetrieval.includeResources(inspection, "patient", "account");
@@ -65,7 +65,7 @@ public class FhirMetadataRetrievalTest {
 
         String inspection;
         try (InputStream fileIn = Files.newInputStream(patient)) {
-            inspection = IOUtils.toString(fileIn);
+            inspection = IOUtils.toString(fileIn, StandardCharsets.UTF_8);
         }
 
         String inspectionWithResources = new FhirMetadataRetrieval().includeResources(inspection, "person", "account");

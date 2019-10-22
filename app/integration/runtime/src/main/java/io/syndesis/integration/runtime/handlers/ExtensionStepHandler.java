@@ -116,8 +116,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     // the handler method.
                     ObjectHelper.trySetCamelContext(stepExtension, context);
 
-                    @SuppressWarnings({"rawtypes", "unchecked"})
-                    final Optional<ProcessorDefinition<?>> configured = (Optional) stepExtension.configure(context, route, props);
+                    final Optional<ProcessorDefinition<?>> configured = stepExtension.configure(context, route, props);
 
                     return configured;
                 } catch (ClassNotFoundException e) {

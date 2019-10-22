@@ -36,7 +36,6 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Ignore;
 import org.junit.Test;
 
-@SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
 @Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBRawOptionsTest extends ConnectorTestSupport {
     @Override

@@ -32,7 +32,6 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.SignatureDeclareThrowsException"})
 public class ComponentOptionsTest {
     private DataSource ds;
 
@@ -128,7 +127,7 @@ public class ComponentOptionsTest {
         }
     }
 
-    private void validateRegistryOption(CamelContext context) throws Exception {
+    private static void validateRegistryOption(CamelContext context) throws Exception {
         context.start();
 
         Collection<String> names = context.getComponentNames();

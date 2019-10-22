@@ -16,6 +16,7 @@
 package io.syndesis.integration.component.proxy;
 
 import java.util.Map;
+import java.util.Locale;
 
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
@@ -53,7 +54,6 @@ import static org.assertj.core.api.Assertions.assertThat;
         "syndesis.integration.runtime.configuration-location = classpath:/syndesis/integration/component/proxy/ComponentProxyGlobalCustomizerTest.json"
     }
 )
-@SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.UseLocaleWithCaseConversions"})
 public class ComponentProxyGlobalCustomizerTest {
 
     @Autowired
@@ -105,7 +105,7 @@ public class ComponentProxyGlobalCustomizerTest {
     @Component("my-bean")
     public static class MyBean {
         public String process(@Body String body) {
-            return body.toUpperCase();
+            return body.toUpperCase(Locale.US);
         }
     }
 
