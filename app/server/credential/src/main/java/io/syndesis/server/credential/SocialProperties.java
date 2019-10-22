@@ -19,7 +19,7 @@ package io.syndesis.server.credential;
 /**
  * Basic configuration properties for spring social.
  */
-public abstract class SocialProperties {
+public class SocialProperties {
 
     /**
      * Application id.
