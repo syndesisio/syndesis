@@ -16,16 +16,6 @@
 
 package org.apache.camel.component.kudu;
 
-import org.apache.camel.EndpointInject;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.kudu.ColumnSchema;
-import org.apache.kudu.Schema;
-import org.apache.kudu.Type;
-import org.apache.kudu.client.CreateTableOptions;
-import org.junit.Before;
-import org.junit.Ignore;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -33,70 +23,31 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ThreadLocalRandom;
 
+import org.apache.camel.EndpointInject;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.kudu.ColumnSchema;
+import org.apache.kudu.Schema;
+import org.apache.kudu.Type;
+import org.apache.kudu.client.CreateTableOptions;
+import org.apache.kudu.client.KuduException;
+import org.junit.Before;
+import org.junit.Ignore;
+
 public class KuduProducerTest extends AbstractKuduTest {
 
-    private static final String TABLE = "KuduTestTable";
     private static final String HOST = "quickstart.cloudera";
     private static final String PORT = "7051";
-
-    @EndpointInject(uri = "mock:test")
-    MockEndpoint successEndpoint;
+    private static final String TABLE = "KuduTestTable";
 
     @EndpointInject(uri = "mock:error")
     MockEndpoint errorEndpoint;
 
-    @Override
-    protected RouteBuilder createRouteBuilder() throws Exception {
-        return new RouteBuilder() {
-            @Override
-            public void configure() {
-
-                errorHandler(deadLetterChannel("mock:error").redeliveryDelay(0).maximumRedeliveries(0));
-
-                //integration test route
-                from("direct:create")
-                        .to("kudu:create?host=" + HOST +
-                                "&port=" + PORT +
-                                "&tableName=" + TABLE +
-                                "&operation=create_table"
-                        )
-                        .to("mock:test");
-
-                from("direct:scan")
-                        .to("kudu:scan?host=" + HOST +
-                                "&port=" + PORT +
-                                "&tableName=" + TABLE +
-                                "&operation=scan"
-                        )
-                        .to("mock:test");
-
-                from("direct:insert")
-                        .to("kudu:insert?host=" + HOST +
-                                "&port=" + PORT +
-                                "&tableName=" + TABLE +
-                                "&operation=insert"
-                        )
-                         .to("mock:test");
-
-                from("direct:data")
-                        .to("kudu:insert?host=" + HOST +
-                                "&port=" + PORT +
-                                "&tableName=impala::default.syndesis_test" +
-                                "&operation=insert"
-                        )
-                        .to("mock:test");
-            }
-        };
-    }
-
-    @Before
-    public void resetEndpoints() {
-        errorEndpoint.reset();
-        successEndpoint.reset();
-    }
+    @EndpointInject(uri = "mock:test")
+    MockEndpoint successEndpoint;
 
     @Ignore
-    public void createTable() throws InterruptedException {
+    public void createTable() throws InterruptedException, KuduException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
 
         errorEndpoint.expectedMessageCount(0);
@@ -104,18 +55,17 @@ public class KuduProducerTest extends AbstractKuduTest {
 
         final Map<String, Object> headers = new HashMap<>();
 
-        List<ColumnSchema> columns = new ArrayList<>(5);
+        final List<ColumnSchema> columns = new ArrayList<>(5);
         final List<String> columnNames = Arrays.asList("id", "title", "name", "lastname", "address");
 
         for (int i = 0; i < columnNames.size(); i++) {
             columns.add(
-                    new ColumnSchema.ColumnSchemaBuilder(columnNames.get(i), Type.STRING)
+                new ColumnSchema.ColumnSchemaBuilder(columnNames.get(i), Type.STRING)
                     .key(i == 0)
-                    .build()
-            );
+                    .build());
         }
 
-        List<String> rangeKeys = new ArrayList<>();
+        final List<String> rangeKeys = new ArrayList<>();
         rangeKeys.add("id");
 
         headers.put("Schema", new Schema(columns));
@@ -128,7 +78,7 @@ public class KuduProducerTest extends AbstractKuduTest {
     }
 
     @Ignore
-    public void insertRow() throws InterruptedException {
+    public void insertRow() throws KuduException, InterruptedException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
         createTestTable(TABLE, HOST + ":" + PORT);
 
@@ -136,7 +86,7 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.expectedMessageCount(1);
 
         // Create a sample row that can be inserted in the test table
-        Map<String, Object> row = new HashMap<>();
+        final Map<String, Object> row = new HashMap<>();
         row.put("id", 5);
         row.put("title", "Mr.");
         row.put("name", "Samuel");
@@ -154,7 +104,7 @@ public class KuduProducerTest extends AbstractKuduTest {
         errorEndpoint.expectedMessageCount(0);
         successEndpoint.expectedMessageCount(1);
 
-        Map<String, Object> row = new HashMap<>();
+        final Map<String, Object> row = new HashMap<>();
         row.put("id", ThreadLocalRandom.current().nextInt(1, 99));
         row.put("_integer", ThreadLocalRandom.current().nextInt(1, 99));
         row.put("_long", ThreadLocalRandom.current().nextLong(500, 600));
@@ -167,8 +117,14 @@ public class KuduProducerTest extends AbstractKuduTest {
         successEndpoint.assertIsSatisfied();
     }
 
+    @Before
+    public void resetEndpoints() {
+        errorEndpoint.reset();
+        successEndpoint.reset();
+    }
+
     @Ignore
-    public void scanTable() throws InterruptedException {
+    public void scanTable() throws InterruptedException, KuduException {
         deleteTestTable(TABLE, HOST + ":" + PORT);
         createTestTable(TABLE, HOST + ":" + PORT);
 
@@ -179,5 +135,45 @@ public class KuduProducerTest extends AbstractKuduTest {
 
         errorEndpoint.assertIsSatisfied();
         successEndpoint.assertIsSatisfied();
+    }
+
+    @Override
+    protected RouteBuilder createRouteBuilder() throws Exception {
+        return new RouteBuilder() {
+            @Override
+            public void configure() {
+
+                errorHandler(deadLetterChannel("mock:error").redeliveryDelay(0).maximumRedeliveries(0));
+
+                // integration test route
+                from("direct:create")
+                    .to("kudu:create?host=" + HOST +
+                        "&port=" + PORT +
+                        "&tableName=" + TABLE +
+                        "&operation=create_table")
+                    .to("mock:test");
+
+                from("direct:scan")
+                    .to("kudu:scan?host=" + HOST +
+                        "&port=" + PORT +
+                        "&tableName=" + TABLE +
+                        "&operation=scan")
+                    .to("mock:test");
+
+                from("direct:insert")
+                    .to("kudu:insert?host=" + HOST +
+                        "&port=" + PORT +
+                        "&tableName=" + TABLE +
+                        "&operation=insert")
+                    .to("mock:test");
+
+                from("direct:data")
+                    .to("kudu:insert?host=" + HOST +
+                        "&port=" + PORT +
+                        "&tableName=impala::default.syndesis_test" +
+                        "&operation=insert")
+                    .to("mock:test");
+            }
+        };
     }
 }
