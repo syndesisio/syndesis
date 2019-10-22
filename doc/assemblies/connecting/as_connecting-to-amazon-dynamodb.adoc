@@ -5,8 +5,8 @@
 = Connecting to Amazon DynamoDB
 :context: dynamodb
 
-An integration can retrieve data from an Amazon DynamoDB table, insert 
-or update data in a DynamoDB table, or remove data from a DynamoDB 
+An integration can retrieve data from an Amazon DynamoDB table, add  
+data to a DynamoDB table, or remove data from a DynamoDB 
 table. To do this, create an Amazon DynamoDB 
 connection and then add that connection to an integration flow.
 

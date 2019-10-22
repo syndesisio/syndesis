@@ -27,16 +27,24 @@ is configured to access that table that you want to obtain data from.
 . On the *Choose an action* page, select the *Query* action. 
 
 . In the *Filter* field, specify JSON notation that identifies the element that the connection should 
-return, and optionally, the element attributes (columns) to return. 
-Specification of a key is required. You can specify input
-parameters with `:#`. 
+return. You must specify the key. Optionally, specify element attributes (columns) 
+that you want the connection to return. You can specify input
+parameters with `:#`, for example: 
++
+----
+{"key":":#MYPARAMNAME", "attribute1":":#PARAM2"}
+----
 
 . Optional. In the *Attributes to query* field, enter a comma-separated list of
 the columns that contain the data that you want the connection to return. 
-For example: `attribute1,attribute2,attribute3`. 
+For example: 
 +
-If you do not specify attributes, the query returns the attributes that you 
-define in the *Filter* field. 
+----
+attribute1,attribute2,attribute3
+----
++
+If you do not specify attributes, the query returns only the columns that are 
+specified in the *Filter* field. 
 
 . Click *Next*. 
 
