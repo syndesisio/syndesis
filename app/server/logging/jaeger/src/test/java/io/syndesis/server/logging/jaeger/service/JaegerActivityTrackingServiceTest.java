@@ -29,8 +29,6 @@ import javax.ws.rs.WebApplicationException;
 
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import io.syndesis.common.util.Json;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 
