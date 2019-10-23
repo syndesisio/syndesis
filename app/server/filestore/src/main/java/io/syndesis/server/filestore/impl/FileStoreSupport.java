@@ -47,7 +47,7 @@ public final class FileStoreSupport {
      * @param path the path to check
      * @throws DaoException if the path is not valid
      */
-    public static void checkValidPath(String path) throws DaoException {
+    public static void checkValidPath(String path) {
         if (!isValidPath(path)) {
             throw new DaoException("Invalid path: " + path);
         }
