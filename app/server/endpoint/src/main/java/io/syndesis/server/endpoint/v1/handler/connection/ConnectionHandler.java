@@ -21,7 +21,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -37,7 +36,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import org.springframework.stereotype.Component;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
@@ -61,6 +59,7 @@ import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import org.springframework.stereotype.Component;
 
 @Path("/connections")
 @Api(value = "connections")
@@ -110,7 +109,8 @@ public class ConnectionHandler
             final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
 
             // set the connector
-            DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId()).ifPresent(builder::connector);
+            DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId())
+                .ifPresent(connector -> encryptConfiguredProperties(builder, connector));
 
             // set the board
             DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
@@ -133,7 +133,8 @@ public class ConnectionHandler
         final ConnectionOverview.Builder builder = new ConnectionOverview.Builder().createFrom(connection);
 
         // set the connector
-        DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId()).ifPresent(builder::connector);
+        DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId())
+            .ifPresent(connector -> encryptConfiguredProperties(builder, connector));
 
         // set the board
         DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
@@ -177,15 +178,17 @@ public class ConnectionHandler
     Connection applyCredentialFlowStateTo(final Connection connection) {
         final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request);
 
-        return flowStates.stream().map(s -> {
-            final Cookie removal = new Cookie(s.persistenceKey(), "");
-            removal.setPath("/");
-            removal.setMaxAge(0);
+        return flowStates.stream()
+            .filter(CredentialFlowState::isApplicable)
+            .map(s -> {
+                final Cookie removal = new Cookie(s.persistenceKey(), "");
+                removal.setPath("/");
+                removal.setMaxAge(0);
 
-            response.addCookie(removal);
+                response.addCookie(removal);
 
-            return credentials.apply(connection, s);
-        }).findFirst().orElse(connection);
+                return credentials.apply(connection, s);
+            }).findFirst().orElse(connection);
     }
 
     private Map<String, ConfigurationProperty> getConnectorProperties(String connectorId) {
@@ -235,6 +238,14 @@ public class ConnectionHandler
     @Override
     public Validator getValidator() {
         return validator;
+    }
+
+    private void encryptConfiguredProperties(ConnectionOverview.Builder builder, Connector connector) {
+        Map<String, String> configuredProperties = connector.getConfiguredProperties();
+        configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connector.getProperties());
+        Connector.Builder connectorBuilder = new Connector.Builder().createFrom(connector)
+            .configuredProperties(configuredProperties);
+        builder.connector(connectorBuilder.build());
     }
 
 }
