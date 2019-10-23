@@ -5,7 +5,7 @@
 = Removing data from an Amazon DynamoDB table 
 
 In the middle of a flow, or to finish a simple integration, a
-DynamoDB connection can remove an element from a DynamoDB table. 
+DynamoDB connection can remove an item from a DynamoDB table. 
 To do this, add a DynamoDB connection
 to the middle of a flow or as a simple integration's finish connection. 
 
@@ -17,14 +17,14 @@ to add to the integration or to choose the finish connection.
 .Procedure
 
 . On the *Choose a connection* page, click the Amazon DynamoDB connection that
-is configured to access the table that contains the element that you want to remove. 
+is configured to access the table that contains the item that you want to remove. 
 
 . On the *Choose an action* page, select *Remove Item*. 
 
 . In the *JSON filter of the element* field, enter JSON notation that 
-identifies the element that you want to remove. You must enter the 
-element key. Input parameters prefixed with `:#` are allowed. 
-In the following example input, `userID` is the key: 
+identifies the item that you want to remove. You must specify the 
+item's key attribute(s). Input parameters prefixed with `:#` are allowed. 
+In the following example input, `userID` is a key attribute: 
 +
 ----
 {"userID":"aslan"}
