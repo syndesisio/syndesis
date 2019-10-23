@@ -26,7 +26,6 @@
 
   <groupId>io.syndesis.connector</groupId>
   <artifactId>connector-parent</artifactId>
-  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Connector</name>

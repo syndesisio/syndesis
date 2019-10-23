@@ -27,7 +27,6 @@
 
   <groupId>io.syndesis.common</groupId>
   <artifactId>common-parent</artifactId>
-  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Common</name>
