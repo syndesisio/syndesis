@@ -48,9 +48,9 @@ public class FhirMetaDataExtension extends AbstractMetaDataExtension {
     public static Set<String> getResources(FhirVersionEnum fhirVersion) {
         if (FhirVersionEnum.DSTU3.equals(fhirVersion)) {
             return toSet(org.hl7.fhir.dstu3.model.ResourceType.values());
-        } else {
-            throw new IllegalArgumentException(fhirVersion + " is not among supported FHIR versions: DSTU3");
         }
+
+        throw new IllegalArgumentException(fhirVersion + " is not among supported FHIR versions: DSTU3");
     }
 
     @SuppressWarnings({"PMD.UseVarargs"})

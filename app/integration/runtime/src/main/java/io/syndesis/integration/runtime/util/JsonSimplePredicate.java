@@ -124,9 +124,9 @@ public final class JsonSimplePredicate implements Predicate {
                             // we do not need to dump on the logs so log it at trace level.
                             LOG.trace("Try to match array item out of bounds ", e);
                             return false;
-                        } else {
-                            throw e;
                         }
+
+                        throw e;
                     }
                 } else if (json.isObject()) {
                     payload.setBody(mapper.convertValue(json, Map.class));
