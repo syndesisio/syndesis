@@ -452,7 +452,12 @@
     <profile>
       <id>non-ui-related-so-disabled</id>
       <activation>
-        <activeByDefault>true</activeByDefault>
+        <!-- this was activeByDefult=true, but alas
+             https://issues.apache.org/jira/browse/MNG-4917
+        -->
+        <file>
+          <exists>.</exists>
+        </file>
       </activation>
       <build>
         <plugins>
@@ -466,6 +471,19 @@
               </execution>
               <execution>
                 <id>basepom.default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>default-deploy</id>
                 <phase />
               </execution>
             </executions>
@@ -516,6 +534,10 @@
             <executions>
               <execution>
                 <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>attach-sources</id>
                 <phase />
               </execution>
             </executions>
@@ -574,6 +596,34 @@
             <executions>
               <execution>
                 <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-install-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-install</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
                 <phase />
               </execution>
             </executions>
