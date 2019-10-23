@@ -38,9 +38,9 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
@@ -292,7 +292,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
     private String extractIntegrationJson(Integration fullIntegration, boolean prettyPrint) {
         Integration integration = resourceManager.sanitize(fullIntegration);
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         try {
             return prettyPrint
                 ? new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), UTF_8)

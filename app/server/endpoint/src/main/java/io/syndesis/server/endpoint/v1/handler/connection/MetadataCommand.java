@@ -28,7 +28,7 @@ import javax.ws.rs.core.Response.Status.Family;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
@@ -84,7 +84,7 @@ class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
         return ClientBuilder.newClient().register((ClientResponseFilter) (requestContext, responseContext) -> {
             if (responseContext.getStatusInfo().getFamily() == Family.SERVER_ERROR
                 && MediaType.APPLICATION_JSON.equals(responseContext.getHeaderString(HttpHeaders.CONTENT_TYPE))) {
-                final RestError error = Json.reader().forType(RestError.class).readValue(responseContext.getEntityStream());
+                final RestError error = JsonUtils.reader().forType(RestError.class).readValue(responseContext.getEntityStream());
 
                 throw new SyndesisRestException(
                     error.getDeveloperMsg(),

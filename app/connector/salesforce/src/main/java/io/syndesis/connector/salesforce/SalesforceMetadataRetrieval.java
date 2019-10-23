@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
@@ -97,7 +96,7 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
             try {
                 final String objectName = ConnectorOptions.extractOption(properties, SalesforceEndpointConfig.SOBJECT_NAME);
                 final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
-                final String specification = Json.writer().writeValueAsString(inputOutputSchema);
+                final String specification = io.syndesis.common.util.json.JsonUtils.writer().writeValueAsString(inputOutputSchema);
 
                 return new SyndesisMetadata(//
                     enrichedProperties, //

@@ -31,8 +31,8 @@ import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.EventBus.Subscription;
-import io.syndesis.common.util.Json;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -118,7 +118,7 @@ public class ResourceUpdateController {
 
         final ChangeEvent changeEvent;
         try {
-            changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
+            changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
         } catch (final IOException e) {
             LOGGER.error("Error while processing change-event {}", data, e);
             final CompletableFuture<Void> errored = new CompletableFuture<>();

@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProcessor;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
@@ -43,7 +43,7 @@ import org.apache.camel.processor.Pipeline;
 public class WebhookConnectorCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
     public static final String SCHEMA_ID = "io:syndesis:webhook";
 
-    static final ObjectReader READER = Json.reader();
+    static final ObjectReader READER = JsonUtils.reader();
 
     private CamelContext camelContext;
     private DataShape inputDataShape;

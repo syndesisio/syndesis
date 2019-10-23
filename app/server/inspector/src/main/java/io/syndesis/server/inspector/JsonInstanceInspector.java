@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,7 @@ public class JsonInstanceInspector implements Inspector {
         try {
             Map<String, Object> json;
             if (JsonUtils.isJsonArray(specification)) {
-                List<Object> items = Json.reader().forType(List.class).readValue(specification);
+                List<Object> items = JsonUtils.reader().forType(List.class).readValue(specification);
                 // add collection specific paths
                 paths.addAll(COLLECTION_PATHS);
                 context = ARRAY_CONTEXT;
@@ -64,7 +63,7 @@ public class JsonInstanceInspector implements Inspector {
 
                 json = (Map<String, Object>) items.get(0);
             } else {
-                json = Json.reader().forType(Map.class).readValue(specification);
+                json = JsonUtils.reader().forType(Map.class).readValue(specification);
             }
 
             fetchPaths(context, paths, json);

@@ -15,8 +15,7 @@
  */
 package io.syndesis.server.credential;
 
-import io.syndesis.common.util.Json;
-
+import io.syndesis.common.util.json.JsonUtils;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -35,7 +34,7 @@ public class AcquisitionMethodTest {
             .type(Type.OAUTH2)
             .build();
 
-        final String json = Json.writer().writeValueAsString(acquisitionMethod);
+        final String json = JsonUtils.writer().writeValueAsString(acquisitionMethod);
         final String expected = "{\"description\":\"description\",\"icon\":\"icon\",\"label\":\"label\",\"type\":\"OAUTH2\",\"configured\":false}";
         JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
     }

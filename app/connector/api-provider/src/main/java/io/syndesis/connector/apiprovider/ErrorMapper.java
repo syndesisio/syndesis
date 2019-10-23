@@ -19,13 +19,13 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisConnectorException;
 
 public final class ErrorMapper {
@@ -42,7 +42,7 @@ public final class ErrorMapper {
             if (ObjectHelper.isEmpty(property)) {
                 return Collections.emptyMap();
             }
-            return Json.reader().forType(new TypeReference<Map<String, String>>(){}).readValue(property);
+            return JsonUtils.reader().forType(new TypeReference<Map<String, String>>(){}).readValue(property);
         } catch (IOException e) {
             LOG.warn(String.format("Failed to read error code mapping property %s: %s", property, e.getMessage()), e);
             return Collections.emptyMap();

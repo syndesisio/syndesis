@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.jsondb.JsonDB;
 
 final class MigrationsHelper {
@@ -32,10 +32,10 @@ final class MigrationsHelper {
         final List<T> items = new ArrayList<>();
         final String raw = jsondb.getAsString(path);
 
-        Json.reader().readTree(raw).fieldNames().forEachRemaining(id -> {
+        JsonUtils.reader().readTree(raw).fieldNames().forEachRemaining(id -> {
             try {
                 final String itemRaw = jsondb.getAsString(path + "/" + id);
-                final T item = Json.reader().forType(type).readValue(itemRaw);
+                final T item = JsonUtils.reader().forType(type).readValue(itemRaw);
 
                 items.add(item);
             } catch (final IOException e) {

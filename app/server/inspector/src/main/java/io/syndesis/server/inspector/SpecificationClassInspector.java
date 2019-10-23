@@ -19,8 +19,7 @@ import java.io.IOException;
 import java.util.Map.Entry;
 import java.util.Optional;
 
-import io.syndesis.common.util.Json;
-
+import io.syndesis.common.util.json.JsonUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -40,7 +39,7 @@ public final class SpecificationClassInspector extends DataMapperBaseInspector<J
     protected Context<JsonNode> createContext(final String kind, final String type, final String specification,
         final Optional<byte[]> exemplar) {
         try {
-            return new Context<>(Json.reader().readTree(specification));
+            return new Context<>(JsonUtils.reader().readTree(specification));
         } catch (final IOException e) {
             throw new IllegalArgumentException("Unable to parse specification", e);
         }
@@ -52,7 +51,7 @@ public final class SpecificationClassInspector extends DataMapperBaseInspector<J
 
         final JsonNode javaClass = JsonNodeFactory.instance.objectNode().set("JavaClass", classNode);
 
-        return Json.writer().writeValueAsString(javaClass);
+        return JsonUtils.writer().writeValueAsString(javaClass);
     }
 
     @Override

@@ -33,8 +33,8 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationEndpoint;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.backend.BackendController;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
@@ -105,7 +105,7 @@ public class EndpointController implements BackendController {
             // Never do anything that could block in this callback!
             if ("change-event".equals(event)) {
                 try {
-                    ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
+                    ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
                     Optional.ofNullable(changeEvent)
                         .flatMap(ChangeEvent::getId)
                         .ifPresent(id -> changeEvent.getKind()

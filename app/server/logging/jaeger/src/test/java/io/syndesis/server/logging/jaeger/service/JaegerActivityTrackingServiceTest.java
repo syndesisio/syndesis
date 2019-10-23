@@ -27,11 +27,9 @@ import java.util.List;
 
 import javax.ws.rs.WebApplicationException;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Test;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import io.syndesis.common.util.Json;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 
 public class JaegerActivityTrackingServiceTest {
@@ -45,7 +43,7 @@ public class JaegerActivityTrackingServiceTest {
             public ArrayList<Trace> tracesForService(String service, int lookbackDays, int limit) {
                 try {
                     String json = resource("example-jaeger-trace-result.json");
-                    Traces traces = Json.reader().forType(Traces.class).readValue(json);
+                    Traces traces = JsonUtils.reader().forType(Traces.class).readValue(json);
                     return traces.data;
                 } catch (IOException e) {
                     throw new WebApplicationException(e);
@@ -57,7 +55,7 @@ public class JaegerActivityTrackingServiceTest {
         assertThat(activities).isNotNull();
 
 
-        assertThat(Json.writer().withDefaultPrettyPrinter().writeValueAsString(activities).trim())
+        assertThat(JsonUtils.writer().withDefaultPrettyPrinter().writeValueAsString(activities).trim())
             .isEqualTo(resource("expected-activities.json").trim());
 
     }

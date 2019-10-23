@@ -27,7 +27,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.deser.DeserializationProblemHandler;
 import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,11 +39,8 @@ public final class JsonSchemaUtils {
     /** Logger */
     private static final Logger LOG = LoggerFactory.getLogger(JsonSchemaUtils.class);
 
-    /**
-     * Prevent instantiation for utility class.
-     */
     private JsonSchemaUtils() {
-        super();
+        // Prevent instantiation for utility class.
     }
 
     /**
@@ -58,7 +55,7 @@ public final class JsonSchemaUtils {
      * @return
      */
     public static ObjectReader reader() {
-        return Json.copyObjectMapperConfiguration()
+        return JsonUtils.copyObjectMapperConfiguration()
                 .addHandler(new DeserializationProblemHandler() {
                     @Override
                     public Object handleUnexpectedToken(DeserializationContext ctxt, Class<?> targetType, JsonToken t,

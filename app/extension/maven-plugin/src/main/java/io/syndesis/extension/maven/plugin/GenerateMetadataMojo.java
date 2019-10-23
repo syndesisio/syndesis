@@ -57,8 +57,8 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import org.apache.maven.artifact.Artifact;
@@ -380,7 +380,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
         if (template.exists()) {
             try {
-                JsonNode tree = Json.reader().readTree(Files.newBufferedReader(template.toPath(), StandardCharsets.UTF_8));
+                JsonNode tree = JsonUtils.reader().readTree(Files.newBufferedReader(template.toPath(), StandardCharsets.UTF_8));
                 Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
                 getLog().info("Loaded base partial metadata configuration file: " + source);
 
@@ -495,7 +495,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
         try {
             JsonNode tree = ExtensionConverter.getDefault().toPublicExtension(jsonObject);
-            ObjectWriter writer = Json.writer();
+            ObjectWriter writer = JsonUtils.writer();
             writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValue(targetFile, tree);
             getLog().info("Created file " + targetFile.getAbsolutePath());
         } catch (IOException e) {

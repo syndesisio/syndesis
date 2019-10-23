@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.spi.FactoryFinder;
@@ -38,7 +40,6 @@ import com.fasterxml.jackson.module.jsonSchema.types.ContainerTypeSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
@@ -68,7 +69,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         assertEquals(DataShapeKinds.JSON_SCHEMA, dataShape.getKind());
         assertNotNull(dataShape.getSpecification());
 
-        ContainerTypeSchema schema = Json.copyObjectMapperConfiguration().readValue(
+        ContainerTypeSchema schema = JsonUtils.copyObjectMapperConfiguration().readValue(
                                             dataShape.getSpecification(), expectedShapeClass);
 
         Map<String, JsonSchema> propSchemaMap = null;

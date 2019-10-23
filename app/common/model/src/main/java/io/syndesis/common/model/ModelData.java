@@ -15,14 +15,14 @@
  */
 package io.syndesis.common.model;
 
+import java.io.IOException;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.common.util.Json;
-
-import java.io.IOException;
+import io.syndesis.common.util.json.JsonUtils;
 
 /**
  * Used to read the deployment.json file from the client GUI project
@@ -57,7 +57,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     @JsonProperty("data")
     public String getDataAsJson() throws JsonProcessingException {
         if (json == null) {
-            json = Json.writer().writeValueAsString(data);
+            json = JsonUtils.writer().writeValueAsString(data);
         }
         return json;
     }
@@ -66,7 +66,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     @JsonProperty("data")
     public void setDataFromJson(JsonNode json) throws JsonProcessingException {
         this.data = null;
-        this.json = Json.writer().writeValueAsString(json);
+        this.json = JsonUtils.writer().writeValueAsString(json);
     }
 
     @JsonIgnore
@@ -74,7 +74,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
         if (data == null && kind != null && json != null) {
             @SuppressWarnings("unchecked")
             final Class<T> modelClass = (Class<T>) kind.getModelClass();
-            data = Json.reader().forType(modelClass).readValue(json);
+            data = JsonUtils.reader().forType(modelClass).readValue(json);
         }
         return data;
     }

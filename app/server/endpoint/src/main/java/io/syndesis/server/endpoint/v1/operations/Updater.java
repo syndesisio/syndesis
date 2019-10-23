@@ -36,7 +36,7 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.ApiParam;
 import io.swagger.jaxrs.PATCH;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.WithDataManager;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.validation.AllValidations;
@@ -65,7 +65,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
             throw new EntityNotFoundException();
         }
 
-        JsonNode document = Json.reader().readTree(Json.writer().writeValueAsString(existing));
+        JsonNode document = JsonUtils.reader().readTree(JsonUtils.writer().writeValueAsString(existing));
 
         // Attempt to apply the patch...
         final JsonMergePatch patch;
@@ -77,7 +77,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
         }
 
         // Convert the Json back to an entity.
-        T obj = Json.reader().forType(modelClass).readValue(Json.writer().writeValueAsBytes(document));
+        T obj = JsonUtils.reader().forType(modelClass).readValue(JsonUtils.writer().writeValueAsBytes(document));
 
         if (this instanceof Validating) {
             final Validator validator = ((Validating<?>) this).getValidator();

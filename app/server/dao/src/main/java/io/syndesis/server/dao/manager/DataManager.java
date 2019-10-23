@@ -25,11 +25,11 @@ import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.cache.Cache;
 import io.syndesis.common.util.cache.CacheManager;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.init.ReadApiClientData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +160,7 @@ public class DataManager implements DataAccessObjectRegistry {
                             System.getenv()
                         );
 
-                        Connector connector = Json.reader().forType(Connector.class).readValue(text);
+                        Connector connector = JsonUtils.reader().forType(Connector.class).readValue(text);
 
                         if (connector != null) {
                             LOGGER.info("Load connector: {} from resource: {}", connector.getId().orElse(""), resource.getURI());

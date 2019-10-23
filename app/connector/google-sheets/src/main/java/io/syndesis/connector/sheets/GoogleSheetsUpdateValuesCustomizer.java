@@ -28,7 +28,6 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
@@ -92,7 +91,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         } else if (in.getBody(String.class) != null) {
             String body = in.getBody(String.class);
             if (JsonUtils.isJsonArray(body)) {
-                jsonBeans = JsonUtils.arrayToJsonBeans(Json.reader().readTree(body));
+                jsonBeans = JsonUtils.arrayToJsonBeans(JsonUtils.reader().readTree(body));
             } else if (JsonUtils.isJson(body)) {
                 jsonBeans = Collections.singletonList(body);
             }
@@ -105,7 +104,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
             final ObjectSchema spec = getItemSchema(GoogleSheetsMetaDataHelper.createSchema(range, majorDimension, columnNames));
 
             for (String json : jsonBeans) {
-                Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(json);
+                Map<String, Object> dataShape = JsonUtils.reader().forType(Map.class).readValue(json);
 
                 if (dataShape.containsKey("spreadsheetId")) {
                     spreadsheetId = Optional.ofNullable(dataShape.remove("spreadsheetId"))

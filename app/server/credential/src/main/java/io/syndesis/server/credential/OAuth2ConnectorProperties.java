@@ -22,8 +22,8 @@ import java.util.Map;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.Json;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.springframework.social.oauth2.TokenStrategy;
 
 public class OAuth2ConnectorProperties extends ConnectorSettings {
@@ -92,7 +92,7 @@ public class OAuth2ConnectorProperties extends ConnectorSettings {
 
     private static Map<String, String> readJsonMap(String params) {
         try {
-            return Json.reader().forType(MAP_TYPE).readValue(params);
+            return JsonUtils.reader().forType(MAP_TYPE).readValue(params);
         } catch (IOException e) {
             throw new ExceptionInInitializerError(e);
         }

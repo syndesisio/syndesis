@@ -26,9 +26,9 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarInputStream;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.util.json.JsonUtils;
 
 /**
  * Tools to analyze binary extensions.
@@ -88,7 +88,7 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
             throw new IllegalArgumentException("Cannot find manifest file (" + MANIFEST_LOCATION + ") inside JAR");
         }
 
-        JsonNode tree = Json.reader().readTree(entry.get());
+        JsonNode tree = JsonUtils.reader().readTree(entry.get());
         Extension extension = ExtensionConverter.getDefault().toInternalExtension(tree);
         if (extension == null) {
             throw new IllegalArgumentException("Cannot extract Extension from manifest file (" + MANIFEST_LOCATION + ") inside JAR");

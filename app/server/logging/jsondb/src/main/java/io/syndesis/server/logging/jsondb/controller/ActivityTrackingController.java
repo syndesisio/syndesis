@@ -36,6 +36,7 @@ import java.util.function.Consumer;
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.PreparedBatch;
 import org.slf4j.Logger;
@@ -49,7 +50,6 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.syndesis.common.util.DurationConverter;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
@@ -350,7 +350,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
     }
 
     public void setPodLogState(String podName, PodLogState state) throws IOException {
-        jsondb.set("/activity/pods/" + podName, Json.writer().writeValueAsBytes(state));
+        jsondb.set("/activity/pods/" + podName, JsonUtils.writer().writeValueAsBytes(state));
     }
 
     public PodLogState getPodLogState(String podName) throws IOException {
@@ -366,7 +366,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
         if (data == null) {
             return null;
         }
-        return Json.reader().forType(type).readValue(data);
+        return JsonUtils.reader().forType(type).readValue(data);
     }
 
     private void processEventQueue() {

@@ -49,8 +49,8 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
@@ -352,7 +352,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
         List<ConfigurationProperty.PropertyValue> statusList = httpStatusList(operation);
         String enumJson = "[]";
         if (! statusList.isEmpty()) {
-            enumJson = Json.toString(statusList);
+            enumJson = JsonUtils.toString(statusList);
         }
         String mapsetJsonTemplate =
             "{ "

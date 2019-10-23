@@ -18,7 +18,7 @@ package io.syndesis.connector.salesforce.customizer;
 import java.io.IOException;
 import java.util.Map;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
@@ -51,7 +51,7 @@ public class ForUpdateCustomizer implements ComponentProxyCustomizer {
             return;
         }
 
-        final ObjectNode node = (ObjectNode) Json.reader().readTree(body);
+        final ObjectNode node = (ObjectNode) JsonUtils.reader().readTree(body);
 
         final JsonNode idProperty = node.remove(idPropertyName);
         if (idProperty == null) {
@@ -72,7 +72,7 @@ public class ForUpdateCustomizer implements ComponentProxyCustomizer {
         clearBaseFields(node);
 
         // update input json
-        in.setBody(Json.writer().writeValueAsString(node));
+        in.setBody(JsonUtils.writer().writeValueAsString(node));
     }
 
     private static void clearBaseFields(final ObjectNode node) {

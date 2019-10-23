@@ -25,7 +25,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 
 import org.apache.commons.io.IOUtils;
@@ -64,7 +64,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
             specification = IOUtils.toString(in, StandardCharsets.UTF_8);
         }
 
-        json = (ObjectNode) Json.reader().readTree(specification);
+        json = (ObjectNode) JsonUtils.reader().readTree(specification);
         swagger = OpenApiHelper.parse(specification);
     }
 

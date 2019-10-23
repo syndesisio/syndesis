@@ -33,9 +33,9 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.Resources;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
@@ -144,7 +144,7 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             Connector connector = null;
 
             try (InputStream is = ConnectorTestSupport.class.getClassLoader().getResourceAsStream("META-INF/syndesis/connector/" + id + ".json")) {
-                connector = Json.reader().forType(Connector.class).readValue(is);
+                connector = JsonUtils.reader().forType(Connector.class).readValue(is);
             } catch (IOException e) {
                 Assertions.fail("Unable to load connector: " + id, e);
             }

@@ -24,7 +24,7 @@ import java.nio.file.Path;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.IOStreams;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 
 /**
  * @author Christoph Deppisch
@@ -61,7 +61,7 @@ public class JsonIntegrationSource implements IntegrationSource {
     @Override
     public Integration get() {
         try {
-            return Json.reader().forType(Integration.class).readValue(json);
+            return JsonUtils.reader().forType(Integration.class).readValue(json);
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read integration json", e);
         }

@@ -28,7 +28,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
@@ -118,7 +117,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
         List<Map<String, Object>> sources = new ArrayList<>();
 
         try {
-            Map<String, Object> atlasMapping = Json.reader().forType(Map.class).readValue(configuredProperties.getOrDefault("atlasmapping", "{}"));
+            Map<String, Object> atlasMapping = JsonUtils.reader().forType(Map.class).readValue(configuredProperties.getOrDefault("atlasmapping", "{}"));
             atlasMapping = (Map<String, Object>) atlasMapping.getOrDefault("AtlasMapping", new HashMap<>());
             sources = (List<Map<String, Object>>) atlasMapping.getOrDefault("dataSource", Collections.emptyList());
         } catch (IOException | ClassCastException e) {
@@ -186,7 +185,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
 
                 if (message != null && message.getBody(String.class) != null) {
                     try {
-                        JsonNode json = Json.reader().readTree(message.getBody(String.class));
+                        JsonNode json = JsonUtils.reader().readTree(message.getBody(String.class));
                         if (json.isArray()) {
                             message.setBody(JsonUtils.arrayToJsonBeans(json));
                         }

@@ -23,7 +23,7 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.CamelContext;
 
@@ -47,7 +47,7 @@ public abstract class SalesforceTestSupport extends ConnectorTestSupport {
         Connector connector;
 
         try (InputStream is = SalesforceTestSupport.class.getResourceAsStream("/META-INF/syndesis/connector/salesforce.json")) {
-            connector = Json.reader().forType(Connector.class).readValue(is);
+            connector = JsonUtils.reader().forType(Connector.class).readValue(is);
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }

@@ -27,6 +27,8 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -55,7 +57,6 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.Json;
 
 @Mojo(
     name = "generate-connector-inspections",
@@ -99,7 +100,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
                 .setLoadingConfiguration(loadingConfiguration).freeze();
 
-            JsonNode schemaObject = Json.reader().readTree(schemaStream);
+            JsonNode schemaObject = JsonUtils.reader().readTree(schemaStream);
             jsonSchema = factory.getJsonSchema(schemaObject);
         } catch (IOException | ProcessingException ex) {
             throw new MojoExecutionException("Schema Initialisation Error", ex);
@@ -131,14 +132,14 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 for (File file: files) {
                     JsonNode jsonNode = validateWithSchema(file);
 
-                    Connector connector = Json.convertValue(jsonNode, Connector.class);
+                    Connector connector = JsonUtils.convertValue(jsonNode, Connector.class);
                     if (!connector.getId().isPresent()) {
                         continue;
                     }
 
                     List<ConnectorAction> actions = generateInspections(connector);
                     if (!actions.isEmpty()) {
-                        Json.writer().writeValue(
+                        JsonUtils.writer().writeValue(
                             file,
                             new Connector.Builder()
                                 .createFrom(connector)
@@ -167,7 +168,7 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             jsonStream = new FileInputStream(jsonFile);
 
             // Will parse and therefore check for well-formedness
-            JsonNode jsonNode = Json.reader().readTree(jsonStream);
+            JsonNode jsonNode = JsonUtils.reader().readTree(jsonStream);
 
             // Validate against the loaded connection-schema
             ProcessingReport report = jsonSchema.validate(jsonNode, true);

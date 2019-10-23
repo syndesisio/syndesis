@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 public class HttpRequestWrapperProcessor implements Processor {
     private final Set<String> parameters;
 
-    private static final ObjectReader READER = Json.reader().forType(JsonNode.class);
+    private static final ObjectReader READER = JsonUtils.reader().forType(JsonNode.class);
 
     public HttpRequestWrapperProcessor(JsonNode schema) {
         this.parameters = SimpleJsonSchemaInspector.getProperties(schema, "parameters");
@@ -47,7 +47,7 @@ public class HttpRequestWrapperProcessor implements Processor {
         final Message message = exchange.getIn();
         final Object body = message.getBody();
 
-        final ObjectNode rootNode = Json.copyObjectMapperConfiguration().createObjectNode();
+        final ObjectNode rootNode = JsonUtils.copyObjectMapperConfiguration().createObjectNode();
 
         if (!parameters.isEmpty()) {
             final ObjectNode parametersNode = rootNode.putObject("parameters");
@@ -81,7 +81,7 @@ public class HttpRequestWrapperProcessor implements Processor {
             rootNode.putPOJO("body", body);
         }
 
-        final String newBody = Json.toString(rootNode);
+        final String newBody = JsonUtils.toString(rootNode);
         final Message replacement = new DefaultMessage(exchange.getContext());
         replacement.copyFromWithNewBody(message, newBody);
 

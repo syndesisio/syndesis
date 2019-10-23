@@ -18,13 +18,13 @@ package io.syndesis.server.api.generator.swagger;
 import java.util.List;
 
 import io.syndesis.common.model.connection.ConnectorTemplate;
-import io.syndesis.common.util.Json;
 
 import com.jayway.jsonpath.Configuration;
 import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.TypeRef;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
+import io.syndesis.common.util.json.JsonUtils;
 
 final class ApiConnectorTemplate {
 
@@ -36,8 +36,8 @@ final class ApiConnectorTemplate {
 
     private static ConnectorTemplate fetchSwaggerConnectorTemplateFromDeployment() {
         final Configuration configuration = Configuration.builder()//
-            .jsonProvider(new JacksonJsonProvider(Json.copyObjectMapperConfiguration()))//
-            .mappingProvider(new JacksonMappingProvider(Json.copyObjectMapperConfiguration()))//
+            .jsonProvider(new JacksonJsonProvider(JsonUtils.copyObjectMapperConfiguration()))//
+            .mappingProvider(new JacksonMappingProvider(JsonUtils.copyObjectMapperConfiguration()))//
             .build();
 
         final List<ConnectorTemplate> templates = JsonPath.using(configuration)

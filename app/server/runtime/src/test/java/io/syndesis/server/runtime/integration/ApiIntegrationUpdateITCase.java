@@ -30,7 +30,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.runtime.BaseITCase;
 
@@ -162,7 +162,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
     }
 
     static HttpEntity<Resource> integration(final Integration integration) throws JsonProcessingException {
-        final byte[] bytes = Json.writer().writeValueAsBytes(integration);
+        final byte[] bytes = JsonUtils.writer().writeValueAsBytes(integration);
 
         final Resource resource = new ByteArrayResource(bytes);
 

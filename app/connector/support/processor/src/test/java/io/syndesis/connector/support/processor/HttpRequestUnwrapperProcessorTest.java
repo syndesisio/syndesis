@@ -17,8 +17,7 @@ package io.syndesis.connector.support.processor;
 
 import java.util.HashMap;
 
-import io.syndesis.common.util.Json;
-
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -99,7 +98,7 @@ public class HttpRequestUnwrapperProcessorTest {
     }
 
     private static JsonNode schema() {
-        final ObjectNode schema = Json.copyObjectMapperConfiguration().createObjectNode();
+        final ObjectNode schema = JsonUtils.copyObjectMapperConfiguration().createObjectNode();
         final ObjectNode parameters = schema.putObject("properties").putObject("parameters").putObject("properties");
         parameters.putObject("h1");
         parameters.putObject("h2");

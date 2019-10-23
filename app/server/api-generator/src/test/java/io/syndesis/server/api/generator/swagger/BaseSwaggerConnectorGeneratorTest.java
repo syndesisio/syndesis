@@ -37,7 +37,7 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIValidationContext;
 
@@ -60,7 +60,7 @@ public class BaseSwaggerConnectorGeneratorTest {
 
     public BaseSwaggerConnectorGeneratorTest() {
         try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
-            final Connector restSwagger = Json.readFromStream(stream, Connector.class);
+            final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
             generator = new BaseSwaggerConnectorGenerator(restSwagger) {
                 @Override

@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -102,7 +102,7 @@ public class GoogleSheetsMetadataAdapterTest {
         GoogleSheetsMetadataRetrieval adapter = new GoogleSheetsMetadataRetrieval();
         SyndesisMetadata syndesisMetaData = adapter.adapt(camelContext, "sheets", actionId, parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource(expectedJson), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }

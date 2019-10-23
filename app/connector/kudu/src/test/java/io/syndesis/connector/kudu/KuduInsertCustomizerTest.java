@@ -16,7 +16,7 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
@@ -77,7 +77,7 @@ public class KuduInsertCustomizerTest extends AbstractKuduCustomizerTestSupport 
 
         Assert.assertNotNull("Model is not null", model);
 
-        Map<String, Object> modelMap = Json.reader().forType(Map.class).readValue(model);
+        Map<String, Object> modelMap = JsonUtils.reader().forType(Map.class).readValue(model);
 
         Assert.assertEquals("Model has all elements", 5, modelMap.size());
 

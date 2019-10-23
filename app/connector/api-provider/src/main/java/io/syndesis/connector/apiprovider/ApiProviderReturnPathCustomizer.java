@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.HttpRequestUnwrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -40,7 +40,7 @@ import org.apache.camel.RuntimeCamelException;
 
 public class ApiProviderReturnPathCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
 
-    private static final ObjectReader READER = Json.reader().forType(JsonNode.class);
+    private static final ObjectReader READER = JsonUtils.reader().forType(JsonNode.class);
 
     private static final String HTTP_RESPONSE_CODE_PROPERTY        = "httpResponseCode";
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";

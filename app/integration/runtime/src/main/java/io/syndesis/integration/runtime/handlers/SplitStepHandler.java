@@ -23,7 +23,6 @@ import java.util.Optional;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
@@ -134,7 +133,7 @@ public class SplitStepHandler implements IntegrationStepHandler {
                 Object value = convert(delegate.evaluate(exchange, Object.class), exchange);
 
                 if (value instanceof String && JsonUtils.isJson(value.toString())) {
-                    JsonNode json = Json.reader().readTree(value.toString());
+                    JsonNode json = JsonUtils.reader().readTree(value.toString());
                     if (json.isArray()) {
                         return JsonUtils.arrayToJsonBeans(json);
                     }
@@ -167,10 +166,10 @@ public class SplitStepHandler implements IntegrationStepHandler {
                 Object value = convert(delegate.evaluate(exchange, Object.class), exchange);
 
                 if (value instanceof String && JsonUtils.isJson(value.toString())) {
-                    JsonNode json = Json.reader().readTree(value.toString());
+                    JsonNode json = JsonUtils.reader().readTree(value.toString());
                     JsonNode body = json.get("body");
                     if (body != null) {
-                        return Json.writer().writeValueAsString(body);
+                        return JsonUtils.writer().writeValueAsString(body);
                     }
                 }
 

@@ -31,8 +31,8 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Exceptions;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.backend.BackendController;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
@@ -130,7 +130,7 @@ public abstract class BaseIntegrationController implements BackendController {
             // Never do anything that could block in this callback!
             if (EventBus.Type.CHANGE_EVENT.equals(event)) {
                 try {
-                    ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
+                    ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
                     if (changeEvent != null) {
                         changeEvent.getId().ifPresent(id -> {
                             changeEvent.getKind()

@@ -28,7 +28,7 @@ import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.dao.Migrator;
 import io.syndesis.server.jsondb.impl.MemorySqlJsonDB;
@@ -65,10 +65,10 @@ public class UpgradeVersion28Test {
         String integrations = jsondb.getAsString(INTEGRATIONS_PATH);
         List<String> integrationIds = new ArrayList<>();
 
-        Json.reader().readTree(integrations).fieldNames().forEachRemaining(integrationIds::add);
+        JsonUtils.reader().readTree(integrations).fieldNames().forEachRemaining(integrationIds::add);
 
         Assert.assertEquals(4, integrationIds.size());
-        Integration integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(0)));
+        Integration integration = JsonUtils.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(0)));
         Flow flow = integration.getFlows().get(0);
         assertStepsOnFlow(flow, StepKind.endpoint, StepKind.split, StepKind.log, StepKind.mapper, StepKind.endpoint);
         Assert.assertTrue(flow.getSteps().get(0).getId().isPresent());
@@ -85,13 +85,13 @@ public class UpgradeVersion28Test {
         Assert.assertEquals("SQL_PARAM_OUT", splitOutputShape.getType());
         Assert.assertNotNull(splitOutputShape.getSpecification());
 
-        integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(1)));
+        integration = JsonUtils.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(1)));
         flow = integration.getFlows().get(0);
         assertStepsOnFlow(flow, StepKind.endpoint, StepKind.endpoint);
         Assert.assertEquals("Simple Timer", flow.getSteps().get(0).getAction().orElseGet(UpgradeVersion28Test::dummyAction).getName());
         Assert.assertEquals("Simple Logger", flow.getSteps().get(1).getAction().orElseGet(UpgradeVersion28Test::dummyAction).getName());
 
-        integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(2)));
+        integration = JsonUtils.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(2)));
         flow = integration.getFlows().get(0);
         assertStepsOnFlow(flow, StepKind.endpoint, StepKind.split, StepKind.mapper, StepKind.endpoint);
         Assert.assertNotEquals("step-service-now-start", flow.getSteps().get(0).getId().get());
@@ -105,7 +105,7 @@ public class UpgradeVersion28Test {
         Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, splitOutputShape.getKind());
         Assert.assertEquals("{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"properties\":{\"ID\":{\"type\":\"integer\",\"required\":true}}}", splitOutputShape.getSpecification());
 
-        integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(3)));
+        integration = JsonUtils.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(3)));
         flow = integration.getFlows().get(0);
         assertStepsOnFlow(flow, StepKind.endpoint, StepKind.split, StepKind.log, StepKind.endpoint);
         Assert.assertNotEquals("step-aws-s3-start", flow.getSteps().get(0).getId().get());
@@ -132,10 +132,10 @@ public class UpgradeVersion28Test {
         String integrations = jsondb.getAsString(INTEGRATIONS_PATH);
         List<String> integrationIds = new ArrayList<>();
 
-        Json.reader().readTree(integrations).fieldNames().forEachRemaining(integrationIds::add);
+        JsonUtils.reader().readTree(integrations).fieldNames().forEachRemaining(integrationIds::add);
 
         Assert.assertEquals(1, integrationIds.size());
-        Integration integration = Json.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(0)));
+        Integration integration = JsonUtils.reader().forType(Integration.class).readValue(jsondb.getAsString(INTEGRATIONS_PATH + "/" + integrationIds.get(0)));
         Assert.assertEquals(5, integration.getFlows().get(0).getSteps().size());
         Assert.assertEquals(StepKind.split, integration.getFlows().get(0).getSteps().get(1).getStepKind());
         Assert.assertEquals("step-sql-start", integration.getFlows().get(0).getSteps().get(1).getId().orElseThrow(AssertionError::new));

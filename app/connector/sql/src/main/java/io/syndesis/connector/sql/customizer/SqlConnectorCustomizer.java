@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlParameterValue;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisConnectorException;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sql.common.DbMetaDataHelper;
@@ -77,7 +76,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
             String body = in.getBody(String.class);
             if (JsonUtils.isJsonArray(body)) {
                 try {
-                    jsonBeans = JsonUtils.arrayToJsonBeans(Json.reader().readTree(body));
+                    jsonBeans = JsonUtils.arrayToJsonBeans(JsonUtils.reader().readTree(body));
                 } catch (IOException e) {
                     throw SyndesisConnectorException.wrap(SqlErrorCategory.SQL_DATA_ACCESS_ERROR, e);
                 }

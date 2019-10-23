@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -111,7 +111,7 @@ abstract class DataMapperBaseInspector<T> implements Inspector {
     @SuppressWarnings("PMD.CyclomaticComplexity")
     protected final List<String> getPathsFromJavaClassJson(final String prefix, final String specification, final Context<T> context) {
         try {
-            final JsonNode node = Json.reader().readTree(specification);
+            final JsonNode node = JsonUtils.reader().readTree(specification);
             if (node == null) {
                 return Collections.emptyList();
             }

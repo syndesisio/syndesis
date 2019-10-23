@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -47,7 +47,7 @@ public class KuduInsertCustomizer implements ComponentProxyCustomizer {
         final String body = in.getBody(String.class);
 
         if (ObjectHelper.isNotEmpty(body)) {
-            in.setBody(Json.reader().forType(Map.class).readValue(body));
+            in.setBody(JsonUtils.reader().forType(Map.class).readValue(body));
         } else {
             in.setBody(new HashMap<>());
         }

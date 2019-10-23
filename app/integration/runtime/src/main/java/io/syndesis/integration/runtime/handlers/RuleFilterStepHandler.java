@@ -22,11 +22,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.filter.FilterPredicate;
 import io.syndesis.common.model.filter.FilterRule;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.json.JsonUtils;
 
 public class RuleFilterStepHandler extends AbstractFilterStepHandler {
     @Override
@@ -61,7 +61,7 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
             }
-            return Json.reader().forType(new TypeReference<List<FilterRule>>(){}).readValue(rulesString);
+            return JsonUtils.reader().forType(new TypeReference<List<FilterRule>>(){}).readValue(rulesString);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Cannot deserialize %s: %s", rulesString, e.getMessage()),e);
         }

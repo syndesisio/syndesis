@@ -26,8 +26,8 @@ import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.kudu.common.KuduSupport;
 import io.syndesis.connector.kudu.meta.KuduMetaData;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
@@ -59,7 +59,7 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("Kudu table")
                             .description(String.format("Columns for table [%s]", kuduMetaData.getTableName()))
-                            .specification(Json.writer().writeValueAsString(spec));
+                            .specification(JsonUtils.writer().writeValueAsString(spec));
                 } else {
                     inDataShapeBuilder.kind(DataShapeKinds.NONE);
                 }
@@ -73,7 +73,7 @@ public class KuduMetadataRetrieval extends ComponentMetadataRetrieval {
                     ArraySchema collectionSpec = new ArraySchema();
                     collectionSpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
                     collectionSpec.setItemsSchema(spec);
-                    outDataShapeBuilder.specification(Json.writer().writeValueAsString(collectionSpec));
+                    outDataShapeBuilder.specification(JsonUtils.writer().writeValueAsString(collectionSpec));
                 } else {
                     outDataShapeBuilder.kind(DataShapeKinds.NONE);
                 }

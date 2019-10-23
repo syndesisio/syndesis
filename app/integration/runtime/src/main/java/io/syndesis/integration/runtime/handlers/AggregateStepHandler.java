@@ -33,7 +33,6 @@ import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
@@ -176,11 +175,11 @@ public class AggregateStepHandler implements IntegrationStepHandler {
                     List<String> unifiedBodies = new ArrayList<>();
                     List<?> jsonBeans = message.getBody(List.class);
                     for (Object unifiedJsonBean : jsonBeans) {
-                        JsonNode unifiedJson = Json.reader().readTree(String.valueOf(unifiedJsonBean));
+                        JsonNode unifiedJson = JsonUtils.reader().readTree(String.valueOf(unifiedJsonBean));
                         if (unifiedJson.isObject()) {
                             JsonNode body = unifiedJson.get("body");
                             if (body != null) {
-                                unifiedBodies.add(Json.writer().writeValueAsString(body));
+                                unifiedBodies.add(JsonUtils.writer().writeValueAsString(body));
                             }
                         }
                     }

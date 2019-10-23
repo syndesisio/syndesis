@@ -56,11 +56,11 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.CollectionsUtils;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Strings;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.integration.api.IntegrationErrorHandler;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
@@ -284,7 +284,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
-                ObjectWriter writer = Json.writer();
+                ObjectWriter writer = JsonUtils.writer();
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(integration, applicationJavaMustache));
                 Scope scope = new Scope(configuration, integration);

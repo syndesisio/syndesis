@@ -29,7 +29,7 @@ import java.util.zip.ZipInputStream;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +66,7 @@ public class IntegrationExportSource implements IntegrationSource {
         try {
             JsonNode integrations = model.get("integrations");
             if (integrations != null && integrations.fields().hasNext()) {
-                return Json.reader().forType(Integration.class).readValue(integrations.fields().next().getValue());
+                return JsonUtils.reader().forType(Integration.class).readValue(integrations.fields().next().getValue());
             }
         } catch (IOException e) {
             throw new IllegalStateException("Failed to read integrations from export", e);
@@ -85,7 +85,7 @@ public class IntegrationExportSource implements IntegrationSource {
                 Iterator<Map.Entry<String, JsonNode>> fields = apis.fields();
                 while (fields.hasNext()) {
                     Map.Entry<String, JsonNode> fieldEntry = fields.next();
-                    openApis.put(fieldEntry.getKey(), Json.reader().forType(OpenApi.class).readValue(fieldEntry.getValue()));
+                    openApis.put(fieldEntry.getKey(), JsonUtils.reader().forType(OpenApi.class).readValue(fieldEntry.getValue()));
                 }
             }
         } catch (IOException e) {
@@ -96,7 +96,7 @@ public class IntegrationExportSource implements IntegrationSource {
     }
 
     private static JsonNode readModel(Path exportDirectory) throws IOException {
-        return Json.reader().readTree(Files.newInputStream(exportDirectory.resolve("model.json")));
+        return JsonUtils.reader().readTree(Files.newInputStream(exportDirectory.resolve("model.json")));
     }
 
     private static JsonNode readModelFromZip(InputStream export) {
@@ -108,7 +108,7 @@ public class IntegrationExportSource implements IntegrationSource {
                 }
 
                 if ("model.json".equals(entry.getName())) {
-                    return Json.reader().readTree(zis);
+                    return JsonUtils.reader().readTree(zis);
                 }
                 zis.closeEntry();
             }

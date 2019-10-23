@@ -29,7 +29,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -63,13 +63,13 @@ public class JsonIntegrationSourceTest {
                     .build())
                 .build();
 
-        JsonIntegrationSource source = new JsonIntegrationSource(Json.writer().forType(Integration.class).writeValueAsString(expected));
+        JsonIntegrationSource source = new JsonIntegrationSource(JsonUtils.writer().forType(Integration.class).writeValueAsString(expected));
         Assert.assertEquals(expected, source.get());
     }
 
     @Test
     public void getFromJsonFile() throws IOException, URISyntaxException {
-        Integration expected = Json.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
+        Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         JsonIntegrationSource source = new JsonIntegrationSource(Paths.get(JsonIntegrationSourceTest.class.getResource("TimerToLog.json").toURI()));
         Assert.assertEquals(expected, source.get());
     }

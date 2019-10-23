@@ -26,7 +26,7 @@ import java.util.Map;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -101,7 +101,7 @@ public class ServiceNowTableGetCustomizer implements ComponentProxyCustomizer {
         }
 
         if  (body instanceof List) {
-            final ObjectWriter writer = Json.writer();
+            final ObjectWriter writer = JsonUtils.writer();
             final List<?> elements = List.class.cast(body);
             final List<String> answer = new ArrayList<>(elements.size());
 
@@ -116,7 +116,7 @@ public class ServiceNowTableGetCustomizer implements ComponentProxyCustomizer {
             message.setBody(answer);
         } else {
             try {
-                final ObjectWriter writer = Json.writer();
+                final ObjectWriter writer = JsonUtils.writer();
                 final String answer = writer.writeValueAsString(body);
 
                 message.setBody(Collections.singletonList(answer));

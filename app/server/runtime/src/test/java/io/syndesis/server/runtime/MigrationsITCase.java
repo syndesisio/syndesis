@@ -17,7 +17,7 @@ package io.syndesis.server.runtime;
 
 import java.util.concurrent.ExecutionException;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
@@ -34,7 +34,7 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import static io.syndesis.common.util.Json.map;
+import static io.syndesis.common.util.json.JsonUtils.map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -102,6 +102,6 @@ public class MigrationsITCase {
     }
 
     private static String json(final Object value) throws JsonProcessingException {
-        return Json.writer().writeValueAsString(value);
+        return JsonUtils.writer().writeValueAsString(value);
     }
 }

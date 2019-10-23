@@ -29,6 +29,7 @@ import java.util.Optional;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.MavenProperties;
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +44,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.server.dao.init.ReadApiClientData;
 import io.syndesis.server.dao.manager.DaoConfiguration;
@@ -150,7 +150,7 @@ public class Application implements ApplicationRunner {
 
             if (resources != null) {
                 for (Resource resource: resources) {
-                    Connector connector = Json.reader().forType(Connector.class).readValue(resource.getInputStream());
+                    Connector connector = JsonUtils.reader().forType(Connector.class).readValue(resource.getInputStream());
 
                     if (connector != null) {
                         for (final Action action : connector.getActions()) {

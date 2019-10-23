@@ -20,14 +20,14 @@ import java.io.InputStream;
 
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Test;
 
 public class ExtensionSerializationTest {
     @Test
     public void testSerializeDeserialize() throws IOException {
-        final ObjectReader reader = Json.reader();
-        final ObjectWriter writer = Json.writer();
+        final ObjectReader reader = JsonUtils.reader();
+        final ObjectWriter writer = JsonUtils.writer();
 
         try (InputStream source = getClass().getResourceAsStream("syndesis-extension-definition.json")) {
            reader.forType(Extension.class).readValue(

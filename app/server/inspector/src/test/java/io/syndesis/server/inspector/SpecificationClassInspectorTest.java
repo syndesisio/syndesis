@@ -18,7 +18,7 @@ package io.syndesis.server.inspector;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.inspector.DataMapperBaseInspector.Context;
 
 import org.apache.commons.io.IOUtils;
@@ -38,7 +38,7 @@ public class SpecificationClassInspectorTest {
 
         final String specification = read("/twitter4j.Status.full.json");
 
-        final Context<JsonNode> context = new Context<>(Json.reader().readTree(specification));
+        final Context<JsonNode> context = new Context<>(JsonUtils.reader().readTree(specification));
 
         final String json = inspector.fetchJsonFor("twitter4j.GeoLocation", context);
 

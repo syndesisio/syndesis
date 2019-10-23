@@ -21,7 +21,7 @@ import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
 import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -32,14 +32,14 @@ public class IntegrationExportSourceTest {
 
     @Test
     public void shouldGetFromZip() throws IOException {
-        Integration expected = Json.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
+        Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog-export.zip"));
         Assert.assertEquals(expected, source.get());
     }
 
     @Test
     public void shouldGetFromDirectory() throws IOException, URISyntaxException {
-        Integration expected = Json.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
+        Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(Paths.get(IntegrationExportSourceTest.class.getResource("TimerToLog-export").toURI()));
         Assert.assertEquals(expected, source.get());
     }

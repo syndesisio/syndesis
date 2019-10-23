@@ -21,8 +21,8 @@ import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.util.Json;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -45,7 +45,7 @@ public class ExtensionSchemaValidationTest {
 
     private static final Logger LOG = LoggerFactory.getLogger(ExtensionSchemaValidationTest.class);
 
-    private static final ObjectMapper OBJECT_MAPPER = Json.copyObjectMapperConfiguration();
+    private static final ObjectMapper OBJECT_MAPPER = JsonUtils.copyObjectMapperConfiguration();
 
     @Test
     @Ignore("Used to generate the initial extension definition")

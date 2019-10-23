@@ -21,7 +21,6 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.fasterxml.jackson.databind.ObjectReader;
-import io.syndesis.common.util.Json;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -68,7 +67,7 @@ public class JsonUtilsTest {
 
     @Test
     public void arrayToJsonBeans() throws IOException {
-        ObjectReader reader = Json.reader();
+        ObjectReader reader = JsonUtils.reader();
         Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{}"))).isEqualTo(Collections.emptyList());
         Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{\"foo\": \"bar\"}"))).isEqualTo(Collections.emptyList());
         Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[]"))).isEqualTo(Collections.emptyList());

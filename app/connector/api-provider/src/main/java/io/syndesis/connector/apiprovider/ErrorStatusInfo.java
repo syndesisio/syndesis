@@ -15,12 +15,11 @@
  */
 package io.syndesis.connector.apiprovider;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.syndesis.common.util.Json;
 
 public class ErrorStatusInfo {
 
@@ -62,7 +61,7 @@ public class ErrorStatusInfo {
 
     public String toJson() {
         try {
-            return Json.writer().writeValueAsString(this);
+            return JsonUtils.writer().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             LOG.warn(e.getMessage());
             return "";

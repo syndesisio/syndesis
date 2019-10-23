@@ -17,8 +17,8 @@ package io.syndesis.server.logging.jaeger.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SuppressFBWarnings;
+import io.syndesis.common.util.json.JsonUtils;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Client;
@@ -45,7 +45,7 @@ public class JaegerQueryAPI {
         @Override
         public String toString() {
             try {
-                return Json.writer().writeValueAsString(this);
+                return JsonUtils.writer().writeValueAsString(this);
             } catch (JsonProcessingException e) {
                 throw new RuntimeException(e); // NOPMD
             }

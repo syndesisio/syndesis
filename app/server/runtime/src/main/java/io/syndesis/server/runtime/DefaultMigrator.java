@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.runtime;
 
-import static io.syndesis.common.util.Json.map;
+import static io.syndesis.common.util.json.JsonUtils.map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

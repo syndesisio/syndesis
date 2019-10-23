@@ -32,7 +32,7 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 
@@ -371,7 +371,7 @@ public class ExtensionsITCase extends BaseITCase {
                 .build();
 
             final JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);
-            final byte[] content = Json.writer().writeValueAsBytes(extensionTree);
+            final byte[] content = JsonUtils.writer().writeValueAsBytes(extensionTree);
             IOUtils.write(content, jar);
             jar.closeEntry();
             jar.flush();

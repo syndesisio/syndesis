@@ -25,7 +25,7 @@ import com.amazonaws.services.dynamodbv2.model.ScalarAttributeType;
 import com.amazonaws.services.dynamodbv2.model.TableDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.aws.ddb.AWSDDBConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -63,7 +63,7 @@ public class AWSDDBMetadataAdapterTest {
             }
         };
 
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext,
         "aws-ddb", "io.syndesis:aws-ddb-query-connector", parameters, metadata.get());
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
@@ -132,7 +132,7 @@ public class AWSDDBMetadataAdapterTest {
             }
         };
 
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext,
             "aws-ddb", "io.syndesis:aws-ddb-removeitem-to-connector", parameters, metadata.get());
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
