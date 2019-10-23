@@ -1,0 +1,42 @@
+// This assembly is included in the following assemblies:
+// assemblies/connecting/as_connecting-to-aws.adoc
+
+[id='connecting-to-amazon-dynamodb_{context}']
+= Connecting to Amazon DynamoDB
+:context: dynamodb
+
+An integration can retrieve data from an Amazon DynamoDB table, add  
+data to a DynamoDB table, or remove data from a DynamoDB 
+table. To do this, create an Amazon DynamoDB 
+connection and then add that connection to an integration flow.
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Connecting to MongoDB is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+
+For details, see:
+
+* xref:create-dynamodb-connections_{context}[]
+* xref:adding-dynamodb-connection-query_{context}[]
+* xref:adding-dynamodb-connection-put_{context}[]
+* xref:adding-dynamodb-connection-remove_{context}[]
+
+
+include::../../modules/connecting/p_creating-amazon-dynamodb-connections.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-dynamodb-connection-query.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-dynamodb-connection-put.adoc[leveloffset=+1]
+
+include::../../modules/connecting/p_adding-dynamodb-connection-remove.adoc[leveloffset=+1]
+
+:context: aws

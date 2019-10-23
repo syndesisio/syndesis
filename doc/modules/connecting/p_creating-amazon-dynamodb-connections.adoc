@@ -1,0 +1,61 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-dynamodb.adoc
+
+[id='create-dynamodb-connections_{context}']
+= Creating Amazon DynamoDB connections
+
+You must create an Amazon DynamoDB connection before you can 
+connect to Amazon DynamoDB in an integration.
+
+.Prerequisites
+
+* You must have an AWS access key. See 
+link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+* You must know which AWS region contains the DynamoDB table that
+you want the connection to access. 
+* You must know the name of the DynamoDB table that you want the 
+connection to access. This table must exist when an integration
+connects to DynamoDB. 
+
+.Procedure
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+{prodname} connectors.
+. Click the *AWS DDB* connector.
+. In the *Access Key* field, enter an Amazon access key ID that is 
+part of a user access key in the AWS account that manages 
+the DynamoDB table that you want the connection to access. 
+
+. In the *Secret Key* field, enter the Amazon secret access key for the 
+Amazon access key ID that you specified.
+
+. In the *Region* field, select the AWS region in which the DynamoDB table resides.
+
+. In the *Table Name* field, enter the name of
+the DynamoDB table that you want this connection to access.
+
+. Click *Validate*. {prodname} immediately tries to validate the
+connection and displays a message that indicates whether or not
+validation is successful. If validation fails, revise the configuration
+details as needed and try again.
+. When validation is successful, click *Next*.
+. In the *Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, enter `DynamoDB West`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. For example,
+enter `*Sample DynamoDB connection
+that accesses sales data in the western region.*`
+. Click *Save* to see that the connection you
+created is now available. If you entered the example name, you would
+see that *DynamoDB West* appears as a connection that you can 
+choose to add to an integration.
+
+.Results
+
+When {prodname} is prompting you to add to an integration, it 
+displays the DynamoDB connection that you just created. 
+This connection always and only accesses the DynamoDB table
+that you specified when you created the connection. 
