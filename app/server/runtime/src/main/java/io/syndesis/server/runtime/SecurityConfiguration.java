@@ -48,7 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         "/api/v1/internal/swagger.*",
         "/api/v1/internal/index.html",
         "/api/v1/version",
-        "/health"
+        "/actuator/health"
     };
 
     @Override
