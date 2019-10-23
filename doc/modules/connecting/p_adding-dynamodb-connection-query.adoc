@@ -1,0 +1,58 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-dynamodb.adoc
+
+[id='adding-dynamodb-connection-query_{context}']
+= Obtaining data from an Amazon DynamoDB table
+
+In an integration flow, to obtain an item from an Amazon DynamoDB table, 
+add an Amazon DynamoDB connection to the middle of the flow.
+
+A DynamoDB connection cannot start a simple integration. If you want 
+to periodically obtain data from a DynamoDB table, start a simple integration
+with a timer followed by a DynamoDB connection that queries a table. 
+
+.Prerequisites
+* You created an Amazon DynamoDB connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to add to the integration. 
+
+.Procedure
+
+. In the flow visualization, click the plus sign where you want 
+to add an Amazon DynamoDB connection. 
+
+. On the *Choose a connection* page, click the Amazon DynamoDB connection that
+is configured to access that table that you want to obtain data from.
+
+. On the *Choose an action* page, select the *Query* action. 
+
+. In the *Filter* field, specify JSON notation that identifies the key attribute(s) 
+for the item that the connection should return. You can specify input 
+parameters with `:#`. For example, to obtain an item that has two key attributes, 
+the specification might be something like this: 
++
+----
+{"key1":":#PARAM1", "key2":":#PARAM2"}
+----
+
+. Optional. In the *Attributes to query* field, enter a comma-separated list of
+the attribute names that contain the data that you want the connection to return. 
+For example: 
++
+----
+key1,key2,attribute3,attribute4,attribute5
+----
++
+If you do not specify attributes, the query returns the key attribute(s). 
+
+. Click *Next*. 
+
+.Result
+The integration now has a DynamoDB connection that obtains data. At runtime, 
+the connection returns a JSON instance document that contains the result
+of the query. 
+
+.Next step
+If you specified placeholder parameters in the *Filter* field, add a data 
+mapper step before this connection. In the data mapper step, map source fields 
+to the target placeholder fields in the DynamoDB connection. 

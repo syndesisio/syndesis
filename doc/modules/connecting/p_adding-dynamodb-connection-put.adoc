@@ -1,0 +1,49 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-dynamodb.adoc
+
+[id='adding-dynamodb-connection-put_{context}']
+= Adding data to an Amazon DynamoDB table
+
+In the middle of a flow, or to finish a simple integration, a
+DynamoDB connection can add an item to a DynamoDB table.
+To do this, add a DynamoDB connection
+to the middle of a flow or as a simple integration's finish connection. 
+
+[NOTE]
+In this release, a DynamoDB connection cannot update an item in a DynamoDB table. 
+This is expected to change in a future release.
+
+.Prerequisites
+* You created an Amazon DynamoDB connection.
+* You are creating or editing a simple integration and {prodname} is prompting you
+to add to the integration or to choose the finish connection.  
+
+.Procedure
+
+. On the *Choose a connection* page, click the Amazon DynamoDB connection that
+is configured to access the table that you want to add to. 
+
+. On the *Choose an action* page, select *Put Item*. 
+
+. In the *JSON definition of the element* field, enter JSON notation 
+that defines the table item to be added. You must specify 
+the item's key attribute(s). Input parameter placeholders prefixed 
+with `:#` are allowed. Be sure to specify 
+all attributes/values that you want to store.
+In the following example, `userID` is the key: 
++
+----
+{"userID":"aslan","attr1":"some-value","attr2":"another-value"}
+----
+
+. Click *Next*. 
+
+.Result
+The connection appears in the integration visualization at the location
+you added it. During execution, the connection adds the defined JSON
+item to the DynamoDB table that the connection is configured to access. 
+
+.Next step
+If you specified placeholder parameters in the JSON definition of the item, add a data 
+mapper step before this connection. In the data mapper step, map source fields 
+to the target placeholder fields in the DynamoDB connection. 

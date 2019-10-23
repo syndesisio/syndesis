@@ -1,0 +1,43 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-dynamodb.adoc
+
+[id='adding-dynamodb-connection-remove_{context}']
+= Removing data from an Amazon DynamoDB table 
+
+In the middle of a flow, or to finish a simple integration, a
+DynamoDB connection can remove an item from a DynamoDB table. 
+To do this, add a DynamoDB connection
+to the middle of a flow or as a simple integration's finish connection. 
+
+.Prerequisites
+* You created an Amazon DynamoDB connection.
+* You are creating or editing a simple integration and {prodname} is prompting you
+to add to the integration or to choose the finish connection.  
+
+.Procedure
+
+. On the *Choose a connection* page, click the Amazon DynamoDB connection that
+is configured to access the table that contains the item that you want to remove. 
+
+. On the *Choose an action* page, select *Remove Item*. 
+
+. In the *JSON filter of the element* field, enter JSON notation that 
+identifies the item that you want to remove. You must specify the 
+item's key attribute(s). Input parameters prefixed with `:#` are allowed. 
+In the following example input, `userID` is a key attribute: 
++
+----
+{"userID":"aslan"}
+----
+
+. Click *Next*. 
+
+.Result
+The connection appears in the flow visualization
+where you added it. 
+
+
+.Next step
+If you specified placeholder parameters in the *JSON filter of the element* field, add a data 
+mapper step before this connection. In the data mapper step, map a source field to each 
+target placeholder field in the DynamoDB connection. 

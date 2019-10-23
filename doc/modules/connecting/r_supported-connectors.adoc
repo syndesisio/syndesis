@@ -12,7 +12,10 @@
 |Name
 |Description
 
-| link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-dynamodb_connectors[Amazon DynamoDB]
+|Obtain, add, update, or delete data in an Amazon DynamoDB table. 
+
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
 |Send messages to an Amazon SNS topic.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sqs_connectors[Amazon Simple Queue Service (SQS)]
