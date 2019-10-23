@@ -442,7 +442,7 @@ public class OpenShiftServiceImplTest {
                             .withLivenessProbe(new ProbeBuilder()
                                 .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
                                 .withNewHttpGet()
-                                    .withPath("/health")
+                                    .withPath("/actuator/health")
                                     .withNewPort(8081)
                                 .endHttpGet()
                                 .build())

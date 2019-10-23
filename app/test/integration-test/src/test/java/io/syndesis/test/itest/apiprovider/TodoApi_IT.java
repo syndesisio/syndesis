@@ -77,7 +77,7 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
                 .method(HttpMethod.GET)
                 .seconds(10L)
                 .status(HttpStatus.OK)
-                .url(String.format("http://localhost:%s/health", integrationContainer.getManagementPort()));
+                .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
 
         runner.http(action -> action.client(todoListApiClient)
                     .send()
