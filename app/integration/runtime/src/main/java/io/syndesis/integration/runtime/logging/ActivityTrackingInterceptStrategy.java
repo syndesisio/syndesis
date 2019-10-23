@@ -62,10 +62,9 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
 
             if (shouldTrackDoneEvent(definition)) {
                 return new TrackDoneEventProcessor(target, stepId);
-            } else {
-                return new TrackStartEventProcessor(target, stepId);
             }
 
+            return new TrackStartEventProcessor(target, stepId);
         }
 
         return target;
