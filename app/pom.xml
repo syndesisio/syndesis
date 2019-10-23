@@ -140,6 +140,7 @@
     <module>server</module>
     <module>s2i</module>
     <module>meta</module>
+    <module>ui-react</module>
   </modules>
 
   <profiles>
@@ -298,7 +299,6 @@
       </activation>
 
       <modules>
-        <module>ui-react</module>
         <module>../doc</module>
         <module>test</module>
       </modules>
