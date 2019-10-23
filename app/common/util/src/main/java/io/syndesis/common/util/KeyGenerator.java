@@ -111,7 +111,7 @@ public final class KeyGenerator {
         return encodeKey(buffer.array());
     }
 
-    private static String encodeKey(byte[] data) throws SyndesisServerException {
+    private static String encodeKey(byte[] data) {
         try {
             return "i" + Base64.encodeBytes(data, 2, 15, Base64.ORDERED) + "z";
         } catch (final IOException e) {
