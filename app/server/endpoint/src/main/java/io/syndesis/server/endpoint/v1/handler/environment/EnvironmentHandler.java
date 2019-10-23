@@ -250,7 +250,7 @@ public class EnvironmentHandler extends BaseHandler {
         }
     }
 
-    public Environment getEnvironment(@ApiParam(required = true) @PathParam("env") @NotNull String environment) throws ClientErrorException {
+    public Environment getEnvironment(@ApiParam(required = true) @PathParam("env") @NotNull String environment) {
         return fetchEnvironment(environment)
                 .orElseThrow(() -> new ClientErrorException("Missing environment " + environment, Response.Status.NOT_FOUND));
     }

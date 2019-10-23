@@ -27,7 +27,6 @@
 
   <groupId>io.syndesis.server</groupId>
   <artifactId>server-parent</artifactId>
-  <version>1.9-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <name>Server</name>

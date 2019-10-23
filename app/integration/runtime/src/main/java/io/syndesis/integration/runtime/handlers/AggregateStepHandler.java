@@ -74,10 +74,9 @@ public class AggregateStepHandler implements IntegrationStepHandler {
                 // When filter match indicator is not present aggregate all.
                 if (exchange.getProperty(Exchange.FILTER_MATCHED, true, Boolean.class)) {
                     return super.getValue(exchange);
-                } else {
-                    return null;
                 }
 
+                return null;
             }
         }),
         latest(UseLatestAggregationStrategy::new),

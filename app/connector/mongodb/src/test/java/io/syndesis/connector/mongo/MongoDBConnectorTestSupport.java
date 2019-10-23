@@ -24,7 +24,6 @@ import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
 import io.syndesis.common.model.integration.Step;
@@ -35,9 +34,6 @@ import org.junit.BeforeClass;
 
 import java.util.Arrays;
 import java.util.List;
-
-import static de.flapdoodle.embed.mongo.distribution.Version.Main.PRODUCTION;
-import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
 
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 

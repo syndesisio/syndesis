@@ -88,7 +88,6 @@
       <plugin>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-support-maven-plugin</artifactId>
-        <version>${project.version}</version>
         <executions>
           <execution>
             <id>inspections</id>
