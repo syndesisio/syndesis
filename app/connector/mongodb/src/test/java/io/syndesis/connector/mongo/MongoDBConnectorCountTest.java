@@ -16,7 +16,6 @@
 package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
-import org.apache.camel.ExchangePattern;
 import org.bson.Document;
 import org.junit.Test;
 
