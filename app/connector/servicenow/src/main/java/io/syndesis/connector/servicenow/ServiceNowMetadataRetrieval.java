@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
@@ -126,11 +126,11 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
                 collectionSchema.put("type", "array");
                 collectionSchema.set("items", schema);
 
-                shapeBuilder.specification(Json.writer().writeValueAsString(collectionSchema));
+                shapeBuilder.specification(JsonUtils.writer().writeValueAsString(collectionSchema));
                 return SyndesisMetadata.outOnly(shapeBuilder.build());
             }
             if (ObjectHelper.equal("io.syndesis:servicenow-action-create-record", actionId)) {
-                shapeBuilder.specification(Json.writer().writeValueAsString(schema));
+                shapeBuilder.specification(JsonUtils.writer().writeValueAsString(schema));
                 return SyndesisMetadata.inOnly(shapeBuilder.build());
             }
         } catch (Exception e) {

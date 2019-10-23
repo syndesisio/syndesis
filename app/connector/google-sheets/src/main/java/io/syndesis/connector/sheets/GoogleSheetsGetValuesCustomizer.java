@@ -20,6 +20,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
@@ -28,7 +30,6 @@ import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstan
 import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.sheets.model.CellCoordinate;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -99,7 +100,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                         model.put(CellCoordinate.getColumnName(columnIndex, rangeCoordinate.getColumnStartIndex(), columnNames), value);
                         columnIndex++;
                     }
-                    jsonBeans.add(Json.writer().writeValueAsString(model));
+                    jsonBeans.add(JsonUtils.writer().writeValueAsString(model));
                 }
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
                 for (List<Object> values : valueRange.getValues()) {
@@ -110,7 +111,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                         model.put(ROW_PREFIX + rowIndex, value);
                         rowIndex++;
                     }
-                    jsonBeans.add(Json.writer().writeValueAsString(model));
+                    jsonBeans.add(JsonUtils.writer().writeValueAsString(model));
                 }
             }
         }
@@ -149,7 +150,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             }
         }
 
-        return Json.writer().writeValueAsString(model);
+        return JsonUtils.writer().writeValueAsString(model);
     }
 
 }

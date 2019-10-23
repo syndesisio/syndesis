@@ -17,8 +17,8 @@ package io.syndesis.extension.converter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.extension.Extension;
+import io.syndesis.common.util.json.JsonUtils;
 
 import java.io.IOException;
 import java.util.Optional;
@@ -91,13 +91,13 @@ class DefaultExtensionConverter implements ExtensionConverter {
     }
 
     private static Extension unmarshal(JsonNode node) throws IOException {
-        byte[] bytes = Json.writer().writeValueAsBytes(node);
-        return Json.reader().forType(Extension.class).readValue(bytes);
+        byte[] bytes = JsonUtils.writer().writeValueAsBytes(node);
+        return JsonUtils.reader().forType(Extension.class).readValue(bytes);
     }
 
     private static ObjectNode marshal(Extension extension) throws IOException {
-        byte[] bytes = Json.writer().writeValueAsBytes(extension);
-        return Json.reader().forType(ObjectNode.class).readValue(bytes);
+        byte[] bytes = JsonUtils.writer().writeValueAsBytes(extension);
+        return JsonUtils.reader().forType(ObjectNode.class).readValue(bytes);
     }
 
     private static ObjectNode toObjectNode(JsonNode tree) {

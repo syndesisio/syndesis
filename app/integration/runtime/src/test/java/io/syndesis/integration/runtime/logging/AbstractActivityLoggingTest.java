@@ -24,8 +24,8 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.util.JsonSupport;
 
 import org.apache.camel.CamelContext;
@@ -52,7 +52,7 @@ public abstract class AbstractActivityLoggingTest {
             try {
                 String json = JsonSupport.toJsonObject(items);
                 LOGGER.debug(json);
-                ActivityEvent event = Json.reader().forType(ActivityEvent.class).readValue(json);
+                ActivityEvent event = JsonUtils.reader().forType(ActivityEvent.class).readValue(json);
 
                 activityEvents.add(event);
             } catch (IOException e) {

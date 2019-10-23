@@ -15,13 +15,13 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 
 public class PodLogState {
     public String time;
 
     @Override
     public String toString() {
-        return Json.toString(this);
+        return JsonUtils.toString(this);
     }
 }

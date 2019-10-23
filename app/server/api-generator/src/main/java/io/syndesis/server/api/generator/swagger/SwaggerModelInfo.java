@@ -21,7 +21,7 @@ import java.util.List;
 
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.Violation;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 
 import org.immutables.value.Value;
@@ -50,7 +50,7 @@ public interface SwaggerModelInfo {
     @Value.Lazy
     default ObjectNode getResolvedJsonGraph() {
         try {
-            final ObjectNode json = (ObjectNode) Json.reader().readTree(getResolvedSpecification());
+            final ObjectNode json = (ObjectNode) JsonUtils.reader().readTree(getResolvedSpecification());
 
             return JsonSchemaHelper.resolvableNodeForSpecification(json);
         } catch (final IOException e) {

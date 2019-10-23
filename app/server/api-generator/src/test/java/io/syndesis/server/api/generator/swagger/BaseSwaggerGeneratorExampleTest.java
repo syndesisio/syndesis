@@ -40,7 +40,7 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 
 import org.w3c.dom.Document;
@@ -63,7 +63,7 @@ abstract class BaseSwaggerGeneratorExampleTest {
 
     public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
         specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
-        expected = Json.reader().forType(Connector.class)
+        expected = JsonUtils.reader().forType(Connector.class)
             .readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
     }
 

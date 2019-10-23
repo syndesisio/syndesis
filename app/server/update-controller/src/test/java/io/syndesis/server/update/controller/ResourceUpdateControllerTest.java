@@ -23,8 +23,8 @@ import java.util.concurrent.TimeoutException;
 
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Json;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -62,7 +62,7 @@ public class ResourceUpdateControllerTest {
             when(handler.canHandle(event)).thenReturn(true);
         }
 
-        final CompletableFuture<Void> processed = controller.onEventInternal(EventBus.Type.CHANGE_EVENT, Json.toString(event));
+        final CompletableFuture<Void> processed = controller.onEventInternal(EventBus.Type.CHANGE_EVENT, JsonUtils.toString(event));
 
         processed.get(1, TimeUnit.SECONDS);
 

@@ -32,8 +32,8 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
 import io.syndesis.server.jsondb.GetOptions;
@@ -51,7 +51,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     public JsonDbDao(JsonDB jsondb) {
         this.jsondb = jsondb;
 
-        reader = Json.copyObjectMapperConfiguration()
+        reader = JsonUtils.copyObjectMapperConfiguration()
             .addMixIn(Connection.Builder.class, CanWriteUsage.class)
             .addMixIn(Extension.Builder.class, CanWriteUsage.class)
             .reader();
@@ -165,7 +165,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
                 return null;
             }
 
-            byte[] json = Json.writer().writeValueAsBytes(entity);
+            byte[] json = JsonUtils.writer().writeValueAsBytes(entity);
             jsondb.set(dbPath, json);
 
             return entity;
@@ -183,7 +183,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
             // Only update if the entity existed.
             if( previousValue !=null ) {
                 String dbPath = getCollectionPath()+"/:"+entity.getId().get();
-                byte[] json = Json.writer().writeValueAsBytes(entity);
+                byte[] json = JsonUtils.writer().writeValueAsBytes(entity);
                 jsondb.set(dbPath, json);
             }
             return previousValue;
@@ -197,7 +197,7 @@ public abstract class JsonDbDao<T extends WithId<T>> implements DataAccessObject
     public void set(T entity) {
         try {
             String dbPath = getCollectionPath()+"/:"+entity.getId().get();
-            byte[] json = Json.writer().writeValueAsBytes(entity);
+            byte[] json = JsonUtils.writer().writeValueAsBytes(entity);
             jsondb.set(dbPath, json);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException|IOException e) {
             throw SyndesisServerException.launderThrowable(e);

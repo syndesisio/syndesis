@@ -28,7 +28,6 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.NumberSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -100,7 +99,7 @@ public class SalesforceMetadataRetrievalTest {
 
         assertThat(metadata.inputShape).isSameAs(metadata.inputShape);
         final Object oneOf = payload.getOneOf().iterator().next();
-        final ObjectSchema inSchema = Json.reader().forType(ObjectSchema.class).readValue(metadata.inputShape.getSpecification()    );
+        final ObjectSchema inSchema = io.syndesis.common.util.json.JsonUtils.reader().forType(ObjectSchema.class).readValue(metadata.inputShape.getSpecification()    );
 
         assertThat(inSchema).isEqualTo(oneOf);
         assertThat(inSchema.get$schema()).isEqualTo(JsonUtils.SCHEMA4);

@@ -28,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -38,7 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -114,7 +115,7 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
 
@@ -134,7 +135,7 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
@@ -153,7 +154,7 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
@@ -173,7 +174,7 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_batch_update_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
@@ -192,7 +193,7 @@ public class SqlMetadataAdapterTest {
 
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
@@ -210,7 +211,7 @@ public class SqlMetadataAdapterTest {
         SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
         SyndesisMetadata syndesisMetaData = adapter.adapt(camelContext, "sql", "sql-stored-connector", parameters, metadata.get());
 
-        ObjectWriter writer = Json.writer();
+        ObjectWriter writer = JsonUtils.writer();
 
         String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
         String actualListOfProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);

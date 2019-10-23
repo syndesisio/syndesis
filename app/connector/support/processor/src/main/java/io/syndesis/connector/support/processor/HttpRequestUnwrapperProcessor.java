@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Set;
 
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 
 import org.apache.camel.Exchange;
@@ -70,7 +70,7 @@ public final class HttpRequestUnwrapperProcessor implements Processor {
                 }
 
                 if (bodyData.isContainerNode()) {
-                    message.setBody(Json.toString(bodyData));
+                    message.setBody(JsonUtils.toString(bodyData));
                     return;
                 }
 
@@ -88,12 +88,12 @@ public final class HttpRequestUnwrapperProcessor implements Processor {
         if (body instanceof String) {
             final String string = (String) body;
             if (ObjectHelper.isNotEmpty(string)) {
-                return Json.reader().readTree(string);
+                return JsonUtils.reader().readTree(string);
             }
         } else if (body instanceof InputStream) {
             try (InputStream stream = (InputStream) body) {
                 if (stream.available() > 0) {
-                    return Json.reader().readTree(stream);
+                    return JsonUtils.reader().readTree(stream);
                 }
             }
         }

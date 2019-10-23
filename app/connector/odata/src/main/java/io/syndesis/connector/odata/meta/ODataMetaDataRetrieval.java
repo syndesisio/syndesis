@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.util.ObjectHelper;
@@ -31,7 +33,6 @@ import com.fasterxml.jackson.module.jsonSchema.types.ContainerTypeSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.odata.ODataConstants;
 import io.syndesis.connector.odata.meta.ODataMetadata.PropertyMetadata;
 import io.syndesis.connector.odata.meta.ODataMetadata.PropertyMetadata.TypeClass;
@@ -120,7 +121,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
 
     private static String serializeSpecification(ContainerTypeSchema schema) {
         try {
-            return Json.writer().writeValueAsString(schema);
+            return JsonUtils.writer().writeValueAsString(schema);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize schema", e);
         }

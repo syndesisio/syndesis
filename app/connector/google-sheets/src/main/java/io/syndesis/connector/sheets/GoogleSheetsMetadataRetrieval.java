@@ -25,7 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
 import io.syndesis.connector.sheets.meta.GoogleValueRangeMetaData;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
@@ -75,7 +75,7 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
                     inputShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("ValueRange Parameter")
                             .description(String.format("Parameters of range [%s]", valueRangeMetaData.getRange()))
-                            .specification(Json.writer().writeValueAsString(spec));
+                            .specification(JsonUtils.writer().writeValueAsString(spec));
 
                     applyMetadata(inputShapeBuilder, spec);
                 } else {
@@ -87,7 +87,7 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
                     outputShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("ValueRange Result")
                             .description(String.format("Results of range [%s]", valueRangeMetaData.getRange()))
-                            .specification(Json.writer().writeValueAsString(spec));
+                            .specification(JsonUtils.writer().writeValueAsString(spec));
 
                     applyMetadata(outputShapeBuilder, spec);
                 } else {

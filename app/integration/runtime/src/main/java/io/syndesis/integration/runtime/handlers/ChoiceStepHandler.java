@@ -24,7 +24,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import io.syndesis.common.model.choice.FlowOption;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
@@ -104,7 +104,7 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
                 return Collections.emptyList();
             }
 
-            return Json.reader().forType(new TypeReference<List<FlowOption>>(){}).readValue(flowMappings);
+            return JsonUtils.reader().forType(new TypeReference<List<FlowOption>>(){}).readValue(flowMappings);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Failed to read flow mappings %s: %s", flowMappings, e.getMessage()),e);
         }

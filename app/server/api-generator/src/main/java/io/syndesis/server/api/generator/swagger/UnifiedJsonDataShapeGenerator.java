@@ -43,7 +43,7 @@ import io.swagger.models.properties.RefProperty;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -232,7 +232,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     private static ObjectNode createSchemaFromModelImpl(final String name, final Model model) {
-        final ObjectNode schema = Json.convertValue(model, ObjectNode.class);
+        final ObjectNode schema = JsonUtils.convertValue(model, ObjectNode.class);
         JsonSchemaHelper.sanitize(schema);
 
         final String title = determineTitleOf(name, model);
@@ -243,7 +243,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     private static ObjectNode createSchemaFromProperty(final ObjectNode json, final String name, final Property schema) {
         if (schema instanceof MapProperty || schema instanceof ObjectProperty) {
             try {
-                final String schemaString = Json.writer().writeValueAsString(schema);
+                final String schemaString = JsonUtils.writer().writeValueAsString(schema);
 
                 return JsonSchemaHelper.parseJsonSchema(schemaString);
             } catch (final JsonProcessingException e) {

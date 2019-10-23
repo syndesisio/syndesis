@@ -27,8 +27,8 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
@@ -132,7 +132,7 @@ public class TimerIntegrationTest {
 
     static Connector loadConnector() {
         try (InputStream json = TimerIntegrationTest.class.getResourceAsStream("/META-INF/syndesis/connector/timer.json")) {
-            return Json.readFromStream(json, Connector.class);
+            return JsonUtils.readFromStream(json, Connector.class);
         } catch (final IOException e) {
             throw new AssertionError(e);
         }

@@ -17,7 +17,7 @@ package io.syndesis.common.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 
 public interface ToJson {
 
@@ -30,7 +30,7 @@ public interface ToJson {
     @JsonIgnore
     default String toJson() {
         try {
-            return Json.writer().writeValueAsString(this);
+            return JsonUtils.writer().writeValueAsString(this);
         } catch (JsonProcessingException e) {
             throw new JsonProcessingRuntimeException(e);
         }

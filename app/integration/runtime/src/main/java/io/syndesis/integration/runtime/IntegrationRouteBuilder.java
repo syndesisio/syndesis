@@ -39,9 +39,9 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Properties;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.Resources;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
@@ -112,7 +112,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         try (InputStream is = createIntegrationInputStream()) {
             if (is != null) {
-                integration = Json.reader().forType(Integration.class).readValue(is);
+                integration = JsonUtils.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
             }

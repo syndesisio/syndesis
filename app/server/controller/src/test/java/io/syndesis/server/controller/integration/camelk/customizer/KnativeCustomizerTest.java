@@ -26,7 +26,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class KnativeCustomizerTest {
         ConnectorAction sourceAction;
 
         try (InputStream is = KnativeCustomizerTest.class.getResourceAsStream("/META-INF/syndesis/connector/knative.json")) {
-            connector = Json.readFromStream(is, Connector.class);
+            connector = JsonUtils.readFromStream(is, Connector.class);
             sinkAction = connector.getActions(ConnectorAction.class).stream()
                 .filter(a -> a.getId().get().equals("io.syndesis:knative-channel-send-connector"))
                 .findFirst()
@@ -105,7 +105,7 @@ public class KnativeCustomizerTest {
         ConnectorAction sourceAction;
 
         try (InputStream is = KnativeCustomizerTest.class.getResourceAsStream("/META-INF/syndesis/connector/knative.json")) {
-            connector = Json.readFromStream(is, Connector.class);
+            connector = JsonUtils.readFromStream(is, Connector.class);
             sinkAction = connector.getActions(ConnectorAction.class).stream()
                 .filter(a -> a.getId().get().equals("io.syndesis:knative-endpoint-call-connector"))
                 .findFirst()

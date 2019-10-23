@@ -32,7 +32,7 @@ import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
@@ -94,7 +94,7 @@ public final class JsonSchemaHelper {
 
     public static ObjectNode parseJsonSchema(final String schema) {
         try {
-            return (ObjectNode) Json.reader().readTree(schema);
+            return (ObjectNode) JsonUtils.reader().readTree(schema);
         } catch (final IOException e) {
             throw new IllegalStateException("Unable to parse given JSON schema: " + StringUtils.abbreviate(schema, 100), e);
         }
@@ -126,7 +126,7 @@ public final class JsonSchemaHelper {
 
     public static String serializeJson(final JsonNode schemaNode) {
         try {
-            return Json.writer().writeValueAsString(schemaNode);
+            return JsonUtils.writer().writeValueAsString(schemaNode);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize JSON schema", e);
         }

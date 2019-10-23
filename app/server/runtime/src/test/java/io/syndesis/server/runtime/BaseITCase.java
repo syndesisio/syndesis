@@ -27,6 +27,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
 import org.junit.Rule;
@@ -57,7 +58,6 @@ import org.springframework.test.context.junit4.rules.SpringMethodRule;
 import com.fasterxml.jackson.dataformat.yaml.YAMLMapper;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
 
@@ -298,7 +298,7 @@ public abstract class BaseITCase {
     }
     static final class JsonJackson2HttpMessageConverter extends AbstractJackson2HttpMessageConverter {
         JsonJackson2HttpMessageConverter() {
-            super(Json.copyObjectMapperConfiguration(), MediaType.parseMediaType("application/json"));
+            super(JsonUtils.copyObjectMapperConfiguration(), MediaType.parseMediaType("application/json"));
         }
     }
 

@@ -32,8 +32,8 @@ import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.jsondb.JsonDBException;
@@ -213,7 +213,7 @@ class PodLogMonitor implements Consumer<InputStream> {
         String data = matcher.group(2);
         try {
             @SuppressWarnings("unchecked")
-            Map<String, Object> json = Json.reader().forType(HashMap.class).readValue(data); //NOPMD
+            Map<String, Object> json = JsonUtils.reader().forType(HashMap.class).readValue(data); //NOPMD
 
             // are the required fields set?
             String exchange = validate((String) json.remove("exchange"));
@@ -303,7 +303,7 @@ class PodLogMonitor implements Consumer<InputStream> {
                     inflightData.activity.setMetadata(toJsonNode(inflightData.metadata));
                 }
 
-                String activityAsString = Json.writer().writeValueAsString(inflightData.activity);
+                String activityAsString = JsonUtils.writer().writeValueAsString(inflightData.activity);
                 String transactionPath = format("/exchanges/%s/%s", integrationId, exchange);
                 inflightActivities.remove(exchange);
 
@@ -322,7 +322,7 @@ class PodLogMonitor implements Consumer<InputStream> {
     }
 
     private static JsonNode toJsonNode(Map<String, Object> json) throws IOException {
-        return Json.reader().readTree(Json.writer().writeValueAsString(json));
+        return JsonUtils.reader().readTree(JsonUtils.writer().writeValueAsString(json));
     }
 
     private void trackState(String time, Map<String, Object> batch) {

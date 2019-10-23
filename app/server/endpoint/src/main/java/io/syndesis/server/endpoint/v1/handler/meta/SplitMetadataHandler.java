@@ -28,7 +28,6 @@ import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.common.util.json.schema.JsonSchemaUtils;
 import org.slf4j.Logger;
@@ -115,7 +114,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                         .createFrom(metadata)
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
-                                                .specification(Json.writer().writeValueAsString(itemSchema))
+                                                .specification(JsonUtils.writer().writeValueAsString(itemSchema))
                                                 .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
@@ -130,13 +129,13 @@ class SplitMetadataHandler implements StepMetadataHandler {
                         }
                     } else if (collectionShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
                         if (JsonUtils.isJsonArray(specification)) {
-                            List<Object> items = Json.reader().forType(List.class).readValue(specification);
+                            List<Object> items = JsonUtils.reader().forType(List.class).readValue(specification);
                             if (!items.isEmpty()) {
                                 return new DynamicActionMetadata.Builder()
                                         .createFrom(metadata)
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
-                                                .specification(Json.writer().writeValueAsString(items.get(0)))
+                                                .specification(JsonUtils.writer().writeValueAsString(items.get(0)))
                                                 .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
@@ -177,10 +176,10 @@ class SplitMetadataHandler implements StepMetadataHandler {
                     if (items.isSingleItems()) {
                         JsonSchema itemSchema = items.asSingleItems().getSchema();
                         itemSchema.set$schema(schema.get$schema());
-                        return Json.writer().writeValueAsString(itemSchema);
+                        return JsonUtils.writer().writeValueAsString(itemSchema);
                     }
                 } else {
-                    return Json.writer().writeValueAsString(bodySchema);
+                    return JsonUtils.writer().writeValueAsString(bodySchema);
                 }
             }
         }

@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -29,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
@@ -73,7 +73,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             return new ArrayList<>();
         }
 
-        JsonNode map = Json.reader().readTree(new ByteArrayInputStream(data));
+        JsonNode map = JsonUtils.reader().readTree(new ByteArrayInputStream(data));
         List<Activity> rc = new ArrayList<>();
 
         Iterator<Map.Entry<String, JsonNode>> i = map.fields();
@@ -81,7 +81,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
             Map.Entry<String, JsonNode> entry = i.next();
             try {
                 String value = entry.getValue().textValue();
-                Activity activity = Json.reader().forType(Activity.class).readValue(value);
+                Activity activity = JsonUtils.reader().forType(Activity.class).readValue(value);
                 if (activity.getSteps() == null){
                     activity.setSteps(new ArrayList<ActivityStep>());
                 }

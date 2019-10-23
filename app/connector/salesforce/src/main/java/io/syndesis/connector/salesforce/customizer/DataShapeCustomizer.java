@@ -21,7 +21,7 @@ import java.util.Map;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -112,7 +112,7 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
 
             try {
                 final String bodyAsString = exchange.getIn().getBody(String.class);
-                final Object output = Json.reader().forType(type).readValue(bodyAsString);
+                final Object output = JsonUtils.reader().forType(type).readValue(bodyAsString);
                 exchange.getIn().setBody(output);
             } catch (final IOException e) {
                 exchange.setException(e);

@@ -48,6 +48,7 @@ import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.slf4j.Logger;
@@ -78,7 +79,6 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Names;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -204,7 +204,7 @@ public class IntegrationSupportHandler {
         return out -> {
             try (ZipOutputStream tos = new ZipOutputStream(out) ) {
                 ModelExport exportObject = ModelExport.of(Schema.VERSION);
-                addEntry(tos, EXPORT_MODEL_INFO_FILE_NAME, Json.writer().writeValueAsBytes(exportObject));
+                addEntry(tos, EXPORT_MODEL_INFO_FILE_NAME, JsonUtils.writer().writeValueAsBytes(exportObject));
                 addEntry(tos, EXPORT_MODEL_FILE_NAME, memJsonDB.getAsByteArray("/"));
                 memJsonDB.close();
                 for (String extensionId : extensions) {
@@ -289,7 +289,7 @@ public class IntegrationSupportHandler {
                 }
 
                 if (EXPORT_MODEL_INFO_FILE_NAME.equals(entry.getName())) {
-                    modelExport = Json.reader().forType(ModelExport.class).readValue(zis);
+                    modelExport = JsonUtils.reader().forType(ModelExport.class).readValue(zis);
                 }
 
                 if (EXPORT_MODEL_FILE_NAME.equals(entry.getName())) {

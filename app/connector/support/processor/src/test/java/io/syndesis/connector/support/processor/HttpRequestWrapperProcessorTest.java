@@ -26,8 +26,7 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 
-import io.syndesis.common.util.Json;
-
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -84,8 +83,8 @@ public class HttpRequestWrapperProcessorTest {
 
     @Test
     public void shouldMapValuesFromMessageHeaders() throws Exception {
-        String schemaStr = Json.writer().forType(JsonSchema.class).writeValueAsString(schema);
-        JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
+        String schemaStr = JsonUtils.writer().forType(JsonSchema.class).writeValueAsString(schema);
+        JsonNode schemaNode = JsonUtils.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
 
         final Exchange exchange = mock(Exchange.class);
@@ -107,8 +106,8 @@ public class HttpRequestWrapperProcessorTest {
 
     @Test
     public void shouldMapValuesFromHttpRequest() throws Exception {
-        final String schemaStr = Json.writer().forType(JsonSchema.class).writeValueAsString(schema);
-        final JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
+        final String schemaStr = JsonUtils.writer().forType(JsonSchema.class).writeValueAsString(schema);
+        final JsonNode schemaNode = JsonUtils.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
 
         final Exchange exchange = mock(Exchange.class);

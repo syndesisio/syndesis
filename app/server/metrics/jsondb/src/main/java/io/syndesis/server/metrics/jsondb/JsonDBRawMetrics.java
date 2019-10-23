@@ -16,9 +16,9 @@
 package io.syndesis.server.metrics.jsondb;
 
 
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.common.util.Json;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -57,7 +57,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         try {
             //persist the latest rawMetrics
             String path = path(rawMetrics.getIntegrationId(), rawMetrics.getPod());
-            String json = Json.writer().writeValueAsString(rawMetrics);
+            String json = JsonUtils.writer().writeValueAsString(rawMetrics);
             if (jsonDB.exists(path)) {
                 //only update if not the same (don't cause unnecessary and expensive writes)
                 if (! jsonDB.getAsString(path).equals(json)) {
@@ -87,7 +87,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         String path = path(integrationId);
         String json = jsonDB.getAsString(path);
         if (json != null) {
-            metrics = Json.reader().forType(VALUE_TYPE_REF).readValue(json);
+            metrics = JsonUtils.reader().forType(VALUE_TYPE_REF).readValue(json);
         }
         return metrics;
     }
@@ -127,11 +127,11 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
                             .resetDate(Optional.empty())
                             .lastProcessed(Optional.ofNullable(lastProcessed))
                             .build();
-                    String json = Json.writer().writeValueAsString(updatedHistoryMetrics);
+                    String json = JsonUtils.writer().writeValueAsString(updatedHistoryMetrics);
                     jsonDB.update(path(integrationId,historyKey), json);
                 } else {
                     //create history bucket, first time we find a dead pod for this integration
-                    String json = Json.writer().writeValueAsString(metrics.get(entry.getKey()));
+                    String json = JsonUtils.writer().writeValueAsString(metrics.get(entry.getKey()));
                     jsonDB.set(path(integrationId,historyKey), json);
                 }
                 //delete the dead pod metrics since it has been added to the history
@@ -153,7 +153,7 @@ public class JsonDBRawMetrics implements RawMetricsHandler {
         //1. Loop over all RawMetrics
         String json = jsonDB.getAsString(path(), new GetOptions().depth(1));
         if (json != null) {
-            Map<String,Boolean> metricsMap = Json.reader().forType(TYPE_REFERENCE).readValue(json);
+            Map<String,Boolean> metricsMap = JsonUtils.reader().forType(TYPE_REFERENCE).readValue(json);
             Set<String> rawIntegrationIds = metricsMap.keySet();
             for (String rawIntId : rawIntegrationIds) {
                 if (! activeIntegrationIds.contains(rawIntId)) {

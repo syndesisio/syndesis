@@ -28,7 +28,7 @@ import com.fasterxml.jackson.databind.ObjectReader;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProcessor;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
@@ -43,7 +43,7 @@ import org.apache.camel.processor.Pipeline;
 
 public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
 
-    private static final ObjectReader READER = Json.reader().forType(JsonNode.class);
+    private static final ObjectReader READER = JsonUtils.reader().forType(JsonNode.class);
 
     private CamelContext context;
 

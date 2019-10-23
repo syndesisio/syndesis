@@ -23,9 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.syndesis.common.util.Json;
-
 import com.fasterxml.jackson.databind.SerializationFeature;
+import io.syndesis.common.util.json.JsonUtils;
 
 import static java.util.Objects.requireNonNull;
 
@@ -50,9 +49,9 @@ public final class TestHelper {
             return null;
         }
 
-        final Map<?, ?> tree = Json.reader().forType(Map.class).readValue(json);
+        final Map<?, ?> tree = JsonUtils.reader().forType(Map.class).readValue(json);
 
-        return Json.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
+        return JsonUtils.copyObjectMapperConfiguration().configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
             .writerWithDefaultPrettyPrinter().writeValueAsString(tree);
     }
 

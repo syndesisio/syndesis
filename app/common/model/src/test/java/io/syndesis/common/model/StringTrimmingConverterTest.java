@@ -19,8 +19,8 @@ import java.io.IOException;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -43,8 +43,8 @@ public class StringTrimmingConverterTest {
             .tags(tags)
             .build();
 
-        final String source = Json.writer().writeValueAsString(original);
-        final Integration created = Json.reader().forType(Integration.class).readValue(source);
+        final String source = JsonUtils.writer().writeValueAsString(original);
+        final Integration created = JsonUtils.reader().forType(Integration.class).readValue(source);
 
         assertThat(created.getName()).isEqualTo("some-name");
         assertThat(created.getDescription()).isNotPresent();

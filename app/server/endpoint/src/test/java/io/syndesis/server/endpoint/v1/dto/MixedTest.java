@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.Map;
 
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.util.Json;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.json.JSONException;
 import org.junit.Test;
 
@@ -61,7 +61,7 @@ public class MixedTest {
 
     private static String serialize(final Mixed value) {
         try {
-            return Json.writer().writeValueAsString(value);
+            return JsonUtils.writer().writeValueAsString(value);
         } catch (final JsonProcessingException e) {
             throw new AssertionError(e);
         }

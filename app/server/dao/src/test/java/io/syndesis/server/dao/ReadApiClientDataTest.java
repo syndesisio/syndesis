@@ -29,7 +29,7 @@ import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.dao.init.ReadApiClientData;
 import org.junit.Assert;
 import org.junit.Test;
@@ -45,8 +45,8 @@ public class ReadApiClientDataTest {
                     .tags(new TreeSet<>(Arrays.asList("tag1", "tag2")))
                     .createdAt(System.currentTimeMillis())
                     .build();
-        String integrationJson = Json.writer().writeValueAsString(integrationIn);
-        Integration integrationOut = Json.reader().forType(Integration.class).readValue(integrationJson);
+        String integrationJson = JsonUtils.writer().writeValueAsString(integrationIn);
+        Integration integrationOut = JsonUtils.reader().forType(Integration.class).readValue(integrationJson);
         assertThat(integrationOut).isNotNull();
 
         //serialize
@@ -55,8 +55,8 @@ public class ReadApiClientDataTest {
         Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdIn.getDataAsJson());
 
         //deserialize
-        String json = Json.writer().writeValueAsString(mdIn);
-        ModelData<?> mdOut = Json.reader().forType(ModelData.class).readValue(json);
+        String json = JsonUtils.writer().writeValueAsString(mdIn);
+        ModelData<?> mdOut = JsonUtils.reader().forType(ModelData.class).readValue(json);
         Assert.assertEquals("{\"id\":\"label\",\"name\":\"label\"}", mdOut.getDataAsJson());
     }
 

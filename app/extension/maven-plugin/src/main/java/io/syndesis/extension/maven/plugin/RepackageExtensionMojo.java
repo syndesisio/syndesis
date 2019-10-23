@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.common.model.extension.Extension;
 import org.apache.maven.model.Dependency;
@@ -302,7 +302,7 @@ public class RepackageExtensionMojo extends SupportMojo {
         }
 
         try {
-            JsonNode tree = Json.reader().readTree(Files.newBufferedReader(metadata.toPath(), StandardCharsets.UTF_8));
+            JsonNode tree = JsonUtils.reader().readTree(Files.newBufferedReader(metadata.toPath(), StandardCharsets.UTF_8));
             this.extensionDescriptor = ExtensionConverter.getDefault().toInternalExtension(tree);
         } catch (IOException e) {
             throw new MojoExecutionException("Error while loading the extension metadata", e);

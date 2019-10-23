@@ -27,7 +27,7 @@ import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
 
 import org.apache.camel.CamelContext;
@@ -226,7 +226,7 @@ public class DescriptorTest {
         final Connector defined;
         try (InputStream stream = DescriptorTest.class
             .getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
-            defined = Json.readFromStream(stream, Connector.class);
+            defined = JsonUtils.readFromStream(stream, Connector.class);
         }
 
         assertThat(defined).isEqualTo(expected);

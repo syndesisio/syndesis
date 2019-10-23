@@ -36,8 +36,8 @@ import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.api.model.PodListBuilder;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.jsondb.GetOptions;
 import io.syndesis.server.jsondb.JsonDB;
 import io.syndesis.server.jsondb.impl.SqlJsonDB;
@@ -171,14 +171,14 @@ public class ActivityTrackingControllerTest {
                 .untilAsserted(() -> {
                     final String json = jsondb.getAsString("/", new GetOptions().prettyPrint(true));
                     assertThat(json).isNotNull();
-                    final JsonNode tree = Json.reader().readTree(json);
+                    final JsonNode tree = JsonUtils.reader().readTree(json);
                     assertThat(tree.get("activity").get("exchanges").get("my-integration").size()).isGreaterThan(1000);
                 });
 
             controller.cleanupLogs();
             final String json = jsondb.getAsString("/", new GetOptions().prettyPrint(true));
             assertThat(json).isNotNull();
-            final JsonNode tree = Json.reader().readTree(json);
+            final JsonNode tree = JsonUtils.reader().readTree(json);
             assertThat(tree.get("activity").get("exchanges").get("my-integration").size()).isLessThanOrEqualTo(controller.getRetention());
         }
     }

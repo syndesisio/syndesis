@@ -23,7 +23,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
 import org.junit.Test;
@@ -43,7 +43,7 @@ public class WebhookCustomizerTest {
         ConnectorAction webhookIncomingAction;
 
         try (InputStream is = WebhookCustomizerTest.class.getResourceAsStream("/META-INF/syndesis/connector/webhook.json")) {
-            connector = Json.readFromStream(is, Connector.class);
+            connector = JsonUtils.readFromStream(is, Connector.class);
             webhookIncomingAction = connector.getActions(ConnectorAction.class).stream()
                 .filter(a -> a.getId().get().equals("io.syndesis:webhook-incoming"))
                 .findFirst()

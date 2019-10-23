@@ -24,7 +24,7 @@ import com.jayway.jsonpath.JsonPath;
 import com.jayway.jsonpath.spi.json.JacksonJsonProvider;
 import com.jayway.jsonpath.spi.mapper.JacksonMappingProvider;
 import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.util.ObjectHelper;
 
 /**
@@ -54,11 +54,11 @@ public class JsonPathIntegrationCustomizer implements IntegrationCustomizer {
 
         try {
             final Configuration configuration = Configuration.builder()
-                    .jsonProvider(new JacksonJsonProvider(Json.copyObjectMapperConfiguration()))
-                    .mappingProvider(new JacksonMappingProvider(Json.copyObjectMapperConfiguration()))
+                    .jsonProvider(new JacksonJsonProvider(JsonUtils.copyObjectMapperConfiguration()))
+                    .mappingProvider(new JacksonMappingProvider(JsonUtils.copyObjectMapperConfiguration()))
                     .build();
 
-            DocumentContext json = JsonPath.using(configuration).parse(Json.writer().forType(Integration.class).writeValueAsString(integration));
+            DocumentContext json = JsonPath.using(configuration).parse(JsonUtils.writer().forType(Integration.class).writeValueAsString(integration));
 
             if (ObjectHelper.isEmpty(key)) {
                 json.set(expression, value);
@@ -66,7 +66,7 @@ public class JsonPathIntegrationCustomizer implements IntegrationCustomizer {
                 json.put(expression, key, value);
             }
 
-            return Json.reader().forType(Integration.class).readValue(json.jsonString());
+            return JsonUtils.reader().forType(Integration.class).readValue(json.jsonString());
         } catch (IOException e) {
             throw new IllegalStateException("Failed to evaluate json path expression on integration object", e);
         }

@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.syndesis.common.util.json.JsonUtils;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,7 +42,6 @@ import org.springframework.core.io.ResourceLoader;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataManager;
@@ -117,7 +117,7 @@ public class MetricsCollectorTest {
     @Test
     public void testGetMetricsForIntegration1() throws IOException {
         String json = jsondb.getAsString(JsonDBRawMetrics.path("intId1"), new GetOptions().prettyPrint(true));
-        Map<String,RawMetrics> metrics = Json.reader().forType(new TypeReference<Map<String,RawMetrics>>() {}).readValue(json);
+        Map<String,RawMetrics> metrics = JsonUtils.reader().forType(new TypeReference<Map<String,RawMetrics>>() {}).readValue(json);
         assertThat(metrics.size()).isEqualTo(3);
         assertThat(metrics.keySet()).contains("HISTORY1");
     }
@@ -156,7 +156,7 @@ public class MetricsCollectorTest {
         assertThat(summary.getStart().get()).isEqualTo(ZonedDateTime.of(2018, 01, 31, 10, 20, 56, 0, ZoneId.of("Z")).toInstant());
 
         //Update pod2, add 6 messages
-        jsondb.update(JsonDBRawMetrics.path("intId1","pod2"), Json.writer().writeValueAsString(raw("intId1","2","pod2",9L,"31-01-2018 10:22:56")));
+        jsondb.update(JsonDBRawMetrics.path("intId1","pod2"), JsonUtils.writer().writeValueAsString(raw("intId1","2","pod2",9L,"31-01-2018 10:22:56")));
         Map<String,RawMetrics> updatedMetrics = jsondbRM.getRawMetrics(integrationId);
         IntegrationMetricsSummary updatedSummary = intMH
                 .compute(integrationId, updatedMetrics, livePodIds);
@@ -173,7 +173,7 @@ public class MetricsCollectorTest {
         //Update pod1 metrics and kill pod1
         Set<String> livePodIds = new HashSet<String>(
             Arrays.asList("pod2", "pod3", "pod4", "pod5"));
-        jsondb.update(JsonDBRawMetrics.path("intId1","pod1"), Json.writer().writeValueAsString(raw("intId1","1","pod1",12L,"31-01-2018 10:22:56")));
+        jsondb.update(JsonDBRawMetrics.path("intId1","pod1"), JsonUtils.writer().writeValueAsString(raw("intId1","1","pod1",12L,"31-01-2018 10:22:56")));
         Map<String,RawMetrics> metrics = jsondbRM.getRawMetrics(integrationId);
         IntegrationMetricsSummary summary = intMH
                 .compute(integrationId, metrics, livePodIds);

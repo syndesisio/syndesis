@@ -21,7 +21,7 @@ import javax.ws.rs.ext.ContextResolver;
 import javax.ws.rs.ext.Provider;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.springframework.stereotype.Service;
 
 // Customized {@code ContextResolver} implementation to pass ObjectMapper to use
@@ -32,7 +32,7 @@ public class JacksonContextResolver implements ContextResolver<ObjectMapper> {
     private final ObjectMapper objectMapper;
 
     public JacksonContextResolver() {
-        this.objectMapper = Json.copyObjectMapperConfiguration();
+        this.objectMapper = JsonUtils.copyObjectMapperConfiguration();
     }
 
     @Override

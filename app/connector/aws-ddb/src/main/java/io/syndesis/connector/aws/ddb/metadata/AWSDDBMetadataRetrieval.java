@@ -38,7 +38,7 @@ import com.google.common.base.Splitter;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.aws.ddb.util.Util;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
@@ -177,7 +177,7 @@ public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
                 inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                     .name("Parameters")
                     .description(String.format("Query parameters."))
-                    .specification(Json.writer().writeValueAsString(builderIn));
+                    .specification(JsonUtils.writer().writeValueAsString(builderIn));
 
                 inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
 
@@ -190,7 +190,7 @@ public class AWSDDBMetadataRetrieval extends ComponentMetadataRetrieval {
                     .name("Result")
                     .description(String.format("Attributes on the result."))
                     .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
-                    .specification(Json.writer().writeValueAsString(builderOut));
+                    .specification(JsonUtils.writer().writeValueAsString(builderOut));
             }
 
             return new SyndesisMetadata(enrichedProperties,

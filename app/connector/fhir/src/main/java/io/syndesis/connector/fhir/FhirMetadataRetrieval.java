@@ -25,9 +25,9 @@ import io.atlasmap.xml.v2.XmlDocument;
 import io.atlasmap.xml.v2.XmlField;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
@@ -184,7 +184,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
         }
         final String schema;
         try {
-            schema = Json.writer().writeValueAsString(patchSchema);
+            schema = JsonUtils.writer().writeValueAsString(patchSchema);
         } catch (JsonProcessingException e) {
             throw new SyndesisServerException(e);
         }
@@ -198,7 +198,7 @@ public class FhirMetadataRetrieval extends ComponentMetadataRetrieval {
             specification = Resources.getResourceAsText("META-INF/syndesis/schemas/dstu3/" + resourcePath + ".json", FhirMetadataRetrieval.class.getClassLoader());
 
             if (ObjectHelper.isNotEmpty(containedResourceTypes)) {
-                String[] containedResourceTypesSplit = Json.reader().forType(String[].class).readValue(containedResourceTypes);
+                String[] containedResourceTypesSplit = JsonUtils.reader().forType(String[].class).readValue(containedResourceTypes);
                 specification = includeResources(specification, containedResourceTypesSplit);
             }
         } catch (Exception e) {

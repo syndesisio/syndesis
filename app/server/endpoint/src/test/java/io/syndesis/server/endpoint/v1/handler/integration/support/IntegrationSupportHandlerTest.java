@@ -15,8 +15,8 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration.support;
 
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.ModelExport;
+import io.syndesis.common.util.json.JsonUtils;
 import org.junit.Test;
 
 import java.io.File;
@@ -37,7 +37,7 @@ public class IntegrationSupportHandlerTest {
         ClassLoader classLoader = getClass().getClassLoader();
        // disabling feature inline, skipt closing source stream
         try(InputStream fis = spy(new FileInputStream(new File(classLoader.getResource("model.json").getFile())))){
-            ModelExport models = Json.reader().forType(ModelExport.class).readValue(fis);
+            ModelExport models = JsonUtils.reader().forType(ModelExport.class).readValue(fis);
             assertThat(models).isNotNull();
             verify(fis, times(0)).close();
         }

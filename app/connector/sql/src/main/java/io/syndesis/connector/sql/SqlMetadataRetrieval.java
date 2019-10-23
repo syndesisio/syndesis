@@ -21,6 +21,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.syndesis.common.util.json.JsonUtils;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
@@ -34,7 +36,6 @@ import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.common.util.Json;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
@@ -121,7 +122,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name("SQL Parameter")
                         .description(String.format("Parameters of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
-                        .specification(Json.writer().writeValueAsString(specIn));
+                        .specification(JsonUtils.writer().writeValueAsString(specIn));
 
                     if (specIn.isObjectSchema()) {
                         inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
@@ -139,7 +140,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                         .name("SQL Result")
                         .description(String.format("Result of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
                         .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
-                        .specification(Json.writer().writeValueAsString(outputSpec));
+                        .specification(JsonUtils.writer().writeValueAsString(outputSpec));
                 }
 
                 return new SyndesisMetadata(enrichedProperties,
@@ -201,7 +202,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name(procedureName + " Parameter")
                         .description(String.format("Parameters of Stored Procedure '%s'", procedureName))
-                        .specification(Json.writer().writeValueAsString(builderIn));
+                        .specification(JsonUtils.writer().writeValueAsString(builderIn));
                 }
                 DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type(builderOut.getTitle());
                 if (builderOut.getProperties().isEmpty()) {
@@ -211,7 +212,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                         .name(procedureName + " Return")
                         .description(String.format("Return value of Stored Procedure '%s'", procedureName))
                         .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
-                        .specification(Json.writer().writeValueAsString(builderOut));
+                        .specification(JsonUtils.writer().writeValueAsString(builderOut));
                 }
 
                 return new SyndesisMetadata(enrichedProperties,
