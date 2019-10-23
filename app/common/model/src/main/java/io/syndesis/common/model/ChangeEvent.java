@@ -40,6 +40,8 @@ public interface ChangeEvent extends ToJson, Serializable {
     }
 
     class Builder extends ImmutableChangeEvent.Builder {
+        // make ImmutableChangeEvent.Builder which is package private
+        // accessible
     }
 
 }

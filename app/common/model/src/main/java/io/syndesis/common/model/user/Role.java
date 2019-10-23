@@ -37,6 +37,7 @@ public interface Role extends WithId<Role>, WithName, Serializable {
     List<Permission> getPermissions();
 
     class Builder extends ImmutableRole.Builder {
+        // make ImmutableRole.Builder which is package private accessible
     }
 
 }

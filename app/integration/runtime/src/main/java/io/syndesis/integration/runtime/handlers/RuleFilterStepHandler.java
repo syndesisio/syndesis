@@ -29,6 +29,10 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.json.JsonUtils;
 
 public class RuleFilterStepHandler extends AbstractFilterStepHandler {
+    private static final TypeReference<List<FilterRule>> FILTER_RULE_LIST_TYPE_TOKEN = new TypeReference<List<FilterRule>>() {
+        // type token used when deserializing generics
+    };
+
     @Override
     public boolean canHandle(Step step) {
         return StepKind.ruleFilter == step.getStepKind();
@@ -61,7 +65,7 @@ public class RuleFilterStepHandler extends AbstractFilterStepHandler {
             if (rulesString == null || rulesString.isEmpty()) {
                 return null;
             }
-            return JsonUtils.reader().forType(new TypeReference<List<FilterRule>>(){}).readValue(rulesString);
+            return JsonUtils.reader().forType(FILTER_RULE_LIST_TYPE_TOKEN).readValue(rulesString);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Cannot deserialize %s: %s", rulesString, e.getMessage()),e);
         }

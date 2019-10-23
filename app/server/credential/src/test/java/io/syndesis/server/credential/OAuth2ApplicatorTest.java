@@ -28,6 +28,7 @@ public class OAuth2ApplicatorTest {
     @Test
     public void shouldApplyAccessGrants() {
         final SocialProperties properties = new SocialProperties() {
+            // quick stub used in the test
         };
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");

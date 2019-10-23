@@ -99,5 +99,7 @@ public interface Dependency {
     // *****************
 
     class Builder extends ImmutableDependency.Builder {
+        // make ImmutableDependency.Builder which is package private
+        // accessible
     }
 }

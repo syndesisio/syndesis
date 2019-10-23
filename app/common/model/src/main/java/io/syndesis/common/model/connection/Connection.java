@@ -40,6 +40,8 @@ public interface Connection extends WithId<Connection>, ConnectionBase {
     }
 
     class Builder extends ImmutableConnection.Builder {
+        // make ImmutableConnection.Builder which is package private
+        // accessible
     }
 
     default Builder builder() {

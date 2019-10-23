@@ -457,7 +457,7 @@
     <priority>3</priority>
   </rule>
   <rule ref="category/java/documentation.xml/UncommentedEmptyConstructor">
-    <priority>5</priority>
+    <priority>3</priority>
   </rule>
   <rule ref="category/java/errorprone.xml/FinalizeOnlyCallsSuperFinalize">
     <priority>3</priority>

@@ -174,14 +174,11 @@ public class GenerateConnectorInspectionsMojoTest {
             .withMessageContaining("Validation of json file " + invalidConnectorFile + " failed, see previous logs");
     }
 
-    // ******************
-    //
-    // Support
-    //
-    // ******************
-
     public static class MyShape {
+        // type used in test
     }
+
     public static class MyShapeVariant {
+        // type used in test
     }
 }

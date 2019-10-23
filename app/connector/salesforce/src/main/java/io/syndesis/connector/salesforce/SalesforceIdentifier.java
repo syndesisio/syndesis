@@ -24,6 +24,7 @@ public final class SalesforceIdentifier {
     private String id;
 
     public SalesforceIdentifier() {
+        // needed for deserialization
     }
 
     @JsonCreator

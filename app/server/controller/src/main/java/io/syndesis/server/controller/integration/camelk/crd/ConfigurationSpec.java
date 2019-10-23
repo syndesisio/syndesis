@@ -38,6 +38,8 @@ public interface ConfigurationSpec {
     String getValue();
 
     class Builder extends ImmutableConfigurationSpec.Builder {
+        // make ImmutableConfigurationSpec.Builder which is package private
+        // accessible
     }
 
     @JsonIgnore

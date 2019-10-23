@@ -28,6 +28,7 @@ public class OAuth1ApplicatorTest {
     @Test
     public void shouldApplyTokens() {
         final SocialProperties properties = new SocialProperties() {
+            // quick stub used in the test
         };
         properties.setAppId("appId");
         properties.setAppSecret("appSecret");

@@ -69,11 +69,9 @@ public class ComponentProxySplitCollectionTest {
         mock.assertIsSatisfied();
     }
 
-    // ***************************
-    //
-    // ***************************
-
     @Configuration
     public static class TestConfiguration {
+        // @Configuration class used for the test prevents auto-loading
+        // other @Configuration classes
     }
 }

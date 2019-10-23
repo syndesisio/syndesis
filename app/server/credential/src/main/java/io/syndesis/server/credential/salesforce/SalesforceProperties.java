@@ -20,5 +20,5 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.social.salesforce")
 public final class SalesforceProperties extends SocialProperties {
-
+    // specialization of the SocialProperties used with Salesforce OAuth
 }

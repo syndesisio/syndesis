@@ -16,7 +16,6 @@
 
 package io.syndesis.integration.runtime.handlers;
 
-import javax.annotation.concurrent.Immutable;
 import javax.script.Bindings;
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -31,6 +30,8 @@ import java.util.function.Supplier;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.errorprone.annotations.Immutable;
+
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.json.JsonUtils;
@@ -91,11 +92,14 @@ public class AggregateStepHandler implements IntegrationStepHandler {
         private final StrategyConfigurer<AggregationStrategy> configurer;
 
         @Immutable
-        @com.google.errorprone.annotations.Immutable
-        interface StrategySupplier<T extends AggregationStrategy> extends Supplier<T> {}
+        interface StrategySupplier<T extends AggregationStrategy> extends Supplier<T> {
+            // specialization of the Supplier interface
+        }
+
         @Immutable
-        @com.google.errorprone.annotations.Immutable
-        interface StrategyConfigurer<T extends AggregationStrategy> extends BiFunction<T, Map<String, String>, T> {}
+        interface StrategyConfigurer<T extends AggregationStrategy> extends BiFunction<T, Map<String, String>, T> {
+            // specialization of the BiFunction interface
+        }
 
         AggregationOption(StrategySupplier<AggregationStrategy> strategySupplier) {
             this(strategySupplier, (strategy, stepProperties) -> strategy);

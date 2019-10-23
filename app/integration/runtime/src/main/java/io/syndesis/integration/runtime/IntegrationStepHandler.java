@@ -31,7 +31,7 @@ public interface IntegrationStepHandler {
      */
     Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex);
 
-    // Marker interface to mark handlers as valid start for a route
     interface Consumer {
+        // Marker interface to mark handlers as valid start for a route
     }
 }

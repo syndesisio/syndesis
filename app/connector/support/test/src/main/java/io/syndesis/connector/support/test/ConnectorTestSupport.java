@@ -197,4 +197,10 @@ public abstract class ConnectorTestSupport extends CamelTestSupport {
             return mandatoryLookupAction(connector, actionId);
         }
     }
+
+    protected static <T> Consumer<T> nop(final Class<T> type) {
+        return x -> {
+            // no op
+        };
+    }
 }

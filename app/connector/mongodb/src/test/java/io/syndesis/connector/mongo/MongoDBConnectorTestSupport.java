@@ -26,6 +26,8 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
+
+import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.bson.Document;
@@ -111,8 +113,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                                            String operation) {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
-            newEndpointStep("mongodb3", connector, builder -> {
-            }, builder -> {
+            newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
                 builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
                 builder.putConfiguredProperty("user", USER);
                 builder.putConfiguredProperty("password", PASSWORD);
@@ -130,8 +131,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     protected List<Step> fromMongoToMock(String mock, String connector, String db, String collection,
                                          String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
                                          String tailTrackDb, String tailTrackCollection, String tailTrackField) {
-        return Arrays.asList(newEndpointStep("mongodb3", connector, builder -> {
-        }, builder -> {
+        return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
             builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
             builder.putConfiguredProperty("user", USER);
             builder.putConfiguredProperty("password", PASSWORD);

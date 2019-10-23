@@ -28,5 +28,6 @@ public interface WithVersion {
      * by the data manager
      */
     interface AutoUpdatable {
+        // marker interface
     }
 }

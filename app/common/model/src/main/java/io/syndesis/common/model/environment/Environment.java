@@ -45,6 +45,8 @@ public interface Environment extends WithId<Environment>, WithName, Serializable
     List<Organization> organizations();
 
     class Builder extends ImmutableEnvironment.Builder {
+        // make ImmutableEnvironment.Builder which is package private
+        // accessible
     }
 
 }

@@ -65,6 +65,8 @@ public interface ListResult<T> extends Iterable<T> {
     }
 
     class Builder<T> extends ImmutableListResult.Builder<T> {
+        // make ImmutableListResult.Builder which is package private
+        // accessible
     }
 
     static <T> ListResult<T> of(Collection<T> items) {
