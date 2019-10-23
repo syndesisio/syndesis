@@ -13,7 +13,7 @@ connection and then add that connection to an integration flow.
 ifeval::["{location}" == "downstream"]
 [IMPORTANT]
 ====
-Connecting to MongoDB is a Technology Preview feature only. Technology Preview features are 
+Connecting to DynamoDB is a Technology Preview feature only. Technology Preview features are 
 not supported with Red Hat production service level agreements (SLAs) and might not be 
 functionally complete. Red Hat does not recommend using them in production. 
 These features provide early access to upcoming product features, enabling 
