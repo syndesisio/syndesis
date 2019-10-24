@@ -354,7 +354,8 @@ release_staging_repo() {
 
     echo "==== Releasing Sonatype staging repo"
     cd $topdir/app
-    ./mvnw ${maven_opts} -Prelease nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
+    # We do not wish to publish ui-react module on Maven Central, so we exclude it from reactor
+    ./mvnw ${maven_opts} -pl \!:ui-react -Prelease nexus-staging:release -DstagingDescription="Releasing $(readopt --release-version)"
 }
 
 git_commit_files() {
