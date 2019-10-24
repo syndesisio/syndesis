@@ -103,7 +103,7 @@
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
     </dependency>
-    <!-- Connection verifier -->
+    <!-- Connection verification support -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
