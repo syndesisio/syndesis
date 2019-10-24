@@ -129,4 +129,10 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
             Assert.assertEquals(expectedValues[i], properties.get(propertyName).toString());
         }
     }
+
+    protected static <T> Consumer<T> nop(final Class<T> ofType) {
+        return s -> {
+            // do nothing
+        };
+    }
 }

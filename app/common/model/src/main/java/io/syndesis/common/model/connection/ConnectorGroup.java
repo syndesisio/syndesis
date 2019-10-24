@@ -40,6 +40,8 @@ public interface ConnectorGroup extends WithId<ConnectorGroup>, WithName, Serial
     }
 
     class Builder extends ImmutableConnectorGroup.Builder {
+        // make ImmutableConnectorGroup.Builder which is package private
+        // accessible
     }
 
 }

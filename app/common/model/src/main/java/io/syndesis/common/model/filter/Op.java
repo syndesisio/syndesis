@@ -55,5 +55,6 @@ public interface Op extends Serializable {
     String getOperator();
 
     class Builder extends ImmutableOp.Builder {
+        // make ImmutableOp.Builder which is package private accessible
     }
 }

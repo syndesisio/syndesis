@@ -39,5 +39,7 @@ public interface Failure {
     FailureRecovery getRecovery();
 
     class Builder extends ImmutableFailure.Builder {
+        // make ImmutableFailure.Builder which is package private
+        // accessible
     }
 }

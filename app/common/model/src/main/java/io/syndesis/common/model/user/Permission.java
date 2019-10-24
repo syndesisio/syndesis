@@ -36,6 +36,7 @@ public interface Permission extends WithId<Permission>, WithName, Serializable {
     String getDescription();
 
     class Builder extends ImmutablePermission.Builder {
+        // make ImmutablePermission.Builder which is package private accessible
     }
 
 }

@@ -20,5 +20,5 @@ import io.fabric8.kubernetes.client.CustomResourceList;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KnativeResourceList extends CustomResourceList<KnativeResource> {
-
+    // type to easily use in code, rather than types with long generics
 }

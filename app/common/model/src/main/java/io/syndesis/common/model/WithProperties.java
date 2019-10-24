@@ -16,4 +16,5 @@
 package io.syndesis.common.model;
 
 public interface WithProperties extends WithConfigurationProperties, WithConfiguredProperties {
+    // combined inteface for objects that both define and hold properties
 }

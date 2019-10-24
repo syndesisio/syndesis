@@ -39,5 +39,7 @@ public interface FailureRecovery {
     String getAttemptTime();
 
     class Builder extends ImmutableFailureRecovery.Builder {
+        // make ImmutableFailureRecovery.Builder which is package private
+        // accessible
     }
 }

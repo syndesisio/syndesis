@@ -20,5 +20,5 @@ import io.fabric8.kubernetes.client.CustomResource;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class KnativeResource extends CustomResource {
-
+    // probably helps with deserialization, who can tell
 }

@@ -34,6 +34,8 @@ public interface EnvironmentType extends WithId<EnvironmentType>, WithName, Seri
     }
 
     class Builder extends ImmutableEnvironmentType.Builder {
+        // make ImmutableEnvironmentType.Builder which is package private
+        // accessible
     }
 
 }

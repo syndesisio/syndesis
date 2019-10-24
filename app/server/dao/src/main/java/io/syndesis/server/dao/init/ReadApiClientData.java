@@ -35,8 +35,12 @@ import io.syndesis.common.model.ModelData;
 
 public class ReadApiClientData {
 
-    private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>(){};
+    private static final TypeReference<List<ModelData<?>>> MODEL_DATA_TYPE = new TypeReference<List<ModelData<?>>>() {
+        // type token used when deserializing generics
+    };
+
     private static final Pattern PATTERN = Pattern.compile("\\@(.*?)\\@");
+
     private final EncryptionComponent encryptionComponent;
 
     public ReadApiClientData() {

@@ -39,5 +39,7 @@ public interface SourceSpec {
     String getLanguage();
 
     class Builder extends ImmutableSourceSpec.Builder {
+        // make ImmutableSourceSpec.Builder which is package private
+        // accessible
     }
 }

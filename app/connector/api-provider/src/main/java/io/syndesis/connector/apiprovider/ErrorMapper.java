@@ -30,6 +30,10 @@ import io.syndesis.common.util.SyndesisConnectorException;
 
 public final class ErrorMapper {
 
+    private static final TypeReference<Map<String, String>> STRING_MAP_TYPE = new TypeReference<Map<String, String>>() {
+        // type token used when deserializing generics
+    };
+
     private static final Logger LOG = LoggerFactory.getLogger(ErrorMapper.class);
 
     private ErrorMapper() {
@@ -42,7 +46,7 @@ public final class ErrorMapper {
             if (ObjectHelper.isEmpty(property)) {
                 return Collections.emptyMap();
             }
-            return JsonUtils.reader().forType(new TypeReference<Map<String, String>>(){}).readValue(property);
+            return JsonUtils.reader().forType(STRING_MAP_TYPE).readValue(property);
         } catch (IOException e) {
             LOG.warn(String.format("Failed to read error code mapping property %s: %s", property, e.getMessage()), e);
             return Collections.emptyMap();

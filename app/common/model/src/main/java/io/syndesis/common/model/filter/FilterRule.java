@@ -36,5 +36,8 @@ public interface FilterRule extends RuleBase {
                              getValue());
     }
 
-    class Builder extends ImmutableFilterRule.Builder { }
+    class Builder extends ImmutableFilterRule.Builder {
+        // make ImmutableFilterRule.Builder which is package private
+        // accessible
+    }
 }

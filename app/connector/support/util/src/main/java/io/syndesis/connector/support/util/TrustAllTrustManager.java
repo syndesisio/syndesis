@@ -26,32 +26,37 @@ import javax.net.ssl.X509ExtendedTrustManager;
  * Use only for AMQ connections to SSL Brokers, when no Broker certificate provided.
  * @author dhirajsb
  */
-@SuppressWarnings("PMD.UncommentedEmptyMethodBody")
 public class TrustAllTrustManager extends X509ExtendedTrustManager {
     private static final X509Certificate[] NONE = new X509Certificate[0];
 
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+        // no-op
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+        // no-op
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
+        // no-op
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
+        // no-op
     }
 
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        // no-op
     }
 
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        // no-op
     }
 
     @Override

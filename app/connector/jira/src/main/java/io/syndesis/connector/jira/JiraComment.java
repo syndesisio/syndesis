@@ -21,6 +21,7 @@ public class JiraComment {
     private String comment;
 
     public JiraComment() {
+        // needed for deserialization
     }
 
     public JiraComment(String issueKey, String comment) {

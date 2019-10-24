@@ -30,5 +30,7 @@ public interface FilterOptions extends Serializable {
     List<Op> getOps();
 
     class Builder extends ImmutableFilterOptions.Builder {
+        // make ImmutableFilterOptions.Builder which is package private
+        // accessible
     }
 }

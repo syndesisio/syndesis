@@ -58,5 +58,8 @@ public interface FlowOption extends RuleBase {
                 getValue());
     }
 
-    class Builder extends ImmutableFlowOption.Builder { }
+    class Builder extends ImmutableFlowOption.Builder {
+        // make ImmutableFlowOption.Builder which is package private
+        // accessible
+    }
 }

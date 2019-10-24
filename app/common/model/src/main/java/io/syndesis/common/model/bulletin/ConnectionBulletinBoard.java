@@ -47,5 +47,7 @@ public interface ConnectionBulletinBoard extends WithId<ConnectionBulletinBoard>
     }
 
     class Builder extends ImmutableConnectionBulletinBoard.Builder {
+        // make ImmutableConnectionBulletinBoard.Builder which is package
+        // private accessible
     }
 }

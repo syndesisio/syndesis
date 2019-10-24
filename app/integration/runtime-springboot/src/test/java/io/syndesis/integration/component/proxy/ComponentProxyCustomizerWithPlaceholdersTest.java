@@ -97,12 +97,10 @@ public class ComponentProxyCustomizerWithPlaceholdersTest {
         mock.assertIsSatisfied();
     }
 
-    // ***************************
-    //
-    // ***************************
-
     @Configuration
     public static class TestConfiguration {
+        // @Configuration class used for the test prevents auto-loading
+        // other @Configuration classes
     }
 
     @Component("my-bean")

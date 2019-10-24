@@ -46,5 +46,7 @@ public interface IntegrationBulletinBoard extends BulletinBoard<IntegrationBulle
     }
 
     class Builder extends ImmutableIntegrationBulletinBoard.Builder {
+        // make ImmutableIntegrationBulletinBoard.Builder which is package
+        // private accessible
     }
 }

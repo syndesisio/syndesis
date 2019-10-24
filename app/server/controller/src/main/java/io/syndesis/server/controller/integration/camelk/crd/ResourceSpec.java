@@ -43,5 +43,6 @@ public interface ResourceSpec {
     String getMountPath();
 
     class Builder extends ImmutableResourceSpec.Builder {
+        // make ImmutableResourceSpec.Builder which is package private accessible
     }
 }
