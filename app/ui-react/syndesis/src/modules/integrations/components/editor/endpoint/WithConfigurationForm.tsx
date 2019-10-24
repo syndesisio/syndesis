@@ -13,7 +13,7 @@ import {
   IConfigurationProperty,
   IConnectionOverview,
 } from '@syndesis/models';
-import { PageSectionLoader } from '@syndesis/ui';
+import { PageSection, PageSectionLoader } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError } from '../../../../../shared';
@@ -152,12 +152,16 @@ export const WithConfigurationForm: React.FunctionComponent<
       initialValue={action.descriptor}
       configuredProperties={props.initialValue || {}}
     >
-      {({ data, hasData, error, errorMessage, loading }) => (
+      {({ data, error, errorMessage, loading }) => (
         <WithLoader
           error={error}
           loading={loading}
           loaderChildren={<PageSectionLoader />}
-          errorChildren={<ApiError error={errorMessage!} />}
+          errorChildren={
+            <PageSection>
+              <ApiError error={errorMessage!} />
+            </PageSection>
+          }
         >
           {() => (
             <ConfigurationForm action={action} descriptor={data} {...props}>
