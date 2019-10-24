@@ -93,7 +93,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
             CONNECTOR_ID, params);
         ComponentVerifierExtension.Result result = VERIFIER
             .resolveComponentVerifierExtension(this.context, SCHEME)
-            .verify(ComponentVerifierExtension.Scope.CONNECTIVITY, params);
+            .verify(ComponentVerifierExtension.Scope.PARAMETERS, params);
         //Then
         assertEquals(Verifier.Status.ERROR, response.get(0).getStatus());
         assertEquals(ComponentVerifierExtension.Result.Status.ERROR, result.getStatus());

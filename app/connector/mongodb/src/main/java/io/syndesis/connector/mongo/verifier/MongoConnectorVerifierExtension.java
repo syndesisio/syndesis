@@ -26,6 +26,7 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -78,7 +79,8 @@ public class MongoConnectorVerifierExtension extends DefaultComponentVerifierExt
         LOG.info("Testing connection against {}", connectionURI);
         try (MongoClient mongoClient = new MongoClient(connectionURI)) {
             // Just ping the server
-            mongoClient.getConnectPoint();
+            mongoClient.getDatabase(connectionURI.getDatabase()).runCommand(Document.parse("{ ping: 1 }"));
+            LOG.info("Testing connection successful!");
         } catch (MongoSecurityException e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(
                 VerificationError.StandardCode.AUTHENTICATION,
