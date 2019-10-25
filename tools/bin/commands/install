@@ -8,11 +8,14 @@ install::usage() {
     cat <<"EOT"
 -s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
                               able to install Syndesis. You have to run this option once as cluster admin.
+-u  --grant <user>            Add permissions for the given user so that user can install the operator
+                              in her projects. Must be run as cluster admin.
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --grant)
 -p  --project                 Install into this project. Delete this project
                               if it already exists. By default, install into the current project (without deleting)
     --operator-only           Only install the operator but no resource
                               connected cluster.
-    --console                 The URL to the OpenShift console
     --tag <tag>               Syndesis version/tag to install. If not given, then the latest
                               version from master is installed
     --force                   Override an existing "Syndesis" if present
