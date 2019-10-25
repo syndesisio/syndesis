@@ -269,16 +269,49 @@ prepare_binaries() {
     done
 }
 
+get_gh_release_name() {
+    local tag=$1
+    local current_branch=$(git branch  | grep \* | awk '{print $2}')
+    local name=${tag}
+
+    if [[ "${current_branch}" == "master" ]]; then
+        name="${tag}-${current_branch}"
+    fi
+
+    echo ${name}
+}
+
+get_gh_release_desc() {
+    local desc="Please follow the instructions at http://syndesis.io/quickstart/ to install syndesis."
+    local commit_history=""
+
+    previous_release_commit=$(curl -s --fail https://api.github.com/repos/syndesisio/syndesis/releases/latest | \
+        grep  target_commitish | \
+        cut -d '"' -f 4)
+
+    if [[ -z $previous_release_commit ]]; then
+        echo "WARNING: Unable to fetch previous release commit"
+    else
+        commit_history=$(git log --pretty=format:"%h - %s" ${previous_release_commit}..HEAD)
+    fi
+
+    desc="${desc}\n\n$commit_history"
+
+    echo ${desc}
+}
+
 publish_artifacts() {
     local release_dir=$1
     local tag=$2
-    local current_branch=$(git branch  | grep \* | awk '{print $2}')
+
+    local release_name=$(get_gh_release_name ${tag})
+    local desc=$(get_gh_release_desc)
 
     get_github_access_token
     get_github_username
 
     set +e
-    local upload_url=$(curl -q --fail -X POST -u $GITHUB_USERNAME:${GITHUB_ACCESS_TOKEN} -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" -d "{\"tag_name\": \"${tag}-${current_branch}\"}" https://api.github.com/repos/syndesisio/syndesis/releases | jq -r .upload_url | cut -d{ -f1)
+    local upload_url=$(curl -q --fail -X POST -u $GITHUB_USERNAME:${GITHUB_ACCESS_TOKEN} -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" -d "{\"tag_name\": \"${tag}\", \"name\": \"${release_name}\", \"body\": \"${desc}\"}" https://api.github.com/repos/syndesisio/syndesis/releases | jq -r .upload_url | cut -d{ -f1)
     if [[ ! $upload_url == http* ]]; then
         echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
         return
