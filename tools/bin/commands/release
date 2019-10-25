@@ -200,7 +200,6 @@ check_git_clean() {
 update_pom_versions() {
     local topdir="$1"
     local version="$2"
-    local maven_opts="$3"
 
     cd $topdir/app
     echo "==== Updating pom.xml versions to $version"
@@ -273,12 +272,13 @@ prepare_binaries() {
 publish_artifacts() {
     local release_dir=$1
     local tag=$2
+    local current_branch=$(git branch  | grep \* | awk '{print $2}')
 
     get_github_access_token
     get_github_username
 
     set +e
-    local upload_url=$(curl -q --fail -X POST -u $GITHUB_USERNAME:${GITHUB_ACCESS_TOKEN} -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" -d "{\"tag_name\": \"${tag}\"}" https://api.github.com/repos/syndesisio/syndesis/releases | jq -r .upload_url | cut -d{ -f1)
+    local upload_url=$(curl -q --fail -X POST -u $GITHUB_USERNAME:${GITHUB_ACCESS_TOKEN} -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" -d "{\"tag_name\": \"${tag}-${current_branch}\"}" https://api.github.com/repos/syndesisio/syndesis/releases | jq -r .upload_url | cut -d{ -f1)
     if [[ ! $upload_url == http* ]]; then
         echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
         return
