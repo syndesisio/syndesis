@@ -312,7 +312,18 @@ publish_artifacts() {
     get_github_username
 
     set +e
-    local upload_url=$(curl -q --fail -X POST -u $GITHUB_USERNAME:${GITHUB_ACCESS_TOKEN} -H "Accept: application/vnd.github.v3+json" -H "Content-Type: application/json" -d "{\"tag_name\": \"${tag}\", \"name\": \"${release_name}\", \"body\": \"${desc}\"}" https://api.github.com/repos/syndesisio/syndesis/releases | jq -r .upload_url | cut -d{ -f1)
+    local data="{
+	  \"tag_name\": \"${tag}\",
+	  \"name\": \"${release_name}\",
+	  \"body\": \"${desc}\"}
+	"
+	local upload_url=$(curl -q --fail \
+      -X POST \
+      -u $GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN \
+      -H "Accept: application/vnd.github.v3+json" \
+      -H "Content-Type: application/json" \
+      -d "$data" \
+      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")'
     if [[ ! $upload_url == http* ]]; then
         echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
         return
