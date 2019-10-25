@@ -67,7 +67,7 @@ This step has to be performed by the admin.
 Also, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant specific permissions to her.
 
 To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**.
-For `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled, for crc follow the login instructions you got whne starting up crc.
+For `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled, for crc follow the login instructions you got when starting up crc.
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
