@@ -66,6 +66,7 @@ public class ActivityTracingWithSplitTest {
 
             @Override
             public void close() {
+                // no resource to dispose
             }
         }).withSampler(new ConstSampler(true)).build();
 

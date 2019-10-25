@@ -48,5 +48,7 @@ public interface DataSpec {
     Boolean getCompression();
 
     class Builder extends ImmutableDataSpec.Builder {
+        // make ImmutableDataSpec.Builder which is package private
+        // accessible
     }
 }

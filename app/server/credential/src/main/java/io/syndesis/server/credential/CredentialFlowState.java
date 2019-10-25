@@ -90,4 +90,8 @@ public interface CredentialFlowState {
     Type type();
 
     CredentialFlowState updateFrom(HttpServletRequest request);
+
+    @JsonIgnore
+    @Value.Derived
+    boolean isApplicable();
 }

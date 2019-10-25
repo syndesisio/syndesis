@@ -44,7 +44,8 @@ public class IntegrationRouteLoader implements RoutesLoader {
     private Set<IntegrationStepHandler> integrationStepHandlers;
     private Tracer tracer;
 
-    public IntegrationRouteLoader() {
+    IntegrationRouteLoader() {
+        // used in unit test to instantiate
     }
 
     public IntegrationRouteLoader(ActivityTracker activityTracker, Set<IntegrationStepHandler> integrationStepHandlers, Tracer tracer) {

@@ -34,11 +34,14 @@ module.exports = function(app) {
       changeOrigin: true,
       ws: !!process.env.PROXY_NO_WS === true,
       headers: {
-        'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
         'X-Forwarded-Access-Token': 'supersecret',
         'X-Forwarded-User': 'user',
         Cookie: process.env.BACKEND_COOKIE || '',
       },
+      logLevel: 'debug',
+      onProxyReq: (proxyReq, req, res) => {
+        proxyReq.setHeader('origin', process.env.BACKEND);
+      }
     });
 
     ['/api/v1', '/vdb-builder/v1'].forEach(url => {

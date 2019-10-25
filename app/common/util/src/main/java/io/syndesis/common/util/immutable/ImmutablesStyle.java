@@ -29,4 +29,5 @@ import org.immutables.value.Value;
     validationMethod = Value.Style.ValidationMethod.VALIDATION_API
     )
 public @interface ImmutablesStyle {
+    // marker annotation that holds style configuration for Immutables
 }

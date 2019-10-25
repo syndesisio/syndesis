@@ -17,5 +17,5 @@ package io.syndesis.integration.component.proxy;
 
 @FunctionalInterface
 public interface ComponentProxyCustomizer extends ComponentCustomizer<ComponentProxyComponent> {
-
+    // type to easily use in code, rather than types with long generics
 }

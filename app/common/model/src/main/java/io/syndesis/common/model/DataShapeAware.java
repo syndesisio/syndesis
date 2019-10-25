@@ -16,4 +16,5 @@
 package io.syndesis.common.model;
 
 public interface DataShapeAware extends InputDataShapeAware, OutputDataShapeAware {
+    // combined interface for both input and output data shape aware objects
 }

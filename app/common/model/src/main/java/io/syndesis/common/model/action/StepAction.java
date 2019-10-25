@@ -44,6 +44,7 @@ public interface StepAction extends Action, WithId<StepAction> {
     StepDescriptor getDescriptor();
 
     class Builder extends ImmutableStepAction.Builder {
+        // make ImmutableStepAction.Builder which is package private accessible
     }
 
 

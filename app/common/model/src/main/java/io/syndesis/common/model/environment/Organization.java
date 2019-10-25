@@ -40,6 +40,8 @@ public interface Organization extends WithId<Organization>, WithName, Serializab
     List<User> getUsers();
 
     class Builder extends ImmutableOrganization.Builder {
+        // make ImmutableOrganization.Builder which is package private
+        // accessible
     }
 
 }

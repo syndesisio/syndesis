@@ -58,6 +58,8 @@ public interface IntegrationStatus extends Serializable {
     String getRuntimeVersion();
 
     class Builder extends ImmutableIntegrationStatus.Builder {
+        // make ImmutableIntegrationStatus.Builder which is package private
+        // accessible
     }
 }
 

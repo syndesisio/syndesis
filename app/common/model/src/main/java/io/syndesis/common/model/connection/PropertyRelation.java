@@ -35,8 +35,8 @@ public interface PropertyRelation extends Serializable {
     @JsonDeserialize(builder = When.Builder.class)
     interface When {
 
-        @SuppressWarnings("PMD.UseUtilityClass")
         class Builder extends ImmutableWhen.Builder {
+            // make ImmutableWhen.Builder which is package private accessible
         }
 
         String getId();

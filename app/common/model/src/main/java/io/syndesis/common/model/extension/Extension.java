@@ -118,5 +118,7 @@ public interface Extension extends WithId<Extension>, WithActions<Action>, WithN
     }
 
     class Builder extends ImmutableExtension.Builder {
+        // make ImmutableExtension.Builder which is package private
+        // accessible
     }
 }

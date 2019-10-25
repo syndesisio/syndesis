@@ -40,6 +40,10 @@ import org.apache.camel.util.ObjectHelper;
 
 public class ChoiceStepHandler implements IntegrationStepHandler {
 
+    private static final TypeReference<List<FlowOption>> FLOW_OPTION_LIST_TYPE = new TypeReference<List<FlowOption>>() {
+        // type token used when deserializing generics
+    };
+
     @Override
     public boolean canHandle(Step step) {
         return StepKind.choice == step.getStepKind();
@@ -104,7 +108,7 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
                 return Collections.emptyList();
             }
 
-            return JsonUtils.reader().forType(new TypeReference<List<FlowOption>>(){}).readValue(flowMappings);
+            return JsonUtils.reader().forType(FLOW_OPTION_LIST_TYPE).readValue(flowMappings);
         } catch (IOException e) {
             throw new IllegalStateException(String.format("Failed to read flow mappings %s: %s", flowMappings, e.getMessage()),e);
         }

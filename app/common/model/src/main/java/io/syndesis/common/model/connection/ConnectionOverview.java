@@ -37,7 +37,8 @@ public interface ConnectionOverview extends WithId<ConnectionOverview>, Connecti
         return ConnectionBulletinBoard.emptyBoard();
     }
 
-    // allow access to ImmutableIntegration.Builder
     class Builder extends ImmutableConnectionOverview.Builder {
+        // make ImmutableConnectionOverview.Builder which is package private
+        // accessible
     }
 }

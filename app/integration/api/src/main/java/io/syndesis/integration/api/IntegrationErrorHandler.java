@@ -23,4 +23,5 @@ import java.util.function.Consumer;
  */
 @FunctionalInterface
 public interface IntegrationErrorHandler extends Consumer<Throwable> {
+    // type to easily use in code, rather than types with long generics
 }

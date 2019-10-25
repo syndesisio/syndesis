@@ -23,5 +23,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @EnableConfigurationProperties(ClassInspectorConfigurationProperties.class)
 public class ClassInspectorConfiguration {
-
+    // loads other beans via @ComponentScan
 }

@@ -23,8 +23,9 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 public interface IntegrationDeploymentOverview extends IntegrationDeploymentBase {
 
-    // allow access to ImmutableIntegrationDeploymentOverview.Builder
     class Builder extends ImmutableIntegrationDeploymentOverview.Builder {
+        // make ImmutableIntegrationDeploymentOverview.Builder which is package
+        // private accessible
     }
 
     static IntegrationDeploymentOverview of(IntegrationDeployment deployment) {

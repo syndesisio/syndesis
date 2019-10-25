@@ -27,5 +27,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @ConditionalOnProperty(value = "features.dblogging.enabled", havingValue = "true")
 public class DBActivityTrackingConfiguration {
-
+    // loads other beans via @ComponentScan
 }

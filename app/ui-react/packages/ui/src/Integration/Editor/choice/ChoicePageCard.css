@@ -9,9 +9,11 @@
   flex-wrap: nowrap;
   flex-direction: row;
   margin-left: 7em;
+  min-height: 75px;
 }
 .conditional-flow__form-group {
   padding: 0 15px 0 15px;
+  flex-grow: 1;
 }
 .conditional-flow__controls {
   padding-top: 4px;

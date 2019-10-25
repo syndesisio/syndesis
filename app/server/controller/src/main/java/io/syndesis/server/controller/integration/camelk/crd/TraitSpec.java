@@ -38,5 +38,6 @@ public interface TraitSpec {
     }
 
     class Builder extends ImmutableTraitSpec.Builder {
+        // make ImmutableTraitSpec.Builder which is package private accessible
     }
 }

@@ -43,7 +43,7 @@ public class SqlStoredConnectorWitDefaultsTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-stored-connector",
-                builder -> {},
+                nop(Step.Builder.class),
                 builder -> builder.replaceConfigurationProperty("template", b -> b.defaultValue("DEMO_ADD(INTEGER ${body[a]}, INTEGER ${body[b]}, OUT INTEGER c)"))),
             newSimpleEndpointStep(
                 "mock",

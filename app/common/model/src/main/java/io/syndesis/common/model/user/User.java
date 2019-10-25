@@ -52,6 +52,8 @@ public interface User extends WithId<User>, Serializable {
     Optional<String> getOrganizationId();
 
     class Builder extends ImmutableUser.Builder {
+        // make ImmutableUser.Builder which is package private
+        // accessible
     }
 
 }

@@ -69,7 +69,8 @@ public interface IntegrationOverview extends WithId<IntegrationOverview>, Integr
     // Builder
     // ******************
 
-    // allow access to ImmutableIntegrationOverview.Builder
     class Builder extends ImmutableIntegrationOverview.Builder {
+        // make ImmutableIntegrationOverview.Builder which is package private
+        // accessible
     }
 }

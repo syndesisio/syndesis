@@ -23,4 +23,5 @@ import org.springframework.context.annotation.Configuration;
 @ComponentScan
 @EnableConfigurationProperties(ControllersConfigurationProperties.class)
 public class ControllersConfiguration {
+    // @Configuration class to load ControllersConfigurationProperties
 }

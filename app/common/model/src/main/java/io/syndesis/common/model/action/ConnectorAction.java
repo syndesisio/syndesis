@@ -56,6 +56,8 @@ public interface ConnectorAction extends Action, WithId<ConnectorAction>, WithDe
     }
 
     class Builder extends ImmutableConnectorAction.Builder {
+        // make ImmutableConnectorAction.Builder which is package private
+        // accessible
     }
 
     default ConnectorAction.Builder builder() {

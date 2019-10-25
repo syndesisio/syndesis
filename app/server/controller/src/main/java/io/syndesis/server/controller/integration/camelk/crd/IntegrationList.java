@@ -18,4 +18,5 @@ package io.syndesis.server.controller.integration.camelk.crd;
 import io.fabric8.kubernetes.client.CustomResourceList;
 
 public class IntegrationList extends CustomResourceList<Integration> {
+    // type to easily use in code, rather than types with long generics
 }

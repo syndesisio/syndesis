@@ -37,6 +37,7 @@ public interface Icon extends WithId<Icon> {
     }
 
     class Builder extends ImmutableIcon.Builder {
+        // make ImmutableIcon.Builder which is package private accessible
     }
 
 }
