@@ -51,6 +51,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
+              <attach>false</attach>
               <tarLongFileMode>posix</tarLongFileMode>
               <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
               <descriptors>
@@ -596,15 +597,6 @@
             <executions>
               <execution>
                 <id>basepom.default</id>
-                <phase />
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
                 <phase />
               </execution>
             </executions>
