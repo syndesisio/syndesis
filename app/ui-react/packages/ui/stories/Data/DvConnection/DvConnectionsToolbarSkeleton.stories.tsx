@@ -2,6 +2,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
 import {
+  DvConnectionsGrid,
   DvConnectionsGridCell,
   DvConnectionSkeleton,
   DvConnectionsToolbarSkeleton,
@@ -13,12 +14,14 @@ const stories = storiesOf(
 );
 
 stories.add('render', () => (
-  <>
+  <React.Fragment>
     <DvConnectionsToolbarSkeleton />
-    {new Array(5).fill(0).map((_, index) => (
-      <DvConnectionsGridCell key={index}>
-        <DvConnectionSkeleton />
-      </DvConnectionsGridCell>
-    ))}
-  </>
+    <DvConnectionsGrid>
+      {new Array(5).fill(0).map((_, index) => (
+        <DvConnectionsGridCell key={index}>
+          <DvConnectionSkeleton />
+        </DvConnectionsGridCell>
+      ))}
+    </DvConnectionsGrid>
+  </React.Fragment>
 ));
