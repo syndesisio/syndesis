@@ -272,7 +272,7 @@ prepare_binaries() {
 
 get_gh_release_name() {
     local tag=$1
-    local current_branch=$(git branch  | grep \* | awk '{print $2}')
+    local current_branch=$(git rev-parse --abbrev-ref HEAD)
     local name=${tag}
 
     if [[ "${current_branch}" == "master" ]]; then
