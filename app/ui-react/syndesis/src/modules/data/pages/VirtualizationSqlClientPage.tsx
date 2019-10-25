@@ -63,7 +63,10 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   );
   const appContext = React.useContext(AppContext);
   const { pushNotification } = React.useContext(UIContext);
-  const { updateVirtualizationDescription } = useVirtualizationHelpers();
+  const {
+    exportVirtualization, 
+    updateVirtualizationDescription 
+  } = useVirtualizationHelpers();
   const {
     handleDeleteVirtualization,
     handlePublishVirtualization,
@@ -107,6 +110,19 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       history.push(resolvers.data.virtualizations.list());
     }
   };
+
+  const doExport = () => {
+    exportVirtualization(virtualization.name).catch((e: any) => {
+      // notify user of error
+      pushNotification(
+        t('exportVirtualizationFailed', {
+          details: e.errorMessage || e.message || e,
+          name: virtualization.name,
+        }),
+        'error'
+      );
+    });
+  }
 
   const doPublish = async (pVirtualizationId: string, hasViews: boolean) => {
     await handlePublishVirtualization(pVirtualizationId, hasViews);
@@ -154,6 +170,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
             name: state.virtualization.name,
           })}
           i18nDeleteModalTitle={t('deleteModalTitle')}
+          i18nExport={t('shared:Export')}
           i18nPublish={t('shared:Publish')}
           i18nUnpublish={t('shared:Unpublish')}
           i18nUnpublishModalMessage={t('unpublishModalMessage', {
@@ -161,8 +178,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           })}
           i18nUnpublishModalTitle={t('unpublishModalTitle')}
           onDelete={doDelete}
-          /* TD-636: Commented out for TP
-            onExport={this.handleExportVirtualization} */
+          onExport={doExport}
           onUnpublish={doUnpublish}
           onPublish={doPublish}
           hasViews={!state.virtualization.empty}

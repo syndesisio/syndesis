@@ -97,6 +97,33 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
+   * Requests a `.zip` file of the virtualization be exported to the filesystem.
+   * @param name the name of the virtualization
+   * @param fileName the name of the output file (must end with `.zip` or won't be used)
+   * @throws an error if there was a problem exporting the file
+   */
+  const exportVirtualization = async (name: string, fileName?: string) => {
+    let zipName = fileName;
+
+    if (!zipName || !zipName.endsWith('.zip')) {
+      zipName = `${name}-export.zip`;
+    }
+
+    const response = await callFetch({
+      headers: apiContext.headers,
+      method: 'GET',
+      url: `${apiContext.dvApiUri}virtualizations/${name}/export`,
+    });
+
+    if (!response.ok) {
+      return Promise.reject(new Error(response.statusText));
+    }
+
+    // return zip file
+    return saveAs(await response.blob(), zipName);
+  };
+
+  /**
    * Publish the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being published
    * @returns the `TeiidStatus` model object
@@ -399,6 +426,7 @@ export const useVirtualizationHelpers = () => {
     createVirtualization,
     deleteViewDefinition,
     deleteVirtualization,
+    exportVirtualization,
     getSourceInfoForView,
     getView,
     getViewDefinition,

@@ -25,6 +25,7 @@
   "errorViewNameValidation": "Error validating the view name.",
   "errorVirtualizationNameExists": "A virtualization with name \"{{name}}\" already exists.",
   "errorVirtualizationNameValidation": "Error validating the virtualization name.",
+  "exportVirtualizationFailed": "Exporting virtualization \"{{name}}\" failed. Details: {{details}}",
   "importDataSource": "Import Data Source",
   "importDataSourceTip": "Import views from a data source",
   "importDataSourceWizardStep1": "Select Connection",

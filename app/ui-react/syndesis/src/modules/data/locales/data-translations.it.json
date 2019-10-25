@@ -25,6 +25,7 @@
   "errorViewNameValidation": "Errore durante la convalida del nome della vista.",
   "errorVirtualizationNameExists": "Esiste già una virtualizzazione con nome \"{{name}}\".",
   "errorVirtualizationNameValidation": "Errore durante la convalida del nome della virtualizzazione.",
+  "exportVirtualizationFailed": "Esportazione della virtualizzazione \"{{name}}\" non riuscita. Dettagli: {{details}}",
   "importDataSource": "Importa Origine Dati",
   "importDataSourceTip": "Importa visualizzazioni da un'origine dati",
   "importDataSourceWizardStep1": "Seleziona Connessione",
