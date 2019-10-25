@@ -27,6 +27,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-amqp_{context}>>
 * <<connecting-to-box_{context}>>
 * <<connecting-to-dropbox_{context}>>
+* <<connecting-to-email-servers_{context}>>
 * <<connecting-to-fhir_{context}>>
 * <<connecting-to-ftp_{context}>>
 * <<connecting-to-google_{context}>>
@@ -58,6 +59,8 @@ include::assemblies/connecting/as_connecting-to-amqp.adoc[leveloffset=+1]
 include::assemblies/connecting/as_connecting-to-box.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-dropbox.adoc[leveloffset=+1]
+
+include::assemblies/connecting/as_connecting-to-email-servers.adoc[leveloffset=+1]
 
 include::assemblies/connecting/as_connecting-to-fhir.adoc[leveloffset=+1]
 
