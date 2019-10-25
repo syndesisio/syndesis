@@ -311,7 +311,6 @@ publish_artifacts() {
     get_github_access_token
     get_github_username
 
-    set +e
     local data="{
 	  \"tag_name\": \"${tag}\",
 	  \"name\": \"${release_name}\",
@@ -334,9 +333,8 @@ publish_artifacts() {
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
           --data-binary "@$file" \
-          $upload_url?name=${file##*/} >$ERROR_FILE 2>&1
+          $upload_url?name=${file##*/}
         local err=$?
-        set -e
         if [ $err -ne 0 ]; then
           echo "ERROR: Cannot upload release artifact $file on remote github repository"
           return
