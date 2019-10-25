@@ -1,6 +1,7 @@
 import { useConnections } from '@syndesis/api';
 import { Connection, VirtualizationSourceStatus } from '@syndesis/models';
 import {
+  DvConnectionsGrid,
   DvConnectionsGridCell,
   DvConnectionSkeleton,
   DvConnectionsListView,
@@ -117,14 +118,16 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
             error={props.error || connectionsError !== false}
             loading={props.loading || !hasConnectionsData}
             loaderChildren={
-              <>
+              <React.Fragment>
                 <DvConnectionsToolbarSkeleton />
-                {new Array(5).fill(0).map((_, index) => (
-                  <DvConnectionsGridCell key={index}>
-                    <DvConnectionSkeleton />
-                  </DvConnectionsGridCell>
-                ))}
-              </>
+                <DvConnectionsGrid>
+                  {new Array(5).fill(0).map((_, index) => (
+                    <DvConnectionsGridCell key={index}>
+                      <DvConnectionSkeleton />
+                    </DvConnectionsGridCell>
+                  ))}
+                </DvConnectionsGrid>
+              </React.Fragment>
             }
             errorChildren={
               <ApiError
