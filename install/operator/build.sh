@@ -5,12 +5,12 @@
 #
 
 set -e
-cd -P $(dirname "${BASH_SOURCE[0]}")
+BASE=$(dirname "${BASH_SOURCE[0]}")
 
-source "$(pwd)/../../tools/bin/commands/util/common_funcs"
-source "$(pwd)/../../tools/bin/commands/util/operator_funcs"
-source "$(pwd)/../../tools/bin/commands/util/openshift_funcs"
-source "./.lib.sh"
+source "$BASE/../../tools/bin/commands/util/common_funcs"
+source "$BASE/../../tools/bin/commands/util/operator_funcs"
+source "$BASE/../../tools/bin/commands/util/openshift_funcs"
+source "$BASE/.lib.sh"
 
 OPERATOR_IMAGE_NAME="$(readopt --image-name         docker.io/syndesis/syndesis-operator)"
 OPERATOR_IMAGE_TAG="$(readopt  --image-tag          latest)"
