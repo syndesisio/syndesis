@@ -200,6 +200,7 @@ check_git_clean() {
 update_pom_versions() {
     local topdir="$1"
     local version="$2"
+    local maven_opts="$3"
 
     cd $topdir/app
     echo "==== Updating pom.xml versions to $version"
