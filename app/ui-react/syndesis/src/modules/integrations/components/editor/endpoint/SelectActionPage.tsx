@@ -60,64 +60,75 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                   loaderChildren={<PageLoader />}
                   errorChildren={<ApiError error={errorMessage!} />}
                 >
-                  {() => (
-                    <>
-                      <PageTitle title={'Choose an action'} />
-                      <IntegrationEditorLayout
-                        title={'Choose an action'}
-                        description={
-                          'Choose an action for the selected connection.'
-                        }
-                        toolbar={this.props.getBreadcrumb(
-                          'Choose an action',
-                          params,
-                          state
-                        )}
-                        sidebar={this.props.sidebar({
-                          activeIndex: positionAsNumber,
-                          activeStep: {
-                            ...toUIStep(state.connection),
-                          },
-                          steps: toUIStepCollection(
-                            getSteps(state.integration, params.flowId)
-                          ),
-                        })}
-                        content={
-                          <IntegrationEditorChooseAction>
-                            {(positionAsNumber > 0
-                              ? data.actionsWithTo
-                              : data.actionsWithFrom
-                            )
-                              .sort((a, b) => a.name.localeCompare(b.name))
-                              .map((a, idx) => (
-                                <IntegrationEditorActionsListItem
-                                  key={idx}
-                                  integrationName={a.name}
-                                  integrationDescription={
-                                    a.description || 'No description available.'
-                                  }
-                                  actions={
-                                    <ButtonLink
-                                      data-testid={
-                                        'select-action-page-select-button'
-                                      }
-                                      href={this.props.selectHref(
-                                        a.id!,
-                                        params,
-                                        state
-                                      )}
-                                    >
-                                      Select
-                                    </ButtonLink>
-                                  }
-                                />
-                              ))}
-                          </IntegrationEditorChooseAction>
-                        }
-                        cancelHref={this.props.cancelHref(params, state)}
-                      />
-                    </>
-                  )}
+                  {() => {
+                    const steps = toUIStepCollection(
+                      getSteps(state.integration, params.flowId)
+                    );
+                    // if we're looking at the 1st step, only show
+                    // actions with 'From'.  If we're looking at the
+                    // last step, only show actions with 'To'.
+                    // Otherwise, show actions with 'To' and 'Pipe'.
+                    const actions =
+                      positionAsNumber > 0
+                        ? positionAsNumber === steps.length
+                          ? data.actionsWithTo
+                          : [...data.actionsWithTo, ...data.actionsWithPipe]
+                        : data.actionsWithFrom;
+                    return (
+                      <>
+                        <PageTitle title={'Choose an action'} />
+                        <IntegrationEditorLayout
+                          title={'Choose an action'}
+                          description={
+                            'Choose an action for the selected connection.'
+                          }
+                          toolbar={this.props.getBreadcrumb(
+                            'Choose an action',
+                            params,
+                            state
+                          )}
+                          sidebar={this.props.sidebar({
+                            activeIndex: positionAsNumber,
+                            activeStep: {
+                              ...toUIStep(state.connection),
+                            },
+                            steps,
+                          })}
+                          content={
+                            <IntegrationEditorChooseAction>
+                              {actions
+                                .sort((a, b) => a.name.localeCompare(b.name))
+                                .map((a, idx) => (
+                                  <IntegrationEditorActionsListItem
+                                    key={idx}
+                                    integrationName={a.name}
+                                    integrationDescription={
+                                      a.description ||
+                                      'No description available.'
+                                    }
+                                    actions={
+                                      <ButtonLink
+                                        data-testid={
+                                          'select-action-page-select-button'
+                                        }
+                                        href={this.props.selectHref(
+                                          a.id!,
+                                          params,
+                                          state
+                                        )}
+                                      >
+                                        Select
+                                      </ButtonLink>
+                                    }
+                                  />
+                                ))}
+                            </IntegrationEditorChooseAction>
+                          }
+                          cancelHref={this.props.cancelHref(params, state)}
+                        />
+                      </>
+                    );
+                  }}
                 </WithLoader>
               )}
             </WithConnection>
