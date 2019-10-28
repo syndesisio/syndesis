@@ -5,6 +5,9 @@
       "description": "Mongo DB producer",
       "descriptor": {
         "componentScheme": "mongodb3",
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+        ],
         "inputDataShape": {
           "kind": "json-schema"
         },

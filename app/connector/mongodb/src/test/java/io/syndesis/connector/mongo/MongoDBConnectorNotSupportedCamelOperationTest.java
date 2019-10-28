@@ -27,16 +27,12 @@ import java.util.List;
 
 public class MongoDBConnectorNotSupportedCamelOperationTest extends MongoDBConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
     @Before
     public void setUp() {
-        assertThatExceptionOfType(FailedToCreateRouteException.class).isThrownBy(() -> super.setUp())
-            .withMessageContaining("Failed to resolve endpoint")
-            .withMessageContaining("Operation not supported");
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> super.setUp())
+            .withCause(new IllegalArgumentException("Operation somethingNotSupported is not supported. " +
+                "Supported operations are [findById, findAll, insert, save, update, remove, count]"));
     }
 
     @Override
