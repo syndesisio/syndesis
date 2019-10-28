@@ -18,7 +18,9 @@ package io.syndesis.connector.mongo;
 import io.syndesis.common.model.integration.Step;
 
 import org.apache.camel.CamelExecutionException;
+import org.apache.camel.FailedToCreateRouteException;
 import org.apache.camel.component.mongodb3.CamelMongoDbException;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -26,6 +28,14 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import java.util.List;
 
 public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBConnectorTestSupport {
+
+    @Override
+    @Before
+    public void setUp() {
+        assertThatExceptionOfType(RuntimeException.class).isThrownBy(() -> super.setUp())
+            .withCause(new IllegalArgumentException("Operation aggregate is not supported. " +
+                "Supported operations are [findById, findAll, insert, save, update, remove, count]"));
+    }
 
     @Override
     protected List<Step> createSteps() {
@@ -39,9 +49,7 @@ public class MongoDBConnectorNotSupportedSyndesisOperationTest extends MongoDBCo
 
     @Test
     public void mongoTest() {
-        assertThatExceptionOfType(CamelExecutionException.class).isThrownBy(() -> template().sendBody("direct:start","Anything...."))
-            .withMessageContaining("Exception occurred during execution on the exchange")
-            .withCause(new CamelMongoDbException("Invalid payload for aggregate"));
+        assertTrue(true);
     }
 
 }
