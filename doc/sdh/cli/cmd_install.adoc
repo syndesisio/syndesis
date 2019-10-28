@@ -67,14 +67,14 @@ This step has to be performed by the admin.
 Also, if you want to allow an OpenShift user to install Syndesis on her own, then you have to grant specific permissions to her.
 
 To perform this setup step, which needs to be performed only once per cluster, you have to run `syndesis` **while being connected as a cluster admin**.
-For `crc` or `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled.
+For `minishift` use `oc login -u system:admin` if you have the `admin-user` addon enabled, for crc follow the login instructions you got when starting up crc.
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
 syndesis install --setup
 ----
 
-This will install only the CRD. In addition to grant a user _developer_ the proper permission to create a `Syndesis` resource, you should add `--grant <user>`:
+This will install only the CRD. In addition, you can grant a user _user_ the proper permission to create a `Syndesis` resource, you should add `--grant <user>`:
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
@@ -88,7 +88,7 @@ This cluster-wide access is especially required when you plan to use the `--proj
 
 === Installing Syndesis
 
-After the CRDs a registered, you can easily install Syndesis directly with
+After the CRD is registered, you can easily install Syndesis directly with
 
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
@@ -115,17 +115,6 @@ oc login -u developer
 # Install Syndesis
 syndesis install
 ----
-
-A route name can be given with `--route`.
-This step can be omitted as the operator can autodetect the route.
-If you provide the route manually, you need to check your OpenShift installation.
-Typically the route name is the name of your OpenShift project followed by the cluster's hostname.
-E.g. a route `--route proj186023.6a63.fuse-ignite.openshiftapps.com` is specific to the Fuse Ignite test cluster `6a63.fuse-ignite.openshiftapps.com` and for the project `proj186023`.
-However, you don't have to provide the route name.
-
-If you want to have a link to the OpenShift console to read the Pod logs, you have to add the `--console` option with the full URL to the console.
-Unfortunately, this cannot be auto detected.
-If not given, no link appears.
 
 By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with `--project <project>`.
 If this project already exists, it gets deleted unconditionally before the deployment, so be careful when using this option.
@@ -156,35 +145,10 @@ By default, the currently checked out checked out branch is used.
 .Example
 [source,bash,indent=0,subs="verbatim,quotes"]
 ----
-syndesis install --route syndesis.192.168.64.12.nip.io --tag 1.4
+syndesis install --tag 1.4
 ----
 
 This example installs the latest Syndesis version of the 1.4 branch to the local cluster.
 
 You can see a list of available tags with `git tag`.
 Tags prefixed with `fuse-ignite` are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.
-
-=== Quick installation
-
-WARNING: The following scripts are not yet updated and probably don't work as expected. Please stay tuned.
-
-If you only want to install Syndesis without developing for, there is even an easier without checking out Syndesis into a local Git repository.
-
-You can directly use the standalone installation script https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis[syndesis-install] for installing Syndesis.
-Just download this https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis[script], save it as "syndesis-install" and then call it with
-
-[source,bash,indent=0,subs="verbatim,quotes"]
-----
-bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com --open
-----
-
-Or, if you feel fancy (and trust us), then you can directly install the latest version of Syndesis by deleting and recreating the current project with a single line:
-
-[source,bash,indent=0,subs="verbatim,quotes"]
-----
-bash <(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com -o
-----
-
-All you need is to have `bash`, `curl` and `oc` installed and you need to be connected to an OpenShift cluster.
-
-Use `install-syndesis --help` for a list of options (which is a subset of `syndesis install` described above)
