@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-13205-g1a68ffa327,</span>
-<span id="revdate">2019-10-25</span>
+<span id="revnumber">version 1.1.3-13208-g18159d7940,</span>
+<span id="revdate">2019-10-28</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -596,7 +596,6 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_installing_syndesis_3">2.9.3. Installing Syndesis</a></li>
 <li><a href="#_development_mode">2.9.4. Development mode</a></li>
 <li><a href="#_selecting_the_version">2.9.5. Selecting the version</a></li>
-<li><a href="#_quick_installation">2.9.6. Quick installation</a></li>
 </ul>
 </li>
 </ul>
@@ -2366,7 +2365,7 @@ This step has to be performed by the admin.</p>
 </div>
 <div class="paragraph">
 <p>To perform this setup step, which needs to be performed only once per cluster, you have to run <code>syndesis</code> <strong>while being connected as a cluster admin</strong>.
-For <code>crc</code> or <code>minishift</code> use <code>oc login -u system:admin</code> if you have the <code>admin-user</code> addon enabled.</p>
+For <code>minishift</code> use <code>oc login -u system:admin</code> if you have the <code>admin-user</code> addon enabled, for crc follow the login instructions you got when starting up crc.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2374,7 +2373,7 @@ For <code>crc</code> or <code>minishift</code> use <code>oc login -u system:admi
 </div>
 </div>
 <div class="paragraph">
-<p>This will install only the CRD. In addition to grant a user <em>developer</em> the proper permission to create a <code>Syndesis</code> resource, you should add <code>--grant &lt;user&gt;</code>:</p>
+<p>This will install only the CRD. In addition, you can grant a user <em>user</em> the proper permission to create a <code>Syndesis</code> resource, you should add <code>--grant &lt;user&gt;</code>:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2391,7 +2390,7 @@ This cluster-wide access is especially required when you plan to use the <code>-
 <div class="sect3">
 <h4 id="_installing_syndesis_3">2.9.3. Installing Syndesis</h4>
 <div class="paragraph">
-<p>After the CRDs a registered, you can easily install Syndesis directly with</p>
+<p>After the CRD is registered, you can easily install Syndesis directly with</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2419,19 +2418,6 @@ oc login -u developer
 # Install Syndesis
 syndesis install</code></pre>
 </div>
-</div>
-<div class="paragraph">
-<p>A route name can be given with <code>--route</code>.
-This step can be omitted as the operator can autodetect the route.
-If you provide the route manually, you need to check your OpenShift installation.
-Typically the route name is the name of your OpenShift project followed by the cluster&#8217;s hostname.
-E.g. a route <code>--route proj186023.6a63.fuse-ignite.openshiftapps.com</code> is specific to the Fuse Ignite test cluster <code>6a63.fuse-ignite.openshiftapps.com</code> and for the project <code>proj186023</code>.
-However, you don&#8217;t have to provide the route name.</p>
-</div>
-<div class="paragraph">
-<p>If you want to have a link to the OpenShift console to read the Pod logs, you have to add the <code>--console</code> option with the full URL to the console.
-Unfortunately, this cannot be auto detected.
-If not given, no link appears.</p>
 </div>
 <div class="paragraph">
 <p>By default, this commands installs Syndesis in the currently connected project, but you can specify an alternative project with <code>--project &lt;project&gt;</code>.
@@ -2480,7 +2466,7 @@ By default, the currently checked out checked out branch is used.</p>
 <div class="listingblock">
 <div class="title">Example</div>
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">syndesis install --route syndesis.192.168.64.12.nip.io --tag 1.4</code></pre>
+<pre class="CodeRay highlight"><code data-lang="bash">syndesis install --tag 1.4</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -2489,47 +2475,6 @@ By default, the currently checked out checked out branch is used.</p>
 <div class="paragraph">
 <p>You can see a list of available tags with <code>git tag</code>.
 Tags prefixed with <code>fuse-ignite</code> are suited for the Fuse Online cluster as those templates do not contain images streams themselves but refer to the image streams installed on this cluster.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_quick_installation">2.9.6. Quick installation</h4>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-The following scripts are not yet updated and probably don&#8217;t work as expected. Please stay tuned.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>If you only want to install Syndesis without developing for, there is even an easier without checking out Syndesis into a local Git repository.</p>
-</div>
-<div class="paragraph">
-<p>You can directly use the standalone installation script <a href="https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis">syndesis-install</a> for installing Syndesis.
-Just download this <a href="https://raw.githubusercontent.com/syndesisio/syndesis/master/tools/bin/install-syndesis">script</a>, save it as "syndesis-install" and then call it with</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">bash install-syndesis --route $(oc project -q).6a63.fuse-ignite.openshiftapps.com --open</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>Or, if you feel fancy (and trust us), then you can directly install the latest version of Syndesis by deleting and recreating the current project with a single line:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="bash">bash &lt;(curl -sL https://bit.ly/syndesis-install) -p $(oc project -q) -r $(oc project -q).6a63.fuse-ignite.openshiftapps.com -o</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>All you need is to have <code>bash</code>, <code>curl</code> and <code>oc</code> installed and you need to be connected to an OpenShift cluster.</p>
-</div>
-<div class="paragraph">
-<p>Use <code>install-syndesis --help</code> for a list of options (which is a subset of <code>syndesis install</code> described above)</p>
 </div>
 </div>
 </div>
@@ -3653,8 +3598,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-13205-g1a68ffa327<br>
-Last updated 2019-10-25 19:13:35 UTC
+Version 1.1.3-13208-g18159d7940<br>
+Last updated 2019-10-28 08:17:29 UTC
 </div>
 </div>
 </body>
