@@ -1,0 +1,54 @@
+// This module is included in the following assemblies:
+// as_connecting-to-email-servers.adoc
+
+[id='sending-email-from-an-integration_{context}']
+= Sending email from an integration
+
+In the middle of a flow, or to finish a simple integration, 
+you can add an email server connection that sends messages. 
+
+.Prerequisites
+* You created an SMTP email server connection that is configured to access 
+the account that you want to send messages from. 
+* {prodname} is prompting you to add to the integration, or to choose the finish 
+connection for a simple integration. 
+
+.Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
+. Click the email server connection that you want to use to send messages. 
+. Select the *Send Email* action.
+. In the *Email from* field, enter the email address that sends the 
+messages. This is required even if you plan to add 
+a data mapper step that maps an email address
+from a previous integration step to this connection.
+
+. Recommended: Specify a value in each of the following fields. Separate 
+multiple email addresses with a comma. 
+
+.. *Email to*
+.. *Email subject* 
+.. *Email text*
+.. *Email cc*
+.. *Email bcc* 
+
+. In the *Parameter Priority* field, accept *Input Values* or select 
+*Consumed Data*. This determines which of the following has precedence: 
++
+* Input values in this action configuration
+* Data values that you map to this connection
+
++
+The recommendation is to select *Consumed Data*. This means that the 
+values that you specify in the email fields here serve as default values.
+
+. Click *Next* to add the connection to the flow. 
+
+.Result
+The connection appears in the integration flow where you added it. 
+
+.Next steps
+Add all other needed to connections to the flow. Then add a data mapper 
+step before the connection that sends email. 
+In the data mapper step, map source fields to the target fields for sending emails. 
