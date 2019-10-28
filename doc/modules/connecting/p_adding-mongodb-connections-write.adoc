@@ -31,11 +31,24 @@ you want the connection to operate on.
 click in the field to display the available actions. Click the action 
 that you want the connection to perform. 
 See the table below for a description of each operation. 
++
+Each operation returns a response. If this is a finish connection, then 
+the response is lost. Consequently, if this is a finish connection, 
+the recommendation is to add a *Log* step to finish the integration instead. 
+Configure the *Log* step to capture the response.
+
 . Click *Next*. 
 
 .Result
 The connection appears in the integration visualization where
 you added it. 
+
+.Next step
+Add all connections to the flow. Add any other steps that process data. 
+In this Technology Preview release, it is not possible to map source fields to 
+MongoDB connection fields. Consequently, you must ensure that the data 
+coming into the connection provides the required input for the selected 
+operation. It is expected that a future release will support data mapping.
 
 .Operation descriptions
 
