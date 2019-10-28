@@ -100,7 +100,7 @@ export const useVirtualizationHelpers = () => {
    * Requests a `.zip` file of the virtualization be exported to the filesystem.
    * @param name the name of the virtualization
    * @param fileName the name of the output file (must end with `.zip` or won't be used)
-   * @throws an error if there was a problem exporting the file
+   * @throws an `Error` if there was a problem exporting the file
    */
   const exportVirtualization = async (name: string, fileName?: string) => {
     let zipName = fileName;
@@ -121,6 +121,41 @@ export const useVirtualizationHelpers = () => {
 
     // return zip file
     return saveAs(await response.blob(), zipName);
+  };
+
+  /**
+   * Uploads and imports the supplied file as a new virtualization. If an error does occur, the
+   * `Error.name` contains the stringified response status code.
+   * @param file the zip file being processed
+   * @throws an `Error` if there was a problem uploading or importing the file.
+   */
+  const importVirtualization = async (file: File) => {
+    const data = new FormData();
+    data.append('file', file, file.name);
+
+    const {
+      Accept,
+      ['Content-Type']: contentType,
+      ...rest
+    } = apiContext.headers;
+
+    const response = await callFetch({
+      body: data,
+      headers: { ...rest },
+      includeAccept: false,
+      includeContentType: false,
+      includeReferrerPolicy: false,
+      method: 'POST',
+      url: `${apiContext.dvApiUri}virtualizations`,
+    });
+
+    if (!response.ok) {
+      const error = new Error(response.statusText);
+      error.name = response.status.toString();
+      return Promise.reject(error);
+    }
+
+    return Promise.resolve();
   };
 
   /**
@@ -431,6 +466,7 @@ export const useVirtualizationHelpers = () => {
     getView,
     getViewDefinition,
     importSource,
+    importVirtualization,
     publishVirtualization,
     queryVirtualization,
     saveViewDefinition,

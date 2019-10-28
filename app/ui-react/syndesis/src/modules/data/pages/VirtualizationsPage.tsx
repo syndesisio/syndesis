@@ -88,11 +88,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
   const { resource: data, hasData, error } = useVirtualizations();
   const { exportVirtualization } = useVirtualizationHelpers();
 
-  // TODO: implement handleImportVirt
-  // const handleImportVirt = (virtualizationName: string) => {
-  //   alert('Import virtualization ' + virtualizationName);
-  // }
-
   const doExport = (virtualizationName: string) => {
     exportVirtualization(virtualizationName).catch((e: any) => {
       // notify user of error
@@ -181,11 +176,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     )}
                     i18nEmptyStateInfo={t('emptyStateInfoMessage')}
                     i18nEmptyStateTitle={t('emptyStateTitle')}
-                    /* TD-636: Commented out for TP
-                      i18nImport={t('shared:Import')}
-                      i18nImportTip={t(
-                        'virtualization.importVirtualizationTip'
-                      )} */
+                    i18nImport={t('shared:Import')}
+                    i18nImportTip={t('importVirtualizationTip')}
                     i18nLinkCreateVirtualization={t('createDataVirtualization')}
                     i18nName={t('shared:Name')}
                     i18nNameFilterPlaceholder={t(
@@ -195,8 +187,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                       count: filteredAndSorted.length,
                     })}
                     linkCreateHRef={resolvers.virtualizations.create()}
-                    /* TD-636: Commented out for TP
-                      onImport={this.handleImportVirt} */
+                    linkImportHRef={resolvers.virtualizations.import()}
                     hasListData={data.length > 0}
                   >
                     {filteredAndSorted.map(
