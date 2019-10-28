@@ -151,9 +151,9 @@ release::run() {
         publish_artifacts "${topdir}/install/operator/releases" "$release_version"
 
         # Create release description based on commit between releases
-        if check_for_command gren; then
-            gren release --data-source=commits --tags=$release_version --override
-        fi
+        # if check_for_command gren; then
+        #    gren release --data-source=commits --tags=$release_version --override
+        # fi
     fi
 }
 
@@ -282,27 +282,13 @@ prepare_binaries() {
     done
 }
 
-get_gh_release_name() {
-    local tag=$1
-    local current_branch=$(git rev-parse --abbrev-ref HEAD)
-    local name=${tag}
-
-    if [[ "${current_branch}" == "master" ]]; then
-        name="${tag}-${current_branch}"
-    fi
-
-    echo ${name}
-}
-
 publish_artifacts() {
     local release_dir=$1
     local tag=$2
 
-    local release_name=$(get_gh_release_name ${tag})
-
     check_github_access_token
     check_github_username
-    check_gren_access_token
+    # check_gren_access_token
 
     local data="{\
         \"tag_name\": \"${tag}\", \
