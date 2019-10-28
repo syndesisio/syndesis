@@ -65,28 +65,7 @@ These are the fields available. Only fields of type string or bool can be edited
 
 |Property path|Type|Description|
 |------------ |----|-----------|
-spec.addons.camelk.camelVersion | string | 
-spec.addons.camelk.camelkRuntime | string | 
-spec.addons.camelk.enabled | boolean | 
-spec.addons.camelk.image | string | 
-spec.addons.dv.enabled | boolean | 
-spec.addons.jaeger.enabled | boolean | 
-spec.addons.jaeger.samplerParam | string | 
-spec.addons.jaeger.samplerType | string | 
-spec.addons.knative.enabled | boolean | 
-spec.addons.ops.enabled | boolean | 
-spec.addons.todo.enabled | boolean | 
-spec.components.database.externalDbURL | string | 
-spec.components.database.name | string | 
-spec.components.database.resources.volumeCapacity | string | 
-spec.components.database.user | string | 
-spec.components.meta.resources.volumeCapacity | string | 
-spec.components.oauth.sarNamespace | string | 
-spec.components.prometheus.resources.volumeCapacity | string | 
-spec.components.prometheus.rules | string | 
-spec.components.server.features.integrationStateCheckInterval | integer | 
-spec.components.server.features.managementUrlFor3scale | string | 
-spec.components.upgrade.resources.volumeCapacity | string | 
-spec.demoData | boolean | Enable SampleDB and demo data for Syndesis
-spec.imageStreamNamespace | string | 
+{{- range $key, $value := .}}
+{{ $key}} | {{ $value.DataType }} | {{ $value.Description }}
+{{- end }}
 

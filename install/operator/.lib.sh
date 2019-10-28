@@ -77,23 +77,23 @@ build_operator()
         export GO111MODULE=on
 
         if [[ ( "$source_gen" == "on" ) || ( "$source_gen" == "verify-none" ) ]]; then
-        	echo "generating sources"
-	        go mod vendor
+          echo "generating sources"
+          go mod vendor
 
-	        local hassdk=$(operatorsdk_is_available)
-	        if [ "$hassdk" == "OK" ]; then
-	            operator-sdk generate k8s
-	            operator-sdk generate openapi
-	        else
-	            # display warning message and move on
-	            printf "$hassdk\n\n"
-	        fi
-	        go generate ./pkg/...
-    	    go mod tidy
+          local hassdk=$(operatorsdk_is_available)
+          if [ "$hassdk" == "OK" ]; then
+              operator-sdk generate k8s
+              operator-sdk generate openapi
+          else
+              # display warning message and move on
+              printf "$hassdk\n\n"
+          fi
+          go generate ./pkg/...
+          go mod tidy
 
             if [ "$source_gen" == "verify-none" ]; then
-        	    echo "verifying no sources have been generated"
-        	    for file in pkg/apis/syndesis/v1alpha1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
+              echo "verifying no sources have been generated"
+              for file in pkg/apis/syndesis/v1alpha1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
                     if [ "$(git diff $file)" != "" ] ; then
                         echo ===========================================
                         echo   Looks like some generated source code
@@ -106,7 +106,7 @@ build_operator()
                 done
             fi
         else
-        	echo "skipping source generation"
+          echo "skipping source generation"
         fi
 
         echo building executable
