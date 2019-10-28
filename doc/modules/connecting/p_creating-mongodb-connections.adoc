@@ -31,13 +31,12 @@ a host name, a virtual host name, or an IP address. For example:
 access the database. 
 .. In the *Password* field, enter the password for the user name 
 that you specified. 
-.. In the *Administration database* field, enter the name of a MongoDB
+.. Optional. In the *Administration database* field, 
+if the database has an administration database, 
+enter the name of the MongoDB
 administration database that is used to grant access permission. 
 A MongoDB administrator should let you know whether the database 
 that you want to access has an administration database. 
-+
-If the database that you want to access does not use an administration 
-database, enter the name of the database that you want to access. 
 
 .. Optional. In the *Replica set name* field, 
 specify the name of the MongoDB replica set (cluster) that the 
