@@ -14,6 +14,7 @@ spec:
     status: {}
   validation:
     openAPIV3Schema:
+      description: Syndesis is the Schema for the syndeses API
       properties:
         apiVersion:
           description: 'APIVersion defines the versioned schema of this representation
@@ -28,6 +29,7 @@ spec:
         metadata:
           type: object
         spec:
+          description: SyndesisSpec defines the desired state of Syndesis
           properties:
             addons:
               description: Optional add on features that can be enabled.
@@ -109,6 +111,9 @@ spec:
                 oauth:
                   properties:
                     sarNamespace:
+		              description: SarNamespace is the namespace to perform Subject Access
+		                Review authorization checks against.  Defaults to match the namespace
+		                of the the Syndesis resource.
                       type: string
                   type: object
                 prometheus:
@@ -143,9 +148,13 @@ spec:
                   type: object
               type: object
             imageStreamNamespace:
+              description: Set ImageStreamNamespace to the namespace where the operator
+                should store image streams in.  Defaults to match the namespace of
+                the the Syndesis resource.
               type: string
           type: object
         status:
+          description: SyndesisStatus defines the observed state of Syndesis
           properties:
             description:
               type: string
