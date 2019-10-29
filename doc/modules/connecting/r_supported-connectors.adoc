@@ -35,7 +35,6 @@ publish messages to an AMQP broker.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-box_connectors[Box]
 |Download files from Box or upload files to Box.
 
-
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
 |Download files from Dropbox or upload files to Dropbox.
 
@@ -73,9 +72,10 @@ send messages to an IRC nickname on a particular channel.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-jira_connectors[Jira]
 |Obtain, create, or update issues on a Jira server. 
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-kafka_connectors[Kafka]
-|Obtain streams of records from
-or publish streams of records to a Kafka topic that you specify.
+
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-knative-resources_connectors[Knative resources]
+|Obtain messages from a Knative channel, send messages to a Knative channel,
+expose a simple integration as a Knative service, or call a Knative service. 
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-kudu_connectors[Kudu]
 |Obtain records from a table in an Apache Kudu data store
