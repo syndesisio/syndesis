@@ -22,7 +22,7 @@ export const ConnectionSchemaList: React.FunctionComponent<
   IConnectionSchemaListProps
 > = props => {
   return (
-    <PageSection noPadding={true}>
+    <PageSection noPadding={true} className={'connection-schema-list'}>
       {props.hasListData ? (
         <>
           <ButtonLink

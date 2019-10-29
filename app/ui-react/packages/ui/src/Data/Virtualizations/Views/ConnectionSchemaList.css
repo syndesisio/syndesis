@@ -4,3 +4,7 @@
 .connection-schema-list-empty-create-connection-button {
   margin-top: 10px;
 }
+.connection-schema-list {
+    max-height: 45em;
+    overflow-y: auto;
+  }
