@@ -1,0 +1,137 @@
+// This module is not included in any assemblies.
+// Downstream, this module is included in 
+// installing-and-operating-fuse-online-on-ocp/master.adoc
+// Upstream, this module is in doc/customizing/master.adoc
+// The fetch-upstream.sh script does not sync the upstream and downstream 
+// versions of this module. If you change this module in one location, 
+// you must also change it in the other location. 
+// Downstream, this content applies only when you are running Fuse Online on OCP.
+// But an upstream user can also use this content if running Syndesis on OCP. 
+
+[id='rebranding-the-user-interface_{context}']
+= Rebranding the {prodname} user interface
+
+You can rebrand {prodname} by replacing the {prodname} application name, logo, 
+icons, and other user interface details. You do this by mounting customized 
+resources as `ConfigMap` objects in the `syndesis-ui` deployment file. 
+
+.Prerequisites
+
+* {prodname} is installed and running on OpenShift Container Platform on-site 
+in a customer-managed environment. 
+
+* The `oc` client tool is connected to the OCP cluster in which {prodname} 
+is installed.
+
+* You have permission to install {prodname}. 
+
+.Procedure
+
+. Obtain the name of the `syndesis-ui` pod in which {prodname} is 
+installed by invoking the following command: 
++
+----
+oc get pods
+----
+
+. Fetch customizable logos, icons, fonts, and backgrounds by invoking the 
+following command and replacing _SYNDESIS_UI_POD_NAME_ with the actual name 
+of the pod that is running `syndesis-ui`:
++
+----
+oc rsync SYNDESIS_UI_POD_NAME:/opt/app-root/src/static/media ~/
+----
++
+This puts user interface resources in the the `~/media/` folder. 
+
+. Edit and save the file that contains the header logo, which is 
+``~/media/syndesis_logo_full_darkbkg.9c467d96.svg`.
+
+. Upload the modified file to the cluster by creating a `ConfigMap` object 
+that contains the updated logo file: 
++
+----
+cd ~/
+oc create configmap syndesis-ui-custom --from-file=media/syndesis_logo_full_darkbkg.9c467d96.svg
+----
+
+. Modify the `syndesis-ui` deployment file to mount the `syndesis-ui-custom` 
+`ConfigMap` object. Do this by invoking `oc edit dc/syndesis-ui` 
+or by using the OpenShift web console, selecting 
+*Applications* > *Deployments* > *syndesis-ui* > *Actions* > *Edit YAML*.
+
+
+.. Under `spec.template.containers.volumeMounts`, add the following: 
++
+----
+name: syndesis-ui-custom-volume
+mountPath: /opt/app-root/src/static/media/syndesis_logo_full_darkbkg.9c467d96.svg
+subPath: syndesis_logo_full_darkbkg.9c467d96.svg
+----
+
+.. Under `spec.template.volumes`, add the following: 
++
+----
+name: syndesis-ui-custom-volume
+configMap: name: syndesis-ui-custom
+----
+
+.. Save the `syndesis-ui` deployment file. 
+
+. Repeat steps 3 through 5 for each file that is in the ``~/media` folder 
+and that you want to customize. 
+
+. Edit and save the file that contains the application title: 
+
+.. Create a directory in which to update the file: 
++
+----
+mkdir ~/syndesis-custom/src
+----
+
+.. Fetch the application title file by invoking the following command and 
+replacing _SYNDESIS_UI_POD_NAME_ with the actual name of the pod that is 
+running `syndesis-ui`:
++
+----
+oc rsync SYNDESIS_UI_POD_NAME:/opt/app-root/src/index.html ~/syndesis-custom/src
+----
+
+.. Replace the application title. For example: 
++
+----
+sed -i 's/\([title]\).*\([\/title]\)/[title]REPLACE_WITH_NEW_TITLE[\/title]/g' ~/syndesis-custom/src/index.html
+----
+
+. Upload the modified application title file to the cluster by creating a 
+`ConfigMap` object that contains the updated file: 
++
+----
+cd ~/syndesis-custom/src
+oc create configmap syndesis-ui-custom --from-file=index.html
+----
+
+. Modify the `syndesis-ui` deployment by mounting the `syndesis-ui-custom` 
+`ConfigMap` object:
+
+.. Under `spec.template.containers.volumeMounts`, add the following: 
++
+----
+name: syndesis-ui-custom-volume
+mountPath: /opt/app-root/src/index.html
+subPath: index.html
+----
+
+.. Under `spec.template.volumes`, add the following: 
++
+----
+name: syndesis-ui-custom-volume
+configMap: name: syndesis-ui-custom
+----
+
+.. Save the `syndesis-ui` deployment file. 
+
+.Results
+Saving the `syndesis-ui` deployment file automatically redeploys {prodname} 
+with a user interface that reflects your changes. Subsequent re-deployments
+of {prodname} also reflect your changes.

@@ -61,6 +61,7 @@ See the following topics for details:
 * xref:adding-api-connectors_{context}[]
 * xref:developing-extensions_{context}[]
 * xref:adding-extensions_{context}[]
+* xref:rebranding-the-user-interface_{context}[]
 
 include::assemblies/customizing/as_developing-rest-api-client-connectors.adoc[leveloffset=+1]
 
@@ -69,5 +70,7 @@ include::assemblies/integrating-applications/as_adding-api-connectors.adoc[level
 include::assemblies/customizing/as_developing-extensions.adoc[leveloffset=+1]
 
 include::assemblies/integrating-applications/as_adding-extensions.adoc[leveloffset=+1]
+
+include::modules/customizing/p_rebranding-the-user-interface.adoc[leveloffset=+1]
 
 :context: custom
