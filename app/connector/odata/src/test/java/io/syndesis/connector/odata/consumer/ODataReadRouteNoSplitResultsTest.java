@@ -480,7 +480,6 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
      *
      * @throws Exception
      */
-    @SuppressWarnings( "unchecked" )
     @Test
     public void testReferenceODataRouteAlreadySeenWithKeyPredicate() throws Exception {
         String resourcePath = "Airports";
