@@ -25,7 +25,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
+
 import org.junit.runners.Parameterized.Parameters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -59,8 +59,7 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class CredentialsIntegrationTest {
 
-    @Parameter(0)
-    public static String PROVIDER;
+    public String provider;
 
     @ClassRule
     public static final SpringClassRule SPRING_CLASS_RULE = new SpringClassRule();
@@ -107,9 +106,13 @@ public class CredentialsIntegrationTest {
         }
     }
 
+    public CredentialsIntegrationTest(final String provider) {
+        this.provider = provider;
+    }
+
     @Test
     public void shouldSupportResourceProviders() {
-        assertThat(credentialProviderLocator.providerWithId(PROVIDER)).isNotNull();
+        assertThat(credentialProviderLocator.providerWithId(provider)).isNotNull();
     }
 
     @Parameters(name = "provider={0}")

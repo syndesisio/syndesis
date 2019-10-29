@@ -15,11 +15,6 @@
  */
 package io.syndesis.server.api.generator.util;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
-
-import org.junit.Ignore;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,23 +22,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class IconGeneratorTest {
 
     private static final String PREFIX = "data:image/svg+xml,%3Csvg";
-
-    @Test
-    @Ignore("Generates test.html for visual inspection")
-    @SuppressWarnings("PMD.JUnitTestsShouldIncludeAssert")
-    public void generateTestHtml() throws IOException {
-        try (PrintStream out = new PrintStream(new FileOutputStream("test.html"))) {
-            out.println("<html><body>");
-
-            for (int letter = 'A'; letter <= 'Z'; letter++) {
-                final String letterString = String.valueOf((char) letter);
-                final String icon = IconGenerator.generate("swagger-connector-template", letterString);
-
-                out.println("<br/>");
-                out.println("<img src=\"" + icon + "\" /> (" + icon.length() + ")");
-            }
-        }
-    }
 
     @Test
     public void shouldGenerateIcon() {
