@@ -64,7 +64,7 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     private final UserConfigurationProperties properties;
 
     public static class TargetStateRequest {
-        private IntegrationDeploymentState targetState;
+        private final IntegrationDeploymentState targetState;
 
         @JsonCreator
         public TargetStateRequest(@JsonProperty("targetState") IntegrationDeploymentState targetState) {
