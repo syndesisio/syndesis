@@ -92,14 +92,6 @@ public interface IntegrationResourceManager {
      */
     String decrypt(String encrypted);
 
-    /**
-     * Collect dependencies.
-     */
-    default Collection<Dependency> collectDependencies(Integration integration) {
-        return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
-    }
-
-
     @SuppressFBWarnings("NP_NONNULL_PARAM_VIOLATION")
     @SuppressWarnings("PMD.ExcessiveMethodLength")
     default Integration sanitize(Integration integration) {
@@ -223,9 +215,10 @@ public interface IntegrationResourceManager {
         return name == null ? null : Names.sanitize(name);
     }
 
-    /**
-     * Collect dependencies.
-     */
+    default Collection<Dependency> collectDependencies(Integration integration) {
+        return collectDependencies(integration.getFlows().stream().flatMap(flow -> flow.getSteps().stream()).collect(Collectors.toList()), true);
+    }
+
     default Collection<Dependency> collectDependencies(Collection<? extends Step> steps, boolean resolveExtensionTags) {
         final List<Dependency> dependencies = new ArrayList<>();
 
