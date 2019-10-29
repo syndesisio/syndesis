@@ -90,7 +90,7 @@ func CreateCR(name string, namespace string) *v1alpha1.Syndesis {
 				},
 			},
 			Addons: v1alpha1.AddonsSpec{
-				"komodo": {
+				"dv": {
 					"installed": "true",
 				},
 			},

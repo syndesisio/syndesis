@@ -146,8 +146,8 @@
           "disableMappingPreviewMode": false
         },
         "datavirt": {
-          "dvUrl": "/vdb-builder/v1/",
-{{- if eq (addonsValue .Syndesis.Spec.Addons "komodo" "enabled") "true" }}
+          "dvUrl": "/dv/v1/",
+{{- if eq (addonsValue .Syndesis.Spec.Addons "dv" "enabled") "true" }}
           "enabled": 1
         {{- else }}
           "enabled": 0

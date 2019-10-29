@@ -85,7 +85,7 @@ type ComponentsSpec struct {
 	PostgresExporter PostgresExporterConfiguration `json:"psql,omitempty"`
 	Prometheus       PrometheusConfiguration       `json:"prometheus,omitempty"`
 	Grafana          GrafanaConfiguration          `json:"grafana,omitempty"`
-	Komodo           KomodoConfiguration           `json:"komodo,omitempty"`
+	Dv           DvConfiguration           `json:"dv,omitempty"`
 	Upgrade          UpgradeConfiguration          `json:"upgrade,omitempty"`
 }
 
@@ -100,7 +100,7 @@ type PostgresExporterConfiguration struct {
 	Image string `json:"image,omitempty"`
 }
 
-type KomodoConfiguration struct {
+type DvConfiguration struct {
 	Resources Resources `json:"resources,omitempty"`
 	Image     string    `json:"image,omitempty"`
 }
