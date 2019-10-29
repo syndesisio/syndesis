@@ -133,6 +133,8 @@
     <micrometer.version>1.2.0</micrometer.version>
     <teiid.version>12.2.1</teiid.version>
     <aws-java-sdk-core.version>1.11.269</aws-java-sdk-core.version>
+
+    <javac.werror>-Werror</javac.werror>
   </properties>
 
   <modules>
@@ -559,12 +561,27 @@
                 <arg>-Xlint:-deprecation</arg>
                 <arg>-Xlint:-processing</arg>
                 <arg>-Xlint:-serial</arg>
-                <arg>-Werror</arg>
+                <arg>${javac.werror}</arg>
                 <arg>-XepDisableWarningsInGeneratedCode</arg>
                 <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
+                <arg>-Xep:ConstantField:WARN</arg>
+                <arg>-Xep:ExpectedExceptionRefactoring:WARN</arg>
+                <arg>-Xep:FieldCanBeFinal:WARN</arg>
+                <arg>-Xep:LambdaFunctionalInterface:WARN</arg>
+                <arg>-Xep:MethodCanBeStatic:WARN</arg>
+                <arg>-XepOpt:MethodCanBeStatic:FindingPerSite</arg>
+                <arg>-Xep:PackageLocation:WARN</arg>
+                <arg>-Xep:PrivateConstructorForUtilityClass:WARN</arg>
+                <arg>-Xep:RemoveUnusedImports:WARN</arg>
+                <arg>-Xep:SwitchDefault:WARN</arg>
+                <arg>-Xep:TestExceptionRefactoring:WARN</arg>
+                <arg>-Xep:ThrowsUncheckedException:WARN</arg>
+                <arg>-Xep:TryFailRefactoring:WARN</arg>
+                <arg>-Xep:UnnecessaryStaticImport:WARN</arg>
+                <arg>-Xep:WildcardImport:WARN</arg>
                 <arg>-implicit:none</arg>
-                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
-                <arg>-Xep:ParameterName:OFF</arg>
+                <arg>${errorprone.autofix.arg1}</arg>
+                <arg>${errorprone.autofix.arg2}</arg>
               </compilerArgs>
             </configuration>
             <dependencies>
@@ -588,28 +605,14 @@
 
     <profile>
       <id>autofix</id>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerId>javac-with-errorprone</compilerId>
-              <forceJavacCompilerUse>true</forceJavacCompilerUse>
-              <compilerArgs>
-                <!-- partialy duplicated from above, no way to combine.self not helping here -->
-                <arg>-XepDisableWarningsInGeneratedCode</arg>
-                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
-                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
-                <arg>-Xep:ParameterName:OFF</arg>
-                <!-- configuration to patch in fixes -->
-                <arg>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod</arg>
-                <arg>-XepPatchLocation:IN_PLACE</arg>
-              </compilerArgs>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <properties>
+        <!-- -Werror is given to javac it never reaches the GENERATE task, and fails in COMPILATION, and refactorings are applied in GENERATE task, so they would be skipped -->
+        <javac.werror></javac.werror>
+        <errorprone.autofix.arg1>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod,FieldCanBeFinal,MethodCanBeStatic,ClassCanBeStatic,RemoveUnusedImports,ThrowsUncheckedException</errorprone.autofix.arg1>
+        <errorprone.autofix.arg2>-XepPatchLocation:IN_PLACE</errorprone.autofix.arg2>
+      </properties>
     </profile>
+
   </profiles>
 
   <build>
