@@ -17,9 +17,6 @@ package io.syndesis.connector.mongo;
 
 import io.syndesis.common.model.integration.Step;
 
-import org.apache.camel.CamelExecutionException;
-import org.apache.camel.FailedToCreateRouteException;
-import org.apache.camel.component.mongodb3.CamelMongoDbException;
 import org.junit.Before;
 import org.junit.Test;
 

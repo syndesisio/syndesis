@@ -28,6 +28,7 @@ import org.springframework.social.salesforce.connect.SalesforceConnectionFactory
 
 @Configuration
 @ConditionalOnClass(SalesforceConnectionFactory.class)
+@SuppressWarnings("PrivateConstructorForUtilityClass") // Spring auto configuration
 public class SalesforceConfiguration {
 
     protected static final class SalesforceApplicator extends OAuth2Applicator {

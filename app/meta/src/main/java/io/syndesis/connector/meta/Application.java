@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.meta;
 
-
 import javax.servlet.Filter;
 
 import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
@@ -34,11 +33,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
-/**
- * @author roland
- * @since 20/03/2017
- */
-@SuppressWarnings("PMD.UseUtilityClass")
+@SuppressWarnings("PrivateConstructorForUtilityClass")
 @SpringBootApplication
 public class Application {
     private static final Logger LOGGER = LoggerFactory.getLogger(Application.class);

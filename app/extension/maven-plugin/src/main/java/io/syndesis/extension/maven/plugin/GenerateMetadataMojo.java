@@ -134,7 +134,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
     @SuppressWarnings("PMD.ImmutableField")
-    private InspectionMode inspectionMode = InspectionMode.RESOURCE_AND_SPECIFICATION;
+    private InspectionMode inspectionMode;
 
     /**
      * Partial Extension JSON descriptor to augment

@@ -18,24 +18,24 @@ package io.syndesis.connector.support.util;
 import java.net.Socket;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509ExtendedTrustManager;
 
 /**
- * TrustManager that trusts all certificates.
- * Use only for AMQ connections to SSL Brokers, when no Broker certificate provided.
- * @author dhirajsb
+ * TrustManager that trusts all certificates. Use only for AMQ connections to
+ * SSL Brokers, when no Broker certificate provided.
  */
-public class TrustAllTrustManager extends X509ExtendedTrustManager {
+class TrustAllTrustManager extends X509ExtendedTrustManager {
     private static final X509Certificate[] NONE = new X509Certificate[0];
 
     @Override
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
         // no-op
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+    public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
         // no-op
     }
 
@@ -45,17 +45,17 @@ public class TrustAllTrustManager extends X509ExtendedTrustManager {
     }
 
     @Override
-    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
-        // no-op
-    }
-
-    @Override
-    public void checkClientTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
-        // no-op
-    }
-
-    @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s) throws CertificateException {
+        // no-op
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+        // no-op
+    }
+
+    @Override
+    public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
         // no-op
     }
 

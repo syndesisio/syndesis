@@ -50,9 +50,10 @@ public class IntegrationRuntimeAutoConfiguration {
     private IntegrationRuntimeConfiguration configuration;
 
     @Autowired(required = false)
+    @SuppressWarnings("FieldCanBeFinal")
     private List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories = Collections.emptyList();
 
-    @SuppressWarnings("PMD.ImmutableField")
+    @SuppressWarnings({"PMD.ImmutableField", "FieldCanBeFinal"})
     @Autowired(required = false)
     private List<IntegrationStepHandler> integrationStepHandlers = Collections.emptyList();
 
