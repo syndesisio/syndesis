@@ -97,6 +97,68 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
+   * Requests a `.zip` file of the virtualization be exported to the filesystem.
+   * @param name the name of the virtualization
+   * @param fileName the name of the output file (must end with `.zip` or won't be used)
+   * @throws an `Error` if there was a problem exporting the file
+   */
+  const exportVirtualization = async (name: string, fileName?: string) => {
+    let zipName = fileName;
+
+    if (!zipName || !zipName.endsWith('.zip')) {
+      zipName = `${name}-export.zip`;
+    }
+
+    const response = await callFetch({
+      headers: apiContext.headers,
+      method: 'GET',
+      url: `${apiContext.dvApiUri}virtualizations/${name}/export`,
+    });
+
+    if (!response.ok) {
+      return Promise.reject(new Error(response.statusText));
+    }
+
+    // return zip file
+    return saveAs(await response.blob(), zipName);
+  };
+
+  /**
+   * Uploads and imports the supplied file as a new virtualization. If an error does occur, the
+   * `Error.name` contains the stringified response status code.
+   * @param file the zip file being processed
+   * @throws an `Error` if there was a problem uploading or importing the file.
+   */
+  const importVirtualization = async (file: File) => {
+    const data = new FormData();
+    data.append('file', file, file.name);
+
+    const {
+      Accept,
+      ['Content-Type']: contentType,
+      ...rest
+    } = apiContext.headers;
+
+    const response = await callFetch({
+      body: data,
+      headers: { ...rest },
+      includeAccept: false,
+      includeContentType: false,
+      includeReferrerPolicy: false,
+      method: 'POST',
+      url: `${apiContext.dvApiUri}virtualizations`,
+    });
+
+    if (!response.ok) {
+      const error = new Error(response.statusText);
+      error.name = response.status.toString();
+      return Promise.reject(error);
+    }
+
+    return Promise.resolve();
+  };
+
+  /**
    * Publish the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being published
    * @returns the `TeiidStatus` model object
@@ -399,10 +461,12 @@ export const useVirtualizationHelpers = () => {
     createVirtualization,
     deleteViewDefinition,
     deleteVirtualization,
+    exportVirtualization,
     getSourceInfoForView,
     getView,
     getViewDefinition,
     importSource,
+    importVirtualization,
     publishVirtualization,
     queryVirtualization,
     saveViewDefinition,

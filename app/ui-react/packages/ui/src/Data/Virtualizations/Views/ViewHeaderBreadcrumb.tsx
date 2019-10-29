@@ -30,15 +30,13 @@ export interface IViewHeaderBreadcrumbProps {
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
-  /* TD-636: Commented out for TP
-  i18nExport: string; */
+  i18nExport: string;
   i18nPublish: string;
   i18nUnpublish: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
   onDelete: (virtualizationName: string) => void;
-  /* TD-636: Commented out for TP
-  onExport: (virtualizationName: string) => void; */
+  onExport: (virtualizationName: string) => void;
   onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
   virtualizationName: string;
@@ -61,6 +59,10 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
 
     // TODO: disable components while delete is processing
     props.onDelete(props.virtualizationName);
+  }
+
+  const doExport = () => {
+    props.onExport(props.virtualizationName);
   }
 
   const doPublish = () => {
@@ -128,6 +130,14 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
       <Breadcrumb
         actions={
           <>
+            <ButtonLink
+              className="btn"
+              data-testid={'virtualization-detail-breadcrumb-export-button'}
+              onClick={doExport}
+            >
+              {props.i18nExport}
+            </ButtonLink>
+            &nbsp;&nbsp;
             <ButtonLink
               data-testid={'virtualization-detail-breadcrumb-publish-button'}
               className="btn btn-primary"

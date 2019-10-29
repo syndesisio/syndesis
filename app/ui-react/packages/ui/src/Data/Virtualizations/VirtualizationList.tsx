@@ -15,16 +15,14 @@ export interface IVirtualizationListProps extends IListViewToolbarProps {
   i18nCreateDataVirtualizationTip?: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
-  /* TD-636: Commented out for TP
   i18nImport: string;
-  i18nImportTip: string; */
+  i18nImportTip: string;
   i18nLinkCreateVirtualization: string;
   i18nLinkCreateVirtualizationTip?: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   linkCreateHRef: H.LocationDescriptor;
-  /* TD-636: Commented out for TP
-  onImport: (name: string) => void; */
+  linkImportHRef: H.LocationDescriptor;
 }
 
 export const VirtualizationList: React.FunctionComponent<
@@ -41,40 +39,27 @@ export const VirtualizationList: React.FunctionComponent<
     );
   };
 
-  /* TD-636: Commented out for TP 
-    const getImportVirtualizationTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="importTip">
-        {props.i18nImportTip
-          ? props.i18nImportTip
-          : props.i18nImport}
-      </Tooltip>
-    ); 
-  };
-
-  public handleImport() {
-    props.onImport('');
-  } */
-
   return (
     <>
       <PageSection noPadding={true} variant={'light'}>
         <ListViewToolbar {...props}>
           <div className="form-group">
-            {/* TD-636: Commented out for TP 
-              <OverlayTrigger
-                overlay={getImportVirtualizationTooltip()}
-                placement="top"
+            <OverlayTrigger
+              overlay={
+                <Tooltip id="importTip">
+                  {props.i18nImportTip}
+                </Tooltip>
+              }
+              placement="top"
+            >
+              <ButtonLink
+                data-testid={'virtualization-list-import-button'}
+                href={props.linkImportHRef}
+                as={'default'}
               >
-               <Button
-                  data-testid={'virtualization-list-import-button'}
-                  bsStyle="default"
-                  to={props.i18nImport}
-                  onClick={handleImport}
-                >
-                  {props.i18nImport}
-                </Button> 
-              </OverlayTrigger> */}
+                {props.i18nImport}
+              </ButtonLink> 
+            </OverlayTrigger>
             <OverlayTrigger
               overlay={getCreateVirtualizationTooltip()}
               placement="top"

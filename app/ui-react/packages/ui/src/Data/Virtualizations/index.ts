@@ -6,6 +6,7 @@ export * from './SqlClientContentSkeleton';
 export * from './SqlClientForm';
 export * from './VirtualizationCreateForm';
 export * from './VirtualizationDetailsHeader';
+export * from './VirtualizationImporter';
 export * from './VirtualizationList';
 export * from './VirtualizationListItem';
 export * from './VirtualizationListSkeleton';

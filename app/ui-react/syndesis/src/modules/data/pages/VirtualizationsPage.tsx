@@ -1,4 +1,4 @@
-import { useVirtualizations } from '@syndesis/api';
+import { useVirtualizationHelpers, useVirtualizations } from '@syndesis/api';
 import { Virtualization } from '@syndesis/models';
 import {
   IActiveFilter,
@@ -13,7 +13,7 @@ import {
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext } from '../../../app';
+import { AppContext, UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../resolvers';
@@ -78,6 +78,7 @@ export function getVirtualizationsHref(baseUrl: string): string {
 
 export const VirtualizationsPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
+  const { pushNotification } = React.useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
   const {
     handleDeleteVirtualization,
@@ -85,17 +86,20 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     handleUnpublishVirtualization,
   } = VirtualizationHandlers();
   const { resource: data, hasData, error } = useVirtualizations();
+  const { exportVirtualization } = useVirtualizationHelpers();
 
-  // TODO: implement handleImportVirt
-  // const handleImportVirt = (virtualizationName: string) => {
-  //   alert('Import virtualization ' + virtualizationName);
-  // }
-
-  /* TD-636: Commented out for TP
-  public handleExportVirtualization() {
-    // TODO: implement handleExportVirtualization
-    alert('Export virtualization ');
-  } */
+  const doExport = (virtualizationName: string) => {
+    exportVirtualization(virtualizationName).catch((e: any) => {
+      // notify user of error
+      pushNotification(
+        t('exportVirtualizationFailed', {
+          details: e.errorMessage || e.message || e,
+          name: virtualizationName,
+        }),
+        'error'
+      );
+    });
+  };
 
   /**
    *
@@ -172,11 +176,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                     )}
                     i18nEmptyStateInfo={t('emptyStateInfoMessage')}
                     i18nEmptyStateTitle={t('emptyStateTitle')}
-                    /* TD-636: Commented out for TP
-                      i18nImport={t('shared:Import')}
-                      i18nImportTip={t(
-                        'virtualization.importVirtualizationTip'
-                      )} */
+                    i18nImport={t('shared:Import')}
+                    i18nImportTip={t('importVirtualizationTip')}
                     i18nLinkCreateVirtualization={t('createDataVirtualization')}
                     i18nName={t('shared:Name')}
                     i18nNameFilterPlaceholder={t(
@@ -186,8 +187,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                       count: filteredAndSorted.length,
                     })}
                     linkCreateHRef={resolvers.virtualizations.create()}
-                    /* TD-636: Commented out for TP
-                      onImport={this.handleImportVirt} */
+                    linkImportHRef={resolvers.virtualizations.import()}
                     hasListData={data.length > 0}
                   >
                     {filteredAndSorted.map(
@@ -218,8 +218,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
                             i18nError={t('shared:Error')}
-                            /* TD-636: Commented out for TP
-                                i18nExport={t('shared:Export')} */
+                            i18nExport={t('shared:Export')}
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
                             )}
@@ -234,11 +233,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             )}
                             i18nUnpublishModalTitle={t('unpublishModalTitle')}
                             onDelete={handleDeleteVirtualization}
-                            /* TD-636: Commented out for TP
-                                onExport={
-                                  this
-                                    .handleExportVirtualization
-                                } */
+                            onExport={doExport}
                             onUnpublish={handleUnpublishVirtualization}
                             onPublish={handlePublishVirtualization}
                             currentPublishedState={publishingDetails.state}

@@ -120,6 +120,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const [usedBy, setUsedBy] = React.useState(state.virtualization.usedBy);
   const {
     deleteViewDefinition,
+    exportVirtualization,
     updateVirtualizationDescription,
   } = useVirtualizationHelpers();
   const {
@@ -166,6 +167,19 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       history.push(resolvers.data.virtualizations.list());
     }
   };
+
+  const doExport = () => {
+    exportVirtualization(virtualization.name).catch((e: any) => {
+      // notify user of error
+      pushNotification(
+        t('exportVirtualizationFailed', {
+          details: e.errorMessage || e.message || e,
+          name: virtualization.name,
+        }),
+        'error'
+      );
+    });
+  }
 
   const doPublish = async (pVirtualizationId: string, hasViews: boolean) => {
     await handlePublishVirtualization(pVirtualizationId, hasViews);
@@ -250,9 +264,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                   name: state.virtualization.name,
                 })}
                 i18nDeleteModalTitle={t('deleteModalTitle')}
-                /* TD-636: Commented out for TP
-                   i18nExport={t('shared:Export')}
-                */
+                i18nExport={t('shared:Export')}
                 i18nPublish={t('shared:Publish')}
                 i18nUnpublish={t('shared:Unpublish')}
                 i18nUnpublishModalMessage={t('unpublishModalMessage', {
@@ -260,10 +272,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                 })}
                 i18nUnpublishModalTitle={t('unpublishModalTitle')}
                 onDelete={doDelete}
-                /* TD-636: Commented out for TP
-                    onExport={
-                    this.handleExportVirtualization
-              } */
+                onExport={doExport}
                 onUnpublish={doUnpublish}
                 onPublish={doPublish}
                 hasViews={viewDefinitionDescriptors.length > 0}

@@ -42,8 +42,7 @@ export interface IVirtualizationListItemProps {
   i18nError: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  /* TD-636: Commented out for TP
-  i18nExport: string; */
+  i18nExport: string;
   i18nInUseText: string;
   i18nPublish: string;
   i18nPublished: string;
@@ -56,8 +55,7 @@ export interface IVirtualizationListItemProps {
   icon?: string;
   odataUrl?: string;
   onDelete: (virtualizationName: string) => void;
-  /* TD-636: Commented out for TP
-  onExport: (virtualizationName: string) => void; */
+  onExport: (virtualizationName: string) => void;
   onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
   publishingCurrentStep?: number;
@@ -96,6 +94,10 @@ export const VirtualizationListItem: React.FunctionComponent<
       props.onDelete(props.virtualizationName);
     }
   };
+
+  const doExport = () => {
+    props.onExport(props.virtualizationName);
+  }
 
   const doPublish = () => {
     if (props.virtualizationName && props.hasViews) {
@@ -217,6 +219,14 @@ export const VirtualizationListItem: React.FunctionComponent<
                 {isPublished || publishInProgress
                   ? props.i18nUnpublish
                   : props.i18nPublish}
+              </MenuItem>
+              <MenuItem
+                data-testid={`virtualization-list-item-${
+                  props.virtualizationName
+                }-export`}
+                onClick={doExport}
+              >
+                {props.i18nExport}
               </MenuItem>
             </DropdownKebab>
           </div>
