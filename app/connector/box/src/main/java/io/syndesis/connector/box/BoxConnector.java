@@ -17,12 +17,13 @@ package io.syndesis.connector.box;
 
 import java.util.Map;
 import java.util.stream.Stream;
-import org.apache.camel.Component;
-import org.apache.camel.component.box.BoxComponent;
-import org.apache.camel.component.box.BoxConfiguration;
+
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import org.apache.camel.Component;
+import org.apache.camel.component.box.BoxComponent;
+import org.apache.camel.component.box.BoxConfiguration;
 
 public class BoxConnector extends ComponentProxyComponent {
 
@@ -57,6 +58,14 @@ public class BoxConnector extends ComponentProxyComponent {
         Stream.of("parentFolderId", "fileId").forEach(key -> {
                 ConnectorOptions.extractOptionAndConsume(options, key, (String value) -> endpointOptions.put(key, value));
         });
+        // add "check" parameter, to emulate the overwrite operation. Box api doesn't overwrite files, if the
+        // filename already exists on box folder, a uploadNewVersion should be called, the "check" parameter
+        // allows this emulation on camel-box component.
+        boolean uploadCall = "files".equals(endpointOptions.get("apiName")) &&
+            ("upload".equals(endpointOptions.get("methodName")) || "uploadFile".equals(endpointOptions.get("methodName")));
+        if (uploadCall) {
+            endpointOptions.put("check", "true");
+        }
         return endpointOptions;
     }
 
