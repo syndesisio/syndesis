@@ -23,21 +23,16 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
-    // **************************
-    // Set up
-    // **************************
+public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "update");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoUpdateSingleTest() {
@@ -49,12 +44,13 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // Given
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"_id\":11},{$set: {\"test\":\"updated!\"}}]";
-        Document result = Document.parse(template.requestBody("direct:start", updateArguments, String.class));
+        Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
-        assertEquals(1, docsFound.size());
-        assertEquals("updated!", docsFound.get(0).getString("test"));
-        assertEquals(Integer.valueOf(1), result.getInteger("count"));
+        assertThat(docsFound, hasSize(1));
+        assertThat(docsFound.get(0).getString("test"), equalTo("updated!"));
+        assertThat(docsFound.get(0).getString("test"), equalTo("updated!"));
+        assertThat(result, equalTo(1L));
     }
 
     @Test
@@ -67,13 +63,13 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // Given
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
-        // Need the header to enable multiple updates!
-        Document result = Document.parse(template.requestBodyAndHeader("direct:start", updateArguments, "CamelMongoDbMultiUpdate", "true", String.class));
+        Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
+        assertThat(docsFound, hasSize(2));
         assertEquals(2, docsFound.size());
-        docsFound.forEach(document -> assertEquals("updated!", document.getString("test")));
-        assertEquals(Integer.valueOf(2), result.getInteger("count"));
+        docsFound.forEach(document -> assertThat(document.getString("test"), equalTo("updated!")));
+        assertThat(result, equalTo(2L));
     }
 
 }

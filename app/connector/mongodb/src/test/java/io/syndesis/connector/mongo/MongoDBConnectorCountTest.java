@@ -21,21 +21,14 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
+import static org.hamcrest.CoreMatchers.equalTo;
 
-    // **************************
-    // Set up
-    // **************************
+public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "count");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-count", DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoCountSingleTest() {
@@ -46,9 +39,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json2));
         // Given
         String countArguments = "{\"test\":\"single\"}";
-        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
+        Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertEquals(Integer.valueOf(1), result.getInteger("count"));
+        assertThat(result, equalTo(1L));
     }
 
     @Test
@@ -62,9 +55,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json3));
         // Given
         String countArguments = "{\"batchNo\":33}";
-        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
+        Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertEquals(Integer.valueOf(2), result.getInteger("count"));
+        assertThat(result, equalTo(2L));
     }
 
 }

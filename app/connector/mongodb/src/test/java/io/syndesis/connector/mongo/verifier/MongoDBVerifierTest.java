@@ -28,23 +28,14 @@ import java.util.Map;
 
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
-    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-producer";
+    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
     private final static String SCHEME = "mongodb3";
     private final static MongoDBVerifier VERIFIER = new MongoDBVerifier();
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "findAll");
+        return fromDirectToMongo("start", CONNECTOR_ID, DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void verifyConnectionOK() {

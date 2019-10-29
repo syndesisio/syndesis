@@ -2,11 +2,15 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Mongo DB producer",
+      "description": "Find documents",
       "descriptor": {
         "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "findAll"
+        },
         "connectorCustomizers": [
-          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerFindCustomizer"
         ],
         "inputDataShape": {
           "kind": "json-schema"
@@ -16,8 +20,8 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Producer configuration",
-            "name": "Database",
+            "description": "Find operation configuration",
+            "name": "Configuration",
             "properties": {
               "collection": {
                 "deprecated": false,
@@ -25,50 +29,8 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "Collection name",
+                "labelHint": "Collection used by this operation",
                 "order": "1",
-                "required": true,
-                "secret": false,
-                "type": "string"
-              },
-              "operation": {
-                "deprecated": false,
-                "displayName": "Operation to perform",
-                "enum": [
-                  {
-                    "label": "Find by id",
-                    "value": "findById"
-                  },
-                  {
-                    "label": "Find all",
-                    "value": "findAll"
-                  },
-                  {
-                    "label": "Insert",
-                    "value": "insert"
-                  },
-                  {
-                    "label": "Save",
-                    "value": "save"
-                  },
-                  {
-                    "label": "Update",
-                    "value": "update"
-                  },
-                  {
-                    "label": "Remove",
-                    "value": "remove"
-                  },
-                  {
-                    "label": "Count",
-                    "value": "count"
-                  }
-                ],
-                "group": "common",
-                "javaType": "java.lang.String",
-                "kind": "property",
-                "labelHint": "Operation name",
-                "order": "2",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -77,15 +39,243 @@
           }
         ]
       },
-      "id": "io.syndesis.connector:connector-mongodb-producer",
-      "name": "Mongo producer",
+      "id": "io.syndesis.connector:connector-mongodb-find",
+      "name": "Find",
       "pattern": "To"
     },
     {
       "actionType": "connector",
-      "description": "Mongo DB consumer",
+      "description": "Insert documents",
       "descriptor": {
         "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "insert"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerInsertCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Save operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-insert",
+      "name": "Insert",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update or insert documents",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "save"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Upsert result",
+          "description": "How many documents were updated",
+          "kind": "java",
+          "type": "com.mongodb.client.result.UpdateResult"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Upsert operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-upsert",
+      "name": "Upsert",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update documents",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "update"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerUpdateCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents updated",
+          "description": "How many documents were updated",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Update operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-update",
+      "name": "Update",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete a document",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "remove"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerDeleteCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents deleted",
+          "description": "How many documents were deleted",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Delete operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-delete",
+      "name": "Delete",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Count the number of documents",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "operation": "count"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents matching",
+          "description": "How many documents are matching the filter expression",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Count operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-count",
+      "name": "Count",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Document tailing",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoConsumerCustomizer"
+        ],
         "inputDataShape": {
           "kind": "none"
         },
@@ -94,8 +284,8 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Consumer configuration",
-            "name": "Database",
+            "description": "Tailing consumer configuration",
+            "name": "Configuration",
             "properties": {
               "collection": {
                 "deprecated": false,
@@ -103,7 +293,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "Collection name",
+                "labelHint": "Collection to read documents from",
                 "order": "1",
                 "placeholder": "collection",
                 "required": true,
@@ -116,7 +306,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "tailTrackIncreasingField",
+                "labelHint": "Property used to track new documents, usually an incremental id or timestamp",
                 "order": "2",
                 "placeholder": "_id",
                 "required": true,
@@ -129,7 +319,7 @@
                 "group": "common",
                 "javaType": "boolean",
                 "kind": "path",
-                "labelHint": "persistentTailTracking",
+                "labelHint": "Tick to enable persistent tracking",
                 "order": "3",
                 "placeholder": "false",
                 "required": false,
@@ -138,11 +328,11 @@
               },
               "persistentId": {
                 "deprecated": false,
-                "displayName": "Field used to store the tracking progress",
+                "displayName": "Unique id to identify this tracking process",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "persistentId",
+                "labelHint": "Specify a different id if you have more than one tracking process in your integrations",
                 "order": "4",
                 "placeholder": "idTracker",
                 "required": false,
@@ -155,7 +345,7 @@
                 "group": "advanced",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "tailTrackDb",
+                "labelHint": "Database used to store the offset of this tailing process",
                 "order": "5",
                 "placeholder": "tailTrackDb",
                 "required": false,
@@ -168,7 +358,7 @@
                 "group": "advanced",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "tailTrackCollection",
+                "labelHint": "Collection used to store the offset of this tailing process",
                 "order": "6",
                 "placeholder": "tailTrackCollection",
                 "required": false,
@@ -181,7 +371,7 @@
                 "group": "advanced",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "tailTrackField",
+                "labelHint": "Property used to store the offset of this tailing process",
                 "order": "7",
                 "placeholder": "tailTrackField",
                 "required": false,
@@ -193,7 +383,7 @@
         ]
       },
       "id": "io.syndesis.connector:connector-mongodb-consumer",
-      "name": "Mongo consumer",
+      "name": "Retrieve documents",
       "pattern": "From"
     }
   ],

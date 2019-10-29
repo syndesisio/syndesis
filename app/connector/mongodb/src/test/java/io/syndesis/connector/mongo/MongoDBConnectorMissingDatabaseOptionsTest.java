@@ -30,15 +30,15 @@ public class MongoDBConnectorMissingDatabaseOptionsTest extends MongoDBConnector
     @Override
     @Before
     public void setUp() {
-        assertThatExceptionOfType(FailedToCreateRouteException.class).isThrownBy(() -> super.setUp())
+        assertThatExceptionOfType(FailedToCreateRouteException.class).isThrownBy(super::setUp)
             .withMessageContaining("Failed to create Producer")
             .withMessageContaining("databaseName is not empty");
     }
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", "",
-            COLLECTION, "count");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-find", "",
+            COLLECTION);
     }
 
     @Test

@@ -25,39 +25,36 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "insert");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-insert", DATABASE, COLLECTION);
     }
 
-    // **************************
-    // Tests
-    // **************************
-
     @Test
-    public void mongoInsertTest() {
+    public void mongoInsertSingleTest() {
         // When
         String uniqueId = UUID.randomUUID().toString();
         String message = String.format("{\"test\":\"unit\",\"uniqueId\":\"%s\"}", uniqueId);
         Document doc = Document.parse(message);
         // Given
-        Document result = Document.parse(template.requestBody("direct:start", message, String.class));
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsString = template.requestBody("direct:start", message, List.class);
         // Then
-        assertEquals(doc.getString("test"), result.getString("test"));
-        assertEquals(doc.getString("uniqueId"), result.getString("uniqueId"));
+        assertThat(resultsAsString, hasSize(1));
+        Document result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList()).get(0);
+        assertThat(doc.getString("test"), equalTo(result.getString("test")));
+        assertThat(doc.getString("uniqueId"), equalTo(result.getString("uniqueId")));
 
         List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<Document>());
-        assertEquals(1, docsFound.size());
-        assertEquals(result, docsFound.get(0));
+        assertThat(docsFound, hasSize(1));
+        assertThat(docsFound, contains(result));
     }
 
     @Test
@@ -69,10 +66,10 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         // Given
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", batchMessage, List.class);
-        List<Document> result = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
+        List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
-        assertEquals(iteration, docsFound.size());
+        assertThat(docsFound, hasSize(iteration));
         assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
 
@@ -97,10 +94,10 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         // Given
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", jsonStrings, List.class);
-        List<Document> result = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
+        List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
-        assertEquals(iteration, docsFound.size());
+        assertThat(docsFound, hasSize(iteration));
         assertThat(result, containsInAnyOrder(docsFound.toArray()));
     }
 }

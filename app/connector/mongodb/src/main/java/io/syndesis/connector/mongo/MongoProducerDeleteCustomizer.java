@@ -15,25 +15,16 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-public class MongoProducerCustomizer extends MongoAbstractCustomizer {
+public class MongoProducerDeleteCustomizer extends MongoAbstractCustomizer {
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        String operation = ConnectorOptions.extractOption(options, "operation");
-        if (operation != null) {
-            if (!MongoProducerOperation.isValid(operation)) {
-                throw new IllegalArgumentException(String.format("Operation %s is not supported. " +
-                    "Supported operations are %s", operation, Arrays.toString(MongoProducerOperation.values())));
-            }
-        } else {
-            throw new IllegalArgumentException(String.format("You must provide a text `operation` option. " +
-                "Supported operations are %s", Arrays.toString(MongoProducerOperation.values())));
-        }
+        component.setAfterProducer(this::convertMongoResultToLong);
     }
+
 }
 

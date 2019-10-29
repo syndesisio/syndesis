@@ -37,10 +37,6 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
     private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerAllOptionsTest.class);
 
-    // **************************
-    // Set up
-    // **************************
-
     // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
@@ -56,8 +52,8 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
      * The test will be interrupted and we do expect to have the valid tracked stored before completion
      */
     @AfterClass
-    public static void testTrackingIdValue() throws InterruptedException {
-        List<Document> docsFound = database.getCollection("tracking").find().into(new ArrayList<Document>());
+    public static void testTrackingIdValue() {
+        List<Document> docsFound = database.getCollection("tracking").find().into(new ArrayList<>());
         System.out.println("Docs found" + docsFound);
         assertEquals(25, (int) docsFound.get(0).getInteger("someTrackingId"));
     }
@@ -86,7 +82,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 Assertions.assertThat(jsonNode).isNotNull();
             } catch (IOException ex) {
-                log.error("Test failed because: ",ex);
+                log.error("Test failed because: ", ex);
                 return false;
             }
             return true;

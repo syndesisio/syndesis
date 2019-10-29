@@ -94,32 +94,45 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     private static void createAuthorizationUser() {
         MongoDatabase admin = mongoClient.getDatabase("admin");
         MongoCollection<Document> usersCollection = admin.getCollection("system.users");
-        usersCollection.insertOne(Document.parse("" + "{\n" + "    \"_id\": \"admin.test-user\",\n" +
-            // " \"userId\": Binary(\"rT2IgiexSzisOOsmjGXZEQ==\", 4),\n" +
-            "    \"user\": \"test-user\",\n" + "    \"db\": \"admin\",\n" + "    \"credentials\": {\n"
-            + "        \"SCRAM-SHA-1\": {\n" + "            \"iterationCount\": 10000,\n"
+        usersCollection.insertOne(Document.parse("" + "{\n"
+            + "    \"_id\": \"admin.test-user\",\n"
+            // + " \"userId\": Binary(\"rT2IgiexSzisOOsmjGXZEQ==\", 4),\n"
+            + "    \"user\": \"test-user\",\n"
+            + "    \"db\": \"admin\",\n"
+            + "    \"credentials\": {\n"
+            + "        \"SCRAM-SHA-1\": {\n"
+            + "            \"iterationCount\": 10000,\n"
             + "            \"salt\": \"gmmPAoNdvFSWCV6PGnNcAw==\",\n"
             + "            \"storedKey\": \"qE9u1Ax7Y40hisNHL2b8/LAvG7s=\",\n"
-            + "            \"serverKey\": \"RefeJcxClt9JbOP/VnrQ7YeQh6w=\"\n" + "        }\n" + "    },\n"
-            + "    \"roles\": [\n" + "        {\n" + "            \"role\": \"readWrite\",\n"
-            + "            \"db\": \"test\"\n" + "        }\n" + "    ]\n" + "}" + ""));
+            + "            \"serverKey\": \"RefeJcxClt9JbOP/VnrQ7YeQh6w=\"\n"
+            + "        }\n"
+            + "    },\n"
+            + "    \"roles\": [\n"
+            + "        {\n"
+            + "            \"role\": \"readWrite\",\n"
+            + "            \"db\": \"test\"\n"
+            + "        }\n"
+            + "    ]\n"
+            + "}"
+            + ""));
     }
 
-    // **************************
-    // Helpers
-    // **************************
+    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection) {
+        return fromDirectToMongo(directStart, connector, db, collection, null);
+    }
 
-    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection,
-                                           String operation) {
+    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection, String operation) {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
             newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-                builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
+                builder.putConfiguredProperty("host", String.format("%s:%s", HOST, PORT));
                 builder.putConfiguredProperty("user", USER);
                 builder.putConfiguredProperty("password", PASSWORD);
                 builder.putConfiguredProperty("database", db);
                 builder.putConfiguredProperty("collection", collection);
-                builder.putConfiguredProperty("operation", operation);
+                if (operation != null) {
+                    builder.putConfiguredProperty("operation", operation);
+                }
             }));
     }
 
@@ -132,7 +145,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                                          String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
                                          String tailTrackDb, String tailTrackCollection, String tailTrackField) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-            builder.putConfiguredProperty("host", String.format("%s:%s",HOST,PORT));
+            builder.putConfiguredProperty("host", String.format("%s:%s", HOST, PORT));
             builder.putConfiguredProperty("user", USER);
             builder.putConfiguredProperty("password", PASSWORD);
             builder.putConfiguredProperty("database", db);

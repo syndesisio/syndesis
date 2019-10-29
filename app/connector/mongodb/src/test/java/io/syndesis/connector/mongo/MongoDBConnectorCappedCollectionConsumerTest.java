@@ -71,7 +71,7 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
                 String value = jsonNode.get("someKey").asText();
                 return id <= globalId && "someValue".equals(value);
             } catch (IOException ex) {
-                log.error("Test failed because: ",ex);
+                log.error("Test failed because: ", ex);
                 return false;
             }
         });
