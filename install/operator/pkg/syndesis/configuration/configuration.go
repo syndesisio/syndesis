@@ -43,7 +43,7 @@ const (
 	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
 	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
 	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
-	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
+	EnvDvMemoryLimit              SyndesisEnvVar = "DV_MEMORY_LIMIT"
 	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
@@ -52,7 +52,7 @@ const (
 	EnvSyndesisMetaTag     SyndesisEnvVar = "SYNDESIS_META_TAG"
 	EnvPostgresTag         SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
 	EnvPostgresExporterTag SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
-	EnvKomodoTag           SyndesisEnvVar = "KOMODO_TAG"
+	EnvDvTag           SyndesisEnvVar = "DV_TAG"
 	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
 	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
 
@@ -105,7 +105,7 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvMaxIntegrationsPerUser:         ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
 	EnvIntegrationStateCheckInterval:  ConfigSpec{Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
 	EnvSarNamespace:                   ConfigSpec{Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
-	EnvKomodoMemoryLimit:              ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
+	EnvDvMemoryLimit:              ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
 	EnvDatavirtEnabled:                ConfigSpec{Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
 
 	EnvSyndesisServerTag:   ConfigSpec{},
@@ -114,7 +114,7 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvSyndesisMetaTag:     ConfigSpec{},
 	EnvPostgresTag:         ConfigSpec{},
 	EnvPostgresExporterTag: ConfigSpec{},
-	EnvKomodoTag:           ConfigSpec{},
+	EnvDvTag:           ConfigSpec{},
 	EnvPrometheusTag:       ConfigSpec{},
 	EnvOauthProxyTag:       ConfigSpec{},
 
@@ -154,7 +154,7 @@ var (
 		maxIntegrationsPerUserFromEnv,
 		integrationStateCheckInterval,
 
-		komodoMemoryLimitFromEnv,
+		dvMemoryLimitFromEnv,
 		sarNamespaceFromEnv,
 
 		upgradeVolumeCapacityFromEnv,
@@ -193,9 +193,9 @@ func sarNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) 
 	}
 }
 
-// Komodo
-func komodoMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Komodo.Resources, config, EnvKomodoMemoryLimit)
+// Dv
+func dvMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	resourceMemoryListFromEnv(&syndesis.Spec.Components.Dv.Resources, config, EnvDvMemoryLimit)
 }
 
 func demoDataEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {

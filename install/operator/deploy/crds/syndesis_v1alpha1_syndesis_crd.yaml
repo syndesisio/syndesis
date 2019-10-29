@@ -92,7 +92,7 @@ spec:
                           type: object
                       type: object
                   type: object
-                komodo:
+                dv:
                   properties:
                     image:
                       type: string

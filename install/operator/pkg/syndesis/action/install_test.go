@@ -48,7 +48,7 @@ func TestTagsDefautValues(t *testing.T) {
 		{"Server", syndesis.Spec.Components.Server.Image, gen.SpecDefaults.Components.Server.Image},
 		{"Meta", syndesis.Spec.Components.Meta.Image, syndesis.Spec.Components.Meta.Image},
 		{"UI", syndesis.Spec.Components.UI.Image, syndesis.Spec.Components.UI.Image},
-		{"Komodo", syndesis.Spec.Components.Komodo.Image, syndesis.Spec.Components.Komodo.Image},
+		{"Dv", syndesis.Spec.Components.Dv.Image, syndesis.Spec.Components.Dv.Image},
 		{"Oauth", syndesis.Spec.Components.Oauth.Image, syndesis.Spec.Components.Oauth.Image},
 		{"Prometheus", syndesis.Spec.Components.Prometheus.Image, syndesis.Spec.Components.Prometheus.Image},
 		{"PostgresExporter", syndesis.Spec.Components.PostgresExporter.Image, syndesis.Spec.Components.PostgresExporter.Image},
