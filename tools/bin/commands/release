@@ -56,6 +56,7 @@ get_release_version() {
 
 release::run() {
     source "$(basedir)/commands/util/maven_funcs"
+    source "$(basedir)/commands/util/operator_funcs"
 
     # Main application directory
     local topdir=$(appdir ".")
@@ -96,9 +97,6 @@ release::run() {
     # Set pom.xml version to the given release_version
     update_pom_versions "$topdir" "$release_version" "$maven_opts"
 
-    # Updates install/operator/deploy/syndesis-operator.yml
-    generate_versioned_files "$topdir" "$release_version"
-
     # Build and stage artefacts to Sonatype
     build_and_stage_artefacts "$topdir" "$maven_opts"
 
@@ -108,10 +106,6 @@ release::run() {
 
     # Create the image for the upgrade
     create_upgrade_docker_image "$topdir" "$release_version"
-
-    # Create the operator image
-    update_image_versions "$topdir" "$release_version" "$moving_tag"
-    "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
@@ -144,6 +138,26 @@ release::run() {
 
     # Release staging repo
     release_staging_repo "$topdir" "$maven_opts"
+
+    # Create the operator image binaries
+    update_image_versions "$topdir" "$release_version" "$moving_tag"
+    "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
+
+    # Prepare binaries for release
+    prepare_binaries "${topdir}/install/operator/dist" "${topdir}/install/operator/releases"
+
+    prerelease=false
+    if [[ $(hasflag --snapshot-release) ]]; then
+        prerelease=true
+    fi
+
+    # Release the binaries
+    publish_artifacts "${topdir}/install/operator/releases" "$release_version" $prerelease
+
+    # Create release description based on commit between releases
+    # if check_for_command gren; then
+    #    gren release --data-source=commits --tags=$release_version --override
+    # fi
 }
 
 create_moving_tag_release() {
@@ -152,14 +166,8 @@ create_moving_tag_release() {
     local moving_tag=$3
 
     if [ ! $(hasflag --snapshot-release) ]; then
-        generate_versioned_files "$topdir" "$moving_tag" "$release_version"
-
         docker image tag "syndesis/syndesis-operator:$release_version" "syndesis/syndesis-operator:$moving_tag"
         docker push "syndesis/syndesis-operator:$moving_tag"
-
-        echo "==== Git commit for templates and syndesis-operator.yml, $moving_tag"
-        cd $topdir
-        git_commit ^install/ "Update OpenShift templates and syndesis-operator.yml for Syndesis $moving_tag"
 
         echo "==== Git tag $moving_tag"
         git tag -f $moving_tag
@@ -235,37 +243,97 @@ update_image_versions() {
     sed "s/TagMajor: .*$/TagMajor: \"$next_version\"/" -i $topdir/install/operator/build/conf/config.yaml
 }
 
+check_github_username() {
+    if [ -z "${GITHUB_USERNAME}" ]; then
+        echo "ERROR: environment variable GITHUB_USERNAME has not been set."
+        echo "Please populate it with your github id"
+        return 1
+    fi
+}
+
+check_github_access_token() {
+    if [ -z "${GITHUB_ACCESS_TOKEN}" ]; then
+        echo "ERROR: environment variable GITHUB_ACCESS_TOKEN has not been set."
+        echo "Please populate it with a valid personal access token from github (with 'repo', 'admin:org_hook' and 'admin:repo_hook' scopes)."
+        return 1
+    fi
+}
+
+check_gren_access_token() {
+    if [ -z "${GREN_GITHUB_TOKEN}" ]; then
+        echo "ERROR: environment variable GREN_GITHUB_TOKEN has not been set."
+        echo "Please populate it with a valid personal access token from github (with 'repo', 'admin:org_hook' and 'admin:repo_hook' scopes)."
+        return 1
+    fi
+}
+
+prepare_binaries() {
+    local from=$1
+    local to=$2
+
+    if ! [[ -d ${from} ]]; then
+        echo "ERROR: The directory where the binaries are located must be a valid directory, got [${from}]"
+        return 1
+    fi
+
+    if ! [[ -d ${to} ]]; then
+        mkdir ${to}
+    fi
+
+    for dist in darwin-amd64 linux-amd64 windows-amd64; do
+        tar -zcf ${to}/syndesis-operator-${dist}.tar.gz -C ${from}/${dist} .
+    done
+}
+
+publish_artifacts() {
+    local release_dir=$1
+    local tag=$2
+    local prerelease=$3
+
+    check_github_access_token
+    check_github_username
+    # check_gren_access_token
+
+    local data="{\
+        \"tag_name\": \"${tag}\", \
+        \"name\": \"${tag}\", \
+        \"prerelease\": ${prerelease} \
+    }"
+
+    local upload_url=$(curl -q -s --fail \
+      -X POST \
+      -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+      -H "Accept: application/vnd.github.v3+json" \
+      -H "Content-Type: application/json" \
+      -d "$data" \
+      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")'
+    )
+
+    if [[ ! $upload_url == http* ]]; then
+        echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
+        return
+    fi
+
+    for file in $release_dir/*; do
+        curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+          -H "Accept: application/vnd.github.v3+json" \
+          -H "Content-Type: application/tar+gzip" \
+          --data-binary "@${file}" \
+          ${upload_url}?name=${file##*/} >/dev/null 2>&1
+        local err=$?
+        if [ $err -ne 0 ]; then
+          echo "ERROR: Cannot upload release artifact $file on remote github repository"
+          return
+        fi
+    done
+}
+
 get_next_version() {
     local version="$1"
     local prefix="${version%.*}"
     local suffix="${version##*.}"
 
     echo "$prefix"."$((suffix+1))"
-}
-
-generate_versioned_files() {
-    local dir="$1/install"
-    local tag="$2"
-    local previous_tag="${3:-latest}"
-
-    echo "==== Updating operator deployment config"
-    cd $dir/operator/deploy
-
-    sed -i.bak \
-        -e "s/syndesis-operator:${previous_tag}/syndesis-operator:$tag/" \
-        -e "s/name:[[:space:]]*'${previous_tag}'/name: '$tag'/" \
-           syndesis-operator.yml
-    rm syndesis-operator.yml.bak
-
-    # Verify that the patch worked
-    local nr_diff=$(git diff --shortstat syndesis-operator.yml | grep "3 insertions" | wc -l | xargs)
-    if [ $nr_diff -ne 1 ]; then
-        echo "Patching of syndesis-operator.yml failed"
-        cat syndesis-operator.yml
-        git diff --shortstat syndesis-operator.yml
-        git diff syndesis-operator.yml | cat -
-        exit 1
-    fi
 }
 
 build_and_stage_artefacts() {
