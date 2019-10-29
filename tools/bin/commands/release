@@ -143,18 +143,21 @@ release::run() {
     update_image_versions "$topdir" "$release_version" "$moving_tag"
     "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
 
-    if ! [[ $(hasflag --snapshot-release) ]]; then
-        # Prepare binaries for release
-        prepare_binaries "${topdir}/install/operator/dist" "${topdir}/install/operator/releases"
+    # Prepare binaries for release
+    prepare_binaries "${topdir}/install/operator/dist" "${topdir}/install/operator/releases"
 
-        # Release the binaries
-        publish_artifacts "${topdir}/install/operator/releases" "$release_version"
-
-        # Create release description based on commit between releases
-        # if check_for_command gren; then
-        #    gren release --data-source=commits --tags=$release_version --override
-        # fi
+    prerelease=false
+    if [[ $(hasflag --snapshot-release) ]]; then
+        prerelease=true
     fi
+
+    # Release the binaries
+    publish_artifacts "${topdir}/install/operator/releases" "$release_version" $prerelease
+
+    # Create release description based on commit between releases
+    # if check_for_command gren; then
+    #    gren release --data-source=commits --tags=$release_version --override
+    # fi
 }
 
 create_moving_tag_release() {
@@ -278,13 +281,14 @@ prepare_binaries() {
     fi
 
     for dist in darwin-amd64 linux-amd64 windows-amd64; do
-        cp ${from}/${dist}/syndesis-operator ${to}/syndesis-operator-${dist}
+        tar -zcf ${to}/syndesis-operator-${dist}.tar.gz -C ${from}/${dist} .
     done
 }
 
 publish_artifacts() {
     local release_dir=$1
     local tag=$2
+    local prerelease=$3
 
     check_github_access_token
     check_github_username
@@ -292,16 +296,18 @@ publish_artifacts() {
 
     local data="{\
         \"tag_name\": \"${tag}\", \
-        \"name\": \"${release_name}\" \
+        \"name\": \"${tag}\", \
+        \"prerelease\": ${prerelease} \
     }"
 
-	local upload_url=$(curl -q -s --fail \
+    local upload_url=$(curl -q -s --fail \
       -X POST \
-      -u $GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN \
+      -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/json" \
       -d "$data" \
-      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")')
+      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")'
+    )
 
     if [[ ! $upload_url == http* ]]; then
         echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
@@ -309,11 +315,11 @@ publish_artifacts() {
     fi
 
     for file in $release_dir/*; do
-        curl -q -s --fail -X POST -u $GITHUB_USERNAME:$GITHUB_ACCESS_TOKEN \
+        curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
-          --data-binary "@$file" \
-          $upload_url?name=${file##*/}
+          --data-binary "@${file}" \
+          ${upload_url}?name=${file##*/} >/dev/null 2>&1
         local err=$?
         if [ $err -ne 0 ]; then
           echo "ERROR: Cannot upload release artifact $file on remote github repository"

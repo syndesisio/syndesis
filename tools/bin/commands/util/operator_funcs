@@ -87,7 +87,7 @@ download_operator_binary() {
     esac
 
     if [[ "${pattern}" != "unknown" ]]; then
-        url=$(curl -s https://api.github.com/repos/syndesisio/syndesis/releases/latest \
+        url=$(curl -s https://api.github.com/repos/syndesisio/syndesis/releases?per_page=1 \
                 | grep browser_download_url \
                 | grep ${pattern} \
                 | cut -d '"' -f 4)
