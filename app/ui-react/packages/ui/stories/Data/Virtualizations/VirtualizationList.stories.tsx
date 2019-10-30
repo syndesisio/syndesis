@@ -32,8 +32,7 @@ const draftText = 'Draft';
 const publishedText = 'Published';
 const deleteText = 'Delete';
 const errorText = 'Error';
-/* TD-636: Commented out for TP
-const exportText = 'Export'; */
+const exportText = 'Export';
 const unpublishText = 'Unpublish';
 const publishText = 'Publish';
 const confirmDeleteTitle = 'Delete Virtualization';
@@ -102,8 +101,7 @@ const virtItem = [
     i18nDeleteModalTitle={confirmDeleteTitle}
     i18nEdit={editText}
     i18nEditTip={editTip1}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 1 integrations'}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -111,8 +109,7 @@ const virtItem = [
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
@@ -141,8 +138,7 @@ const virtualizationItems = [
     i18nDeleteModalTitle={confirmDeleteTitle}
     i18nEdit={editText}
     i18nEditTip={editTip1}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -150,8 +146,7 @@ const virtualizationItems = [
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
@@ -176,8 +171,7 @@ const virtualizationItems = [
     i18nDeleteModalTitle={confirmDeleteTitle}
     i18nEdit={editText}
     i18nEditTip={editTip2}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -185,8 +179,7 @@ const virtualizationItems = [
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusPublished}
@@ -210,8 +203,7 @@ const virtualizationItems = [
     i18nDeleteModalTitle={confirmDeleteTitle}
     i18nEdit={editText}
     i18nEditTip={editTip2}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
@@ -219,8 +211,7 @@ const virtualizationItems = [
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusBuilding}
@@ -314,6 +305,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -335,9 +327,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization
@@ -379,6 +370,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -400,9 +392,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization
@@ -446,6 +437,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -467,9 +459,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization

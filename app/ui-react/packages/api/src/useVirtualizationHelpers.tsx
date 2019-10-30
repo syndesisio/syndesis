@@ -79,11 +79,11 @@ export const useVirtualizationHelpers = () => {
   /**
    * Deletes the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being deleted
-   * @returns `true` if virtualization was successfully deleted
+   * @throws an `Error` if there was a problem deleting the virtualization
    */
   const deleteVirtualization = async (
     virtualizationName: string
-  ): Promise<boolean> => {
+  ): Promise<void> => {
     const response = await callFetch({
       headers: {},
       method: 'DELETE',
@@ -94,7 +94,7 @@ export const useVirtualizationHelpers = () => {
       return Promise.reject(new Error(response.statusText));
     }
 
-    return true;
+    return Promise.resolve();
   };
 
   /**
@@ -163,6 +163,7 @@ export const useVirtualizationHelpers = () => {
    * Publish the virtualization with the specified name.
    * @param virtualizationName the name of the virtualization being published
    * @returns the `TeiidStatus` model object
+   * @throws an `Error` if there was a problem submitting the virtualization for publishing.
    */
   const publishVirtualization = async (
     virtualizationName: string

@@ -392,40 +392,11 @@ export function getPublishingDetails(
 /**
  *
  * @param currDetails the current publishing details
- * @param prevDetails the previous publishing details if available
  * @returns a suitable `Label` style for the publishing state
  */
 export function getStateLabelStyle(
   currDetails: VirtualizationPublishingDetails,
-  prevDetails?: VirtualizationPublishingDetails
 ): 'primary' | 'danger' | 'default' {
-  let isInProgress = false;
-
-  if (prevDetails) {
-    // Here are the publish state transitions returned from server for when a publish is initiated:
-    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
-    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
-    // workaround.
-    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
-      isInProgress = true;
-    }
-
-    // Here are the publish state transitions returned from server for when an unpublish is initiated:
-    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
-    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
-    // workaround.
-    if (
-      prevDetails.state === 'DELETE_SUBMITTED' &&
-      currDetails.state === 'RUNNING'
-    ) {
-      isInProgress = true;
-    }
-  }
-
-  if (isInProgress) {
-    return 'default';
-  }
-
   let result: 'primary' | 'danger' | 'default';
   switch (currDetails.state) {
     case 'RUNNING':
@@ -434,7 +405,7 @@ export function getStateLabelStyle(
     case 'FAILED':
       result = 'danger';
       break;
-    default:
+    default: // in-progress
       result = 'default';
       break;
   }
@@ -443,34 +414,11 @@ export function getStateLabelStyle(
 
 /**
  * @param currDetails the current publishing details
- * @param prevDetails the previous publishing details if available
  * @returns the `Label` text representing the publish state
  */
 export function getStateLabelText(
   currDetails: VirtualizationPublishingDetails,
-  prevDetails?: VirtualizationPublishingDetails
 ): string {
-  if (prevDetails) {
-    // Here are the publish state transitions returned from server for when a publish is initiated:
-    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
-    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
-    // workaround.
-    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
-      return i18n.t('data:publishInProgress');
-    }
-
-    // Here are the publish state transitions returned from server for when an unpublish is initiated:
-    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
-    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
-    // workaround.
-    if (
-      prevDetails.state === 'DELETE_SUBMITTED' &&
-      currDetails.state === 'RUNNING'
-    ) {
-      return i18n.t('data:unpublishInProgress');
-    }
-  }
-
   let result = '';
   switch (currDetails.state) {
     case 'RUNNING':
@@ -522,34 +470,11 @@ export function isPublishStep(
  * Checks to see if a delete, publish, or unpublish operation is in-progress. When the state is a
  * publish step state, `false` is returned.
  * @param currDetails the current publishing details
- * @param prevDetails the previous publishing details if available
  * @returns `true` if a state operation is in-progress
  */
 export function isStateOperationInProgress(
   currDetails: VirtualizationPublishingDetails,
-  prevDetails?: VirtualizationPublishingDetails
 ): boolean {
-  if (prevDetails) {
-    // Here is the publish state transitions returned from server for when a publish is initiated:
-    // SUBMITTED > NOTFOUND > SUBMITTED > CONFIGURING > BUILDING > DEPLOYING > RUNNING
-    // The transitiong from SUBMITTED to NOTFOUND seems to be a bug. The following code is a
-    // workaround.
-    if (prevDetails.state === 'SUBMITTED' && currDetails.state === 'NOTFOUND') {
-      return true;
-    }
-
-    // Here is the publish state transitions returned from server for when an unpublish is initiated:
-    // DELETE_SUBMITTED > RUNNING > DELETE_SUBMITTED > NOTFOUND
-    // The transitiong from DELETE_SUBMITTED to RUNNING seems to be a bug. The following code is a
-    // workaround.
-    if (
-      prevDetails.state === 'DELETE_SUBMITTED' &&
-      currDetails.state === 'RUNNING'
-    ) {
-      return true;
-    }
-  }
-
   let result = false;
   switch (currDetails.state) {
     case 'SUBMITTED':

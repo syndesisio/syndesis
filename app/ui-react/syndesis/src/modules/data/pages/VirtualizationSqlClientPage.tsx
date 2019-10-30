@@ -72,12 +72,12 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     unpublishVirtualization,
     updateVirtualizationDescription,
   } = useVirtualizationHelpers();
+
   const [currPublishedState, setCurrPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
-  const [prevPublishedState, setPrevPublishedState] = React.useState(
-    {} as VirtualizationPublishingDetails
-  );
+  const [isProgressWithLink, setProgressWithLink] = React.useState(false);
+  const [isSubmitted, setSubmitted] = React.useState(false);
   const [labelType, setLabelType] = React.useState('default' as 'danger' | 'primary' | 'default');
   const [publishStateText, setPublishStateText] = React.useState();
   const [usedBy, setUsedBy] = React.useState(state.virtualization.usedBy);
@@ -94,7 +94,6 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       virtualization
     ) as VirtualizationPublishingDetails;
 
-    setPrevPublishedState(currPublishedState);
     setCurrPublishedState(publishedDetails);
     setUsedBy(virtualization.usedBy);
   };
@@ -103,9 +102,22 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   usePolling({ callback: updatePublishedState, delay: 5000 });
 
   React.useEffect(() => {
-    setLabelType(getStateLabelStyle(prevPublishedState, currPublishedState));
-    setPublishStateText(getStateLabelText(prevPublishedState, currPublishedState));
-  }, [currPublishedState, prevPublishedState]);
+    // turn off once publish/unpublish shows in-progress
+    if (
+      currPublishedState.state === 'DELETE_SUBMITTED' ||
+      currPublishedState.state === 'SUBMITTED' ||
+      isProgressWithLink
+    ) {
+      setSubmitted(false);
+    }
+
+    setProgressWithLink(isPublishStep(currPublishedState));
+
+    if (!isSubmitted) {
+      setLabelType(getStateLabelStyle(currPublishedState));
+      setPublishStateText(getStateLabelText(currPublishedState));
+    }
+  }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
   const getUsedByMessage = (integrationNames: string[]): string => {
     if (integrationNames.length === 1) {
@@ -115,23 +127,16 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     return t('usedByMulti', { count: integrationNames.length });
   };
 
-  const doDelete = async (virtId: string): Promise<string> => {
+  const doDelete = async (virtId: string): Promise<void> => {
+    setSubmitted(true);
+
     // save current values in case we need to restore
     const saveText = publishStateText;
     const saveLabelType = labelType;
 
     setLabelType('default');
     setPublishStateText(t('deleteInProgress'));
-    // manually set state here until polling returns
-    const deleteSubmitted: VirtualizationPublishingDetails = {
-      state: 'DELETE_SUBMITTED',
-      stepNumber: 0,
-      stepText: '',
-      stepTotal: 0,
-    };
-    setPrevPublishedState(currPublishedState);
-    setCurrPublishedState(deleteSubmitted);
-    const result = await deleteVirtualization(virtId).catch((e: any) => {
+    await deleteVirtualization(virtId).catch((e: any) => {
       pushNotification(
         t('deleteVirtualizationFailed', {
           details: e.errorMessage || e.message || e,
@@ -143,14 +148,12 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       // restore previous state
       setPublishStateText(saveText);
       setLabelType(saveLabelType);
-      setCurrPublishedState(prevPublishedState);
+      setSubmitted(false);
+      throw e;
     });
-    if (result) {
-      // successfully deleted navigate to the virtualizations list page
-      history.push(resolvers.data.virtualizations.list());
-      return 'DELETED';
-    }
-    return 'FAILED';
+
+    // successfully deleted navigate to the virtualizations list page
+    history.push(resolvers.data.virtualizations.list());
   };
 
   const doExport = () => {
@@ -169,7 +172,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const doPublish = async (
     virtId: string,
     hasViews: boolean
-  ): Promise<string> => {
+  ): Promise<void> => {
     if (!hasViews) {
       pushNotification(
         t('publishVirtualizationNoViews', {
@@ -177,66 +180,48 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         }),
         'info'
       );
-      return 'FAILED';
-    } else {
-      // save current values in case we need to restore
-      const saveText = publishStateText;
-      const saveLabelType = labelType;
-
-      setLabelType('default');
-      setPublishStateText(t('publishInProgress'));
-      // manually set state here until polling returns
-      const submitted: VirtualizationPublishingDetails = {
-        state: 'SUBMITTED',
-        stepNumber: 0,
-        stepText: '',
-        stepTotal: 0,
-      };
-      setPrevPublishedState(currPublishedState);
-      setCurrPublishedState(submitted);
-      const teiidStatus = await publishVirtualization(virtId).catch(
-        (e: any) => {
-          pushNotification(
-            t('publishVirtualizationFailed', {
-              details: e.errorMessage || e.message || e,
-              name: virtId,
-            }),
-            'error'
-          );
-
-          // restore previous state
-          setPublishStateText(saveText);
-          setLabelType(saveLabelType);
-          setCurrPublishedState(prevPublishedState);
-        }
-      );
-      if (teiidStatus) {
-        if (teiidStatus.attributes['Build Status']) {
-          return teiidStatus.attributes['Build Status'];
-        }
-        return 'SUBMITTED';
-      }
-      return 'FAILED';
+      const e = new Error();
+      e.name = 'NoViews';
+      throw e;
     }
+
+    setSubmitted(true);
+
+    // save current values in case we need to restore
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+
+    setLabelType('default');
+    setPublishStateText(t('publishInProgress'));
+    await publishVirtualization(virtId).catch(
+      (e: any) => {
+        pushNotification(
+          t('publishVirtualizationFailed', {
+            details: e.errorMessage || e.message || e,
+            name: virtId,
+          }),
+          'error'
+        );
+
+        // restore previous state
+        setPublishStateText(saveText);
+        setLabelType(saveLabelType);
+        setSubmitted(false);
+        throw e;
+      }
+    );
   };
 
-  const doUnpublish = async (virtId: string): Promise<string> => {
+  const doUnpublish = async (virtId: string): Promise<void> => {
+    setSubmitted(true);
+
     // save current values in case we need to restore
     const saveText = publishStateText;
     const saveLabelType = labelType;
 
     setLabelType('default');
     setPublishStateText(t('unpublishInProgress'));
-    // manually set state here until polling returns
-    const deleteSubmitted: VirtualizationPublishingDetails = {
-      state: 'DELETE_SUBMITTED',
-      stepNumber: 0,
-      stepText: '',
-      stepTotal: 0,
-    };
-    setPrevPublishedState(currPublishedState);
-    setCurrPublishedState(deleteSubmitted);
-    const buildStatus = await unpublishVirtualization(virtId).catch(
+    await unpublishVirtualization(virtId).catch(
       (e: any) => {
         if (e.name === 'AlreadyUnpublished') {
           pushNotification(
@@ -258,16 +243,10 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         // restore previous state
         setPublishStateText(saveText);
         setLabelType(saveLabelType);
-        setCurrPublishedState(prevPublishedState);
+        setSubmitted(false);
+        throw e;
       }
     );
-    if (buildStatus) {
-      if (buildStatus.status) {
-        return buildStatus.status;
-      }
-      return 'DELETE_SUBMITTED';
-    }
-    return 'FAILED';
   };
 
   const doSetDescription = async (newDescription: string) => {
@@ -292,12 +271,11 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     }
   };
 
-  const isProgressWithLink = isPublishStep(currPublishedState);
-
   return (
     <>
       <PageSection variant={'light'} noPadding={true}>
         <ViewHeaderBreadcrumb
+          isSubmitted={isSubmitted}
           currentPublishedState={currPublishedState.state}
           virtualizationName={state.virtualization.name}
           dashboardHref={resolvers.dashboard.root()}
@@ -312,9 +290,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
           i18nDeleteModalTitle={t('deleteModalTitle')}
           i18nExport={t('shared:Export')}
           i18nPublish={t('shared:Publish')}
-          i18nPublishInProgress={t('publishInProgress')}
           i18nUnpublish={t('shared:Unpublish')}
-          i18nUnpublishInProgress={t('unpublishInProgress')}
           i18nUnpublishModalMessage={t('unpublishModalMessage', {
             name: state.virtualization.name,
           })}

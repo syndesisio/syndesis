@@ -102,8 +102,7 @@ stories
           icon={text('icon', virtualizationIconData)}
           i18nEdit={editText}
           i18nEditTip={editTip}
-          /* TD-636: Commented out for TP 
-        i18nExport={'Export'} */
+          i18nExport={'Export'}
           i18nInUseText={'The virtualization is in use by an integration.'}
           i18nUnpublish={unpublishText}
           i18nPublish={publishText}
@@ -112,8 +111,7 @@ stories
           i18nUnpublishModalTitle={confirmUnpublishTitle}
           detailsPageLink={'/details/page/link'}
           onDelete={action(deleteText)}
-          /* TD-636: Commented out for TP 
-        onExport={action(exportText)} */
+          onExport={action(exportText)}
           onUnpublish={action(unpublishText)}
           onPublish={action(publishText)}
           currentPublishedState={'BUILDING'}
@@ -145,8 +143,7 @@ stories
           odataUrl={'http://redhat.com'}
           i18nEdit={editText}
           i18nEditTip={editTip}
-          /* TD-636: Commented out for TP 
-            i18nExport={'Export'} */
+          i18nExport={'Export'}
           i18nInUseText={'The virtualization is not in use by an integration.'}
           i18nUnpublish={unpublishText}
           i18nPublish={publishText}
@@ -155,8 +152,7 @@ stories
           i18nUnpublishModalTitle={confirmUnpublishTitle}
           detailsPageLink={'/details/page/link'}
           onDelete={action(deleteText)}
-          /* TD-636: Commented out for TP 
-            onExport={action(exportText)} */
+          onExport={action(exportText)}
           onUnpublish={action(unpublishText)}
           onPublish={action(publishText)}
           currentPublishedState={'RUNNING'}

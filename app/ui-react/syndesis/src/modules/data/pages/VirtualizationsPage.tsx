@@ -196,8 +196,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                         );
                         const doDelete = async (
                           virtId: string
-                        ): Promise<string> => {
-                          const result = await deleteVirtualization(
+                        ): Promise<void> => {
+                          await deleteVirtualization(
                             virtId
                           ).catch((e: any) => {
                             pushNotification(
@@ -207,15 +207,12 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               }),
                               'error'
                             );
+                            throw e;
                           });
-                          if (result) {
-                            return 'DELETED';
-                          }
-                          return 'FAILED';
                         };
                         const doPublish = async (
                           virtId: string
-                        ): Promise<string> => {
+                        ): Promise<void> => {
                           if (virtualization.empty) {
                             pushNotification(
                               t('publishVirtualizationNoViews', {
@@ -223,32 +220,28 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               }),
                               'info'
                             );
-                            return 'FAILED';
-                          } else {
-                            const teiidStatus = await publishVirtualization(
-                              virtId
-                            ).catch((e: any) => {
-                              pushNotification(
-                                t('publishVirtualizationFailed', {
-                                  details: e.errorMessage || e.message || error,
-                                  name: virtId,
-                                }),
-                                'error'
-                              );
-                            });
-                            if (teiidStatus) {
-                              if (teiidStatus.attributes['Build Status']) {
-                                return teiidStatus.attributes['Build Status'];
-                              }
-                              return 'SUBMITTED';
-                            }
-                            return 'FAILED';
+                            const e = new Error();
+                            e.name = 'NoViews';
+                            throw e;
                           }
+
+                          await publishVirtualization(
+                            virtId
+                          ).catch((e: any) => {
+                            pushNotification(
+                              t('publishVirtualizationFailed', {
+                                details: e.errorMessage || e.message || error,
+                                name: virtId,
+                              }),
+                              'error'
+                            );
+                            throw e;
+                          });
                         };
                         const doUnpublish = async (
                           virtId: string
-                        ): Promise<string> => {
-                          const buildStatus = await unpublishVirtualization(
+                        ): Promise<void> => {
+                          await unpublishVirtualization(
                             virtId
                           ).catch((e: any) => {
                             if (e.name === 'AlreadyUnpublished') {
@@ -267,14 +260,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                                 'error'
                               );
                             }
+                            throw e;
                           });
-                          if (buildStatus) {
-                            if (buildStatus.status) {
-                              return buildStatus.status;
-                            }
-                            return 'DELETE_SUBMITTED';
-                          }
-                          return 'FAILED';
                         };
                         const isProgressWithLink = isPublishStep(
                           publishingDetails
@@ -312,7 +299,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
-                            i18nError={t('shared:Error')}
                             i18nExport={t('shared:Export')}
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
