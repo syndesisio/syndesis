@@ -24,10 +24,12 @@ import {
   VirtualizationNavBar,
   WithVirtualizationSqlClientForm,
 } from '../shared';
-import { VirtualizationHandlers } from '../shared/VirtualizationHandlers';
 import {
   getOdataUrl,
   getPublishingDetails,
+  getStateLabelStyle,
+  getStateLabelText,
+  isPublishStep,
 } from '../shared/VirtualizationUtils';
 import './VirtualizationSqlClientPage.css';
 
@@ -64,17 +66,20 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
   const { pushNotification } = React.useContext(UIContext);
   const {
-    exportVirtualization, 
-    updateVirtualizationDescription 
+    deleteVirtualization,
+    exportVirtualization,
+    publishVirtualization,
+    unpublishVirtualization,
+    updateVirtualizationDescription,
   } = useVirtualizationHelpers();
-  const {
-    handleDeleteVirtualization,
-    handlePublishVirtualization,
-    handleUnpublishVirtualization,
-  } = VirtualizationHandlers();
-  const [publishedState, setPublishedState] = React.useState(
+
+  const [currPublishedState, setCurrPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
+  const [isProgressWithLink, setProgressWithLink] = React.useState(false);
+  const [isSubmitted, setSubmitted] = React.useState(false);
+  const [labelType, setLabelType] = React.useState('default' as 'danger' | 'primary' | 'default');
+  const [publishStateText, setPublishStateText] = React.useState();
   const [usedBy, setUsedBy] = React.useState(state.virtualization.usedBy);
 
   const {
@@ -89,12 +94,30 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       virtualization
     ) as VirtualizationPublishingDetails;
 
-    setPublishedState(publishedDetails);
+    setCurrPublishedState(publishedDetails);
     setUsedBy(virtualization.usedBy);
   };
 
   // poll to check for updates to the published state
   usePolling({ callback: updatePublishedState, delay: 5000 });
+
+  React.useEffect(() => {
+    // turn off once publish/unpublish shows in-progress
+    if (
+      currPublishedState.state === 'DELETE_SUBMITTED' ||
+      currPublishedState.state === 'SUBMITTED' ||
+      isProgressWithLink
+    ) {
+      setSubmitted(false);
+    }
+
+    setProgressWithLink(isPublishStep(currPublishedState));
+
+    if (!isSubmitted) {
+      setLabelType(getStateLabelStyle(currPublishedState));
+      setPublishStateText(getStateLabelText(currPublishedState));
+    }
+  }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
   const getUsedByMessage = (integrationNames: string[]): string => {
     if (integrationNames.length === 1) {
@@ -104,11 +127,33 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     return t('usedByMulti', { count: integrationNames.length });
   };
 
-  const doDelete = async (pVirtualizationId: string) => {
-    const success = await handleDeleteVirtualization(pVirtualizationId);
-    if (success) {
-      history.push(resolvers.data.virtualizations.list());
-    }
+  const doDelete = async (virtId: string): Promise<void> => {
+    setSubmitted(true);
+
+    // save current values in case we need to restore
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+
+    setLabelType('default');
+    setPublishStateText(t('deleteInProgress'));
+    await deleteVirtualization(virtId).catch((e: any) => {
+      pushNotification(
+        t('deleteVirtualizationFailed', {
+          details: e.errorMessage || e.message || e,
+          name: virtId,
+        }),
+        'error'
+      );
+
+      // restore previous state
+      setPublishStateText(saveText);
+      setLabelType(saveLabelType);
+      setSubmitted(false);
+      throw e;
+    });
+
+    // successfully deleted navigate to the virtualizations list page
+    history.push(resolvers.data.virtualizations.list());
   };
 
   const doExport = () => {
@@ -124,12 +169,84 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     });
   }
 
-  const doPublish = async (pVirtualizationId: string, hasViews: boolean) => {
-    await handlePublishVirtualization(pVirtualizationId, hasViews);
+  const doPublish = async (
+    virtId: string,
+    hasViews: boolean
+  ): Promise<void> => {
+    if (!hasViews) {
+      pushNotification(
+        t('publishVirtualizationNoViews', {
+          name: virtId,
+        }),
+        'info'
+      );
+      const e = new Error();
+      e.name = 'NoViews';
+      throw e;
+    }
+
+    setSubmitted(true);
+
+    // save current values in case we need to restore
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+
+    setLabelType('default');
+    setPublishStateText(t('publishInProgress'));
+    await publishVirtualization(virtId).catch(
+      (e: any) => {
+        pushNotification(
+          t('publishVirtualizationFailed', {
+            details: e.errorMessage || e.message || e,
+            name: virtId,
+          }),
+          'error'
+        );
+
+        // restore previous state
+        setPublishStateText(saveText);
+        setLabelType(saveLabelType);
+        setSubmitted(false);
+        throw e;
+      }
+    );
   };
 
-  const doUnpublish = async (virtualizationName: string) => {
-    await handleUnpublishVirtualization(virtualizationName);
+  const doUnpublish = async (virtId: string): Promise<void> => {
+    setSubmitted(true);
+
+    // save current values in case we need to restore
+    const saveText = publishStateText;
+    const saveLabelType = labelType;
+
+    setLabelType('default');
+    setPublishStateText(t('unpublishInProgress'));
+    await unpublishVirtualization(virtId).catch(
+      (e: any) => {
+        if (e.name === 'AlreadyUnpublished') {
+          pushNotification(
+            t('unpublishedVirtualization', {
+              name: virtId,
+            }),
+            'info'
+          );
+        } else {
+          pushNotification(
+            t('unpublishVirtualizationFailed', {
+              details: e.errorMessage || e.message || error,
+              name: virtId,
+            }),
+            'error'
+          );
+        }
+
+        // restore previous state
+        setPublishStateText(saveText);
+        setLabelType(saveLabelType);
+        setSubmitted(false);
+        throw e;
+      }
+    );
   };
 
   const doSetDescription = async (newDescription: string) => {
@@ -158,7 +275,8 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     <>
       <PageSection variant={'light'} noPadding={true}>
         <ViewHeaderBreadcrumb
-          currentPublishedState={publishedState.state}
+          isSubmitted={isSubmitted}
+          currentPublishedState={currPublishedState.state}
           virtualizationName={state.virtualization.name}
           dashboardHref={resolvers.dashboard.root()}
           dashboardString={t('shared:Home')}
@@ -191,20 +309,18 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         noPadding={true}
       >
         <VirtualizationDetailsHeader
+          isProgressWithLink={isProgressWithLink}
+          i18nPublishState={publishStateText}
+          labelType={labelType}
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
-          i18nDraft={t('shared:Draft')}
-          i18nError={t('shared:Error')}
           i18nInUseText={getUsedByMessage(usedBy)}
-          i18nPublished={t('publishedDataVirtualization')}
-          i18nPublishInProgress={t('publishInProgress')}
-          i18nUnpublishInProgress={t('unpublishInProgress')}
           i18nPublishLogUrlText={t('shared:viewLogs')}
           odataUrl={getOdataUrl(virtualization)}
-          publishedState={publishedState.state || 'Loading'}
-          publishingCurrentStep={publishedState.stepNumber}
-          publishingLogUrl={publishedState.logUrl}
-          publishingTotalSteps={publishedState.stepTotal}
-          publishingStepText={publishedState.stepText}
+          publishedState={currPublishedState.state}
+          publishingCurrentStep={currPublishedState.stepNumber}
+          publishingLogUrl={currPublishedState.logUrl}
+          publishingTotalSteps={currPublishedState.stepTotal}
+          publishingStepText={currPublishedState.stepText}
           virtualizationDescription={description}
           virtualizationName={state.virtualization.name}
           isWorking={false}

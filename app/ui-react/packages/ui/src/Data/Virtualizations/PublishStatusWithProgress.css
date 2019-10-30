@@ -4,4 +4,8 @@
     flex-flow: row;
     margin-right: 10px;
 }
+
+.publish-status-with-progress__label {
+    margin-right: 10px;
+}
   

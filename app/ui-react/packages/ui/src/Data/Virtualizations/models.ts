@@ -9,6 +9,7 @@ export const CANCELLED = 'CANCELLED';
 export const DELETE_SUBMITTED = 'DELETE_SUBMITTED';
 export const DELETE_REQUEUE = 'DELETE_REQUEUE';
 export const DELETE_DONE = 'DELETE_DONE';
+export const UNPUBLISH_SUBMITTED = 'UNPUBLISH_SUBMITTED';
 
 export type VirtualizationPublishState =
   | 'NOTFOUND'
@@ -21,7 +22,8 @@ export type VirtualizationPublishState =
   | 'CANCELLED'
   | 'DELETE_SUBMITTED'
   | 'DELETE_REQUEUE'
-  | 'DELETE_DONE';
+  | 'DELETE_DONE'
+  | 'UNPUBLISH_SUBMITTED';
 
 // Detailed state log link types
 export const LOGS = 'LOGS';

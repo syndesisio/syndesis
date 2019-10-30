@@ -12,15 +12,16 @@ import {
 } from '../../../Shared';
 
 import {
-  BUILDING,
-  CONFIGURING,
-  DEPLOYING,
+  FAILED,
+  NOTFOUND,
   RUNNING,
-  SUBMITTED,
   VirtualizationPublishState,
 } from '../models';
 
+import './ViewHeaderBreadcrumb.css';
+
 export interface IViewHeaderBreadcrumbProps {
+  isSubmitted: boolean; // `true` if publish/unpublish have been initiated but publish state has not reflected this
   currentPublishedState: VirtualizationPublishState;
   dashboardHref: H.LocationDescriptor;
   dataHref: H.LocationDescriptor;
@@ -35,10 +36,26 @@ export interface IViewHeaderBreadcrumbProps {
   i18nUnpublish: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
-  onDelete: (virtualizationName: string) => void;
+
+  /**
+   * @param virtualizationName the name of the virtualization being deleted
+   */
+  onDelete: (virtualizationName: string) => Promise<void>;
+
+  /**
+   * @param virtualizationName the name of the virtualization being exported
+   */
   onExport: (virtualizationName: string) => void;
-  onPublish: (virtualizationName: string, hasViews: boolean) => void;
-  onUnpublish: (virtualizationName: string) => void;
+
+  /**
+   * @param virtualizationName the name of the virtualization being published
+   */
+  onPublish: (virtualizationName: string, hasViews: boolean) => Promise<void>;
+
+  /**
+   * @param virtualizationName the name of the virtualization being unpublished
+   */
+  onUnpublish: (virtualizationName: string) => Promise<void>;
   virtualizationName: string;
   hasViews: boolean;
   usedInIntegration: boolean;
@@ -47,54 +64,81 @@ export interface IViewHeaderBreadcrumbProps {
 export const ViewHeaderBreadcrumb: React.FunctionComponent<
   IViewHeaderBreadcrumbProps
 > = props => {
+  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(
+    false
+  );
+  const [inProgress, setInProgress] = React.useState(false);
+  const [isPublished, setIsPublished] = React.useState(false);
+  const [buttonText, setButtonText] = React.useState(props.i18nPublish);
 
-  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(false);
+  React.useEffect(() => {
+    let working = false;
+    if (
+      props.currentPublishedState !== NOTFOUND &&
+      props.currentPublishedState !== RUNNING &&
+      props.currentPublishedState !== FAILED
+    ) {
+      working = true;
+    }
+    setInProgress(working);
+
+    // update button text
+    if (!working) {
+      const published = props.currentPublishedState === RUNNING;
+      setIsPublished(published);
+      if (published) {
+        setButtonText(props.i18nUnpublish);
+      } else {
+        setButtonText(props.i18nPublish);
+      }
+    }
+  }, [props.currentPublishedState]);
 
   const doCancel = () => {
     setShowConfirmationDialog(false);
-  }
+  };
 
-  const doDelete = () => {
+  const doDelete = async () => {
     setShowConfirmationDialog(false);
-
-    // TODO: disable components while delete is processing
-    props.onDelete(props.virtualizationName);
-  }
+    setInProgress(true);
+    await props.onDelete(props.virtualizationName).catch(() => {
+      // restore button text
+      setButtonText(props.i18nPublish);
+      setInProgress(false);
+    });
+  };
 
   const doExport = () => {
     props.onExport(props.virtualizationName);
   }
 
-  const doPublish = () => {
-    if (props.virtualizationName) {
-      props.onPublish(props.virtualizationName, props.hasViews);
-    }
-  }
+  const doPublish = async () => {
+    setInProgress(true);
+    await props.onPublish(
+      props.virtualizationName,
+      props.hasViews
+    ).catch(() => {
+      // restore button text
+      setButtonText(props.i18nPublish);
+      setInProgress(false);
+    });
+  };
 
-  const doUnpublish = () => {
+  const doUnpublish = async () => {
     setShowConfirmationDialog(false);
-
-    if (props.virtualizationName) {
-      props.onUnpublish(props.virtualizationName);
-    }
-  }
+    setInProgress(true);
+    await props.onUnpublish(props.virtualizationName).catch(() => {
+      // restore button text
+      setButtonText(props.i18nUnpublish);
+      setInProgress(false);
+    });
+  };
 
   const showConfirmDialog = () => {
     if (!props.usedInIntegration) {
       setShowConfirmationDialog(true);
     }
-  }
-
-  const isPublished =
-    props.currentPublishedState === RUNNING ? true : false;
-
-  const publishInProgress =
-    props.currentPublishedState === BUILDING ||
-      props.currentPublishedState === CONFIGURING ||
-      props.currentPublishedState === DEPLOYING ||
-      props.currentPublishedState === SUBMITTED
-      ? true
-      : false;
+  };
 
   return (
     <>
@@ -141,24 +185,29 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
             <ButtonLink
               data-testid={'virtualization-detail-breadcrumb-publish-button'}
               className="btn btn-primary"
-              onClick={
-                isPublished || publishInProgress
-                  ? doUnpublish 
-                  : doPublish
+              onClick={isPublished ? doUnpublish : doPublish}
+              disabled={
+                props.usedInIntegration || inProgress || props.isSubmitted
               }
-              disabled={props.usedInIntegration}
             >
-              {isPublished || publishInProgress
-                ? props.i18nUnpublish
-                : props.i18nPublish}
+              {buttonText}
             </ButtonLink>
             <DropdownKebab
-              id={`virtualization-${
-                props.virtualizationName
-                }-action-menu`}
+              id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}
+              data-testid={'view-header-breadcrumb-dropdown-kebab'}
             >
-              <MenuItem onClick={showConfirmDialog} disabled={props.usedInIntegration}>
+              <MenuItem
+                className={'virtualization-list-item__menuItem'}
+                onClick={showConfirmDialog}
+                disabled={
+                  props.usedInIntegration ||
+                  inProgress ||
+                  isPublished ||
+                  props.isSubmitted
+                }
+                data-testid={'view-header-breadcrumb-delete-button'}
+              >
                 {props.i18nDelete}
               </MenuItem>
             </DropdownKebab>
@@ -177,10 +226,8 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
         >
           {props.dataString}
         </Link>
-        <span>
-          {props.virtualizationName}
-        </span>
+        <span>{props.virtualizationName}</span>
       </Breadcrumb>
     </>
   );
-}
+};

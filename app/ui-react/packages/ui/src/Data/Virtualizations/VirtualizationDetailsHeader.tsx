@@ -8,16 +8,14 @@ import { PublishStatusWithProgress } from './PublishStatusWithProgress';
 import './VirtualizationDetailsHeader.css';
 
 export interface IVirtualizationDetailsHeaderProps {
+  isProgressWithLink: boolean;
+  i18nPublishState: string;
+  labelType: 'danger' | 'primary' | 'default';
   i18nDescriptionPlaceholder: string;
-  i18nDraft: string;
-  i18nError: string;
   i18nInUseText: string;
-  i18nPublished: string;
-  i18nPublishInProgress: string;
-  i18nUnpublishInProgress: string;
   i18nPublishLogUrlText: string;
   odataUrl?: string;
-  publishedState: VirtualizationPublishState | 'Loading';
+  publishedState: VirtualizationPublishState;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -44,14 +42,11 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               {props.virtualizationName}
             </SplitItem>
             <SplitItem>
-              {props.publishedState !== 'Loading' ? (
+              {props.publishedState && props.i18nPublishState ? (
                 <PublishStatusWithProgress
-                  publishedState={props.publishedState}
-                  i18nError={props.i18nError}
-                  i18nPublished={props.i18nPublished}
-                  i18nUnpublished={props.i18nDraft}
-                  i18nPublishInProgress={props.i18nPublishInProgress}
-                  i18nUnpublishInProgress={props.i18nUnpublishInProgress}
+                  isProgressWithLink={props.isProgressWithLink}
+                  i18nPublishState={props.i18nPublishState}
+                  labelType={props.labelType}
                   i18nPublishLogUrlText={props.i18nPublishLogUrlText}
                   publishingCurrentStep={props.publishingCurrentStep}
                   publishingLogUrl={props.publishingLogUrl}
@@ -61,7 +56,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               ) : (
                 <Loader size={'sm'} inline={true} />
               )}
-              {props.odataUrl && props.publishedState !== 'Loading' && (
+              {props.odataUrl && props.publishedState && (
                 <span>
                   <a
                     data-testid={'virtualization-details-header-odataUrl'}
@@ -79,7 +74,12 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                 </span>
               )}
             </SplitItem>
-            <SplitItem>{props.i18nInUseText}</SplitItem>
+            <SplitItem
+              className={'virtualization-details-header__usedByMessage'}
+              isFilled={true}
+            >
+              {props.i18nInUseText}
+            </SplitItem>
           </Split>
         </StackItem>
         <StackItem>

@@ -13,3 +13,7 @@
 .virtualization-details-header-odata-link-icon {
   margin-left: 5px;
 }
+
+.virtualization-details-header__usedByMessage {
+  text-align: end;
+}

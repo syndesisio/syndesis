@@ -32,8 +32,7 @@ const draftText = 'Draft';
 const publishedText = 'Published';
 const deleteText = 'Delete';
 const errorText = 'Error';
-/* TD-636: Commented out for TP
-const exportText = 'Export'; */
+const exportText = 'Export';
 const unpublishText = 'Unpublish';
 const publishText = 'Publish';
 const confirmDeleteTitle = 'Delete Virtualization';
@@ -42,8 +41,9 @@ const confirmDeleteMessage =
 const confirmUnpublishTitle = 'Unpublish Virtualization';
 const confirmUnpublishMessage =
   'This Virtualization has been published.  Please unpublish the Virtualization first.';
-const publishInProgressText = 'publish in progress...';
-const unpublishInProgressText = 'unpublish in progress...';
+const deleteInProgressText = 'Deleting...';
+const publishInProgressText = 'Publishing...';
+const unpublishInProgressText = 'Unpublishing...';
 const publishLogUrlText = 'View Logs';
 const currentStatusPublished = 'RUNNING';
 const currentStatusDraft = 'NOTFOUND';
@@ -85,6 +85,12 @@ const viewItems = [
 const virtItem = [
   <VirtualizationListItem
     key="virtualizationListItem1"
+    isProgressWithLink={false}
+    i18nDeleteInProgressText={deleteInProgressText}
+    i18nPublishInProgressText={publishInProgressText}
+    i18nUnpublishInProgressText={unpublishInProgressText}
+    i18nPublishState={draftText}
+    labelType={'primary'}
     hasViews={true}
     virtualizationName={virtualizationName1}
     virtualizationDescription={virtualizationDescription1}
@@ -93,24 +99,17 @@ const virtItem = [
     i18nDelete={deleteText}
     i18nDeleteModalMessage={confirmDeleteMessage}
     i18nDeleteModalTitle={confirmDeleteTitle}
-    i18nDraft={draftText}
     i18nEdit={editText}
     i18nEditTip={editTip1}
-    i18nError={errorText}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 1 integrations'}
-    i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
-    i18nPublishInProgress={publishInProgressText}
     i18nPublishLogUrlText={publishLogUrlText}
-    i18nUnpublishInProgress={unpublishInProgressText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
@@ -123,6 +122,12 @@ const virtItem = [
 const virtualizationItems = [
   <VirtualizationListItem
     key="virtualizationListItem1"
+    isProgressWithLink={false}
+    i18nDeleteInProgressText={deleteInProgressText}
+    i18nPublishInProgressText={publishInProgressText}
+    i18nUnpublishInProgressText={unpublishInProgressText}
+    i18nPublishState={draftText}
+    labelType={'default'}
     hasViews={true}
     virtualizationName={virtualizationName1}
     virtualizationDescription={virtualizationDescription1}
@@ -131,24 +136,17 @@ const virtualizationItems = [
     i18nDelete={deleteText}
     i18nDeleteModalMessage={confirmDeleteMessage}
     i18nDeleteModalTitle={confirmDeleteTitle}
-    i18nDraft={draftText}
     i18nEdit={editText}
     i18nEditTip={editTip1}
-    i18nError={errorText}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
-    i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
-    i18nPublishInProgress={publishInProgressText}
     i18nPublishLogUrlText={publishLogUrlText}
-    i18nUnpublishInProgress={unpublishInProgressText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
@@ -157,6 +155,12 @@ const virtualizationItems = [
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
+    isProgressWithLink={false}
+    i18nDeleteInProgressText={deleteInProgressText}
+    i18nPublishInProgressText={publishInProgressText}
+    i18nUnpublishInProgressText={unpublishInProgressText}
+    i18nPublishState={publishInProgressText}
+    labelType={'default'}
     hasViews={true}
     virtualizationName={virtualizationName2}
     virtualizationDescription={virtualizationDescription2}
@@ -165,24 +169,17 @@ const virtualizationItems = [
     i18nDelete={deleteText}
     i18nDeleteModalMessage={confirmDeleteMessage}
     i18nDeleteModalTitle={confirmDeleteTitle}
-    i18nDraft={draftText}
     i18nEdit={editText}
     i18nEditTip={editTip2}
-    i18nError={errorText}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
-    i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
-    i18nPublishInProgress={publishInProgressText}
     i18nPublishLogUrlText={publishLogUrlText}
-    i18nUnpublishInProgress={unpublishInProgressText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusPublished}
@@ -190,6 +187,12 @@ const virtualizationItems = [
   />,
   <VirtualizationListItem
     key="virtualizationListItem3"
+    isProgressWithLink={true}
+    i18nDeleteInProgressText={deleteInProgressText}
+    i18nPublishInProgressText={publishInProgressText}
+    i18nUnpublishInProgressText={unpublishInProgressText}
+    i18nPublishState={publishedText}
+    labelType={'primary'}
     hasViews={true}
     virtualizationName={virtualizationName3}
     virtualizationDescription={virtualizationDescription3}
@@ -198,28 +201,21 @@ const virtualizationItems = [
     i18nDelete={deleteText}
     i18nDeleteModalMessage={confirmDeleteMessage}
     i18nDeleteModalTitle={confirmDeleteTitle}
-    i18nDraft={draftText}
     i18nEdit={editText}
     i18nEditTip={editTip2}
-    i18nError={errorText}
-    /* TD-636: Commented out for TP
-    i18nExport={exportText} */
+    i18nExport={exportText}
     i18nInUseText={'Used by 0 integrations'}
-    i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
-    i18nPublishInProgress={publishInProgressText}
     i18nPublishLogUrlText={publishLogUrlText}
-    i18nUnpublishInProgress={unpublishInProgressText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP
-    onExport={action(exportText)} */
+    onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusBuilding}
-    publishingLogUrl={''}
+    publishingLogUrl={'log/usl/goes/here'}
     publishingCurrentStep={2}
     publishingTotalSteps={4}
     publishingStepText={'Building'}
@@ -309,6 +305,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -330,9 +327,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization
@@ -374,6 +370,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -395,9 +392,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization
@@ -441,6 +437,7 @@ stories
           filterTypes={[]}
           isSortAscending={true}
           linkCreateHRef={action('/data/create')}
+          linkImportHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -462,9 +459,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP
           i18nImport={importText}
-          i18nImportTip={importTip} */
+          i18nImportTip={importTip}
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
             createVirtualization
@@ -480,6 +476,7 @@ stories
           )}
           /* TD-636: Commented out for TP 
           onImport={action(importText)} */
+          children={virtItem}
           hasListData={true}
         />
       </Router>
