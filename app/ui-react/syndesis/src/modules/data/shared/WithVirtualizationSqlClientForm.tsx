@@ -208,12 +208,14 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
           )}
           queryResultRows={getQueryRows(queryResults)}
           queryResultCols={getQueryColumns(queryResults)}
+          isQueryRunning={isSubmitting}
           i18nResultsTitle={t('queryResultsTitle')}
           i18nResultsRowCountMsg={t('queryResultsRowCountMsg')}
           i18nEmptyStateInfo={t('viewEmptyStateInfo')}
           i18nEmptyStateTitle={t('viewEmptyStateTitle')}
           i18nImportViews={t('importDataSource')}
           i18nImportViewsTip={t('importDataSourceTip')}
+          i18nLoadingQueryResults={t('preview.loadingQueryResults')}
           i18nCreateView={t('createView')}
           i18nCreateViewTip={t('createViewTip')}
           linkCreateViewHRef={props.linkCreateView}

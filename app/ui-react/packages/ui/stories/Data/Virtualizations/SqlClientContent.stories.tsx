@@ -49,6 +49,8 @@ stories.add('No Views', () => (
       viewNames={[]}
       queryResultRows={[]}
       queryResultCols={[]}
+      isQueryRunning={false}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nResultsTitle={queryResultsTitle}
       i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
@@ -76,6 +78,37 @@ stories.add('With Views, no query results', () => (
       viewNames={viewNames}
       queryResultRows={[]}
       queryResultCols={[]}
+      isQueryRunning={false}
+      i18nLoadingQueryResults={'Loading query results...'}
+      i18nResultsTitle={queryResultsTitle}
+      i18nResultsRowCountMsg={queryResultRowCountMsg}
+      i18nEmptyStateInfo={emptyStateInfo}
+      i18nEmptyStateTitle={emptyStateTitle}
+      i18nImportViews={importText}
+      i18nImportViewsTip={importTip}
+      i18nCreateView={createText}
+      i18nCreateViewTip={createTip}
+      linkCreateViewHRef={''}
+      linkImportViewsHRef={''}
+      i18nEmptyResultsTitle={queryResultsTableEmptyStateTitle}
+      i18nEmptyResultsMsg={queryResultsTableEmptyStateInfo}
+    />
+  </Router>
+));
+
+stories.add('Loading query results', () => (
+  <Router>
+    <SqlClientContent
+      formContent={
+        <Container>
+          <h2>Form Content goes here</h2>
+        </Container>
+      }
+      viewNames={viewNames}
+      queryResultRows={resultRows}
+      queryResultCols={resultCols}
+      isQueryRunning={true}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nResultsTitle={queryResultsTitle}
       i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
@@ -103,6 +136,8 @@ stories.add('With Views, with query results', () => (
       viewNames={viewNames}
       queryResultRows={resultRows}
       queryResultCols={resultCols}
+      isQueryRunning={false}
+      i18nLoadingQueryResults={'Loading query results...'}
       i18nResultsTitle={queryResultsTitle}
       i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
