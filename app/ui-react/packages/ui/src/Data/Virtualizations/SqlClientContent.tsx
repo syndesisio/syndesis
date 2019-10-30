@@ -1,6 +1,6 @@
 import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState, OverlayTrigger, Table, Tooltip } from 'patternfly-react';
+import { EmptyState, OverlayTrigger, Spinner, Table, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
@@ -35,10 +35,12 @@ export interface ISqlClientContentProps {
    * ]
    */
   queryResultRows: Array<{}>;
+  isQueryRunning: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImportViews: string;
   i18nImportViewsTip: string;
+  i18nLoadingQueryResults: string;
   i18nResultsTitle: string;
   i18nResultsRowCountMsg: string;
   linkCreateViewHRef: H.LocationDescriptor;
@@ -91,47 +93,55 @@ export const SqlClientContent: React.FunctionComponent<
             isFilled={true}
             className={'sql-client-content__resultsSection'}
           >
-            {props.queryResultCols.length > 0 ? (
-              <Stack>
-                <StackItem isFilled={false}>{props.i18nResultsTitle}</StackItem>
-                <StackItem isFilled={false}>
-                  <small>
-                    <i>
-                      {props.i18nResultsRowCountMsg}
-                      {props.queryResultRows.length}
-                    </i>
-                  </small>
-                </StackItem>
-                <StackItem isFilled={true}>
-                  <GenericTable
-                    columns={props.queryResultCols.map(col => ({
-                      cell: {
-                        formatters: [defaultCellFormat],
-                      },
-                      header: {
-                        formatters: [defaultHeaderFormat],
-                        label: col.label,
-                      },
-                      property: col.id,
-                    }))}
-                    rows={props.queryResultRows}
-                    rowKey={
-                      props.queryResultCols.length > 0
-                        ? props.queryResultCols[0].id
-                        : ''
-                    }
-                    {...props}
-                  />
-                </StackItem>
-              </Stack>
-            ) : (
-              <EmptyState>
-                <EmptyState.Title>
-                  {props.i18nEmptyResultsTitle}
-                </EmptyState.Title>
-                <EmptyState.Info>{props.i18nEmptyResultsMsg}</EmptyState.Info>
-              </EmptyState>
-            )}
+            {props.isQueryRunning
+              ? <Split>
+                  <SplitItem isFilled={false}>
+                    <Spinner loading={true} inline={false} />
+                  </SplitItem>
+                  <SplitItem isFilled={true}>
+                    &nbsp;&nbsp;{props.i18nLoadingQueryResults}
+                  </SplitItem>
+                </Split>
+              : props.queryResultCols.length > 0 
+                ? <Stack>
+                    <StackItem isFilled={false}>{props.i18nResultsTitle}</StackItem>
+                    <StackItem isFilled={false}>
+                      <small>
+                        <i>
+                          {props.i18nResultsRowCountMsg}
+                          {props.queryResultRows.length}
+                        </i>
+                      </small>
+                    </StackItem>
+                    <StackItem isFilled={true}>
+                      <GenericTable
+                        columns={props.queryResultCols.map(col => ({
+                          cell: {
+                            formatters: [defaultCellFormat],
+                          },
+                          header: {
+                            formatters: [defaultHeaderFormat],
+                            label: col.label,
+                          },
+                          property: col.id,
+                        }))}
+                        rows={props.queryResultRows}
+                        rowKey={
+                          props.queryResultCols.length > 0
+                            ? props.queryResultCols[0].id
+                            : ''
+                        }
+                        {...props}
+                      />
+                    </StackItem>
+                  </Stack>
+                : <EmptyState>
+                    <EmptyState.Title>
+                      {props.i18nEmptyResultsTitle}
+                    </EmptyState.Title>
+                    <EmptyState.Info>{props.i18nEmptyResultsMsg}</EmptyState.Info>
+                  </EmptyState>
+            }
           </SplitItem>
         </Split>
       ) : (
