@@ -56,8 +56,9 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
     private HttpServer httpTestServer;
 
     /**
-     * Integration periodically retrieves all contacts from the database and maps the entries (first_name, last_name, company) to a spreadsheet on a Google Sheets account.
-     * The integration uses a split step to pass entries one by one to the Google Sheets API.
+     * Integration periodically retrieves all contacts (ordered by first_name) from the database and maps the
+     * entries (first_name, last_name, company) to a Http endpoint.
+     * The integration uses a split step to pass entries one by one to the Http endpoint.
      */
     @ClassRule
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
@@ -74,12 +75,12 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
     public void testDBToHttp(@CitrusResource TestRunner runner) {
         runner.sql(builder -> builder.dataSource(sampleDb)
                 .statements(Arrays.asList("insert into contact (first_name, last_name, company) values ('Joe','Jackson','Red Hat')",
-                                "insert into contact (first_name, last_name, company) values ('Joanne','Jackson','Red Hat')")));
+                                          "insert into contact (first_name, last_name, company) values ('Joanne','Jackson','Red Hat')")));
 
         runner.http(builder -> builder.server(httpTestServer)
                 .receive()
                 .put()
-                .payload("{\"contact\":\"Joe Jackson Red Hat\"}"));
+                .payload("{\"contact\":\"Joanne Jackson Red Hat\"}"));
 
         runner.http(builder -> builder.server(httpTestServer)
                 .send()
@@ -88,7 +89,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.http(builder -> builder.server(httpTestServer)
                 .receive()
                 .put()
-                .payload("{\"contact\":\"Joanne Jackson Red Hat\"}"));
+                .payload("{\"contact\":\"Joe Jackson Red Hat\"}"));
 
         runner.http(builder -> builder.server(httpTestServer)
                 .send()
