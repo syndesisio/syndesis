@@ -1080,7 +1080,7 @@
                     "type": "SQL_PARAM_IN"
                   },
                   "outputDataShape": {
-                    "description": "Result of SQL [select * from contact]",
+                    "description": "Result of SQL [select * from contact order by first_name]",
                     "kind": "json-schema",
                     "metadata": {
                       "variant": "collection"
@@ -1095,13 +1095,13 @@
                       "name": "SQL statement",
                       "properties": {
                         "query": {
-                          "defaultValue": "select * from contact",
+                          "defaultValue": "select * from contact order by first_name",
                           "deprecated": false,
                           "displayName": "SQL statement",
                           "enum": [
                             {
                               "label": "query",
-                              "value": "select * from contact"
+                              "value": "select * from contact order by first_name"
                             }
                           ],
                           "group": "common",
@@ -1138,7 +1138,7 @@
                 ]
               },
               "configuredProperties": {
-                "query": "select * from contact",
+                "query": "select * from contact order by first_name",
                 "schedulerExpression": "60000"
               },
               "connection": {
@@ -1472,7 +1472,7 @@
                     "type": "SQL_PARAM_IN"
                   },
                   "outputDataShape": {
-                    "description": "Result of SQL [select * from contact]",
+                    "description": "Result of SQL [select * from contact order by first_name]",
                     "kind": "json-schema",
                     "metadata": {
                       "variant": "element"
@@ -1482,7 +1482,7 @@
                     "type": "SQL_PARAM_OUT",
                     "variants": [
                       {
-                        "description": "Result of SQL [select * from contact]",
+                        "description": "Result of SQL [select * from contact order by first_name]",
                         "kind": "json-schema",
                         "metadata": {
                           "variant": "collection"
