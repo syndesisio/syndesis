@@ -107,6 +107,10 @@ release::run() {
     # Create the image for the upgrade
     create_upgrade_docker_image "$topdir" "$release_version"
 
+    # Create the operator image binaries
+    update_image_versions "$topdir" "$release_version" "$moving_tag"
+    "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
+
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
         drop_staging_repo "$topdir" "$maven_opts"
@@ -138,10 +142,6 @@ release::run() {
 
     # Release staging repo
     release_staging_repo "$topdir" "$maven_opts"
-
-    # Create the operator image binaries
-    update_image_versions "$topdir" "$release_version" "$moving_tag"
-    "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator" --image-tag "$release_version"
 
     # Prepare binaries for release
     prepare_binaries "${topdir}/install/operator/dist" "${topdir}/install/operator/releases"
