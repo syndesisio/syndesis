@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -35,6 +34,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.common.util.thread.Threads;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
@@ -69,7 +69,7 @@ public class EndpointController implements BackendController {
     @Override
     public void start() {
         if (scheduler == null) {
-            scheduler = Executors.newSingleThreadScheduledExecutor(threadFactory("Endpoint Controller"));
+            scheduler = Executors.newSingleThreadScheduledExecutor(Threads.newThreadFactory("Endpoint Controller"));
             scheduler.scheduleWithFixedDelay(this::scanIntegrationDeployments, 5, 60, TimeUnit.SECONDS);
             eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
         }
@@ -93,11 +93,6 @@ public class EndpointController implements BackendController {
 
             scheduler = null;
         }
-    }
-
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    private static ThreadFactory threadFactory(String name) {
-        return r -> new Thread(null, r, name);
     }
 
     private EventBus.Subscription getChangeEventSubscription() {

@@ -22,7 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import io.syndesis.common.model.ChangeEvent;
@@ -33,6 +32,7 @@ import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Exceptions;
 import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.common.util.thread.Threads;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
@@ -94,8 +94,8 @@ public abstract class BaseIntegrationController implements BackendController {
 
     @SuppressWarnings("FutureReturnValueIgnored")
     protected void doStart() {
-        executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
-        scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
+        executor = Executors.newSingleThreadExecutor(Threads.newThreadFactory("Integration Controller"));
+        scheduler = Executors.newScheduledThreadPool(2, Threads.newThreadFactory("Integration Controller Scheduler"));
 
         scheduler.scheduleAtFixedRate(this::scanIntegrationsForWork, 0, properties.getIntegrationStateCheckInterval(), TimeUnit.SECONDS);
         eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
@@ -118,11 +118,6 @@ public abstract class BaseIntegrationController implements BackendController {
             LOG.warn("Unable to cleanly stop: {}", e.getMessage());
             LOG.debug("Interrupted while stopping", e);
         }
-    }
-
-    @SuppressWarnings("PMD.DoNotUseThreads")
-    private static ThreadFactory threadFactory(String name) {
-        return r -> new Thread(null, r, name);
     }
 
     private EventBus.Subscription getChangeEventSubscription() {
@@ -240,7 +235,7 @@ public abstract class BaseIntegrationController implements BackendController {
                         dataManager.update(updated.builder().updatedAt(System.currentTimeMillis()).build());
                     }
                 });
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            } catch (Exception e) {
                 LOG.error("Error while processing integration status for integration {}", integrationDeploymentId, e);
                 // Something went wrong.. lets note it.
                 IntegrationDeployment current = dataManager.fetch(IntegrationDeployment.class, integrationDeploymentId);
