@@ -1,6 +1,8 @@
 import { EmptyState, ListView } from 'patternfly-react';
 import * as React from 'react';
+import { PageSection } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
+import './ViewInfoList.css';
 
 export interface IViewInfoListProps extends IListViewToolbarProps {
   i18nEmptyStateInfo: string;
@@ -12,23 +14,20 @@ export interface IViewInfoListProps extends IListViewToolbarProps {
 export const ViewInfoList: React.FunctionComponent<
   IViewInfoListProps
 > = props => {
-
   return (
-    <>
+    <PageSection noPadding={true} className={'view-info-list'}>
       <ListViewToolbar {...props}>
         <div />
       </ListViewToolbar>
       {props.children ? (
         <ListView>{props.children}</ListView>
       ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
-          </EmptyState>
-        )}
-    </>
+        <EmptyState>
+          <EmptyState.Icon />
+          <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
+          <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
+        </EmptyState>
+      )}
+    </PageSection>
   );
-}
+};
