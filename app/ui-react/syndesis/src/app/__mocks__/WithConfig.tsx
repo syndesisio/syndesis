@@ -23,7 +23,7 @@ export const WithConfig = ({ children }: mockIWithConfigProps) => {
         disableMappingPreviewMode: false,
       },
       datavirt: {
-        dvUrl: '/vdb-builder/v1/',
+        dvUrl: '/dv/v1/',
         enabled: 0
       },
       features: {

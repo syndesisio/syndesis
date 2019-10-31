@@ -159,7 +159,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.S2I.Image, renderContext.SpecDefaults.Components.S2I.Image)
 	ifMissingSet(&syndesis.Spec.Components.Db.Image, renderContext.SpecDefaults.Components.Db.Image)
 	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Image, renderContext.SpecDefaults.Components.PostgresExporter.Image)
-	ifMissingSet(&syndesis.Spec.Components.Komodo.Image, renderContext.SpecDefaults.Components.Komodo.Image)
+	ifMissingSet(&syndesis.Spec.Components.Dv.Image, renderContext.SpecDefaults.Components.Dv.Image)
 	ifMissingSet(&syndesis.Spec.Components.Oauth.Image, renderContext.SpecDefaults.Components.Oauth.Image)
 	ifMissingSet(&syndesis.Spec.Components.Prometheus.Image, renderContext.SpecDefaults.Components.Prometheus.Image)
 	ifMissingSet(&syndesis.Spec.Components.Upgrade.Image, renderContext.SpecDefaults.Components.Upgrade.Image)
@@ -178,7 +178,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSetResource(syndesis.Spec.Components.Db.Resources.Resources.Limits, "memory", cf.DefaultValue(cf.EnvPostgresqlMemoryLimit))
 	ifMissingSetResource(syndesis.Spec.Components.Meta.Resources.Resources.Limits, "memory", cf.DefaultValue(cf.EnvMetaMemoryLimit))
 	ifMissingSetResource(syndesis.Spec.Components.Server.Resources.Limits, "memory", cf.DefaultValue(cf.EnvServerMemoryLimit))
-	ifMissingSetResource(syndesis.Spec.Components.Komodo.Resources.Limits, "memory", cf.DefaultValue(cf.EnvKomodoMemoryLimit))
+	ifMissingSetResource(syndesis.Spec.Components.Dv.Resources.Limits, "memory", cf.DefaultValue(cf.EnvDvMemoryLimit))
 
 	if syndesis.Spec.Integration.Limit == nil {
 		maxIntegrations := 0

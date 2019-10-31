@@ -94,7 +94,7 @@ func (o *options) run() error {
 	util.KnownDockerImages[config.SpecDefaults.Components.Oauth.Image] = true
 	util.KnownDockerImages[config.SpecDefaults.Components.PostgresExporter.Image] = true
 	util.KnownDockerImages[config.SpecDefaults.Components.Prometheus.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Komodo.Image] = true
+	util.KnownDockerImages[config.SpecDefaults.Components.Dv.Image] = true
 	util.KnownDockerImages[config.SpecDefaults.Components.Upgrade.Image] = true
 
 	ctx := o.Context

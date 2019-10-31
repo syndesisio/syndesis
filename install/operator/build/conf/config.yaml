@@ -25,7 +25,7 @@ spec-defaults:
     db:
       imageStreamNamespace: openshift
       image: postgresql:9.6
-    komodo:
+    dv:
       image: docker.io/teiid/syndesis-dv:latest
     oauth:
       image: quay.io/openshift/origin-oauth-proxy:v4.0.0

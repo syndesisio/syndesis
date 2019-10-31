@@ -58,7 +58,7 @@ func TestGenerator(t *testing.T) {
 				Oauth: v1alpha1.OauthConfiguration{
 					Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0",
 				},
-				Komodo: v1alpha1.KomodoConfiguration{
+				Dv: v1alpha1.DvConfiguration{
 					Resources: v1alpha1.Resources{
 						ResourceRequirements: v12.ResourceRequirements{
 							Limits: v12.ResourceList{
@@ -69,7 +69,7 @@ func TestGenerator(t *testing.T) {
 				},
 			},
 			Addons: v1alpha1.AddonsSpec{
-				"komodo": {
+				"dv": {
 					"enabled": "true",
 				},
 			},
@@ -114,13 +114,13 @@ func TestGenerator(t *testing.T) {
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/komodo/", gen)
+	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/dv/", gen)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 
 	checks = 0
 	for _, resource := range resources {
-		checks += checkSynAddonKomodo(t, resource, gen.Syndesis)
+		checks += checkSynAddonDv(t, resource, gen.Syndesis)
 	}
 	assert.True(t, checks >= 1)
 }
@@ -223,7 +223,7 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 	config, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "data", "config.json")
 	if exists {
         var expected string
-        if (syndesis.Spec.Addons["komodo"]["enabled"] == "true") {
+        if (syndesis.Spec.Addons["dv"]["enabled"] == "true") {
             expected = "1"
         } else {
             expected = "0"
@@ -234,7 +234,7 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 	return 1
 }
 
-func checkSynAddonKomodo(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
 	if resource.GetName() != "syndesis-dv" {
 		return 0
 	}
@@ -242,13 +242,13 @@ func checkSynAddonKomodo(t *testing.T, resource unstructured.Unstructured, synde
 	container := sliceProperty(resource, "spec", "template", "spec", "containers")
 	if container != nil {
 		//
-		// Compare the komodo memory limit which is set via the template function 'memoryLimit'
+		// Compare the dv memory limit which is set via the template function 'memoryLimit'
 		//
 		limits, lexists, _ := unstructured.NestedFieldNoCopy(container, "resources", "limits")
 		assert.True(t, lexists)
 		limitMap, ok := limits.(map[string]interface{})
 		assert.True(t, ok)
-		assert.Equal(t, syndesis.Spec.Components.Komodo.Resources.Limits.Memory().String(), limitMap["memory"])
+		assert.Equal(t, syndesis.Spec.Components.Dv.Resources.Limits.Memory().String(), limitMap["memory"])
 	}
 
 	return 1
@@ -345,8 +345,8 @@ func TestConfigYAML(t *testing.T) {
 	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
 	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
 
 	assert.NotNil(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
 	assert.NotEmpty(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
@@ -360,8 +360,8 @@ func TestConfigYAML(t *testing.T) {
 	//assert.NotNil(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
 	//assert.NotEmpty(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
 
-	assert.NotNil(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Komodo.Image, "Spec.Components.Komodo.Image is a mandatory field in config.yaml file")
+	assert.NotNil(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
+	assert.NotEmpty(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
 
 	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
 	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
