@@ -15,28 +15,30 @@
  */
 package io.syndesis.connector.calendar;
 
-import java.util.Map;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.impl.DefaultMessage;
+import org.junit.Test;
 
 import com.google.api.services.calendar.model.Event;
 
-public class GoogleCalendarEventsCustomizer implements ComponentProxyCustomizer {
+import static org.assertj.core.api.Assertions.assertThat;
 
-    @Override
-    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeConsumer(GoogleCalendarEventsCustomizer::beforeConsumer);
-    }
+public class GoogleCalendarEventsCustomizerTest {
 
-    static void beforeConsumer(Exchange exchange) {
-        final Message in = exchange.getIn();
-        final Event event = exchange.getIn().getBody(Event.class);
+    @Test
+    public void shouldConvertGoogleEventToConnectorEventModel() {
+        Exchange exchange = new DefaultExchange((CamelContext) null);
+        Message in = new DefaultMessage(null);
+        in.setBody(new Event());
+        exchange.setIn(in);
 
-        GoogleCalendarEventModel model = GoogleCalendarEventModel.newFrom(event);
-        in.setBody(model);
+        GoogleCalendarEventsCustomizer.beforeConsumer(exchange);
+
+        Object body = in.getBody();
+
+        assertThat(body).isInstanceOf(GoogleCalendarEventModel.class);
     }
 }

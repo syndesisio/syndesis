@@ -36,27 +36,22 @@ public class GoogleCalendarMetaDataRetrieval extends ComponentMetadataRetrieval 
      * TODO: use local extension, remove when switching to camel 2.22.x
      */
     @Override
-    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
+    protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId,
+        String actionId) {
         return new GoogleCalendarMetaDataExtension(context);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
-        try {
-            Set<CalendarListEntry> calendars = (Set<CalendarListEntry>) metadata.getPayload();
+    protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties,
+        MetaDataExtension.MetaData metadata) {
 
-            List<PropertyPair> calendarResult = new ArrayList<>();
-            calendars.stream().forEach(
-                t -> calendarResult.add(new PropertyPair(t.getId(), t.getSummary()))
-            );
+        @SuppressWarnings("unchecked")
+        Set<CalendarListEntry> calendars = (Set<CalendarListEntry>) metadata.getPayload();
 
-            return SyndesisMetadata.of(
-                Collections.singletonMap("calendarId", calendarResult)
-            );
-        } catch ( Exception e) {
-            return SyndesisMetadata.EMPTY;
-        }
+        List<PropertyPair> calendarResult = new ArrayList<>();
+        calendars.stream().forEach(t -> calendarResult.add(new PropertyPair(t.getId(), t.getSummary())));
+
+        return SyndesisMetadata.of(Collections.singletonMap("calendarId", calendarResult));
     }
 
 }
