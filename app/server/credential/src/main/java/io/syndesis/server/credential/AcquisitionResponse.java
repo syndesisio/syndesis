@@ -23,7 +23,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = AcquisitionResponse.Builder.class)
 public interface AcquisitionResponse {
 
-    @SuppressWarnings("PMD.UseUtilityClass")
     final class Builder extends ImmutableAcquisitionResponse.Builder {
 
         public static AcquisitionResponse.Builder from(final AcquisitionFlow flow) {
@@ -36,7 +35,6 @@ public interface AcquisitionResponse {
     @JsonDeserialize(builder = State.Builder.class)
     interface State {
 
-        @SuppressWarnings("PMD.UseUtilityClass")
         final class Builder extends ImmutableState.Builder {
 
             public static State cookie(final String spec) {

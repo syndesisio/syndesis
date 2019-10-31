@@ -15,9 +15,11 @@
  */
 package io.syndesis.connector.email.model;
 
+import java.util.Objects;
+
 import io.syndesis.connector.email.EMailConstants;
 
-public class EMailMessageModel implements EMailConstants {
+public final class EMailMessageModel implements EMailConstants {
 
     private String subject;
     private String from;
@@ -94,7 +96,6 @@ public class EMailMessageModel implements EMailConstants {
     }
 
     @Override
-    @SuppressWarnings("PMD")
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -105,55 +106,14 @@ public class EMailMessageModel implements EMailConstants {
         }
 
         EMailMessageModel other = (EMailMessageModel) obj;
-        if (bcc == null) {
-            if (other.bcc != null) {
-                return false;
-            }
-        } else if (!bcc.equals(other.bcc)) {
-            return false;
-        }
+        boolean equal = Objects.equals(bcc, other.bcc);
+        equal &= Objects.equals(cc, other.cc);
+        equal &= Objects.equals(subject, other.subject);
+        equal &= Objects.equals(content, other.content);
+        equal &= Objects.equals(from, other.from);
+        equal &= Objects.equals(to, other.to);
 
-        if (cc == null) {
-            if (other.cc != null) {
-                return false;
-            }
-        } else if (!cc.equals(other.cc)) {
-            return false;
-        }
-
-        if (subject == null) {
-            if (other.subject != null) {
-                return false;
-            }
-        } else if (!subject.equals(other.subject)) {
-            return false;
-        }
-
-        if (content == null) {
-            if (other.content != null) {
-                return false;
-            }
-        } else if (!content.equals(other.content)) {
-            return false;
-        }
-
-        if (from == null) {
-            if (other.from != null) {
-                return false;
-            }
-        } else if (!from.equals(other.from)) {
-            return false;
-        }
-
-        if (to == null) {
-            if (other.to != null) {
-                return false;
-            }
-        } else if (!to.equals(other.to)) {
-            return false;
-        }
-
-        return true;
+        return equal;
     }
 
     @Override

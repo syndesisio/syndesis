@@ -63,7 +63,6 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
         return meta.get();
     }
 
-    @SuppressWarnings("PMD.AvoidDeeplyNestedIfStmts")
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
         Component component = context.getComponent(componentId, true, false);
         if (component == null) {

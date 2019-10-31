@@ -133,7 +133,7 @@ public class ComponentVerifier implements Verifier {
                     result.getStatus() == ComponentVerifierExtension.Result.Status.UNSUPPORTED) {
                     break;
                 }
-            } catch (@SuppressWarnings("PMD") Exception exp) {
+            } catch (Exception exp) {
                 resp.add(toExceptionResponse(exp, scope, params.keySet()));
                 LOG.error("Exception during verify with params {} and scope {} : {}", params, scope, exp.getMessage(), exp);
             }

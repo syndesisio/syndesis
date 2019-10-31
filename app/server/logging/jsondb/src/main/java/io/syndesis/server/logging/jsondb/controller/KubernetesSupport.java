@@ -123,7 +123,7 @@ public class KubernetesSupport {
                     });
                 }
             });
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException t) {
+        } catch (RuntimeException t) {
             throw new IOException("Unexpected Error", t);
         } finally {
             Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);

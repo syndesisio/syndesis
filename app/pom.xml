@@ -2157,6 +2157,13 @@
         <scope>test</scope>
       </dependency>
 
+      <dependency>
+        <groupId>nl.jqno.equalsverifier</groupId>
+        <artifactId>equalsverifier</artifactId>
+        <version>3.1.10</version>
+        <scope>test</scope>
+      </dependency>
+
       <!-- ========================================== -->
 
       <!-- === Atlasmap -->

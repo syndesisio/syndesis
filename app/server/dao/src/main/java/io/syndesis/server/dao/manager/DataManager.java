@@ -131,7 +131,7 @@ public class DataManager implements DataAccessObjectRegistry {
                     store(modelData);
                 }
             }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             throw new IllegalStateException("Cannot read startup data due to: " + e.getMessage(), e);
         }
     }
@@ -192,7 +192,7 @@ public class DataManager implements DataAccessObjectRegistry {
             LOGGER.debug("{}:{}", kind, modelData.getDataAsJson());
 
             store(entity, kind.getModelClass());
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             LOGGER.warn("Cannot load entity from file: ", e);
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -207,7 +207,7 @@ public class DataManager implements DataAccessObjectRegistry {
                 WithId<?> prev = null;
                 try {
                     prev = this.fetch(modelClass, id.get());
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
+                } catch (RuntimeException e) {
                     // Lets try to wipe out the previous record in case
                     // we are running into something like a schema change.
                     this.delete(modelClass, id.get());
@@ -218,7 +218,7 @@ public class DataManager implements DataAccessObjectRegistry {
                     update(entity);
                 }
             }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             LOGGER.warn("Cannot load entity: ", e);
             throw SyndesisServerException.launderThrowable(e);
         }

@@ -32,7 +32,6 @@ import org.immutables.value.Value;
 @JsonDeserialize(builder = Violation.Builder.class)
 public interface Violation {
 
-    @SuppressWarnings("PMD.UseUtilityClass")
     final class Builder extends ImmutableViolation.Builder {
 
         public static Violation fromConstraintViolation(final ConstraintViolation<?> constraintViolation) {

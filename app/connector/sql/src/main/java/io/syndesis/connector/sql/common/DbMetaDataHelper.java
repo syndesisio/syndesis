@@ -118,9 +118,8 @@ public final class DbMetaDataHelper {
         return paramList;
     }
 
-    @SuppressWarnings("PMD.RemoteInterfaceNamingConvention")
-    private List<ColumnMetaData> getColumnMetaData(String catalog, //NOPMD
-            String schema, String tableName, String columnName, int expectedSize) throws SQLException { //NOPMD
+    private List<ColumnMetaData> getColumnMetaData(String catalog,
+            String schema, String tableName, String columnName, int expectedSize) throws SQLException {
         try (ResultSet columns = meta.getColumns(
                 catalog,
                 adapt(schema),

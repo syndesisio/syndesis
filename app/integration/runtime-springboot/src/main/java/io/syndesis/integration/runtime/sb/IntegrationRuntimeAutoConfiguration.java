@@ -92,7 +92,7 @@ public class IntegrationRuntimeAutoConfiguration {
                 try {
                     // Register routes to the camel context
                     camelContext.addRoutes(routeBuilder);
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                } catch (Exception e) {
                     throw new IllegalArgumentException(e);
                 }
             }

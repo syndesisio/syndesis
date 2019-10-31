@@ -27,7 +27,6 @@ import java.util.List;
 import lombok.Data;
 
 @Data
-@SuppressWarnings("PMD.StdCyclomaticComplexity")
 public class SqlParam {
 
     private String name;
@@ -86,7 +85,7 @@ public class SqlParam {
         }
     }
 
-    @SuppressWarnings({"rawtypes", "PMD.CyclomaticComplexity"})
+    @SuppressWarnings("PMD.CyclomaticComplexity") // a lot of types to handle
     static TypeValue<?> javaType(final JDBCType jdbcType) {
 
         switch (jdbcType) {

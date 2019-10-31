@@ -56,12 +56,11 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
     }
 
     @Override
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     public Optional<InputStream> getIcon(InputStream binaryExtension, String path) {
         if (!allowedIconPaths.containsKey(path)) {
             try {
                 binaryExtension.close();
-            } catch (IOException e) {
+            } catch (IOException ignored) {
                 // ignore
             }
             throw new IllegalArgumentException("The specified path for the icon (" + path + ") is not allowed. Only " + allowedIconPaths.keySet() + " are allowed.");
@@ -96,9 +95,8 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
         return extension;
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     private static Optional<InputStream> readPath(InputStream binaryExtension, String path) {
-        JarInputStream jar;
+        final JarInputStream jar;
         try {
             jar = new JarInputStream(binaryExtension);
         } catch (IOException ioe) {
@@ -116,10 +114,10 @@ class DefaultBinaryExtensionAnalyzer implements BinaryExtensionAnalyzer {
 
             jar.close();
             return Optional.empty();
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (IOException e) {
             try {
                 jar.close();
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex2) {
+            } catch (Exception ignored) {
                 // ignore
             }
             throw SyndesisServerException.launderThrowable(e);
