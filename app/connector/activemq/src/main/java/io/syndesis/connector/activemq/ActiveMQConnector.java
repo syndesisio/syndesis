@@ -125,7 +125,6 @@ class ActiveMQConnector extends ComponentProxyComponent {
     // Helpers
     // ************************************
 
-    @SuppressWarnings("PMD.AvoidDeeplyNestedIfStmts")
     private SjmsComponent lookupComponent() {
         final CamelContext context = getCamelContext();
         final List<String> names = context.getComponentNames();
@@ -136,25 +135,27 @@ class ActiveMQConnector extends ComponentProxyComponent {
 
         // Try to check if a component with same set-up has already been
         // configured, if so reuse it.
-        for (String name: names) {
+        for (String name : names) {
             Component cmp = context.getComponent(name, false, false);
-            if (cmp instanceof SjmsComponent) {
-                ConnectionFactory factory = ((SjmsComponent)cmp).getConnectionFactory();
-                if (factory instanceof ActiveMQConnectionFactory) {
-                    ActiveMQConnectionFactory amqFactory = (ActiveMQConnectionFactory)factory;
+            if (!(cmp instanceof SjmsComponent)) {
+                continue;
+            }
 
-                    if (!Objects.equals(brokerUrl, amqFactory.getBrokerURL())) {
-                        continue;
-                    }
-                    if (!Objects.equals(username, amqFactory.getUserName())) {
-                        continue;
-                    }
-                    if (!Objects.equals(password, amqFactory.getPassword())) {
-                        continue;
-                    }
+            ConnectionFactory factory = ((SjmsComponent) cmp).getConnectionFactory();
+            if (factory instanceof ActiveMQConnectionFactory) {
+                ActiveMQConnectionFactory amqFactory = (ActiveMQConnectionFactory) factory;
 
-                    return (SjmsComponent) cmp;
+                if (!Objects.equals(brokerUrl, amqFactory.getBrokerURL())) {
+                    continue;
                 }
+                if (!Objects.equals(username, amqFactory.getUserName())) {
+                    continue;
+                }
+                if (!Objects.equals(password, amqFactory.getPassword())) {
+                    continue;
+                }
+
+                return (SjmsComponent) cmp;
             }
         }
 

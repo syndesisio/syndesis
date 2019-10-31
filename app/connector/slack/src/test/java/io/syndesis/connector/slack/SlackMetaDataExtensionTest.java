@@ -16,10 +16,10 @@
 package io.syndesis.connector.slack;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
@@ -44,7 +44,7 @@ public class SlackMetaDataExtensionTest {
         Optional<MetaDataExtension.MetaData> meta = extension.meta(properties);
 
         assertThat(meta).isPresent();
-        assertThat(meta.get().getPayload()).isInstanceOf(HashSet.class);
+        assertThat(meta.get().getPayload()).isInstanceOf(Set.class);
         assertThat(meta.get().getAttributes()).hasEntrySatisfying(MetaDataExtension.MetaData.JAVA_TYPE, new Condition<Object>() {
             @Override
             public boolean matches(Object val) {
@@ -58,7 +58,7 @@ public class SlackMetaDataExtensionTest {
             }
         });
     }
-    
+
     @Test
     public void noChannelTest() {
         CamelContext context = new DefaultCamelContext();

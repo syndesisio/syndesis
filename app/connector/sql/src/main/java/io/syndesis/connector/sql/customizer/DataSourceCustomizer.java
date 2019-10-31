@@ -44,17 +44,13 @@ public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelCont
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         if (!options.containsKey("dataSource")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("url")) {
-                try {
-                    BasicDataSource ds = new BasicDataSource();
+                BasicDataSource ds = new BasicDataSource();
 
-                    consumeOption(camelContext, options, "user", String.class, ds::setUsername);
-                    consumeOption(camelContext, options, "password", String.class, ds::setPassword);
-                    consumeOption(camelContext, options, "url", String.class, ds::setUrl);
+                consumeOption(camelContext, options, "user", String.class, ds::setUsername);
+                consumeOption(camelContext, options, "password", String.class, ds::setPassword);
+                consumeOption(camelContext, options, "url", String.class, ds::setUrl);
 
-                    options.put("dataSource", ds);
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-                    throw new IllegalArgumentException(e);
-                }
+                options.put("dataSource", ds);
             } else {
                 LOGGER.debug("Not enough information provided to set-up the DataSource");
             }
