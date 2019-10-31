@@ -48,7 +48,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
-@SuppressWarnings("PMD")
+@SuppressWarnings("PMD.GodClass")
 @SupportedSourceVersion(value = SourceVersion.RELEASE_8)
 @SupportedAnnotationTypes({
     ActionProcessor.SYNDESIS_ANNOTATION_CLASS_NAME
@@ -76,13 +76,14 @@ public class ActionProcessor extends AbstractProcessor {
     private Class<? extends Annotation> routeBuilderClass;
     private Class<?> stepClass;
 
+    @SuppressWarnings("PMD.AvoidSynchronizedAtMethodLevel") // as in super
     @Override
     public synchronized void init(ProcessingEnvironment processingEnv) {
         super.init(processingEnv);
 
         mapper = new ObjectMapper()
             .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);;
+            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
 
         annotationClass = mandatoryFindClass(SYNDESIS_ANNOTATION_CLASS_NAME);
         propertyAnnotationClass = mandatoryFindClass(SYNDESIS_PROPERTY_ANNOTATION_CLASS_NAME);
@@ -250,23 +251,24 @@ public class ActionProcessor extends AbstractProcessor {
                 String javaType = typeMirror.toString();
                 String type = propertyNode.get("type").asText();
 
-                if (!propertyNode.has("enums")) {
-                    // don't auto detect enum if enums are set through annotations
-                    if (typeElement != null && typeElement.getKind() == ElementKind.ENUM) {
-                        for (Element enumElement : typeElement.getEnclosedElements()) {
-                            if (enumElement.getKind() == ElementKind.ENUM_CONSTANT) {
-                                ObjectNode enumNode = mapper.createObjectNode();
+                final boolean doesntHaveEnums = !propertyNode.has("enums");
+                final boolean typeIsEnum = typeElement != null && typeElement.getKind() == ElementKind.ENUM;
+                if (doesntHaveEnums && typeIsEnum) {
+                    // don't auto detect enum if enums are set through
+                    // annotations
+                    for (Element enumElement : typeElement.getEnclosedElements()) {
+                        if (enumElement.getKind() == ElementKind.ENUM_CONSTANT) {
+                            ObjectNode enumNode = mapper.createObjectNode();
 
-                                writeIfNotEmpty(enumNode, "label", enumElement.toString());
-                                writeIfNotEmpty(enumNode, "value", enumElement.toString());
+                            writeIfNotEmpty(enumNode, "label", enumElement.toString());
+                            writeIfNotEmpty(enumNode, "value", enumElement.toString());
 
-                                propertyNode.withArray("enums").add(enumNode);
-                            }
+                            propertyNode.withArray("enums").add(enumNode);
                         }
-
-                        javaType = String.class.getName();
-                        type = String.class.getName();
                     }
+
+                    javaType = String.class.getName();
+                    type = String.class.getName();
                 }
 
                 if (type == null || "".equals(type.trim())){
