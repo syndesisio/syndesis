@@ -88,11 +88,10 @@ public class SqlFileStore {
         }
     }
 
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     public void destroy() {
         try {
             dbi.useHandle(h -> h.execute("DROP TABLE filestore"));
-        } catch (CallbackFailedException ex) {
+        } catch (CallbackFailedException ignored) {
             // simply ignore
         }
     }
@@ -240,36 +239,30 @@ public class SqlFileStore {
      * Derby does not allow to read from the blob after the connection has been closed.
      * It also requires an outcome of commit/rollback.
      */
-    @SuppressWarnings("PMD.EmptyCatchBlock")
     private InputStream doReadDerby(String path) {
-        Handle h = dbi.open();
-        try {
+        try (Handle h = dbi.open()) {
             h.getConnection().setAutoCommit(false);
 
-            List<Map<String, Object>> res = h.select("SELECT data FROM filestore WHERE path=?", path);
-
-            Optional<Blob> blob = res.stream()
-                .map(row -> row.get("data"))
-                .map(Blob.class::cast)
-                .findFirst();
-
-            if (blob.isPresent()) {
-                return new HandleCloserInputStream(h, blob.get().getBinaryStream());
-            } else {
-                h.commit();
-                h.close();
-                return null;
-            }
-
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-            // Do cleanup
             try {
-                h.rollback();
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
-                // ignore
-            }
-            IOUtils.closeQuietly(h);
+                List<Map<String, Object>> res = h.select("SELECT data FROM filestore WHERE path=?", path);
 
+                Optional<Blob> blob = res.stream()
+                    .map(row -> row.get("data"))
+                    .map(Blob.class::cast)
+                    .findFirst();
+
+                if (blob.isPresent()) {
+                    return new HandleCloserInputStream(h, blob.get().getBinaryStream());
+                }
+            } catch (SQLException e) {
+                h.rollback();
+                throw e;
+            }
+
+
+            h.commit();
+            return null;
+        } catch (SQLException e) {
             throw DaoException.launderThrowable(e);
         }
     }
@@ -356,16 +349,12 @@ public class SqlFileStore {
         }
 
         @Override
-        @SuppressWarnings("PMD.EmptyCatchBlock")
         public void close() throws IOException {
             try {
                 super.close();
             } finally {
-                try {
-                    handle.commit();
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
-                    // ignore
-                }
+                handle.commit();
+
                 handle.close();
             }
         }

@@ -39,7 +39,6 @@ public class KnativeMetaDataExtension extends AbstractMetaDataExtension {
     }
 
     @Override
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public Optional<MetaData> meta(Map<String, Object> parameters) {
         String name = ConnectorOptions.extractOption(parameters, "name");
         if (name == null) {
@@ -59,7 +58,7 @@ public class KnativeMetaDataExtension extends AbstractMetaDataExtension {
                     channelNames.addAll(KnativeMetaDataSupport.listServices());
                     break;
                 default:
-                    throw new RuntimeException("Unsupported Knative type: " + type);
+                    throw new IllegalArgumentException("Unsupported Knative type: " + type);
             }
 
             return Optional.of(

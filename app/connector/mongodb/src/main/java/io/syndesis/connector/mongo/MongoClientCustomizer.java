@@ -46,22 +46,18 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
-                try {
-                    MongoConfiguration mongoConf = new MongoConfiguration();
-                    consumeOption(camelContext, options, "host", String.class, mongoConf::setHost);
-                    consumeOption(camelContext, options, "user", String.class, mongoConf::setUser);
-                    consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
-                    consumeOption(camelContext, options, "adminDB", String.class, mongoConf::setAdminDB);
-                    LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
-                    MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
-                    MongoClient mongoClient = new MongoClient(mongoClientURI);
-                    options.put("mongoConnection", mongoClient);
-                    if (!options.containsKey("connectionBean")) {
-                        //We safely put a default name instead of leaving null
-                        options.put("connectionBean", String.format("%s-%s", mongoConf.getHost(), mongoConf.getUser()));
-                    }
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-                    throw new IllegalArgumentException(e);
+                MongoConfiguration mongoConf = new MongoConfiguration();
+                consumeOption(camelContext, options, "host", String.class, mongoConf::setHost);
+                consumeOption(camelContext, options, "user", String.class, mongoConf::setUser);
+                consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
+                consumeOption(camelContext, options, "adminDB", String.class, mongoConf::setAdminDB);
+                LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
+                MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
+                MongoClient mongoClient = new MongoClient(mongoClientURI);
+                options.put("mongoConnection", mongoClient);
+                if (!options.containsKey("connectionBean")) {
+                    //We safely put a default name instead of leaving null
+                    options.put("connectionBean", String.format("%s-%s", mongoConf.getHost(), mongoConf.getUser()));
                 }
             } else {
                 LOGGER.warn(

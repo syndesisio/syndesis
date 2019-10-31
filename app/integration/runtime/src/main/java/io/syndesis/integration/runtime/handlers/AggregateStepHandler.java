@@ -115,7 +115,6 @@ public class AggregateStepHandler implements IntegrationStepHandler {
         }
     }
 
-    @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     private static class ScriptAggregationStrategy implements AggregationStrategy {
         private String language;
         private String script;
@@ -140,7 +139,7 @@ public class AggregateStepHandler implements IntegrationStepHandler {
             try {
                 return (Exchange) engine.eval(script, bindings);
             } catch (ScriptException e) {
-                throw new RuntimeException("Script aggregation strategy failed", e);
+                throw new IllegalStateException("Script aggregation strategy failed", e);
             }
         }
 

@@ -37,19 +37,14 @@ import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.update.controller.ResourceUpdateHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.LoggerIsNotStaticFinal")
 abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements ResourceUpdateHandler {
-    private final Logger logger;
     private final AtomicBoolean running;
     private final DataManager dataManager;
     private final EncryptionComponent encryptionComponent;
     private final Validator validator;
 
     protected AbstractResourceUpdateHandler(DataManager dataManager, EncryptionComponent encryptionComponent, Validator validator) {
-        this.logger = LoggerFactory.getLogger(getClass());
         this.running = new AtomicBoolean(false);
         this.dataManager = dataManager;
         this.encryptionComponent = encryptionComponent;
@@ -60,10 +55,6 @@ abstract class AbstractResourceUpdateHandler<T extends WithId<T>> implements Res
         if (running.compareAndSet(false, true)) {
             try {
                 compute(event).forEach(dataManager::set);
-            } catch (@SuppressWarnings("PMD.AvoidCatchingThrowable") Throwable e) {
-                logger.warn("Error handling update event {}", event, e);
-
-                throw e;
             } finally {
                 running.lazySet(false);
             }
