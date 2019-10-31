@@ -144,7 +144,6 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
     @JsonDeserialize(builder = ConnectorDescriptor.StandardizedError.Builder.class)
     interface StandardizedError {
 
-        @SuppressWarnings("PMD.UseUtilityClass")
         final class Builder extends ImmutableStandardizedError.Builder {
             public static ConnectorDescriptor.StandardizedError of(final String name, final String displayName) {
                 return new ConnectorDescriptor.StandardizedError.Builder().name(name).displayName(displayName).build();

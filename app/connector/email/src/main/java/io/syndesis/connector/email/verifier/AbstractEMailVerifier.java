@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.email.verifier;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,8 +100,7 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         setJavaMailProperty(configuration, "mail." + secureProtocol.id() + ".timeout", timeoutValue);
     }
 
-    @SuppressWarnings("PMD")
-    protected MailConfiguration createConfiguration(Map<String, Object> parameters) throws Exception {
+    protected MailConfiguration createConfiguration(Map<String, Object> parameters) {
         secureProtocol(parameters);
         SSLContextParameters sslContextParameters = EMailUtil.createSSLContextParameters(parameters);
         parameters.put(SSL_CONTEXT_PARAMETERS, sslContextParameters);
@@ -110,10 +108,14 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         //
         // setProperties will strip parameters key/values so copy the map
         //
-        return setProperties(new MailConfiguration(), new HashMap<>(parameters));
+        try {
+            return setProperties(new MailConfiguration(), new HashMap<>(parameters));
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Unable to set parameters", e);
+        }
     }
 
-    protected JavaMailSender createJavaMailSender(MailConfiguration configuration) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException {
+    protected JavaMailSender createJavaMailSender(MailConfiguration configuration) throws ReflectiveOperationException {
             Method method = MailConfiguration.class.getDeclaredMethod("createJavaMailSender");
             method.setAccessible(true);
             return (JavaMailSender) method.invoke(configuration);

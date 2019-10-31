@@ -21,7 +21,6 @@ import io.syndesis.common.model.connection.Connector;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 
-@SuppressWarnings("PMD.UseUtilityClass")
 class ConnectorSettings extends SocialProperties {
 
     ConnectorSettings(final Connector connector) {

@@ -31,7 +31,7 @@ public class IntegrationMetadataContextCustomizer implements ContextCustomizer {
         try {
             // register custom mbean
             camelContext.addService(new CamelContextMetadataMBean());
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             ObjectHelper.wrapRuntimeCamelException(e);
         }
         LOGGER.info("Added Syndesis MBean Service");

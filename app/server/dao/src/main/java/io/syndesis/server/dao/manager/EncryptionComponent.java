@@ -115,7 +115,7 @@ public class EncryptionComponent {
         if( result.startsWith(ENCRYPTED_PREFIX) ) {
             try {
                 result = textEncryptor.decrypt(stripPrefix(result, ENCRYPTED_PREFIX));
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
+            } catch (RuntimeException e) {
                 // We could fail to decrypt the value..
                 result = null;
             }

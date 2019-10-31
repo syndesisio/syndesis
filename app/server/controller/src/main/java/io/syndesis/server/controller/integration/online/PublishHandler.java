@@ -53,7 +53,6 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
 
     private final IntegrationProjectGenerator projectGenerator;
     private final List<DeploymentDataCustomizer> customizers;
-    @SuppressWarnings("PMD.DefaultPackage")
     PublishHandler(
         OpenShiftService openShiftService,
         IntegrationDao iDao,
@@ -112,7 +111,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
 
             deploymentData = new DeploymentData.Builder().createFrom(deploymentData).withImage(stepOncePerformer.stepsPerformed.get(buildLabel)).build();
             stepOncePerformer.perform("deploy", this::deploy, deploymentData);
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (Exception e) {
             logError(integrationDeployment, "[ERROR] Activation failure", e);
             // Setting a message to update means implicitly that the deployment is in an error state (for the UI)
             return new StateUpdate(IntegrationDeploymentState.Pending, stepOncePerformer.getStepsPerformed(), e.getMessage());

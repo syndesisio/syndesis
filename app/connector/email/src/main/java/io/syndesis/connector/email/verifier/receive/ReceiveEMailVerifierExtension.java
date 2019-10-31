@@ -65,7 +65,6 @@ public class ReceiveEMailVerifierExtension extends AbstractEMailVerifier {
     // *********************************
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY);
 

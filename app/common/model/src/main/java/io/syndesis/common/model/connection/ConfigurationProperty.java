@@ -45,7 +45,6 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
     @JsonDeserialize(builder = PropertyValue.Builder.class)
     interface PropertyValue {
 
-        @SuppressWarnings("PMD.UseUtilityClass")
         class Builder extends ImmutablePropertyValue.Builder {
             public static PropertyValue from(final ActionPropertySuggestion suggestion) {
                 return new Builder().label(suggestion.displayValue()).value(suggestion.value()).build();

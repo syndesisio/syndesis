@@ -189,17 +189,14 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         }
     }
 
-    @SuppressWarnings("PMD")
     @Override
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
-        MailComponent component = new MailComponent(getCamelContext());
-        MailConfiguration configuration = new MailConfiguration(getCamelContext());
-
         String protocol = getProtocol();
         if (protocol == null) {
             throw new IllegalStateException("No protocol specified for email component");
         }
 
+        MailConfiguration configuration = new MailConfiguration(getCamelContext());
         configuration.setProtocol(protocol);
         configuration.setHost(getHost());
         configuration.setPort(getPort());
@@ -227,6 +224,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         // Decode mime headers like the subject from Quoted-Printable encoding to normal text
         configuration.setMimeDecodeHeaders(true);
 
+        MailComponent component = new MailComponent(getCamelContext());
         component.setConfiguration(configuration);
         return Optional.of(component);
     }

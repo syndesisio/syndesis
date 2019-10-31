@@ -29,7 +29,6 @@ import picocli.CommandLine.Command;
 
 @SpringBootApplication(scanBasePackageClasses = SyndesisCommandLine.class)
 @ComponentScan(basePackageClasses = SyndesisCommandLine.class, includeFilters = @Filter(Command.class))
-@SuppressWarnings("PMD.UseUtilityClass")
 public class SyndesisCommandLine implements PicocliConfigurer {
 
     private static final Class<?>[] COMMANDS = {MigrateCommand.class};

@@ -189,7 +189,7 @@ public final class SwaggerHelper {
         try {
             resolvedSpecification = resolve(specification);
             resultBuilder.resolvedSpecification(resolvedSpecification);
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
+        } catch (final Exception e) {
             LOG.debug("Unable to resolve OpenAPI document\n{}\n", specification, e);
             return resultBuilder
                 .addError(new Violation.Builder().error("error").property("").message("Unable to resolve OpenAPI document from: "

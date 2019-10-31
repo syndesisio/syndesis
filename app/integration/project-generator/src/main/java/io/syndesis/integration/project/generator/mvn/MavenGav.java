@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.CompareToBuilder;
 
-@SuppressWarnings("PMD")
 public final class MavenGav implements Comparable<MavenGav> {
     private static final Pattern DEPENDENCY_PATTERN = Pattern.compile("([^: ]+):([^: ]+)(:([^: ]*)(:([^: ]+))?)?(:([^: ]+))?");
     private static final char SEPARATOR_COORDINATE = ':';

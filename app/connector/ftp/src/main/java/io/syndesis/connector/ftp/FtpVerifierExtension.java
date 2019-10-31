@@ -55,7 +55,6 @@ public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
                 .error(parameters, FtpVerifierExtension::verifyCredentials).build();
     }
 
-    @SuppressWarnings("PMD.NPathComplexity")
     private static void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         final String host = ConnectorOptions.extractOption(parameters, "host");

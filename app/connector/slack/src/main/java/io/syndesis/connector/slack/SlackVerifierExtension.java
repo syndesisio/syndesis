@@ -65,7 +65,6 @@ public class SlackVerifierExtension extends DefaultComponentVerifierExtension {
         return ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY).error(parameters, this::verifyCredentials).build();
     }
 
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         String webhookUrl = ConnectorOptions.extractOption(parameters, "webhookUrl");

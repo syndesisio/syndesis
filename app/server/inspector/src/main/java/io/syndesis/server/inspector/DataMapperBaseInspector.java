@@ -98,7 +98,7 @@ abstract class DataMapperBaseInspector<T> implements Inspector {
         String json;
         try {
             json = fetchJsonFor(fullyQualifiedName, context);
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {
+        } catch (final Exception e) {
             if (strict) {
                 throw SyndesisServerException.launderThrowable(e);
             }
@@ -108,7 +108,6 @@ abstract class DataMapperBaseInspector<T> implements Inspector {
         return getPathsFromJavaClassJson(prefix, json, context);
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     protected final List<String> getPathsFromJavaClassJson(final String prefix, final String specification, final Context<T> context) {
         try {
             final JsonNode node = JsonUtils.reader().readTree(specification);

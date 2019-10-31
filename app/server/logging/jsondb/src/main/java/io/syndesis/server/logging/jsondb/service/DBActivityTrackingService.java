@@ -86,7 +86,7 @@ public class DBActivityTrackingService implements ActivityTrackingService {
                     activity.setSteps(new ArrayList<ActivityStep>());
                 }
                 rc.add(activity);
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException ignored) {
+            } catch (RuntimeException ignored) {
                 // We could get stuff like class cast exceptions..
                 LOG.debug("Could convert entry: {}", entry, ignored);
             }

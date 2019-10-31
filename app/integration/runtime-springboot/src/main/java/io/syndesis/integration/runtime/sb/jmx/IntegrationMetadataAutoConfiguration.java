@@ -49,7 +49,7 @@ public class IntegrationMetadataAutoConfiguration {
                     // register custom mbean
                     camelContext.addService(new CamelContextMetadataMBean());
                     LOGGER.info("Added Syndesis MBean Service");
-                } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+                } catch (Exception e) {
                     ObjectHelper.wrapRuntimeCamelException(e);
                 }
             }
