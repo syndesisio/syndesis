@@ -9,6 +9,12 @@
       syndesis.io/component: syndesis-server
   rules:
   - apiGroups:
+    - camel.apache.org
+    resources:
+    - "*"
+    - "*/finalizers"
+    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - apiGroups:
     - ""
     resources:
     - pods
