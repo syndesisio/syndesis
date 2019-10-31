@@ -42,9 +42,8 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
         return step.getActionAs(StepAction.class).isPresent();
     }
 
-    @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition<?>> handle(io.syndesis.common.model.integration.Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(final io.syndesis.common.model.integration.Step step, final ProcessorDefinition<?> route, final IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
         // Model
@@ -54,27 +53,27 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
         final Map<String, String> properties = step.getConfiguredProperties();
         final CamelContext context = builder.getContext();
 
+        final ProcessorDefinition<?> definition;
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
             for (Map.Entry<String, String> entry: properties.entrySet()) {
                 route.setHeader(entry.getKey(), builder.constant(entry.getValue()));
             }
 
-            route = route.to(action.getDescriptor().getEntrypoint());
+            definition = route.to(action.getDescriptor().getEntrypoint());
         } else if (action.getDescriptor().getKind() == StepAction.Kind.BEAN) {
-            String method = null;
             String function = action.getDescriptor().getEntrypoint();
-            String options = null;
-
             if (ObjectHelper.isEmpty(function)) {
                 return Optional.empty();
             }
 
             int idx = function.indexOf("::");
+            String method = null;
             if (idx > 0 && !function.endsWith("::")) {
                 method = function.substring(idx + 2);
                 function = function.substring(0, idx);
             }
 
+            String options = null;
             if (ObjectHelper.isNotEmpty(properties)) {
                 options = properties.entrySet().stream()
                     .filter(entry -> ObjectHelper.isNotEmpty(entry.getKey()))
@@ -83,18 +82,18 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     .collect(Collectors.joining("&"));
             }
 
-            String uri = "class:" + function;
+            StringBuilder uri = new StringBuilder("class:").append(function);
             if (method != null) {
-                uri += "?method=" + method;
+                uri.append("?method=").append(method);
 
                 if (options != null){
-                    uri += "&" + options;
+                    uri.append('&').append(options);
                 }
             } else if (options != null){
-                uri += "?" + options;
+                uri.append('?').append(options);
             }
 
-            route = route.to(uri);
+            definition = route.to(uri.toString());
         } else if (action.getDescriptor().getKind() == StepAction.Kind.STEP) {
             final String target = action.getDescriptor().getEntrypoint();
             final TypeConverter converter = context.getTypeConverter();
@@ -116,15 +115,17 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     // the handler method.
                     ObjectHelper.trySetCamelContext(stepExtension, context);
 
-                    final Optional<ProcessorDefinition<?>> configured = stepExtension.configure(context, route, props);
-
-                    return configured;
+                    return stepExtension.configure(context, route, props);
                 } catch (ClassNotFoundException e) {
                     throw new IllegalStateException(e);
                 }
             }
+
+            definition = route;
+        } else {
+            definition = route;
         }
 
-        return Optional.of(route);
+        return Optional.of(definition);
     }
 }

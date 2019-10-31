@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
  */
-@SuppressWarnings("PMD")
+@SuppressWarnings("PMD.GodClass")
 public class IntegrationRouteBuilder extends RouteBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteBuilder.class);
 
@@ -125,8 +125,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         if (sourceProvider != null) {
             try {
                 return sourceProvider.getSource(getContext());
-            } catch (IOException | RuntimeException e) {
-                throw e;
             } catch (Exception e) {
                 throw ObjectHelper.wrapRuntimeCamelException(e);
             }
@@ -147,12 +145,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     private void configureFlow(Flow flow, final String flowIndex) throws URISyntaxException {
         final List<Step> steps = flow.getSteps();
-        final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
-
         if (steps.isEmpty()) {
             return;
         }
 
+        final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
         ProcessorDefinition<?> parent = configureRouteScheduler(flow);
         final Deque<String> splitStack = new ArrayDeque<>();
         for (int stepIndex = 0; stepIndex < steps.size(); stepIndex++) {
@@ -245,19 +242,21 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
     }
 
-    private ProcessorDefinition<?> closeParent(ProcessorDefinition<?> parent, String stepId,
-                                               BiFunction<ProcessorDefinition<?>, String, ProcessorDefinition<?>> fallback) {
+    private ProcessorDefinition<?> closeParent(final ProcessorDefinition<?> parent, final String stepId,
+        final BiFunction<ProcessorDefinition<?>, String, ProcessorDefinition<?>> fallback) {
+        ProcessorDefinition<?> definition;
+
         if (parent instanceof PipelineDefinition) {
-            parent = captureOutMessage(parent, stepId);
-            parent = parent.end();
+            definition = captureOutMessage(parent, stepId);
+            definition = parent.end();
         } else if (parent instanceof ExpressionNode) {
-            parent = captureOutMessage(parent, stepId);
-            parent = parent.endParent();
+            definition = captureOutMessage(parent, stepId);
+            definition = parent.endParent();
         } else {
-            parent = fallback.apply(parent, stepId);
+            definition = fallback.apply(parent, stepId);
         }
 
-        return parent;
+        return definition;
     }
 
     /**
@@ -266,7 +265,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
      * @param stepId
      * @return
      */
-    private ProcessorDefinition<?> captureOutMessage(ProcessorDefinition<?> parent, String stepId) {
+    private ProcessorDefinition<?> captureOutMessage(final ProcessorDefinition<?> parent, String stepId) {
+        ProcessorDefinition<?> definition;
         if (parent instanceof PipelineDefinition &&
                 ObjectHelper.isNotEmpty(parent.getOutputs())) {
             ProcessorDefinition<?> lastInPipeline = parent.getOutputs().get(parent.getOutputs().size() - 1);
@@ -276,12 +276,12 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
         } else {
             // not in a pipeline so set the step id header to be sure it is there
-            parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
+            definition = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
         }
 
-        parent = parent.process(OutMessageCaptureProcessor.INSTANCE)
+        definition = parent.process(OutMessageCaptureProcessor.INSTANCE)
                         .id(String.format("capture-out:%s", stepId));
-        return parent;
+        return definition;
     }
 
     private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId, String stepId) {

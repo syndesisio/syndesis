@@ -40,7 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@SuppressWarnings("PMD.CyclomaticComplexity")
 public final class ProjectGeneratorHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProjectGeneratorHelper.class);
 
@@ -68,38 +67,38 @@ public final class ProjectGeneratorHelper {
         return bos.toByteArray();
     }
 
-    @SuppressWarnings("PMD.NPathComplexity")
     public static boolean filterDefaultDependencies(MavenGav gav) {
-        boolean answer = true;
-
-        if ("org.springframework.boot".equals(gav.getGroupId())) {
-            if ("spring-boot-starter-web".equals(gav.getArtifactId())) {
-                answer = false;
-            } if ("spring-boot-starter-undertow".equals(gav.getArtifactId())) {
-                answer = false;
-            } else if ("spring-boot-starter-actuator".equals(gav.getArtifactId())) {
-                answer = false;
-            }
-        }
-
-        if ("org.apache.camel".equals(gav.getGroupId()) && "camel-spring-boot-starter".equals(gav.getArtifactId())) {
-            answer = false;
-        }
-
-        if ("io.syndesis".equals(gav.getGroupId()) && "integration-runtime".equals(gav.getArtifactId())) {
-            answer = false;
-        }
-
-        if ("org.apache.camel.k".equals(gav.getGroupId())) {
-            // Camel K does not work with s2i runtime
-            answer = false;
-        }
-
-        if (!answer) {
+        if (!shouldIncludeDependency(gav)) {
             LOGGER.debug("Dependency: {} filtered", gav);
+            return false;
         }
 
-        return answer;
+        return true;
+    }
+
+    private static boolean shouldIncludeDependency(MavenGav gav) {
+        final String groupId = gav.getGroupId();
+        final String artifactId = gav.getArtifactId();
+
+        final boolean isSpringBoot = "org.springframework.boot".equals(groupId)
+            && ("spring-boot-starter-web".equals(artifactId)
+                || "spring-boot-starter-undertow".equals(artifactId)
+                || "spring-boot-starter-actuator".equals(artifactId));
+        if (isSpringBoot) {
+            return false;
+        }
+
+        final boolean isApacheSpringBoot = "org.apache.camel".equals(groupId) && "camel-spring-boot-starter".equals(artifactId);
+        if (isApacheSpringBoot) {
+            return false;
+        }
+
+        final boolean isSyndesisIntegrationRuntime = "io.syndesis".equals(groupId) && "integration-runtime".equals(artifactId);
+        if (isSyndesisIntegrationRuntime) {
+            return false;
+        }
+
+        return !"org.apache.camel.k".equals(groupId);
     }
 
     public static Mustache compile(MustacheFactory mustacheFactory, ProjectGeneratorConfiguration generatorProperties, String template, String name) throws IOException {

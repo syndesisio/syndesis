@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
 import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
 
-@SuppressWarnings("PMD.ExcessiveImports")
 public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorStepHandler.class);
 
@@ -68,9 +67,8 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         ).isPresent();
     }
 
-    @SuppressWarnings("PMD")
     @Override
-    public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
+    public Optional<ProcessorDefinition<?>> handle(final Step step, final ProcessorDefinition<?> route, final IntegrationRouteBuilder builder, final String flowIndex, final String stepIndex) {
         // Model
         final Connection connection = step.getConnection().get();
         final Connector connector = connection.getConnector().get();
@@ -112,41 +110,46 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         connector.getConfiguredProperties().forEach(properties::put);
         descriptor.getConfiguredProperties().forEach(properties::put);
 
+        final Map<String, Object> proxyProperties = new HashMap<>(properties);
+
+        // Set input/output data shape if the component proxy implements
+        // Input/OutputDataShapeAware
+        descriptor.getInputDataShape().ifPresent(ds -> trySetInputDataShape(component, ds));
+        descriptor.getOutputDataShape().ifPresent(ds -> trySetOutputDataShape(component, ds));
+
+        // Try to set properties to the component
+        HandlerCustomizer.setProperties(context, component, proxyProperties);
+
+        component.setCamelContext(context);
+
+        HandlerCustomizer.customizeComponent(context, connector, descriptor, component, proxyProperties);
+
+        component.setOptions(proxyProperties);
+
+        // Remove component
+        context.removeComponent(component.getComponentId());
         try {
-            final Map<String, Object> proxyProperties = new HashMap<>(properties);
-
-            // Set input/output data shape if the component proxy implements
-            // Input/OutputDataShapeAware
-            descriptor.getInputDataShape().ifPresent(ds -> trySetInputDataShape(component, ds));
-            descriptor.getOutputDataShape().ifPresent(ds -> trySetOutputDataShape(component, ds));
-
-            // Try to set properties to the component
-            HandlerCustomizer.setProperties(context, component, proxyProperties);
-
-            component.setCamelContext(context);
-
-            HandlerCustomizer.customizeComponent(context, connector, descriptor, component, proxyProperties);
-
-            component.setOptions(proxyProperties);
-
-            // Remove component
-            context.removeComponent(component.getComponentId());
             context.removeService(component);
-
-            // Register component
-            context.addService(component, true, true);
-            context.addComponent(component.getComponentId(), component);
-
-            if (route == null) {
-                route = builder.from(componentId);
-            } else {
-                route = route.to(componentId);
-            }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IllegalStateException("Unable to remove component `" + component.getComponentId() + "` from Camel managed services", e);
         }
 
-        return Optional.ofNullable(route);
+        // Register component
+        try {
+            context.addService(component, true, true);
+        } catch (Exception e) {
+            throw new IllegalStateException("Unable to add component `" + component.getComponentId() + "` to Camel managed services", e);
+        }
+        context.addComponent(component.getComponentId(), component);
+
+        final ProcessorDefinition<?> definition;
+        if (route == null) {
+            definition = builder.from(componentId);
+        } else {
+            definition = route.to(componentId);
+        }
+
+        return Optional.ofNullable(definition);
     }
 
     // *************************
