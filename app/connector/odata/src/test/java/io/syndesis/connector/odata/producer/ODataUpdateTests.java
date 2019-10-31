@@ -384,13 +384,10 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         request.addHeader(HttpHeader.ODATA_VERSION, ODataServiceVersion.V40.toString());
         request.addHeader(HttpHeader.ODATA_MAX_VERSION, ODataServiceVersion.V40.toString());
 
-        CloseableHttpClient client = HttpClients.createMinimal();
-        try {
-            CloseableHttpResponse response = client.execute(request);
+        try (CloseableHttpClient client = HttpClients.createMinimal();
+            CloseableHttpResponse response = client.execute(request)) {
             StatusLine statusLine = response.getStatusLine();
             assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.getStatusCode());
-        } finally {
-            client.close();
         }
     }
 

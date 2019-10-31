@@ -57,7 +57,7 @@ public class ComponentProxyWithCustomComponentTest {
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-sql-proxy", "sql") {
             @Override
-            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
                 return Optional.of(new SqlComponent());
             }
         };
@@ -78,7 +78,7 @@ public class ComponentProxyWithCustomComponentTest {
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-sql-proxy", "sql") {
             @Override
-            protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) throws Exception {
+            protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) {
                 assertThat(component).isInstanceOf(SqlComponent.class);
                 assertThat(options).containsKey("dataSource");
                 assertThat(options).hasEntrySatisfying("dataSource", new Condition<Object>() {
@@ -110,13 +110,13 @@ public class ComponentProxyWithCustomComponentTest {
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-sql-proxy", "sql") {
             @Override
-            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
                 componentRef.set(new SqlComponent());
 
                 return Optional.of(componentRef.get());
             }
             @Override
-            protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) throws Exception {
+            protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) {
                 assertThat(component).isSameAs(componentRef.get());
                 assertThat(component).isInstanceOf(SqlComponent.class);
                 assertThat(options).containsKey("dataSource");

@@ -99,9 +99,8 @@ class ActiveMQConnector extends ComponentProxyComponent {
         this.clientCertificate = clientCertificate;
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
         SjmsComponent component = lookupComponent();
 
         if (component == null) {

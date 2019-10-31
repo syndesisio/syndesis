@@ -16,6 +16,8 @@
 package io.syndesis.connector.knative;
 
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,28 +40,29 @@ public final class KnativeComponentProxyFactory implements ComponentProxyFactory
     public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
         return new ComponentProxyComponent(componentId, componentScheme, createCatalog()) {
             @Override
-            @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+            protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
                 // No specific component options
                 return Optional.empty();
             }
 
             @Override
-            @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-            protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+            protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
                 return getCamelContext().getEndpoint(computeKnativeUri(scheme, options));
             }
         };
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    public static String computeKnativeUri(String scheme, Map<String, String> options) throws Exception {
+    public static String computeKnativeUri(String scheme, Map<String, String> options) {
         Map<String, Object> uriOptions = new HashMap<>(options);
         String type = (String) uriOptions.remove("type");
         String name = (String) uriOptions.remove("name");
         String uri = scheme + "://" + type + "/" + name;
         if (!uriOptions.isEmpty()) {
-            uri = URISupport.appendParametersToURI(uri, uriOptions);
+            try {
+                return URISupport.appendParametersToURI(uri, uriOptions);
+            } catch (UnsupportedEncodingException | URISyntaxException e) {
+                throw new IllegalStateException("Unable to append parameters to URI", e);
+            }
         }
         return uri;
     }

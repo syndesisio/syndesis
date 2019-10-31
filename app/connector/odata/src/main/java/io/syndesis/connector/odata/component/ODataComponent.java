@@ -116,7 +116,6 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         this.queryParams = queryParams;
     }
 
-    @SuppressWarnings("PMD")
     public boolean isFilterAlreadySeen() {
         return filterAlreadySeen ;
     }
@@ -190,10 +189,8 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
             .build();
     }
 
-    @SuppressWarnings("PMD")
     @Override
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
-        Olingo4Component component = new Olingo4Component(getCamelContext());
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
 
         Map<String, String> httpHeaders = new HashMap<>();
@@ -250,29 +247,27 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
             configuration.setFilterAlreadySeen(isFilterAlreadySeen());
         }
 
+        Olingo4Component component = new Olingo4Component(getCamelContext());
         component.setConfiguration(configuration);
         return Optional.of(component);
     }
 
-    @SuppressWarnings("PMD")
     private void configureResourcePath(Olingo4AppEndpointConfiguration configuration, Map<String, Object> options) {
         //
         // keyPredicate is not supported properly in 2.21.0 but is handled
         // in 2.24.0 by setting it directly on the configuration. Can modify
         // this when component dependencies are upgraded.
         //
-        String resourcePath = ConnectorOptions.extractOption(options, RESOURCE_PATH);
+        StringBuilder resourcePath = new StringBuilder(ConnectorOptions.extractOption(options, RESOURCE_PATH));
         if (getKeyPredicate() != null) {
-            resourcePath = resourcePath + ODataUtil.formatKeyPredicate(getKeyPredicate(), true);
+            resourcePath.append(ODataUtil.formatKeyPredicate(getKeyPredicate(), true));
         }
 
-        configuration.setResourcePath(resourcePath);
+        configuration.setResourcePath(resourcePath.toString());
     }
 
     @Override
-    protected Endpoint createDelegateEndpoint(
-                                              ComponentDefinition definition, String scheme, Map<String, String> options)
-                                              throws Exception {
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
 
         Endpoint endpoint = super.createDelegateEndpoint(definition, scheme, options);
 

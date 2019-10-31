@@ -37,8 +37,7 @@ public class SalesforceStreamingConnectorFactory implements ComponentProxyFactor
         }
 
         @Override
-        @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-        protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+        protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
             final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);
             final String query = "SELECT Id FROM " + sObjectName;
             final String topicName = SalesforceUtil.topicNameFor(options);

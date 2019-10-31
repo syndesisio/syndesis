@@ -15,8 +15,15 @@
  */
 package io.syndesis.connector.odata.verifier;
 
-import java.security.cert.CertificateException;
+import java.io.IOException;
 import java.util.Map;
+
+import javax.net.ssl.SSLHandshakeException;
+
+import io.syndesis.connector.odata.ODataConstants;
+import io.syndesis.connector.odata.ODataUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
+
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError.StandardCode;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
@@ -29,9 +36,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.syndesis.connector.odata.ODataConstants;
-import io.syndesis.connector.odata.ODataUtil;
-import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class ODataVerifierExtension extends DefaultComponentVerifierExtension implements ODataConstants {
 
@@ -92,10 +96,10 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
             );
         }
 
-        try (CloseableHttpClient httpClient = ODataUtil.createHttpClient(parameters)) {
-            serviceUrl = ODataUtil.removeEndSlashes(serviceUrl);
-            HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
-            CloseableHttpResponse response = httpClient.execute(httpGet);
+        serviceUrl = ODataUtil.removeEndSlashes(serviceUrl);
+        HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
+        try (CloseableHttpClient httpClient = ODataUtil.createHttpClient(parameters);
+            CloseableHttpResponse response = httpClient.execute(httpGet)) {
             if (response.getStatusLine().getStatusCode() == 401) {
                 String msg = "Cannot authenticate to service URL";
                 LOGGER.error(msg);
@@ -111,7 +115,7 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                            .parameterKey(SERVICE_URI).build());
                 }
 
-        } catch (CertificateException e) {
+        } catch (SSLHandshakeException e) {
             String msg = "Invalid certificate: " + e.getMessage();
             LOGGER.error(msg, e);
             builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
@@ -119,7 +123,7 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                           .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
                           .parameterKey(SERVER_CERTIFICATE)
                           .build());
-        } catch (Exception e) {
+        } catch (IOException e) {
             String msg = "Failure to communicate with service URL";
             LOGGER.error(msg, e);
             builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)

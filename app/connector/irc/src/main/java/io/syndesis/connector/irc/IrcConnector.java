@@ -25,7 +25,7 @@ public class IrcConnector extends ComponentProxyComponent {
     }
 
     @Override
-    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
+    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) {
         Map<String, String> endpointOptions = super.buildEndpointOptions(remaining, options);
         String channels = ConnectorOptions.extractOption(options, "channels");
         if (channels != null) {

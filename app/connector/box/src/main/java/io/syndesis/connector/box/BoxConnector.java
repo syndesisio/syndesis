@@ -38,7 +38,7 @@ public class BoxConnector extends ComponentProxyComponent {
     }
 
     @Override
-    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) throws Exception {
+    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) {
         super.configureDelegateComponent(definition, component, options);
 
         if (component instanceof BoxComponent) {
@@ -53,7 +53,7 @@ public class BoxConnector extends ComponentProxyComponent {
     }
 
     @Override
-    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
+    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) {
         Map<String, String> endpointOptions = super.buildEndpointOptions(remaining, options);
         Stream.of("parentFolderId", "fileId").forEach(key -> {
                 ConnectorOptions.extractOptionAndConsume(options, key, (String value) -> endpointOptions.put(key, value));
