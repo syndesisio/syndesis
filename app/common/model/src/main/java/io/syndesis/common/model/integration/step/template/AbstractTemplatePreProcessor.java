@@ -16,6 +16,7 @@
 package io.syndesis.common.model.integration.step.template;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -46,12 +47,12 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
     }
 
     protected String ensurePrefix(String symbolName) {
-        return symbolName.startsWith(BODY_PREFIX) ? symbolName : BODY_PREFIX + symbolName;
+        return symbolName.startsWith("body.") ? symbolName : "body." + symbolName;
     }
 
     protected String labelledGroup(Matcher m, String label) {
         Optional<String> optional = Optional.ofNullable(m.group(label));
-        return optional.orElse(EMPTY_STRING);
+        return optional.orElse("");
     }
 
     protected void checkValidTags(String otag, String symbol, String ctag) throws TemplateProcessingException {
@@ -136,7 +137,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 // Found a partial containing the close and onlyPartial flag matches
                 // this syntax so found the end of the token so token is complete
                 //
-                token = currentToken + SPACE + partial;
+                token = currentToken + " " + partial;
                 onlyPartial = null;
                 break;
             }
@@ -146,7 +147,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 // middle of a symbol since onlyPartial flag is set thus append and
                 // continue
                 //
-                token = currentToken + SPACE + partial;
+                token = currentToken + " " + partial;
                 break;
             }
         }
@@ -164,12 +165,11 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
     @Override
     public String preProcess(String template) throws TemplateProcessingException {
-        Scanner lineScanner = new Scanner(template);
-        try {
+        try (Scanner lineScanner = new Scanner(template)) {
             while(lineScanner.hasNextLine()) {
                 String line = lineScanner.nextLine();
                 Scanner scanner = new Scanner(line);
-                scanner.useDelimiter(SPACE);
+                scanner.useDelimiter(" ");
 
                 try {
                     String completeToken = null;
@@ -200,14 +200,14 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                         }
 
                         if (scanner.hasNext()) {
-                            append(SPACE);
+                            append(" ");
                         }
 
                         completeToken = null;
                     }
 
                     if (lineScanner.hasNextLine()) {
-                        append(NEW_LINE);
+                        append("\n");
                     }
 
                     if (onlyPartial != null) {
@@ -221,8 +221,6 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                 }
             }
 
-        } finally {
-            lineScanner.close();
         }
 
         return sb.toString();
@@ -234,14 +232,9 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
         sb = new StringBuilder();
     }
 
-    /*
-     * Suppress warning as this method is the default and we want to only override it
-     * if parameters are specifically required.
-     */
-    @SuppressWarnings("PMD.EmptyMethodInAbstractClassShouldBeAbstract")
     @Override
     public Map<String, Object> getUriParams() {
-        return null;
+        return Collections.emptyMap();
     }
 
     @Override

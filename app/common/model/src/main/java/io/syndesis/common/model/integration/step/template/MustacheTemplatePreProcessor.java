@@ -47,7 +47,7 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     private boolean inSectionSymbol;
 
     MustacheTemplatePreProcessor() {
-        super(new SymbolSyntax(OPEN_BRACE + OPEN_BRACE, CLOSE_BRACE + CLOSE_BRACE));
+        super(new SymbolSyntax("{{", "}}"));
     }
 
     private static boolean isOpeningSectionSymbol(String literal) {

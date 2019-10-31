@@ -15,10 +15,11 @@
  */
 package io.syndesis.common.util.cache;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -54,10 +55,10 @@ public class LRUCacheManagerTest {
         cache.put(two, two);
         cache.put(three, three);
 
-        Assertions.assertThat(cache.size()).isEqualTo(2);
-        Assertions.assertThat(cache.get(one)).isNull();
-        Assertions.assertThat(cache.get(two)).isNotNull();
-        Assertions.assertThat(cache.get(three)).isNotNull();
+        assertThat(cache.size()).isEqualTo(2);
+        assertThat(cache.get(one)).isNull();
+        assertThat(cache.get(two)).isNotNull();
+        assertThat(cache.get(three)).isNotNull();
     }
 
     @Test
@@ -68,7 +69,7 @@ public class LRUCacheManagerTest {
         // same cache, but warning printed
         Cache<String, String> cache3 = manager.getCache("cache", !this.soft);
 
-        Assertions.assertThat(cache1).isEqualTo(cache2);
-        Assertions.assertThat(cache1).isEqualTo(cache3);
+        assertThat(cache1).isEqualTo(cache2);
+        assertThat(cache1).isEqualTo(cache3);
     }
 }

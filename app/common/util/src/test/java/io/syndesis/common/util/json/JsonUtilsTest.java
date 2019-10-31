@@ -21,7 +21,9 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import com.fasterxml.jackson.databind.ObjectReader;
-import org.assertj.core.api.Assertions;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 import org.junit.Test;
 
 /**
@@ -31,54 +33,54 @@ public class JsonUtilsTest {
 
     @Test
     public void isJson() {
-        Assertions.assertThat(JsonUtils.isJson(null)).isFalse();
-        Assertions.assertThat(JsonUtils.isJson("")).isFalse();
-        Assertions.assertThat(JsonUtils.isJson("{}")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("{\"foo\": \"bar\"}")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("  {\"foo\": \"bar\"}  ")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("\n{\"foo\": \"bar\"}\n")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("[]")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("[{\"foo\": \"bar\"}]")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("  [{\"foo\": \"bar\"}]  ")).isTrue();
-        Assertions.assertThat(JsonUtils.isJson("\n[{\"foo\": \"bar\"}]\n")).isTrue();
+        assertThat(JsonUtils.isJson(null)).isFalse();
+        assertThat(JsonUtils.isJson("")).isFalse();
+        assertThat(JsonUtils.isJson("{}")).isTrue();
+        assertThat(JsonUtils.isJson("{\"foo\": \"bar\"}")).isTrue();
+        assertThat(JsonUtils.isJson("  {\"foo\": \"bar\"}  ")).isTrue();
+        assertThat(JsonUtils.isJson("\n{\"foo\": \"bar\"}\n")).isTrue();
+        assertThat(JsonUtils.isJson("[]")).isTrue();
+        assertThat(JsonUtils.isJson("[{\"foo\": \"bar\"}]")).isTrue();
+        assertThat(JsonUtils.isJson("  [{\"foo\": \"bar\"}]  ")).isTrue();
+        assertThat(JsonUtils.isJson("\n[{\"foo\": \"bar\"}]\n")).isTrue();
     }
 
     @Test
     public void isJsonObject() {
-        Assertions.assertThat(JsonUtils.isJsonObject(null)).isFalse();
-        Assertions.assertThat(JsonUtils.isJsonObject("")).isFalse();
-        Assertions.assertThat(JsonUtils.isJsonObject("{}")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonObject("{\"foo\": \"bar\"}")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonObject("  {\"foo\": \"bar\"}  ")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonObject("\n{\"foo\": \"bar\"}\n")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonObject("[]")).isFalse();
+        assertThat(JsonUtils.isJsonObject(null)).isFalse();
+        assertThat(JsonUtils.isJsonObject("")).isFalse();
+        assertThat(JsonUtils.isJsonObject("{}")).isTrue();
+        assertThat(JsonUtils.isJsonObject("{\"foo\": \"bar\"}")).isTrue();
+        assertThat(JsonUtils.isJsonObject("  {\"foo\": \"bar\"}  ")).isTrue();
+        assertThat(JsonUtils.isJsonObject("\n{\"foo\": \"bar\"}\n")).isTrue();
+        assertThat(JsonUtils.isJsonObject("[]")).isFalse();
     }
 
     @Test
     public void isJsonArray() {
-        Assertions.assertThat(JsonUtils.isJsonArray(null)).isFalse();
-        Assertions.assertThat(JsonUtils.isJsonArray("")).isFalse();
-        Assertions.assertThat(JsonUtils.isJsonArray("{}")).isFalse();
-        Assertions.assertThat(JsonUtils.isJsonArray("[]")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonArray("[{\"foo\": \"bar\"}]")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonArray("  [{\"foo\": \"bar\"}]  ")).isTrue();
-        Assertions.assertThat(JsonUtils.isJsonArray("\n[{\"foo\": \"bar\"}]\n")).isTrue();
+        assertThat(JsonUtils.isJsonArray(null)).isFalse();
+        assertThat(JsonUtils.isJsonArray("")).isFalse();
+        assertThat(JsonUtils.isJsonArray("{}")).isFalse();
+        assertThat(JsonUtils.isJsonArray("[]")).isTrue();
+        assertThat(JsonUtils.isJsonArray("[{\"foo\": \"bar\"}]")).isTrue();
+        assertThat(JsonUtils.isJsonArray("  [{\"foo\": \"bar\"}]  ")).isTrue();
+        assertThat(JsonUtils.isJsonArray("\n[{\"foo\": \"bar\"}]\n")).isTrue();
     }
 
     @Test
     public void arrayToJsonBeans() throws IOException {
         ObjectReader reader = JsonUtils.reader();
-        Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{}"))).isEqualTo(Collections.emptyList());
-        Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{\"foo\": \"bar\"}"))).isEqualTo(Collections.emptyList());
-        Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[]"))).isEqualTo(Collections.emptyList());
-        Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[{\"foo\": \"bar\"}]"))).isEqualTo(Collections.singletonList("{\"foo\":\"bar\"}"));
-        Assertions.assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[{\"foo1\": \"bar1\"}, {\"foo2\": \"bar2\"}]"))).isEqualTo(Arrays.asList("{\"foo1\":\"bar1\"}", "{\"foo2\":\"bar2\"}"));
+        assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{}"))).isEqualTo(Collections.emptyList());
+        assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("{\"foo\": \"bar\"}"))).isEqualTo(Collections.emptyList());
+        assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[]"))).isEqualTo(Collections.emptyList());
+        assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[{\"foo\": \"bar\"}]"))).isEqualTo(Collections.singletonList("{\"foo\":\"bar\"}"));
+        assertThat(JsonUtils.arrayToJsonBeans(reader.readTree("[{\"foo1\": \"bar1\"}, {\"foo2\": \"bar2\"}]"))).isEqualTo(Arrays.asList("{\"foo1\":\"bar1\"}", "{\"foo2\":\"bar2\"}"));
     }
 
     @Test
     public void jsonBeansToArray() {
-        Assertions.assertThat(JsonUtils.jsonBeansToArray(Collections.emptyList())).isEqualTo("[]");
-        Assertions.assertThat(JsonUtils.jsonBeansToArray(Collections.singletonList("{\"foo\": \"bar\"}"))).isEqualTo("[{\"foo\": \"bar\"}]");
-        Assertions.assertThat(JsonUtils.jsonBeansToArray(Arrays.asList("{\"foo1\": \"bar1\"}", "{\"foo2\": \"bar2\"}"))).isEqualTo("[{\"foo1\": \"bar1\"},{\"foo2\": \"bar2\"}]");
+        assertThat(JsonUtils.jsonBeansToArray(Collections.emptyList())).isEqualTo("[]");
+        assertThat(JsonUtils.jsonBeansToArray(Collections.singletonList("{\"foo\": \"bar\"}"))).isEqualTo("[{\"foo\": \"bar\"}]");
+        assertThat(JsonUtils.jsonBeansToArray(Arrays.asList("{\"foo1\": \"bar1\"}", "{\"foo2\": \"bar2\"}"))).isEqualTo("[{\"foo1\": \"bar1\"},{\"foo2\": \"bar2\"}]");
     }
 }

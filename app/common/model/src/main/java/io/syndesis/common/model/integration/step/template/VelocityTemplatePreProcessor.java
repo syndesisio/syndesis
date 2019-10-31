@@ -60,7 +60,6 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
         return !token.contains(DOLLAR_SIGN);
     }
 
-    @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     @Override
     protected void parseSymbol(String literal) throws TemplateProcessingException {
         if (vSymbolDeclaration) {
@@ -94,19 +93,21 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
             checkValidSymbol(symbol, SYMBOL_PATTERN);
 
-            String replacement = otag + ensurePrefix(symbol);
+            StringBuilder replacement = new StringBuilder(otag)
+                .append(ensurePrefix(symbol));
+
             if (ctag != null) {
                 //
                 // If formal var definition, ie. ${xyz} then ctag
                 // will be the final '}'.
                 //
-                replacement = replacement + ctag;
+                replacement.append(ctag);
             }
 
             // Allows for appending text that comes after
             // the found symbol by using appendTail (see below)
             StringBuffer buf = new StringBuffer();
-            m.appendReplacement(buf, Matcher.quoteReplacement(replacement));
+            m.appendReplacement(buf, Matcher.quoteReplacement(replacement.toString()));
             append(buf.toString());
         }
 

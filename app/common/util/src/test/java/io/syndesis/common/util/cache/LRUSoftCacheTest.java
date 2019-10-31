@@ -15,8 +15,9 @@
  */
 package io.syndesis.common.util.cache;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LRUSoftCacheTest {
 
@@ -51,17 +52,17 @@ public class LRUSoftCacheTest {
         // Initial tests on the cache
         byte[] payload = new byte[]{1, 2, 3, 4, 5};
         cache.put("key", payload);
-        Assertions.assertThat(cache.get("key")).isEqualTo(payload);
-        Assertions.assertThat(cache.size()).isEqualTo(1);
+        assertThat(cache.get("key")).isEqualTo(payload);
+        assertThat(cache.size()).isEqualTo(1);
         cache.remove("key");
-        Assertions.assertThat(cache.get("key")).isNull();
-        Assertions.assertThat(cache.size()).isEqualTo(0);
+        assertThat(cache.get("key")).isNull();
+        assertThat(cache.size()).isEqualTo(0);
 
         // Test OOM behavior
         for (int i = 0; i < MAX_ELEMENTS; i++) {
-            cache.put("" + i, new byte[BUFFER_SIZE]);
+            cache.put(String.valueOf(i), new byte[BUFFER_SIZE]);
         }
-        Assertions.assertThat(cache.size()).isLessThan(MAX_ELEMENTS); // auto-purge before going oom
+        assertThat(cache.size()).isLessThan(MAX_ELEMENTS); // auto-purge before going oom
     }
 
 }

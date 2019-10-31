@@ -17,7 +17,6 @@ package io.syndesis.common.util;
 
 import java.util.Arrays;
 
-import io.syndesis.common.util.Names;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

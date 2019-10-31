@@ -18,10 +18,14 @@ package io.syndesis.common.model.extension;
 import java.io.IOException;
 import java.io.InputStream;
 
+import io.syndesis.common.util.json.JsonUtils;
+
+import org.junit.Test;
+
 import com.fasterxml.jackson.databind.ObjectReader;
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class ExtensionSerializationTest {
     @Test
@@ -30,14 +34,19 @@ public class ExtensionSerializationTest {
         final ObjectWriter writer = JsonUtils.writer();
 
         try (InputStream source = getClass().getResourceAsStream("syndesis-extension-definition.json")) {
-           reader.forType(Extension.class).readValue(
-               writer.writeValueAsString(
-                   new Extension.Builder()
-                       .createFrom(reader.forType(Extension.class).readValue(source))
-                       .build()
-               )
+            final Extension read = reader.forType(Extension.class).readValue(source);
 
-           );
+            final Extension recreated = new Extension.Builder()
+                .createFrom(read)
+                .build();
+
+            final String written = writer.writeValueAsString(recreated);
+
+            final Extension reRead = reader.forType(Extension.class).readValue(written);
+
+            assertThat(reRead)
+                .isEqualTo(read)
+                .isEqualTo(recreated);
         }
     }
 }

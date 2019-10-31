@@ -124,26 +124,22 @@ public class EquivalencerTest implements StringConstants {
     }
 
     private static String expectedMessage(String property, Object  value1, Object value2, NameTypePair... ctx) {
-        StringBuilder msg = new StringBuilder();
-        msg.append(
-            "Reason: '" + property + "' is different" + NEW_LINE +
-                TAB + "=> " + QUOTE_MARK + value1 + QUOTE_MARK + NEW_LINE +
-                TAB + "=> " + QUOTE_MARK + value2 + QUOTE_MARK + NEW_LINE);
+        StringBuilder msg = new StringBuilder(100)
+            .append("Reason: '").append(property).append("' is different\n")
+            .append("\t=> '").append(value1).append("'\n")
+            .append("\t=> '").append(value2).append("'\n")
+            .append("Context: ");
 
-        msg.append("Context: ");
         for (int i = 0; i < ctx.length; ++i) {
             NameTypePair ntp = ctx[i];
-            msg.append(ntp.type())
-                .append(OPEN_BRACKET).append(QUOTE_MARK)
-                .append(ntp.name())
-                .append(QUOTE_MARK).append(CLOSE_BRACKET);
+            msg.append(ntp.type()).append("('").append(ntp.name()).append("')");
 
             if (i < ctx.length - 1) {
-                msg.append(SPACE).append(FORWARD_SLASH).append(SPACE);
+                msg.append(" / ");
             }
         }
 
-        return msg.append(NEW_LINE).toString();
+        return msg.append('\n').toString();
     }
 
     @Test

@@ -15,27 +15,29 @@
  */
 package io.syndesis.common.util;
 
-import org.junit.Assert;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class LabelsTest {
 
     @Test
     public void testValid() {
-        Assert.assertTrue(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789"));
-        Assert.assertTrue(Labels.isValid("012345678901234567890123456789012345678901234567890123456789123"));
+        assertThat(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789")).isTrue();
+        assertThat(Labels.isValid("012345678901234567890123456789012345678901234567890123456789123")).isTrue();
     }
 
     @Test
     public void testInvalid() {
-        Assert.assertFalse(Labels.isValid("-abcdefghijklmnopqrstyvwxyz0123456789"));
-        Assert.assertFalse(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789-"));
-        Assert.assertFalse(Labels.isValid("01234567890123456789012345678901234567890123456789012345678912345"));
+        assertThat(Labels.isValid("-abcdefghijklmnopqrstyvwxyz0123456789")).isFalse();
+        assertThat(Labels.isValid("abcdefghijklmnopqrstyvwxyz0123456789-")).isFalse();
+        assertThat(Labels.isValid("01234567890123456789012345678901234567890123456789012345678912345")).isFalse();
     }
 
     @Test
     public void testValidateGeneratedKeys() {
-        for (int i=0;i<1000;i++)
-        Assert.assertTrue(Labels.isValid(KeyGenerator.createKey()));
+        for (int i = 0; i < 1000; i++) {
+            assertThat(Labels.isValid(KeyGenerator.createKey())).isTrue();
+        }
     }
 }

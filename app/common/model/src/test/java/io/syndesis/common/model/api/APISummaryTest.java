@@ -17,8 +17,9 @@ package io.syndesis.common.model.api;
 
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Map;
 
@@ -35,12 +36,12 @@ public class APISummaryTest {
             ).build()
         ).build();
 
-        Assertions.assertThat(summary.getActionsSummary().getTotalActions()).isEqualTo(4);
+        assertThat(summary.getActionsSummary().getTotalActions()).isEqualTo(4);
         Map<String, Integer> actionCountByTags = summary.getActionsSummary().getActionCountByTags();
-        Assertions.assertThat(actionCountByTags).containsEntry("1", 1);
-        Assertions.assertThat(actionCountByTags).containsEntry("2", 3);
-        Assertions.assertThat(actionCountByTags).containsEntry("3", 2);
-        Assertions.assertThat(actionCountByTags).containsEntry("4", 1);
+        assertThat(actionCountByTags).containsEntry("1", 1);
+        assertThat(actionCountByTags).containsEntry("2", 3);
+        assertThat(actionCountByTags).containsEntry("3", 2);
+        assertThat(actionCountByTags).containsEntry("4", 1);
     }
 
 }

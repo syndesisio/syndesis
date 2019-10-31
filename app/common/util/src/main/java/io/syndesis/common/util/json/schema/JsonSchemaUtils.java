@@ -63,8 +63,7 @@ public final class JsonSchemaUtils {
                         if (t == JsonToken.START_ARRAY && targetType.equals(Boolean.class)) {
                             // handle Json schema draft-04 array type for required field and resolve to default value (required=true).
                             String[] requiredProps = new StringArrayDeserializer().deserialize(p, ctxt);
-                            LOG.warn(String.format("Auto convert Json schema draft-04 \"required\" array value '%s' " +
-                                    "to default \"required=false\" value for draft-03 parser compatibility reasons", Arrays.toString(requiredProps)));
+                            LOG.warn("Auto convert Json schema draft-04 \"required\" array value '{}' to default \"required=false\" value for draft-03 parser compatibility reasons", Arrays.toString(requiredProps));
                             return null;
                         }
 
