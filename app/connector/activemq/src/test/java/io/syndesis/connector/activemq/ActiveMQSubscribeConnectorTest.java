@@ -50,7 +50,7 @@ public class ActiveMQSubscribeConnectorTest extends ActiveMQConnectorTestSupport
     // **************************
 
     @Test
-    public void subscribeTest() throws Exception {
+    public void subscribeTest() throws InterruptedException {
         final String message = UUID.randomUUID().toString();
 
         MockEndpoint mock = getMockEndpoint("mock:result");

@@ -48,7 +48,7 @@ public class ComponentProxyWithCustomEndpointTest {
 
         ComponentProxyComponent component = new ComponentProxyComponent("my-ftp-proxy", "ftp") {
             @Override
-            protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) throws Exception {
+            protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) {
                 assertThat(endpoint).isNotNull();
                 assertThat(endpoint).isInstanceOf(FtpEndpoint.class);
 

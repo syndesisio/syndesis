@@ -67,7 +67,7 @@ public class ActiveMQConnectionTest extends ConnectorTestSupport {
     // **************************
 
     @Test
-    public void connectionTest() throws Exception {
+    public void connectionTest() {
         final String message = UUID.randomUUID().toString();
         final SjmsComponent sjms1 = context.getComponent("sjms-sjms-0-0", SjmsComponent.class);
         final SjmsComponent sjms2 = context.getComponent("sjms-sjms-0-1", SjmsComponent.class);

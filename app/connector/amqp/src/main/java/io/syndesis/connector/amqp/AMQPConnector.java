@@ -112,9 +112,8 @@ class AMQPConnector extends ComponentProxyComponent {
         return new AMQPVerifierExtension(getComponentId(), getCamelContext());
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
 
         AMQPComponent delegate = lookupComponent();
 

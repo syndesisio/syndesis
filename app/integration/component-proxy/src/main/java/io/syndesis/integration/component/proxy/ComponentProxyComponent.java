@@ -16,6 +16,7 @@
 package io.syndesis.integration.component.proxy;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -28,7 +29,9 @@ import java.util.Set;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
+import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
+import org.apache.camel.TypeConversionException;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.catalog.CamelCatalog;
 import org.apache.camel.catalog.DefaultCamelCatalog;
@@ -127,9 +130,8 @@ public class ComponentProxyComponent extends DefaultComponent {
         return definition;
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
-    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
+    protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) {
         // merge parameters
         final Map<String, Object> options = new HashMap<>();
         doAddOptions(options, this.remainingOptions);
@@ -166,7 +168,6 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStart() throws Exception {
         this.remainingOptions.clear();
         this.remainingOptions.putAll(this.configuredOptions);
@@ -219,7 +220,6 @@ public class ComponentProxyComponent extends DefaultComponent {
     }
 
     @Override
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStop() throws Exception {
         if (componentSchemeAlias.isPresent()) {
             LOGGER.debug("Stopping component: {}", componentSchemeAlias.get());
@@ -282,8 +282,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         // no-op
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
         final String componentClass = definition.getComponent().getJavaType();
 
         // configure component with extra options
@@ -317,8 +316,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         return Optional.empty();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) throws Exception {
+    protected void configureDelegateComponent(ComponentDefinition definition, Component component, Map<String, Object> options) {
         final CamelContext context = getCamelContext();
         final List<Map.Entry<String, Object>> entries = new ArrayList<>();
 
@@ -344,35 +342,45 @@ public class ComponentProxyComponent extends DefaultComponent {
             component.setCamelContext(context);
 
             for (Map.Entry<String, Object> entry : entries) {
-                String key = entry.getKey();
                 Object val = entry.getValue();
 
                 if (val instanceof String) {
-                    val = getCamelContext().resolvePropertyPlaceholders((String) val);
+                    try {
+                        val = getCamelContext().resolvePropertyPlaceholders((String) val);
+                    } catch (Exception e) {
+                        throw new IllegalStateException("Unable to resolve property placeholders in: `" + val + "`", e);
+                    }
                 }
 
-                if (IntrospectionSupport.setProperty(context, component, key, val)) {
-                    options.remove(key);
+                String key = entry.getKey();
+                try {
+                    if (IntrospectionSupport.setProperty(context, component, key, val)) {
+                        options.remove(key);
+                    }
+                } catch (Exception e) {
+                    throw new IllegalStateException("Unable to set property: `" + key+ "` on component: " + component, e);
                 }
             }
         }
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
         // Build the delegate uri using the catalog
-        final String uri = catalog.asEndpointUri(scheme, options, false);
+        final String uri;
+        try {
+            uri = catalog.asEndpointUri(scheme, options, false);
+        } catch (URISyntaxException e) {
+            throw new IllegalArgumentException("Unable to create endpoint url for scheme: " + scheme + ", and options: " + options, e);
+        }
 
         return getCamelContext().getEndpoint(uri);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) throws Exception {
+    protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) {
         // no-op
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
+    protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) {
         final TypeConverter converter = getCamelContext().getTypeConverter();
         final Map<String, String> endpointOptions = new LinkedHashMap<>();
 
@@ -383,14 +391,26 @@ public class ComponentProxyComponent extends DefaultComponent {
         for (String key : endpointProperties) {
             Object val = options.get(key);
             if (val != null) {
-                doAddOption(endpointOptions, key, converter.mandatoryConvertTo(String.class, val));
+                String converted;
+                try {
+                    converted = converter.mandatoryConvertTo(String.class, val);
+                } catch (TypeConversionException | NoTypeConversionAvailableException e) {
+                    throw new IllegalStateException("Unable to convert value: `" + val + "` to String", e);
+                }
+
+                doAddOption(endpointOptions, key, converted);
             }
         }
 
         // add extra options from remaining (context-path)
         if (remaining != null) {
             String targetUri = componentScheme + ":" + remaining;
-            Map<String, String> extra = catalog.endpointProperties(targetUri);
+            final Map<String, String> extra;
+            try {
+                extra = catalog.endpointProperties(targetUri);
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException("Unable to parse endpoint properties from : `" + targetUri+ "`", e);
+            }
             if (extra != null && !extra.isEmpty()) {
                 extra.forEach((key, value) -> doAddOption(endpointOptions, key, value));
             }
@@ -447,10 +467,19 @@ public class ComponentProxyComponent extends DefaultComponent {
         return extension;
     }
 
+    protected final String createEndpointUriFor(final String scheme, final Map<String, String> options) {
+        final String uri;
+        try {
+            uri = catalog.asEndpointUri(scheme, options, false);
+        } catch (final URISyntaxException e) {
+            throw new IllegalArgumentException("Unable to create endpoint url for scheme: " + scheme + ", and options: " + options, e);
+        }
+        return uri;
+    }
+
     /**
      * Build a ComponentVerifierExtension using options bound to this component.
      */
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     private ComponentVerifierExtension getComponentVerifierExtension() {
         try {
             //

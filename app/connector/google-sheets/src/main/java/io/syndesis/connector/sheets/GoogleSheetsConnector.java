@@ -16,6 +16,8 @@
 
 package io.syndesis.connector.sheets;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Map;
 import java.util.Optional;
 
@@ -39,10 +41,14 @@ public class GoogleSheetsConnector extends ComponentProxyComponent {
         super(componentId, componentScheme);
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
-        final GoogleSheetsClientFactory clientFactory = GoogleSheetsConnectorHelper.createClientFactory(rootUrl, serverCertificate, validateCertificates);
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
+        final GoogleSheetsClientFactory clientFactory;
+        try {
+            clientFactory = GoogleSheetsConnectorHelper.createClientFactory(rootUrl, serverCertificate, validateCertificates);
+        } catch (GeneralSecurityException | IOException e) {
+            throw new IllegalStateException("Unable to create Google Sheets client factory", e);
+        }
 
         switch (getComponentScheme()) {
             case "google-sheets-stream": {

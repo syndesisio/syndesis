@@ -190,7 +190,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
     }
 
     @Override
-    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
+    protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
         String protocol = getProtocol();
         if (protocol == null) {
             throw new IllegalStateException("No protocol specified for email component");
@@ -230,7 +230,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
     }
 
     @Override
-    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
         Endpoint endpoint = super.createDelegateEndpoint(getDefinition(), scheme, options);
 
         Protocol protocol = Protocol.getValueOf(getProtocol());
