@@ -44,6 +44,10 @@ spec:
                   properties:
                     database:
                       type: string
+                    externalDbURL:
+                      description: Options for configuring an external database instead
+                        of deploying one
+                      type: string
                     image:
                       type: string
                     imageStreamNamespace:
@@ -71,8 +75,10 @@ spec:
                     user:
                       type: string
                   type: object
-                grafana:
+                dv:
                   properties:
+                    image:
+                      type: string
                     resources:
                       properties:
                         limits:
@@ -92,10 +98,8 @@ spec:
                           type: object
                       type: object
                   type: object
-                dv:
+                grafana:
                   properties:
-                    image:
-                      type: string
                     resources:
                       properties:
                         limits:
