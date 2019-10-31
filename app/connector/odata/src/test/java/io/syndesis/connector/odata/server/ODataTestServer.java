@@ -170,10 +170,8 @@ public class ODataTestServer extends Server implements ODataConstants {
 
         try {
             return Integer.parseInt(portProperty);
-        } catch (NumberFormatException ex) {
-            LOG.error("Cannot format the port from the property {}. "
-                                    + "Falling back to default of finding next random port",
-                                      property);
+        } catch (NumberFormatException e) {
+            LOG.error("Cannot format the port from the property {}. Falling back to default of finding next random port", property, e);
             return 0;
         }
     }

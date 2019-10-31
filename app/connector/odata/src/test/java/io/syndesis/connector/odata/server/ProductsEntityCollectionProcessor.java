@@ -195,7 +195,7 @@ public class ProductsEntityCollectionProcessor implements EntityCollectionProces
 
                 } catch (ExpressionVisitException e) {
                   throw new ODataApplicationException("Exception in filter evaluation",
-                      HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH);
+                      HttpStatusCode.INTERNAL_SERVER_ERROR.getStatusCode(), Locale.ENGLISH, e);
                 }
         }
 

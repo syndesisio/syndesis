@@ -201,9 +201,10 @@ public abstract class AbstractODataTest implements ODataConstants {
     }
 
     protected String testData(String fileName, Class<?> tgtClass) throws IOException {
-        InputStream in = tgtClass.getResourceAsStream(fileName);
-        String expected = streamToString(in);
-        return expected;
+        try (InputStream in = tgtClass.getResourceAsStream(fileName)) {
+            String expected = streamToString(in);
+            return expected;
+        }
     }
 
     protected String testData(String fileName) throws IOException {

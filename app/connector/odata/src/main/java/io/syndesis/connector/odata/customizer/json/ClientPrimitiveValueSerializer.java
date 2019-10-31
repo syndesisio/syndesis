@@ -43,7 +43,6 @@ public class ClientPrimitiveValueSerializer
         return ClientPrimitiveValue.class;
     }
 
-    @SuppressWarnings("PMD.MissingBreakInSwitch")
     @Override
     public void serialize(ClientPrimitiveValue value, JsonGenerator generator, SerializerProvider provider) throws IOException {
         try {
@@ -64,11 +63,11 @@ public class ClientPrimitiveValueSerializer
                 case Int64:
                     generator.writeNumber(value.toCastValue(Integer.class));
                     break;
-                case String:
                 default:
                     generator.writeString(value.toString());
+                    break;
             }
-        } catch (EdmPrimitiveTypeException e) {
+        } catch (EdmPrimitiveTypeException ignored) {
             generator.writeString(value.toString());
         }
     }

@@ -15,7 +15,9 @@
  */
 package io.syndesis.connector.odata;
 
+import java.io.IOException;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Map;
@@ -42,8 +44,11 @@ import org.apache.olingo.commons.api.http.HttpMethod;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
 
-@SuppressWarnings("PMD")
 public class ODataUtil implements ODataConstants {
+
+    private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("-?\\d+");
+
+    private static final Pattern KEY_PREDICATE_PATTERN = Pattern.compile("\\(?'?(.+?)'?\\)?\\/(.+)");
 
     public static class ODataHttpClientFactory implements HttpClientFactory {
 
@@ -70,10 +75,6 @@ public class ODataUtil implements ODataConstants {
 
     }
 
-    private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("-?\\d+");
-
-    private static final Pattern KEY_PREDICATE_PATTERN = Pattern.compile("\\(?'?(.+?)'?\\)?\\/(.+)");
-
     /**
      * @param url
      * @return whether url is an ssl (https) url or not.
@@ -88,7 +89,7 @@ public class ODataUtil implements ODataConstants {
         return scheme != null && scheme.equals("https");
     }
 
-    private static KeyStore createKeyStore(Map<String, Object> options) throws Exception {
+    private static KeyStore createKeyStore(Map<String, Object> options) throws GeneralSecurityException, IOException {
         String certContent = ConnectorOptions.extractOption(options, SERVER_CERTIFICATE);
         if (ObjectHelper.isEmpty(certContent)) {
             return KeyStoreHelper.defaultKeyStore();
@@ -97,30 +98,34 @@ public class ODataUtil implements ODataConstants {
         return KeyStoreHelper.createKeyStoreWithCustomCertificate("odata", certContent);
     }
 
-    public static SSLContext createSSLContext(Map<String, Object> options) throws Exception {
+    public static SSLContext createSSLContext(Map<String, Object> options) {
         String serviceUrl = ConnectorOptions.extractOption(options, SERVICE_URI);
         if (! isServiceSSL(serviceUrl)) {
             return null;
         }
 
-        KeyStore keyStore = createKeyStore(options);
-        TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-        tmf.init(keyStore);
+        try {
+            KeyStore keyStore = createKeyStore(options);
+            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+            tmf.init(keyStore);
 
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
-        return sslContext;
+            SSLContext sslContext = SSLContext.getInstance("TLS");
+            sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
+            return sslContext;
+        } catch (GeneralSecurityException | IOException e) {
+            throw new IllegalArgumentException("Unable to configure TLS context", e);
+        }
     }
 
     private static CredentialsProvider createCredentialProvider(Map<String, Object> options) {
         String basicUser = ConnectorOptions.extractOption(options, BASIC_USER_NAME);
-        String basicPswd = ConnectorOptions.extractOption(options, BASIC_PASSWORD);
 
         if (ObjectHelper.isEmpty(basicUser)) {
             return null;
         }
 
         CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        String basicPswd = ConnectorOptions.extractOption(options, BASIC_PASSWORD);
         credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials(basicUser, basicPswd));
         return credentialsProvider;
     }
@@ -131,11 +136,8 @@ public class ODataUtil implements ODataConstants {
      * @param options
      *
      * @return the new http client builder
-     *
-     * @throws Exception
      */
-    public static HttpClientBuilder createHttpClientBuilder(Map<String, Object> options)
-                                                       throws Exception {
+    public static HttpClientBuilder createHttpClientBuilder(Map<String, Object> options) {
         HttpClientBuilder builder = HttpClientBuilder.create();
 
         SSLContext sslContext = createSSLContext(options);
@@ -163,8 +165,7 @@ public class ODataUtil implements ODataConstants {
      *
      * @throws Exception
      */
-    public static HttpAsyncClientBuilder createHttpAsyncClientBuilder(Map<String, Object> options)
-                                                       throws Exception {
+    public static HttpAsyncClientBuilder createHttpAsyncClientBuilder(Map<String, Object> options) {
         HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create();
 
         SSLContext sslContext = createSSLContext(options);
@@ -191,8 +192,7 @@ public class ODataUtil implements ODataConstants {
      *
      * @throws Exception
      */
-    public static CloseableHttpClient createHttpClient(Map<String, Object> options)
-                                                                   throws Exception {
+    public static CloseableHttpClient createHttpClient(Map<String, Object> options) {
         return createHttpClientBuilder(options).build();
     }
 
@@ -213,23 +213,25 @@ public class ODataUtil implements ODataConstants {
             .orElse(path);
     }
 
-    private static String stripQuotesAndBrackets(String value) {
-        if (value.startsWith(OPEN_BRACKET)) {
-            value = value.substring(1);
+    private static String stripQuotesAndBrackets(final String value) {
+        String ret = value;
+
+        if (ret.startsWith(OPEN_BRACKET)) {
+            ret = ret.substring(1);
         }
 
-        if (value.startsWith(QUOTE_MARK)) {
-            value = value.substring(1);
+        if (ret.startsWith(QUOTE_MARK)) {
+            ret = ret.substring(1);
         }
 
-        if (value.endsWith(CLOSE_BRACKET)) {
-            value = value.substring(0, value.length() - 1);
+        if (ret.endsWith(CLOSE_BRACKET)) {
+            ret = ret.substring(0, ret.length() - 1);
         }
 
-        if (value.endsWith(QUOTE_MARK)) {
-            value = value.substring(0, value.length() - 1);
+        if (ret.endsWith(QUOTE_MARK)) {
+            ret = ret.substring(0, ret.length() - 1);
         }
-        return value;
+        return ret;
     }
 
     private static boolean isNumber(String keyPredicate) {
@@ -242,33 +244,33 @@ public class ODataUtil implements ODataConstants {
      * @param includeBrackets whether brackets should be added around the key predicate string
      * @return the keyPredicate formatted with quotes and brackets
      */
-    @SuppressWarnings("PMD")
-    public static String formatKeyPredicate(String keyPredicate, boolean includeBrackets) {
+    public static String formatKeyPredicate(final String keyPredicate, final boolean includeBrackets) {
         String subPredicate = null;
 
         Matcher kp1Matcher = KEY_PREDICATE_PATTERN.matcher(keyPredicate);
+        String keyPredicateToUse = keyPredicate;
         if (kp1Matcher.matches()) {
-            keyPredicate = kp1Matcher.group(1);
+            keyPredicateToUse = kp1Matcher.group(1);
             subPredicate = kp1Matcher.group(2);
         }
 
-        keyPredicate = stripQuotesAndBrackets(keyPredicate);
+        keyPredicateToUse = stripQuotesAndBrackets(keyPredicateToUse);
 
         StringBuilder buf = new StringBuilder();
         if (includeBrackets || subPredicate != null) {
             buf.append(OPEN_BRACKET);
         }
 
-        if (isNumber(keyPredicate)) {
+        if (isNumber(keyPredicateToUse)) {
             //
             // if keyPredicate is a number only, it doesn't need quotes
             //
-            buf.append(keyPredicate);
-        } else if (keyPredicate.contains(EQUALS)) {
+            buf.append(keyPredicateToUse);
+        } else if (keyPredicateToUse.contains(EQUALS)) {
             //
             // keyPredicate contains an equals so acting as a filter
             //
-            String[] clauses = keyPredicate.split(EQUALS, 2);
+            String[] clauses = keyPredicateToUse.split(EQUALS, 2);
 
             // Strip off quotes on both values
             String keyName = stripQuotesAndBrackets(clauses[0]);
@@ -285,7 +287,7 @@ public class ODataUtil implements ODataConstants {
             }
 
         } else {
-            buf.append(QUOTE_MARK).append(keyPredicate).append(QUOTE_MARK);
+            buf.append(QUOTE_MARK).append(keyPredicateToUse).append(QUOTE_MARK);
         }
 
         if (includeBrackets || subPredicate != null) {

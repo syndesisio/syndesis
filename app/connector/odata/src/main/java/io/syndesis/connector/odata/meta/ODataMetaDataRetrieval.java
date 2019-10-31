@@ -53,7 +53,6 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         return new ODataMetaDataExtension(context);
     }
 
-    @SuppressWarnings({"PMD"})
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
@@ -75,9 +74,9 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
             case READ:
                 if (actionId.endsWith(FROM)) {
                     return genReadFromDataShape(odataMetadata, properties, enrichedProperties);
-                } else {
-                    return genReadToShape(odataMetadata, enrichedProperties);
                 }
+
+                return genReadToShape(odataMetadata, enrichedProperties);
             case CREATE:
                 return genCreateDataShape(odataMetadata, enrichedProperties);
             case DELETE:
@@ -141,7 +140,6 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         }
     }
 
-    @SuppressWarnings("PMD")
     private void schemaFor(PropertyMetadata propertyMetadata, ObjectSchema parentSchema) {
         JsonSchema schema;
 
@@ -168,6 +166,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 break;
             default:
                 schema = factory.anySchema();
+                break;
         }
 
         if (propertyMetadata.isArray()) {

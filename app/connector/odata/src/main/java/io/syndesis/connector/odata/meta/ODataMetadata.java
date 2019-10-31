@@ -19,8 +19,11 @@ import java.util.HashSet;
 import java.util.Set;
 import io.syndesis.connector.odata.ODataConstants;
 
-@SuppressWarnings("PMD")
 public class ODataMetadata implements ODataConstants {
+
+    private Set<String> entityNames;
+
+    private Set<PropertyMetadata> entityProperties;
 
     public static class PropertyMetadata {
 
@@ -85,10 +88,6 @@ public class ODataMetadata implements ODataConstants {
             this.chilldProperties = childProperties;
         }
     }
-
-    private Set<String> entityNames;
-
-    private Set<PropertyMetadata> entityProperties;
 
     public boolean hasEntityProperties() {
         return entityProperties != null && ! entityProperties.isEmpty();
