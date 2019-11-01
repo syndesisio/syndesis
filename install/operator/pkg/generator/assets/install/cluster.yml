@@ -84,10 +84,11 @@
         - serviceaccounts
         - services
         - deploymentconfigs
-        - deploymentconfigs/scale
-        - deploymentconfigrollbacks
+        - deploymentconfigs/finalizers
         - deploymentconfigs/instantiate
         - deploymentconfigs/rollback
+        - deploymentconfigs/scale
+        - deploymentconfigrollbacks
         - imagestreams
         - imagestreamimages
         - imagestreammappings
