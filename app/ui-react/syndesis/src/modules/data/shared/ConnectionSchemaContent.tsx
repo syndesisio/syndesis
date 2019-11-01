@@ -36,6 +36,7 @@ export interface IConnectionSchemaContentProps {
     nodePath: string[]
   ) => void;
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
+  selectedSchemaNodes: SchemaNodeInfo[];
 }
 
 export const ConnectionSchemaContent: React.FunctionComponent<
@@ -89,6 +90,11 @@ export const ConnectionSchemaContent: React.FunctionComponent<
                 key={index}
                 connectionName={cName}
                 connectionDescription={''}
+                haveSelectedSource={
+                  props.selectedSchemaNodes[0]
+                    ? props.selectedSchemaNodes[0].connectionName === cName
+                    : false
+                }
                 // tslint:disable-next-line: no-shadowed-variable
                 children={srcInfos.map((info, index) => (
                   <SchemaNodeListItem
@@ -97,7 +103,12 @@ export const ConnectionSchemaContent: React.FunctionComponent<
                     teiidName={info.teiidName}
                     connectionName={info.connectionName}
                     nodePath={info.nodePath}
-                    selected={false}
+                    selected={
+                      props.selectedSchemaNodes[0]
+                        ? props.selectedSchemaNodes[0].teiidName ===
+                          info.teiidName
+                        : false
+                    }
                     onSelectionChanged={handleSourceSelectionChange}
                   />
                 ))}

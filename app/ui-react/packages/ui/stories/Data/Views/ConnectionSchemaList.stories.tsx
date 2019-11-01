@@ -66,18 +66,21 @@ const connectionItems = [
     key="connectionListItem1"
     connectionName={connectionName1}
     connectionDescription={connectionDescription1}
+    haveSelectedSource={false}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem2"
     connectionName={connectionName2}
     connectionDescription={connectionDescription2}
     children={conn2NodeItems}
+    haveSelectedSource={false}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem3"
     connectionName={connectionName3}
     connectionDescription={connectionDescription3}
     children={conn3NodeItems}
+    haveSelectedSource={false}
   />,
 ];
 

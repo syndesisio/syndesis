@@ -6,12 +6,12 @@ export interface IConnectionSchemaListItemProps {
   icon?: string;
   connectionName: string;
   connectionDescription: string;
+  haveSelectedSource: boolean;
 }
 
 export const ConnectionSchemaListItem: React.FunctionComponent<
   IConnectionSchemaListItemProps
 > = props => {
-
   return (
     <>
       <ListViewItem
@@ -20,31 +20,23 @@ export const ConnectionSchemaListItem: React.FunctionComponent<
         )}-list-item`}
         heading={props.connectionName}
         description={
-          props.connectionDescription
-            ? props.connectionDescription
-            : ''
+          props.connectionDescription ? props.connectionDescription : ''
         }
         hideCloseIcon={true}
         leftContent={
           props.icon ? (
             <div className="blank-slate-pf-icon">
-              <img
-                src={props.icon}
-                alt={props.connectionName}
-                width={46}
-              />
+              <img src={props.icon} alt={props.connectionName} width={46} />
             </div>
           ) : (
-              <ListViewIcon name={'database'} />
-            )
+            <ListViewIcon name={'database'} />
+          )
         }
+        initExpanded={props.haveSelectedSource}
         stacked={false}
       >
-        {props.children ? (
-          <ListView>{props.children}</ListView>
-        ) : null}
+        {props.children ? <ListView>{props.children}</ListView> : null}
       </ListViewItem>
     </>
   );
-
-}
+};
