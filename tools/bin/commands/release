@@ -56,7 +56,7 @@ get_release_version() {
 
 release::run() {
     source "$(basedir)/commands/util/maven_funcs"
-    source "$(basedir)/commands/util/operator_funcs"
+    # source "$(basedir)/commands/util/operator_funcs"
 
     # Main application directory
     local topdir=$(appdir ".")
@@ -137,9 +137,6 @@ release::run() {
     # Pushing to Docker Hub
     docker_push "$release_version" "$moving_tag"
 
-    # Push everything (if configured)
-    git_push "$topdir" "$release_version" "$moving_tag"
-
     # Release staging repo
     release_staging_repo "$topdir" "$maven_opts"
 
@@ -158,6 +155,9 @@ release::run() {
     # if check_for_command gren; then
     #    gren release --data-source=commits --tags=$release_version --override
     # fi
+
+    # Push everything (if configured)
+    git_push "$topdir" "$release_version" "$moving_tag"
 }
 
 create_moving_tag_release() {
