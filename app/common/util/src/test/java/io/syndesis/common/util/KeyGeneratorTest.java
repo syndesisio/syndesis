@@ -15,8 +15,6 @@
  */
 package io.syndesis.common.util;
 
-import io.syndesis.common.util.KeyGenerator;
-import org.assertj.core.api.Assertions;
 import org.assertj.core.api.Condition;
 import org.assertj.core.data.Offset;
 import org.junit.Assert;
@@ -59,7 +57,7 @@ public class KeyGeneratorTest {
         for (int i = 0; i < 1000000; i++) {
             final String lastKey = last;
             final String key = KeyGenerator.createKey();
-            Assertions.assertThat(key).is(new Condition<>((other) -> lastKey.compareTo(other) < 0, "greater than " + lastKey));
+            assertThat(key).is(new Condition<>((other) -> lastKey.compareTo(other) < 0, "greater than " + lastKey));
             last = key;
         }
     }

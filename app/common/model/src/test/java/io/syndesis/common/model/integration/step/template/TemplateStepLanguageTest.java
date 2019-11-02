@@ -26,7 +26,6 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 
 public class TemplateStepLanguageTest {
 

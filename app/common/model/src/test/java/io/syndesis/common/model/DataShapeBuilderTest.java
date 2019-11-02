@@ -31,157 +31,157 @@ import org.junit.Test;
  */
 public class DataShapeBuilderTest {
 
-    private final String specification = "some uncompressed data";
-    private final String compressedSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUUhJLEkEALZP9NQWAAAA";
-    private final String variantSpecification = "some uncompressed variant data";
-    private final String compressedVariantSpecification = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUShLLMpMzCtRSEksSQQAQv1meR4AAAA=";
+    private static final String SPECIFICATION = "some uncompressed data";
+    private static final String COMPRESSED_SPECIFICATION = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUUhJLEkEALZP9NQWAAAA";
+    private static final String VARIANT_SPECIFICATION = "some uncompressed variant data";
+    private static final String COMPRESSED_VARIANT_SPECIFICATION = "H4sIAAAAAAAAACvOz01VKM1Lzs8tKEotLk5NUShLLMpMzCtRSEksSQQAQv1meR4AAAA=";
 
     @Test
     public void shouldNotCompressBasedOnMetadata() {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "false")
-                .specification(specification);
+                .specification(SPECIFICATION);
 
-        Assert.assertEquals(specification, shape.build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
     }
 
     @Test
     public void shouldCompressBasedOnMetadata() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(specification);
+                .specification(SPECIFICATION);
 
-        Assert.assertEquals(specification, shape.build().getSpecification());
-        assertCompressedSpecification(specification, shape.compress().build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().decompress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
     }
 
     @Test
     public void shouldDecompressBasedOnMetadata() {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(compressedSpecification);
+                .specification(COMPRESSED_SPECIFICATION);
 
-        Assert.assertEquals(specification, shape.decompress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
     }
 
     @Test
     public void shouldNotCompressMultipleTimes() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(specification);
+                .specification(SPECIFICATION);
 
-        assertCompressedSpecification(specification, shape.compress().compress().build().getSpecification());
+        assertCompressedSpecification(SPECIFICATION, shape.compress().compress().build().getSpecification());
     }
 
     @Test
     public void shouldNotDecompressMultipleTimes() {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(compressedSpecification);
+                .specification(COMPRESSED_SPECIFICATION);
 
-        Assert.assertEquals(specification, shape.decompress().decompress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
     }
 
     @Test
     public void shouldCompressVariants() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(specification)
+                .specification(SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                                .specification(variantSpecification)
+                                .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(specification, shape.build().getSpecification());
-        assertCompressedSpecification(specification, shape.compress().build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(variantSpecification, shape.build().getVariants().get(0).getSpecification());
-        assertCompressedSpecification(variantSpecification, shape.compress().build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(variantSpecification, shape.compress().decompress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        assertCompressedSpecification(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().decompress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
     public void shouldDecompressVariants() {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(compressedSpecification)
+                .specification(COMPRESSED_SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                                .specification(compressedVariantSpecification)
+                                .specification(COMPRESSED_VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(specification, shape.decompress().build().getSpecification());
-        Assert.assertEquals(variantSpecification, shape.decompress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.decompress().build().getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.decompress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
     public void shouldNotCompressVariantsBasedOnMetadata() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(specification)
+                .specification(SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "false")
-                                .specification(variantSpecification)
+                                .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(specification, shape.build().getSpecification());
-        assertCompressedSpecification(specification, shape.compress().build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(variantSpecification, shape.build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(variantSpecification, shape.compress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        assertCompressedSpecification(SPECIFICATION, shape.compress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
     public void shouldCompressShapesBasedOnMetadata() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .specification(specification)
+                .specification(SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                                .specification(variantSpecification)
+                                .specification(VARIANT_SPECIFICATION)
                                 .build())
                 .addVariant(new DataShape.Builder()
-                                .specification(variantSpecification)
+                                .specification(VARIANT_SPECIFICATION)
                                 .build());
 
-        Assert.assertEquals(specification, shape.build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().build().getSpecification());
-        Assert.assertEquals(specification, shape.compress().decompress().build().getSpecification());
-        Assert.assertEquals(variantSpecification, shape.build().getVariants().get(0).getSpecification());
-        assertCompressedSpecification(variantSpecification, shape.compress().build().getVariants().get(0).getSpecification());
-        Assert.assertEquals(variantSpecification, shape.build().getVariants().get(1).getSpecification());
-        Assert.assertEquals(variantSpecification, shape.compress().build().getVariants().get(1).getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().build().getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.compress().decompress().build().getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(0).getSpecification());
+        assertCompressedSpecification(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.build().getVariants().get(1).getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.compress().build().getVariants().get(1).getSpecification());
     }
 
     @Test
     public void shouldNotCompressAlreadyCompressedVariants() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(specification)
+                .specification(SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                         .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                        .specification(variantSpecification)
+                        .specification(VARIANT_SPECIFICATION)
                         .compress()
                         .build());
 
-        assertCompressedSpecification(specification, shape.compress().compress().build().getSpecification());
-        assertCompressedSpecification(variantSpecification, shape.compress().compress().build().getVariants().get(0).getSpecification());
+        assertCompressedSpecification(SPECIFICATION, shape.compress().compress().build().getSpecification());
+        assertCompressedSpecification(VARIANT_SPECIFICATION, shape.compress().compress().build().getVariants().get(0).getSpecification());
     }
 
     @Test
     public void shouldNotDecompressAlreadyDecompressedVariants() {
         DataShape.Builder shape = new DataShape.Builder()
                 .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                .specification(compressedSpecification)
+                .specification(COMPRESSED_SPECIFICATION)
                 .addVariant(new DataShape.Builder()
                         .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
-                        .specification(variantSpecification)
+                        .specification(VARIANT_SPECIFICATION)
                         .compress()
                         .build());
 
-        Assert.assertEquals(specification, shape.decompress().decompress().build().getSpecification());
-        Assert.assertEquals(variantSpecification, shape.decompress().decompress().build().getVariants().get(0).getSpecification());
+        Assert.assertEquals(SPECIFICATION, shape.decompress().decompress().build().getSpecification());
+        Assert.assertEquals(VARIANT_SPECIFICATION, shape.decompress().decompress().build().getVariants().get(0).getSpecification());
     }
 
     private static void assertCompressedSpecification(String expected, String compressed) throws IOException {
