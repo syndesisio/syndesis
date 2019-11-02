@@ -41,18 +41,9 @@ public final class ActiveMQUtil {
         // utility class
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     public static ActiveMQConnectionFactory createActiveMQConnectionFactory(String brokerUrl, String username, String password, String brokerCertificate, String clientCertificate, boolean skipCertificateCheck) {
         if (brokerUrl.contains("ssl:")) {
-            final ActiveMQSslConnectionFactory connectionFactory;
-
-            if (ObjectHelper.isEmpty(username)) {
-                connectionFactory = new ActiveMQSslConnectionFactory(brokerUrl);
-            } else {
-                connectionFactory = new ActiveMQSslConnectionFactory(brokerUrl);
-                connectionFactory.setUserName(username);
-                connectionFactory.setPassword(password);
-            }
+            final ActiveMQSslConnectionFactory connectionFactory = createTlsConnectionFactory(brokerUrl, username, password);
 
             try {
                 // create client key manager
@@ -84,11 +75,20 @@ public final class ActiveMQUtil {
             } catch (GeneralSecurityException | IOException e) {
                 throw new IllegalArgumentException("SSL configuration error: " + e.getMessage(), e);
             }
-        } else {
-            // non-ssl connection
-            return ObjectHelper.isEmpty(username)
-                ? new ActiveMQConnectionFactory(brokerUrl)
-                : new ActiveMQConnectionFactory(username, password, brokerUrl);
         }
+
+        // non-ssl connection
+        return ObjectHelper.isEmpty(username)
+            ? new ActiveMQConnectionFactory(brokerUrl)
+            : new ActiveMQConnectionFactory(username, password, brokerUrl);
+    }
+
+    private static ActiveMQSslConnectionFactory createTlsConnectionFactory(String brokerUrl, String username, String password) {
+        final ActiveMQSslConnectionFactory connectionFactory = new ActiveMQSslConnectionFactory(brokerUrl);
+        if (! ObjectHelper.isEmpty(username)) {
+            connectionFactory.setUserName(username);
+            connectionFactory.setPassword(password);
+        }
+        return connectionFactory;
     }
 }

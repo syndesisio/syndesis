@@ -62,7 +62,6 @@ public class AWSS3VerifierExtension extends DefaultComponentVerifierExtension {
     // *********************************
 
     @Override
-    @SuppressWarnings("PMD.AvoidCatchingGenericException")
     protected Result verifyConnectivity(Map<String, Object> parameters) {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY);
 
@@ -78,7 +77,7 @@ public class AWSS3VerifierExtension extends DefaultComponentVerifierExtension {
                 .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e);
 
             builder.error(errorBuilder.build());
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch ( Exception e) {
             builder.error(ResultErrorBuilder.withException(e).build());
         }
         return builder.build();
