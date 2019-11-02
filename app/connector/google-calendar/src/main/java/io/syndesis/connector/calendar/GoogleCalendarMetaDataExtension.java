@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.calendar;
 
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -43,42 +44,41 @@ public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-
         String clientId = ConnectorOptions.extractOption(parameters, "clientId");
+        if (clientId == null) {
+            return Optional.empty();
+        }
+
+        LOG.debug("Retrieving calendars for connection to google calendar");
         String clientSecret = ConnectorOptions.extractOption(parameters, "clientSecret");
         String googleScopes = "https://www.googleapis.com/auth/calendar";
         String applicationName = ConnectorOptions.extractOption(parameters, "applicationName");
         String accessToken = ConnectorOptions.extractOption(parameters, "accessToken");
         String refreshToken = ConnectorOptions.extractOption(parameters, "refreshToken");
 
-        if (clientId != null) {
-            try {
-                LOG.debug("Retrieving calendars for connection to google calendar");
-                Calendar client = new BatchGoogleCalendarClientFactory().makeClient(clientId, clientSecret,
-                         getScopes(googleScopes), applicationName, refreshToken, accessToken, null, null, "me");
+        Calendar client = new BatchGoogleCalendarClientFactory().makeClient(clientId, clientSecret,
+            getScopes(googleScopes), applicationName, refreshToken, accessToken, null, null, "me");
 
-                CalendarList calendars;
-                calendars = client.calendarList().list().execute();
-
-                Set<CalendarListEntry> setCalendars = new HashSet<CalendarListEntry>();
-                if (calendars.getItems() != null) {
-                   for (CalendarListEntry entry : calendars.getItems()) {
-                       setCalendars.add(entry);
-                   }
-                }
-
-                return Optional
-                        .of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                            .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setCalendars).build());
-            } catch (Exception e) {
-                 throw new IllegalStateException("Get information about calendars has failed.", e);
-            }
-        } else {
-            return Optional.empty();
+        final CalendarList calendars;
+        try {
+            calendars = client.calendarList().list().execute();
+        } catch (IOException e) {
+            throw new IllegalStateException("Unable to fetch the list of calendars", e);
         }
+
+        Set<CalendarListEntry> setCalendars = new HashSet<CalendarListEntry>();
+        if (calendars.getItems() != null) {
+            for (CalendarListEntry entry : calendars.getItems()) {
+                setCalendars.add(entry);
+            }
+        }
+
+        return Optional.of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+            .withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setCalendars).build());
+
     }
 
     private static List<String> getScopes(String scopesString) {
-       return Splitter.on(',').splitToList(scopesString);
+        return Splitter.on(',').splitToList(scopesString);
     }
 }

@@ -15,21 +15,18 @@
  */
 package io.syndesis.connector.calendar;
 
-import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
+
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
-import org.apache.camel.util.ObjectHelper;
+
 import com.google.api.services.calendar.model.Event;
-import io.syndesis.connector.support.util.ConnectorOptions;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomizer {
 
@@ -60,48 +57,11 @@ public class GoogleCalendarGetEventCustomizer implements ComponentProxyCustomize
         in.setHeader("CamelGoogleCalendar.calendarId", calendarId);
     }
 
-    @SuppressWarnings("PMD.NPathComplexity")
     private static void afterProducer(Exchange exchange) {
 
         final Message in = exchange.getIn();
         final Event event = exchange.getIn().getBody(Event.class);
-        GoogleCalendarEventModel model = new GoogleCalendarEventModel();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        DateFormat timeFormat = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        if (event != null) {
-
-            if (ObjectHelper.isNotEmpty(event.getSummary())) {
-                model.setTitle(event.getSummary());
-            }
-            if (ObjectHelper.isNotEmpty(event.getDescription())) {
-                model.setDescription(event.getDescription());
-            }
-            if (ObjectHelper.isNotEmpty(event.getAttendees())) {
-                model.setAttendees(getAttendeesString(event.getAttendees()));
-            }
-            if (ObjectHelper.isNotEmpty(event.getStart())) {
-                if (event.getStart().getDateTime() != null) {
-                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDateTime().getValue())));
-                    model.setStartTime(timeFormat.format(new Date(event.getStart().getDateTime().getValue())));
-                } else {
-                    model.setStartDate(dateFormat.format(new Date(event.getStart().getDate().getValue())));
-                }
-            }
-            if (ObjectHelper.isNotEmpty(event.getEnd())) {
-                if (event.getEnd().getDateTime() != null) {
-                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDateTime().getValue())));
-                    model.setEndTime(timeFormat.format(new Date(event.getEnd().getDateTime().getValue())));
-                } else {
-                    model.setEndDate(dateFormat.format(new Date(event.getEnd().getDate().getValue())));
-                }
-            }
-            if (ObjectHelper.isNotEmpty(event.getLocation())) {
-                model.setLocation(event.getLocation());
-            }
-            if (ObjectHelper.isNotEmpty(event.getId())) {
-                model.setEventId(event.getId());
-            }
-        }
+        final GoogleCalendarEventModel model = GoogleCalendarEventModel.newFrom(event);
 
         in.setBody(model);
     }
