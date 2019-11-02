@@ -63,6 +63,7 @@ import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.extension.converter.ExtensionConverter;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.artifact.handler.ArtifactHandler;
 import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.model.Dependency;
@@ -133,7 +134,6 @@ public class GenerateMetadataMojo extends AbstractMojo {
     private String tags;
 
     @Parameter(defaultValue = "RESOURCE_AND_SPECIFICATION")
-    @SuppressWarnings("PMD.ImmutableField")
     private InspectionMode inspectionMode;
 
     /**
@@ -185,7 +185,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
                         getLog().error("Error reading file " + path);
                     }
                 }
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+            } catch (IOException e) {
                 throw new MojoExecutionException("Error checking annotations.", e);
             }
         } else {
@@ -193,14 +193,8 @@ public class GenerateMetadataMojo extends AbstractMojo {
         }
     }
 
-    @SuppressWarnings({"PMD.PrematureDeclaration", "PMD.SignatureDeclareThrowsException"})
-    protected void assignProperties(JsonNode root) throws Exception {
-
+    protected void assignProperties(JsonNode root) {
         final String actionId = root.get("id").asText();
-        final String actionName = root.get("name").asText();
-        final String actionKind = root.get("kind").asText();
-        final String actionEntry = root.get("entrypoint").asText();
-
         if (StringUtils.isEmpty(actionId)) {
             getLog().warn("Unable to define action, reason: 'id' is not set (" + root + ")");
             return;
@@ -212,14 +206,19 @@ public class GenerateMetadataMojo extends AbstractMojo {
             actionBuilder = actionBuilder.createFrom(actions.get(actionId));
         }
 
+        final String actionName = root.get("name").asText();
         if (StringUtils.isEmpty(actionName)) {
             getLog().warn("Unable to define action, reason: 'name' is not set (" + root + ")");
             return;
         }
+
+        final String actionKind = root.get("kind").asText();
         if (StringUtils.isEmpty(actionKind)) {
             getLog().warn("Unable to define action, reason: 'kind' is not set (" + root + ")");
             return;
         }
+
+        final String actionEntry = root.get("entrypoint").asText();
         if (StringUtils.isEmpty(actionEntry)) {
             getLog().warn("Unable to define action, reason: 'entrypoint' is not set (" + root + ")");
             return;
@@ -528,45 +527,40 @@ public class GenerateMetadataMojo extends AbstractMojo {
      * Generate atlasmap inspections, no matter if they come from annotations or they are written directly into source json
      */
     private void generateAtlasMapInspections() throws MojoExecutionException {
-        try {
-            Map<String, Action> processedActions = new TreeMap<>();
-            for (Map.Entry<String, Action> actionEntry : actions.entrySet()) {
-                Optional<DataShape> input = generateInspections(actionEntry.getKey(), actionEntry.getValue().getInputDataShape());
-                Optional<DataShape> output = generateInspections(actionEntry.getKey(), actionEntry.getValue().getOutputDataShape());
+        Map<String, Action> processedActions = new TreeMap<>();
+        for (Map.Entry<String, Action> actionEntry : actions.entrySet()) {
+            Optional<DataShape> input = generateInspections(actionEntry.getKey(), actionEntry.getValue().getInputDataShape());
+            Optional<DataShape> output = generateInspections(actionEntry.getKey(), actionEntry.getValue().getOutputDataShape());
 
-                Action newAction;
-                if (Action.TYPE_CONNECTOR.equals(actionEntry.getValue().getActionType())) {
-                    newAction = new ConnectorAction.Builder()
-                            .createFrom((ConnectorAction) actionEntry.getValue())
-                            .descriptor(new ConnectorDescriptor.Builder()
-                                    .createFrom((ConnectorDescriptor) actionEntry.getValue().getDescriptor())
-                                    .inputDataShape(input)
-                                    .outputDataShape(output)
-                                    .build())
-                            .build();
-                } else if (Action.TYPE_STEP.equals(actionEntry.getValue().getActionType())) {
-                    newAction = new StepAction.Builder()
-                            .createFrom((StepAction) actionEntry.getValue())
-                            .descriptor(new StepDescriptor.Builder()
-                                    .createFrom((StepDescriptor) actionEntry.getValue().getDescriptor())
-                                    .inputDataShape(input)
-                                    .outputDataShape(output)
-                                    .build())
-                            .build();
-                } else {
-                    throw new IllegalArgumentException("Unsupported action type: " + actionEntry.getValue().getActionType());
-                }
-
-                processedActions.put(actionEntry.getKey(), newAction);
+            Action newAction;
+            if (Action.TYPE_CONNECTOR.equals(actionEntry.getValue().getActionType())) {
+                newAction = new ConnectorAction.Builder()
+                    .createFrom((ConnectorAction) actionEntry.getValue())
+                    .descriptor(new ConnectorDescriptor.Builder()
+                        .createFrom((ConnectorDescriptor) actionEntry.getValue().getDescriptor())
+                        .inputDataShape(input)
+                        .outputDataShape(output)
+                        .build())
+                    .build();
+            } else if (Action.TYPE_STEP.equals(actionEntry.getValue().getActionType())) {
+                newAction = new StepAction.Builder()
+                    .createFrom((StepAction) actionEntry.getValue())
+                    .descriptor(new StepDescriptor.Builder()
+                        .createFrom((StepDescriptor) actionEntry.getValue().getDescriptor())
+                        .inputDataShape(input)
+                        .outputDataShape(output)
+                        .build())
+                    .build();
+            } else {
+                throw new IllegalArgumentException("Unsupported action type: " + actionEntry.getValue().getActionType());
             }
-            this.actions = processedActions;
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
-            throw new MojoExecutionException("Error processing atlasmap inspections", ex);
+
+            processedActions.put(actionEntry.getKey(), newAction);
         }
+        this.actions = processedActions;
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    protected Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws Exception {
+    protected Optional<DataShape> generateInspections(String actionId, Optional<DataShape> dataShape) throws MojoExecutionException {
         if (dataShape.isPresent()) {
 
             // don't compute inspections if already set
@@ -575,7 +569,13 @@ public class GenerateMetadataMojo extends AbstractMojo {
                 return dataShape;
             }
 
-            Optional<String> specs = generateInspections(actionId, dataShape.get().getKind(), dataShape.get().getType());
+            Optional<String> specs;
+            try {
+                specs = generateInspections(actionId, dataShape.get().getKind(), dataShape.get().getType());
+            } catch (ClassNotFoundException | DependencyResolutionRequiredException | IOException e) {
+                throw new MojoExecutionException("Error processing atlasmap inspections", e);
+            }
+
             if (specs.isPresent()) {
                 String inspection = specs.get();
                 DataShape.Builder builder = new DataShape.Builder()
@@ -597,8 +597,7 @@ public class GenerateMetadataMojo extends AbstractMojo {
         return Optional.empty();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private Optional<String> generateInspections(String actionId, DataShapeKinds kind, String type) throws Exception {
+    private Optional<String> generateInspections(String actionId, DataShapeKinds kind, String type) throws DependencyResolutionRequiredException, IOException, ClassNotFoundException {
         Optional<String> specification = Optional.empty();
 
         if (DataShapeKinds.JAVA == kind) {
