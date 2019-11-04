@@ -15,17 +15,15 @@
  */
 package io.syndesis.connector.mongo;
 
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.bson.types.ObjectId;
-import org.junit.Test;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasSize;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
 
@@ -58,11 +56,11 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsText3 = template.requestBody("direct:start", "{ \"_id\": 3 }", List.class);
         List<Document> resultsAsDocs3 = resultsAsText3.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertThat(resultsAsDocs, hasSize(1));
-        assertThat(resultsAsDocs, contains(doc));
-        assertThat(resultsAsDocs2, hasSize(1));
-        assertThat(resultsAsDocs2, contains(doc2));
-        assertThat(resultsAsDocs3, hasSize(0));
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
+        Assertions.assertThat(resultsAsDocs).contains(doc);
+        Assertions.assertThat(resultsAsDocs2).hasSize(1);
+        Assertions.assertThat(resultsAsDocs2).contains(doc2);
+        Assertions.assertThat(resultsAsDocs3).hasSize(0);
     }
 
     @Test
@@ -78,8 +76,8 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsText = template.requestBody("direct:start", "{ \"_id\": \"test\" }", List.class);
         List<Document> resultsAsDocs = resultsAsText.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertThat(resultsAsDocs, hasSize(1));
-        assertThat(resultsAsDocs, contains(doc));
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
+        Assertions.assertThat(resultsAsDocs).contains(doc);
     }
 
     @Test
@@ -99,8 +97,8 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         List<Document> resultsAsDocs = resultsAsText.stream().map(Document::parse).collect(Collectors.toList());
         // Then
 
-        assertThat(resultsAsDocs, contains(doc));
-        assertThat(resultsAsDocs, hasSize(1));
+        Assertions.assertThat(resultsAsDocs).contains(doc);
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
     }
 
 }

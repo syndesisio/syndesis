@@ -15,17 +15,15 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import com.mongodb.client.result.UpdateResult;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.result.UpdateResult;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
 
@@ -41,10 +39,10 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         String saveArguments = "{\"_id\":11,\"test\":\"new\"}";
         UpdateResult result = template.requestBody("direct:start", saveArguments, UpdateResult.class);
         // Then
-        assertThat(result.getUpsertedId().asNumber().longValue(), equalTo(11L));
+        Assertions.assertThat(result.getUpsertedId().asNumber().longValue()).isEqualTo(11L);
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound.get(0).getString("test"), equalTo("new"));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
     }
 
     @Test
@@ -56,9 +54,9 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id",
             result.getUpsertedId().asObjectId())).into(new ArrayList<>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound.get(0).getString("test"), equalTo("new"));
-        assertThat(result.getUpsertedId().asObjectId().getValue(), equalTo(docsFound.get(0).getObjectId("_id")));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("new");
+        Assertions.assertThat(result.getUpsertedId().asObjectId().getValue()).isEqualTo(docsFound.get(0).getObjectId("_id"));
     }
 
     @Test
@@ -70,11 +68,11 @@ public class MongoDBConnectorSaveTest extends MongoDBConnectorTestSupport {
         String saveArguments2 = "{\"_id\":32,\"test\":\"save\",\"newField\":true}";
         UpdateResult result = template.requestBody("direct:start", saveArguments2, UpdateResult.class);
         // Then
-        assertThat(result.getModifiedCount(), equalTo(1L));
+        Assertions.assertThat(result.getModifiedCount()).isEqualTo(1L);
         List<Document> docsFound = collection.find(Filters.eq("_id", 32)).into(new ArrayList<>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound.get(0).getString("test"), equalTo("save"));
-        assertThat(docsFound.get(0).getBoolean("newField"), equalTo(true));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("save");
+        Assertions.assertThat(docsFound.get(0).getBoolean("newField")).isEqualTo(true);
     }
 
 }

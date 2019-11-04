@@ -20,7 +20,6 @@ import java.util.List;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.bson.Document;
@@ -29,15 +28,18 @@ import org.slf4j.LoggerFactory;
 
 import static java.util.stream.Collectors.toList;
 
-public abstract class MongoAbstractCustomizer implements ComponentProxyCustomizer {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MongoAbstractCustomizer.class);
+public final class MongoCustomizersUtil {
+    private static final Logger LOGGER = LoggerFactory.getLogger(MongoCustomizersUtil.class);
+
+    private MongoCustomizersUtil(){
+    }
 
     /**
      * Used to convert any result MongoOperation (either {@link DeleteResult} or {@link UpdateResult}
      * to a {@link Long}
      * @param exchange
      */
-    protected void convertMongoResultToLong(Exchange exchange) {
+    static void convertMongoResultToLong(Exchange exchange) {
         Message in = exchange.getIn();
         if (in.getBody() instanceof DeleteResult) {
             Long docsDeleted = in.getBody(DeleteResult.class).getDeletedCount();
@@ -54,7 +56,7 @@ public abstract class MongoAbstractCustomizer implements ComponentProxyCustomize
      * Used to convert any {@link Document} object to Json text list
      * @param exchange
      */
-    protected void convertMongoDocumentsToJsonTextList(Exchange exchange) {
+    static void convertMongoDocumentsToJsonTextList(Exchange exchange) {
         List<String> convertedToJson = new ArrayList<>();
         Message in = exchange.getIn();
         if (in.getBody() instanceof Document) {

@@ -15,16 +15,16 @@
  */
 package io.syndesis.connector.mongo.verifier;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Test;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 

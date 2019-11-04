@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.Arrays;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -26,16 +29,12 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.runtime.Network;
-
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-
-import java.util.Arrays;
-import java.util.List;
 
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 

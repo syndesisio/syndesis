@@ -15,13 +15,12 @@
  */
 package io.syndesis.connector.mongo;
 
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
 
@@ -41,7 +40,7 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         String countArguments = "{\"test\":\"single\"}";
         Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertThat(result, equalTo(1L));
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -57,7 +56,7 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         String countArguments = "{\"batchNo\":33}";
         Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertThat(result, equalTo(2L));
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }

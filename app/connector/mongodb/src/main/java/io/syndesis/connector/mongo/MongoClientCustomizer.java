@@ -20,12 +20,13 @@ import java.util.Map;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class MongoClientCustomizer extends MongoAbstractCustomizer implements CamelContextAware {
+public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientCustomizer.class);
 
     private CamelContext camelContext;

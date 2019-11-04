@@ -15,23 +15,22 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
 
 public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends MongoDBConnectorTestSupport {
 
@@ -82,7 +81,6 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 Assertions.assertThat(jsonNode).isNotNull();
             } catch (IOException ex) {
-                log.error("Test failed because: ", ex);
                 return false;
             }
             return true;

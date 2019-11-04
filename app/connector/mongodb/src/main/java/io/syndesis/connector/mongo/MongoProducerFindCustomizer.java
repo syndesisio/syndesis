@@ -18,17 +18,18 @@ package io.syndesis.connector.mongo;
 import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mongodb3.MongoDbConstants;
 
-public class MongoProducerFindCustomizer extends MongoAbstractCustomizer {
+public class MongoProducerFindCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeProducer(this::convertInputToFilter);
-        component.setAfterProducer(this::convertMongoDocumentsToJsonTextList);
+        component.setBeforeProducer(MongoProducerFindCustomizer::convertInputToFilter);
+        component.setAfterProducer(MongoCustomizersUtil::convertMongoDocumentsToJsonTextList);
     }
 
-    private void convertInputToFilter(Exchange exchange) {
+    private static void convertInputToFilter(Exchange exchange) {
         final String body = exchange.getIn().getBody(String.class);
         if (body != null) {
             exchange.getIn().getHeaders().put(MongoDbConstants.CRITERIA, body);

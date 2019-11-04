@@ -15,17 +15,14 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
 
@@ -47,10 +44,10 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound.get(0).getString("test"), equalTo("updated!"));
-        assertThat(docsFound.get(0).getString("test"), equalTo("updated!"));
-        assertThat(result, equalTo(1L));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -66,10 +63,9 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
-        assertThat(docsFound, hasSize(2));
-        assertEquals(2, docsFound.size());
-        docsFound.forEach(document -> assertThat(document.getString("test"), equalTo("updated!")));
-        assertThat(result, equalTo(2L));
+        Assertions.assertThat(docsFound).hasSize(2);
+        docsFound.forEach(document -> Assertions.assertThat(document.getString("test")).isEqualTo("updated!"));
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }

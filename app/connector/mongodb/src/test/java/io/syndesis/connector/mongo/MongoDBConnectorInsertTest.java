@@ -15,20 +15,16 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
 
@@ -47,14 +43,14 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", message, List.class);
         // Then
-        assertThat(resultsAsString, hasSize(1));
+        Assertions.assertThat(resultsAsString).hasSize(1);
         Document result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList()).get(0);
-        assertThat(doc.getString("test"), equalTo(result.getString("test")));
-        assertThat(doc.getString("uniqueId"), equalTo(result.getString("uniqueId")));
+        Assertions.assertThat(doc.getString("test")).isEqualTo(result.getString("test"));
+        Assertions.assertThat(doc.getString("uniqueId")).isEqualTo(result.getString("uniqueId"));
 
         List<Document> docsFound = collection.find(Filters.eq("uniqueId", uniqueId)).into(new ArrayList<Document>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound, contains(result));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound).contains(result);
     }
 
     @Test
@@ -69,8 +65,8 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
-        assertThat(docsFound, hasSize(iteration));
-        assertThat(result, containsInAnyOrder(docsFound.toArray()));
+        Assertions.assertThat(docsFound).hasSize(iteration);
+        Assertions.assertThat(result).containsAll(docsFound);
     }
 
     private static List<Document> formatBatchMessageDocument(int batchNo) {
@@ -97,7 +93,7 @@ public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
         List<Document> result = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", batchId)).into(new ArrayList<Document>());
-        assertThat(docsFound, hasSize(iteration));
-        assertThat(result, containsInAnyOrder(docsFound.toArray()));
+        Assertions.assertThat(docsFound).hasSize(iteration);
+        Assertions.assertThat(result).containsAll(docsFound);
     }
 }

@@ -20,8 +20,9 @@ import java.util.Map;
 
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
-public class MongoProducerCustomizer extends MongoAbstractCustomizer {
+public class MongoProducerCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         String operation = ConnectorOptions.extractOption(options, "operation");

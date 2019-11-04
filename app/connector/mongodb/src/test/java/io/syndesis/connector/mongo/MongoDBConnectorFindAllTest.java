@@ -15,17 +15,14 @@
  */
 package io.syndesis.connector.mongo;
 
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
 
@@ -52,8 +49,8 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsString = template.requestBody("direct:start", null, List.class);
         List<Document> results = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertThat(results, hasSize(2));
-        assertThat(results, containsInAnyOrder(doc, doc2));
+        Assertions.assertThat(results).hasSize(2);
+        Assertions.assertThat(results).contains(doc, doc2);
     }
 
     @Test
@@ -74,7 +71,7 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         List<String> resultsAsString = template.requestBody("direct:start", "{\"color\": \"red\"}", List.class);
         List<Document> results = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertThat(results, hasSize(1));
-        assertThat(results, contains(doc2));
+        Assertions.assertThat(results).hasSize(1);
+        Assertions.assertThat(results).contains(doc2);
     }
 }

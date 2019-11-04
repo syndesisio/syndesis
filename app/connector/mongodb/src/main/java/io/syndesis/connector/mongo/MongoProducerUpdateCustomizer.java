@@ -18,16 +18,17 @@ package io.syndesis.connector.mongo;
 import java.util.Map;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.component.mongodb3.MongoDbConstants;
 
-public class MongoProducerUpdateCustomizer extends MongoAbstractCustomizer {
+public class MongoProducerUpdateCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(
             exchange -> exchange.getIn().getHeaders().put(MongoDbConstants.MULTIUPDATE, "true")
         );
-        component.setAfterProducer(this::convertMongoResultToLong);
+        component.setAfterProducer(MongoCustomizersUtil::convertMongoResultToLong);
     }
 }
 

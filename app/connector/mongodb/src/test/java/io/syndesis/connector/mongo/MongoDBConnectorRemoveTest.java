@@ -15,16 +15,14 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
 public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
 
@@ -47,8 +45,8 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then
         docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
-        assertThat(docsFound, hasSize(0));
-        assertThat(result, equalTo(1L));
+        Assertions.assertThat(docsFound).hasSize(0);
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -68,9 +66,9 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then
         docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
-        assertThat(docsFound, hasSize(1));
-        assertThat(docsFound.get(0).getString("test"), equalTo("unit3"));
-        assertThat(result, equalTo(2L));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("unit3");
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }
