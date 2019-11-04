@@ -115,21 +115,18 @@ public class ActivityTrackingController implements BackendController, Closeable 
 
         // Lets find out the type of DB we are working with.
         dbi.inTransaction((x, status) -> {
-            try {
-                String dbName = x.getConnection().getMetaData().getDatabaseProductName();
-                databaseKind = SqlJsonDB.DatabaseKind.valueOf(dbName);
+            String dbName = x.getConnection().getMetaData().getDatabaseProductName();
+            databaseKind = SqlJsonDB.DatabaseKind.valueOf(dbName);
 
-                // CockroachDB uses the PostgreSQL driver.. so need to look a little closer.
-                if( databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL ) {
-                    String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
-                    if( version.startsWith("CockroachDB") ) {
-                        databaseKind = SqlJsonDB.DatabaseKind.CockroachDB;
-                    }
+            // CockroachDB uses the PostgreSQL driver.. so need to look a little
+            // closer.
+            if (databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL) {
+                String version = x.createQuery("SELECT VERSION()").mapTo(String.class).first();
+                if (version.startsWith("CockroachDB")) {
+                    databaseKind = SqlJsonDB.DatabaseKind.CockroachDB;
                 }
-                return null;
-            } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
-                throw new IllegalStateException("Could not determine the database type", e);
             }
+            return null;
         });
     }
 
@@ -140,7 +137,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
             LOG.info("Purging old activity logs");
 
             @SuppressWarnings("unchecked")
-            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations"); //NOPMD
+            Map<String, Object> hashMap = dbGet(HashMap.class, "/activity/integrations");
             if( hashMap!=null ) {
                 for (String integrationId : hashMap.keySet()) {
                     String integrationPath = "/activity/exchanges/" + integrationId + "/%";
@@ -148,7 +145,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
                     LOG.info("deleted {} transactions for integration: {}", count, integrationId);
                 }
             }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
+        } catch (IOException e) {
             LOG.error("Unexpected Error occurred.", e);
         } finally {
             Thread.currentThread().setName("Logs Controller Scheduler [idle]");
@@ -297,7 +294,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
                     LOG.info("Pod state removed from db: {}", o);
                 }
             }
-        } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException | IOException e) {
+        } catch (RuntimeException | IOException e) {
             LOG.error("Unexpected Error occurred.", e);
         } finally {
             Thread.currentThread().setName("Logs Controller Scheduler [idle]");
@@ -391,7 +388,7 @@ public class ActivityTrackingController implements BackendController, Closeable 
                     // Write the batch..
                     try {
                         writeBatch(batch);
-                    } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") RuntimeException e) {
+                    } catch (RuntimeException e) {
                         LOG.warn("Unable to write batch of events: {}", e.getMessage());
                         LOG.debug("Unable to write batch of events: ", e);
                     }

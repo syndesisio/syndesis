@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.Optional;
@@ -110,10 +111,8 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
         return integration;
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private static ResourceSpec generateOpenAPIResource(OpenApi openApi) throws Exception {
+    private static ResourceSpec generateOpenAPIResource(OpenApi openApi) throws IOException {
         final byte[] openApiBytes = openApi.getDocument();
-//        final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(openApiBytes) : new String(openApiBytes, UTF_8);
 
         return new ResourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()
@@ -143,8 +142,7 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
             .build();
     }
 
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    private SourceSpec generateOpenAPIRestEndpoint() throws Exception {
+    private SourceSpec generateOpenAPIRestEndpoint() throws IOException {
         try (InputStream is = CamelKPublishHandler.class.getResourceAsStream("/expose-openapi-document.xml")) {
             String oepnApiEndpointXml = IOUtils.toString(is, UTF_8);
             final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(oepnApiEndpointXml) : oepnApiEndpointXml;
