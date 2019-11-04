@@ -15,6 +15,10 @@
  */
 package io.syndesis.connector.mongo.verifier;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
 import io.syndesis.connector.support.verifier.api.Verifier;
@@ -22,29 +26,16 @@ import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
-    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-producer";
+    private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
     private final static String SCHEME = "mongodb3";
     private final static MongoDBVerifier VERIFIER = new MongoDBVerifier();
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "findAll");
+        return fromDirectToMongo("start", CONNECTOR_ID, DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void verifyConnectionOK() {

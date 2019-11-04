@@ -15,32 +15,24 @@
  */
 package io.syndesis.connector.mongo;
 
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
+
 public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
-    // **************************
-    // Set up
-    // **************************
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "findAll");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-find", DATABASE, COLLECTION);
     }
 
-    // **************************
-    // Tests
-    // **************************
-
     @Test
-    public void mongoFindAllTest() throws IOException {
+    public void mongoFindAllTest() {
         // When
         String uniqueId = UUID.randomUUID().toString();
         Document doc = new Document();
@@ -55,17 +47,14 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         // Given
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", null, List.class);
-        List<Document> results = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
+        List<Document> results = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertEquals(2, results.size());
-        results.forEach(document -> assertTrue(
-            (Integer.valueOf(1).equals(document.get("_id")) && uniqueId.equals(document.get("unique"))) ||
-                (Integer.valueOf(2).equals(document.get("_id")) && uniqueId2.equals(document.get("unique")))
-        ));
+        Assertions.assertThat(results).hasSize(2);
+        Assertions.assertThat(results).contains(doc, doc2);
     }
 
     @Test
-    public void mongoFindAllFilterTest() throws IOException {
+    public void mongoFindAllFilterTest() {
         // When
         String uniqueId = UUID.randomUUID().toString();
         Document doc = new Document();
@@ -80,9 +69,9 @@ public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
         // Given
         @SuppressWarnings("unchecked")
         List<String> resultsAsString = template.requestBody("direct:start", "{\"color\": \"red\"}", List.class);
-        List<Document> results = resultsAsString.stream().map(s -> Document.parse(s)).collect(Collectors.toList());
+        List<Document> results = resultsAsString.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertEquals(1, results.size());
-        assertEquals(uniqueId2, results.get(0).getString("unique"));
+        Assertions.assertThat(results).hasSize(1);
+        Assertions.assertThat(results).contains(doc2);
     }
 }

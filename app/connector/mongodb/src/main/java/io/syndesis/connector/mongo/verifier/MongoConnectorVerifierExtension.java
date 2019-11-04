@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.mongo.verifier;
 
+import java.util.Map;
+
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoClientURI;
@@ -28,8 +30,6 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 import static org.apache.camel.util.CastUtils.cast;
 

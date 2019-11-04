@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.io.IOException;
+import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
@@ -25,9 +28,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
@@ -71,7 +71,6 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
                 String value = jsonNode.get("someKey").asText();
                 return id <= globalId && "someValue".equals(value);
             } catch (IOException ex) {
-                log.error("Test failed because: ",ex);
                 return false;
             }
         });

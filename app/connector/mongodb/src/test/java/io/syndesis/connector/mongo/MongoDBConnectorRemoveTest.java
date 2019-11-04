@@ -15,29 +15,21 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
-    // **************************
-    // Set up
-    // **************************
+public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "remove");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-delete", DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoRemoveSingleTest() {
@@ -46,15 +38,15 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         String json2 = String.format("{\"test\":\"unit2\",\"_id\":%s}", "22");
         collection.insertOne(Document.parse(json));
         collection.insertOne(Document.parse(json2));
-        List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
         assertEquals(1, docsFound.size());
         // Given
         String removeArguments = "{\"test\":\"unit\"}";
-        Document result = Document.parse(template.requestBody("direct:start", removeArguments, String.class));
+        Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then
-        docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
-        assertEquals(0, docsFound.size());
-        assertEquals(Integer.valueOf(1), result.getInteger("count"));
+        docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
+        Assertions.assertThat(docsFound).hasSize(0);
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -66,17 +58,17 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json));
         collection.insertOne(Document.parse(json2));
         collection.insertOne(Document.parse(json3));
-        List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
+        List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
         assertEquals(3, docsFound.size());
         // Given
         String removeArguments = "{\"test\":\"unit\"}";
         // Need the header to enable multiple updates!
-        Document result = Document.parse(template.requestBody("direct:start", removeArguments, String.class));
+        Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then
-        docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
-        assertEquals(1, docsFound.size());
-        assertEquals("unit3", docsFound.get(0).getString("test"));
-        assertEquals(Integer.valueOf(2), result.getInteger("count"));
+        docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("unit3");
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }

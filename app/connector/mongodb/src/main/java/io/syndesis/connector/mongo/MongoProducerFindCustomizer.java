@@ -15,26 +15,26 @@
  */
 package io.syndesis.connector.mongo;
 
-import java.util.Arrays;
 import java.util.Map;
 
-import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Exchange;
+import org.apache.camel.component.mongodb3.MongoDbConstants;
 
-public class MongoProducerCustomizer implements ComponentProxyCustomizer {
+public class MongoProducerFindCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        String operation = ConnectorOptions.extractOption(options, "operation");
-        if (operation != null) {
-            if (!MongoProducerOperation.isValid(operation)) {
-                throw new IllegalArgumentException(String.format("Operation %s is not supported. " +
-                    "Supported operations are %s", operation, Arrays.toString(MongoProducerOperation.values())));
-            }
-        } else {
-            throw new IllegalArgumentException(String.format("You must provide a text `operation` option. " +
-                "Supported operations are %s", Arrays.toString(MongoProducerOperation.values())));
+        component.setBeforeProducer(MongoProducerFindCustomizer::convertInputToFilter);
+        component.setAfterProducer(MongoCustomizersUtil::convertMongoDocumentsToJsonTextList);
+    }
+
+    private static void convertInputToFilter(Exchange exchange) {
+        final String body = exchange.getIn().getBody(String.class);
+        if (body != null) {
+            exchange.getIn().getHeaders().put(MongoDbConstants.CRITERIA, body);
         }
     }
+
 }
 

@@ -15,29 +15,21 @@
  */
 package io.syndesis.connector.mongo;
 
-import com.mongodb.client.model.Filters;
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
+import com.mongodb.client.model.Filters;
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.junit.Test;
 
-    // **************************
-    // Set up
-    // **************************
+public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "update");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoUpdateSingleTest() {
@@ -49,12 +41,13 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // Given
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"_id\":11},{$set: {\"test\":\"updated!\"}}]";
-        Document result = Document.parse(template.requestBody("direct:start", updateArguments, String.class));
+        Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<Document>());
-        assertEquals(1, docsFound.size());
-        assertEquals("updated!", docsFound.get(0).getString("test"));
-        assertEquals(Integer.valueOf(1), result.getInteger("count"));
+        Assertions.assertThat(docsFound).hasSize(1);
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
+        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -67,13 +60,12 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         // Given
         // { $set: { <field1>: <value1>, ... } }
         String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
-        // Need the header to enable multiple updates!
-        Document result = Document.parse(template.requestBodyAndHeader("direct:start", updateArguments, "CamelMongoDbMultiUpdate", "true", String.class));
+        Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<Document>());
-        assertEquals(2, docsFound.size());
-        docsFound.forEach(document -> assertEquals("updated!", document.getString("test")));
-        assertEquals(Integer.valueOf(2), result.getInteger("count"));
+        Assertions.assertThat(docsFound).hasSize(2);
+        docsFound.forEach(document -> Assertions.assertThat(document.getString("test")).isEqualTo("updated!"));
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }

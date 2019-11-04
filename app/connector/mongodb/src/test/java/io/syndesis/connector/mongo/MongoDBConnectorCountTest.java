@@ -15,27 +15,19 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.util.List;
+
 import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-import java.util.List;
-
 public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
-
-    // **************************
-    // Set up
-    // **************************
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "count");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-count", DATABASE, COLLECTION);
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Test
     public void mongoCountSingleTest() {
@@ -46,9 +38,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json2));
         // Given
         String countArguments = "{\"test\":\"single\"}";
-        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
+        Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertEquals(Integer.valueOf(1), result.getInteger("count"));
+        Assertions.assertThat(result).isEqualTo(1L);
     }
 
     @Test
@@ -62,9 +54,9 @@ public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json3));
         // Given
         String countArguments = "{\"batchNo\":33}";
-        Document result = Document.parse(template.requestBody("direct:start", countArguments, String.class));
+        Long result = template.requestBody("direct:start", countArguments, Long.class);
         // Then
-        assertEquals(Integer.valueOf(2), result.getInteger("count"));
+        Assertions.assertThat(result).isEqualTo(2L);
     }
 
 }

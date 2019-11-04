@@ -15,31 +15,25 @@
  */
 package io.syndesis.connector.mongo;
 
-import io.syndesis.common.model.integration.Step;
-import org.bson.Document;
-import org.junit.Test;
-
-import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import io.syndesis.common.model.integration.Step;
+import org.assertj.core.api.Assertions;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.junit.Test;
 
 public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
-    // **************************
-    // Set up
-    // **************************
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-producer", DATABASE, COLLECTION,
-            "findById");
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-find", DATABASE, COLLECTION);
     }
 
-    // **************************
-    // Tests
-    // **************************
-
     @Test
-    public void mongoFindByIdTest() throws IOException {
+    public void mongoFindByIdNumericTest() {
         // When
         String uniqueId = UUID.randomUUID().toString();
         Document doc = new Document();
@@ -52,11 +46,59 @@ public class MongoDBConnectorFindByIdTest extends MongoDBConnectorTestSupport {
         doc2.append("unique", uniqueId2);
         collection.insertOne(doc2);
         // Given
-        Document result = Document.parse(template.requestBody("direct:start", 1, String.class));
-        Document result2 = Document.parse(template.requestBody("direct:start", 2, String.class));
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsText = template.requestBody("direct:start", "{ \"_id\": { $eq: 1 } }", List.class);
+        List<Document> resultsAsDocs = resultsAsText.stream().map(Document::parse).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsText2 = template.requestBody("direct:start", "{ \"_id\": 2 }", List.class);
+        List<Document> resultsAsDocs2 = resultsAsText2.stream().map(Document::parse).collect(Collectors.toList());
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsText3 = template.requestBody("direct:start", "{ \"_id\": 3 }", List.class);
+        List<Document> resultsAsDocs3 = resultsAsText3.stream().map(Document::parse).collect(Collectors.toList());
         // Then
-        assertEquals(uniqueId, result.get("unique"));
-        assertEquals(uniqueId2, result2.get("unique"));
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
+        Assertions.assertThat(resultsAsDocs).contains(doc);
+        Assertions.assertThat(resultsAsDocs2).hasSize(1);
+        Assertions.assertThat(resultsAsDocs2).contains(doc2);
+        Assertions.assertThat(resultsAsDocs3).hasSize(0);
+    }
+
+    @Test
+    public void mongoFindByIdTextTest() {
+        // When
+        String uniqueId = UUID.randomUUID().toString();
+        Document doc = new Document();
+        doc.append("_id", "test");
+        doc.append("unique", uniqueId);
+        collection.insertOne(doc);
+        // Given
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsText = template.requestBody("direct:start", "{ \"_id\": \"test\" }", List.class);
+        List<Document> resultsAsDocs = resultsAsText.stream().map(Document::parse).collect(Collectors.toList());
+        // Then
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
+        Assertions.assertThat(resultsAsDocs).contains(doc);
+    }
+
+    @Test
+    public void mongoFindByIdObjectIdTest() {
+        // When
+        String uniqueId = UUID.randomUUID().toString();
+        Document doc = new Document();
+        ObjectId objectId = new ObjectId();
+        doc.append("_id", objectId);
+        doc.append("unique", uniqueId);
+        collection.insertOne(doc);
+        // Given
+        @SuppressWarnings("unchecked")
+        List<String> resultsAsText = template.requestBody(
+            "direct:start", "{ \"_id\": ObjectId(\"" + objectId.toString() + "\") }",
+            List.class);
+        List<Document> resultsAsDocs = resultsAsText.stream().map(Document::parse).collect(Collectors.toList());
+        // Then
+
+        Assertions.assertThat(resultsAsDocs).contains(doc);
+        Assertions.assertThat(resultsAsDocs).hasSize(1);
     }
 
 }

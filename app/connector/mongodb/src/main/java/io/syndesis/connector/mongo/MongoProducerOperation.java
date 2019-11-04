@@ -30,8 +30,8 @@ enum MongoProducerOperation {
         if (operation == null) {
             return false;
         }
-        for(MongoProducerOperation op:EnumSet.allOf(MongoProducerOperation.class)){
-            if(op.name().equals(operation)){
+        for (MongoProducerOperation op : EnumSet.allOf(MongoProducerOperation.class)) {
+            if (op.name().equals(operation)) {
                 return true;
             }
         }
