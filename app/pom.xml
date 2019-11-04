@@ -79,7 +79,7 @@
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-750033</camel.version>
+    <camel.version>2.21.0.fuse-760006</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
@@ -1968,7 +1968,7 @@
           as the plugin version differed from the spotbug-annotations
           version, keep in mind when upgrading the plugin also to set
           this version
-        --> 
+        -->
         <version>3.1.12</version>
         <scope>provided</scope>
       </dependency>
