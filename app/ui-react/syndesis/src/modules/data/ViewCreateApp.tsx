@@ -1,4 +1,4 @@
-import { Virtualization } from '@syndesis/models';
+import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -17,6 +17,50 @@ export interface IViewCreateAppRouteState {
 export const ViewCreateApp: React.FunctionComponent = () => {
   const { t } = useTranslation(['data', 'shared']);
   const { state } = useRouteData<null, IViewCreateAppRouteState>();
+
+  const [selectedSchemaNodes, setSelectedSchemaNodes] = React.useState<
+    SchemaNodeInfo[]
+  >([]);
+  const [selectedNodesCount, setSelectedNodesCount] = React.useState(0);
+
+  const handleNodeSelected = async (
+    connName: string,
+    name: string,
+    teiidName: string,
+    nodePath: string[]
+  ) => {
+    const srcInfo = {
+      connectionName: connName,
+      name,
+      nodePath,
+      teiidName,
+    } as SchemaNodeInfo;
+
+    const currentNodes = selectedSchemaNodes;
+    currentNodes.push(srcInfo);
+    setSelectedSchemaNodes(currentNodes);
+    setSelectedNodesCount(currentNodes.length);
+  };
+
+  const handleNodeDeselected = async (
+    connectionName: string,
+    teiidName: string
+  ) => {
+    const tempArray = selectedSchemaNodes;
+    const index = getIndex(teiidName, tempArray, 'teiidName');
+    tempArray.splice(index, 1);
+    setSelectedSchemaNodes(tempArray);
+    setSelectedNodesCount(tempArray.length);
+  };
+
+  const getIndex = (value: string, arr: SchemaNodeInfo[], prop: string) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i][prop] === value) {
+        return i;
+      }
+    }
+    return -1; // to handle the case where the value doesn't exist
+  };
 
   return (
     <WithClosedNavigation>
@@ -51,7 +95,14 @@ export const ViewCreateApp: React.FunctionComponent = () => {
               .selectSources
           }
           exact={true}
-          component={SelectSourcesPage}
+          render={() => (
+            <SelectSourcesPage
+              selectedSchemaNodes={selectedSchemaNodes}
+              selectedNodesCount={selectedNodesCount}
+              handleNodeSelected={handleNodeSelected}
+              handleNodeDeselected={handleNodeDeselected}
+            />
+          )}
         />
         {/* step 2 */}
         <Route

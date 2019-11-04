@@ -19,47 +19,24 @@ export interface ISelectSourcesRouteState {
   virtualization: Virtualization;
 }
 
-export const SelectSourcesPage: React.FunctionComponent = () => {
+export interface ISelectSourcesPageProps {
+  handleNodeSelected: (
+    connectionName: string,
+    name: string,
+    teiidName: string,
+    nodePath: string[]
+  ) => void;
+  handleNodeDeselected: (connectionName: string, teiidName: string) => void;
+  selectedSchemaNodes: SchemaNodeInfo[];
+  selectedNodesCount: number;
+}
 
-  const { state } = useRouteData<
-    null,
-    ISelectSourcesRouteState
-  >();
-  const [selectedSchemaNodes, setSelectedSchemaNodes] = React.useState<SchemaNodeInfo[]>([]);
-  const [selectedNodesCount, setSelectedNodesCount] = React.useState(0);
+export const SelectSourcesPage: React.FunctionComponent<
+  ISelectSourcesPageProps
+> = props => {
+  const { state } = useRouteData<null, ISelectSourcesRouteState>();
 
-  const handleNodeSelected = async (connName: string, name: string, teiidName: string, nodePath: string[]) => {
-    const srcInfo = {
-      connectionName: connName,
-      name,
-      nodePath,
-      teiidName,
-     } as SchemaNodeInfo;
-
-    const currentNodes = selectedSchemaNodes;
-    currentNodes.push(srcInfo);
-    setSelectedSchemaNodes(currentNodes);
-    setSelectedNodesCount(currentNodes.length);
-  }
-
-  const handleNodeDeselected = async (connectionName: string, teiidName: string) => {
-    const tempArray = selectedSchemaNodes;
-    const index = getIndex(teiidName, tempArray, 'teiidName');
-    tempArray.splice(index, 1);
-    setSelectedSchemaNodes(tempArray);
-    setSelectedNodesCount(tempArray.length);
-  }
-
-  const getIndex = (value: string, arr: SchemaNodeInfo[], prop: string) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (arr[i][prop] === value) {
-        return i;
-      }
-    }
-    return -1; // to handle the case where the value doesn't exist
-  }
-
-  const schemaNodeInfo: SchemaNodeInfo[] = selectedSchemaNodes;
+  const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
   const virtualization = state.virtualization;
 
   return (
@@ -67,23 +44,21 @@ export const SelectSourcesPage: React.FunctionComponent = () => {
       header={<ViewCreateSteps step={1} />}
       content={
         <ConnectionSchemaContent
-          onNodeSelected={handleNodeSelected}
-          onNodeDeselected={handleNodeDeselected}
+          onNodeSelected={props.handleNodeSelected}
+          onNodeDeselected={props.handleNodeDeselected}
+          selectedSchemaNodes={props.selectedSchemaNodes}
         />
       }
       cancelHref={resolvers.data.virtualizations.views.root({
         virtualization,
       })}
-      nextHref={resolvers.data.virtualizations.views.createView.selectName(
-        {
-          schemaNodeInfo,
-          virtualization,
-        }
-      )}
-      isNextDisabled={selectedNodesCount>1}
+      nextHref={resolvers.data.virtualizations.views.createView.selectName({
+        schemaNodeInfo,
+        virtualization,
+      })}
+      isNextDisabled={props.selectedNodesCount > 1}
       isNextLoading={false}
       isLastStep={false}
     />
   );
-
-}
+};
