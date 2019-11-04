@@ -57,11 +57,13 @@
 
     <jackson.version>2.9.9</jackson.version>
     <json-patch.version>1.9</json-patch.version>
-    <kubernetes.client.version>3.1.12.fuse-740022-redhat-00001</kubernetes.client.version>
+    <kubernetes.client.version>4.6.1</kubernetes.client.version>
 
     <spring.version>4.3.18.RELEASE</spring.version>
     <spring-boot.version>1.5.16.RELEASE</spring-boot.version>
     <spring-cloud.version>Dalston.SR5</spring-cloud.version>
+
+    <okhttp3.version>3.12.1</okhttp3.version>
 
     <swagger.version>1.5.24</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
@@ -736,6 +738,10 @@
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
               <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
+              <!-- see https://github.com/fabric8io/kubernetes-client/issues/1847 -->
+              <ignoredResourcePattern>resource-handler-services.vm</ignoredResourcePattern>
+              <ignoredResourcePattern>resource-handler.vm</ignoredResourcePattern>
+              <ignoredResourcePattern>resource-operation.vm</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <exceptions>
               <exception>
@@ -1088,12 +1094,6 @@
         <version>${kubernetes.client.version}</version>
         <scope>import</scope>
         <type>pom</type>
-      </dependency>
-
-      <dependency>
-        <groupId>io.fabric8</groupId>
-        <artifactId>kubernetes-model</artifactId>
-        <version>2.0.10</version>
       </dependency>
 
       <dependency>
@@ -2113,6 +2113,12 @@
         <groupId>com.github.fge</groupId>
         <artifactId>json-patch</artifactId>
         <version>${json-patch.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.squareup.okhttp3</groupId>
+        <artifactId>okhttp</artifactId>
+        <version>${okhttp3.version}</version>
       </dependency>
 
       <dependency>

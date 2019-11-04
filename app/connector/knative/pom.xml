@@ -95,12 +95,12 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-client</artifactId>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>kubernetes-model</artifactId>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
 
     <!-- test -->

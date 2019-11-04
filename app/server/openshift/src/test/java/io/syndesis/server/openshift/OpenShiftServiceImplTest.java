@@ -154,7 +154,7 @@ public class OpenShiftServiceImplTest {
         service.deploy(name, deploymentData);
 
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/secrets", expectedSecret));
     }
 
@@ -174,9 +174,9 @@ public class OpenShiftServiceImplTest {
         service.deploy(name, deploymentData);
 
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
-        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/oapi/v1/namespaces/test/routes"));
-        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/oapi/v1/namespaces/test/services"));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/apis/route.openshift.io/v1/namespaces/test/routes"));
+        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/api/v1/namespaces/test/services"));
     }
 
     @Test
@@ -219,9 +219,9 @@ public class OpenShiftServiceImplTest {
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/oapi/v1/namespaces/test/routes"));
+        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/apis/route.openshift.io/v1/namespaces/test/routes"));
     }
 
     @Test
@@ -260,9 +260,9 @@ public class OpenShiftServiceImplTest {
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/oapi/v1/namespaces/test/routes"));
+        assertThat(issuedRequests).doesNotContain(Request.with("POST", "/apis/route.openshift.io/v1/namespaces/test/routes"));
     }
 
     @Test
@@ -318,15 +318,15 @@ public class OpenShiftServiceImplTest {
 
         server.expect()
             .post()
-            .withPath("/oapi/v1/namespaces/test/routes")
+            .withPath("/apis/route.openshift.io/v1/namespaces/test/routes")
             .andReturn(200, expectedRoute)
             .always();
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs", expectedDeploymentConfig));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).contains(Request.with("POST", "/oapi/v1/namespaces/test/routes"));
+        assertThat(issuedRequests).contains(Request.with("POST", "/apis/route.openshift.io/v1/namespaces/test/routes"));
     }
 
     @Test
@@ -371,15 +371,15 @@ public class OpenShiftServiceImplTest {
 
         server.expect()
             .patch()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route")
             .andReturn(200, expectedDeploymentConfig)
             .always();
 
         service.deploy(name, deploymentData);
         final List<Request> issuedRequests = gatherRequests();
-        assertThat(issuedRequests).contains(Request.with("PATCH", "/oapi/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", Collections.EMPTY_LIST));
+        assertThat(issuedRequests).contains(Request.with("PATCH", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", Collections.EMPTY_LIST));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
-        assertThat(issuedRequests).contains(Request.with("DELETE", "/oapi/v1/namespaces/test/routes/i-via-service-and-route"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/route.openshift.io/v1/namespaces/test/routes/i-via-service-and-route"));
     }
 
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {
@@ -481,22 +481,22 @@ public class OpenShiftServiceImplTest {
             .build();
         server.expect()
             .get()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
             .andReturn(404, new StatusBuilder().withCode(404).build())
             .times(1);
         server.expect()
             .get()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
             .andReturn(200, deployed)
             .always();
         server.expect()
             .patch()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/" + openshiftName(name))
             .andReturn(200, deployed)
             .always();
         server.expect()
             .post()
-            .withPath("/oapi/v1/namespaces/test/deploymentconfigs")
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs")
             .andReturn(200, expectedDeploymentConfig)
             .always();
     }
