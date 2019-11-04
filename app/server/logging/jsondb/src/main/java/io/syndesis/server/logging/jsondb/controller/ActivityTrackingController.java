@@ -28,7 +28,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
@@ -37,6 +36,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import io.syndesis.common.util.json.JsonUtils;
+
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.PreparedBatch;
 import org.slf4j.Logger;
@@ -45,6 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+
+import static io.syndesis.common.util.thread.Threads.newThreadFactory;
 
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
@@ -104,8 +106,8 @@ public class ActivityTrackingController implements BackendController, Closeable 
     @PostConstruct
     @SuppressWarnings("FutureReturnValueIgnored")
     public void open() {
-        scheduler = Executors.newScheduledThreadPool(1, threadFactory("Logs Controller Scheduler"));
-        executor =  Executors.newCachedThreadPool(threadFactory("Logs Controller"));
+        scheduler = Executors.newScheduledThreadPool(1, newThreadFactory("Logs Controller Scheduler"));
+        executor =  Executors.newCachedThreadPool(newThreadFactory("Logs Controller"));
         stopped.set(false);
         executor.execute(this::processEventQueue);
         scheduler.scheduleWithFixedDelay(this::pollPods, startupDelay.getSeconds(), 5, TimeUnit.SECONDS);
@@ -246,24 +248,6 @@ public class ActivityTrackingController implements BackendController, Closeable 
         }
     }
 
-
-    /**
-     * This controller can potentially spin up lots of threads, at last one for each
-     * pod that's being processed.  Lets reduce thread stack size since we don't need
-     * a very large stack to do log processing.
-     *
-     * @param name
-     * @return
-     */
-    @SuppressWarnings("PMD.InvalidSlf4jMessageFormat") // false positive
-    private static ThreadFactory threadFactory(String name) {
-        return r -> {
-            Thread thread = new Thread(null, r, name, 1024);
-            thread.setUncaughtExceptionHandler((where, throwable) -> LOG.error("Failure running activity tracking task on thread: {}", where.getName(), throwable));
-
-            return thread;
-        };
-    }
 
     private void pollPods() {
         Thread.currentThread().setName("Logs Controller Scheduler [running]: pollPods");
