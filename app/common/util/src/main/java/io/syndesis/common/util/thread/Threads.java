@@ -15,10 +15,29 @@
  */
 package io.syndesis.common.util.thread;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public final class Threads {
+
+    private static class Logging implements UncaughtExceptionHandler {
+
+        private final Logger log;
+
+        public Logging(final Logger log) {
+            this.log = log;
+        }
+
+        @Override
+        public void uncaughtException(final Thread thread, final Throwable e) {
+            log.error("Failure on thread: {}", thread.getName(), e);
+        }
+
+    }
 
     private Threads() {
         // utility class
@@ -33,8 +52,12 @@ public final class Threads {
 
             @Override
             public Thread newThread(final Runnable task) {
+
                 final Thread thread = new Thread(initialization, task);
                 thread.setName(groupName + "-" + threadNumber.incrementAndGet());
+
+                final Logger log = LoggerFactory.getLogger(task.getClass());
+                thread.setUncaughtExceptionHandler(new Logging(log));
 
                 return thread;
             }
