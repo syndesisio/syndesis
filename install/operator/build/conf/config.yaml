@@ -5,7 +5,7 @@ PrometheusRules: ""
 TagMinor: "1.9.0"
 TagMajor: "2.0.0"
 Versions:
-  Camel: "2.21.0.fuse-750033"
+  Camel: "2.21.0.fuse-760006"
   CamelKRuntime: "0.3.4.fuse-740008"
 spec-defaults:
   imageStreamNamespace: ""
