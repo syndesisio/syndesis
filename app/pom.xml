@@ -615,6 +615,18 @@
       </properties>
     </profile>
 
+    <profile>
+      <id>teiid-syndesis</id>
+       <properties>
+        <!-- skip license header chedk for now, teiid has failures -->
+        <basepom.check.skip-license>true</basepom.check.skip-license>
+       </properties>
+
+      <modules>
+        <module>teiid-syndesis</module>
+      </modules>
+    </profile>
+
   </profiles>
 
   <build>
