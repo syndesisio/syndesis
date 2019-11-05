@@ -105,7 +105,7 @@ public class TemplateStepHandler implements IntegrationStepHandler, StringConsta
             String id = flowIndex + HYPHEN + stepIndex;
             String uri = language.generateUri(id);
             Map<String, Object> params = language.getUriParams();
-            if (params != null) {
+            if (params != null && !params.isEmpty()) {
                 uri = URISupport.appendParametersToURI(uri, params);
             }
             route = route.to(uri);
