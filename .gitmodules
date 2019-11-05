@@ -1,0 +1,3 @@
+[submodule "app/teiid-syndesis"]
+	path = app/teiid-syndesis
+	url = https://github.com/teiid/teiid-syndesis
