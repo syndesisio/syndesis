@@ -21,12 +21,10 @@ cd syndesis
 * Startup minishift and install:
 
 ```
-./tools/bin/syndesis minishift --install --open
+./tools/bin/syndesis minishift --install --open --nodev
 ```
 
 This will install the latest bleeding edge version from Syndesis from the `master` branch.
 For a more stable experience, use the option `--tag` with a [stable version](https://github.com/syndesisio/syndesis/releases).
 
 Now you can run some [quickstarts](https://github.com/syndesisio/syndesis-quickstarts/blob/master/README.md#4-lets-run-some-quickstarts)
-
-
