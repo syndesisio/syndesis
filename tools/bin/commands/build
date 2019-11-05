@@ -269,7 +269,7 @@ MODULES=(
   "server:common extension integration connector"
   "s2i:common extension integration connector server"
   "test:common extension integration connector server s2i"
-  "teiid-syndesis"
+  "dv"
 )
 MODULE_PATHS=(
   "upgrade:tools/upgrade/"
@@ -282,7 +282,7 @@ MODULE_PATHS=(
   "meta:app/meta/"
   "server:app/server/"
   "s2i:app/s2i/"
-  "teiid-syndesis:app/teiid-syndesis/"
+  "dv:app/dv/"
 )
 
 extract_modules() {
