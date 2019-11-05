@@ -1,7 +1,7 @@
 #!/bin/bash
 
 OPERATOR_GO_PACKAGE="github.com/syndesisio/syndesis/install/operator"
-OPERATOR_BINARY=$HOME/.syndesis/bin/syndesis
+OPERATOR_BINARY=$HOME/.syndesis/bin/syndesis-operator
 
 operatorsdk_is_available() {
     set +e
@@ -82,7 +82,7 @@ download_operator_binary() {
 
     case "$OSTYPE" in
         darwin*)  pattern="mac-64" ;;
-        linux*)   pattern="linux-64" ;;
+        linux*)   pattern="linux-amd64" ;;
         *)        pattern="unknown" ;;
     esac
 
