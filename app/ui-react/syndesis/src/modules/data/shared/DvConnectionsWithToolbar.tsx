@@ -42,6 +42,7 @@ export interface IDvConnectionsWithToolbarProps {
   loading: boolean;
   dvSourceStatuses: VirtualizationSourceStatus[];
   onConnectionSelectionChanged: (name: string, selected: boolean) => void;
+  selectedConnection: string;
   children?: any;
 }
 
@@ -49,7 +50,6 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
   IDvConnectionsWithToolbarProps
 > = props => {
   const { t } = useTranslation(['data', 'shared']);
-  const [selectedConnection, setSelectedConnection] = React.useState('');
 
   function getFilteredAndSortedConnections(
     connections: Connection[],
@@ -89,7 +89,6 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
     selected: boolean
   ) => {
     props.onConnectionSelectionChanged(name, selected);
-    setSelectedConnection(selected ? name : '');
   };
 
   const {
@@ -107,7 +106,7 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
         const filteredAndSortedConnections = getFilteredAndSortedConnections(
           connectionsData.connectionsForDisplay,
           props.dvSourceStatuses,
-          selectedConnection,
+          props.selectedConnection,
           helpers.activeFilters,
           helpers.currentSortType,
           helpers.isSortAscending
@@ -153,7 +152,7 @@ export const DvConnectionsWithToolbar: React.FunctionComponent<
                 {filteredAndSortedConnections.length > 0 && (
                   <DvConnections
                     connections={filteredAndSortedConnections}
-                    initialSelection={selectedConnection}
+                    initialSelection={props.selectedConnection}
                     onConnectionSelectionChanged={
                       handleConnectionSelectionChanged
                     }

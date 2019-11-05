@@ -1,4 +1,4 @@
-import { Virtualization } from '@syndesis/models';
+import { ViewInfo, Virtualization } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -17,6 +17,43 @@ export interface IViewsImportAppRouteState {
 export const ViewsImportApp: React.FunctionComponent = () => {
   const { t } = useTranslation(['data', 'shared']);
   const { state } = useRouteData<null, IViewsImportAppRouteState>();
+
+  const [selectedConnection, setSelectedConnection] = React.useState('');
+
+  const handleConnectionSelectionChanged = async (
+    name: string,
+    selected: boolean
+  ) => {
+    const selConn = selected ? name : '';
+    setSelectedConnection(selConn);
+    clearViewSelection();
+  };
+
+  const [selectedViews, setSelectedViews] = React.useState<ViewInfo[]>([]);
+  const [hasSelectedViews, setHasSelectedViews] = React.useState(false);
+
+  const handleAddView = async (view: ViewInfo) => {
+    const currentViews = selectedViews;
+    currentViews.push(view);
+    setSelectedViews(currentViews);
+    setHasSelectedViews(currentViews.length > 0);
+  };
+
+  const handleRemoveView = async (viewName: string) => {
+    const currentViews = selectedViews;
+    const index = currentViews.findIndex(view => view.viewName === viewName);
+
+    if (index !== -1) {
+      currentViews.splice(index, 1);
+    }
+    setSelectedViews(currentViews);
+    setHasSelectedViews(currentViews.length > 0);
+  };
+
+  const clearViewSelection = () => {
+    setSelectedViews([]);
+    setHasSelectedViews(false);
+  };
 
   return (
     <WithClosedNavigation>
@@ -51,7 +88,14 @@ export const ViewsImportApp: React.FunctionComponent = () => {
               .selectConnection
           }
           exact={true}
-          component={SelectConnectionPage}
+          render={() => (
+            <SelectConnectionPage
+              selectedConnection={selectedConnection}
+              handleConnectionSelectionChanged={
+                handleConnectionSelectionChanged
+              }
+            />
+          )}
         />
         {/* step 2 */}
         <Route
@@ -60,7 +104,14 @@ export const ViewsImportApp: React.FunctionComponent = () => {
               .selectViews
           }
           exact={true}
-          component={SelectViewsPage}
+          render={() => (
+            <SelectViewsPage
+              selectedViews={selectedViews}
+              hasSelectedViews={hasSelectedViews}
+              handleAddView={handleAddView}
+              handleRemoveView={handleRemoveView}
+            />
+          )}
         />
       </Switch>
     </WithClosedNavigation>
