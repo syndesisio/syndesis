@@ -86,7 +86,7 @@
     <dependency>
       <groupId>io.jaegertracing</groupId>
       <artifactId>jaeger-thrift</artifactId>
-      <version>0.32.0</version>
+      <version>1.0.0</version>
       <scope>runtime</scope>
     </dependency>
 
