@@ -41,3 +41,9 @@ sed -i "s/$current_camel/$new_camel/g" \
 
 git mv ${current_camel_catalog} ${new_camel_catalog}
 
+cd install/operator
+go generate ./pkg/...
+cd -
+
+git status
+echo "You should use git to add the files and commit them"
