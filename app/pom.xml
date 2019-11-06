@@ -61,7 +61,7 @@
 
     <spring.version>4.3.18.RELEASE</spring.version>
     <spring-boot.version>1.5.16.RELEASE</spring-boot.version>
-    <spring-cloud.version>Dalston.SR5</spring-cloud.version>
+    <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
