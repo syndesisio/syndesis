@@ -4,10 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"net/url"
 	"os"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 
 	"github.com/mcuadros/go-version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
@@ -197,7 +198,7 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		addonDir := "./addons/" + addon + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			a.log.Info("unsuported addon configured", "addon", addon, "error", err)
+			a.log.Info("unsupported addon configured", "addon", addon, "error", err)
 			continue
 		}
 		f.Close()

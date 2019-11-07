@@ -20,6 +20,7 @@ package install
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
@@ -89,14 +90,16 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	})
 
-	cmd.AddCommand(&cobra.Command{
+	app := &cobra.Command{
 		Use:   "app",
 		Short: "install the syndesis application (requires namespace admin privileges)",
 		Run: func(cmd *cobra.Command, args []string) {
 			err := o.installApplication()
 			util.ExitOnError(err)
 		},
-	})
+	}
+	app.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
+	cmd.AddCommand(app)
 
 	standalone := &cobra.Command{
 		Use:   "standalone",
@@ -107,7 +110,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	standalone.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
-	standalone.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
+	standalone.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
 	cmd.AddCommand(standalone)
 
 	forge := &cobra.Command{
@@ -119,7 +122,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	forge.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
-	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
+	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
 	cmd.AddCommand(forge)
 
 	cmd.PersistentFlags().StringVarP(&o.eject, "eject", "e", "", "eject configuration that would be applied to the cluster in the specified format instead of installing the configuration. One of: json|yaml")
@@ -188,12 +191,13 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-	Image      string
-	Tag        string
-	Namespace  string
-	DevSupport bool
-	Role       string
-	Kind       string
+	Image         string
+	Tag           string
+	Namespace     string
+	DevSupport    bool
+	Role          string
+	Kind          string
+	EnabledAddons []string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -237,13 +241,19 @@ func (o *Install) install(action string, resources []unstructured.Unstructured) 
 }
 
 func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
+	addons := make([]string, 0)
+	if o.addons != "" {
+		addons = strings.Split(o.addons, ",")
+	}
+
 	resources, err := generator.Render(fromFile, RenderScope{
-		Namespace:  o.Namespace,
-		Image:      o.image,
-		Tag:        o.tag,
-		DevSupport: o.devSupport,
-		Role:       RoleName,
-		Kind:       "Role",
+		Namespace:     o.Namespace,
+		Image:         o.image,
+		Tag:           o.tag,
+		DevSupport:    o.devSupport,
+		Role:          RoleName,
+		Kind:          "Role",
+		EnabledAddons: addons,
 	})
 	return resources, err
 }
