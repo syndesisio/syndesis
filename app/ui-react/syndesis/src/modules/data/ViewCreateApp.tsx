@@ -21,7 +21,6 @@ export const ViewCreateApp: React.FunctionComponent = () => {
   const [selectedSchemaNodes, setSelectedSchemaNodes] = React.useState<
     SchemaNodeInfo[]
   >([]);
-  const [selectedNodesCount, setSelectedNodesCount] = React.useState(0);
 
   const handleNodeSelected = async (
     connName: string,
@@ -36,21 +35,19 @@ export const ViewCreateApp: React.FunctionComponent = () => {
       teiidName,
     } as SchemaNodeInfo;
 
-    const currentNodes = selectedSchemaNodes;
+    const currentNodes = selectedSchemaNodes.slice();
     currentNodes.push(srcInfo);
     setSelectedSchemaNodes(currentNodes);
-    setSelectedNodesCount(currentNodes.length);
   };
 
   const handleNodeDeselected = async (
     connectionName: string,
     teiidName: string
   ) => {
-    const tempArray = selectedSchemaNodes;
+    const tempArray = selectedSchemaNodes.slice();
     const index = getIndex(teiidName, tempArray, 'teiidName');
     tempArray.splice(index, 1);
     setSelectedSchemaNodes(tempArray);
-    setSelectedNodesCount(tempArray.length);
   };
 
   const getIndex = (value: string, arr: SchemaNodeInfo[], prop: string) => {
@@ -98,7 +95,6 @@ export const ViewCreateApp: React.FunctionComponent = () => {
           render={() => (
             <SelectSourcesPage
               selectedSchemaNodes={selectedSchemaNodes}
-              selectedNodesCount={selectedNodesCount}
               handleNodeSelected={handleNodeSelected}
               handleNodeDeselected={handleNodeDeselected}
             />
