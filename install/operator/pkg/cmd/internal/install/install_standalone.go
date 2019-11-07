@@ -20,9 +20,10 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"strings"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/action"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -208,7 +209,7 @@ func (o *Install) installStandalone() error {
 
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			fmt.Printf("unsuported addon configured: [%s]. [%v]", addon, err)
+			fmt.Printf("unsupported addon configured: [%s]. [%v]", addon, err)
 			continue
 		}
 		f.Close()
