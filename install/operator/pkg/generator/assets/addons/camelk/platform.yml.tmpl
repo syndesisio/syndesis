@@ -6,7 +6,9 @@
     name: camel-k
   spec:
     build:
-      baseImage: '{{ .Images.CamelKBaseImagePrefix }}:{{ .Tags.CamelKBase }}'
+      {{- if .Syndesis.Spec.Addons.camelk.image}}
+      baseImage: '{{.Syndesis.Spec.Addons.camelk.image}}'
+      {{- end}}
       {{- if (not .Productized)}}
       camelVersion: {{.Versions.Camel}}
       runtimeVersion: {{.Versions.CamelKRuntime}}
