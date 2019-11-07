@@ -17,6 +17,7 @@ package io.syndesis.connector.mongo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
@@ -72,4 +73,17 @@ public final class MongoCustomizersUtil {
         in.setBody(convertedToJson);
     }
 
+    /**
+     * Utility method used to replace the adminDB parameter if it was not provided
+     * by user
+     * @param params
+     */
+    public static void replaceAdminDBIfMissing(Map<String, Object> params) {
+        // Fallback admin database parameter
+        if (!params.containsKey("adminDB")){
+            params.put("adminDB", params.get("database"));
+        } else if (params.get("adminDB").equals("")){
+            params.replace("adminDB", params.get("database"));
+        }
+    }
 }
