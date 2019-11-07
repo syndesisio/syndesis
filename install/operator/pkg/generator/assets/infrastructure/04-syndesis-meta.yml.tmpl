@@ -31,7 +31,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: {{.Syndesis.Spec.Components.Meta.Resources.VolumeCapacity}}
+        storage: {{.Syndesis.Components.Meta.Resources.VolumeCapacity}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -76,22 +76,20 @@
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-{{if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+{{if .Syndesis.Addons.Jaeger.Enabled}}
           - name: JAEGER_ENDPOINT
             value: "http://syndesis-jaeger-collector:14268/api/traces"
           - name: JAEGER_SAMPLER_TYPE
-            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_TYPE "const"}}"
+            value: "{{.Syndesis.Addons.Jaeger.SamplerType}}"
           - name: JAEGER_SAMPLER_PARAM
-            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_PARAM "0"}}"
+            value: "{{.Syndesis.Addons.Jaeger.SamplerParam}}"
 {{end}}
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
           - name: JAVA_DEBUG
             value: "true"
-{{end}}
-{{if .Syndesis.Spec.DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Spec.Components.Meta.Image }}'
+          image: '{{ .Syndesis.Components.Meta.Image }}'
 {{end}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -122,7 +120,7 @@
             protocol: TCP
           resources:
             limits:
-              memory: {{.Syndesis.Spec.Components.Meta.Resources.Limits.Memory.String}}
+              memory: {{.Syndesis.Components.Meta.Resources.Memory}}
             requests:
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
@@ -141,7 +139,7 @@
             name: syndesis-meta-config
     triggers:
     - type: ConfigChange
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -149,7 +147,7 @@
         from:
           kind: ImageStreamTag
           name: syndesis-meta:latest
-          namespace: {{.Syndesis.Namespace}}
+          namespace: {{.OpenShiftProject}}
       type: ImageChange
 - apiVersion: image.openshift.io/v1
   kind: ImageStream

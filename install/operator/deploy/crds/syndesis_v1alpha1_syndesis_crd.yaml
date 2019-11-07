@@ -30,199 +30,106 @@ spec:
         spec:
           properties:
             addons:
-              additionalProperties:
-                additionalProperties:
-                  type: string
-                type: object
-              description: Optional add on features that can be enabled. +k8s:openapi-gen=false
+              description: Optional add on features that can be enabled.
+              properties:
+                camelk:
+                  properties:
+                    camelVersion:
+                      type: string
+                    camelkRuntime:
+                      type: string
+                    enabled:
+                      type: boolean
+                    image:
+                      type: string
+                  type: object
+                dv:
+                  properties:
+                    enabled:
+                      type: boolean
+                    resources:
+                      type: object
+                  type: object
+                jaeger:
+                  properties:
+                    enabled:
+                      type: boolean
+                    samplerParam:
+                      type: string
+                    samplerType:
+                      type: string
+                  type: object
+                ops:
+                  properties:
+                    enabled:
+                      type: boolean
+                  type: object
+                todo:
+                  properties:
+                    enabled:
+                      type: boolean
+                  type: object
               type: object
             components:
               description: Components is used to configure all the core components
                 of Syndesis
               properties:
-                db:
+                database:
                   properties:
                     database:
                       type: string
                     externalDbURL:
-                      description: Options for configuring an external database instead
-                        of deploying one
-                      type: string
-                    image:
-                      type: string
-                    imageStreamNamespace:
                       type: string
                     resources:
                       properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                         volumeCapacity:
                           type: string
                       type: object
                     user:
                       type: string
                   type: object
-                dv:
-                  properties:
-                    image:
-                      type: string
-                    resources:
-                      properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                      type: object
-                  type: object
                 grafana:
                   properties:
                     resources:
-                      properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                       type: object
                   type: object
                 meta:
                   properties:
-                    image:
-                      type: string
                     resources:
                       properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                         volumeCapacity:
                           type: string
                       type: object
                   type: object
                 oauth:
                   properties:
-                    image:
+                    sarNamespace:
                       type: string
                   type: object
                 prometheus:
                   properties:
-                    image:
-                      type: string
                     resources:
                       properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                         volumeCapacity:
                           type: string
                       type: object
-                  type: object
-                psql:
-                  properties:
-                    image:
+                    rules:
                       type: string
                   type: object
-                s2i:
-                  properties:
-                    image:
-                      type: string
-                  type: object
-                scheduled:
-                  type: boolean
                 server:
                   properties:
                     features:
                       properties:
-                        managementUrlFor3scale:
-                          type: string
+                        mavenRepositories:
+                          additionalProperties:
+                            type: string
+                          type: object
                       type: object
-                    image:
-                      type: string
                     resources:
-                      properties:
-                        limits:
-                          additionalProperties:
-                            type: string
-                          description: 'Limits describes the maximum amount of compute
-                            resources allowed. More info: https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
-                        requests:
-                          additionalProperties:
-                            type: string
-                          description: 'Requests describes the minimum amount of compute
-                            resources required. If Requests is omitted for a container,
-                            it defaults to Limits if that is explicitly specified,
-                            otherwise to an implementation-defined value. More info:
-                            https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/'
-                          type: object
                       type: object
-                  type: object
-                ui:
-                  properties:
-                    image:
-                      type: string
                   type: object
                 upgrade:
                   properties:
-                    image:
-                      type: string
                     resources:
                       properties:
                         volumeCapacity:
@@ -230,55 +137,8 @@ spec:
                       type: object
                   type: object
               type: object
-            demoData:
-              type: boolean
-            deployIntegrations:
-              type: boolean
-            devSupport:
-              description: if true, then the image streams are changed to used local
-                development builds & JAVA_DEBUG is enabled
-              type: boolean
             imageStreamNamespace:
-              description: Set ImageStreamNamespace to the namespace where the operator
-                should store image streams in.  Defaults to match the namespace of
-                the the Syndesis resource.
               type: string
-            integration:
-              description: Integration is used to configure settings related to runtime
-                integrations that get deployed.
-              properties:
-                limit:
-                  format: int64
-                  type: integer
-                stateCheckInterval:
-                  format: int64
-                  type: integer
-              type: object
-            mavenRepositories:
-              additionalProperties:
-                type: string
-              type: object
-            openShiftConsoleUrl:
-              description: Set OpenShiftConsoleUrl to the the http URL of your OpenShift
-                console so we can deep link to things like pod logs.
-              type: string
-            openShiftMaster:
-              type: string
-            routeHostname:
-              description: Set RouteHostname to the hostname of the exposed syndesis
-                service.  Typically the operator can automatically determine this
-                by looking at the result of the Route object it creates.
-              type: string
-            sarNamespace:
-              description: SarNamespace is the namespace to perform Subject Access
-                Review authorization checks against.  Defaults to match the namespace
-                of the the Syndesis resource.
-              type: string
-            testSupport:
-              description: Set TestSupport to true to enable a very low level data
-                access API into Syndesis, typically used for integration testing,
-                and should not be enabled in production. +k8s:openapi-gen=false
-              type: boolean
           type: object
         status:
           properties:

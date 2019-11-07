@@ -6,10 +6,10 @@
     name: camel-k
   spec:
     build:
-      baseImage: '{{ .Images.CamelKBaseImagePrefix }}:{{ .Tags.CamelKBase }}'
+      baseImage: '{{ .Syndesis.Addons.CamelK.Image }}'
       {{- if (not .Productized)}}
-      camelVersion: {{.Versions.Camel}}
-      runtimeVersion: {{.Versions.CamelKRuntime}}
+      camelVersion: {{.Syndesis.Addons.CamelK.CamelVersion}}
+      runtimeVersion: {{.Syndesis.Addons.CamelK.CamelKRuntime}}
       {{- end}}
       maven:
         settings:

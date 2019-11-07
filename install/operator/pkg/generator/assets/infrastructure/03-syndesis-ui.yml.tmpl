@@ -55,16 +55,16 @@
         serviceAccountName: syndesis-default
         containers:
         - name: syndesis-ui
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Spec.Components.UI.Image }}'
+          image: '{{ .Syndesis.Components.UI.Image }}'
 {{end}}
           env:
 # We need a config value to change to trigger a new deployment which switching the DevSupport flag.
 # Just changing the image name is not considered a config change.
           - name: DEV_SUPPORT
-            value: '{{.Syndesis.Spec.DevSupport}}'
+            value: '{{.DevSupport}}'
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -93,7 +93,7 @@
           name: config-volume
     triggers:
     - type: ConfigChange
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -101,7 +101,7 @@
         from:
           kind: ImageStreamTag
           name: 'syndesis-ui:latest'
-          namespace: '{{.Syndesis.Spec.ImageStreamNamespace}}'
+          namespace: '{{.ImageStreamNamespace}}'
       type: ImageChange
 
 - apiVersion: image.openshift.io/v1
@@ -133,21 +133,21 @@
   data:
     config.json: |
       {
-        "apiBase": "https://{{.Syndesis.Spec.RouteHostname}}",
+        "apiBase": "https://{{.RouteHostname}}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
-        "consoleUrl": "{{.Syndesis.Spec.OpenShiftConsoleUrl}}",
-        "project": "{{.Syndesis.Namespace}}",
+        "consoleUrl": "{{.OpenShiftConsoleUrl}}",
+        "project": "{{.OpenShiftProject}}",
         "datamapper": {
-          "baseMappingServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/",
-          "baseJavaInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://{{.Syndesis.Spec.RouteHostname}}/api/v1/atlas/json/",
+          "baseMappingServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
         "datavirt": {
           "dvUrl": "/dv/v1/",
-{{- if eq (addonsValue .Syndesis.Spec.Addons "dv" "enabled") "true" }}
+{{- if .Syndesis.Addons.DV.Enabled }}
           "enabled": 1
         {{- else }}
           "enabled": 0

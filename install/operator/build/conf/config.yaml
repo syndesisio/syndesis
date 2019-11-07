@@ -1,39 +1,76 @@
 ProductName: syndesis
 AllowLocalHost: false
 Productized: false
-PrometheusRules: ""
-TagMinor: "1.9.0"
-TagMajor: "2.0.0"
-Versions:
-  Camel: "2.21.0.fuse-760006"
-  CamelKRuntime: "0.3.4.fuse-740008"
-spec-defaults:
-  imageStreamNamespace: ""
-  components:
-    psql:
-      image: docker.io/wrouesnel/postgres_exporter:v0.4.7
-    s2i:
-      image: docker.io/syndesis/syndesis-s2i:latest
-    operator:
-      image: docker.io/syndesis/syndesis-operator:latest
-    ui:
-      image: docker.io/syndesis/syndesis-ui:latest
-    server:
-      image: docker.io/syndesis/syndesis-server:latest
-    meta:
-      image: docker.io/syndesis/syndesis-meta:latest
-    db:
-      imageStreamNamespace: openshift
-      image: postgresql:9.6
-    dv:
-      image: docker.io/teiid/syndesis-dv:latest
-    oauth:
-      image: quay.io/openshift/origin-oauth-proxy:v4.0.0
-    prometheus:
-      image: docker.io/prom/prometheus:v2.1.0
-    upgrade:
-      image: docker.io/syndesis/syndesis-upgrade:latest
-  mavenRepositories:
-    central: https://repo.maven.apache.org/maven2/
-    repo-02-redhat-ga: https://maven.repository.redhat.com/ga/
-    repo-03-jboss-ea: https://repository.jboss.org/nexus/content/groups/ea/
+DevSupport: false
+Scheduled: true
+Syndesis:
+    ImageStreamNamespace: ""
+    Addons:
+        Jaeger:
+            Enabled: false
+            SamplerType: "const"
+            SamplerParam: "0"
+        Ops:
+            Enabled: false
+        Todo:
+            Enabled: false
+        DV:
+            Enabled: false
+            Image: "docker.io/teiid/syndesis-dv:latest"
+            Resources:
+                Memory: "1024Mi"
+        CamelK:
+            Enabled: false
+            Image: "fabric8/s2i-java:3.0-java8"
+            CamelVersion: "2.21.0.fuse-760006"
+            CamelKRuntime: "0.3.4.fuse-740008"
+    Components:
+        Oauth:
+            Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+        UI:
+            Image: "docker.io/syndesis/syndesis-ui:latest"
+        S2I:
+            Image: "docker.io/syndesis/syndesis-s2i:latest"
+        Prometheus:
+            Rules: ""
+            Image: "docker.io/prom/prometheus:v2.1.0"
+            Resources:
+                Memory: "512Mi"
+                VolumeCapacity: "1Gi"
+        Upgrade:
+            Image: "docker.io/syndesis/syndesis-upgrade:latest"
+            Resources:
+                VolumeCapacity: "1Gi"
+        Meta:
+            Image: "docker.io/syndesis/syndesis-meta:latest"
+            Resources:
+                Memory: "512Mi"
+                VolumeCapacity: "1Gi"
+        Database:
+            Database: "syndesis"
+            User: "syndesis"
+            URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
+            ImageStreamNamespace: "openshift"
+            Image: "postgresql:9.6"
+            Exporter:
+                Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
+            Resources:
+                Memory: "255Mi"
+                VolumeCapacity: "1Gi"
+        Server:
+            Image: "docker.io/syndesis/syndesis-server:latest"
+            ControllersIntegrationEnabled: true
+            Resources:
+                Memory: "800Mi"
+            Features:
+                IntegrationLimit: 0
+                IntegrationStateCheckInterval: 60
+                DemoData: false
+                DeployIntegrations: true
+                TestSupport: false
+                OpenShiftMaster: "https://localhost:8443"
+                ManagementUrlFor3scale: ""
+                MavenRepositories:
+                    central: "https://repo.maven.apache.org/maven2/"
+                    repo-02-redhat-ga: "https://maven.repository.redhat.com/ga/"
+                    repo-03-jboss-ea: "https://repository.jboss.org/nexus/content/groups/ea/"

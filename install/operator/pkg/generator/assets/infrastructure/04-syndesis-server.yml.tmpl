@@ -60,11 +60,11 @@
               fieldRef:
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
-            value: '{{ .Syndesis.Spec.TestSupport }}'
+            value: '{{ .Syndesis.Components.Server.Features.TestSupport }}'
           - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: '{{ .Syndesis.Spec.DeployIntegrations }}'
+            value: '{{ .Syndesis.Components.Server.Features.DeployIntegrations }}'
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
-            value: '{{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}'
+            value: '{{.Syndesis.Components.Database.SampledbPassword}}'
           - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
             value: "HmacSHA1"
           - name: CLIENT_STATE_AUTHENTICATION_KEY
@@ -82,30 +82,30 @@
           - name: CLIENT_STATE_TID
             value: "1"
           - name: INTEGRATION_STATE_CHECK_INTERVAL
-            value: '{{ .Syndesis.Spec.Integration.StateCheckInterval }}'
+            value: '{{ .Syndesis.Components.Server.Features.IntegrationStateCheckInterval }}'
           - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
-            value: '{{ .Syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale }}'
-{{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+            value: '{{ .Syndesis.Components.Server.Features.ManagementUrlFor3scale }}'
+{{- if .Syndesis.Addons.Jaeger.Enabled}}
           - name: JAEGER_ENDPOINT
             value: "http://syndesis-jaeger-collector:14268/api/traces"
           - name: JAEGER_SAMPLER_TYPE
-            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_TYPE "const"}}"
+            value: "{{.Syndesis.Addons.Jaeger.SamplerType}}"
           - name: JAEGER_SAMPLER_PARAM
-            value: "{{or .Syndesis.Spec.Addons.jaeger.SAMPLER_PARAM "0"}}"
+            value: "{{.Syndesis.Addons.Jaeger.SamplerParam}}"
 {{- end}}
-{{- if (eq (or .Syndesis.Spec.Addons.camelk.enabled "false") "true") }}
+{{- if .Syndesis.Addons.CamelK.Enabled}}
           # Marker that causes a redeployment of the syndesis server, so that the new configuration is applied
           - name: CAMEL_K_ENABLED
             value: "true"
 {{- end}}
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
           - name: JAVA_DEBUG
             value: "true"
 {{end}}
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Spec.Components.Server.Image }}'
+          image: '{{ .Syndesis.Components.Server.Image }}'
 {{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -141,7 +141,7 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: '{{ memoryLimit .Syndesis.Spec.Components.Server.Resources.Limits }}'
+              memory: '{{ .Syndesis.Components.Server.Resources.Memory }}'
               cpu: 750m
             requests:
               memory: 256Mi
@@ -152,7 +152,7 @@
             name: syndesis-server-config
     triggers:
     - type: ConfigChange
-{{if .Syndesis.Spec.DevSupport}}
+{{if .DevSupport}}
     - imageChangeParams:
         automatic: true
         containerNames:
@@ -160,7 +160,7 @@
         from:
           kind: ImageStreamTag
           name: 'syndesis-server:latest'
-          namespace: '{{.Syndesis.Namespace}}'
+          namespace: '{{.OpenShiftProject}}'
       type: ImageChange
 
 - apiVersion: image.openshift.io/v1
@@ -194,9 +194,9 @@
     name: syndesis-prometheus-agent-config
   data:
     prometheus-config.yml: |-
-{{.PrometheusRules}}
+{{.Syndesis.Components.Prometheus.Rules}}
 
-{{- if eq .Syndesis.Spec.Addons.camelk.enabled "true" }}
+{{- if .Syndesis.Addons.CamelK.Enabled }}
 # START:CAMEL-K
 - kind: Role
   apiVersion: rbac.authorization.k8s.io/v1beta1

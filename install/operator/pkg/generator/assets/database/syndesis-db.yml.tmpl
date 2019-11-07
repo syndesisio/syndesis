@@ -177,7 +177,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: {{.Syndesis.Spec.Components.Db.Resources.VolumeCapacity}}
+        storage: {{.Syndesis.Components.Database.Resources.VolumeCapacity}}
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -212,13 +212,13 @@
         containers:
         - env:
           - name: POSTGRESQL_USER
-            value: {{.Syndesis.Spec.Components.Db.User}}
+            value: {{.Syndesis.Components.Database.User}}
           - name: POSTGRESQL_PASSWORD
-            value: {{.Env.POSTGRESQL_PASSWORD}}
+            value: {{.Syndesis.Components.Database.Password}}
           - name: POSTGRESQL_DATABASE
-            value: {{.Syndesis.Spec.Components.Db.Database}}
+            value: {{.Syndesis.Components.Database.Database}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
-            value: {{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
+            value: {{.Syndesis.Components.Database.SampledbPassword}}
           image: ' '
           imagePullPolicy: IfNotPresent
           lifecycle:
@@ -248,9 +248,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: {{memoryLimit .Syndesis.Spec.Components.Db.Resources.Limits}}
+              memory: {{.Syndesis.Components.Database.Resources.Memory}}
             requests:
-              memory: {{memoryLimit .Syndesis.Spec.Components.Db.Resources.Limits}}
+              memory: {{.Syndesis.Components.Database.Resources.Memory}}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
@@ -260,10 +260,10 @@
             name: syndesis-db-conf
         - env:
           - name: DATA_SOURCE_NAME
-            value: postgresql://{{.Syndesis.Spec.Components.Db.User}}:{{.Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
+            value: postgresql://{{.Syndesis.Components.Database.User}}:{{.Syndesis.Components.Database.Password}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
-          image: '{{ .Syndesis.Spec.Components.PostgresExporter.Image }}'
+          image: '{{ .Syndesis.Components.Database.Exporter.Image }}'
           imagePullPolicy: IfNotPresent
           name: syndesis-db-metrics
           livenessProbe:
@@ -309,6 +309,6 @@
         - postgresql
         from:
           kind: ImageStreamTag
-          name: {{.Syndesis.Spec.Components.Db.Image}}
-          namespace: {{.Syndesis.Spec.Components.Db.ImageStreamNamespace}}
+          name: {{.Syndesis.Components.Database.Image}}
+          namespace: {{.Syndesis.Components.Database.ImageStreamNamespace}}
       type: ImageChange

@@ -1,88 +1,84 @@
 package generator_test
 
 import (
-	"encoding/json"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/build"
-	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/apimachinery/pkg/api/resource"
-	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"path/filepath"
-	"strconv"
+	"context"
 	"strings"
 	"testing"
 
-	v12 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func TestGenerator(t *testing.T) {
-
-	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
-	require.NoError(t, err)
-
-	// Parse the config
-	gen := &generator.Context{}
-	err = json.Unmarshal(templateConfig, gen)
-	require.NoError(t, err)
-
-	aTrue := true
 	syndesis := &v1alpha1.Syndesis{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: "TEST",
-		},
 		Spec: v1alpha1.SyndesisSpec{
-			RouteHostname:        "myhost.com",
-			ImageStreamNamespace: "IMAGETEST",
-			TestSupport:          &aTrue,
-			DeployIntegrations:   &aTrue,
-			Components: v1alpha1.ComponentsSpec{
-				Db: v1alpha1.DbConfiguration{},
-				Server: v1alpha1.ServerConfiguration{
-					Resources: v1alpha1.Resources{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("3Gi"),
-							},
-						},
-					},
-					Features: v1alpha1.ServerFeatures{
-						ManagementUrlFor3scale: "http://www.3scale.org/3scale",
-					},
+			Addons: v1alpha1.AddonsSpec{
+				Jaeger: v1alpha1.JaegerConfiguration{
+					Enabled:      true,
+					SamplerType:  "const",
+					SamplerParam: "0",
 				},
-				Oauth: v1alpha1.OauthConfiguration{
-					Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0",
+				Ops:  v1alpha1.AddonSpec{Enabled: true},
+				Todo: v1alpha1.AddonSpec{Enabled: true},
+				DV: v1alpha1.DvConfiguration{
+					Enabled:   false,
+					Resources: v1alpha1.Resources{Memory: "1024Mi"},
 				},
-				Dv: v1alpha1.DvConfiguration{
-					Resources: v1alpha1.Resources{
-						ResourceRequirements: v12.ResourceRequirements{
-							Limits: v12.ResourceList{
-								"memory": resource.MustParse("3Gi"),
-							},
-						},
-					},
+				CamelK: v1alpha1.CamelKConfiguration{
+					Enabled:       true,
+					CamelVersion:  "2.21.0.fuse-760006",
+					CamelKRuntime: "0.3.4.fuse-740008",
+					Image:         "fabric8/s2i-java:3.0-java8",
 				},
 			},
-			Addons: v1alpha1.AddonsSpec{
-				"dv": {
-					"enabled": "true",
+			Components: v1alpha1.ComponentsSpec{
+				Oauth: v1alpha1.OauthConfiguration{},
+				Server: v1alpha1.ServerConfiguration{
+					Resources: v1alpha1.Resources{Memory: "800Mi"},
+					Features: v1alpha1.ServerFeatures{
+						MavenRepositories: map[string]string{
+							"central":           "https://repo.maven.apache.org/maven2/",
+							"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
+							"repo-03-jboss-ea":  "https://repository.jboss.org/nexus/content/groups/ea/",
+						},
+					},
+				},
+				Meta: v1alpha1.MetaConfiguration{
+					Resources: v1alpha1.ResourcesWithVolume{
+						Memory:         "512Mi",
+						VolumeCapacity: "1Gi",
+					},
+				},
+				Database: v1alpha1.DatabaseConfiguration{
+					User:     "syndesis",
+					Database: "syndesis",
+					URL:      "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
+					Resources: v1alpha1.ResourcesWithVolume{
+						Memory:         "255Mi",
+						VolumeCapacity: "1Gi",
+					},
+				},
+				Prometheus: v1alpha1.PrometheusConfiguration{
+					Resources: v1alpha1.ResourcesWithVolume{
+						Memory:         "512Mi",
+						VolumeCapacity: "1Gi",
+					},
+				},
+				Upgrade: v1alpha1.UpgradeConfiguration{
+					Resources: v1alpha1.VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
 			},
 		},
 	}
-	gen.Syndesis = syndesis
 
-	err = template.SetupRenderContext(gen, syndesis, map[string]string{})
+	configuration, err := configuration.GetProperties("../../build/conf/config.yaml", context.TODO(), nil, syndesis)
 	require.NoError(t, err)
 
-	configuration.SetConfigurationFromEnvVars(gen.Env, syndesis)
-
-	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", gen)
+	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./infrastructure/", configuration)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 
@@ -98,29 +94,24 @@ func TestGenerator(t *testing.T) {
 	//
 	checks := 0
 	for _, resource := range resources {
-		checks += checkSynMeta(t, resource, gen.Syndesis)
-		checks += checkSynServer(t, resource, gen.Syndesis)
-		checks += checkSynGlobalConfig(t, resource, gen.Syndesis)
-		checks += checkSynUIConfig(t, resource, gen.Syndesis)
-		checks += checkSynOAuthProxy(t, resource, gen.Syndesis)
+		checks += checkSynMeta(t, resource, syndesis)
+		checks += checkSynServer(t, resource, syndesis)
+		checks += checkSynGlobalConfig(t, resource, syndesis)
+		checks += checkSynUIConfig(t, resource, syndesis)
+		checks += checkSynOAuthProxy(t, resource, syndesis)
 	}
 	assert.True(t, checks >= 6)
 
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./upgrade/", gen)
-	require.NoError(t, err)
-	assert.True(t, len(resources) > 0)
+	for _, addon := range []string{"todo", "camelk", "jaeger", "dv", "ops"} {
+		resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/"+addon+"/", configuration)
+		require.NoError(t, err)
+		assert.True(t, len(resources) > 0)
+	}
 
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/todo/", gen)
-	require.NoError(t, err)
-	assert.True(t, len(resources) > 0)
-
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/dv/", gen)
-	require.NoError(t, err)
-	assert.True(t, len(resources) > 0)
-
+	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/dv/", configuration)
 	checks = 0
 	for _, resource := range resources {
-		checks += checkSynAddonDv(t, resource, gen.Syndesis)
+		checks += checkSynAddonDv(t, resource, syndesis)
 	}
 	assert.True(t, checks >= 1)
 }
@@ -159,28 +150,13 @@ func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *
 	container := sliceProperty(resource, "spec", "template", "spec", "containers")
 	if container != nil {
 		//
-		// Compare the environment variables defined in the container
-		//
-		vars, exists, _ := unstructured.NestedSlice(container, "env")
-		if exists {
-			for _, s := range vars {
-				if m, ok := s.(map[string]interface{}); ok {
-					assertNameValueMap(t, m, "ENDPOINTS_TEST_SUPPORT_ENABLED", strconv.FormatBool(*syndesis.Spec.TestSupport))
-					assertNameValueMap(t, m, "CONTROLLERS_INTEGRATION_ENABLED", strconv.FormatBool(*syndesis.Spec.DeployIntegrations))
-					assertNameValueMap(t, m, "INTEGRATION_STATE_CHECK_INTERVAL", strconv.Itoa(*syndesis.Spec.Integration.StateCheckInterval))
-					assertNameValueMap(t, m, "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE", syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale)
-				}
-			}
-		}
-
-		//
 		// Compare the server memory limit which is set via the template function 'memoryLimit'
 		//
 		limits, lexists, _ := unstructured.NestedFieldNoCopy(container, "resources", "limits")
 		if lexists {
 			limitMap, ok := limits.(map[string]interface{})
 			assert.True(t, ok)
-			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Limits.Memory().String(), limitMap["memory"])
+			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Memory, limitMap["memory"])
 		}
 	}
 
@@ -222,12 +198,12 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 
 	config, exists, _ := unstructured.NestedString(resource.UnstructuredContent(), "data", "config.json")
 	if exists {
-        var expected string
-        if (syndesis.Spec.Addons["dv"]["enabled"] == "true") {
-            expected = "1"
-        } else {
-            expected = "0"
-        }
+		var expected string
+		if syndesis.Spec.Addons.DV.Enabled {
+			expected = "1"
+		} else {
+			expected = "0"
+		}
 		assert.True(t, strings.Contains(config, "\"enabled\": "+expected))
 	}
 
@@ -248,7 +224,7 @@ func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis 
 		assert.True(t, lexists)
 		limitMap, ok := limits.(map[string]interface{})
 		assert.True(t, ok)
-		assert.Equal(t, syndesis.Spec.Components.Dv.Resources.Limits.Memory().String(), limitMap["memory"])
+		assert.Equal(t, syndesis.Spec.Addons.DV.Resources.Memory, limitMap["memory"])
 	}
 
 	return 1
@@ -269,6 +245,7 @@ func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndes
 
 	return 1
 }
+
 func assertNameValueMap(t *testing.T, m map[string]interface{}, name string, expected interface{}) int {
 	field, ok := m["name"]
 	if !ok || field != name {
@@ -315,60 +292,4 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 	if exists {
 		assert.Equal(t, expected, value, "rendering should be applied correctly")
 	}
-}
-
-func TestConfigYAML(t *testing.T) {
-	templateConfig, err := util.LoadJsonFromFile(filepath.Join(build.GO_MOD_DIRECTORY, "build", "conf", "config.yaml"))
-	require.NoError(t, err)
-
-	// Parse the config
-	gen := &generator.Context{}
-	err = json.Unmarshal(templateConfig, gen)
-	require.NoError(t, err)
-
-	// Images are mandatory as fallback in case CR dont have them defined
-	assert.NotNil(t, gen.SpecDefaults.Components.Server.Image, "Spec.Components.Server.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Server.Image, "Spec.Components.Server.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Meta.Image, "Spec.Components.Meta.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Meta.Image, "Spec.Components.Meta.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.UI.Image, "Spec.Components.UI.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.UI.Image, "Spec.Components.UI.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.S2I.Image, "Spec.Components.S2I.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.S2I.Image, "Spec.Components.S2I.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Db.Image, "Spec.Components.Db.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Db.Image, "Spec.Components.Db.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Oauth.Image, "Spec.Components.Oauth.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.PostgresExporter.Image, "Spec.Components.PostgresExporter.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.PostgresExporter.Image, "Spec.Components.PostgresExporter.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Prometheus.Image, "Spec.Components.Prometheus.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Prometheus.Image, "Spec.Components.Prometheus.Image is a mandatory field in config.yaml file")
-
-	//assert.NotNil(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
-	//assert.NotEmpty(t, gen.Spec.Components.Grafana.Image, "Spec.Components.Grafana.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Dv.Image, "Spec.Components.Dv.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.SpecDefaults.Components.Upgrade.Image, "Spec.Components.Upgrade.Image is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.TagMajor, "TagMajor is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.TagMajor, "TagMajor is a mandatory field in config.yaml file")
-
-	assert.NotNil(t, gen.TagMinor, "TagMinor is a mandatory field in config.yaml file")
-	assert.NotEmpty(t, gen.TagMinor, "TagMinor is a mandatory field in config.yaml file")
 }

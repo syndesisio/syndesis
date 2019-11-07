@@ -13,25 +13,9 @@ import (
 	"text/template"
 
 	"github.com/pkg/errors"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
-
-type Context struct {
-	SpecDefaults     v1alpha1.SyndesisSpec `json:"spec-defaults,omitempty"`
-	ProductName      string
-	AllowLocalHost   bool
-	Productized      bool
-	TagMinor         string
-	TagMajor         string
-	PrometheusRules  string
-	Env              map[string]string
-	Syndesis         *v1alpha1.Syndesis
-	ImagePullSecrets []string
-	Versions         map[string]string
-}
 
 func AssetAsBytes(path string) ([]byte, error) {
 	file, err := GetAssetsFS().Open(path)
@@ -60,20 +44,6 @@ var templateFunctions = template.FuncMap{
 		} else {
 			return false, nil
 		}
-	},
-	"memoryLimit": func(limits v1.ResourceList) (string, error) {
-		if l := limits.Memory(); l != nil && l.Value() > 0 {
-			return l.String(), nil
-		}
-
-		return "", nil
-	},
-	"addonsValue": func(addons v1alpha1.AddonsSpec, key1 string, key2 string) (string, error) {
-		if addons == nil || len(key1) == 0 || len(key2) == 0 {
-			return "", nil
-		}
-
-		return addons[key1][key2], nil
 	},
 	"tagOf": util.TagOf,
 }

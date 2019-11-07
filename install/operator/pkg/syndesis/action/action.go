@@ -47,7 +47,6 @@ func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []Syndesi
 		newStartupAction(mgr, api),
 		newUpgradeAction(mgr, api),
 		newUpgradeBackoffAction(mgr, api),
-		newUpgradeLegacyAction(mgr, api),
 	}
 }
 
@@ -89,31 +88,6 @@ func createOrReplaceForce(ctx context.Context, client client.Client, res runtime
 	} else {
 		return err
 	}
-}
-
-type updateFunction func(runtime.Object)
-
-func updateOnLatestRevision(ctx context.Context, cl client.Client, res runtime.Object, change updateFunction) error {
-	change(res)
-	err := cl.Update(ctx, res)
-	if err != nil && k8serrors.IsConflict(err) {
-		attempts := 1
-		for attempts <= 5 && err != nil && k8serrors.IsConflict(err) {
-			var key client.ObjectKey
-			if key, err = client.ObjectKeyFromObject(res); err != nil {
-				return err
-			}
-			err = cl.Get(ctx, key, res)
-			if err != nil {
-				return err
-			}
-
-			change(res)
-			err = cl.Update(ctx, res)
-			attempts++
-		}
-	}
-	return err
 }
 
 func canResourceBeReplaced(res runtime.Object) bool {

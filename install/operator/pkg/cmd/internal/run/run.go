@@ -2,6 +2,8 @@ package run
 
 import (
 	"fmt"
+	"runtime"
+
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
@@ -9,14 +11,13 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"github.com/syndesisio/syndesis/install/operator/version"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
-	"runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
@@ -82,20 +83,21 @@ func (o *options) run() error {
 		return err
 	}
 
-	config, err := template.GetTemplateContext()
+	configuration, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1alpha1.Syndesis{})
 	if err != nil {
 		return err
 	}
-	util.KnownDockerImages[config.SpecDefaults.Components.Server.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Meta.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.UI.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.S2I.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Db.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Oauth.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.PostgresExporter.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Prometheus.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Dv.Image] = true
-	util.KnownDockerImages[config.SpecDefaults.Components.Upgrade.Image] = true
+
+	util.KnownDockerImages[configuration.Syndesis.Components.Server.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Meta.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.UI.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.S2I.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Database.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Oauth.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Database.Exporter.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Prometheus.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Components.Upgrade.Image] = true
+	util.KnownDockerImages[configuration.Syndesis.Addons.DV.Image] = true
 
 	ctx := o.Context
 

@@ -1,313 +1,430 @@
+/*
+ * Copyright (C) 2019 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package configuration
 
 import (
-	"fmt"
+	"context"
+	"encoding/json"
+	"errors"
+	"io/ioutil"
+	"math/rand"
+	"net/url"
+	"os"
+	"strings"
+	"time"
+
+	"github.com/imdario/mergo"
+
+	"k8s.io/apimachinery/pkg/types"
+
+	routev1 "github.com/openshift/api/route/v1"
+	corev1 "k8s.io/api/core/v1"
+	k8serrors "k8s.io/apimachinery/pkg/api/errors"
+	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	"k8s.io/apimachinery/pkg/util/yaml"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	v1 "k8s.io/api/core/v1"
 )
 
-type SyndesisEnvVar string
+var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Location from where the template configuration is located
 var TemplateConfig string
 
-const (
-	EnvRouteHostname                  SyndesisEnvVar = "ROUTE_HOSTNAME"
-	EnvOpenShiftMaster                SyndesisEnvVar = "OPENSHIFT_MASTER"
-	EnvOpenShiftConsoleUrl            SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
-	EnvOpenShiftProject               SyndesisEnvVar = "OPENSHIFT_PROJECT"
-	EnvOpenShiftOauthClientSecret     SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
-	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
-	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
-	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"
-	EnvPostgresqlPassword             SyndesisEnvVar = "POSTGRESQL_PASSWORD"
-	EnvPostgresqlURL                  SyndesisEnvVar = "POSTGRESQL_URL"
-	EnvPostgresqlDatabase             SyndesisEnvVar = "POSTGRESQL_DATABASE"
-	EnvPostgresqlVolumeCapacity       SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
-	EnvPostgresqlSampledbPassword     SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
-	EnvTestSupport                    SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
-	EnvOauthCookieSecret              SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
-	EnvSyndesisEncryptKey             SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
-	EnvPrometheusVolumeCapacity       SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
-	EnvPrometheusMemoryLimit          SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
-	EnvMetaVolumeCapacity             SyndesisEnvVar = "META_VOLUME_CAPACITY"
-	EnvMetaMemoryLimit                SyndesisEnvVar = "META_MEMORY_LIMIT"
-	EnvServerMemoryLimit              SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
-	EnvClientStateAuthenticationKey   SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
-	EnvClientStateEncryptionKey       SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
-	EnvImageStreamNamespace           SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
-	EnvControllersIntegrationEnabled  SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
-	EnvSyndesisRegistry               SyndesisEnvVar = "SYNDESIS_REGISTRY"
-	EnvDemoDataEnabled                SyndesisEnvVar = "DEMO_DATA_ENABLED"
-	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
-	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
-	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
-	EnvDvMemoryLimit              SyndesisEnvVar = "DV_MEMORY_LIMIT"
-	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
-
-	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
-	EnvSyndesisUITag       SyndesisEnvVar = "SYNDESIS_UI_TAG"
-	EnvSyndesisS2ITag      SyndesisEnvVar = "SYNDESIS_S2I_TAG"
-	EnvSyndesisMetaTag     SyndesisEnvVar = "SYNDESIS_META_TAG"
-	EnvPostgresTag         SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
-	EnvPostgresExporterTag SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
-	EnvDvTag           SyndesisEnvVar = "DV_TAG"
-	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
-	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
-
-	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
-	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
-)
-
-const EMPTY_FIELD = "<>"
-
-type ConfigSpec struct {
-	Value       string `json:"value"`
-	Required    bool   `json:"required,omitempty"`
-	Generate    string `json:"generate,omitempty"`
-	FromLen     int    `json:"fromLen,omitempty"`
-	Description string `json:"description,omitempty"`
+type Config struct {
+	AllowLocalHost             bool
+	Productized                bool
+	DevSupport                 bool
+	Scheduled                  bool
+	ProductName                string
+	ImageStreamNamespace       string
+	PrometheusRules            string
+	OpenShiftProject           string
+	OpenShiftOauthClientSecret string
+	RouteHostname              string
+	OpenShiftConsoleUrl        string
+	ImagePullSecrets           []string
+	Syndesis                   SyndesisConfig
 }
 
-func (cs ConfigSpec) From() string {
-	return fmt.Sprintf("[a-zA-Z0-9]{%d}", cs.FromLen)
+type SyndesisConfig struct {
+	ImageStreamNamespace string
+	Components           ComponentsSpec
+	Addons               AddonsSpec
 }
 
-var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
-	EnvRouteHostname:                  ConfigSpec{Description: "The external hostname to access Syndesis"},
-	EnvOpenShiftMaster:                ConfigSpec{Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
-	EnvOpenShiftConsoleUrl:            ConfigSpec{Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
-	EnvOpenShiftProject:               ConfigSpec{Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
-	EnvOpenShiftOauthClientSecret:     ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
-	EnvPostgresqlMemoryLimit:          ConfigSpec{Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
-	EnvPostgresqlImageStreamNamespace: ConfigSpec{Value: "openshift", Description: "The OpenShift Namespace where the PostgreSQL ImageStream resides"},
-	EnvPostgresqlUser:                 ConfigSpec{Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
-	EnvPostgresqlPassword:             ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL connection user"},
-	EnvPostgresqlDatabase:             ConfigSpec{Value: "syndesis", Required: true, Description: "Name of the PostgreSQL database accessed"},
-	EnvPostgresqlURL:                  ConfigSpec{Value: "postgresql://syndesis-db:5432/syndesis?sslmode=disable", Required: true, Description: "Host and port of the PostgreSQL database to access"},
-	EnvPostgresqlVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
-	EnvPostgresqlSampledbPassword:     ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
-	EnvTestSupport:                    ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
-	EnvOauthCookieSecret:              ConfigSpec{Generate: "expression", FromLen: 32, Description: "Secret to use to encrypt oauth cookies"},
-	EnvSyndesisEncryptKey:             ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "The encryption key used to encrypt/decrypt stored secrets"},
-	EnvPrometheusVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Prometheus data, e.g. 512Mi, 2Gi"},
-	EnvPrometheusMemoryLimit:          ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the Prometheus container can use"},
-	EnvMetaVolumeCapacity:             ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Meta data, e.g. 512Mi, 2Gi"},
-	EnvMetaMemoryLimit:                ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the syndesis-meta service might use"},
-	EnvServerMemoryLimit:              ConfigSpec{Value: "800Mi", Required: true, Description: "Maximum amount of memory the syndesis-server service might use"},
-	EnvClientStateAuthenticationKey:   ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
-	EnvClientStateEncryptionKey:       ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
-	EnvImageStreamNamespace:           ConfigSpec{Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
-	EnvControllersIntegrationEnabled:  ConfigSpec{Value: "true", Description: "Should deployment of integrations be enabled?"},
-	EnvSyndesisRegistry:               ConfigSpec{Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
-	EnvDemoDataEnabled:                ConfigSpec{Value: "false", Required: true, Description: "Enables starting up with demo data"},
-	EnvMaxIntegrationsPerUser:         ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
-	EnvIntegrationStateCheckInterval:  ConfigSpec{Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
-	EnvSarNamespace:                   ConfigSpec{Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
-	EnvDvMemoryLimit:              ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
-	EnvDatavirtEnabled:                ConfigSpec{Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
-
-	EnvSyndesisServerTag:   ConfigSpec{},
-	EnvSyndesisUITag:       ConfigSpec{},
-	EnvSyndesisS2ITag:      ConfigSpec{},
-	EnvSyndesisMetaTag:     ConfigSpec{},
-	EnvPostgresTag:         ConfigSpec{},
-	EnvPostgresExporterTag: ConfigSpec{},
-	EnvDvTag:           ConfigSpec{},
-	EnvPrometheusTag:       ConfigSpec{},
-	EnvOauthProxyTag:       ConfigSpec{},
-
-	EnvUpgradeVolumeCapacity:  ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi"},
-	EnvManagementUrlFor3scale: ConfigSpec{Value: "", Description: "Url to 3scale for exposing services"},
+// Components
+type ComponentsSpec struct {
+	UI         UIConfiguration
+	S2I        S2IConfiguration
+	Oauth      OauthConfiguration
+	Server     ServerConfiguration
+	Meta       MetaConfiguration
+	Database   DatabaseConfiguration
+	Prometheus PrometheusConfiguration
+	Grafana    GrafanaConfiguration
+	Upgrade    UpgradeConfiguration
 }
 
-func DefaultValue(envVar SyndesisEnvVar) string {
-	return AllConfigOptions[envVar].Value
+type OauthConfiguration struct {
+	CookieSecret    string
+	Image           string
+	DisableSarCheck bool
+	SarNamespace    string
 }
 
-type SyndesisEnvVarSetter func(config map[string]string, syndesis *v1alpha1.Syndesis)
+type UIConfiguration struct {
+	Image string
+}
 
-var (
-	setters = []SyndesisEnvVarSetter{
-		routeHostnameFromEnv,
-		openshiftMasterFromEnv,
-		openshiftConsoleUrlFromEnv,
+type S2IConfiguration struct {
+	Image string
+}
 
-		postgresqlMemoryLimitFromEnv,
-		postgresqlImageStreamNamespaceFromEnv,
-		postgresqlUserFromEnv,
-		postgresqlDatabaseFromEnv,
-		postgresqlVolumeCapacityFromEnv,
+type DatabaseConfiguration struct {
+	User                 string
+	Database             string
+	URL                  string
+	ExternalDbURL        string
+	Resources            ResourcesWithVolume
+	Exporter             ExporterConfiguration
+	Image                string
+	ImageStreamNamespace string
+	Password             string
+	SampledbPassword     string
+}
 
-		testSupportFromEnv,
+type ExporterConfiguration struct {
+	Image string
+}
 
-		prometheusVolumeCapacityFromEnv,
-		prometheusMemoryLimitFromEnv,
-		metaVolumeCapacityFromEnv,
-		metaMemoryLimitFromEnv,
-		serverMemoryLimitFromEnv,
+type PrometheusConfiguration struct {
+	Image     string
+	Rules     string
+	Resources ResourcesWithVolume
+}
 
-		imageStreamNamespaceFromEnv,
-		controllersIntegrationsEnabledFromEnv,
-		demoDataEnabledFromEnv,
-		maxIntegrationsPerUserFromEnv,
-		integrationStateCheckInterval,
+type GrafanaConfiguration struct {
+	Resources Resources
+}
 
-		dvMemoryLimitFromEnv,
-		sarNamespaceFromEnv,
+type ServerConfiguration struct {
+	Resources                     Resources
+	Features                      ServerFeatures
+	Image                         string
+	SyndesisEncryptKey            string
+	ClientStateAuthenticationKey  string
+	ClientStateEncryptionKey      string
+	ControllersIntegrationEnabled bool
+}
 
-		upgradeVolumeCapacityFromEnv,
-		managementUrlFor3scale,
+type MetaConfiguration struct {
+	Image     string
+	Resources ResourcesWithVolume
+}
+
+type UpgradeConfiguration struct {
+	Image     string
+	Resources VolumeOnlyResources
+}
+
+type Resources struct {
+	Memory string
+}
+
+type ResourcesWithVolume struct {
+	Memory         string
+	VolumeCapacity string
+}
+
+type VolumeOnlyResources struct {
+	VolumeCapacity string
+}
+
+type ServerFeatures struct {
+	IntegrationLimit              int
+	IntegrationStateCheckInterval int
+	DemoData                      bool
+	DeployIntegrations            bool
+	TestSupport                   bool
+	OpenShiftMaster               string
+	ManagementUrlFor3scale        string
+	MavenRepositories             map[string]string
+}
+
+// Addons
+type AddonsSpec struct {
+	Jaeger JaegerConfiguration
+	Ops    AddonConfiguration
+	Todo   AddonConfiguration
+	DV     DvConfiguration
+	CamelK CamelKConfiguration
+}
+
+type JaegerConfiguration struct {
+	Enabled      bool
+	SamplerType  string
+	SamplerParam string
+}
+
+type DvConfiguration struct {
+	Enabled   bool
+	Resources Resources
+	Image     string
+}
+
+type AddonConfiguration struct {
+	Enabled bool
+}
+
+type CamelKConfiguration struct {
+	Enabled       bool
+	CamelVersion  string
+	CamelKRuntime string
+	Image         string
+}
+
+/*
+/ Returns all processed configurations for Syndesis
+
+ - Default values for configuration are loaded from file
+ - Secrets and passwords are loaded from syndesis-global-config Secret if they exits
+ and generated if they dont
+ - For QE, some fields are loaded from environment variables
+ - Users might define fields using the syndesis custom resource
+*/
+func GetProperties(file string, ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) (*Config, error) {
+	configuration := &Config{}
+	if err := configuration.loadFromFile(file); err != nil {
+		return nil, err
 	}
-)
 
-func SetConfigurationFromEnvVars(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	for _, setter := range setters {
-		setter(config, syndesis)
-	}
-}
+	configuration.OpenShiftProject = syndesis.Namespace
+	configuration.Syndesis.Components.Oauth.SarNamespace = configuration.OpenShiftProject
 
-// Common
-func routeHostnameFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvRouteHostname); ok && syndesis.Spec.RouteHostname == "" {
-		syndesis.Spec.RouteHostname = v
-	}
-}
-
-func openshiftMasterFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvOpenShiftMaster); ok && syndesis.Spec.OpenShiftMaster == "" {
-		syndesis.Spec.OpenShiftMaster = v
-	}
-}
-
-func openshiftConsoleUrlFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvOpenShiftConsoleUrl); ok && syndesis.Spec.OpenShiftConsoleUrl == "" {
-		syndesis.Spec.OpenShiftConsoleUrl = v
-	}
-}
-
-func sarNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvSarNamespace); ok && syndesis.Spec.SarNamespace == "" {
-		syndesis.Spec.SarNamespace = v
-	}
-}
-
-// Dv
-func dvMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Dv.Resources, config, EnvDvMemoryLimit)
-}
-
-func demoDataEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvDemoDataEnabled); ok && syndesis.Spec.DemoData == nil {
-		syndesis.Spec.DemoData = &v
-	}
-}
-
-func maxIntegrationsPerUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getInt(config, EnvMaxIntegrationsPerUser); ok && syndesis.Spec.Integration.Limit == nil {
-		syndesis.Spec.Integration.Limit = &v
-	}
-}
-
-func integrationStateCheckInterval(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getInt(config, EnvIntegrationStateCheckInterval); ok && syndesis.Spec.Integration.StateCheckInterval == nil {
-		syndesis.Spec.Integration.StateCheckInterval = &v
-	}
-}
-
-func controllersIntegrationsEnabledFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvControllersIntegrationEnabled); ok && syndesis.Spec.DeployIntegrations != nil {
-		syndesis.Spec.DeployIntegrations = &v
-	}
-}
-
-func testSupportFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getBool(config, EnvTestSupport); ok && syndesis.Spec.TestSupport == nil {
-		syndesis.Spec.TestSupport = &v
-	}
-}
-
-func imageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvImageStreamNamespace); ok && syndesis.Spec.ImageStreamNamespace == "" {
-		syndesis.Spec.ImageStreamNamespace = v
-	}
-}
-
-func postgresqlMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Db.Resources.Resources, config, EnvPostgresqlMemoryLimit)
-}
-
-func postgresqlImageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlImageStreamNamespace); ok && syndesis.Spec.Components.Db.ImageStreamNamespace == "" {
-		syndesis.Spec.Components.Db.ImageStreamNamespace = v
-	}
-}
-
-func postgresqlUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlUser); ok && syndesis.Spec.Components.Db.User == "" {
-		syndesis.Spec.Components.Db.User = v
-	}
-}
-
-func postgresqlDatabaseFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlDatabase); ok && syndesis.Spec.Components.Db.Database == "" {
-		syndesis.Spec.Components.Db.Database = v
-	}
-}
-
-func postgresqlVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlVolumeCapacity); ok && syndesis.Spec.Components.Db.Resources.VolumeCapacity == "" {
-		syndesis.Spec.Components.Db.Resources.VolumeCapacity = v
-	}
-}
-
-// Prometheus
-func prometheusMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Prometheus.Resources.Resources, config, EnvPrometheusMemoryLimit)
-}
-
-func prometheusVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPrometheusVolumeCapacity); ok && syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity == "" {
-		syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity = v
-	}
-}
-
-// Server
-func serverMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Server.Resources, config, EnvServerMemoryLimit)
-}
-
-func resourceMemoryListFromEnv(r *v1alpha1.Resources, config map[string]string, envVar SyndesisEnvVar) {
-	if r.Limits == nil {
-		r.Limits = make(v1.ResourceList, 0)
-	}
-	if v, found := getQuantity(config, envVar); found {
-		if _, found := r.Limits[v1.ResourceMemory]; !found {
-			r.Limits[v1.ResourceMemory] = v
+	if client != nil {
+		if err := configuration.setPasswordsFromSecret(ctx, client, syndesis); err != nil {
+			return nil, err
 		}
 	}
+	configuration.generatePasswords()
+
+	if err := configuration.setImagesFromEnv(); err != nil {
+		return nil, err
+	}
+
+	if err := configuration.setSyndesisFromCustomResource(syndesis); err != nil {
+		return nil, err
+	}
+
+	return configuration, nil
 }
 
-// Meta
-func metaMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	resourceMemoryListFromEnv(&syndesis.Spec.Components.Meta.Resources.Resources, config, EnvMetaMemoryLimit)
+// Load configuration from config file. Config file is expected to be a yaml
+// The returned configuration is parsed to JSON and returned as a Config object
+func (config *Config) loadFromFile(file string) error {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		return err
+	}
+
+	if strings.HasSuffix(file, ".yaml") || strings.HasSuffix(file, ".yml") {
+		data, err = yaml.ToJSON(data)
+		if err != nil {
+			return err
+		}
+	}
+
+	if err := json.Unmarshal(data, config); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func metaVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvMetaVolumeCapacity); ok && syndesis.Spec.Components.Meta.Resources.VolumeCapacity == "" {
-		syndesis.Spec.Components.Meta.Resources.VolumeCapacity = v
+// Set Config.RouteHostname based on the Spec.Host property of the syndesis route
+func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+	syndesisRoute := &routev1.Route{}
+
+	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {
+		if k8serrors.IsNotFound(err) {
+			return nil
+		} else {
+			return err
+		}
+	}
+	config.RouteHostname = syndesisRoute.Spec.Host
+
+	return nil
+}
+
+// When an external database is defined, reset connection parameters
+func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+	// Handle an external database being defined
+	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
+		// check to see if password is already provided, check to see if merge is done
+		globalCfgSec := &corev1.Secret{}
+		if err := client.Get(ctx, types.NamespacedName{Name: "syndesis-global-config", Namespace: syndesis.Namespace}, globalCfgSec); err != nil {
+			// the secret doesn't already exist, but it must for external databases
+			return err
+		}
+		postgresPass := string(globalCfgSec.Data["POSTGRESQL_PASSWORD"])
+		if postgresPass == "" {
+			return errors.New("failed to find postgresql password in global config")
+		}
+
+		// setup connection string from provided url
+		externalDbURL, err := url.Parse(syndesis.Spec.Components.Database.ExternalDbURL)
+		if err != nil {
+			return err
+		}
+		if externalDbURL.Path == "" {
+			externalDbURL.Path = syndesis.Spec.Components.Database.Database
+		}
+
+		config.Syndesis.Components.Database.URL = externalDbURL.String()
+		config.Syndesis.Components.Database.Password = postgresPass
+	}
+
+	return nil
+}
+
+func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+	secrets, err := getSyndesisEnvVarsFromOpenShiftNamespace(ctx, client, syndesis.Namespace)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			return nil
+		} else {
+			return err
+		}
+	}
+
+	config.OpenShiftOauthClientSecret = secrets["OPENSHIFT_OAUTH_CLIENT_SECRET"]
+	config.Syndesis.Components.Database.Password = secrets["POSTGRESQL_PASSWORD"]
+	config.Syndesis.Components.Database.SampledbPassword = secrets["POSTGRESQL_SAMPLEDB_PASSWORD"]
+	config.Syndesis.Components.Oauth.CookieSecret = secrets["OAUTH_COOKIE_SECRET"]
+	config.Syndesis.Components.Server.SyndesisEncryptKey = secrets["SYNDESIS_ENCRYPT_KEY"]
+	config.Syndesis.Components.Server.ClientStateAuthenticationKey = secrets["CLIENT_STATE_AUTHENTICATION_KEY"]
+	config.Syndesis.Components.Server.ClientStateEncryptionKey = secrets["CLIENT_STATE_ENCRYPTION_KEY"]
+
+	return nil
+}
+
+// Overwrite operand images with values from ENV if those env are present
+func (config *Config) setImagesFromEnv() error {
+	img_env := Config{
+		Syndesis: SyndesisConfig{
+			Addons: AddonsSpec{
+				DV: DvConfiguration{Image: os.Getenv("DV_IMAGE")},
+			},
+			Components: ComponentsSpec{
+				Oauth:      OauthConfiguration{Image: os.Getenv("OAUTH_IMAGE")},
+				UI:         UIConfiguration{Image: os.Getenv("UI_IMAGE")},
+				S2I:        S2IConfiguration{Image: os.Getenv("S2I_IMAGE")},
+				Prometheus: PrometheusConfiguration{Image: os.Getenv("PROMETHEUS_IMAGE")},
+				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
+				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
+				Database: DatabaseConfiguration{
+					Image: os.Getenv("DATABASE_IMAGE"), ImageStreamNamespace: os.Getenv("DATABASE_NAMESPACE"),
+					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
+				},
+				Server: ServerConfiguration{Image: os.Getenv("SERVER_IMAGE")},
+			},
+		},
+	}
+
+	if err := mergo.Merge(config, img_env, mergo.WithOverride); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// Replace default values with those from custom resource
+func (config *Config) setSyndesisFromCustomResource(syndesis *v1alpha1.Syndesis) error {
+	c := SyndesisConfig{}
+	jsonProperties, err := json.Marshal(syndesis.Spec)
+	if err != nil {
+		return err
+	}
+
+	if err := json.Unmarshal(jsonProperties, &c); err != nil {
+		return err
+	}
+
+	if err := mergo.Merge(&config.Syndesis, c, mergo.WithOverride); err != nil {
+		return err
+	}
+	return nil
+}
+
+// Generate random expressions for passwords and secrets
+func (config *Config) generatePasswords() {
+
+	if config.OpenShiftOauthClientSecret == "" {
+		config.OpenShiftOauthClientSecret = generatePassword(64)
+	}
+
+	if config.Syndesis.Components.Database.Password == "" {
+		config.Syndesis.Components.Database.Password = generatePassword(16)
+	}
+
+	if config.Syndesis.Components.Database.SampledbPassword == "" {
+		config.Syndesis.Components.Database.SampledbPassword = generatePassword(16)
+	}
+
+	if config.Syndesis.Components.Oauth.CookieSecret == "" {
+		config.Syndesis.Components.Oauth.CookieSecret = generatePassword(32)
+	}
+
+	if config.Syndesis.Components.Server.SyndesisEncryptKey == "" {
+		config.Syndesis.Components.Server.SyndesisEncryptKey = generatePassword(64)
+	}
+
+	if config.Syndesis.Components.Server.ClientStateAuthenticationKey == "" {
+		config.Syndesis.Components.Server.ClientStateAuthenticationKey = generatePassword(32)
+	}
+
+	if config.Syndesis.Components.Server.ClientStateEncryptionKey == "" {
+		config.Syndesis.Components.Server.ClientStateEncryptionKey = generatePassword(32)
 	}
 }
 
-func upgradeVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvUpgradeVolumeCapacity); ok && syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity == "" {
-		syndesis.Spec.Components.Upgrade.Resources.VolumeCapacity = v
+func generatePassword(size int) string {
+	alphabet := make([]rune, (26*2)+10)
+	i := 0
+	for c := 'a'; c <= 'z'; c++ {
+		alphabet[i] = c
+		i += 1
 	}
-}
+	for c := 'A'; c <= 'Z'; c++ {
+		alphabet[i] = c
+		i += 1
+	}
+	for c := '0'; c <= '9'; c++ {
+		alphabet[i] = c
+		i += 1
+	}
 
-func managementUrlFor3scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvManagementUrlFor3scale); ok && syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale == "" {
-		syndesis.Spec.Components.Server.Features.ManagementUrlFor3scale = v
+	result := make([]rune, size)
+	for i := 0; i < size; i++ {
+		result[i] = alphabet[random.Intn(len(alphabet))]
 	}
+	s := string(result)
+	return s
 }

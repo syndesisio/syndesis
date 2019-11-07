@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -18,7 +20,6 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -143,10 +144,13 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
 
-	unstructured, err := template.GetUpgradeResources(scheme, syndesis)
-	if err != nil {
-		return nil, err
-	}
+	// TODO: Refactor upgrade, it wont load Upgrade resources any more
+	// unstructured, err := template.GetUpgradeResources(scheme, syndesis)
+	// if err != nil {
+	//	return nil, err
+	//}
+
+	unstructured := []unstructured.Unstructured{}
 
 	var structured []runtime.Object
 	structured, unstructured = util.SeperateStructuredAndUnstructured(a.scheme, unstructured)
