@@ -30,29 +30,25 @@ export const ViewsImportApp: React.FunctionComponent = () => {
   };
 
   const [selectedViews, setSelectedViews] = React.useState<ViewInfo[]>([]);
-  const [hasSelectedViews, setHasSelectedViews] = React.useState(false);
 
   const handleAddView = async (view: ViewInfo) => {
-    const currentViews = selectedViews;
+    const currentViews = selectedViews.slice();
     currentViews.push(view);
     setSelectedViews(currentViews);
-    setHasSelectedViews(currentViews.length > 0);
   };
 
   const handleRemoveView = async (viewName: string) => {
-    const currentViews = selectedViews;
+    const currentViews = selectedViews.slice();
     const index = currentViews.findIndex(view => view.viewName === viewName);
 
     if (index !== -1) {
       currentViews.splice(index, 1);
     }
     setSelectedViews(currentViews);
-    setHasSelectedViews(currentViews.length > 0);
   };
 
   const clearViewSelection = () => {
     setSelectedViews([]);
-    setHasSelectedViews(false);
   };
 
   return (
@@ -107,7 +103,6 @@ export const ViewsImportApp: React.FunctionComponent = () => {
           render={() => (
             <SelectViewsPage
               selectedViews={selectedViews}
-              hasSelectedViews={hasSelectedViews}
               handleAddView={handleAddView}
               handleRemoveView={handleRemoveView}
             />

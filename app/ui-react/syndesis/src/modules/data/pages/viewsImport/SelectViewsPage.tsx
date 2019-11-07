@@ -35,7 +35,6 @@ export interface ISelectViewsRouteState {
 
 export interface ISelectViewsPageProps {
   selectedViews: ViewInfo[];
-  hasSelectedViews: boolean;
   handleAddView: (view: ViewInfo) => void;
   handleRemoveView: (viewName: string) => void;
 }
@@ -126,7 +125,7 @@ export const SelectViewsPage: React.FunctionComponent<
         { virtualization }
       )}
       onCreateViews={handleCreateViews}
-      isNextDisabled={!props.hasSelectedViews}
+      isNextDisabled={props.selectedViews.length < 1}
       isNextLoading={saveInProgress}
       isLastStep={true}
     />
