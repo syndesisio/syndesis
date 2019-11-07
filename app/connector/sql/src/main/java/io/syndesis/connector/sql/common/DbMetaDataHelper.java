@@ -176,10 +176,21 @@ public final class DbMetaDataHelper {
 
             ColumnMetaData columnMetaData = new ColumnMetaData();
 
+            // the order in which the columns are read is significant for some databases
+            // for certain combinations of Oracle Database / Oracle JDBC driver if we
+            // try to fetch COLUMN_DEF column after IS_AUTOINCREMENT we get:
+            //     java.sql.SQLException: Stream has already been closed
+            // reason for this could like in the fact that the IS_AUTOINCREMENT column
+            // is the last column the table metadata ResultSet has, and once we try to
+            // read it we moved beyond the previous columns in the ResultSet coupled
+            // with the fact that reading could be unbuffered or that on reaching the
+            // end of the row data that bit of stream is closed automatically
+            // this issue was reported in https://issues.jboss.org/browse/ENTESB-12159
+            // against Oracle 12.1
             columnMetaData.setName(resultSet.getString("COLUMN_NAME"));
             columnMetaData.setType(JDBCType.valueOf(resultSet.getInt("DATA_TYPE")));
-            String autoIncString = resultSet.getString("IS_AUTOINCREMENT");
             String columnDefString = resultSet.getString("COLUMN_DEF");
+            String autoIncString = resultSet.getString("IS_AUTOINCREMENT");
 
             if ("YES".equalsIgnoreCase(autoIncString) ||
                     (columnDefString != null && columnDefString.contains("nextval"))) {
