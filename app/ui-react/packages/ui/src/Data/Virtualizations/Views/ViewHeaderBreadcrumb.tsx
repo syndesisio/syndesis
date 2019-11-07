@@ -38,26 +38,25 @@ export interface IViewHeaderBreadcrumbProps {
   i18nUnpublishModalTitle: string;
 
   /**
-   * @param virtualizationName the name of the virtualization being deleted
+   * Callback that will delete the virtualization.
    */
-  onDelete: (virtualizationName: string) => Promise<void>;
+  onDelete: () => Promise<void>;
 
   /**
-   * @param virtualizationName the name of the virtualization being exported
+   * Callback that will export the virtualization.
    */
-  onExport: (virtualizationName: string) => void;
+  onExport: () => void;
 
   /**
-   * @param virtualizationName the name of the virtualization being published
+   * Callback that will publish the virtualization.
    */
-  onPublish: (virtualizationName: string, hasViews: boolean) => Promise<void>;
+  onPublish: () => Promise<void>;
 
   /**
-   * @param virtualizationName the name of the virtualization being unpublished
+   * Callback that will unpublish the virtualization.
    */
-  onUnpublish: (virtualizationName: string) => Promise<void>;
+  onUnpublish: () => Promise<void>;
   virtualizationName: string;
-  hasViews: boolean;
   usedInIntegration: boolean;
 }
 
@@ -101,7 +100,7 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
   const doDelete = async () => {
     setShowConfirmationDialog(false);
     setInProgress(true);
-    await props.onDelete(props.virtualizationName).catch(() => {
+    await props.onDelete().catch(() => {
       // restore button text
       setButtonText(props.i18nPublish);
       setInProgress(false);
@@ -109,15 +108,12 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
   };
 
   const doExport = () => {
-    props.onExport(props.virtualizationName);
+    props.onExport();
   }
 
   const doPublish = async () => {
     setInProgress(true);
-    await props.onPublish(
-      props.virtualizationName,
-      props.hasViews
-    ).catch(() => {
+    await props.onPublish().catch(() => {
       // restore button text
       setButtonText(props.i18nPublish);
       setInProgress(false);
@@ -127,7 +123,7 @@ export const ViewHeaderBreadcrumb: React.FunctionComponent<
   const doUnpublish = async () => {
     setShowConfirmationDialog(false);
     setInProgress(true);
-    await props.onUnpublish(props.virtualizationName).catch(() => {
+    await props.onUnpublish().catch(() => {
       // restore button text
       setButtonText(props.i18nUnpublish);
       setInProgress(false);
