@@ -5,6 +5,9 @@
       app: camel-k
     name: camel-k
   spec:
+    {{- if (eq (or .Syndesis.Spec.Addons.knative.enabled "false") "true") }}
+    profile: Knative
+    {{- end}}
     build:
       {{- if .Syndesis.Spec.Addons.camelk.image}}
       baseImage: '{{.Syndesis.Spec.Addons.camelk.image}}'
