@@ -39,6 +39,13 @@ public final class KnativeComponentProxyFactory implements ComponentProxyFactory
     @Override
     public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
         return new ComponentProxyComponent(componentId, componentScheme, createCatalog()) {
+
+            {
+                setBeforeConsumer(exchange -> {
+                    exchange.getMessage().removeHeader("CamelHttpUri");
+                });
+            }
+
             @Override
             protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) {
                 // No specific component options
@@ -49,6 +56,7 @@ public final class KnativeComponentProxyFactory implements ComponentProxyFactory
             protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) {
                 return getCamelContext().getEndpoint(computeKnativeUri(scheme, options));
             }
+
         };
     }
 

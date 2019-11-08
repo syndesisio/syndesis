@@ -98,6 +98,11 @@
           - name: CAMEL_K_ENABLED
             value: "true"
 {{- end}}
+{{- if (eq (or .Syndesis.Spec.Addons.knative.enabled "false") "true") }}
+          # Marker that causes a redeployment of the syndesis server, so that the new configuration is applied
+          - name: KNATIVE_ENABLED
+            value: "true"
+{{- end}}
 {{if .Syndesis.Spec.DevSupport}}
           - name: JAVA_DEBUG
             value: "true"
