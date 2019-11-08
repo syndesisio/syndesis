@@ -5,6 +5,6 @@
   margin-top: 10px;
 }
 .connection-schema-list {
-    max-height: 45em;
+    max-height: 40em;
     overflow-y: auto;
   }

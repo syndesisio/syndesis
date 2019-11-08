@@ -22,7 +22,7 @@ export const ConnectionSchemaList: React.FunctionComponent<
   IConnectionSchemaListProps
 > = props => {
   return (
-    <PageSection noPadding={true} className={'connection-schema-list'}>
+    <PageSection noPadding={true}>
       {props.hasListData ? (
         <>
           <ButtonLink
@@ -33,7 +33,9 @@ export const ConnectionSchemaList: React.FunctionComponent<
           >
             {props.i18nLinkCreateConnection}
           </ButtonLink>
-          <ListView>{props.children}</ListView>
+          <div className={'connection-schema-list'}>
+            <ListView>{props.children}</ListView>
+          </div>
         </>
       ) : (
         <EmptyState variant={EmptyStateVariant.full}>
