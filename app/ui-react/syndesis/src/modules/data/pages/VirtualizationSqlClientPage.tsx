@@ -49,6 +49,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   return (
     <VirtualizationEditorPage
       onDeleteSuccess={deleteCallback}
+      routeParams={params}
       routeState={state}
       virtualization={virtualization}
     >

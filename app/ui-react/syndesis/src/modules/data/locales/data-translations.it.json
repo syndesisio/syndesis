@@ -1,6 +1,19 @@
 {
   "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Fai clic su Crea connessione per una nuova connessione.",
   "activeConnectionsEmptyStateTitle": "Nessuna Connessione Attiva",
+  "buildStatus": {
+    "BUILDING": "Costruzione",
+    "CANCELLED": "Annullato",
+    "CONFIGURING": "Configurazione",
+    "DELETE_SUBMITTED": "Elimina Inviato",
+    "DELETE_REQUEUE": "Elimina la Coda",
+    "DELETE_DONE": "Elimina Fatto",
+    "DEPLOYING": "Distribuzione",
+    "FAILED": "Mancato",
+    "NOTFOUND": "Non Trovato",
+    "RUNNING": "In Esecuzione",
+    "SUBMITTED": "Inserito"
+  },
   "createDataVirtualization": "Crea $t(shared:DataVirtualization)",
   "createDataVirtualizationTip": "Creare una virtualizzazione dei dati",
   "createDataVirtualizationTitle": "Crea Nuova $t(shared:DataVirtualization)",

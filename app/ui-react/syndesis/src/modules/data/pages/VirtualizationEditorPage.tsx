@@ -23,21 +23,27 @@ import {
 import './VirtualizationEditorPage.css';
 
 /**
- * @param virtualizationName - the name of the virtualization whose details are being shown by this page
+ * This will always have a value and can be used for the virtualization name.
+ * @property {string} virtualizationId - the name of the virtualization whose details are being shown by this page
  */
 export interface IVirtualizationEditorPageRouteParams {
   virtualizationId: string;
 }
 
 /**
- * @param virtualization - the virtualization whose details are being shown by this page
+ * This will *not* have a value if cutting and pasting a URL.
+ * @property {Virtualization} virtualization - the virtualization whose details are being shown by this page
  */
-
 export interface IVirtualizationEditorPageRouteState {
   virtualization: Virtualization;
 }
 
 export interface IVirtualizationEditorPageProps {
+  /**
+   * The route parameters.
+   */
+  routeParams: IVirtualizationEditorPageRouteParams;
+
   /**
    * The route state.
    */
@@ -95,10 +101,33 @@ export const VirtualizationEditorPage: React.FunctionComponent<
     | 'danger'
     | 'primary'
     | 'default');
-  const [publishStateText, setPublishStateText] = React.useState();
-  const [description, setDescription] = React.useState(
-    props.routeState.virtualization.description
+  const [publishStateText, setPublishStateText] = React.useState(
+    () => {
+      if (props.routeState.virtualization) {
+        return props.routeState.virtualization.publishedState;
+      }
+
+      if (props.virtualization) {
+        return props.virtualization.publishedState;
+      }
+
+      return '';
+    }
   );
+  const [description, setDescription] = React.useState(() => {
+    if (
+      props.routeState.virtualization &&
+      props.routeState.virtualization.description
+    ) {
+      return props.routeState.virtualization.description;
+    }
+
+    if (props.virtualization && props.virtualization.description) {
+      return props.virtualization.description;
+    }
+
+    return '';
+  });
 
   /**
    * Update publishing details and description whenever a virtualization state changes.
@@ -288,15 +317,43 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   };
 
   /**
+   * Using this method instead of using `description` directly prevented the description in the details
+   * header from displaying the description placeholder initially.
+   */
+  const getDescription = () => {
+    if (description) {
+      return description;
+    }
+
+    if (props.virtualization && props.virtualization.description) {
+      return props.virtualization.description;
+    }
+
+    if (props.routeState.virtualization && props.routeState.virtualization.description) {
+      return props.routeState.virtualization.description;
+    }
+    
+    return '';
+}
+
+  /**
    *
    * @param integrationNames
    */
-  const getUsedByMessage = (integrationNames: string[]): string => {
-    if (integrationNames.length === 1) {
+  const getUsedByMessage = (): string => {
+    let count = 0;
+
+    if (props.virtualization) {
+      count = props.virtualization.usedBy.length;
+    } else if (props.routeState.virtualization) {
+      count = props.routeState.virtualization.usedBy.length;
+    }
+
+    if (count === 1) {
       return t('usedByOne');
     }
 
-    return t('usedByMulti', { count: integrationNames.length });
+    return t('usedByMulti', { count });
   };
 
   return (
@@ -305,7 +362,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<
         <ViewHeaderBreadcrumb
           isSubmitted={isSubmitted}
           currentPublishedState={currPublishedState.state}
-          virtualizationName={props.routeState.virtualization.name}
+          virtualizationName={props.routeParams.virtualizationId}
           dashboardHref={resolvers.dashboard.root()}
           dashboardString={t('shared:Home')}
           dataHref={resolvers.data.root()}
@@ -313,21 +370,21 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nCancelText={t('shared:Cancel')}
           i18nDelete={t('shared:Delete')}
           i18nDeleteModalMessage={t('deleteModalMessage', {
-            name: props.routeState.virtualization.name,
+            name: props.routeParams.virtualizationId,
           })}
           i18nDeleteModalTitle={t('deleteModalTitle')}
           i18nExport={t('shared:Export')}
           i18nPublish={t('shared:Publish')}
           i18nUnpublish={t('shared:Unpublish')}
           i18nUnpublishModalMessage={t('unpublishModalMessage', {
-            name: props.routeState.virtualization.name,
+            name: props.routeParams.virtualizationId,
           })}
           i18nUnpublishModalTitle={t('unpublishModalTitle')}
           onDelete={doDelete}
           onExport={doExport}
           onUnpublish={doUnpublish}
           onPublish={doPublish}
-          usedInIntegration={props.virtualization.usedBy.length > 0}
+          usedInIntegration={props.virtualization ? props.virtualization.usedBy.length > 0 : true}
         />
       </PageSection>
       <PageSection
@@ -340,17 +397,17 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nPublishState={publishStateText}
           labelType={labelType}
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
-          i18nInUseText={getUsedByMessage(props.virtualization.usedBy)}
+          i18nInUseText={getUsedByMessage()}
           i18nPublishLogUrlText={t('shared:viewLogs')}
-          odataUrl={getOdataUrl(props.virtualization)}
+          odataUrl={getOdataUrl(props.virtualization || props.routeState.virtualization)}
           publishedState={currPublishedState.state}
           publishingCurrentStep={currPublishedState.stepNumber}
           publishingLogUrl={currPublishedState.logUrl}
           publishingTotalSteps={currPublishedState.stepTotal}
           publishingStepText={currPublishedState.stepText}
-          virtualizationDescription={description}
-          virtualizationName={props.routeState.virtualization.name}
-          isWorking={false}
+          virtualizationDescription={getDescription()}
+          virtualizationName={props.routeParams.virtualizationId}
+          isWorking={!props.virtualization || !currPublishedState}
           onChangeDescription={doSetDescription}
         />
       </PageSection>
