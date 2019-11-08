@@ -161,6 +161,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   return (
     <VirtualizationEditorPage
       onDeleteSuccess={deleteCallback}
+      routeParams={params}
       routeState={state}
       virtualization={virtualization}
     >

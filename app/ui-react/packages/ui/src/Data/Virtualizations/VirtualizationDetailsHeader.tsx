@@ -42,7 +42,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               {props.virtualizationName}
             </SplitItem>
             <SplitItem>
-              {props.publishedState && props.i18nPublishState ? (
+              {!props.isWorking ? (
                 <PublishStatusWithProgress
                   isProgressWithLink={props.isProgressWithLink}
                   i18nPublishState={props.i18nPublishState}
