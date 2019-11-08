@@ -19,6 +19,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -69,7 +71,18 @@ public final class RequestPayloadConverter extends PayloadConverterBase {
             return;
         }
 
-        payload.with("parameters").fields().forEachRemaining(e -> in.setHeader(e.getKey(), e.getValue().asText()));
+        payload.with("parameters").fields().forEachRemaining(e -> {
+            final String name = e.getKey();
+            final JsonNode value = e.getValue();
+
+            if (value.isArray()) {
+                final List<String> values = new ArrayList<>(value.size());
+                value.elements().forEachRemaining(n -> values.add(n.asText()));
+                in.setHeader(name, values);
+            } else {
+                in.setHeader(name, value.asText());
+            }
+        });
 
         final JsonNode requestBody = payload.get("body");
         if (requestBody == null) {

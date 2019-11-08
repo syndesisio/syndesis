@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import java.util.List;
+
 import io.syndesis.common.model.DataShapeKinds;
 
 import org.apache.camel.Exchange;
@@ -36,6 +38,21 @@ public class RequestPayloadConverterTest {
         converter.process(createExhangeWithBody(null, "{}"));
         converter.process(createExhangeWithBody("application/xml", "<xml/>"));
         converter.process(createExhangeWithBody("application/json", "{}"));
+    }
+
+    @Test
+    public void shouldConvertArrays() {
+        final RequestPayloadConverter converter = new RequestPayloadConverter(DataShapeKinds.JSON_SCHEMA);
+
+        final Exchange exchange = createExhangeWithBody("application/json",
+            "{\"parameters\":{\"param\": [\"1\", \"2\", \"3\"]}}");
+
+        converter.process(exchange);
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        final Class<List<String>> listType = (Class) List.class;
+
+        assertThat(exchange.getIn().getHeader("param")).isInstanceOfSatisfying(listType, l -> assertThat(l).containsExactly("1", "2", "3"));
     }
 
     @Test
