@@ -31,6 +31,7 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 /**
  * Catch all for utility methods.
@@ -43,7 +44,7 @@ public final class Utils {
 
     static {
         ObjectMapper objectMapper = new ObjectMapper()
-            .registerModules(new Jdk8Module(), new EpochMillisTimeModule())
+            .registerModules(new Jdk8Module(), new EpochMillisTimeModule(), new JavaTimeModule())
             .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
