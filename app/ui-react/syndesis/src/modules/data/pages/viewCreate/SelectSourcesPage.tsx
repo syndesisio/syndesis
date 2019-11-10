@@ -28,7 +28,7 @@ export interface ISelectSourcesPageProps {
   ) => void;
   handleNodeDeselected: (connectionName: string, teiidName: string) => void;
   selectedSchemaNodes: SchemaNodeInfo[];
-  selectedNodesCount: number;
+  // selectedNodesCount: number;
 }
 
 export const SelectSourcesPage: React.FunctionComponent<
@@ -56,7 +56,7 @@ export const SelectSourcesPage: React.FunctionComponent<
         schemaNodeInfo,
         virtualization,
       })}
-      isNextDisabled={props.selectedNodesCount > 1}
+      isNextDisabled={props.selectedSchemaNodes.length > 1}
       isNextLoading={false}
       isLastStep={false}
     />

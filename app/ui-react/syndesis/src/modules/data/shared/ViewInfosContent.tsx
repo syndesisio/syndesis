@@ -54,11 +54,16 @@ function getFilteredAndSortedViewInfos(
   return filteredAndSorted;
 }
 
+const getSelectedViewName = (selectedViews: ViewInfo[]): string[] => {
+  return selectedViews.map(view => view.viewName);
+};
+
 export interface IViewInfosContentProps {
   connectionName: string;
   existingViewNames: string[];
   onViewSelected: (view: ViewInfo) => void;
   onViewDeselected: (viewName: string) => void;
+  selectedViews: ViewInfo[];
 }
 
 const filterByName = {
@@ -84,7 +89,7 @@ export const ViewInfosContent: React.FunctionComponent<
   const { t } = useTranslation(['data', 'shared']);
 
   let displayedViews: ViewInfo[] = [];
-  const selectedViewNames: string[] = [];
+  const selectedViewNames: string[] = getSelectedViewName(props.selectedViews);
 
   const handleViewSelectionChange = async (name: string, selected: boolean) => {
     if (selected) {

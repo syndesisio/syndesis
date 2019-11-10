@@ -289,7 +289,7 @@
       "type": "EXTENSION_TAG"
     }
   ],
-  "description": "Subscribe for and publish messages.",
+  "description": "Invoke SQL to obtain, store, update, or delete data.",
   "icon": "assets:sql.svg",
   "id": "sql",
   "name": "Database",

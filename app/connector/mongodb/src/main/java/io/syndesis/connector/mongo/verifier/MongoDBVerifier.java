@@ -15,17 +15,19 @@
  */
 package io.syndesis.connector.mongo.verifier;
 
+import java.util.Map;
+
+import io.syndesis.connector.mongo.MongoCustomizersUtil;
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.ComponentVerifierExtension;
 
 public class MongoDBVerifier extends ComponentVerifier {
+
     public MongoDBVerifier() {
         super("mongodb3");
     }
 
     @Override
-    protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new MongoConnectorVerifierExtension(context);
+    protected void customize(Map<String, Object> params) {
+        MongoCustomizersUtil.replaceAdminDBIfMissing(params);
     }
 }

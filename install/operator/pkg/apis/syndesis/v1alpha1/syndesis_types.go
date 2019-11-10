@@ -126,11 +126,12 @@ type ServerFeatures struct {
 }
 
 type AddonsSpec struct {
-	Jaeger JaegerConfiguration `json:"jaeger,omitempty"`
-	Ops    AddonSpec           `json:"ops,omitempty"`
-	Todo   AddonSpec           `json:"todo,omitempty"`
-	DV     DvConfiguration     `json:"dv,omitempty"`
-	CamelK CamelKConfiguration `json:"camelk,omitempty"`
+	Jaeger  JaegerConfiguration `json:"jaeger,omitempty"`
+	Ops     AddonSpec           `json:"ops,omitempty"`
+	Todo    AddonSpec           `json:"todo,omitempty"`
+	Knative AddonSpec           `json:"knative,omitempty"`
+	DV      DvConfiguration     `json:"dv,omitempty"`
+	CamelK  CamelKConfiguration `json:"camelk,omitempty"`
 }
 
 type JaegerConfiguration struct {

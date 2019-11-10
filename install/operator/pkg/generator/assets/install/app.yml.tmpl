@@ -6,3 +6,8 @@ spec:
   devSupport: {{.DevSupport}}
   components:
     scheduled: true
+  addons:
+  {{- range .EnabledAddons }}
+    {{.}}:
+      enabled: "true"
+  {{- end }}

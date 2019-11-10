@@ -5,9 +5,8 @@ import (
 	"errors"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -111,6 +110,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if err != nil {
 		return err
 	}
+	if err := configuration.SetRoute(ctx, a.client, syndesis); err != nil {
+		return err
+	}
 
 	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
@@ -137,6 +139,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		{"ops", configuration.Syndesis.Addons.Ops.Enabled},
 		{"dv", configuration.Syndesis.Addons.DV.Enabled},
 		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
+		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
 		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
 	}
 	for _, addon := range addons {

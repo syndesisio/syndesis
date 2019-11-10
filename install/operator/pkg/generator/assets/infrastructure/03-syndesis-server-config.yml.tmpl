@@ -54,7 +54,11 @@
         public-api:
           enabled: true
         knative:
+          {{- if .Syndesis.Addons.Knative.Enabled }}
+          enabled: true
+          {{- else}}
           enabled: false
+          {{- end}}
 {{- if .Syndesis.Addons.Jaeger.Enabled}}
         dblogging:
           enabled: false

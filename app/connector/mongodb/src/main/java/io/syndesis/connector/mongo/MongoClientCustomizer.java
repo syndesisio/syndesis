@@ -23,8 +23,11 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.component.mongodb3.conf.ConnectionParamsConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import static org.apache.camel.util.CastUtils.cast;
 
 public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelContextAware {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoClientCustomizer.class);
@@ -43,14 +46,13 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        MongoCustomizersUtil.replaceAdminDBIfMissing(options);
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
             if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
-                MongoConfiguration mongoConf = new MongoConfiguration();
-                consumeOption(camelContext, options, "host", String.class, mongoConf::setHost);
-                consumeOption(camelContext, options, "user", String.class, mongoConf::setUser);
+                ConnectionParamsConfiguration mongoConf = new ConnectionParamsConfiguration(cast(options));
+                // We need to force consumption in order to perform property placeholder done by Camel
                 consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
-                consumeOption(camelContext, options, "adminDB", String.class, mongoConf::setAdminDB);
                 LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
                 MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
                 MongoClient mongoClient = new MongoClient(mongoClientURI);

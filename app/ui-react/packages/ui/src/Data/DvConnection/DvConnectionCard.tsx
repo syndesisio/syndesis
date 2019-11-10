@@ -31,13 +31,10 @@ export interface IDvConnectionCardProps {
 export const DvConnectionCard: React.FunctionComponent<
   IDvConnectionCardProps
 > = props => {
-  const [isSelected, setIsSelected] = React.useState(props.selected);
-
   const doToggleSelected = (connName: string) => (event: any) => {
     // User can only select active connections that are not loading
     if (props.dvStatus === ConnectionStatus.ACTIVE && props.loading === false) {
-      setIsSelected(!isSelected);
-      props.onSelectionChanged(connName, !isSelected);
+      props.onSelectionChanged(connName, !props.selected);
     }
   };
 
@@ -50,10 +47,7 @@ export const DvConnectionCard: React.FunctionComponent<
       onClick={doToggleSelected(props.name)}
     >
       <CardHeader>
-        {props.loading ? (
-          <Spinner loading={true} inline={true} />
-        ) : ( <></> )
-        }
+        {props.loading ? <Spinner loading={true} inline={true} /> : <></>}
         <Label
           className="dv-connection-card__status"
           type={

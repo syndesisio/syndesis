@@ -169,11 +169,12 @@ type ServerFeatures struct {
 
 // Addons
 type AddonsSpec struct {
-	Jaeger JaegerConfiguration
-	Ops    AddonConfiguration
-	Todo   AddonConfiguration
-	DV     DvConfiguration
-	CamelK CamelKConfiguration
+	Jaeger  JaegerConfiguration
+	Ops     AddonConfiguration
+	Todo    AddonConfiguration
+	Knative AddonConfiguration
+	DV      DvConfiguration
+	CamelK  CamelKConfiguration
 }
 
 type JaegerConfiguration struct {

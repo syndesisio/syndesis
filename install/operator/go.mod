@@ -29,8 +29,8 @@ require (
 	k8s.io/code-generator v0.0.0-20181203235156-f8cba74510f3
 	k8s.io/gengo v0.0.0-20190327210449-e17681d19d3a
 	k8s.io/kube-openapi v0.0.0-20190603182131-db7b694dc208
-	sigs.k8s.io/controller-runtime v0.2.2
-	sigs.k8s.io/controller-tools v0.2.1
+	sigs.k8s.io/controller-runtime v0.3.0
+	sigs.k8s.io/controller-tools v0.2.2
 	sigs.k8s.io/yaml v1.1.0
 )
 
@@ -51,6 +51,6 @@ replace (
 	sigs.k8s.io/controller-tools => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
 )
 
-replace git.apache.org/thrift.git => github.com/apache/thrift v0.12.0
+replace git.apache.org/thrift.git => github.com/apache/thrift v0.0.0-20180902110319-2566ecd5d999
 
 go 1.13

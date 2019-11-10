@@ -198,8 +198,9 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							SamplerType:  "const",
 							SamplerParam: "0",
 						},
-						Ops:  AddonConfiguration{Enabled: false},
-						Todo: AddonConfiguration{Enabled: true},
+						Ops:     AddonConfiguration{Enabled: false},
+						Todo:    AddonConfiguration{Enabled: true},
+						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
 							Resources: Resources{Memory: "1024Mi"},

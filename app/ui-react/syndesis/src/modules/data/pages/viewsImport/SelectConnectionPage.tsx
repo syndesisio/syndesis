@@ -20,22 +20,20 @@ export interface ISelectConnectionRouteState {
   virtualization: Virtualization;
 }
 
-export const SelectConnectionPage: React.FunctionComponent = () => {
+export interface ISelectConnectionPageProps {
+  selectedConnection: string;
+  handleConnectionSelectionChanged: (name: string, selected: boolean) => void;
+}
+
+export const SelectConnectionPage: React.FunctionComponent<
+  ISelectConnectionPageProps
+> = props => {
   const { state } = useRouteData<
     ISelectConnectionRouteParams,
     ISelectConnectionRouteState
   >();
-  const [selectedConnection, setSelectedConnection] = React.useState('');
 
-  const handleConnectionSelectionChanged = async (
-    name: string,
-    selected: boolean
-  ) => {
-    const selConn = selected ? name : '';
-    setSelectedConnection(selConn);
-  };
-
-  const connectionId = selectedConnection;
+  const connectionId = props.selectedConnection;
   const virtualization = state.virtualization;
   const {
     resource: connectionStatuses,
@@ -56,7 +54,8 @@ export const SelectConnectionPage: React.FunctionComponent = () => {
           }
           loading={!hasConnectionStatuses}
           dvSourceStatuses={connectionStatuses}
-          onConnectionSelectionChanged={handleConnectionSelectionChanged}
+          onConnectionSelectionChanged={props.handleConnectionSelectionChanged}
+          selectedConnection={props.selectedConnection}
         />
       }
       cancelHref={resolvers.data.virtualizations.views.root({
@@ -66,7 +65,7 @@ export const SelectConnectionPage: React.FunctionComponent = () => {
         connectionId,
         virtualization,
       })}
-      isNextDisabled={selectedConnection.length < 1}
+      isNextDisabled={props.selectedConnection.length < 1}
       isNextLoading={false}
       isLastStep={false}
     />

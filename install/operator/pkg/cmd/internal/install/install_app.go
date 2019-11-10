@@ -2,15 +2,15 @@ package install
 
 import (
 	"context"
+	"time"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/client-go/dynamic"
-	"time"
 )
 
 func (o *Install) installApplication() error {
-
 	resources, err := o.render("./install/app.yml.tmpl")
 	if err != nil {
 		return err

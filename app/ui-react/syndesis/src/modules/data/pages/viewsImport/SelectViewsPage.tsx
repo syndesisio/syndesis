@@ -33,14 +33,20 @@ export interface ISelectViewsRouteState {
   connectionId: string;
 }
 
-export const SelectViewsPage: React.FunctionComponent = () => {
+export interface ISelectViewsPageProps {
+  selectedViews: ViewInfo[];
+  handleAddView: (view: ViewInfo) => void;
+  handleRemoveView: (viewName: string) => void;
+}
+
+export const SelectViewsPage: React.FunctionComponent<
+  ISelectViewsPageProps
+> = props => {
   const { params, state, history } = useRouteData<
     ISelectViewsRouteParams,
     ISelectViewsRouteState
   >();
   const [saveInProgress, setSaveInProgress] = React.useState(false);
-  const [selectedViews, setSelectedViews] = React.useState<ViewInfo[]>([]);
-  const [hasSelectedViews, setHasSelectedViews] = React.useState(false);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data']);
   const { importSource } = useVirtualizationHelpers();
@@ -55,24 +61,6 @@ export const SelectViewsPage: React.FunctionComponent = () => {
     return viewNames;
   };
 
-  const handleAddView = async (view: ViewInfo) => {
-    const currentViews = selectedViews;
-    currentViews.push(view);
-    setSelectedViews(currentViews);
-    setHasSelectedViews(currentViews.length > 0);
-  };
-
-  const handleRemoveView = async (viewName: string) => {
-    const currentViews = selectedViews;
-    const index = currentViews.findIndex(view => view.viewName === viewName);
-
-    if (index !== -1) {
-      currentViews.splice(index, 1);
-    }
-    setSelectedViews(currentViews);
-    setHasSelectedViews(currentViews.length > 0);
-  };
-
   const setInProgress = async (isWorking: boolean) => {
     setSaveInProgress(isWorking);
   };
@@ -84,8 +72,10 @@ export const SelectViewsPage: React.FunctionComponent = () => {
 
   const handleCreateViews = async () => {
     setInProgress(true);
-    const viewNames = selectedViews.map(selectedView => selectedView.viewName);
-    const connName = selectedViews[0].connectionName;
+    const viewNames = props.selectedViews.map(
+      selectedView => selectedView.viewName
+    );
+    const connName = props.selectedViews[0].connectionName;
     const importSources: ImportSources = {
       tables: viewNames,
     };
@@ -123,8 +113,9 @@ export const SelectViewsPage: React.FunctionComponent = () => {
         <ViewInfosContent
           connectionName={state.connectionId}
           existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
-          onViewSelected={handleAddView}
-          onViewDeselected={handleRemoveView}
+          onViewSelected={props.handleAddView}
+          onViewDeselected={props.handleRemoveView}
+          selectedViews={props.selectedViews}
         />
       }
       cancelHref={resolvers.data.virtualizations.views.root({
@@ -134,7 +125,7 @@ export const SelectViewsPage: React.FunctionComponent = () => {
         { virtualization }
       )}
       onCreateViews={handleCreateViews}
-      isNextDisabled={!hasSelectedViews}
+      isNextDisabled={props.selectedViews.length < 1}
       isNextLoading={saveInProgress}
       isLastStep={true}
     />

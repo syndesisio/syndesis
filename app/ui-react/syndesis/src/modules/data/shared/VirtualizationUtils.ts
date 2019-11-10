@@ -356,25 +356,18 @@ export function getPublishingDetails(
   const publishStepDetails: VirtualizationPublishingDetails = {
     state: virtualization.publishedState,
     stepNumber: 0,
-    stepText: '',
-    stepTotal: 4,
+    stepText: i18n.t('data:buildStatus.' + virtualization.publishedState),
+    stepTotal: 3,
   };
   switch (virtualization.publishedState) {
     case 'CONFIGURING':
       publishStepDetails.stepNumber = 1;
-      publishStepDetails.stepText = 'Configuring';
       break;
     case 'BUILDING':
       publishStepDetails.stepNumber = 2;
-      publishStepDetails.stepText = 'Building';
       break;
     case 'DEPLOYING':
       publishStepDetails.stepNumber = 3;
-      publishStepDetails.stepText = 'Deploying';
-      break;
-    case 'RUNNING':
-      publishStepDetails.stepNumber = 4;
-      publishStepDetails.stepText = 'Published';
       break;
     default:
       break;

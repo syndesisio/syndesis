@@ -42,47 +42,45 @@ export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
   };
 
   return (
-    <>
-      <PageSection noPadding={true} variant={'light'}>
-        <ListViewToolbar {...props}>
-          <div className="form-group">
-            <OverlayTrigger overlay={getImportViewsTooltip()} placement="top">
-              <ButtonLink
-                data-testid={'view-list-import-views-button'}
-                href={props.linkImportViewsHRef}
-                as={'default'}
-              >
-                {props.i18nImportViews}
-              </ButtonLink>
-            </OverlayTrigger>
-            <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
-              <ButtonLink
-                data-testid={'view-list-create-view-button'}
-                href={props.linkCreateViewHRef}
-                as={'primary'}
-              >
-                {props.i18nCreateView}
-              </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-      </PageSection>
-      <PageSection noPadding={true} variant={'light'}>
-        {props.hasListData ? (
+    <PageSection>
+      {props.hasListData ? (
+        <React.Fragment>
+          <ListViewToolbar {...props}>
+            <div className="form-group">
+              <OverlayTrigger overlay={getImportViewsTooltip()} placement="top">
+                <ButtonLink
+                  data-testid={'view-list-import-views-button'}
+                  href={props.linkImportViewsHRef}
+                  as={'default'}
+                >
+                  {props.i18nImportViews}
+                </ButtonLink>
+              </OverlayTrigger>
+              <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
+                <ButtonLink
+                  data-testid={'view-list-create-view-button'}
+                  href={props.linkCreateViewHRef}
+                  as={'primary'}
+                >
+                  {props.i18nCreateView}
+                </ButtonLink>
+              </OverlayTrigger>
+            </div>
+          </ListViewToolbar>
           <ListView>{props.children}</ListView>
-        ) : (
-          <EmptyViewsState
-            i18nEmptyStateTitle={props.i18nEmptyStateTitle}
-            i18nEmptyStateInfo={props.i18nEmptyStateInfo}
-            i18nCreateView={props.i18nCreateView}
-            i18nCreateViewTip={props.i18nCreateViewTip}
-            i18nImportViews={props.i18nImportViews}
-            i18nImportViewsTip={props.i18nImportViewsTip}
-            linkCreateViewHRef={props.linkCreateViewHRef}
-            linkImportViewsHRef={props.linkImportViewsHRef}
-          />
-        )}
-      </PageSection>
-    </>
+        </React.Fragment>
+      ) : (
+        <EmptyViewsState
+          i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+          i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+          i18nCreateView={props.i18nCreateView}
+          i18nCreateViewTip={props.i18nCreateViewTip}
+          i18nImportViews={props.i18nImportViews}
+          i18nImportViewsTip={props.i18nImportViewsTip}
+          linkCreateViewHRef={props.linkCreateViewHRef}
+          linkImportViewsHRef={props.linkImportViewsHRef}
+        />
+      )}
+    </PageSection>
   );
 };
