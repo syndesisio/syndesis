@@ -28,7 +28,6 @@ export interface ISelectSourcesPageProps {
   ) => void;
   handleNodeDeselected: (connectionName: string, teiidName: string) => void;
   selectedSchemaNodes: SchemaNodeInfo[];
-  // selectedNodesCount: number;
 }
 
 export const SelectSourcesPage: React.FunctionComponent<

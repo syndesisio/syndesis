@@ -47,12 +47,8 @@ export const DvConnectionCard: React.FunctionComponent<
       onClick={doToggleSelected(props.name)}
     >
       <CardHeader>
-        {props.loading ? (
-          props.dvStatus !== ConnectionStatus.ACTIVE ? (
-            <Spinner loading={true} inline={true} />
-          ) : (
-            <></>
-          )
+        {props.loading && props.dvStatus !== ConnectionStatus.ACTIVE ? (
+          <Spinner loading={true} inline={true} />
         ) : (
           <></>
         )}
