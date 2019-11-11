@@ -30,6 +30,7 @@
 
   <properties>
     <embedded-mongo.version>2.1.2</embedded-mongo.version>
+    <mongodb.version>3.6.4</mongodb.version>
   </properties>
 
   <!--
@@ -47,6 +48,11 @@
         <groupId>de.flapdoodle.embed</groupId>
         <artifactId>de.flapdoodle.embed.process</artifactId>
         <version>${embedded-mongo.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongo-java-driver</artifactId>
+        <version>${mongodb.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

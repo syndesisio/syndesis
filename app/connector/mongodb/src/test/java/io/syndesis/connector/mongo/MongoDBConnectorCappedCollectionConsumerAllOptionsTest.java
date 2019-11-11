@@ -63,7 +63,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
     @Override
     protected List<Step> createSteps() {
-        return fromMongoToMock("result", "io.syndesis.connector:connector-mongodb-consumer", DATABASE, COLLECTION,
+        return fromMongoTailToMock("result", "io.syndesis.connector:connector-mongodb-consumer-tail", DATABASE, COLLECTION,
             "someTrackingId", true, "idTracker",
             "test", "tracking", "someTrackingId");
     }
