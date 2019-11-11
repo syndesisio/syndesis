@@ -27,12 +27,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import io.syndesis.connector.sql.db.Db;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DbMetaDataHelper {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(DbMetaDataHelper.class);
     Db db;
     DatabaseMetaData meta;
     Connection connection;
@@ -158,8 +160,11 @@ public final class DbMetaDataHelper {
                     paramList.add(param);
                 }
             }
-            return paramList;
+        } catch (SQLException e) {
+            LOGGER.warn("Couldn't get output column info. No need to worry, it could be because of the type " +
+                             "of database.", e);
         }
+        return paramList;
     }
 
     @SuppressFBWarnings("OBL_UNSATISFIED_OBLIGATION") // needed for https://github.com/spotbugs/spotbugs/issues/432

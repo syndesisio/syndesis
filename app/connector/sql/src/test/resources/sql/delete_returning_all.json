@@ -1,0 +1,28 @@
+{
+  "inputShape" : {
+    "name" : "SQL Parameter",
+    "description" : "Parameters of SQL [DELETE FROM TEST where charType=:#myCharValue RETURNING *]",
+    "kind" : "json-schema",
+    "type" : "SQL_PARAM_IN",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"myCharValue\":{\"type\":\"string\",\"required\":true}}}",
+    "metadata" : {
+      "variant" : "element"
+    }
+  },
+  "outputShape" : {
+    "name" : "SQL Result",
+    "description" : "Result of SQL [DELETE FROM TEST where charType=:#myCharValue RETURNING *]",
+    "kind" : "json-schema",
+    "type" : "SQL_PARAM_OUT",
+    "specification" : "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"chartype\":{\"type\":\"string\",\"required\":true},\"varchartype\":{\"type\":\"string\",\"required\":true},\"numerictype\":{\"type\":\"number\",\"required\":true},\"decimaltype\":{\"type\":\"number\",\"required\":true},\"smallinttype\":{\"type\":\"integer\",\"required\":true},\"datetype\":{\"type\":\"string\",\"required\":true,\"format\":\"date-time\"},\"timetype\":{\"type\":\"string\",\"required\":true,\"format\":\"date-time\"}}}}",
+    "metadata" : {
+      "variant" : "collection"
+    }
+  },
+  "properties" : {
+    "query" : [ {
+      "displayValue" : "DELETE FROM TEST where charType=:#myCharValue RETURNING *",
+      "value" : "DELETE FROM TEST where charType=:#myCharValue RETURNING *"
+    } ]
+  }
+}

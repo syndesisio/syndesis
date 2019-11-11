@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -70,8 +69,8 @@ public final class JSONBeanUtil {
         final Properties ret = new Properties();
         if (parsed != null) {
             parsed.entrySet().stream()
-                    .filter(e -> e.getKey() != null && e.getValue() != null)
-                    .forEach(e -> ret.put(e.getKey(), e.getValue()));
+                .filter(e -> e.getKey() != null && e.getValue() != null)
+                .forEach(e -> ret.put(e.getKey(), e.getValue()));
         }
         return ret;
     }
@@ -178,18 +177,23 @@ public final class JSONBeanUtil {
 
         if (in.getBody() instanceof List) {
             @SuppressWarnings("unchecked")
-            final List<Map<String, Object>> maps = in.getBody(List.class);
+            final List<Object> maps = (List<Object>)in.getBody(List.class);
 
             if (ObjectHelper.isNotEmpty(maps)) {
-                for (Map<String, Object> map : maps) {
-                    final String bean = JSONBeanUtil.toJSONBean(map);
-                    jsonBeans.add(bean);
+                for (Object map : maps) {
+                    if(map instanceof Map) {
+                        @SuppressWarnings("unchecked")
+                        String jsonBean = JSONBeanUtil.toJSONBean((Map<String, Object>) map);
+                        jsonBeans.add(jsonBean);
+                    } else {
+                        //Failback for DELETE-RETURNING operation
+                        jsonBeans.add(map.toString());
+                    }
                 }
             }
             return jsonBeans;
         } else if (in.getBody() instanceof Map) {
-            @SuppressWarnings("unchecked")
-            final Map<String, Object> singleMap = in.getBody(Map.class);
+            @SuppressWarnings("unchecked") final Map<String, Object> singleMap = in.getBody(Map.class);
 
             if (singleMap != null) {
                 final String bean = JSONBeanUtil.toJSONBean(singleMap);

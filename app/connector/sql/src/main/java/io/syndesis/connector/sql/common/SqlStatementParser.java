@@ -184,6 +184,8 @@ public class SqlStatementParser {
                     dbHelper.getJDBCInfoByColumnNames(
                             null, schema, tableNameDelete, inputParams));
         }
+
+        statementInfo.setOutParams(dbHelper.getOutputColumnInfo(statementInfo.getDefaultedSqlStatement()));
     }
 
     private void parseSelect() throws SQLException  {
