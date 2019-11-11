@@ -37,7 +37,6 @@ install::usage() {
                               Use quotes and start with a space before appending the options.
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
-    --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT
 }
 
@@ -130,17 +129,12 @@ install::run() {
         exit 0
     else
         echo "Deploying syndesis app."
-        if [ $(hasflag --nodev) ] ; then
-            result=$($OPERATOR_BINARY install app)
-        else
-            result=$($OPERATOR_BINARY install app --dev)
-            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
-        fi
+        result=$($OPERATOR_BINARY install app)
         check_error "$result"
     fi
 
     echo "Install finished."
-    if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
+    if [ $(hasflag --watch -w) ] || [ $(hasflag --open -o) ]; then
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
     fi
 
