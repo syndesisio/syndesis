@@ -27,7 +27,6 @@ import de.flapdoodle.embed.mongo.MongodStarter;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
@@ -62,20 +61,15 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     public static void startUpMongo() throws Exception {
         IMongodConfig mongodConfig = new MongodConfigBuilder()
             .version(Version.V3_6_5)
-            .net(new Net(PORT, false))
-            .replication(new Storage(null, "replicationName", 5000))
+            .net(new Net(HOST, PORT, false))
             .build();
-
         mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
         mongodExecutable.start();
-
         initClient();
     }
 
-    private static void initClient() {
+    protected static void initClient() {
         mongoClient = new MongoClient(HOST);
-        // init replica set
-        mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
         createAuthorizationUser();
         database = mongoClient.getDatabase(DATABASE);
         collection = database.getCollection(COLLECTION);
