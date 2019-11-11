@@ -1,36 +1,36 @@
 {
     meta: {
-        createdAt: '2019-08-16T15:06:05.518Z',
-        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        createdAt: '2019-11-11T17:09:25.007Z',
+        host: 'https://syndesis-e2e-tests.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
     req: {
-        url: '/api/v1/public/environments?withUses=true',
+        url: '/api/v1/connections?per_page=50',
         method: 'GET',
         headers: {
-            'sec-fetch-site': 'same-origin',
-            'syndesis-mock-request': '12',
-            'syndesis-mock-session': 'integration.cicd.spec.js',
-            referrerpolicy: 'no-referrer',
             'sec-fetch-mode': 'cors',
+            'sec-fetch-site': 'same-origin',
+            'syndesis-mock-request': '1',
+            'syndesis-mock-session': 'create-connection.spec.js',
+            referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
         },
         body: '',
     },
     res: {
-        status: 200,
+        status: 403,
         headers: {
             'cache-control': [
-                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+                'no-cache, no-store, max-age=0, must-revalidate',
             ],
             'content-length': [
-                '37',
-            ],
-            'content-type': [
-                'application/json',
+                '20',
             ],
             date: [
-                'Fri, 16 Aug 2019 15:06:06 GMT',
+                'Mon, 11 Nov 2019 17:09:25 GMT',
+            ],
+            expires: [
+                '0',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',
@@ -38,14 +38,14 @@
             'gap-upstream-address': [
                 'syndesis-server',
             ],
+            pragma: [
+                'no-cache',
+            ],
             'strict-transport-security': [
                 'max-age=31536000 ; includeSubDomains',
             ],
             'syndesis-xsrf-token': [
                 'awesome',
-            ],
-            'x-application-context': [
-                'application',
             ],
             'x-content-type-options': [
                 'nosniff',
@@ -56,15 +56,13 @@
             'x-xss-protection': [
                 '1; mode=block',
             ],
+            'content-type': [
+                'text/plain; charset=utf-8',
+            ],
             connection: [
                 'close',
             ],
         },
-        body: [
-            {
-                name: 'E2E Test Env 74',
-                uses: 0,
-            },
-        ],
+        body: 'Invalid CORS request',
     },
 }
