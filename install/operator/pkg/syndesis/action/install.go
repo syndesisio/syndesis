@@ -4,10 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"net/url"
 	"os"
+	"regexp"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 
 	"github.com/mcuadros/go-version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
@@ -298,6 +300,8 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 // Checks that the tags from syndesis components is valid between the supported versions
 func checkTags(context *generator.Context) error {
 	c := version.NewConstrainGroupFromString(fmt.Sprintf(">=%s,<%s", context.TagMinor, context.TagMajor))
+	// Allows for pr matching tags for testing images
+	pr := regexp.MustCompile(`[0-9]+-[a-f0-9]{40}$`)
 	var images = []struct {
 		name string
 		tag  string
@@ -308,14 +312,17 @@ func checkTags(context *generator.Context) error {
 		{"s2i", util.TagOf(context.Syndesis.Spec.Components.S2I.Image)},
 	}
 	for _, image := range images {
-		if image.tag != "latest" {
-			if !c.Match(version.Normalize(image.tag)) {
-				return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
-					image.name,
-					image.tag,
-					context.TagMinor,
-					context.TagMajor)
-			}
+		if image.tag == "latest" {
+			continue
+		}
+
+		n := version.Normalize(image.tag)
+		if !c.Match(n) && !pr.MatchString(n) {
+			return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
+				image.name,
+				image.tag,
+				context.TagMinor,
+				context.TagMajor)
 		}
 	}
 

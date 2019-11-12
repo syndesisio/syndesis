@@ -2,6 +2,10 @@ package action
 
 import (
 	"encoding/json"
+	"path/filepath"
+	"strings"
+	"testing"
+
 	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/build"
@@ -10,9 +14,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"path/filepath"
-	"strings"
-	"testing"
 )
 
 const succeed = "\u2713"
@@ -106,6 +107,26 @@ func TestCheckTags(t *testing.T) {
 		if err != nil {
 			t.Fatalf("\t%s\tAll tags are valid but got error: (%v)", failed, err)
 		}
+
+		// Test pr version tags
+		gen.Syndesis.Spec.Components.Server.Image = "test:7013-f64d65024d51c2c3bddb302d2e6ebfdaa0322f8a"
+		err = checkTags(gen)
+		if err != nil {
+			t.Fatalf("\t%s\tAll tags are valid but got error: (%v)", failed, err)
+		}
+
+		gen.Syndesis.Spec.Components.Server.Image = "test:100-f64d65024d51c2c3bddb302d2e6ebfdaa0322f8a"
+		err = checkTags(gen)
+		if err != nil {
+			t.Fatalf("\t%s\tAll tags are valid but got error: (%v)", failed, err)
+		}
+
+		gen.Syndesis.Spec.Components.Server.Image = "test:2-f64d65024d51c2c3bddb302d2e6ebfdaa0322f8a"
+		err = checkTags(gen)
+		if err != nil {
+			t.Fatalf("\t%s\tAll tags are valid but got error: (%v)", failed, err)
+		}
+
 		t.Logf("\t%s\tAll tags are valid.", succeed)
 
 		gen.Syndesis.Spec.Components.Server.Image = "test:1.7"
@@ -120,6 +141,35 @@ func TestCheckTags(t *testing.T) {
 		if err == nil {
 			t.Fatalf("\t%s\tAll tags are valid but server tag [some_invalid_tag has an invalid format], it should fail: (%v)", failed, err)
 		}
+
+		// invalid pr tags
+		gen.Syndesis.Spec.Components.Server.Image = "test:2-f64d65024d51c2"
+		err = checkTags(gen)
+		if err == nil {
+			t.Fatalf("\t%s\tAll tags are valid but server tag [%s has an invalid format], it should fail: (%v)",
+				failed,
+				gen.Syndesis.Spec.Components.Server.Image,
+				err)
+		}
+
+		gen.Syndesis.Spec.Components.Server.Image = "test:2-f64d65024d51c2c3bddb302d2e6ebfdaa0322f8amorechars"
+		err = checkTags(gen)
+		if err == nil {
+			t.Fatalf("\t%s\tAll tags are valid but server tag [%s has an invalid format], it should fail: (%v)",
+				failed,
+				gen.Syndesis.Spec.Components.Server.Image,
+				err)
+		}
+
+		gen.Syndesis.Spec.Components.Server.Image = "test:x-f64d65024d51c2c3bddb302d2e6ebfdaa0322f8a"
+		err = checkTags(gen)
+		if err == nil {
+			t.Fatalf("\t%s\tAll tags are valid but server tag [%s has an invalid format], it should fail: (%v)",
+				failed,
+				gen.Syndesis.Spec.Components.Server.Image,
+				err)
+		}
+
 		t.Logf("\t%s\tAll tags are valid but server tag [some_invalid_tag has an invalid format], and it should fail.", succeed)
 	}
 }
