@@ -216,7 +216,7 @@
           - name: POSTGRESQL_PASSWORD
             value: {{.Syndesis.Components.Database.Password}}
           - name: POSTGRESQL_DATABASE
-            value: {{.Syndesis.Components.Database.Database}}
+            value: {{.Syndesis.Components.Database.Name}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: {{.Syndesis.Components.Database.SampledbPassword}}
           image: ' '

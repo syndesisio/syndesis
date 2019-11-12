@@ -87,6 +87,8 @@
                 fieldPath: metadata.name
           - name: OPERATOR_NAME
             value: "syndesis-operator"
+          - name: DEV_SUPPORT
+            value: "{{.DevSupport}}"
     triggers:
     - imageChangeParams:
         automatic: true

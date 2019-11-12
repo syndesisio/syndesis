@@ -54,9 +54,9 @@ func TestGenerator(t *testing.T) {
 					},
 				},
 				Database: v1alpha1.DatabaseConfiguration{
-					User:     "syndesis",
-					Database: "syndesis",
-					URL:      "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
+					User: "syndesis",
+					Name: "syndesis",
+					URL:  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
 					Resources: v1alpha1.ResourcesWithVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",

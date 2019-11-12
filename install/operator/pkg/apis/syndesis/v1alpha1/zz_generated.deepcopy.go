@@ -30,6 +30,7 @@ func (in *AddonsSpec) DeepCopyInto(out *AddonsSpec) {
 	out.Jaeger = in.Jaeger
 	out.Ops = in.Ops
 	out.Todo = in.Todo
+	out.Knative = in.Knative
 	out.DV = in.DV
 	out.CamelK = in.CamelK
 	return

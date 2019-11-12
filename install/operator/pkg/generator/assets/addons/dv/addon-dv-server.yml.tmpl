@@ -67,7 +67,7 @@
           - name: POSTGRESQL_USER
             value: {{.Syndesis.Components.Database.User}}
           - name: POSTGRESQL_DATABASE
-            value: {{.Syndesis.Components.Database.Database}}
+            value: {{.Syndesis.Components.Database.Name}}
           - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
             value: '{{.Syndesis.Components.Server.Features.ManagementUrlFor3scale}}'
 {{if .DevSupport}}

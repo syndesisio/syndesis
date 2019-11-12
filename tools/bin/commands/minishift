@@ -142,7 +142,12 @@ minishift::run() {
 
         # Deploy operator
         echo "Deploying Syndesis operator"
-        result=$($OPERATOR_BINARY install operator)
+        if [ $(hasflag --nodev) ] ; then
+            result=$($OPERATOR_BINARY install operator)
+        else
+            result=$($OPERATOR_BINARY install operator --dev)
+            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
+        fi
         check_error "$result"
 
         # Deploy Camel-K operator if requested
@@ -164,12 +169,7 @@ minishift::run() {
             exit 0
         else
             echo "Deploying syndesis app."
-            if [ $(hasflag --nodev) ] ; then
-                result=$($OPERATOR_BINARY install app)
-            else
-                result=$($OPERATOR_BINARY install app --dev)
-                echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
-            fi
+            result=$($OPERATOR_BINARY install app)
             check_error "$result"
         fi
 

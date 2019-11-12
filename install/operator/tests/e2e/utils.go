@@ -72,9 +72,9 @@ func CreateCR(name string, namespace string) *v1alpha1.Syndesis {
 		Spec: v1alpha1.SyndesisSpec{
 			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DatabaseConfiguration{
-					Image:    "postgresql:9.5",
-					User:     "syndesis",
-					Database: "syndesis",
+					Image: "postgresql:9.5",
+					User:  "syndesis",
+					Name:  "syndesis",
 					Resources: v1alpha1.ResourcesWithVolume{
 						Resources:      v1alpha1.Resources{},
 						VolumeCapacity: "512Mi",

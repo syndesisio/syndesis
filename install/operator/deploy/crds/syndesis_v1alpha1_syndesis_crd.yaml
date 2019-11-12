@@ -59,6 +59,11 @@ spec:
                     samplerType:
                       type: string
                   type: object
+                knative:
+                  properties:
+                    enabled:
+                      type: boolean
+                  type: object
                 ops:
                   properties:
                     enabled:

@@ -49,7 +49,7 @@ Syndesis:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
         Database:
-            Database: "syndesis"
+            Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
             ImageStreamNamespace: "openshift"

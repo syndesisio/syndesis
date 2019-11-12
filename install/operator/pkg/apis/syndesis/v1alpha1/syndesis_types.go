@@ -80,7 +80,7 @@ type DvConfiguration struct {
 
 type DatabaseConfiguration struct {
 	User          string              `json:"user,omitempty"`
-	Database      string              `json:"database,omitempty"`
+	Name          string              `json:"name,omitempty"`
 	URL           string              `url:"url,omitempty"`
 	ExternalDbURL string              `json:"externalDbURL,omitempty"`
 	Resources     ResourcesWithVolume `json:"resources,omitempty"`

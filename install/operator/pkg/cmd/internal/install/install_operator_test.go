@@ -43,7 +43,7 @@ func TestInstallOperator(t *testing.T) {
 	}
 
 	ctx := context.TODO()
-	i := &Install{Options: &internal.Options{Namespace: ns, Context: ctx}, tag: tag}
+	i := &Install{Options: &internal.Options{Namespace: ns, Context: ctx}, tag: tag, devSupport: false}
 
 	s := scheme.Scheme
 	if err := v12.AddToScheme(s); err != nil {

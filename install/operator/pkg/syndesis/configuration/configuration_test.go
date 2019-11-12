@@ -58,7 +58,7 @@ func Test_loadFromFile(t *testing.T) {
 	}
 }
 
-func Test_setImagesFromEnv(t *testing.T) {
+func Test_setConfigFromEnv(t *testing.T) {
 	tests := []struct {
 		name    string
 		conf    *Config
@@ -71,6 +71,7 @@ func Test_setImagesFromEnv(t *testing.T) {
 			want: &Config{
 				Productized: true,
 				ProductName: "something",
+				DevSupport:  false,
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
@@ -96,6 +97,7 @@ func Test_setImagesFromEnv(t *testing.T) {
 			conf: &Config{
 				Productized: true,
 				ProductName: "something",
+				DevSupport:  true,
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
@@ -121,7 +123,7 @@ func Test_setImagesFromEnv(t *testing.T) {
 			env: []string{
 				"PSQL_IMAGE", "S2I_IMAGE", "OPERATOR_IMAGE", "UI_IMAGE", "SERVER_IMAGE",
 				"META_IMAGE", "DV_IMAGE", "OAUTH_IMAGE", "PROMETHEUS_IMAGE", "UPGRADE_IMAGE",
-				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE",
+				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT",
 			},
 			wantErr: false,
 		},
@@ -139,7 +141,7 @@ func Test_setImagesFromEnv(t *testing.T) {
 				os.Setenv(img, img)
 			}
 
-			err := tt.conf.setImagesFromEnv()
+			err := tt.conf.setConfigFromEnv()
 			if (err != nil) != tt.wantErr {
 				t.Errorf("loadFromFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -350,7 +352,7 @@ func getConfigLiteral() *Config {
 					ImageStreamNamespace: "openshift",
 					Image:                "postgresql:9.6",
 					User:                 "syndesis",
-					Database:             "syndesis",
+					Name:                 "syndesis",
 					URL:                  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
 					Exporter:             ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
 					Resources: ResourcesWithVolume{
@@ -371,5 +373,40 @@ func getConfigLiteral() *Config {
 				},
 			},
 		},
+	}
+}
+
+func Test_setBoolFromEnv(t *testing.T) {
+	type args struct {
+		env     string
+		current bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want bool
+		env  map[string]string
+	}{
+		{"With no env, false value should stay false", args{"NOT_EXISTING_ENV", false}, false, map[string]string{}},
+		{"With no env, true value should stay true", args{"NOT_EXISTING_ENV", true}, true, map[string]string{}},
+		{"With env set to true, a value of true should stay true", args{"EXISTING_ENV", true}, true, map[string]string{"EXISTING_ENV": "true"}},
+		{"With env set to true, a value of false should change to true", args{"EXISTING_ENV", false}, true, map[string]string{"EXISTING_ENV": "true"}},
+		{"With env set to false, a value of true should change to false", args{"EXISTING_ENV", true}, false, map[string]string{"EXISTING_ENV": "false"}},
+		{"With env set to false, a value of false should stay false", args{"EXISTING_ENV", false}, false, map[string]string{"EXISTING_ENV": "false"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.env {
+				os.Setenv(k, v)
+			}
+
+			if got := setBoolFromEnv(tt.args.env, tt.args.current); got != tt.want {
+				t.Errorf("setBoolFromEnv() = %v, want %v", got, tt.want)
+			}
+
+			for k, _ := range tt.env {
+				os.Unsetenv(k)
+			}
+		})
 	}
 }
