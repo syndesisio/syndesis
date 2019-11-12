@@ -18,6 +18,7 @@ package io.syndesis.connector.mongo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.model.CreateCollectionOptions;
@@ -100,6 +101,6 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
         collection.insertOne(doc3);
 
         // Then
-        mock.assertIsSatisfied();
+        MockEndpoint.assertIsSatisfied(5, TimeUnit.SECONDS, mock);
     }
 }

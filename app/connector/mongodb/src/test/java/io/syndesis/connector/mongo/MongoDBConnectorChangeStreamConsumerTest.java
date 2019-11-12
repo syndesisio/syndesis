@@ -109,6 +109,6 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
         doc2.append("test", "junit2");
         collection.insertOne(doc2);
         // Then
-        mock.assertIsSatisfied(5, TimeUnit.SECONDS);
+        MockEndpoint.assertIsSatisfied(5, TimeUnit.SECONDS, mock);
     }
 }
