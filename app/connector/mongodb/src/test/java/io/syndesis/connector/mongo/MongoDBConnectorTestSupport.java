@@ -28,7 +28,6 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.distribution.Version;
-import de.flapdoodle.embed.process.runtime.Network;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
@@ -60,31 +59,17 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     @BeforeClass
     public static void startUpMongo() throws Exception {
-        // Single embedded host configuration
-        IMongodConfig mongodConfig = new MongodConfigBuilder().version(Version.V3_6_5)
-            .net(new Net(HOST, PORT, Network.localhostIsIPv6())).build();
-        MongodStarter starter = MongodStarter.getDefaultInstance();
-        mongodExecutable = starter.prepare(mongodConfig);
-
-        // Clustered configuration
-        // TODO check how to enable cluster without MVN fork error
-        /*IMongodConfig mongodConfig = new MongodConfigBuilder()
-            .version(PRODUCTION)
-            .net(new Net(PORT, localhostIsIPv6()))
-            .replication(new Storage(null, "replicationName", 5000))
+        IMongodConfig mongodConfig = new MongodConfigBuilder()
+            .version(Version.V3_6_5)
+            .net(new Net(HOST, PORT, false))
             .build();
-
         mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
-         */
         mongodExecutable.start();
-
         initClient();
     }
 
-    private static void initClient() {
+    protected static void initClient() {
         mongoClient = new MongoClient(HOST);
-        // init replica set
-        // mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
         createAuthorizationUser();
         database = mongoClient.getDatabase(DATABASE);
         collection = database.getCollection(COLLECTION);
@@ -136,12 +121,12 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
             }));
     }
 
-    protected List<Step> fromMongoToMock(String mock, String connector, String db, String collection,
+    protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
                                          String tailTrackIncreasingField) {
-        return this.fromMongoToMock(mock, connector, db, collection, tailTrackIncreasingField, null, null, null, null, null);
+        return this.fromMongoTailToMock(mock, connector, db, collection, tailTrackIncreasingField, null, null, null, null, null);
     }
 
-    protected List<Step> fromMongoToMock(String mock, String connector, String db, String collection,
+    protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
                                          String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
                                          String tailTrackDb, String tailTrackCollection, String tailTrackField) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
@@ -167,6 +152,17 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
             if (tailTrackField != null) {
                 builder.putConfiguredProperty("tailTrackField", tailTrackField);
             }
+        }), newSimpleEndpointStep("mock", builder -> builder.putConfiguredProperty("name", mock)));
+    }
+
+    protected List<Step> fromMongoChangeStreamToMock(String mock, String connector, String db, String collection) {
+        return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
+            builder.putConfiguredProperty("host", String.format("%s:%s", HOST, PORT));
+            builder.putConfiguredProperty("user", USER);
+            builder.putConfiguredProperty("password", PASSWORD);
+            builder.putConfiguredProperty("adminDB", ADMIN_DB);
+            builder.putConfiguredProperty("database", db);
+            builder.putConfiguredProperty("collection", collection);
         }), newSimpleEndpointStep("mock", builder -> builder.putConfiguredProperty("name", mock)));
     }
 }

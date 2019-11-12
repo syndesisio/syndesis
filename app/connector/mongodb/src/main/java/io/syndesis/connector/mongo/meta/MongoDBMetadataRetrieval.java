@@ -39,8 +39,7 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
         String datashapeName = String.format("%s.%s", properties.get("database"), properties.get("collection"));
         DataShape schema;
         if (defaultMeta.equals(metadata)) {
-            // no metadata provided, just return an empty result
-            LOGGER.info("Was not able to retrieve metadata. Likely the collection {} has no schema validator associated!", datashapeName);
+            // no metadata provided, just return a ANY datashape to allow user add his own
             schema = MongoDBMetadataRetrieval.any(datashapeName);
         } else {
             String jsonPayload = metadata.getPayload(String.class);
@@ -69,7 +68,7 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
             return SyndesisMetadata.of(MongoDBMetadataRetrieval.criteria(), schema);
         } else if (actionId.endsWith("insert")) {
             return SyndesisMetadata.of(schema);
-        } else if (actionId.endsWith("consumer")) {
+        } else if (actionId.contains("consumer")) {
             return SyndesisMetadata.outOnly(schema);
         } else {
             throw new IllegalArgumentException(String.format("Could not find any dynamic metadata adaptation for action %s", actionId));

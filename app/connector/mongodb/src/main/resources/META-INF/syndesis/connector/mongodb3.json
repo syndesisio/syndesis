@@ -294,6 +294,9 @@
       "description": "Document tailing",
       "descriptor": {
         "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "consumerType": "tailable"
+        },
         "connectorCustomizers": [
           "io.syndesis.connector.mongo.MongoConsumerCustomizer"
         ],
@@ -403,8 +406,54 @@
           }
         ]
       },
-      "id": "io.syndesis.connector:connector-mongodb-consumer",
-      "name": "Retrieve documents",
+      "id": "io.syndesis.connector:connector-mongodb-consumer-tail",
+      "name": "Retrieve documents (tail)",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Document change stream",
+      "descriptor": {
+        "componentScheme": "mongodb3",
+        "configuredProperties": {
+          "consumerType": "changeStreams"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoConsumerCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Change stream consumer configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection to read documents from",
+                "order": "1",
+                "placeholder": "collection",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-consumer-changestream",
+      "name": "Retrieve documents (stream)",
       "pattern": "From",
       "tags": [
         "dynamic"
