@@ -67,7 +67,7 @@ export default {
             },
             state: {
               virtualization,
-              viewDefinition
+              viewDefinition,
             },
           })
         ),
@@ -105,6 +105,17 @@ export default {
         ),
       },
     },
+    details: makeResolver<{ virtualization: Virtualization }>(
+      routes.virtualizations.virtualization.details,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.name,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
     sqlClient: makeResolver<{ virtualization: Virtualization }>(
       routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({

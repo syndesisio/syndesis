@@ -31,6 +31,7 @@
   "deleteViewSuccess": "Visualizza \"{{name}}\" è stato eliminato.",
   "deleteVirtualizationFailed": "Elimina virtualizzazione \"{{name}}\" non riuscita. Dettagli: {{details}}",
   "descriptionPlaceholder": "Inserisci una descrizione ...",
+  "details": "Dettagli",
   "editDataVirtualizationTip": "Modifica la virtualizzazione dei dati",
   "emptyStateInfoMessage": "TNon ci sono virtualizzazioni disponibili. Fai clic sul pulsante in basso per crearne uno.",
   "emptyStateTitle": "$t(createDataVirtualization)",

@@ -155,7 +155,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
             helpers.isSortAscending
           );
           return (
-            <PageSection variant={'light'} noPadding={true}>
+            <PageSection>
               <WithLoader
                 error={error !== false}
                 loading={!hasData}
@@ -197,9 +197,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                         const doDelete = async (
                           virtId: string
                         ): Promise<void> => {
-                          await deleteVirtualization(
-                            virtId
-                          ).catch((e: any) => {
+                          await deleteVirtualization(virtId).catch((e: any) => {
                             pushNotification(
                               t('deleteVirtualizationFailed', {
                                 details: e.errorMessage || e.message || e,
@@ -225,43 +223,44 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             throw e;
                           }
 
-                          await publishVirtualization(
-                            virtId
-                          ).catch((e: any) => {
-                            pushNotification(
-                              t('publishVirtualizationFailed', {
-                                details: e.errorMessage || e.message || error,
-                                name: virtId,
-                              }),
-                              'error'
-                            );
-                            throw e;
-                          });
-                        };
-                        const doUnpublish = async (
-                          virtId: string
-                        ): Promise<void> => {
-                          await unpublishVirtualization(
-                            virtId
-                          ).catch((e: any) => {
-                            if (e.name === 'AlreadyUnpublished') {
+                          await publishVirtualization(virtId).catch(
+                            (e: any) => {
                               pushNotification(
-                                t('unpublishedVirtualization', {
-                                  name: virtId,
-                                }),
-                                'info'
-                              );
-                            } else {
-                              pushNotification(
-                                t('unpublishVirtualizationFailed', {
+                                t('publishVirtualizationFailed', {
                                   details: e.errorMessage || e.message || error,
                                   name: virtId,
                                 }),
                                 'error'
                               );
+                              throw e;
                             }
-                            throw e;
-                          });
+                          );
+                        };
+                        const doUnpublish = async (
+                          virtId: string
+                        ): Promise<void> => {
+                          await unpublishVirtualization(virtId).catch(
+                            (e: any) => {
+                              if (e.name === 'AlreadyUnpublished') {
+                                pushNotification(
+                                  t('unpublishedVirtualization', {
+                                    name: virtId,
+                                  }),
+                                  'info'
+                                );
+                              } else {
+                                pushNotification(
+                                  t('unpublishVirtualizationFailed', {
+                                    details:
+                                      e.errorMessage || e.message || error,
+                                    name: virtId,
+                                  }),
+                                  'error'
+                                );
+                              }
+                              throw e;
+                            }
+                          );
                         };
                         const isProgressWithLink = isPublishStep(
                           publishingDetails
