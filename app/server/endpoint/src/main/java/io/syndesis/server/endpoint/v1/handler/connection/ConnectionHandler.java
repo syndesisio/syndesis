@@ -110,7 +110,7 @@ public class ConnectionHandler
 
             // set the connector
             DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId())
-                .ifPresent(connector -> encryptConfiguredProperties(builder, connector));
+                .ifPresent(builder::connector);
 
             // set the board
             DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
@@ -134,7 +134,7 @@ public class ConnectionHandler
 
         // set the connector
         DataManagerSupport.fetch(dataManager, Connector.class, connection.getConnectorId())
-            .ifPresent(connector -> encryptConfiguredProperties(builder, connector));
+            .ifPresent(builder::connector);
 
         // set the board
         DataManagerSupport.fetchBoard(dataManager, ConnectionBulletinBoard.class, id).ifPresent(builder::board);
@@ -238,14 +238,6 @@ public class ConnectionHandler
     @Override
     public Validator getValidator() {
         return validator;
-    }
-
-    private void encryptConfiguredProperties(ConnectionOverview.Builder builder, Connector connector) {
-        Map<String, String> configuredProperties = connector.getConfiguredProperties();
-        configuredProperties = encryptionComponent.encryptPropertyValues(configuredProperties, connector.getProperties());
-        Connector.Builder connectorBuilder = new Connector.Builder().createFrom(connector)
-            .configuredProperties(configuredProperties);
-        builder.connector(connectorBuilder.build());
     }
 
 }
