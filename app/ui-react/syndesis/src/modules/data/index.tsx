@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import {
   VirtualizationCreatePage,
+  VirtualizationDetailsPage,
   VirtualizationImportPage,
   VirtualizationsPage,
   VirtualizationSqlClientPage,
@@ -64,6 +65,11 @@ export class DataModule extends React.Component {
             path={routes.virtualizations.virtualization.sqlClient}
             exact={true}
             component={VirtualizationSqlClientPage}
+          />
+          <Route
+            path={routes.virtualizations.virtualization.details}
+            exact={true}
+            component={VirtualizationDetailsPage}
           />
         </Switch>
       </>

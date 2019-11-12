@@ -18,7 +18,8 @@ export interface IVirtualizationNavBarProps {
  * A component that displays a nav bar with 4 items:
  *
  * 1. a link to the page that displays a list of Views
- * 2. a link to the page that displays the SQL Query editor
+ * 2. a link to the page that displays the virtualization state and history
+ * 3. a link to the page that displays the SQL Query editor
  *
  */
 export const VirtualizationNavBar: React.FunctionComponent<
@@ -33,6 +34,12 @@ export const VirtualizationNavBar: React.FunctionComponent<
         <TabBarItem
           label={t('views')}
           to={resolvers.virtualizations.views.root({
+            virtualization,
+          })}
+        />
+        <TabBarItem
+          label={t('details')}
+          to={resolvers.virtualizations.details({
             virtualization,
           })}
         />
