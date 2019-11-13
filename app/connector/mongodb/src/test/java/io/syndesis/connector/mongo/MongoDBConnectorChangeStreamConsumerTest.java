@@ -15,9 +15,10 @@
  */
 package io.syndesis.connector.mongo;
 
+import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.BasicDBList;
 import com.mongodb.MongoClient;
 import de.flapdoodle.embed.mongo.MongodExecutable;
@@ -28,7 +29,9 @@ import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import io.syndesis.common.model.integration.Step;
+import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -68,8 +71,6 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
         initCluster();
         initClient();
-        //Create a collection needed by this test
-        database.createCollection(COLLECTION);
     }
 
     private static void initCluster() {
@@ -84,6 +85,8 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
         config.put("members", members);
         mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", config));
         database = mongoClient.getDatabase(DATABASE);
+        //Create a collection needed by this test
+        database.createCollection(COLLECTION);
         collection = database.getCollection(COLLECTION);
     }
 
@@ -98,7 +101,21 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
     public void singleInsertTest() throws Exception {
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
+        mock.setRetainLast(1);
         mock.expectedMessageCount(2);
+        mock.expectedMessagesMatches((Exchange e) -> {
+            try {
+                // We just want to validate the output is coming as json well format
+                @SuppressWarnings("unchecked")
+                List<String> doc = e.getMessage().getBody(List.class);
+                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+                Assertions.assertThat(jsonNode).isNotNull();
+                Assertions.assertThat(jsonNode.get("test").asText()).isEqualTo("junit2");
+            } catch (IOException ex) {
+                return false;
+            }
+            return true;
+        });
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");
@@ -109,6 +126,6 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
         doc2.append("test", "junit2");
         collection.insertOne(doc2);
         // Then
-        MockEndpoint.assertIsSatisfied(5, TimeUnit.SECONDS, mock);
+        mock.assertIsSatisfied();
     }
 }
