@@ -21,6 +21,8 @@ dev::usage() {
     --debug <name>            Setup a port forwarding to <name> pod (default: server)
     --cookie                  Loads a local valid cookie to access Syndesis APIs when using Minishift
     --cleanup                 Removes 'Completed' pods
+    --cleanup --nuke          Remove all Syndesis created OpenShift objects and remove all data from the database
+                              (both switches need to be specified)
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
     --update-manifest <name>  Updates the json manifest for the given connector
@@ -167,6 +169,7 @@ dev::run() {
             oc delete pods $old_pods
         fi
         echo -e -n 'done\nRemoving stale builds...'
+        set +e # we might not have system:admin privileges
         oc --as system:admin adm prune builds --confirm
         echo -e -n 'done\nRemoving stale deployments...'
         oc --as system:admin adm prune deployments --confirm
@@ -195,7 +198,16 @@ dev::run() {
                 oc --as system:admin delete $img;
             done
         fi
+        set -e
 
+        if [ $(hasflag --nuke) ]; then
+            # truncate jsondb and data_virtualization tables
+            oc exec -c postgresql $(oc get pod -l 'syndesis.io/component=syndesis-db' --no-headers=true -o=custom-columns=x:.metadata.name) -- bash -c "echo 'TRUNCATE jsondb; TRUNCATE config; TRUNCATE filestore; TRUNCATE data_virtualization CASCADE; VACUUM FULL ANALYSE;' |psql -U syndesis"
+            # restart syndesis-server pod
+            oc delete $(oc get pod -l 'syndesis.io/component=syndesis-server' -o name)
+            # delete all syndesis and datavirt deployed objects
+            oc delete $(oc get all -o name |grep -E '^[^/]+/(i-|dv-)')
+        fi
 
         echo done
     elif [ $(hasflag --update-manifest) ]; then
