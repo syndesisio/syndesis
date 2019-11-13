@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { text } from '@storybook/addon-knobs';
+import { boolean, text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -108,6 +108,7 @@ const virtItem = [
     i18nPublishLogUrlText={publishLogUrlText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
+    modified={boolean('modified', false)}
     onDelete={action(deleteText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
@@ -145,6 +146,7 @@ const virtualizationItems = [
     i18nPublishLogUrlText={publishLogUrlText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
+    modified={boolean('modified', false)}
     onDelete={action(deleteText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
@@ -178,6 +180,7 @@ const virtualizationItems = [
     i18nPublishLogUrlText={publishLogUrlText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
+    modified={boolean('modified', false)}
     onDelete={action(deleteText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
@@ -210,6 +213,7 @@ const virtualizationItems = [
     i18nPublishLogUrlText={publishLogUrlText}
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
+    modified={boolean('modified', false)}
     onDelete={action(deleteText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}

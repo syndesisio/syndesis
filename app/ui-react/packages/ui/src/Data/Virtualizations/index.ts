@@ -1,3 +1,4 @@
+export * from './Details';
 export * from './Metrics';
 export * from './Views';
 export * from './ViewEditor';

@@ -44,9 +44,10 @@ export interface IVirtualizationListItemProps {
    */
   labelType: 'danger' | 'primary' | 'default';
   /**
-   * The publish state returned from the backend.
+   * The publish state and version returned from the backend.
    */
   currentPublishedState: VirtualizationPublishState;
+  currentPublishedVersion?: number;
   detailsPageLink: H.LocationDescriptor;
   hasViews: boolean;
   i18nCancelText: string;
@@ -63,6 +64,7 @@ export interface IVirtualizationListItemProps {
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
   icon?: string;
+  modified: boolean;
   odataUrl?: string;
 
   /**
@@ -100,7 +102,9 @@ export const VirtualizationListItem: React.FunctionComponent<
     false
   );
   const [labelType, setLabelType] = React.useState(props.labelType);
-  const [publishStateText, setPublishStateText] = React.useState(props.i18nPublishState);
+  const [publishStateText, setPublishStateText] = React.useState(
+    props.i18nPublishState
+  );
   const [working, setWorking] = React.useState(false);
 
   React.useEffect(() => {
@@ -108,9 +112,9 @@ export const VirtualizationListItem: React.FunctionComponent<
 
     if (props.i18nPublishState) {
       if (
-        props.currentPublishedState !== NOTFOUND
-        && props.currentPublishedState !== RUNNING
-        && props.currentPublishedState !== FAILED
+        props.currentPublishedState !== NOTFOUND &&
+        props.currentPublishedState !== RUNNING &&
+        props.currentPublishedState !== FAILED
       ) {
         changeText = false;
       }
@@ -121,9 +125,9 @@ export const VirtualizationListItem: React.FunctionComponent<
     }
 
     setWorking(
-      props.currentPublishedState !== NOTFOUND
-      && props.currentPublishedState !== RUNNING
-      && props.currentPublishedState !== FAILED
+      props.currentPublishedState !== NOTFOUND &&
+        props.currentPublishedState !== RUNNING &&
+        props.currentPublishedState !== FAILED
     );
   }, [props.i18nPublishState, props.currentPublishedState]);
 
@@ -160,7 +164,7 @@ export const VirtualizationListItem: React.FunctionComponent<
 
   const doExport = () => {
     props.onExport(props.virtualizationName);
-  }
+  };
 
   const doPublish = async () => {
     setWorking(true);
@@ -168,14 +172,11 @@ export const VirtualizationListItem: React.FunctionComponent<
     const saveLabelType = labelType;
     setLabelType('default');
     setPublishStateText(props.i18nPublishInProgressText);
-    await props.onPublish(
-      props.virtualizationName,
-      props.hasViews
-    ).catch(() => {
-      // restore previous values
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-    });
+    await props.onPublish(props.virtualizationName, props.hasViews).catch(() => {
+        // restore previous values
+        setPublishStateText(saveText);
+        setLabelType(saveLabelType);
+      });
     setWorking(false);
   };
 
@@ -243,8 +244,10 @@ export const VirtualizationListItem: React.FunctionComponent<
             <PublishStatusWithProgress
               isProgressWithLink={props.isProgressWithLink}
               i18nPublishState={publishStateText}
-              labelType={labelType}
               i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+              labelType={labelType}
+              modified={props.modified}
+              publishVersion={props.currentPublishedVersion}
               publishingCurrentStep={props.publishingCurrentStep}
               publishingLogUrl={props.publishingLogUrl}
               publishingTotalSteps={props.publishingTotalSteps}

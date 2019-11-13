@@ -1,5 +1,8 @@
 import { useVirtualizationHelpers } from '@syndesis/api';
-import { Virtualization, VirtualizationPublishingDetails } from '@syndesis/models';
+import {
+  Virtualization,
+  VirtualizationPublishingDetails,
+} from '@syndesis/models';
 import {
   IVirtualizationAction,
   PageSection,
@@ -108,7 +111,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<
    * State for the virtualization description.
    */
   const [description, setDescription] = React.useState(() => {
-    if (props.routeState.virtualization && props.routeState.virtualization.description) {
+    if (
+      props.routeState.virtualization &&
+      props.routeState.virtualization.description
+    ) {
       return props.routeState.virtualization.description;
     }
 
@@ -132,7 +138,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   /**
    * State identifying the type that should be used by labels.
    */
-  const [labelType, setLabelType] = React.useState('default' as 'danger' | 'primary' | 'default');
+  const [labelType, setLabelType] = React.useState('default' as
+    | 'danger'
+    | 'primary'
+    | 'default');
 
   /**
    * State for the user-friendly text of the current published state.
@@ -191,7 +200,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<
     const previous = description;
     setDescription(newDescription); // this sets InlineTextEdit component to new value
     try {
-      await updateVirtualizationDescription(props.virtualization.name, newDescription);
+      await updateVirtualizationDescription(
+        props.virtualization.name,
+        newDescription
+      );
       return true;
     } catch {
       pushNotification(
@@ -218,7 +230,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<
       return props.virtualization.description;
     }
 
-    if (props.routeState.virtualization && props.routeState.virtualization.description) {
+    if (
+      props.routeState.virtualization &&
+      props.routeState.virtualization.description
+    ) {
       return props.routeState.virtualization.description;
     }
 
@@ -270,7 +285,11 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           virtualizationName={props.routeParams.virtualizationId}
         />
       </PageSection>
-      <PageSection className={'virtualization-sql-client-page'} variant={'light'} noPadding={true}>
+      <PageSection
+        className={'virtualization-sql-client-page'}
+        variant={'light'}
+        noPadding={true}
+      >
         <VirtualizationDetailsHeader
           isProgressWithLink={isProgressWithLink}
           i18nPublishState={publishStateText}
@@ -278,8 +297,12 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nInUseText={getUsedByMessage()}
           i18nPublishLogUrlText={t('shared:viewLogs')}
-          odataUrl={getOdataUrl(props.virtualization || props.routeState.virtualization)}
+          modified={props.virtualization.modified}
+          odataUrl={getOdataUrl(
+            props.virtualization || props.routeState.virtualization
+          )}
           publishedState={currPublishedState.state}
+          publishedVersion={props.virtualization.publishedRevision}
           publishingCurrentStep={currPublishedState.stepNumber}
           publishingLogUrl={currPublishedState.logUrl}
           publishingTotalSteps={currPublishedState.stepTotal}

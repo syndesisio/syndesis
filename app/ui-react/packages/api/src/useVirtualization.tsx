@@ -19,6 +19,7 @@ export const useVirtualization = (
       description: '',
       empty: true,
       id: '',
+      modified: true,
       name: '',
       publishedState: 'NOTFOUND',
       serviceViewModel: '',

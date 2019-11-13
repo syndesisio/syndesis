@@ -1,5 +1,5 @@
 import { Bullseye } from '@patternfly/react-core';
-import { withKnobs } from '@storybook/addon-knobs';
+import { boolean, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { VirtualizationDetailsHeader } from '../../../src';
@@ -36,12 +36,14 @@ stories
     <Bullseye style={{ margin: 100 }}>
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
-        i18nPublishState={'Published'}
+        i18nPublishState={'Running'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        modified={boolean('modified', false)}
         publishedState={'RUNNING'}
+        publishedVersion={3}
         virtualizationName={virtualizationName}
         isWorking={false}
         onChangeDescription={changeDescription}
@@ -58,6 +60,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        modified={boolean('modified', false)}
         publishedState={'NOTFOUND'}
         virtualizationName={virtualizationName}
         virtualizationDescription={virtualizationDescription}
@@ -76,7 +79,9 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
+        modified={boolean('modified', false)}
         publishedState={'SUBMITTED'}
+        publishedVersion={3}
         virtualizationName={virtualizationName}
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
@@ -93,7 +98,9 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
+        modified={boolean('modified', false)}
         publishedState={'CONFIGURING'}
+        publishedVersion={3}
         publishingCurrentStep={publishStepConfiguring.stepNumber}
         publishingLogUrl={publishLogUrl}
         publishingTotalSteps={4}
@@ -114,7 +121,9 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
+        modified={boolean('modified', false)}
         publishedState={'BUILDING'}
+        publishedVersion={3}
         publishingCurrentStep={publishStepBuilding.stepNumber}
         publishingLogUrl={publishLogUrl}
         publishingTotalSteps={4}
@@ -135,7 +144,9 @@ stories
         i18nPublishLogUrlText={'View Logs'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
+        modified={boolean('modified', false)}
         publishedState={'DEPLOYING'}
+        publishedVersion={3}
         publishingCurrentStep={publishStepDeploying.stepNumber}
         publishingLogUrl={publishLogUrl}
         publishingTotalSteps={4}
@@ -156,7 +167,9 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        modified={boolean('modified', false)}
         publishedState={'RUNNING'}
+        publishedVersion={3}
         odataUrl={'http://odataUrl.com'}
         virtualizationName={virtualizationName}
         virtualizationDescription={virtualizationDescription}
