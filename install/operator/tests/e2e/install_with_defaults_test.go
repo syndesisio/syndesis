@@ -18,16 +18,15 @@ package e2e
 
 import (
 	goctx "context"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"testing"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/util/wait"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 
 	"golang.org/x/net/context"
 	"sigs.k8s.io/controller-runtime/pkg/client"
