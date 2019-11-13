@@ -5,16 +5,14 @@
       app: camel-k
     name: camel-k
   spec:
-    {{- if (eq (or .Syndesis.Spec.Addons.knative.enabled "false") "true") }}
+    {{- if .Syndesis.Addons.Knative.Enabled }}
     profile: Knative
     {{- end}}
     build:
-      {{- if .Syndesis.Spec.Addons.camelk.image}}
-      baseImage: '{{.Syndesis.Spec.Addons.camelk.image}}'
-      {{- end}}
+      baseImage: '{{ .Syndesis.Addons.CamelK.Image }}'
       {{- if (not .Productized)}}
-      camelVersion: {{.Versions.Camel}}
-      runtimeVersion: {{.Versions.CamelKRuntime}}
+      camelVersion: {{.Syndesis.Addons.CamelK.CamelVersion}}
+      runtimeVersion: {{.Syndesis.Addons.CamelK.CamelKRuntime}}
       {{- end}}
       maven:
         settings:

@@ -28,7 +28,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	conf "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -44,70 +43,164 @@ var exceptionalItems = []string{
 	"MAX_INTEGRATIONS_PER_USER",
 }
 
+type ConfigSpec struct {
+	Value       string `json:"value"`
+	Required    bool   `json:"required,omitempty"`
+	Generate    string `json:"generate,omitempty"`
+	FromLen     int    `json:"fromLen,omitempty"`
+	Description string `json:"description,omitempty"`
+}
+
 type TemplateParam struct {
 	Name        string `json:"name,omitempty"`
 	DisplayName string `json:"displayName,omitempty"`
-	Spec        *conf.ConfigSpec
+	Spec        *ConfigSpec
 }
 
 var params = map[string]TemplateParam{}
 
+type SyndesisEnvVar string
+
+const EMPTY_FIELD = "<>"
+
+// Location from where the template configuration is located
+var TemplateConfig string
+
+const (
+	EnvRouteHostname                  SyndesisEnvVar = "ROUTE_HOSTNAME"
+	EnvOpenShiftMaster                SyndesisEnvVar = "OPENSHIFT_MASTER"
+	EnvOpenShiftConsoleUrl            SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
+	EnvOpenShiftProject               SyndesisEnvVar = "OPENSHIFT_PROJECT"
+	EnvOpenShiftOauthClientSecret     SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
+	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
+	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
+	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"
+	EnvPostgresqlPassword             SyndesisEnvVar = "POSTGRESQL_PASSWORD"
+	EnvPostgresqlURL                  SyndesisEnvVar = "POSTGRESQL_URL"
+	EnvPostgresqlDatabase             SyndesisEnvVar = "POSTGRESQL_DATABASE"
+	EnvPostgresqlVolumeCapacity       SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
+	EnvPostgresqlSampledbPassword     SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
+	EnvTestSupport                    SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvOauthCookieSecret              SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
+	EnvSyndesisEncryptKey             SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
+	EnvPrometheusVolumeCapacity       SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
+	EnvPrometheusMemoryLimit          SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
+	EnvMetaVolumeCapacity             SyndesisEnvVar = "META_VOLUME_CAPACITY"
+	EnvMetaMemoryLimit                SyndesisEnvVar = "META_MEMORY_LIMIT"
+	EnvServerMemoryLimit              SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
+	EnvClientStateAuthenticationKey   SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
+	EnvClientStateEncryptionKey       SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
+	EnvImageStreamNamespace           SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
+	EnvControllersIntegrationEnabled  SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
+	EnvSyndesisRegistry               SyndesisEnvVar = "SYNDESIS_REGISTRY"
+	EnvDemoDataEnabled                SyndesisEnvVar = "DEMO_DATA_ENABLED"
+	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
+	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
+	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
+	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
+	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
+
+	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
+	EnvSyndesisUITag       SyndesisEnvVar = "SYNDESIS_UI_TAG"
+	EnvSyndesisS2ITag      SyndesisEnvVar = "SYNDESIS_S2I_TAG"
+	EnvSyndesisMetaTag     SyndesisEnvVar = "SYNDESIS_META_TAG"
+	EnvPostgresTag         SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
+	EnvPostgresExporterTag SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
+	EnvKomodoTag           SyndesisEnvVar = "KOMODO_TAG"
+	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
+	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
+
+	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
+	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
+)
+
+var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
+	EnvRouteHostname:                  ConfigSpec{Description: "The external hostname to access Syndesis"},
+	EnvOpenShiftMaster:                ConfigSpec{Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
+	EnvOpenShiftConsoleUrl:            ConfigSpec{Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
+	EnvOpenShiftProject:               ConfigSpec{Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
+	EnvOpenShiftOauthClientSecret:     ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
+	EnvPostgresqlMemoryLimit:          ConfigSpec{Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
+	EnvPostgresqlImageStreamNamespace: ConfigSpec{Value: "openshift", Description: "The OpenShift Namespace where the PostgreSQL ImageStream resides"},
+	EnvPostgresqlUser:                 ConfigSpec{Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
+	EnvPostgresqlPassword:             ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL connection user"},
+	EnvPostgresqlDatabase:             ConfigSpec{Value: "syndesis", Required: true, Description: "Name of the PostgreSQL database accessed"},
+	EnvPostgresqlURL:                  ConfigSpec{Value: "postgresql://syndesis-db:5432/syndesis?sslmode=disable", Required: true, Description: "Host and port of the PostgreSQL database to access"},
+	EnvPostgresqlVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
+	EnvPostgresqlSampledbPassword:     ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
+	EnvTestSupport:                    ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
+	EnvOauthCookieSecret:              ConfigSpec{Generate: "expression", FromLen: 32, Description: "Secret to use to encrypt oauth cookies"},
+	EnvSyndesisEncryptKey:             ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "The encryption key used to encrypt/decrypt stored secrets"},
+	EnvPrometheusVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Prometheus data, e.g. 512Mi, 2Gi"},
+	EnvPrometheusMemoryLimit:          ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the Prometheus container can use"},
+	EnvMetaVolumeCapacity:             ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Meta data, e.g. 512Mi, 2Gi"},
+	EnvMetaMemoryLimit:                ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the syndesis-meta service might use"},
+	EnvServerMemoryLimit:              ConfigSpec{Value: "800Mi", Required: true, Description: "Maximum amount of memory the syndesis-server service might use"},
+	EnvClientStateAuthenticationKey:   ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
+	EnvClientStateEncryptionKey:       ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
+	EnvImageStreamNamespace:           ConfigSpec{Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
+	EnvControllersIntegrationEnabled:  ConfigSpec{Value: "true", Description: "Should deployment of integrations be enabled?"},
+	EnvSyndesisRegistry:               ConfigSpec{Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
+	EnvDemoDataEnabled:                ConfigSpec{Value: "false", Required: true, Description: "Enables starting up with demo data"},
+	EnvMaxIntegrationsPerUser:         ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
+	EnvIntegrationStateCheckInterval:  ConfigSpec{Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
+	EnvSarNamespace:                   ConfigSpec{Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
+	EnvKomodoMemoryLimit:              ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
+	EnvDatavirtEnabled:                ConfigSpec{Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
+
+	EnvSyndesisServerTag:   ConfigSpec{},
+	EnvSyndesisUITag:       ConfigSpec{},
+	EnvSyndesisS2ITag:      ConfigSpec{},
+	EnvSyndesisMetaTag:     ConfigSpec{},
+	EnvPostgresTag:         ConfigSpec{},
+	EnvPostgresExporterTag: ConfigSpec{},
+	EnvKomodoTag:           ConfigSpec{},
+	EnvPrometheusTag:       ConfigSpec{},
+	EnvOauthProxyTag:       ConfigSpec{},
+
+	EnvUpgradeVolumeCapacity:  ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi"},
+	EnvManagementUrlFor3scale: ConfigSpec{Value: "", Description: "Url to 3scale for exposing services"},
+}
+
+func (cs ConfigSpec) From() string {
+	return fmt.Sprintf("[a-zA-Z0-9]{%d}", cs.FromLen)
+}
+
 func (o *Install) installForge() error {
-	templateConfig, err := util.LoadJsonFromFile(conf.TemplateConfig)
-	if err != nil {
-		return err
-	}
-
-	//
-	// Parse the template config
-	//
-	gen := &generator.Context{}
-	err = json.Unmarshal(templateConfig, gen)
-	if err != nil {
-		return err
-	}
-
-	//
 	// Create an empty syndesis CR which will
 	// be filled with parameters placeholder values
 	//
 	syndesis := &v1alpha1.Syndesis{
 		ObjectMeta: metav1.ObjectMeta{
-			Namespace: convertToParam(string(conf.EnvOpenShiftProject)),
+			Namespace: convertToParam(string(EnvOpenShiftProject)),
 		},
 		Spec: v1alpha1.SyndesisSpec{
-			DevSupport: false,
-			Components: v1alpha1.ComponentsSpec{
-				Db: v1alpha1.DbConfiguration{},
-			},
-			Addons: v1alpha1.AddonsSpec{},
+			Components: v1alpha1.ComponentsSpec{},
+			Addons:     v1alpha1.AddonsSpec{},
 		},
 		Status: v1alpha1.SyndesisStatus{
 			TargetVersion: "latest",
 		},
 	}
 
-	//
-	// Applies the placeholder config to the syndesis CR
-	//
-	if err := template.SetupRenderContext(gen, syndesis, createConfig()); err != nil {
+	configuration, err := conf.GetProperties(conf.TemplateConfig, o.Context, nil, syndesis)
+	if err != nil {
 		return err
 	}
-
 	//
 	// Process the yml template files containing
 	// the framework for application
 	//
 	resources := make([]unstructured.Unstructured, 0)
 
-	route, err := generator.RenderDir("./route/", gen)
+	route, err := generator.RenderDir("./route/", configuration)
 	if err != nil {
 		return err
 	}
 	resources = append(resources, route...)
 
 	// Render the remaining syndesis resources...
-	infra, err := generator.RenderDir("./infrastructure/", gen)
+	infra, err := generator.RenderDir("./infrastructure/", configuration)
 	if err != nil {
 		return err
 	}
@@ -121,21 +214,31 @@ func (o *Install) installForge() error {
 	if o.addons != "" {
 		addonArr = strings.Split(o.addons, ",")
 	}
+
+	addons := map[string]*bool{
+		"jaeger":  &configuration.Syndesis.Addons.Jaeger.Enabled,
+		"ops":     &configuration.Syndesis.Addons.Ops.Enabled,
+		"dv":      &configuration.Syndesis.Addons.DV.Enabled,
+		"camelk":  &configuration.Syndesis.Addons.CamelK.Enabled,
+		"knative": &configuration.Syndesis.Addons.Knative.Enabled,
+		"todo":    &configuration.Syndesis.Addons.Todo.Enabled,
+	}
+
 	for _, addon := range addonArr {
-		if syndesis.Spec.Addons[addon] == nil {
-			syndesis.Spec.Addons[addon] = v1alpha1.Parameters{}
+		if *addons[addon] != true {
+			t := true
+			addons[addon] = &t
 		}
-		syndesis.Spec.Addons[addon]["enabled"] = "true"
 
 		addonDir := "./addons/" + addon + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			fmt.Printf("Unsupported addon configured: [%s]. [%v]", addon, err)
+			fmt.Printf("unsupported addon configured %s: %s", "addon", addon)
 			return err
 		}
 		f.Close()
 
-		addonResources, err := generator.RenderDir(addonDir, gen)
+		addonResources, err := generator.RenderDir(addonDir, configuration)
 		if err != nil {
 			return err
 		}
@@ -194,7 +297,7 @@ func convertToParam(name string) string {
 			DisplayName: displayName,
 		}
 
-		if cvar, ok := conf.AllConfigOptions[conf.SyndesisEnvVar(name)]; ok {
+		if cvar, ok := AllConfigOptions[SyndesisEnvVar(name)]; ok {
 			v.Spec = &cvar
 		}
 		params[evar] = v
@@ -203,26 +306,16 @@ func convertToParam(name string) string {
 	return evar
 }
 
-func createConfig() map[string]string {
-	config := map[string]string{}
-
-	for k, _ := range conf.AllConfigOptions {
-		config[string(k)] = convertToParam(string(k))
-	}
-
-	return config
-}
-
 func fixHardcodedExceptions(key string, value interface{}) interface{} {
 	switch key {
 	case "load-demo-data":
-		return convertToParam(string(conf.EnvDemoDataEnabled))
+		return convertToParam(string(EnvDemoDataEnabled))
 	case "integrationStateCheckInterval":
-		return convertToParam(string(conf.EnvIntegrationStateCheckInterval))
+		return convertToParam(string(EnvIntegrationStateCheckInterval))
 	case "maxDeploymentsPerUser":
-		return convertToParam(string(conf.EnvMaxIntegrationsPerUser))
+		return convertToParam(string(EnvMaxIntegrationsPerUser))
 	case "maxIntegrationsPerUser":
-		return convertToParam(string(conf.EnvMaxIntegrationsPerUser))
+		return convertToParam(string(EnvMaxIntegrationsPerUser))
 	}
 
 	return value
@@ -230,7 +323,7 @@ func fixHardcodedExceptions(key string, value interface{}) interface{} {
 
 func fixDataVirt(value interface{}) interface{} {
 	if dvMap, ok := value.(map[string]interface{}); ok {
-		dvMap["enabled"] = convertToParam(string(conf.EnvDatavirtEnabled))
+		dvMap["enabled"] = convertToParam(string(EnvDatavirtEnabled))
 		return dvMap
 	}
 
@@ -419,7 +512,7 @@ func exportTo(resources []unstructured.Unstructured, format string) error {
 				m["description"] = spec.Description
 			}
 			if len(spec.Value) > 0 {
-				if spec.Value == conf.EMPTY_FIELD {
+				if spec.Value == EMPTY_FIELD {
 					m["value"] = ""
 				} else {
 					m["value"] = spec.Value

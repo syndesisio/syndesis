@@ -50,11 +50,11 @@
       spec:
         containers:
         - name: oauthproxy
-          image: '{{ .Syndesis.Spec.Components.Oauth.Image }}'
+          image: '{{ .Syndesis.Components.Oauth.Image }}'
           args:
             - --provider=openshift
-            - --client-id=system:serviceaccount:{{.Syndesis.Namespace}}:syndesis-oauth-client
-            - --client-secret=$(OPENSHIFT_OAUTH_CLIENT_SECRET)
+            - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
+            - --client-secret={{.OpenShiftOauthClientSecret}}
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
@@ -74,8 +74,8 @@
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
-{{ if (not .Syndesis.Spec.Components.Oauth.DisableSarCheck) }}
-            - --openshift-sar={"namespace":"{{.Syndesis.Spec.SarNamespace}}","resource":"pods","verb":"get"}
+{{ if (not .Syndesis.Components.Oauth.DisableSarCheck) }}
+            - --openshift-sar={"namespace":"{{.Syndesis.Components.Oauth.SarNamespace}}","resource":"pods","verb":"get"}
 {{ end }}
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin

@@ -12,12 +12,12 @@
   data:
     application.yml: |-
       deployment:
-        load-demo-data: '{{.Syndesis.Spec.DemoData}}'
+        load-demo-data: '{{.Syndesis.Components.Server.Features.DemoData}}'
       cors:
 {{- if (not .AllowLocalHost)}}
-        allowedOrigins: https://{{.Syndesis.Spec.RouteHostname}}
+        allowedOrigins: https://{{.RouteHostname}}
 {{- else}}
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{.Syndesis.Spec.RouteHostname}}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{.RouteHostname}}
 {{- end}}
       cache:
         cluster:
@@ -25,14 +25,14 @@
         max:
           entries: 100
       encrypt:
-        key: '{{.Env.SYNDESIS_ENCRYPT_KEY}}'
+        key: '{{.Syndesis.Components.Server.SyndesisEncryptKey}}'
       spring:
         zipkin:
           enabled: false
         datasource:
-          url: 'jdbc:{{.Env.POSTGRESQL_URL}}'
-          username: '{{.Syndesis.Spec.Components.Db.User}}'
-          password: '{{.Env.POSTGRESQL_PASSWORD}}'
+          url: 'jdbc:{{.Syndesis.Components.Database.URL}}'
+          username: '{{.Syndesis.Components.Database.User}}'
+          password: '{{.Syndesis.Components.Database.Password}}'
           driver-class-name: org.postgresql.Driver
       security:
         basic:
@@ -54,12 +54,12 @@
         public-api:
           enabled: true
         knative:
-          {{- if (eq (or .Syndesis.Spec.Addons.knative.enabled "false") "true") }}
+          {{- if .Syndesis.Addons.Knative.Enabled }}
           enabled: true
           {{- else}}
           enabled: false
           {{- end}}
-{{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+{{- if .Syndesis.Addons.Jaeger.Enabled}}
         dblogging:
           enabled: false
         jaeger-activity-tracing:
@@ -68,18 +68,18 @@
         query.api.url: http://noauth-syndesis-jaeger-query:443/api
         service.name: syndesis-server
 {{- end}}
-{{- if .Syndesis.Spec.MavenRepositories}}
+{{- if .Syndesis.Components.Server.Features.MavenRepositories}}
       maven:
         repositories:
-    {{- range $id, $url := .Syndesis.Spec.MavenRepositories}}
+    {{- range $id, $url := .Syndesis.Components.Server.Features.MavenRepositories}}
           {{ $id }}: {{ $url }}
     {{- end }}
 {{- end}}
       openshift:
-        apiBaseUrl: '{{.Syndesis.Spec.OpenShiftMaster}}/oapi/v1'
-        namespace: '{{.Syndesis.Namespace}}'
-        imageStreamNamespace: {{.Syndesis.Spec.ImageStreamNamespace}}
-        builderImageStreamTag: syndesis-s2i:{{ tagOf .Syndesis.Spec.Components.S2I.Image }}
+        apiBaseUrl: '{{.Syndesis.Components.Server.Features.OpenShiftMaster}}/oapi/v1'
+        namespace: '{{.OpenShiftProject}}'
+        imageStreamNamespace: {{.ImageStreamNamespace}}
+        builderImageStreamTag: syndesis-s2i:{{ tagOf .Syndesis.Components.S2I.Image }}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
@@ -87,22 +87,22 @@
       dao:
         kind: jsondb
       controllers:
-{{- if (eq (or .Syndesis.Spec.Addons.camelk.enabled "false") "true") }}
+{{- if .Syndesis.Addons.CamelK.Enabled}}
         integration: camel-k
         camelk:
           customizers:
           - metadata
-          {{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+          {{- if .Syndesis.Addons.Jaeger.Enabled}}
           - tracing
           {{- else}}
           - logging
           {{- end}}
           - syndesis
 {{- end}}
-        maxIntegrationsPerUser: '{{.Syndesis.Spec.Integration.Limit}}'
-        maxDeploymentsPerUser: '{{.Syndesis.Spec.Integration.Limit}}'
-        integrationStateCheckInterval: '{{.Syndesis.Spec.Integration.StateCheckInterval}}'
-{{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
+        maxIntegrationsPerUser: '{{.Syndesis.Components.Server.Features.IntegrationLimit}}'
+        maxDeploymentsPerUser: '{{.Syndesis.Components.Server.Features.IntegrationLimit}}'
+        integrationStateCheckInterval: '{{.Syndesis.Components.Server.Features.IntegrationStateCheckInterval}}'
+{{- if .Syndesis.Addons.Jaeger.Enabled}}
       generator:
         activityTracing: true
 {{- end}}

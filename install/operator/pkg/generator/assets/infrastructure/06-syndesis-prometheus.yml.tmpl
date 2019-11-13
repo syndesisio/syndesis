@@ -45,7 +45,7 @@
           - role: pod
             namespaces:
               names:
-                - {{.Syndesis.Namespace}}
+                - {{.OpenShiftProject}}
 
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
@@ -123,7 +123,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: {{.Syndesis.Spec.Components.Prometheus.Resources.VolumeCapacity}}
+        storage: {{.Syndesis.Components.Prometheus.Resources.VolumeCapacity}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -157,7 +157,7 @@
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-          image: '{{ .Syndesis.Spec.Components.Prometheus.Image }}'
+          image: '{{ .Syndesis.Components.Prometheus.Image }}'
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
@@ -176,9 +176,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: {{memoryLimit .Syndesis.Spec.Components.Prometheus.Resources.Limits}}
+              memory: {{ .Syndesis.Components.Prometheus.Resources.Memory}}
             requests:
-              memory: {{memoryLimit .Syndesis.Spec.Components.Prometheus.Resources.Limits}}
+              memory: {{ .Syndesis.Components.Prometheus.Resources.Memory}}
           volumeMounts:
           - name: syndesis-prometheus-data
             mountPath: /prometheus

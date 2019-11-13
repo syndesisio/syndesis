@@ -3,15 +3,10 @@ package action
 import (
 	"context"
 	"errors"
-	"fmt"
-	"net/url"
-	"os"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
-
-	"github.com/mcuadros/go-version"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -31,7 +26,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
-	syndesistemplate "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -62,16 +56,21 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
-func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.Syndesis) error {
-	syndesis := originalSyndesis.DeepCopy()
+func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
 		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 	}
 	resourcesThatShouldExist := map[types.UID]bool{}
 
+	// Load configuration to to use as context for generate pkg
+	configuration, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
+	if err != nil {
+		return err
+	}
+
 	// Check if an image secret exists, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
-	err := a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
+	err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			secret = nil
@@ -80,122 +79,75 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		}
 	}
 
+	if secret != nil {
+		configuration.ImagePullSecrets = append(configuration.ImagePullSecrets, secret.Name)
+	}
+
 	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
 	if err != nil {
 		return err
 	}
 	resourcesThatShouldExist[serviceAccount.GetUID()] = true
 
-	// Detect if the route should be auto-generated
-	autoGenerateRoute := syndesis.Spec.RouteHostname == ""
-	if autoGenerateRoute {
-		syndesis.Spec.RouteHostname = "dummy"
-	}
-
-	config, err := configuration.GetSyndesisEnvVarsFromOpenShiftNamespace(ctx, a.client, syndesis.Namespace)
-	if err != nil {
-		config = map[string]string{}
-	}
-
 	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
 	if err != nil {
 		return err
 	}
-	config[string(configuration.EnvOpenShiftOauthClientSecret)] = token
+	configuration.OpenShiftOauthClientSecret = token
 
-	// Handle an external database being defined
-	if syndesis.Spec.Components.Db.ExternalDbURL != "" {
-		// check to see if password is already provided, check to see if merge is done
-		globalCfgSec := &corev1.Secret{}
-		if err := a.client.Get(ctx, types.NamespacedName{Name: "syndesis-global-config", Namespace: syndesis.Namespace}, globalCfgSec); err != nil {
-			// the secret doesn't already exist, but it must for external databases
-			return err
-		}
-		postgresPass := string(globalCfgSec.Data["POSTGRESQL_PASSWORD"])
-		if postgresPass == "" {
-			return errors.New("failed to find postgresql password in global config")
-		}
-
-		// setup connection string from provided url
-		externalDbURL, err := url.Parse(syndesis.Spec.Components.Db.ExternalDbURL)
-		if err != nil {
-			return err
-		}
-		if externalDbURL.Path == "" {
-			externalDbURL.Path = syndesis.Spec.Components.Db.Database
-		}
-		config[string(configuration.EnvPostgresqlURL)] = externalDbURL.String()
-		config[string(configuration.EnvPostgresqlPassword)] = postgresPass
-	}
-
-	renderContext, err := syndesistemplate.GetTemplateContext()
-	if err != nil {
+	if err := configuration.ExternalDatabase(ctx, a.client, syndesis); err != nil {
 		return err
-	}
-
-	err = syndesistemplate.SetupRenderContext(renderContext, syndesis, config)
-	if err != nil {
-		return err
-	}
-
-	if secret != nil {
-		renderContext.ImagePullSecrets = append(renderContext.ImagePullSecrets, secret.Name)
-	}
-	configuration.SetConfigurationFromEnvVars(renderContext.Env, syndesis)
-
-	err = checkTags(renderContext)
-	if err != nil {
-		fmt.Println("error:", err)
-		os.Exit(1)
 	}
 
 	// Render the route resource...
-	all, err := generator.RenderDir("./route/", renderContext)
+	all, err := generator.RenderDir("./route/", configuration)
 	if err != nil {
 		return err
 	}
 
 	routes, _ := util.SeperateStructuredAndUnstructured(a.scheme, all)
-	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes, autoGenerateRoute)
+	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes)
 	if err != nil {
+		return err
+	}
+	if err := configuration.SetRoute(ctx, a.client, syndesis); err != nil {
 		return err
 	}
 
 	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
-	if autoGenerateRoute {
-		// Set the right hostname after generating the route
-		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
-
-		// Hack to remove the auto-generated annotation
-		// In OpenShift 3.9, the route gets low priority for being displayed as main route for the app if the openshift.io/host.generated=true annotation is present
-		err = removeAutoGeneratedAnnotation(ctx, a.client, syndesisRoute)
-		if err != nil {
-			return err
-		}
-	}
-
 	// Render the remaining syndesis resources...
-	all, err = generator.RenderDir("./infrastructure/", renderContext)
+	all, err = generator.RenderDir("./infrastructure/", configuration)
 	if err != nil {
 		return err
 	}
 
 	// Render the database resource if needed...
-	if syndesis.Spec.Components.Db.ExternalDbURL == "" {
-		dbResources, err := generator.RenderDir("./database/", renderContext)
+	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
+		dbResources, err := generator.RenderDir("./database/", configuration)
 		if err != nil {
 			return err
 		}
 		all = append(all, dbResources...)
 	}
 
-	for addon, properties := range syndesis.Spec.Addons {
-		if properties["enabled"] != "true" {
+	addons := []struct {
+		name    string
+		enabled bool
+	}{
+		{"jaeger", configuration.Syndesis.Addons.Jaeger.Enabled},
+		{"ops", configuration.Syndesis.Addons.Ops.Enabled},
+		{"dv", configuration.Syndesis.Addons.DV.Enabled},
+		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
+		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
+		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
+	}
+	for _, addon := range addons {
+		if !addon.enabled {
 			continue
 		}
 
-		addonDir := "./addons/" + addon + "/"
+		addonDir := "./addons/" + addon.name + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
 			a.log.Info("unsupported addon configured", "addon", addon, "error", err)
@@ -203,7 +155,7 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		}
 		f.Close()
 
-		resources, err := generator.RenderDir(addonDir, renderContext)
+		resources, err := generator.RenderDir(addonDir, configuration)
 		if err != nil {
 			return err
 		}
@@ -281,43 +233,17 @@ func (a *installAction) Execute(ctx context.Context, originalSyndesis *v1alpha1.
 		return err
 	}
 
-	addRouteAnnotation(originalSyndesis, syndesisRoute)
+	addRouteAnnotation(syndesis, syndesisRoute)
 	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		originalSyndesis.Status.Phase = v1alpha1.SyndesisPhaseStarting
-		originalSyndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		originalSyndesis.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, originalSyndesis, "kind", "apiVersion")
+		syndesis.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		syndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		syndesis.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
-		a.log.Info("Syndesis resource installed", "name", originalSyndesis.Name)
-	}
-	return err
-}
-
-// Checks that the tags from syndesis components is valid between the supported versions
-func checkTags(context *generator.Context) error {
-	c := version.NewConstrainGroupFromString(fmt.Sprintf(">=%s,<%s", context.TagMinor, context.TagMajor))
-	var images = []struct {
-		name string
-		tag  string
-	}{
-		{"server", util.TagOf(context.Syndesis.Spec.Components.Server.Image)},
-		{"meta", util.TagOf(context.Syndesis.Spec.Components.Meta.Image)},
-		{"ui", util.TagOf(context.Syndesis.Spec.Components.UI.Image)},
-		{"s2i", util.TagOf(context.Syndesis.Spec.Components.S2I.Image)},
-	}
-	for _, image := range images {
-		if image.tag != "latest" {
-			if !c.Match(version.Normalize(image.tag)) {
-				return fmt.Errorf("tag for %s[%s] component is not valid, should have a value between [%s] and [%s]",
-					image.name,
-					image.tag,
-					context.TagMinor,
-					context.TagMajor)
-			}
-		}
+		a.log.Info("Syndesis resource installed", "name", syndesis.Name)
 	}
 
 	return nil
@@ -403,6 +329,7 @@ func addRouteAnnotation(syndesis *v1alpha1.Syndesis, route *v1.Route) {
 	}
 	annotations["syndesis.io/applicationUrl"] = extractApplicationUrl(route)
 }
+
 func extractApplicationUrl(route *v1.Route) string {
 	scheme := "http"
 	if route.Spec.TLS != nil {
@@ -411,17 +338,13 @@ func extractApplicationUrl(route *v1.Route) string {
 	return scheme + "://" + route.Spec.Host
 }
 
-func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, objects []runtime.Object, autoGenerate bool) (*v1.Route, error) {
+func installSyndesisRoute(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, objects []runtime.Object) (*v1.Route, error) {
 	route, err := findSyndesisRoute(objects)
 	if err != nil {
 		return nil, err
 	}
 
 	operation.SetNamespaceAndOwnerReference(route, syndesis)
-
-	if autoGenerate {
-		route.Spec.Host = ""
-	}
 
 	// We don't replace the route if already present, to let OpenShift generate its host
 	o, _, err := util.CreateOrUpdate(ctx, cl, route)
@@ -520,12 +443,4 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	}
 
 	return false
-}
-
-func removeAutoGeneratedAnnotation(ctx context.Context, cl client.Client, route *v1.Route) error {
-	return updateOnLatestRevision(ctx, cl, route, func(obj runtime.Object) {
-		if r, ok := obj.(*v1.Route); ok {
-			delete(r.Annotations, "openshift.io/host.generated")
-		}
-	})
 }

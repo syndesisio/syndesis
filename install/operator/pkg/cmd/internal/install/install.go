@@ -101,18 +101,6 @@ func New(parent *internal.Options) *cobra.Command {
 	app.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
 	cmd.AddCommand(app)
 
-	standalone := &cobra.Command{
-		Use:   "standalone",
-		Short: "perform a fire an forget installation",
-		Run: func(cmd *cobra.Command, args []string) {
-			err := o.installStandalone()
-			util.ExitOnError(err)
-		},
-	}
-	standalone.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
-	standalone.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
-	cmd.AddCommand(standalone)
-
 	forge := &cobra.Command{
 		Use:   "forge",
 		Short: "forge the resource configuration into an openshift template <deprecated>",
@@ -122,7 +110,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	forge.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
-	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
+	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
 	cmd.AddCommand(forge)
 
 	cmd.PersistentFlags().StringVarP(&o.eject, "eject", "e", "", "eject configuration that would be applied to the cluster in the specified format instead of installing the configuration. One of: json|yaml")

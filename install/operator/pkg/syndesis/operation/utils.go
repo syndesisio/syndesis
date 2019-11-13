@@ -17,10 +17,10 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1alpha1.Synd
 			Kind:    syndesis.Kind,
 		}),
 	})
-	SetLabel(resource, "owner", string(syndesis.GetUID()))
+	setLabel(resource, "owner", string(syndesis.GetUID()))
 }
 
-func SetLabel(resource interface{}, key string, value string) {
+func setLabel(resource interface{}, key string, value string) {
 	obj := util.ToMetaObject(resource)
 	labels := obj.GetLabels()
 	if labels == nil {

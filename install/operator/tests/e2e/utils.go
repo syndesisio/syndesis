@@ -18,13 +18,14 @@ package e2e
 
 import (
 	goctx "context"
+	"testing"
+	"time"
+
 	framework "github.com/operator-framework/operator-sdk/pkg/test"
 	v1alpha1 "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/util/wait"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"testing"
-	"time"
 )
 
 func WaitForSyndesisPhase(t *testing.T, f *framework.Framework, namespace, name string, phase v1alpha1.SyndesisPhase, retryInterval, timeout time.Duration) error {
@@ -70,10 +71,10 @@ func CreateCR(name string, namespace string) *v1alpha1.Syndesis {
 		},
 		Spec: v1alpha1.SyndesisSpec{
 			Components: v1alpha1.ComponentsSpec{
-				Db: v1alpha1.DbConfiguration{
-					Image:    "postgresql:9.5",
-					User:     "syndesis",
-					Database: "syndesis",
+				Db: v1alpha1.DatabaseConfiguration{
+					Image: "postgresql:9.5",
+					User:  "syndesis",
+					Name:  "syndesis",
 					Resources: v1alpha1.ResourcesWithVolume{
 						Resources:      v1alpha1.Resources{},
 						VolumeCapacity: "512Mi",

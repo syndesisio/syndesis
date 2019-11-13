@@ -3,9 +3,6 @@ kind: Syndesis
 metadata:
   name: app
 spec:
-  devSupport: {{.DevSupport}}
-  components:
-    scheduled: true
   addons:
   {{- range .EnabledAddons }}
     {{.}}:
