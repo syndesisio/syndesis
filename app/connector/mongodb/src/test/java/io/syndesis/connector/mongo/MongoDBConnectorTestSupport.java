@@ -123,7 +123,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
                                          String tailTrackIncreasingField) {
-        return this.fromMongoTailToMock(mock, connector, db, collection, tailTrackIncreasingField, null, null, null, null, null);
+        return this.fromMongoTailToMock(mock, connector, db, collection, tailTrackIncreasingField, true, null, null, null, null);
     }
 
     protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,

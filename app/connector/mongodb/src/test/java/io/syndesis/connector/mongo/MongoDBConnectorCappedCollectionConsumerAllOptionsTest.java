@@ -18,7 +18,6 @@ package io.syndesis.connector.mongo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.model.CreateCollectionOptions;
@@ -54,13 +53,8 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     @AfterClass
     public static void testTrackingIdValue() {
         List<Document> docsFound = database.getCollection("tracking").find().into(new ArrayList<>());
-        System.out.println("Docs found" + docsFound);
         assertEquals(25, (int) docsFound.get(0).getInteger("someTrackingId"));
     }
-
-    // **************************
-    // Tests
-    // **************************
 
     @Override
     protected List<Step> createSteps() {
@@ -73,6 +67,8 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     public void mongoTest() throws Exception {
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
+        // We just retain last message
+        mock.setRetainLast(1);
         mock.expectedMessageCount(3);
         mock.expectedMessagesMatches((Exchange e) -> {
             try {
@@ -81,6 +77,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
                 List<String> doc = e.getMessage().getBody(List.class);
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 Assertions.assertThat(jsonNode).isNotNull();
+                Assertions.assertThat(jsonNode.get("someTrackingId").asInt()).isEqualTo(25);
             } catch (IOException ex) {
                 return false;
             }
@@ -101,6 +98,6 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
         collection.insertOne(doc3);
 
         // Then
-        MockEndpoint.assertIsSatisfied(5, TimeUnit.SECONDS, mock);
+        mock.assertIsSatisfied();
     }
 }
