@@ -15,7 +15,7 @@
    limitations under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>io.syndesis.integration</groupId>
@@ -31,9 +31,10 @@
     <camel.version>2.21.0.fuse-760006</camel.version>
     <atlasmap.version>1.42.10</atlasmap.version>
     <jackson.databind.version>2.8.11.3</jackson.databind.version>
+    <mongo.driver.version>3.6.3</mongo.driver.version>
   </properties>
 
-    <!-- Metadata need to publish to central -->
+  <!-- Metadata need to publish to central -->
   <url>https://syndesis.io/</url>
   <inceptionYear>2016</inceptionYear>
 
@@ -122,14 +123,20 @@
 
   <dependencyManagement>
     <dependencies>
-            <!--
-                NOTE: the final BOM will be an extension of the FIS BOM.
+      <!-- Overriden Spring boot BOM dependecies -->
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongo-java-driver</artifactId>
+        <version>${mongo.driver.version}</version>
+      </dependency>
+      <!--
+          NOTE: the final BOM will be an extension of the FIS BOM.
 
-                Once the FIS BOM is aligned with versions used in syndesis, the FIS BOM should be imported instead of
-                the spring-boot and camel BOMs.
-            -->
+          Once the FIS BOM is aligned with versions used in syndesis, the FIS BOM should be imported instead of
+          the spring-boot and camel BOMs.
+      -->
 
-            <!-- Spring-boot full BOM -->
+      <!-- Spring-boot full BOM -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -138,7 +145,7 @@
         <scope>import</scope>
       </dependency>
 
-            <!-- Camel BOM for Spring-boot -->
+      <!-- Camel BOM for Spring-boot -->
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
@@ -147,7 +154,7 @@
         <scope>import</scope>
       </dependency>
 
-            <!-- Extension dependencies -->
+      <!-- Extension dependencies -->
       <dependency>
         <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-annotation-processor</artifactId>
@@ -160,7 +167,7 @@
         <version>${project.version}</version>
       </dependency>
 
-            <!-- Integration runtime depdendencies -->
+      <!-- Integration runtime depdendencies -->
       <dependency>
         <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-api</artifactId>
@@ -186,12 +193,12 @@
         <version>${atlasmap.version}</version>
       </dependency>
 
-            <!--
-                Connector depdendencies
+      <!--
+          Connector depdendencies
 
-                NOTE: any new connector provided out of the box by syndesis should be listed here. Maybe this can be
-                      auto generated in a future release.
-            -->
+          NOTE: any new connector provided out of the box by syndesis should be listed here. Maybe this can be
+                auto generated in a future release.
+      -->
       <!-- components -->
       <dependency>
         <groupId>io.syndesis.integration</groupId>
