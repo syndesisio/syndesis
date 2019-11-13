@@ -72,6 +72,6 @@
   },
   "dependencies": {},
   "resolutions": {
-    "@patternfly/patternfly": "2.6.6"
+    "@patternfly/patternfly": "2.40.6"
   }
 }

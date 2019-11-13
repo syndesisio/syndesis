@@ -181,8 +181,9 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
         }
         sidebar={
           <PageSidebar
+            theme="dark"
             nav={
-              <Nav>
+              <Nav theme="dark">
                 <NavList>{verticalNav}</NavList>
               </Nav>
             }
