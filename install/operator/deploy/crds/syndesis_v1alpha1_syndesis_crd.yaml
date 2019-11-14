@@ -81,9 +81,9 @@ spec:
               properties:
                 database:
                   properties:
-                    database:
-                      type: string
                     externalDbURL:
+                      type: string
+                    name:
                       type: string
                     resources:
                       properties:
