@@ -354,6 +354,7 @@ func (config *Config) setConfigFromEnv() error {
 	}
 
 	config.DevSupport = setBoolFromEnv("DEV_SUPPORT", config.DevSupport)
+	config.Syndesis.Components.Server.Features.TestSupport = setBoolFromEnv("TEST_SUPPORT", config.Syndesis.Components.Server.Features.TestSupport)
 
 	return nil
 }
