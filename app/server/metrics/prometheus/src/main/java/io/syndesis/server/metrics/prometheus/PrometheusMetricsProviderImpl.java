@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.metrics.prometheus;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Comparator;
@@ -26,6 +24,8 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import io.fabric8.kubernetes.api.model.LabelSelector;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -156,8 +156,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .version(version)
                 .messages(messages)
                 .errors(errors)
-                .start(start)
-                .lastProcessed(lastProcessed)
+                // set as long values instead of long and nano parts as the UI don't need to handle the nano part
+                .start(start.map(st -> Instant.ofEpochMilli(st.toEpochMilli() * 1000)))
+                .lastProcessed(lastProcessed.map(lp -> Instant.ofEpochMilli(lp.toEpochMilli() * 1000)))
                 .uptimeDuration(start.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
                 .build();
         }).sorted(Comparator.comparing(IntegrationDeploymentMetrics::getVersion)).collect(Collectors.toList());
@@ -165,8 +166,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         return new IntegrationMetricsSummary.Builder()
                 .metricsProvider("prometheus")
                 .integrationDeploymentMetrics(deploymentMetrics)
-                .start(startTime)
-                .lastProcessed(lastProcessedTime)
+                // set as long values instead of long and nano parts as the UI don't need to handle the nano part
+                .start(startTime.map(st -> Instant.ofEpochMilli(st.toEpochMilli() * 1000)))
+                .lastProcessed(lastProcessedTime.map(lp -> Instant.ofEpochMilli(lp.toEpochMilli() * 1000)))
                 .uptimeDuration(startTime.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
                 .messages(totalMessages[0])
                 .errors(totalErrors[0])
@@ -197,8 +199,9 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         // get top 5 integrations by total messages
         return new IntegrationMetricsSummary.Builder()
             .metricsProvider("prometheus")
-            .start(startTime)
-            .lastProcessed(lastProcessedTime)
+            // set as long values instead of long and nano parts as the UI don't need to handle the nano part
+            .start(startTime.map(st -> Instant.ofEpochMilli(st.toEpochMilli() * 1000)))
+            .lastProcessed(lastProcessedTime.map(lp -> Instant.ofEpochMilli(lp.toEpochMilli() * 1000)))
             .uptimeDuration(startTime.map(date -> Duration.between(date, Instant.now()).toMillis()).orElse(0L))
             .messages(totalMessages.orElse(0L))
             .errors(failedMessages.orElse(0L))
