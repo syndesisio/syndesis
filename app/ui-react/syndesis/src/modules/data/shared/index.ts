@@ -5,5 +5,6 @@ export * from './ViewInfosContent';
 export * from './DvConnections';
 export * from './VirtualizationUtils';
 export * from './DvConnectionsWithToolbar';
+export * from './VirtualizationActionContainer';
 export * from './WithVirtualizationSqlClientForm';
 export * from './ConnectionSchemaContent';

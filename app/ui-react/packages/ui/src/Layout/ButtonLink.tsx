@@ -5,8 +5,8 @@ import classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-interface IButtonLinkProps {
-  onClick?: (e: React.MouseEvent<any>) => void;
+export interface IButtonLinkProps {
+  onClick?: (e: MouseEvent | React.MouseEvent<any> | React.KeyboardEvent<Element>) => void;
   href?: H.LocationDescriptor;
   className?: string;
   disabled?: boolean;

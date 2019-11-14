@@ -32,6 +32,7 @@
   "deleteVirtualizationFailed": "Elimina virtualizzazione \"{{name}}\" non riuscita. Dettagli: {{details}}",
   "descriptionPlaceholder": "Inserisci una descrizione ...",
   "details": "Dettagli",
+  "editVirtualization": "Modifica la virtualizzazione dei dati",
   "editDataVirtualizationTip": "Modifica la virtualizzazione dei dati",
   "emptyStateInfoMessage": "TNon ci sono virtualizzazioni disponibili. Fai clic sul pulsante in basso per crearne uno.",
   "emptyStateTitle": "$t(createDataVirtualization)",
