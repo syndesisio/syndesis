@@ -20,14 +20,15 @@ import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
-import io.swagger.models.HttpMethod;
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.common.util.openapi.OpenApiHelper;
-
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
@@ -36,15 +37,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
 
     @Parameter(0)
-    public HttpMethod operation;
+    public String operation;
 
     @Parameter(1)
     public String path;
@@ -56,7 +55,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
 
     private final ObjectNode json;
 
-    private final Swagger swagger;
+    private final Oas20Document openApiDoc;
 
     public UnifiedXmlDataShapeGeneratorRequestShapeTest() throws IOException {
         final String specification;
@@ -65,14 +64,14 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
         }
 
         json = (ObjectNode) JsonUtils.reader().readTree(specification);
-        swagger = OpenApiHelper.parse(specification);
+        openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
     }
 
     @Test
     public void shouldGenerateAtlasmapSchemaSetForUpdatePetRequest() throws IOException {
-        final Operation swaggerOperation = swagger.getPaths().get(path).getOperationMap().get(operation);
+        final Oas20Operation openApiOperation = Oas20ModelHelper.getOperationMap((Oas20PathItem) openApiDoc.paths.getPathItem(path)).get(operation);
 
-        final DataShape shape = generator.createShapeFromRequest(json, swagger, swaggerOperation);
+        final DataShape shape = generator.createShapeFromRequest(json, openApiDoc, openApiOperation);
 
         final SoftAssertions softly = new SoftAssertions();
         softly.assertThat(shape.getKind()).isEqualTo(DataShapeKinds.XML_SCHEMA);
@@ -95,12 +94,12 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
     public static Iterable<Object[]> data() {
         return Arrays.<Object[]>asList(//
             new Object[] {//
-                HttpMethod.PUT, //
+                "put", //
                 "/pet", //
                 "petstore.update-pet.schemaset.xml"//
             }, //
             new Object[] {//
-                HttpMethod.POST, //
+                "post", //
                 "/pet/{petId}", //
                 "petstore.update-pet-with-form.schemaset.xml"//
             });

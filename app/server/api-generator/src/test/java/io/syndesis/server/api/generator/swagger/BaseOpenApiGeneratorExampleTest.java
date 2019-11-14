@@ -15,6 +15,14 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
+import javax.xml.crypto.NodeSetData;
+import javax.xml.crypto.OctetStreamData;
+import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.crypto.dsig.TransformException;
+import javax.xml.crypto.dsig.TransformService;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,15 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.xml.crypto.NodeSetData;
-import javax.xml.crypto.OctetStreamData;
-import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.crypto.dsig.TransformException;
-import javax.xml.crypto.dsig.TransformService;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -42,7 +41,6 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,10 +48,9 @@ import org.xml.sax.SAXException;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class BaseSwaggerGeneratorExampleTest {
+abstract class BaseOpenApiGeneratorExampleTest {
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
@@ -61,7 +58,7 @@ abstract class BaseSwaggerGeneratorExampleTest {
 
     final String specification;
 
-    public BaseSwaggerGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
+    public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
         specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
         expected = JsonUtils.reader().forType(Connector.class)
             .readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));

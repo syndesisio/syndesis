@@ -17,35 +17,29 @@ package io.syndesis.server.api.generator.swagger.util;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
-import io.swagger.models.auth.ApiKeyAuthDefinition;
-import io.swagger.models.auth.In;
-import io.syndesis.common.model.Violation;
-import io.syndesis.common.util.openapi.OpenApiHelper;
-import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
-import io.syndesis.server.jsondb.impl.JsonRecordSupport;
-
-import org.junit.Test;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
+import io.syndesis.common.model.Violation;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.api.generator.APIValidationContext;
+import io.syndesis.server.api.generator.swagger.OpenApiModelInfo;
+import io.syndesis.server.jsondb.impl.JsonRecordSupport;
+import org.junit.Test;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
-import static org.assertj.core.api.Assertions.entry;
 
-public class SwaggerHelperTest {
+public class Oas20ModelHelperTest {
 
     @Test
     public void convertingToJsonShouldNotLooseSecurityDefinitions() throws JsonProcessingException, IOException {
@@ -62,7 +56,7 @@ public class SwaggerHelperTest {
             "        }\n" +
             "    }}";
 
-        final JsonNode node = SwaggerHelper.convertToJson(definition);
+        final JsonNode node = Oas20ModelHelper.convertToJson(definition);
 
         final JsonNode securityDefinitions = node.get("securityDefinitions");
 
@@ -80,7 +74,7 @@ public class SwaggerHelperTest {
     @Test
     public void convertingToJsonShouldNotLooseSecurityRequirements() throws JsonProcessingException, IOException {
         final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[\"scope\"]}]}}}}";
-        final JsonNode node = SwaggerHelper.convertToJson(definition);
+        final JsonNode node = Oas20ModelHelper.convertToJson(definition);
         assertThat(node.get("paths").get("/api").get("get").get("security"))
             .hasOnlyOneElementSatisfying(securityRequirement -> assertThat(securityRequirement.get("secured"))
                 .hasOnlyOneElementSatisfying(scope -> assertThat(scope.asText()).isEqualTo("scope")));
@@ -90,15 +84,18 @@ public class SwaggerHelperTest {
     public void minimizingShouldNotLooseMultipleKeySecurityRequirements() throws JsonProcessingException, IOException {
         final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured1\":[]},{\"secured2\":[]}]}}}}";
 
-        final Swagger swagger = OpenApiHelper.parse(definition);
+        final Oas20Document swagger = (Oas20Document) Library.readDocumentFromJSONString(definition);
 
-        final String minimizedString = SwaggerHelper.minimalSwaggerUsedByComponent(swagger);
+        final String minimizedString = Oas20ModelHelper.minimalOpenApiUsedByComponent(swagger);
 
-        final Swagger minimized = OpenApiHelper.parse(minimizedString);
+        final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
 
-        final Operation getApi = minimized.getPath("/api").getGet();
-        assertThat(getApi.getSecurity()).containsExactly(Collections.singletonMap("secured1", Collections.emptyList()),
-            Collections.singletonMap("secured2", Collections.emptyList()));
+        final Oas20Operation getApi = (Oas20Operation) minimized.paths.getPathItem("/api").get;
+        assertThat(getApi.security).hasSize(2);
+        assertThat(getApi.security.get(0).getSecurityRequirementNames()).containsExactly("secured1");
+        assertThat(getApi.security.get(0).getScopes("secured1")).isEmpty();
+        assertThat(getApi.security.get(1).getSecurityRequirementNames()).containsExactly("secured2");
+        assertThat(getApi.security.get(1).getScopes("secured2")).isEmpty();
     }
 
     @Test
@@ -116,20 +113,34 @@ public class SwaggerHelperTest {
             "        }\n" +
             "    }}";
 
-        final Swagger swagger = OpenApiHelper.parse(definition);
+        final Oas20Document swagger = (Oas20Document) Library.readDocumentFromJSONString(definition);
 
-        final String minimizedString = SwaggerHelper.minimalSwaggerUsedByComponent(swagger);
+        final String minimizedString = Oas20ModelHelper.minimalOpenApiUsedByComponent(swagger);
 
-        final Swagger minimized = OpenApiHelper.parse(minimizedString);
+        final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
 
-        assertThat(minimized.getSecurityDefinitions()).containsExactly(
-            entry("api-key-header", new ApiKeyAuthDefinition("API-KEY", In.HEADER)),
-            entry("api-key-parameter", new ApiKeyAuthDefinition("api_key", In.QUERY)));
+        Oas20SecurityScheme apiKeyHeader = new Oas20SecurityScheme("api-key-header");
+        apiKeyHeader.type = "apiKey";
+        apiKeyHeader.in = "header";
+        apiKeyHeader.name = "API-KEY";
+
+        Oas20SecurityScheme apiKeyParameter = new Oas20SecurityScheme("api-key-parameter");
+        apiKeyParameter.type = "apiKey";
+        apiKeyParameter.in = "query";
+        apiKeyParameter.name = "api_key";
+
+        assertThat(minimized.securityDefinitions.getSecuritySchemes()).hasSize(2);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyHeader._schemeName).type).isEqualTo(apiKeyHeader.type);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyHeader._schemeName).in).isEqualTo(apiKeyHeader.in);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyHeader._schemeName).name).isEqualTo(apiKeyHeader.name);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).type).isEqualTo(apiKeyParameter.type);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).in).isEqualTo(apiKeyParameter.in);
+        assertThat(minimized.securityDefinitions.getSecurityScheme(apiKeyParameter._schemeName).name).isEqualTo(apiKeyParameter.name);
     }
 
     @Test
     public void shouldNotReportIssuesWithSupportedVersions() {
-        final SwaggerModelInfo validated = SwaggerHelper.parse(
+        final OpenApiModelInfo validated = Oas20ModelHelper.parse(
             "{\"swagger\": \"2.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
@@ -139,7 +150,7 @@ public class SwaggerHelperTest {
 
     @Test
     public void shouldReportIssuesWithUnsupportedVersions() {
-        final SwaggerModelInfo validated = SwaggerHelper.parse(
+        final OpenApiModelInfo validated = Oas20ModelHelper.parse(
             "{\"openapi\": \"3.0.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
@@ -153,20 +164,20 @@ public class SwaggerHelperTest {
 
     @Test
     public void shouldSanitizeListOfTags() {
-        assertThat(SwaggerHelper.sanitizeTags(Arrays.asList("tag", "wag ", " bag", ".]t%a$g#[/")))
+        assertThat(Oas20ModelHelper.sanitizeTags(Arrays.asList("tag", "wag ", " bag", ".]t%a$g#[/")))
             .containsExactly("tag", "wag", "bag");
     }
 
     @Test
     public void shouldSanitizeTags() {
-        assertThat(SwaggerHelper.sanitizeTag("tag")).isEqualTo("tag");
-        assertThat(SwaggerHelper.sanitizeTag(".]t%a$g#[/")).isEqualTo("tag");
+        assertThat(Oas20ModelHelper.sanitizeTag("tag")).isEqualTo("tag");
+        assertThat(Oas20ModelHelper.sanitizeTag(".]t%a$g#[/")).isEqualTo("tag");
 
         final char[] str = new char[1024];
         final String randomString = IntStream.range(0, str.length)
             .map(x -> (int) (Character.MAX_CODE_POINT * Math.random())).mapToObj(i -> new String(Character.toChars(i)))
             .collect(Collectors.joining(""));
-        final String sanitized = SwaggerHelper.sanitizeTag(randomString);
+        final String sanitized = Oas20ModelHelper.sanitizeTag(randomString);
         assertThatCode(() -> JsonRecordSupport.validateKey(sanitized)).doesNotThrowAnyException();
     }
 
@@ -177,7 +188,7 @@ public class SwaggerHelperTest {
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
-            final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+            final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
             assertThat(info.getErrors())
                 .withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors()).isEmpty();
@@ -187,7 +198,7 @@ public class SwaggerHelperTest {
     @Test
     public void testThatInvalidFieldPetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -200,7 +211,7 @@ public class SwaggerHelperTest {
     @Test
     public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).hasSize(1);
@@ -215,7 +226,7 @@ public class SwaggerHelperTest {
     @Test
     public void testThatInvalidTypePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -227,17 +238,13 @@ public class SwaggerHelperTest {
     @Test
     public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
         final String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
         assertThat(info.getWarnings()).hasSize(2);
     }
 
-    ArrayNode newArray() {
-        return OpenApiHelper.mapper().createArrayNode();
-    }
-
-    ObjectNode newNode() {
-        return OpenApiHelper.mapper().createObjectNode();
+    private static ObjectNode newNode() {
+        return JsonUtils.copyObjectMapperConfiguration().createObjectNode();
     }
 }

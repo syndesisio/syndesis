@@ -26,7 +26,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.OpenApiUnifiedShapeConnectorGenerator;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.apache.commons.io.IOUtils;
@@ -64,7 +64,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {
-            return new SwaggerUnifiedShapeConnectorGenerator(new Connector.Builder()
+            return new OpenApiUnifiedShapeConnectorGenerator(new Connector.Builder()
                 .addTags("from-connector")
                 .build());
         }

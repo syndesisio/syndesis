@@ -15,19 +15,18 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public interface DataShapeGenerator {
 
     DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
-    DataShape createShapeFromRequest(ObjectNode json, Swagger swagger, Operation operation);
+    DataShape createShapeFromRequest(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
 
-    DataShape createShapeFromResponse(ObjectNode json, Swagger swagger, Operation operation);
+    DataShape createShapeFromResponse(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
 
 }

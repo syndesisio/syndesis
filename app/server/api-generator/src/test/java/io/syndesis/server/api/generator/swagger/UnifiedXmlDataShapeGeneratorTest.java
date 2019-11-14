@@ -21,12 +21,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import io.swagger.models.Swagger;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.Property;
-import io.syndesis.common.util.openapi.OpenApiHelper;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
-
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -36,20 +38,14 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorTest {
 
-    private static final ObjectMapper MAPPER = OpenApiHelper.mapper();
-
     private static final Map<String, UnifiedXmlDataShapeGenerator.SchemaPrefixAndElement> NO_MORE_SCHEMAS = null;
 
-    private static final Swagger NO_SWAGGER = null;
+    private static final Oas20Document NO_OPEN_API_DOC = null;
 
     @Parameter(3)
     public String arrayElementName;
@@ -64,13 +60,12 @@ public class UnifiedXmlDataShapeGeneratorTest {
     public String xmlSchemaSnippet;
 
     @Test
-    public void shouldCreateArrayFromExamples() {
-        final Map<String, ArrayProperty> namedPropertyMap = propertyFrom(jsonSchemaSnippet);
-        final Entry<String, ArrayProperty> namedProperty = namedPropertyMap.entrySet().iterator().next();
+    public void shouldCreateArrayFromExamples() throws IOException {
+        final Map<String, Oas20Schema> namedPropertyMap = propertyFrom(jsonSchemaSnippet);
+        final Entry<String, Oas20Schema> namedProperty = namedPropertyMap.entrySet().iterator().next();
 
         final String propertyName = namedProperty.getKey();
-
-        final ArrayProperty array = namedProperty.getValue();
+        final Oas20Schema array = namedProperty.getValue();
 
         final Document document = DocumentHelper.createDocument();
         final Element parent = document.addElement("xsd:sequence", XmlSchemaHelper.XML_SCHEMA_NS);
@@ -78,7 +73,7 @@ public class UnifiedXmlDataShapeGeneratorTest {
         assertThat(UnifiedXmlDataShapeGenerator.determineArrayItemName(propertyName, array)).isEqualTo(arrayItemName);
         assertThat(UnifiedXmlDataShapeGenerator.determineArrayElementName(propertyName, array)).isEqualTo(arrayElementName);
 
-        UnifiedXmlDataShapeGenerator.defineArrayElement(array, propertyName, parent, NO_SWAGGER, NO_MORE_SCHEMAS);
+        UnifiedXmlDataShapeGenerator.defineArrayElement(array, propertyName, parent, NO_OPEN_API_DOC, NO_MORE_SCHEMAS);
         assertThat(XmlSchemaHelper.serialize(document)).isXmlEqualTo(schema(xmlSchemaSnippet));
     }
 
@@ -144,20 +139,19 @@ public class UnifiedXmlDataShapeGeneratorTest {
                 "animals", "animals"});
     }
 
-    private static Map<String, ArrayProperty> propertyFrom(final String json) {
-        try {
-            final ObjectNode object = (ObjectNode) MAPPER.readTree(json);
+    private static Map<String, Oas20Schema> propertyFrom(final String json) throws IOException {
+        final ObjectNode object = (ObjectNode) JsonUtils.reader().readTree(json);
 
-            final String propertyName = object.fieldNames().next();
+        final String propertyName = object.fieldNames().next();
 
-            final JsonNode node = object.elements().next();
+        final JsonNode node = object.elements().next();
 
-            final ArrayProperty array = MAPPER.readerFor(Property.class).readValue(node);
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.paths = openApiDoc.createPaths();
+        Oas20PathItem pathItem = (Oas20PathItem) openApiDoc.paths.createPathItem("/foo");
 
-            return Collections.singletonMap(propertyName, array);
-        } catch (final IOException e) {
-            throw new AssertionError("Unable to deserialize given parameter", e);
-        }
+        final Oas20Schema schema = (Oas20Schema) Library.readNode(node, pathItem.createParameter().createSchema());
+        return Collections.singletonMap(propertyName, schema);
     }
 
     private static String schema(final String xml) {

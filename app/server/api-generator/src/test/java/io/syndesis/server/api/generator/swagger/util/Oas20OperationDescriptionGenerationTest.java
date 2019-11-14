@@ -17,10 +17,9 @@ package io.syndesis.server.api.generator.swagger.util;
 
 import java.util.Arrays;
 
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Swagger;
-
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -29,24 +28,31 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
-public class SwaggerHelperOperationDescriptionGenerationTest {
+public class Oas20OperationDescriptionGenerationTest {
 
     private final OperationDescription expected;
 
-    private final Operation operation;
+    private final Oas20Operation operation;
 
-    private final Swagger swagger;
+    private final Oas20Document openApiDoc;
 
-    public SwaggerHelperOperationDescriptionGenerationTest(final String operationSummary, final String operationDescription,
-        final String expectedName, final String expectedDescription) {
-        operation = new Operation().description(operationDescription).summary(operationSummary);
-        swagger = new Swagger().path("/test", new Path().get(operation));
+    public Oas20OperationDescriptionGenerationTest(final String operationSummary, final String operationDescription,
+                                                   final String expectedName, final String expectedDescription) {
+        operation = new Oas20Operation("get");
+        operation.description = operationDescription;
+        operation.summary = operationSummary;
+
+        openApiDoc = new Oas20Document();
+        Oas20PathItem pathItem = new Oas20PathItem("/test");
+        pathItem.get = operation;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/test", pathItem);
         expected = new OperationDescription(expectedName, expectedDescription);
     }
 
     @Test
     public void shouldDetermineOperationDescriptions() {
-        assertThat(SwaggerHelper.operationDescriptionOf(swagger, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
+        assertThat(Oas20ModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
     }
 
     @Parameters

@@ -34,11 +34,11 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SwaggerAPIGeneratorTest {
+public class OpenApiGeneratorTest {
 
     @Test
     public void infoShouldHandleNullModels() {
-        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+        final OpenApiGenerator generator = new OpenApiGenerator();
 
         final APISummary summary = generator.info("invalid", APIValidationContext.NONE);
 
@@ -50,7 +50,7 @@ public class SwaggerAPIGeneratorTest {
 
     @Test
     public void infoShouldHandleNullPaths() {
-        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+        final OpenApiGenerator generator = new OpenApiGenerator();
 
         final APISummary summary = generator.info("{\"swagger\": \"2.0\"}", APIValidationContext.NONE);
 
@@ -61,7 +61,7 @@ public class SwaggerAPIGeneratorTest {
 
     @Test
     public void infoShouldHandleNullSpecifications() {
-        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+        final OpenApiGenerator generator = new OpenApiGenerator();
 
         final APISummary summary = generator.info(null, APIValidationContext.NONE);
 
@@ -74,7 +74,7 @@ public class SwaggerAPIGeneratorTest {
     public void testEmptyOperationSummary() throws IOException {
         final ProvidedApiTemplate template = new ProvidedApiTemplate(dummyConnection(), "fromAction", "toAction");
         final String specification = TestHelper.resource("/swagger/empty-summary.json");
-        final SwaggerAPIGenerator generator = new SwaggerAPIGenerator();
+        final OpenApiGenerator generator = new OpenApiGenerator();
 
         final APIIntegration apiIntegration = generator.generateIntegration(specification, template);
         assertThat(apiIntegration).isNotNull();

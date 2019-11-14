@@ -18,12 +18,9 @@ package io.syndesis.server.api.generator.swagger.util;
 import java.io.IOException;
 import java.io.StringWriter;
 
-import io.swagger.models.ModelImpl;
-import io.swagger.models.Xml;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
-
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.models.OasXML;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -54,41 +51,41 @@ public final class XmlSchemaHelper {
         return current;
     }
 
-    public static boolean isAttribute(final Property property) {
-        final Xml xml = property.getXml();
+    public static boolean isAttribute(final OasSchema property) {
+        final OasXML xml = property.xml;
         if (xml == null) {
             return false;
         }
 
-        final Boolean attribute = xml.getAttribute();
+        final Boolean attribute = xml.attribute;
 
         return Boolean.TRUE.equals(attribute);
     }
 
-    public static boolean isElement(final Property property) {
-        final Xml xml = property.getXml();
+    public static boolean isElement(final OasSchema property) {
+        final OasXML xml = property.xml;
         if (xml == null) {
             return true;
         }
 
-        final Boolean attribute = xml.getAttribute();
+        final Boolean attribute = xml.attribute;
 
         return attribute == null || Boolean.FALSE.equals(attribute);
     }
 
-    public static String nameOf(final ModelImpl model) {
-        return xmlNameOrDefault(model.getXml(), model.getName());
+    public static String nameOf(final Oas20SchemaDefinition model) {
+        return xmlNameOrDefault(model.xml, model.getName());
     }
 
-    public static String nameOf(final Property property) {
-        if (property instanceof RefProperty) {
+    public static String nameOf(final OasSchema property) {
+        if (Oas20ModelHelper.isReferenceType(property)) {
             throw new IllegalArgumentException("Make sure that you dereference property, given: " + property);
         }
 
-        return xmlNameOrDefault(property.getXml(), property.getName());
+        return xmlNameOrDefault(property.xml, Oas20ModelHelper.getPropertyName(property));
     }
 
-    public static String nameOrDefault(final Property property, final String name) {
+    public static String nameOrDefault(final OasSchema property, final String name) {
         final String determined = nameOf(property);
         if (determined == null) {
             return name;
@@ -139,36 +136,36 @@ public final class XmlSchemaHelper {
         }
     }
 
-    public static boolean xmlIsWrapped(final ArrayProperty array) {
-        if (array == null || array.getXml() == null) {
+    public static boolean xmlIsWrapped(final OasSchema array) {
+        if (array == null || array.xml == null) {
             return false;
         }
 
-        return Boolean.TRUE.equals(array.getXml().getWrapped());
+        return Boolean.TRUE.equals(array.xml.wrapped);
     }
 
-    public static String xmlNameOrDefault(final Xml xml, final String defaultName) {
-        if (xml == null || xml.getName() == null) {
+    public static String xmlNameOrDefault(final OasXML xml, final String defaultName) {
+        if (xml == null || xml.name == null) {
             return defaultName;
         }
 
-        return xml.getName();
+        return xml.name;
     }
 
-    public static String xmlTargetNamespaceOrNull(final ModelImpl model) {
-        if (model == null || model.getXml() == null) {
+    public static String xmlTargetNamespaceOrNull(final Oas20SchemaDefinition model) {
+        if (model == null || model.xml == null) {
             return null;
         }
 
-        return model.getXml().getNamespace();
+        return model.xml.namespace;
     }
 
-    public static String xmlTargetNamespaceOrNull(final Property property) {
-        if (property == null || property.getXml() == null) {
+    public static String xmlTargetNamespaceOrNull(final OasSchema property) {
+        if (property == null || property.xml == null) {
             return null;
         }
 
-        return property.getXml().getNamespace();
+        return property.xml.namespace;
     }
 
 }

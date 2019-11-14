@@ -17,6 +17,7 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +25,14 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
-import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
-import io.swagger.models.auth.ApiKeyAuthDefinition;
-import io.swagger.models.auth.BasicAuthDefinition;
-import io.swagger.models.auth.OAuth2Definition;
-import io.swagger.models.auth.SecuritySchemeDefinition;
+import io.apicurio.datamodels.core.models.Extension;
+import io.apicurio.datamodels.core.models.common.SecurityScheme;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Scopes;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityDefinitions;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConnectorSettings;
-
 import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Optional.empty;
@@ -57,17 +56,17 @@ enum PropertyGenerators {
     authenticationParameterName {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> apiKeyProperty(swagger, template, settings, ApiKeyAuthDefinition::getName);
+            return (openApiDoc, template, settings) -> apiKeyProperty(openApiDoc, template, settings, SecurityScheme::getSchemeName);
         }
     },
     authenticationParameterPlacement {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> securityDefinition(swagger, settings, ApiKeyAuthDefinition.class)
+            return (openApiDoc, template, settings) -> securityDefinition(openApiDoc, settings, SchemeType.API_KEY)
                 .map(definition -> new ConfigurationProperty.Builder()
                     .createFrom(template)
                     .getEnum(Collections.emptyList())
-                    .defaultValue(definition.getIn().toValue())
+                    .defaultValue(definition.in)
                     .build());
         }
     },
@@ -80,16 +79,18 @@ enum PropertyGenerators {
     authenticationType {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> {
-                final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
-                if (securityDefinitions == null || securityDefinitions.isEmpty()) {
+            return (openApiDoc, template, settings) -> {
+                final List<Oas20SecurityScheme> securityDefinitions = ofNullable(openApiDoc.securityDefinitions)
+                                                                        .map(Oas20SecurityDefinitions::getSecuritySchemes)
+                                                                        .orElse(Collections.emptyList());
+                if (securityDefinitions.isEmpty()) {
                     return Optional.of(NO_SECURITY.apply(template));
                 }
 
-                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.entrySet().stream()
-                    .filter(e -> SupportedAuthenticationTypes.supports(e.getValue()))
-                    .map(e -> SupportedAuthenticationTypes.asPropertyValue(e.getKey(), e.getValue()))
-                    .toArray(l -> new ConfigurationProperty.PropertyValue[l]);
+                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.stream()
+                    .filter(SupportedAuthenticationTypes::supports)
+                    .map(e -> SupportedAuthenticationTypes.asPropertyValue(e.getSchemeName(), e))
+                    .toArray(ConfigurationProperty.PropertyValue[]::new);
 
                 if (enums.length == 0) {
                     return Optional.of(NO_SECURITY.apply(template));
@@ -110,19 +111,19 @@ enum PropertyGenerators {
     authorizationEndpoint {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthProperty(swagger, template, settings, OAuth2Definition::getAuthorizationUrl);
+            return (openApiDoc, template, settings) -> oauthProperty(openApiDoc, template, settings, scheme -> scheme.authorizationUrl);
         }
     },
     authorizeUsingParameters {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-authorize-using-parameters");
+            return (openApiDoc, template, settings) -> oauthVendorProperty(openApiDoc, template, settings, "x-authorize-using-parameters");
         }
     },
     basePath {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return withDefaultValue(Swagger::getBasePath);
+            return withDefaultValue(doc -> doc.basePath);
         }
     },
     clientId {
@@ -146,8 +147,8 @@ enum PropertyGenerators {
     oauthScopes {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthProperty(swagger, template, settings,
-                d -> ofNullable(d.getScopes()).map(scopes -> scopes.keySet().stream().sorted().collect(Collectors.joining(" "))).orElse(null));
+            return (openApiDoc, template, settings) -> oauthProperty(openApiDoc, template, settings,
+                d -> ofNullable(d.scopes).map(Oas20Scopes::getScopeNames).map(scopes -> scopes.stream().sorted().collect(Collectors.joining(" "))).orElse(null));
         }
     },
     password {
@@ -165,7 +166,7 @@ enum PropertyGenerators {
     refreshTokenRetryStatuses {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-refresh-token-retry-statuses");
+            return (openApiDoc, template, settings) -> oauthVendorProperty(openApiDoc, template, settings, "x-refresh-token-retry-statuses");
         }
     },
     specification {
@@ -177,13 +178,13 @@ enum PropertyGenerators {
     tokenEndpoint {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthProperty(swagger, template, settings, OAuth2Definition::getTokenUrl);
+            return (openApiDoc, template, settings) -> oauthProperty(openApiDoc, template, settings, scheme -> scheme.tokenUrl);
         }
     },
     tokenStrategy {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-token-strategy");
+            return (openApiDoc, template, settings) -> oauthVendorProperty(openApiDoc, template, settings, "x-token-strategy");
         }
     },
     username {
@@ -201,7 +202,30 @@ enum PropertyGenerators {
 
     @FunctionalInterface
     interface PropertyGenerator {
-        Optional<ConfigurationProperty> generate(Swagger swagger, ConfigurationProperty template, ConnectorSettings connectorSettings);
+        Optional<ConfigurationProperty> generate(Oas20Document openApiDoc, ConfigurationProperty template, ConnectorSettings connectorSettings);
+    }
+
+    /**
+     * Supported security schemes.
+     */
+    enum SchemeType {
+        OAUTH2("oauth2"),
+        BASIC("basic"),
+        API_KEY("apiKey");
+
+        private final String name;
+        SchemeType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 
     protected abstract PropertyGenerator propertyGenerator();
@@ -218,33 +242,37 @@ enum PropertyGenerators {
         }
     }
 
-    static Optional<ConfigurationProperty> createProperty(final String propertyName, final Swagger swagger,
+    static Optional<ConfigurationProperty> createProperty(final String propertyName, final Oas20Document openApiDoc,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
         final PropertyGenerators propertyGenerator = PropertyGenerators.valueOf(propertyName);
 
-        return propertyGenerator.propertyGenerator().generate(swagger, template, connectorSettings);
+        return propertyGenerator.propertyGenerator().generate(openApiDoc, template, connectorSettings);
     }
 
-    static String determineHost(final Swagger swagger) {
-        final Map<String, Object> vendorExtensions = ofNullable(swagger.getVendorExtensions()).orElse(Collections.emptyMap());
-        final URI specificationUrl = (URI) vendorExtensions.get(BaseSwaggerConnectorGenerator.URL_EXTENSION);
+    static String determineHost(final Oas20Document openApiDoc) {
+        final Collection<Extension> vendorExtensions = ofNullable(openApiDoc.getExtensions()).orElse(Collections.emptyList());
+        final URI specificationUrl = vendorExtensions.stream()
+                                                     .filter(extension -> BaseOpenApiConnectorGenerator.URL_EXTENSION.equals(extension.name))
+                                                     .findFirst()
+                                                     .map(extension -> (URI) extension.value)
+                                                     .orElse(null);
 
-        final String schemeToUse = determineSchemeToUse(swagger, specificationUrl);
+        final String schemeToUse = determineSchemeToUse(openApiDoc, specificationUrl);
         if (schemeToUse == null) {
             return null;
         }
 
-        final String specificationHost = swagger.getHost();
+        final String specificationHost = openApiDoc.host;
         final boolean specificationWithoutHost = StringUtils.isEmpty(specificationHost);
         if (specificationWithoutHost && specificationUrl == null) {
             return null;
         }
 
         String hostToUse;
-        if (specificationWithoutHost && specificationUrl != null) {
+        if (specificationWithoutHost) {
             hostToUse = specificationUrl.getHost();
         } else {
-            hostToUse = swagger.getHost();
+            hostToUse = openApiDoc.host;
         }
 
         final int portToUse;
@@ -259,20 +287,21 @@ enum PropertyGenerators {
         return createHostUri(schemeToUse, hostToUse, portToUse);
     }
 
-    static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final ConnectorSettings connectorSettings,
-        final Class<T> type) {
-        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
-
-        if (securityDefinitions == null || securityDefinitions.isEmpty()) {
+    static Optional<Oas20SecurityScheme> securityDefinition(final Oas20Document openApiDoc,
+                                                            final ConnectorSettings connectorSettings, final SchemeType type) {
+        final List<Oas20SecurityScheme> securitySchemes = ofNullable(openApiDoc.securityDefinitions)
+                                                              .map(Oas20SecurityDefinitions::getSecuritySchemes)
+                                                              .orElse(Collections.emptyList());
+        if (securitySchemes.isEmpty()) {
             return empty();
         }
 
-        final Map<String, SecuritySchemeDefinition> supportedSecurityDefinitions = securityDefinitions.entrySet().stream()
-            .filter(e -> type.isInstance(e.getValue()))
-            .filter(e -> SupportedAuthenticationTypes.supports(e.getValue()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        final List<Oas20SecurityScheme> supportedSecuritySchemes = securitySchemes.stream()
+            .filter(scheme -> type.getName().equals(scheme.type))
+            .filter(SupportedAuthenticationTypes::supports)
+            .collect(Collectors.toList());
 
-        if (supportedSecurityDefinitions.isEmpty()) {
+        if (supportedSecuritySchemes.isEmpty()) {
             // no supported security definitions of selected type defined
             return empty();
         }
@@ -280,13 +309,12 @@ enum PropertyGenerators {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
         final String configuredAuthenticationType = configuredProperties.get(authenticationType.name());
 
-        if (supportedSecurityDefinitions.size() == 1 && configuredAuthenticationType == null) {
+        if (supportedSecuritySchemes.size() == 1 && configuredAuthenticationType == null) {
             // we have only one, so we provide that one as the user hasn't
             // expressed any preference
-            @SuppressWarnings("unchecked")
-            final T onlySecurityDefinitionPresent = (T) supportedSecurityDefinitions.values().iterator().next();
+            final Oas20SecurityScheme onlySecuritySchemePresent = supportedSecuritySchemes.get(0);
 
-            return Optional.of(onlySecurityDefinitionPresent);
+            return Optional.of(onlySecuritySchemePresent);
         }
 
         if (configuredAuthenticationType == null) {
@@ -295,16 +323,13 @@ enum PropertyGenerators {
             return empty();
         }
 
-        for (final Map.Entry<String, SecuritySchemeDefinition> securityDefinition : supportedSecurityDefinitions.entrySet()) {
+        for (final Oas20SecurityScheme securityScheme : supportedSecuritySchemes) {
             // we have more than one supported security definition and the
             // configured authentication type matches that definition
             final int idx = configuredAuthenticationType.indexOf(':');
 
-            if (idx > 0 && securityDefinition.getKey().equals(configuredAuthenticationType.substring(idx + 1))) {
-                @SuppressWarnings("unchecked")
-                final T choosenSecurityDefinition = (T) securityDefinition.getValue();
-
-                return Optional.of(choosenSecurityDefinition);
+            if (idx > 0 && securityScheme.getSchemeName().equals(configuredAuthenticationType.substring(idx + 1))) {
+                return Optional.of(securityScheme);
             }
         }
 
@@ -313,61 +338,60 @@ enum PropertyGenerators {
         return empty();
     }
 
-    private static Optional<ConfigurationProperty> apiKeyProperty(final Swagger swagger, final ConfigurationProperty template,
+    private static Optional<ConfigurationProperty> apiKeyProperty(final Oas20Document openApiDoc, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
-        final Function<ApiKeyAuthDefinition, String> defaultValueExtractor) {
-        return securityDefinition(swagger, connectorSettings, ApiKeyAuthDefinition.class)
+        final Function<Oas20SecurityScheme, String> defaultValueExtractor) {
+        return securityDefinition(openApiDoc, connectorSettings, SchemeType.API_KEY)
             .map(definition -> new ConfigurationProperty.Builder()
                 .createFrom(template)
                 .defaultValue(defaultValueExtractor.apply(definition))
                 .build());
     }
 
-    private static String determineSchemeToUse(final Swagger swagger, final URI specificationUrl) {
-        final List<Scheme> schemes = swagger.getSchemes();
+    private static String determineSchemeToUse(final Oas20Document openApiDoc, final URI specificationUrl) {
+        final List<String> schemes = openApiDoc.schemes;
         final boolean noSchemes = schemes == null || schemes.isEmpty();
         if (noSchemes && specificationUrl == null) {
             return null;
         }
 
         final String schemeToUse;
-        if (noSchemes && specificationUrl != null) {
+        if (noSchemes) {
             schemeToUse = specificationUrl.getScheme();
-        } else if (schemes.contains(Scheme.HTTPS)) {
+        } else if (schemes.contains("https")) {
             schemeToUse = "https";
         } else {
             schemeToUse = schemes.stream()//
-                .filter(s -> s.toValue().startsWith("http"))//
-                .map(s -> s.toValue())//
+                .filter(s -> s.startsWith("http"))//
                 .findFirst()//
                 .orElse(null);
         }
         return schemeToUse;
     }
 
-    private static Optional<ConfigurationProperty> fromTemplate(@SuppressWarnings("unused") final Swagger swagger,
+    private static Optional<ConfigurationProperty> fromTemplate(@SuppressWarnings("unused") final Oas20Document openApiDoc,
         final ConfigurationProperty template, @SuppressWarnings("unused") final ConnectorSettings connectorSettings) {
         return Optional.of(template);
     }
 
-    private static Optional<ConfigurationProperty> ifHasApiKeysSecurityDefinition(final Swagger swagger,
+    private static Optional<ConfigurationProperty> ifHasApiKeysSecurityDefinition(final Oas20Document openApiDoc,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(swagger, template, connectorSettings, ApiKeyAuthDefinition.class);
+        return ifHasSecurityDefinition(openApiDoc, template, connectorSettings, SchemeType.API_KEY);
     }
 
-    private static Optional<ConfigurationProperty> ifHasBasicSecurityDefinition(final Swagger swagger,
+    private static Optional<ConfigurationProperty> ifHasBasicSecurityDefinition(final Oas20Document openApiDoc,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(swagger, template, connectorSettings, BasicAuthDefinition.class);
+        return ifHasSecurityDefinition(openApiDoc, template, connectorSettings, SchemeType.BASIC);
     }
 
-    private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final Swagger swagger,
+    private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final Oas20Document openApiDoc,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(swagger, template, connectorSettings, OAuth2Definition.class);
+        return ifHasSecurityDefinition(openApiDoc, template, connectorSettings, SchemeType.OAUTH2);
     }
 
-    private static Optional<ConfigurationProperty> ifHasSecurityDefinition(final Swagger swagger, final ConfigurationProperty template,
-        final ConnectorSettings connectorSettings, final Class<? extends AbstractSecuritySchemeDefinition> type) {
-        final Optional<? extends AbstractSecuritySchemeDefinition> securityDefinition = securityDefinition(swagger, connectorSettings, type);
+    private static Optional<ConfigurationProperty> ifHasSecurityDefinition(final Oas20Document openApiDoc, final ConfigurationProperty template,
+        final ConnectorSettings connectorSettings, final SchemeType type) {
+        final Optional<Oas20SecurityScheme> securityDefinition = securityDefinition(openApiDoc, connectorSettings, type);
 
         if (securityDefinition.isPresent()) {
             return Optional.of(template);
@@ -376,41 +400,42 @@ enum PropertyGenerators {
         return empty();
     }
 
-    private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
+    private static Optional<ConfigurationProperty> oauthProperty(final Oas20Document openApiDoc, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
-        final Function<OAuth2Definition, String> defaultValueExtractor) {
-        return securityDefinition(swagger, connectorSettings, OAuth2Definition.class).map(definition -> new ConfigurationProperty.Builder()
+        final Function<Oas20SecurityScheme, String> defaultValueExtractor) {
+        return securityDefinition(openApiDoc, connectorSettings, SchemeType.OAUTH2).map(definition -> new ConfigurationProperty.Builder()
             .createFrom(template).defaultValue(defaultValueExtractor.apply(definition)).build());
     }
 
-    private static Optional<ConfigurationProperty> oauthVendorProperty(final Swagger swagger, final ConfigurationProperty template,
+    private static Optional<ConfigurationProperty> oauthVendorProperty(final Oas20Document openApiDoc, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
         final String name) {
-        return securityDefinition(swagger, connectorSettings, OAuth2Definition.class).map(definition -> vendorExtension(definition, template, name))
-            .orElse(empty());
+        return securityDefinition(openApiDoc, connectorSettings, SchemeType.OAUTH2).flatMap(definition -> vendorExtension(definition, template, name));
     }
 
-    private static Optional<ConfigurationProperty> vendorExtension(final SecuritySchemeDefinition definition,
+    private static Optional<ConfigurationProperty> vendorExtension(final Oas20SecurityScheme definition,
         final ConfigurationProperty template, final String name) {
-        final Map<String, Object> vendorExtensions = definition.getVendorExtensions();
+        final Collection<Extension> vendorExtensions = definition.getExtensions();
         if (vendorExtensions == null) {
             return empty();
         }
 
-        final Object value = vendorExtensions.get(name);
-        if (value == null) {
+        final Optional<Extension> maybeExtension = vendorExtensions.stream()
+                                                                .filter(extension -> name.equals(extension.name))
+                                                                .findFirst();
+        if (!maybeExtension.isPresent()) {
             return empty();
         }
 
-        final ConfigurationProperty property = new ConfigurationProperty.Builder().createFrom(template).defaultValue(String.valueOf(value))
+        final ConfigurationProperty property = new ConfigurationProperty.Builder().createFrom(template).defaultValue(String.valueOf(maybeExtension.get().value))
             .build();
 
         return Optional.of(property);
     }
 
     private static PropertyGenerator
-        withDefaultValue(final Function<Swagger, String> defaultValueExtractor) {
-        return (swagger, template, settings) -> Optional
-            .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue(defaultValueExtractor.apply(swagger)).build());
+        withDefaultValue(final Function<Oas20Document, String> defaultValueExtractor) {
+        return (openApiDoc, template, settings) -> Optional
+            .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue(defaultValueExtractor.apply(openApiDoc)).build());
     }
 }

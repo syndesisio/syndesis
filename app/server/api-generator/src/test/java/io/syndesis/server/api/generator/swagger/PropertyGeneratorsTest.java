@@ -16,40 +16,38 @@
 package io.syndesis.server.api.generator.swagger;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Optional;
 
-import io.swagger.models.Scheme;
-import io.swagger.models.Swagger;
-import io.swagger.models.auth.ApiKeyAuthDefinition;
-import io.swagger.models.auth.BasicAuthDefinition;
-import io.swagger.models.auth.OAuth2Definition;
+import io.apicurio.datamodels.core.models.Extension;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.ConnectorSettings;
-
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.swagger.PropertyGenerators.createHostUri;
 import static io.syndesis.server.api.generator.swagger.PropertyGenerators.determineHost;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class PropertyGeneratorsTest {
 
     @Test
     public void shouldConsiderOnlyAuthorizationCodeOAuthFlows() {
-        final Swagger swagger = new Swagger()
-            .securityDefinition("oauth-username-password", new OAuth2Definition().password("https://api.example.com/token"))
-            .securityDefinition("oauth-implicit", new OAuth2Definition().implicit("https://api.example.com/authz"))
-            .securityDefinition("oauth-authorization-code", new OAuth2Definition().accessCode("https://api.example.com/token", "https://api.example.com/authz"))
-            .securityDefinition("basic-auth", new BasicAuthDefinition())
-            .securityDefinition("api-key", new ApiKeyAuthDefinition());
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-username-password", oauth2SecurityScheme("oauth-username-password", "password", "https://api.example.com/token", null));
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-implicit", oauth2SecurityScheme("oauth-implicit", "implicit", null, "https://api.example.com/authz"));
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-authorization-code", oauth2SecurityScheme("oauth-authorization-code", "accessCode","https://api.example.com/token", "https://api.example.com/authz"));
+        openApiDoc.securityDefinitions.addSecurityScheme("basic-auth", basicAuthSecurityScheme("basic-auth"));
+        openApiDoc.securityDefinitions.addSecurityScheme("api-key", apiKeySecurityScheme("api-key"));
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder().build();
         final Optional<ConfigurationProperty> authenticationTypes = PropertyGenerators.authenticationType
             .propertyGenerator()
-            .generate(swagger, template, settings);
+            .generate(openApiDoc, template, settings);
 
         assertThat(authenticationTypes)
             .contains(new ConfigurationProperty.Builder()
@@ -67,15 +65,16 @@ public class PropertyGeneratorsTest {
 
     @Test
     public void shouldDefaultToNoSecurityIfNoSupportedSecurityDefinitionsFound() {
-        final Swagger swagger = new Swagger()
-            .securityDefinition("oauth-username-password", new OAuth2Definition().password("https://api.example.com/token"))
-            .securityDefinition("oauth-implicit", new OAuth2Definition().implicit("https://api.example.com/authz"));
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-username-password", oauth2SecurityScheme("oauth-username-password", "password", "https://api.example.com/token", null));
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-implicit", oauth2SecurityScheme("oauth-implicit", "implicit", null, "https://api.example.com/authz"));
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder().build();
         final Optional<ConfigurationProperty> authenticationTypes = PropertyGenerators.authenticationType
             .propertyGenerator()
-            .generate(swagger, template, settings);
+            .generate(openApiDoc, template, settings);
 
         assertThat(authenticationTypes)
             .contains(new ConfigurationProperty.Builder()
@@ -86,78 +85,112 @@ public class PropertyGeneratorsTest {
 
     @Test
     public void shouldDetermineFromHostsContainingPorts() {
-        assertThat(determineHost(new Swagger().host("54.152.43.92:8080").scheme(Scheme.HTTPS))).isEqualTo("https://54.152.43.92:8080");
+        Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.host = "54.152.43.92:8080";
+        openApiDoc.schemes = new ArrayList<>();
+        openApiDoc.schemes.add("https");
+        assertThat(determineHost(openApiDoc)).isEqualTo("https://54.152.43.92:8080");
     }
 
     @Test
     public void shouldDetermineHostFromSpecification() {
-        assertThat(determineHost(new Swagger().host("api.example.com").scheme(Scheme.HTTPS))).isEqualTo("https://api.example.com");
-        assertThat(determineHost(new Swagger().host("api.example.com").scheme(Scheme.HTTP).scheme(Scheme.HTTPS)))
-            .isEqualTo("https://api.example.com");
-        assertThat(determineHost(new Swagger().host("api.example.com").scheme(Scheme.HTTP))).isEqualTo("http://api.example.com");
+        Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.host = "api.example.com";
+        openApiDoc.schemes = new ArrayList<>();
+        openApiDoc.schemes.add("https");
+        assertThat(determineHost(openApiDoc)).isEqualTo("https://api.example.com");
+
+        openApiDoc.schemes.add("http");
+        assertThat(determineHost(openApiDoc)).isEqualTo("https://api.example.com");
+
+        openApiDoc.schemes.remove("https");
+        assertThat(determineHost(openApiDoc)).isEqualTo("http://api.example.com");
     }
 
     @Test
     public void shouldDetermineHostFromSpecificationUrl() {
         final URI specificationUrl = URI.create("https://api.example.com/swagger.json");
-        assertThat(determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)))
-            .isEqualTo("https://api.example.com");
-        assertThat(
-            determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl).scheme(Scheme.HTTP)))
-                .isEqualTo("http://api.example.com");
-        assertThat(determineHost(new Swagger().vendorExtension(BaseSwaggerConnectorGenerator.URL_EXTENSION, specificationUrl)
-            .host("api2.example.com").scheme(Scheme.HTTP))).isEqualTo("http://api2.example.com");
+        Oas20Document openApiDoc = new Oas20Document();
+        Extension extension = new Extension();
+        extension.name = BaseOpenApiConnectorGenerator.URL_EXTENSION;
+        extension.value = specificationUrl;
+        openApiDoc.addExtension(BaseOpenApiConnectorGenerator.URL_EXTENSION, extension);
+
+        assertThat(determineHost(openApiDoc)).isEqualTo("https://api.example.com");
+        openApiDoc.schemes = new ArrayList<>();
+        openApiDoc.schemes.add("http");
+        assertThat(determineHost(openApiDoc)).isEqualTo("http://api.example.com");
+
+        openApiDoc.host = "api2.example.com";
+        assertThat(determineHost(openApiDoc)).isEqualTo("http://api2.example.com");
     }
 
     @Test
     public void shouldDetermineSecurityDefinitionToUseFromTheConfiguredAuthenticationType() {
-        final BasicAuthDefinition securityDefinition = new BasicAuthDefinition();
+        final Oas20SecurityScheme securityScheme = basicAuthSecurityScheme("username-password");
 
-        final Swagger swagger = new Swagger()
-            .securityDefinition("username-password", securityDefinition);
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        openApiDoc.securityDefinitions.addSecurityScheme("username-password", securityScheme);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
             .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:username-password")
             .build();
 
-        final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
-        assertThat(got).containsSame(securityDefinition);
+        final Optional<Oas20SecurityScheme> got = PropertyGenerators.securityDefinition(openApiDoc, settings, PropertyGenerators.SchemeType.BASIC);
+        assertThat(got).containsSame(securityScheme);
     }
 
     @Test
     public void shouldDetermineSecurityDefinitionToUseFromTheConfiguredAuthenticationTypeWithName() {
-        final BasicAuthDefinition securityDefinition = new BasicAuthDefinition();
+        final Oas20SecurityScheme securityScheme = basicAuthSecurityScheme("username-password");
 
-        final Swagger swagger = new Swagger()
-            .securityDefinition("username-password", securityDefinition);
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        openApiDoc.securityDefinitions.addSecurityScheme("username-password", securityScheme);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
             .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:username-password")
             .build();
 
-        final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
-        assertThat(got).containsSame(securityDefinition);
+        final Optional<Oas20SecurityScheme> got = PropertyGenerators.securityDefinition(openApiDoc, settings, PropertyGenerators.SchemeType.BASIC);
+        assertThat(got).containsSame(securityScheme);
     }
 
     @Test
     public void shouldReturnNullIfNoHostGivenAnywhere() {
-        assertThat(determineHost(new Swagger())).isNull();
-        assertThat(determineHost(new Swagger().scheme(Scheme.HTTP))).isNull();
-        assertThat(determineHost(new Swagger().host("host"))).isNull();
+        Oas20Document openApiDoc = new Oas20Document();
+        assertThat(determineHost(openApiDoc)).isNull();
+
+        openApiDoc.schemes = new ArrayList<>();
+        openApiDoc.schemes.add("http");
+        assertThat(determineHost(openApiDoc)).isNull();
+
+        openApiDoc = new Oas20Document();
+        openApiDoc.host = "host";
+        assertThat(determineHost(openApiDoc)).isNull();
     }
 
     @Test
     public void shouldReturnNullIfNoHttpSchemesFound() {
-        assertThat(determineHost(new Swagger().scheme(Scheme.WS).scheme(Scheme.WSS))).isNull();
+        Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.schemes = new ArrayList<>();
+        openApiDoc.schemes.add("ws");
+        openApiDoc.schemes.add("wss");
+
+        assertThat(determineHost(openApiDoc)).isNull();
     }
 
     @Test
     public void shouldTakeOnlyAuthorizationCodeOAuthFlowUrls() {
-        final Swagger swagger = new Swagger()
-            .securityDefinition("oauth-username-password", new OAuth2Definition().password("https://wrong.example.com/token"))
-            .securityDefinition("oauth-implicit", new OAuth2Definition().implicit("https://wrong.example.com/authz"))
-            .securityDefinition("oauth-authorization-code",
-                new OAuth2Definition().accessCode("https://api.example.com/token", "https://api.example.com/authz"));
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-username-password",
+            oauth2SecurityScheme("oauth-username-password", "password", "https://wrong.example.com/token", null));
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-implicit",
+            oauth2SecurityScheme("oauth-implicit", "implicit", null, "https://wrong.example.com/authz"));
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth-authorization-code",
+            oauth2SecurityScheme("oauth-authorization-code", "accessCode","https://api.example.com/token", "https://api.example.com/authz"));
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder()
@@ -165,20 +198,41 @@ public class PropertyGeneratorsTest {
             .build();
         final Optional<ConfigurationProperty> authorizationEndpoint = PropertyGenerators.authorizationEndpoint
             .propertyGenerator()
-            .generate(swagger, template, settings);
+            .generate(openApiDoc, template, settings);
 
         assertThat(authorizationEndpoint)
             .contains(new ConfigurationProperty.Builder()
-                .defaultValue("https://api.example.com/token")
+                .defaultValue("https://api.example.com/authz")
                 .build());
 
         final Optional<ConfigurationProperty> tokenEndpoint = PropertyGenerators.tokenEndpoint
             .propertyGenerator()
-            .generate(swagger, template, settings);
+            .generate(openApiDoc, template, settings);
 
         assertThat(tokenEndpoint)
             .contains(new ConfigurationProperty.Builder()
-                .defaultValue("https://api.example.com/authz")
+                .defaultValue("https://api.example.com/token")
                 .build());
+    }
+
+    private static Oas20SecurityScheme oauth2SecurityScheme(String name, String flow, String tokenUrl, String authorizationUrl) {
+        Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
+        securityScheme.type = PropertyGenerators.SchemeType.OAUTH2.getName();
+        securityScheme.tokenUrl = tokenUrl;
+        securityScheme.authorizationUrl = authorizationUrl;
+        securityScheme.flow = flow;
+        return  securityScheme;
+    }
+
+    private static Oas20SecurityScheme basicAuthSecurityScheme(String name) {
+        Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
+        securityScheme.type = PropertyGenerators.SchemeType.BASIC.getName();
+        return  securityScheme;
+    }
+
+    private static Oas20SecurityScheme apiKeySecurityScheme(String name) {
+        Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
+        securityScheme.type = PropertyGenerators.SchemeType.API_KEY.getName();
+        return  securityScheme;
     }
 }

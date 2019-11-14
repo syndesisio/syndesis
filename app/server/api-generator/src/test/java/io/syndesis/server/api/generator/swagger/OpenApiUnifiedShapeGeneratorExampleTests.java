@@ -24,7 +24,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +34,9 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
-public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGeneratorExampleTest {
+public class OpenApiUnifiedShapeGeneratorExampleTests extends BaseOpenApiGeneratorExampleTest {
 
-    public SwaggerUnifiedShapeGeneratorExampleTests(final String name) throws IOException {
+    public OpenApiUnifiedShapeGeneratorExampleTests(final String name) throws IOException {
         super("unified", name);
     }
 
@@ -48,18 +48,18 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
 
     @Test
     public void specificationsShouldNotContainErrors() {
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
     }
 
     @Override
     ConnectorGenerator generator() {
-        try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+        try (InputStream stream = OpenApiUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
             final AtomicInteger cnt = new AtomicInteger();
-            return new SwaggerUnifiedShapeConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
+            return new OpenApiUnifiedShapeConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
         } catch (final IOException e) {
             throw new AssertionError(e);
         }
