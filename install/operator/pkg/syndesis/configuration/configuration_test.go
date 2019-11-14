@@ -90,7 +90,10 @@ func Test_setConfigFromEnv(t *testing.T) {
 							Image: "DATABASE_IMAGE", ImageStreamNamespace: "DATABASE_NAMESPACE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 						},
-						Server: ServerConfiguration{Image: "SERVER_IMAGE"},
+						Server: ServerConfiguration{
+							Image:    "SERVER_IMAGE",
+							Features: ServerFeatures{TestSupport: false},
+						},
 					},
 				},
 			},
@@ -123,7 +126,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 			env: []string{
 				"PSQL_IMAGE", "S2I_IMAGE", "OPERATOR_IMAGE", "UI_IMAGE", "SERVER_IMAGE",
 				"META_IMAGE", "DV_IMAGE", "OAUTH_IMAGE", "PROMETHEUS_IMAGE", "UPGRADE_IMAGE",
-				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT",
+				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT", "TEST_SUPPORT",
 			},
 			wantErr: false,
 		},
