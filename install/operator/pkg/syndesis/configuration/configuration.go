@@ -261,7 +261,7 @@ func (config *Config) loadFromFile(file string) error {
 // Set Config.RouteHostname based on the Spec.Host property of the syndesis route
 // If an environment variable is set to overwrite the route, take that instead
 func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
-	if os.Getenv("ROUTE_HOSTNAME") != "" {
+	if os.Getenv("ROUTE_HOSTNAME") == "" {
 		syndesisRoute := &routev1.Route{}
 
 		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {

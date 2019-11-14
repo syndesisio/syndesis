@@ -17,9 +17,12 @@
 package configuration
 
 import (
+	"context"
 	"os"
 	"reflect"
 	"testing"
+
+	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/stretchr/testify/assert"
 
@@ -407,6 +410,50 @@ func Test_setBoolFromEnv(t *testing.T) {
 			if got := setBoolFromEnv(tt.args.env, tt.args.current); got != tt.want {
 				t.Errorf("setBoolFromEnv() = %v, want %v", got, tt.want)
 			}
+
+			for k, _ := range tt.env {
+				os.Unsetenv(k)
+			}
+		})
+	}
+}
+
+func TestConfig_SetRoute(t *testing.T) {
+	type args struct {
+		ctx      context.Context
+		client   client.Client
+		syndesis *v1alpha1.Syndesis
+	}
+	tests := []struct {
+		name    string
+		args    args
+		env     map[string]string
+		wantErr bool
+		want    string
+	}{
+		{
+			name: "If ROUTE_HOSTNAME environment variable is set, config.RouteHostname should take that value",
+			args: args{
+				ctx:      context.TODO(),
+				client:   nil,
+				syndesis: nil,
+			},
+			wantErr: false,
+			env:     map[string]string{"ROUTE_HOSTNAME": "some_value"},
+			want:    "some_value",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.env {
+				os.Setenv(k, v)
+			}
+
+			config := getConfigLiteral()
+			if err := config.SetRoute(tt.args.ctx, tt.args.client, tt.args.syndesis); (err != nil) != tt.wantErr {
+				t.Errorf("SetRoute() error = %v, wantErr %v", err, tt.wantErr)
+			}
+			assert.Equal(t, config.RouteHostname, tt.want)
 
 			for k, _ := range tt.env {
 				os.Unsetenv(k)
