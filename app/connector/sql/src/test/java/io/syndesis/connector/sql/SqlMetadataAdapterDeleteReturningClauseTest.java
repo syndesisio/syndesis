@@ -42,6 +42,7 @@ import org.json.JSONException;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,6 +53,7 @@ import org.testcontainers.containers.JdbcDatabaseContainer;
 import org.testcontainers.containers.PostgreSQLContainer;
 
 @RunWith(Parameterized.class)
+@Ignore("Needs docker installed to run")
 public class SqlMetadataAdapterDeleteReturningClauseTest {
 
     @Rule
