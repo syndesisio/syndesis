@@ -69,9 +69,10 @@ func Test_setConfigFromEnv(t *testing.T) {
 		{
 			name: "When all environment variables are set for images, a valid configuration with all values should be created",
 			want: &Config{
-				Productized: true,
-				ProductName: "something",
-				DevSupport:  false,
+				Productized:   true,
+				ProductName:   "something",
+				DevSupport:    false,
+				RouteHostname: "ROUTE_HOSTNAME",
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
@@ -123,7 +124,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 			env: []string{
 				"PSQL_IMAGE", "S2I_IMAGE", "OPERATOR_IMAGE", "UI_IMAGE", "SERVER_IMAGE",
 				"META_IMAGE", "DV_IMAGE", "OAUTH_IMAGE", "PROMETHEUS_IMAGE", "UPGRADE_IMAGE",
-				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT",
+				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT", "ROUTE_HOSTNAME",
 			},
 			wantErr: false,
 		},

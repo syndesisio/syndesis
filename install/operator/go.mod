@@ -18,6 +18,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/shurcooL/httpfs v0.0.0-20190527155220-6a4d4a70508b
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
+	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.4.0

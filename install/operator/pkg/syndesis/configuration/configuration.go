@@ -259,18 +259,22 @@ func (config *Config) loadFromFile(file string) error {
 }
 
 // Set Config.RouteHostname based on the Spec.Host property of the syndesis route
+// If an environment variable is set to overwrite the route, take that instead
 func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
-	syndesisRoute := &routev1.Route{}
+	if os.Getenv("ROUTE_HOSTNAME") != "" {
+		syndesisRoute := &routev1.Route{}
 
-	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {
-		if k8serrors.IsNotFound(err) {
-			return nil
-		} else {
-			return err
+		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis"}, syndesisRoute); err != nil {
+			if k8serrors.IsNotFound(err) {
+				return nil
+			} else {
+				return err
+			}
 		}
+		config.RouteHostname = syndesisRoute.Spec.Host
+	} else {
+		config.RouteHostname = os.Getenv("ROUTE_HOSTNAME")
 	}
-	config.RouteHostname = syndesisRoute.Spec.Host
-
 	return nil
 }
 
@@ -329,6 +333,7 @@ func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.
 // Overwrite operand images with values from ENV if those env are present
 func (config *Config) setConfigFromEnv() error {
 	img_env := Config{
+		RouteHostname: os.Getenv("ROUTE_HOSTNAME"),
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
 				DV: DvConfiguration{Image: os.Getenv("DV_IMAGE")},
