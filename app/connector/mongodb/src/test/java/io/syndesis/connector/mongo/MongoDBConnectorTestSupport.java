@@ -102,10 +102,10 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     }
 
     protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection) {
-        return fromDirectToMongo(directStart, connector, db, collection, null);
+        return fromDirectToMongo(directStart, connector, db, collection, null, null);
     }
 
-    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection, String operation) {
+    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection, String operation, String filter) {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
             newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
@@ -115,6 +115,9 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                 builder.putConfiguredProperty("adminDB", ADMIN_DB);
                 builder.putConfiguredProperty("database", db);
                 builder.putConfiguredProperty("collection", collection);
+                if (filter != null) {
+                    builder.putConfiguredProperty("filter", filter);
+                }
                 if (operation != null) {
                     builder.putConfiguredProperty("operation", operation);
                 }

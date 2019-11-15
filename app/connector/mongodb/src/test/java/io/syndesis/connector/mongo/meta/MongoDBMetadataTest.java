@@ -29,6 +29,7 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -91,17 +92,18 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         );
         // format as json the datashape
         JsonNode json = OBJECT_MAPPER.readTree(metadata.outputShape.getSpecification());
-        assertNotNull(json);
-        assertNotNull(json.get("properties"));
-        assertNotNull(json.get("$schema"));
-        assertNotNull(json.get("required"));
-        assertEquals("http://json-schema.org/schema#", json.get("$schema").asText());
-        assertNotNull(json.get("id"));
-        assertNotNull(json.get("type"));
+        Assertions.assertThat(json.get("$schema").asText()).isEqualTo("http://json-schema.org/schema#");
+        Assertions.assertThat(json.get("required").isArray()).isTrue();
+        Assertions.assertThat(json.get("properties").isObject()).isTrue();
+        Assertions.assertThat(json.get("properties").get("name")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("surname")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("email")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("year_of_birth")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("gender")).isNotNull();
     }
 
     @Test
-    public void verifyMetadataJsonSchemaMissing() throws IOException {
+    public void verifyMetadataJsonSchemaMissing() {
         // Given
         String collection = "noSchema";
         Map<String, Object> properties = new HashMap<>();
@@ -121,8 +123,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
             CONNECTOR_ID,
             properties
         );
-        assertEquals(DataShapeKinds.JAVA, metadata.inputShape.getKind());
-        assertEquals(DataShapeKinds.ANY, metadata.outputShape.getKind());
+        Assertions.assertThat(metadata.outputShape.getKind()).isEqualTo(DataShapeKinds.ANY);
     }
 
 }

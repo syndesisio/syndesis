@@ -28,7 +28,8 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-delete", DATABASE, COLLECTION);
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-delete", DATABASE, COLLECTION, null,
+            "{\"test\":\":#filter\"}");
     }
 
     @Test
@@ -41,7 +42,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
         assertEquals(1, docsFound.size());
         // Given
-        String removeArguments = "{\"test\":\"unit\"}";
+        String removeArguments = "{\"filter\":\"unit\"}";
         Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then
         docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
@@ -61,7 +62,7 @@ public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());
         assertEquals(3, docsFound.size());
         // Given
-        String removeArguments = "{\"test\":\"unit\"}";
+        String removeArguments = "{\"filter\":\"unit\"}";
         // Need the header to enable multiple updates!
         Long result = template.requestBody("direct:start", removeArguments, Long.class);
         // Then

@@ -15,12 +15,18 @@
  */
 package io.syndesis.connector.mongo.meta;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
+import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.connector.mongo.MongoCustomizersUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
@@ -32,6 +38,7 @@ import org.slf4j.LoggerFactory;
 public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoDBMetadataRetrieval.class);
+    private static final ObjectMapper MAPPER = new ObjectMapper();
     private final MetaDataExtension.MetaData defaultMeta = MetaDataBuilder.on(null).build();
 
     @Override
@@ -52,7 +59,7 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
                 .build();
         }
 
-        return MongoDBMetadataRetrieval.buildDatashape(actionId, schema);
+        return buildDatashape(actionId, schema, properties);
     }
 
     // The component may not return metadata if the collection has no validator associated
@@ -63,32 +70,69 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
         return meta.orElse(defaultMeta);
     }
 
-    private static SyndesisMetadata buildDatashape(String actionId, DataShape schema) {
-        if (actionId.endsWith("find")) {
-            return SyndesisMetadata.of(MongoDBMetadataRetrieval.criteria(), schema);
-        } else if (actionId.endsWith("insert")) {
+    public SyndesisMetadata buildDatashape(String actionId, DataShape schema, Map<String, Object> properties) {
+        if (isFilterAction(actionId)) {
+            return SyndesisMetadata.of(
+                MongoDBMetadataRetrieval.criteria(ConnectorOptions.extractOption(properties,"filter")),
+                schema);
+        } else if ("io.syndesis.connector:connector-mongodb-insert".equals(actionId)) {
             return SyndesisMetadata.of(schema);
         } else if (actionId.contains("consumer")) {
-            return SyndesisMetadata.outOnly(schema);
+            return SyndesisMetadata.of(none("N/A"), schema);
         } else {
             throw new IllegalArgumentException(String.format("Could not find any dynamic metadata adaptation for action %s", actionId));
         }
     }
 
-    private static DataShape any(String name) {
+    @SuppressWarnings("MethodCanBeStatic")
+    private boolean isFilterAction(String actionId) {
+        return "io.syndesis.connector:connector-mongodb-update".equals(actionId) ||
+            "io.syndesis.connector:connector-mongodb-find".equals(actionId) ||
+            "io.syndesis.connector:connector-mongodb-delete".equals(actionId) ||
+            "io.syndesis.connector:connector-mongodb-upsert".equals(actionId) ||
+            "io.syndesis.connector:connector-mongodb-count".equals(actionId);
+    }
+
+    public static DataShape any(String name) {
         return new DataShape.Builder()
             .name(name)
             .kind(DataShapeKinds.ANY)
             .build();
     }
 
-    private static DataShape criteria() {
+    public static DataShape none(String name) {
         return new DataShape.Builder()
-            .name("Raw text criteria")
-            .description("Text criteria")
-            .kind(DataShapeKinds.JAVA)
-            .type("java.lang.String")
+            .name(name)
+            .kind(DataShapeKinds.NONE)
             .build();
+    }
+
+    public static DataShape criteria(String filter) {
+        if (filter == null || !FilterUtil.hasAnyParameter(filter)){
+            return none("Filter parameters");
+        }
+        return new DataShape.Builder()
+            .name("Filter parameters")
+            .kind(DataShapeKinds.JSON_SCHEMA)
+            .specification(buildFilterJsonSpecification(filter))
+            .build();
+    }
+
+    public static String buildFilterJsonSpecification(String filter) {
+        final JsonSchemaFactory factory = new JsonSchemaFactory();
+        final ObjectSchema builderIn = new ObjectSchema();
+        List<String> parameters = FilterUtil.extractParameters(filter);
+        builderIn.setTitle("Filter parameters");
+        for(String param:parameters){
+            builderIn.putProperty(param,factory.stringSchema());
+        }
+        String jsonSpecification = null;
+        try {
+            jsonSpecification = MAPPER.writeValueAsString(builderIn);
+        } catch (JsonProcessingException e) {
+            LOGGER.error("Issue while processing filter parameters", e);
+        }
+        return  jsonSpecification;
     }
 
 }

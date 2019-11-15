@@ -21,6 +21,7 @@ import java.util.Map;
 
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.UpdateResult;
+import io.syndesis.connector.mongo.meta.FilterUtil;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.bson.Document;
@@ -32,12 +33,13 @@ import static java.util.stream.Collectors.toList;
 public final class MongoCustomizersUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MongoCustomizersUtil.class);
 
-    private MongoCustomizersUtil(){
+    private MongoCustomizersUtil() {
     }
 
     /**
      * Used to convert any result MongoOperation (either {@link DeleteResult} or {@link UpdateResult}
      * to a {@link Long}
+     *
      * @param exchange
      */
     static void convertMongoResultToLong(Exchange exchange) {
@@ -55,6 +57,7 @@ public final class MongoCustomizersUtil {
 
     /**
      * Used to convert any {@link Document} object to Json text list
+     *
      * @param exchange
      */
     static void convertMongoDocumentsToJsonTextList(Exchange exchange) {
@@ -76,14 +79,49 @@ public final class MongoCustomizersUtil {
     /**
      * Utility method used to replace the adminDB parameter if it was not provided
      * by user
+     *
      * @param params
      */
     public static void replaceAdminDBIfMissing(Map<String, Object> params) {
         // Fallback admin database parameter
-        if (!params.containsKey("adminDB")){
+        if (!params.containsKey("adminDB")) {
             params.put("adminDB", params.get("database"));
-        } else if (params.get("adminDB").equals("")){
+        } else if (params.get("adminDB").equals("")) {
             params.replace("adminDB", params.get("database"));
+        }
+    }
+
+    /**
+     * Merge the filter expression with body and set the result as the new body
+     *
+     * @param exchange
+     * @param filter
+     */
+    static void executeFilterComponent(Exchange exchange, String filter) {
+        executeFilterComponent(exchange, filter, null);
+    }
+
+    /**
+     * Merge the filter expression with body and set the result as an header
+     *
+     * @param exchange
+     * @param filter
+     * @param header
+     */
+    static void executeFilterComponent(Exchange exchange, String filter, String header) {
+        // Merge the filter parameter expression with values coming in the input body
+        final String body = exchange.getIn().getBody(String.class);
+        if (filter != null) {
+            String mergedFilter = FilterUtil.merge(filter, body);
+            if (header == null) {
+                // Put the merged criteria as the input body
+                exchange.getIn().setBody(mergedFilter);
+            } else {
+                // Put the merged criteria as a header
+                exchange.getIn().getHeaders().put(header, mergedFilter);
+            }
+        } else {
+            throw new IllegalArgumentException("The operation requires the user to provide a filter expression!");
         }
     }
 }
