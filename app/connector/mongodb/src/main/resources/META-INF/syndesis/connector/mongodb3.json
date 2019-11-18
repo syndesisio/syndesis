@@ -13,10 +13,9 @@
           "io.syndesis.connector.mongo.MongoProducerFindCustomizer"
         ],
         "inputDataShape": {
-          "name": "Criteria",
-          "description": "Text criteria",
-          "kind": "java",
-          "type": "java.lang.String"
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "kind": "json-schema"
@@ -35,6 +34,19 @@
                 "labelHint": "Collection used by this operation",
                 "order": "1",
                 "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Filter expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a filter to match a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": false,
                 "secret": false,
                 "type": "string"
               }
@@ -104,13 +116,13 @@
           "operation": "save"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerUpsertCustomizer"
         ],
         "inputDataShape": {
-          "name": "Criteria",
-          "description": "Counting text criteria",
-          "kind": "java",
-          "type": "java.lang.String"
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "name": "Upsert result",
@@ -134,6 +146,19 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Upsert expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to match a document to update or new document to be created if _id is not found. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"_id\": :#id, \"color\": /:#color/}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -141,7 +166,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-upsert",
       "name": "Upsert",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -156,10 +184,9 @@
           "io.syndesis.connector.mongo.MongoProducerUpdateCustomizer"
         ],
         "inputDataShape": {
-          "name": "Criteria",
-          "description": "Text criteria",
-          "kind": "java",
-          "type": "java.lang.String"
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "name": "Documents updated",
@@ -183,6 +210,19 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Update expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to update a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -190,7 +230,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-update",
       "name": "Update",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -205,10 +248,9 @@
           "io.syndesis.connector.mongo.MongoProducerDeleteCustomizer"
         ],
         "inputDataShape": {
-          "name": "Criteria",
-          "description": "Text criteria",
-          "kind": "java",
-          "type": "java.lang.String"
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "name": "Documents deleted",
@@ -232,6 +274,19 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Delete expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to delete a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -239,7 +294,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-delete",
       "name": "Delete",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -250,13 +308,13 @@
           "operation": "count"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.mongo.MongoProducerCustomizer"
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerCountCustomizer"
         ],
         "inputDataShape": {
-          "name": "Criteria",
-          "description": "Text criteria",
-          "kind": "java",
-          "type": "java.lang.String"
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "name": "Documents matching",
@@ -280,6 +338,19 @@
                 "required": true,
                 "secret": false,
                 "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Count expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to count a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -287,7 +358,10 @@
       },
       "id": "io.syndesis.connector:connector-mongodb-count",
       "name": "Count",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
