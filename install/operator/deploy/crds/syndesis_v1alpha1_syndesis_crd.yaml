@@ -125,6 +125,11 @@ spec:
                   properties:
                     features:
                       properties:
+                        integrationStateCheckInterval:
+                          format: int64
+                          type: integer
+                        managementUrlFor3scale:
+                          type: string
                         mavenRepositories:
                           additionalProperties:
                             type: string
@@ -142,6 +147,9 @@ spec:
                       type: object
                   type: object
               type: object
+            demoData:
+              description: Enable SampleDB and demo data for Syndesis
+              type: boolean
             imageStreamNamespace:
               type: string
           type: object

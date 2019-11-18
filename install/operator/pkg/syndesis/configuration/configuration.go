@@ -24,6 +24,7 @@ import (
 	"math/rand"
 	"net/url"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 
@@ -49,6 +50,7 @@ var TemplateConfig string
 type Config struct {
 	AllowLocalHost             bool
 	Productized                bool
+	DemoData                   bool           // Enables starting up with demo data
 	DevSupport                 bool           // If set to true, pull docker images from imagetag instead of upstream source
 	Scheduled                  bool           // Legacy parameter to set scheduled:true in the imagestreams, but we dont use many imagestreams nowadays
 	ProductName                string         // Usually syndesis or fuse-online
@@ -160,7 +162,6 @@ type ServerFeatures struct {
 	IntegrationLimit              int               // Maximum number of integrations single user can create
 	IntegrationStateCheckInterval int               // Interval for checking the state of the integrations
 	DeployIntegrations            bool              // Whether we deploy integrations
-	DemoData                      bool              // Enables starting up with demo data
 	TestSupport                   bool              // Enables test-support endpoint on backend API
 	OpenShiftMaster               string            // Public OpenShift master address
 	ManagementUrlFor3scale        string            // 3scale management URL
@@ -349,7 +350,13 @@ func (config *Config) setConfigFromEnv() error {
 					Image: os.Getenv("DATABASE_IMAGE"), ImageStreamNamespace: os.Getenv("DATABASE_NAMESPACE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
 				},
-				Server: ServerConfiguration{Image: os.Getenv("SERVER_IMAGE")},
+				Server: ServerConfiguration{
+					Image: os.Getenv("SERVER_IMAGE"),
+					Features: ServerFeatures{
+						IntegrationLimit:   setIntFromEnv("INTEGRATION_LIMIT", config.Syndesis.Components.Server.Features.IntegrationLimit),
+						DeployIntegrations: setBoolFromEnv("DEPLOY_INTEGRATIONS", config.Syndesis.Components.Server.Features.DeployIntegrations),
+					},
+				},
 			},
 		},
 	}
@@ -368,13 +375,25 @@ func (config *Config) setConfigFromEnv() error {
 // variable.
 func setBoolFromEnv(env string, current bool) bool {
 	var result bool
-	if var_from_env := os.Getenv(env); var_from_env != "" {
-		result = var_from_env == "true"
+	if varFromEnv := os.Getenv(env); varFromEnv != "" {
+		result = varFromEnv == "true"
 	} else {
 		result = current
 	}
 
 	return result
+}
+
+// Return the value of a config given its default value and an environment
+// variable.
+func setIntFromEnv(env string, current int) int {
+	if varFromEnv := os.Getenv(env); varFromEnv != "" {
+		if result, err := strconv.Atoi(varFromEnv); err == nil {
+			return result
+		}
+	}
+
+	return current
 }
 
 // Replace default values with those from custom resource

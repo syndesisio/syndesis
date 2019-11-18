@@ -66,7 +66,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 		name    string
 		conf    *Config
 		want    *Config
-		env     []string
+		env     map[string]string
 		wantErr bool
 	}{
 		{
@@ -74,8 +74,8 @@ func Test_setConfigFromEnv(t *testing.T) {
 			want: &Config{
 				Productized:   true,
 				ProductName:   "something",
-				DevSupport:    false,
-				RouteHostname: "ROUTE_HOSTNAME",
+				DevSupport:    true,
+				RouteHostname: "route",
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
@@ -95,8 +95,12 @@ func Test_setConfigFromEnv(t *testing.T) {
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 						},
 						Server: ServerConfiguration{
-							Image:    "SERVER_IMAGE",
-							Features: ServerFeatures{TestSupport: false},
+							Image: "SERVER_IMAGE",
+							Features: ServerFeatures{
+								TestSupport:        false,
+								IntegrationLimit:   30,
+								DeployIntegrations: true,
+							},
 						},
 					},
 				},
@@ -127,10 +131,13 @@ func Test_setConfigFromEnv(t *testing.T) {
 					},
 				},
 			},
-			env: []string{
-				"PSQL_IMAGE", "S2I_IMAGE", "OPERATOR_IMAGE", "UI_IMAGE", "SERVER_IMAGE",
-				"META_IMAGE", "DV_IMAGE", "OAUTH_IMAGE", "PROMETHEUS_IMAGE", "UPGRADE_IMAGE",
-				"DATABASE_NAMESPACE", "DATABASE_IMAGE", "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT", "TEST_SUPPORT", "ROUTE_HOSTNAME",
+			env: map[string]string{
+				"PSQL_IMAGE": "PSQL_IMAGE", "S2I_IMAGE": "S2I_IMAGE", "OPERATOR_IMAGE": "OPERATOR_IMAGE",
+				"UI_IMAGE": "UI_IMAGE", "SERVER_IMAGE": "SERVER_IMAGE", "META_IMAGE": "META_IMAGE",
+				"DV_IMAGE": "DV_IMAGE", "OAUTH_IMAGE": "OAUTH_IMAGE", "PROMETHEUS_IMAGE": "PROMETHEUS_IMAGE",
+				"UPGRADE_IMAGE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "DATABASE_IMAGE": "DATABASE_IMAGE",
+				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
+				"ROUTE_HOSTNAME": "route", "INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true",
 			},
 			wantErr: false,
 		},
@@ -138,14 +145,14 @@ func Test_setConfigFromEnv(t *testing.T) {
 			name:    "When no environment variables are set for images, a valid configuration with the original images should be created",
 			want:    getConfigLiteral(),
 			conf:    getConfigLiteral(),
-			env:     []string{},
+			env:     map[string]string{},
 			wantErr: false,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			for _, img := range tt.env {
-				os.Setenv(img, img)
+			for k, v := range tt.env {
+				os.Setenv(k, v)
 			}
 
 			err := tt.conf.setConfigFromEnv()
@@ -157,8 +164,8 @@ func Test_setConfigFromEnv(t *testing.T) {
 				t.Errorf("loadFromFile() got = %v, want %v", tt.conf, tt.want)
 			}
 
-			for _, img := range tt.env {
-				os.Unsetenv(img)
+			for k, _ := range tt.env {
+				os.Unsetenv(k)
 			}
 		})
 	}
@@ -337,7 +344,6 @@ func getConfigLiteral() *Config {
 					Features: ServerFeatures{
 						IntegrationLimit:              0,
 						IntegrationStateCheckInterval: 60,
-						DemoData:                      false,
 						DeployIntegrations:            true,
 						TestSupport:                   false,
 						OpenShiftMaster:               "https://localhost:8443",
@@ -454,6 +460,37 @@ func TestConfig_SetRoute(t *testing.T) {
 				t.Errorf("SetRoute() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			assert.Equal(t, config.RouteHostname, tt.want)
+
+			for k, _ := range tt.env {
+				os.Unsetenv(k)
+			}
+		})
+	}
+}
+
+func Test_setIntFromEnv(t *testing.T) {
+	type args struct {
+		env     string
+		current int
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+		env  map[string]string
+	}{
+		{"With no env, default value should not change", args{"NOT_EXISTING_ENV", 10}, 10, map[string]string{}},
+		{"With env set to a value, the default should take that value", args{"EXISTING_ENV", 10}, 30, map[string]string{"EXISTING_ENV": "30"}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			for k, v := range tt.env {
+				os.Setenv(k, v)
+			}
+
+			if got := setIntFromEnv(tt.args.env, tt.args.current); got != tt.want {
+				t.Errorf("setIntFromEnv() = %v, want %v", got, tt.want)
+			}
 
 			for k, _ := range tt.env {
 				os.Unsetenv(k)

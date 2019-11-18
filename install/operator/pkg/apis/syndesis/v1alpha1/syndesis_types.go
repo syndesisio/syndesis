@@ -28,6 +28,9 @@ import (
 type SyndesisSpec struct {
 	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
 
+	// Enable SampleDB and demo data for Syndesis
+	DemoData bool `json:"demoData,omitempty"`
+
 	// Components is used to configure all the core components of Syndesis
 	Components ComponentsSpec `json:"components,omitempty"`
 
@@ -122,7 +125,9 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
+	MavenRepositories             map[string]string `json:"mavenRepositories,omitempty"`
+	ManagementUrlFor3scale        string            `json:"managementUrlFor3scale,omitempty"`
+	IntegrationStateCheckInterval int               `json:"integrationStateCheckInterval,omitempty"`
 }
 
 type AddonsSpec struct {

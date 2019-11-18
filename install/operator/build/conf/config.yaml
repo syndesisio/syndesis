@@ -3,6 +3,7 @@ AllowLocalHost: false
 Productized: false
 DevSupport: false
 Scheduled: true
+DemoData: false
 Syndesis:
     ImageStreamNamespace: ""
     Addons:
@@ -67,7 +68,6 @@ Syndesis:
             Features:
                 IntegrationLimit: 0
                 IntegrationStateCheckInterval: 60
-                DemoData: false
                 DeployIntegrations: true
                 TestSupport: false
                 OpenShiftMaster: "https://localhost:8443"

@@ -121,6 +121,13 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 							Format: "",
 						},
 					},
+					"demoData": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Enable SampleDB and demo data for Syndesis",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
 					"components": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Components is used to configure all the core components of Syndesis",
