@@ -50,7 +50,6 @@ var TemplateConfig string
 type Config struct {
 	AllowLocalHost             bool
 	Productized                bool
-	DemoData                   bool           // Enables starting up with demo data
 	DevSupport                 bool           // If set to true, pull docker images from imagetag instead of upstream source
 	Scheduled                  bool           // Legacy parameter to set scheduled:true in the imagestreams, but we dont use many imagestreams nowadays
 	ProductName                string         // Usually syndesis or fuse-online
@@ -65,6 +64,7 @@ type Config struct {
 }
 
 type SyndesisConfig struct {
+	DemoData             bool           // Enables starting up with demo data
 	ImageStreamNamespace string         // Namespace where syndesis docker images are located and the operator should look after them
 	Components           ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
 	Addons               AddonsSpec     // Addons specifications and configurations

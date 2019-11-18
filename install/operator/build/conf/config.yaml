@@ -3,9 +3,9 @@ AllowLocalHost: false
 Productized: false
 DevSupport: false
 Scheduled: true
-DemoData: false
 Syndesis:
     ImageStreamNamespace: ""
+    DemoData: false
     Addons:
         Jaeger:
             Enabled: false
