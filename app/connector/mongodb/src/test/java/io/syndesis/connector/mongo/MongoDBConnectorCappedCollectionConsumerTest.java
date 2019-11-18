@@ -20,12 +20,15 @@ import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -33,15 +36,18 @@ import org.slf4j.LoggerFactory;
 
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerTest.class);
+    private final static String COLLECTION = "cappedCollection";
     private static int globalId = 0;
+
+    protected MongoCollection<Document> collection;
 
     // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
-        database.createCollection(COLLECTION, opts);
+        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION, opts);
         LOG.debug("Created a capped collection named {}", COLLECTION);
     }
 
@@ -49,6 +55,11 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
     protected List<Step> createSteps() {
         return fromMongoTailToMock("result", "io.syndesis.connector:connector-mongodb-consumer-tail", DATABASE, COLLECTION,
             "id");
+    }
+
+    @Before
+    public void init(){
+        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
     }
 
     @Test

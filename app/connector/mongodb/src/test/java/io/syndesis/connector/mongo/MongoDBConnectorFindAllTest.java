@@ -27,7 +27,14 @@ import org.junit.Test;
 
 import static org.assertj.core.api.ThrowableAssert.catchThrowable;
 
-public class MongoDBConnectorFindAllTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorFindAllTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "findAllCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {

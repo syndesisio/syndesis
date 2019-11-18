@@ -19,82 +19,46 @@ import java.io.IOException;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.mongodb.BasicDBList;
-import com.mongodb.MongoClient;
-import de.flapdoodle.embed.mongo.MongodExecutable;
-import de.flapdoodle.embed.mongo.MongodStarter;
-import de.flapdoodle.embed.mongo.config.IMongodConfig;
-import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
-import de.flapdoodle.embed.mongo.config.Net;
-import de.flapdoodle.embed.mongo.config.Storage;
-import de.flapdoodle.embed.mongo.distribution.Version;
+import com.mongodb.client.MongoCollection;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.AfterClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTestSupport {
 
-    protected static MongodExecutable mongodExecutablePrimary;
-    protected static MongodExecutable mongodExecutableSecondary;
+    private final static Logger LOG = LoggerFactory.getLogger(MongoDBConnectorChangeStreamConsumerTest.class);
+    private final static String COLLECTION = "changeStreamCollection";
+
+    protected MongoCollection<Document> collection;
+
+    @BeforeClass
+    public static void doCollectionSetup() {
+        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION);
+        LOG.debug("Created a change stream collection named {}", COLLECTION);
+    }
+
+    @Before
+    public void before(){
+        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
+    }
+
+    @After
+    public void after(){
+        collection.drop();
+    }
 
     @Override
     protected List<Step> createSteps() {
         return fromMongoChangeStreamToMock("result", "io.syndesis.connector:connector-mongodb-consumer-changestream", DATABASE, COLLECTION);
-    }
-
-    /**
-     * We need to create a cluster of at least 2 nodes to avoid exception on cluster shutdown
-     * @throws Exception
-     */
-    @BeforeClass
-    public static void startUpMongo() throws Exception {
-        IMongodConfig mongodConfigPrimary = new MongodConfigBuilder()
-            .version(Version.V3_6_5)
-            .net(new Net(HOST, PORT, false))
-            .replication(new Storage(null, "rs0", 5000))
-            .build();
-        mongodExecutablePrimary = MongodStarter.getDefaultInstance().prepare(mongodConfigPrimary);
-        mongodExecutablePrimary.start();
-
-        IMongodConfig mongodConfigSecondary = new MongodConfigBuilder()
-            .version(Version.V3_6_5)
-            .net(new Net(HOST, 27018, false))
-            .replication(new Storage(null, "rs0", 5000))
-            .build();
-        mongodExecutableSecondary = MongodStarter.getDefaultInstance().prepare(mongodConfigSecondary);
-        mongodExecutableSecondary.start();
-
-        initCluster();
-        initClient();
-    }
-
-    private static void initCluster() {
-        mongoClient = new MongoClient(HOST);
-        // init replica set
-        Document config = new Document("_id", "rs0");
-        BasicDBList members = new BasicDBList();
-        members.add(new Document("_id", 0)
-            .append("host", HOST+":" + PORT));
-        members.add(new Document("_id", 1)
-            .append("host", HOST+":27018"));
-        config.put("members", members);
-        mongoClient.getDatabase("admin").runCommand(new Document("replSetInitiate", config));
-        database = mongoClient.getDatabase(DATABASE);
-        //Create a collection needed by this test
-        database.createCollection(COLLECTION);
-        collection = database.getCollection(COLLECTION);
-    }
-
-    @AfterClass
-    public static void tearDownMongo() {
-        mongoClient.close();
-        mongodExecutablePrimary.stop();
-        mongodExecutableSecondary.stop();
     }
 
     @Test

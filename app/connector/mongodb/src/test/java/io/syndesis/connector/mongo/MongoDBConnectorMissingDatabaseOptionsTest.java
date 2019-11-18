@@ -23,7 +23,14 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-public class MongoDBConnectorMissingDatabaseOptionsTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorMissingDatabaseOptionsTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "missingDBCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     @Before

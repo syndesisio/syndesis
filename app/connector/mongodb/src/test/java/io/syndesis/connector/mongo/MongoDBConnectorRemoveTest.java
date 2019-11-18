@@ -24,7 +24,14 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-public class MongoDBConnectorRemoveTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorRemoveTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "removeCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {
