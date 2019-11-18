@@ -1599,6 +1599,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-debezium</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ::::::::::: test :::::::::::: -->
 
       <dependency>
