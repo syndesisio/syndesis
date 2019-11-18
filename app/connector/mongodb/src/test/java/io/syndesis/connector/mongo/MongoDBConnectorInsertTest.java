@@ -26,7 +26,14 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-public class MongoDBConnectorInsertTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorInsertTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "insertCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {

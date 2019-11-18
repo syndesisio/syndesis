@@ -20,13 +20,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -34,17 +37,22 @@ import org.slf4j.LoggerFactory;
 
 public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends MongoDBConnectorTestSupport {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerAllOptionsTest.class);
+    private final static Logger LOG = LoggerFactory.getLogger(MongoDBConnectorCappedCollectionConsumerAllOptionsTest.class);
+    private final static String COLLECTION = "allOptionCappedCollection";
+    private final static String COLLECTION_TRACKING = "allOptionCappedCollection_tracking";
+    private final static String COLLECTION_TRACKING_FIELD = "someTrackingId";
+
+    protected MongoCollection<Document> collection;
 
     // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
-        database.createCollection("test", opts);
-        LOG.debug("Created a capped collection named test");
-        database.createCollection("tracking");
-        LOG.debug("Created a tracking collection named tracking");
+        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION, opts);
+        LOG.debug("Created a capped collection named {}", COLLECTION);
+        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION_TRACKING);
+        LOG.debug("Created a tracking collection named {}", COLLECTION_TRACKING);
     }
 
     /**
@@ -52,15 +60,20 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
      */
     @AfterClass
     public static void testTrackingIdValue() {
-        List<Document> docsFound = database.getCollection("tracking").find().into(new ArrayList<>());
-        assertEquals(25, (int) docsFound.get(0).getInteger("someTrackingId"));
+        List<Document> docsFound = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
+        assertEquals(25, (int) docsFound.get(0).getInteger(COLLECTION_TRACKING_FIELD));
+    }
+
+    @Before
+    public void init(){
+        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
     }
 
     @Override
     protected List<Step> createSteps() {
         return fromMongoTailToMock("result", "io.syndesis.connector:connector-mongodb-consumer-tail", DATABASE, COLLECTION,
-            "someTrackingId", true, "idTracker",
-            "test", "tracking", "someTrackingId");
+            COLLECTION_TRACKING_FIELD, true, "idTracker",
+            DATABASE, COLLECTION_TRACKING, COLLECTION_TRACKING_FIELD);
     }
 
     @Test
@@ -77,7 +90,7 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
                 List<String> doc = e.getMessage().getBody(List.class);
                 JsonNode jsonNode = MAPPER.readTree(doc.get(0));
                 Assertions.assertThat(jsonNode).isNotNull();
-                Assertions.assertThat(jsonNode.get("someTrackingId").asInt()).isEqualTo(25);
+                Assertions.assertThat(jsonNode.get(COLLECTION_TRACKING_FIELD).asInt()).isEqualTo(25);
             } catch (IOException ex) {
                 return false;
             }
@@ -86,15 +99,15 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");
-        doc.append("someTrackingId", 10);
+        doc.append(COLLECTION_TRACKING_FIELD, 10);
         collection.insertOne(doc);
         Document doc2 = new Document();
         doc2.append("someKey", "someNewValue");
-        doc2.append("someTrackingId", 20);
+        doc2.append(COLLECTION_TRACKING_FIELD, 20);
         collection.insertOne(doc2);
         Document doc3 = new Document();
         doc3.append("someKey", "someNewValue");
-        doc3.append("someTrackingId", 25);
+        doc3.append(COLLECTION_TRACKING_FIELD, 25);
         collection.insertOne(doc3);
 
         // Then

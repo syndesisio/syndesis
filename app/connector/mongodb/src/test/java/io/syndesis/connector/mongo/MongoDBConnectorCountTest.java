@@ -22,7 +22,14 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-public class MongoDBConnectorCountTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorCountTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "countCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {

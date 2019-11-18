@@ -24,7 +24,14 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorUpdateTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "updateCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {
