@@ -12,17 +12,17 @@ import {
 import * as H from '@syndesis/history';
 import { Flow, IntegrationOverview } from '@syndesis/models';
 import {
+  ApiProviderDropdownItem,
   Breadcrumb,
+  BreadcrumbDropdown,
   BreadcrumbItem,
   BreadcrumbItemProps,
   ButtonLink,
-  ConditionsDropdown,
   ConditionsDropdownBody,
   ConditionsDropdownHeader,
   ConditionsDropdownItem,
   EditorToolbarDropdownBackButtonItem,
   HttpMethodColors,
-  OperationsDropdown,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -98,6 +98,7 @@ export interface IApiProviderOperationItemProps {
   description: string;
   isCurrent?: boolean;
 }
+
 export const ApiProviderOperationItem: React.FunctionComponent<
   IApiProviderOperationItemProps
 > = ({ description, isCurrent }) => {
@@ -128,12 +129,11 @@ const ApiProviderDropdown: React.FunctionComponent<
       );
   const isMultiflow =
     integration.flows && integration.flows.filter(f => f.name).length > 0;
-
   return isApiProvider && primaryFlow && isMultiflow ? (
     <BreadcrumbItem>
       <span>Operation&nbsp;&nbsp;</span>
-      <OperationsDropdown
-        selectedOperation={
+      <BreadcrumbDropdown
+        body={
           getMetadataValue<string>(
             EXCERPT_METADATA_KEY,
             primaryFlow.metadata
@@ -148,18 +148,21 @@ const ApiProviderDropdown: React.FunctionComponent<
           title={t('integrations:editor:BackToOperationList')}
           href={rootHref}
         />
-        {getApiProviderFlows(integration).map(f => (
-          <Link to={getFlowHref(f.id!)} key={f.id}>
-            <ApiProviderOperationItem
-              description={f.description!}
-              isCurrent={f.id === currentFlow.id}
-            />
-            <div>
-              <strong>{f.name}</strong>
-            </div>
-          </Link>
-        ))}
-      </OperationsDropdown>
+        <ul>
+          {getApiProviderFlows(integration).map(f => (
+            <ApiProviderDropdownItem
+              flowName={f.name}
+              link={getFlowHref(f.id!)}
+              key={f.id}
+            >
+              <ApiProviderOperationItem
+                description={f.description!}
+                isCurrent={f.id === currentFlow.id}
+              />
+            </ApiProviderDropdownItem>
+          ))}
+        </ul>
+      </BreadcrumbDropdown>
     </BreadcrumbItem>
   ) : null;
 };
@@ -186,8 +189,8 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
   return !isPrimary && flowGroups.length > 0 ? (
     <BreadcrumbItem>
       <span>Flow&nbsp;&nbsp;</span>
-      <ConditionsDropdown
-        selectedFlow={
+      <BreadcrumbDropdown
+        body={
           <ConditionsDropdownBody
             description={currentFlow.description!}
             condition={isDefaultFlow(currentFlow) ? 'OTHERWISE' : 'WHEN'}
@@ -229,7 +232,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
             </ConditionsDropdownHeader>
           ))}
         </>
-      </ConditionsDropdown>
+      </BreadcrumbDropdown>
     </BreadcrumbItem>
   ) : null;
 };

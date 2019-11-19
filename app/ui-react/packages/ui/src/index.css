@@ -19,9 +19,13 @@
   --pf-global--link--Color: #0088ce;
   --pf-c-nav__list-link--m-current--after--BackgroundColor: #0088ce;
   --pf-global--link--Color--hover: #00659c;
-  --pf-c-backdrop--Color: rgba(3,3,3,.62);
+  --pf-c-backdrop--Color: rgba(3, 3, 3, 0.62);
   --pf-c-popover__content--PaddingRight: 3rem;
   --pf-global--gutter--md: 1.5rem;
+}
+
+.pf-c-page__main {
+  background-color: var(--pf-c-page__main-section--BackgroundColor);
 }
 
 .pf-c-page__main-breadcrumb {
@@ -178,12 +182,12 @@ body {
   .wizard-pf-steps-indicator .wizard-pf-step .wizard-pf-step-number {
     top: 100%;
     left: 50%;
-    transform: translate(-50%, .5em);
+    transform: translate(-50%, 0.5em);
   }
 }
 
 .wizard-pf-steps-indicator .wizard-pf-step:before {
-  top: calc(100% + .5em + calc(25px / 2));
+  top: calc(100% + 0.5em + calc(25px / 2));
   transform: translateY(-100%);
 }
 
@@ -201,7 +205,9 @@ body {
 }
 
 .syn-card__header--border.pf-c-card__header {
-  --pf-c-card__header--not-last-child--PaddingBottom: var(--pf-c-card--first-child--PaddingTop);
+  --pf-c-card__header--not-last-child--PaddingBottom: var(
+    --pf-c-card--first-child--PaddingTop
+  );
   border-bottom: 1px solid #d1d1d1;
   margin-bottom: var(--pf-c-card__header--not-last-child--PaddingBottom);
 }

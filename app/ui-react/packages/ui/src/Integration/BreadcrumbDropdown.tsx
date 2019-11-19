@@ -1,23 +1,22 @@
 import { Dropdown, DropdownToggle } from '@patternfly/react-core';
 import * as React from 'react';
-import './OperationsDropdown.css';
 
 export interface IOperationsDropdownProps {
-  selectedOperation: React.ReactNode;
+  body: React.ReactNode;
 }
-export const OperationsDropdown: React.FunctionComponent<
+export const BreadcrumbDropdown: React.FunctionComponent<
   IOperationsDropdownProps
-> = ({ selectedOperation, children }) => {
+> = ({ body, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const closeDropdown = () => setIsOpen(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
   return (
     <Dropdown
-      className={'operations-dropdown'}
+      className={'breadcrumb-dropdown'}
       onSelect={closeDropdown}
       toggle={
         <DropdownToggle onToggle={toggleDropdown}>
-          {selectedOperation}
+          {body}
         </DropdownToggle>
       }
       isOpen={isOpen}

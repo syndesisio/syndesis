@@ -76,7 +76,7 @@
     "BackToOperationList": "Back to Operation List",
     "BackToOperationFlow": "Back to Operation Flow",
     "BackToPrimaryFlow": "Back to Primary Flow",
-    "ConditionalFlowStepGroup": "{{group}} Cnditional Flow Step",
+    "ConditionalFlowStepGroup": "{{group}} Conditional Flow Step",
     "OTHERWISE": "OTHERWISE",
     "WHEN": "WHEN",
     "addStep": "Add a step",
