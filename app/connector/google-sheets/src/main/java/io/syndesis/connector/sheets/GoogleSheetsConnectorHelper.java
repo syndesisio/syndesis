@@ -22,14 +22,10 @@ import java.security.GeneralSecurityException;
 import java.util.Base64;
 import java.util.Map;
 
-import com.google.api.client.auth.oauth2.Credential;
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.jackson2.JacksonFactory;
 import com.google.api.services.sheets.v4.Sheets;
 import io.syndesis.connector.support.util.ConnectorOptions;
-import org.apache.camel.RuntimeCamelException;
+import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.util.ObjectHelper;
 
@@ -68,81 +64,12 @@ public final class GoogleSheetsConnectorHelper {
             transport.doNotValidateCertificate();
         }
 
-        return new ConfigurableGoogleSheetsClientFactory(transport.build()) {
+        return new BatchGoogleSheetsClientFactory(transport.build()) {
             @Override
             protected void configure(Sheets.Builder clientBuilder) {
                 clientBuilder.setRootUrl(rootUrl);
             }
         };
-    }
-
-    /**
-     * Client factory allows to configure http transport and root URL for better testability.
-     * TODO: Use the default client factory as soon as we are using latest Camel 3 bits in Syndesis.
-     * TODO: Backport https://github.com/apache/camel/commit/47f173822d6730300e28d60117d513c89f78fa2b#diff-7200173bb3f32fad958e41b41828ba81 to 2.23.x.redhat-7-x
-     */
-    private static class ConfigurableGoogleSheetsClientFactory implements GoogleSheetsClientFactory {
-        private final HttpTransport transport;
-        private final JacksonFactory jsonFactory;
-
-        ConfigurableGoogleSheetsClientFactory(HttpTransport httpTransport) {
-            this(httpTransport, new JacksonFactory());
-        }
-
-        ConfigurableGoogleSheetsClientFactory(HttpTransport httpTransport, JacksonFactory jacksonFactory) {
-            this.transport = httpTransport;
-            this.jsonFactory = jacksonFactory;
-        }
-
-        @Override
-        public Sheets makeClient(String clientId,
-                                 String clientSecret,
-                                 String applicationName,
-                                 String refreshToken,
-                                 String accessToken) {
-            if (clientId == null || clientSecret == null) {
-                throw new IllegalArgumentException("clientId and clientSecret are required to create Google Sheets client.");
-            }
-
-            try {
-                Credential credential = authorize(clientId, clientSecret, refreshToken, accessToken);
-
-                Sheets.Builder clientBuilder = new Sheets.Builder(transport, jsonFactory, credential)
-                        .setApplicationName(applicationName);
-                configure(clientBuilder);
-                return clientBuilder.build();
-            } catch (Exception e) {
-                throw new RuntimeCamelException("Could not create Google Sheets client.", e);
-            }
-        }
-
-        /**
-         * Subclasses may add customized configuration to client builder.
-         * @param clientBuilder
-         */
-        protected void configure(Sheets.Builder clientBuilder) {
-            clientBuilder.setRootUrl(Sheets.DEFAULT_ROOT_URL);
-        }
-
-        // Authorizes the installed application to access user's protected data.
-        private Credential authorize(String clientId, String clientSecret, String refreshToken, String accessToken) {
-            // authorize
-            Credential credential = new GoogleCredential.Builder()
-                    .setJsonFactory(jsonFactory)
-                    .setTransport(transport)
-                    .setClientSecrets(clientId, clientSecret)
-                    .build();
-
-            if (ObjectHelper.isNotEmpty(refreshToken)) {
-                credential.setRefreshToken(refreshToken);
-            }
-
-            if (ObjectHelper.isNotEmpty(accessToken)) {
-                credential.setAccessToken(accessToken);
-            }
-
-            return credential;
-        }
     }
 
     /**
