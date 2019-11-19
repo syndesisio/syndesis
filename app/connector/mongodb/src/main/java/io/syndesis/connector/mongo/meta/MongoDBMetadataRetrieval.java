@@ -84,8 +84,7 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
         }
     }
 
-    @SuppressWarnings("MethodCanBeStatic")
-    private boolean isFilterAction(String actionId) {
+    private static boolean isFilterAction(String actionId) {
         return "io.syndesis.connector:connector-mongodb-update".equals(actionId) ||
             "io.syndesis.connector:connector-mongodb-find".equals(actionId) ||
             "io.syndesis.connector:connector-mongodb-delete".equals(actionId) ||
