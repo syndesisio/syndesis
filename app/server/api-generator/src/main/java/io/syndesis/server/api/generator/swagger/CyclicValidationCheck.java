@@ -15,16 +15,13 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Definitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
@@ -50,9 +47,11 @@ final class CyclicValidationCheck {
     private static Map<String, Set<String>> collectReferences(final Oas20Document openApiDoc) {
         final Map<String, Set<String>> references = new TreeMap<>();
 
-        List<Oas20SchemaDefinition> schemaDefinitions = Optional.ofNullable(openApiDoc.definitions)
-                                                                .map(Oas20Definitions::getDefinitions)
-                                                                .orElse(Collections.emptyList());
+        if (openApiDoc.definitions == null) {
+            return references;
+        }
+
+        List<Oas20SchemaDefinition> schemaDefinitions = openApiDoc.definitions.getDefinitions();
         for (final Oas20SchemaDefinition definition : schemaDefinitions) {
             final String name = definition.getName();
             references.putIfAbsent(name, new HashSet<>());

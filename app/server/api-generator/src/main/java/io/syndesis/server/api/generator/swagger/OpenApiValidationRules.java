@@ -92,7 +92,6 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
      * Check if all operations contains valid authentication types
      */
     static OpenApiModelInfo validateAuthTypesIn(final OpenApiModelInfo modelInfo, final Set<String> validAuthTypes) {
-
         if (modelInfo.getModel() == null) {
             return modelInfo;
         }
@@ -343,8 +342,12 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
     }
 
     private static URI specificationUriFrom(final Oas20Document openApiDoc) {
-        final Collection<Extension> vendorExtensions = Optional.ofNullable(openApiDoc.getExtensions())
-                                                         .orElse(Collections.emptyList());
+        final Collection<Extension> vendorExtensions = openApiDoc.getExtensions();
+
+        if (vendorExtensions == null) {
+            return null;
+        }
+
         return vendorExtensions.stream().filter(extension -> BaseOpenApiConnectorGenerator.URL_EXTENSION.equals(extension.name))
                                      .map(extension -> (URI) extension.value)
                                      .findFirst()

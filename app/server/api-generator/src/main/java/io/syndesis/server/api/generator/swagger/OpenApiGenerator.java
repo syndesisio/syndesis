@@ -17,7 +17,6 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,7 +34,6 @@ import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasResponse;
-import io.apicurio.datamodels.openapi.models.OasResponses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
@@ -366,9 +364,11 @@ public class OpenApiGenerator implements APIGenerator {
     }
 
     Optional<Pair<String, OasResponse>> findResponseCode(final OasOperation operation) {
-        List<OasResponse> responses = Optional.ofNullable(operation.responses)
-                                              .map(OasResponses::getResponses)
-                                              .orElse(Collections.emptyList());
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
 
         // Return the Response object related to the first 2xx return code found
         Optional<Pair<String, OasResponse>> responseOk = responses.stream()
@@ -390,11 +390,13 @@ public class OpenApiGenerator implements APIGenerator {
     }
 
     static List<ConfigurationProperty.PropertyValue> httpStatusList(final OasOperation operation) {
-        List<OasResponse> responses = Optional.ofNullable(operation.responses)
-            .map(OasResponses::getResponses)
-            .orElse(Collections.emptyList());
-
         List<ConfigurationProperty.PropertyValue> httpStatusList = new ArrayList<>();
+
+        if (operation.responses == null) {
+            return httpStatusList;
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
         responses.stream()
             .filter(r -> NumberUtils.isDigits(r.getStatusCode()))
             .forEach(r -> httpStatusList.add(

@@ -15,14 +15,12 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasResponse;
-import io.apicurio.datamodels.openapi.models.OasResponses;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import org.apache.commons.lang3.tuple.Pair;
@@ -30,8 +28,11 @@ import org.apache.commons.lang3.tuple.Pair;
 abstract class BaseDataShapeGenerator implements DataShapeGenerator {
 
     static Optional<OasParameter> findBodyParameter(final OasOperation operation) {
-        final List<OasParameter> operationParameters = Optional.ofNullable(operation.parameters)
-            .orElse(Collections.emptyList());
+        if (operation.parameters == null) {
+            return Optional.empty();
+        }
+
+        final List<OasParameter> operationParameters = operation.parameters;
 
         return operationParameters.stream()
             .filter(p -> "body".equals(p.in) && p.schema != null)
@@ -43,9 +44,11 @@ abstract class BaseDataShapeGenerator implements DataShapeGenerator {
     }
 
     private static Optional<Pair<String, Oas20Response>> findResponseCodeAndSchema(final OasOperation operation) {
-        List<OasResponse> responses = Optional.ofNullable(operation.responses)
-            .map(OasResponses::getResponses)
-            .orElse(Collections.emptyList());
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
 
         // Return the Response object related to the first 2xx return code found
         Optional<Pair<String, Oas20Response>> responseOk = responses.stream()

@@ -299,13 +299,15 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
     static void addGlobalParameters(final Connector.Builder builder, final Oas20Document openApiDoc) {
         final Oas20ParameterDefinitions globalParameters = openApiDoc.parameters;
-        if (globalParameters != null) {
-            globalParameters.getItems().forEach(parameter -> {
-                createPropertyFromParameter(parameter).ifPresent(property -> {
-                    builder.putProperty(parameter.getName(), property);
-                });
-            });
+        if (globalParameters == null) {
+            return;
         }
+
+        globalParameters.getItems().forEach(parameter -> {
+            createPropertyFromParameter(parameter).ifPresent(property -> {
+                builder.putProperty(parameter.getName(), property);
+            });
+        });
     }
 
     static String createActionId(final String connectorId, final OasOperation operation) {
