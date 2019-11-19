@@ -197,8 +197,8 @@
           "title": "Task completition status",
           "description": "0 - ongoing, 1 - completed",
           "enum": [
-            0,
-            1
+            "0",
+            "1"
           ]
         }
       }

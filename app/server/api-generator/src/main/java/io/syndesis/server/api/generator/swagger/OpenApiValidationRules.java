@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
@@ -239,7 +240,7 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
                     }
 
                     if (responseEntry instanceof Oas20Response && ((Oas20Response)responseEntry).schema == null) {
-                        final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getPath()
+                        final String message = "Operation " + operationEntry.getKey().toUpperCase(Locale.US) + " " + pathEntry.getPath()
                             + " does not provide a response schema for code " + responseEntry.getStatusCode();
 
                         withWarnings.addWarning(new Violation.Builder()//
