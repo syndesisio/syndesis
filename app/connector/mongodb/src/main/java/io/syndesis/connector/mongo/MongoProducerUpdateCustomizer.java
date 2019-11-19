@@ -28,7 +28,9 @@ public class MongoProducerUpdateCustomizer implements ComponentProxyCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(exchange -> {
             exchange.getIn().getHeaders().put(MongoDbConstants.MULTIUPDATE, "true");
-            MongoCustomizersUtil.executeFilterComponent(exchange, ConnectorOptions.extractOption(options, "filter"));
+            MongoCustomizersUtil.executeFilterComponent(exchange, ConnectorOptions.extractOption(options, "filter"),
+                MongoDbConstants.CRITERIA);
+            MongoCustomizersUtil.executeFilterComponent(exchange, ConnectorOptions.extractOption(options, "updateExpression"));
         });
         component.setAfterProducer(MongoCustomizersUtil::convertMongoResultToLong);
     }

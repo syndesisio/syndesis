@@ -94,12 +94,15 @@ public class DataShapeConnectorTest {
         // Given
         DataShape schema = new DataShape.Builder().name("fake").build();
         Map<String, Object> properties = new HashMap<>();
-        properties.put("filter", "{fake: :#fake}");
+        properties.put("filter", "{fake: :#fakeFilter}");
+        properties.put("updateExpression", "{fakeExpression: :#fakeExpression}");
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
         // When
         SyndesisMetadata meta = metaBridge.buildDatashape("io.syndesis.connector:connector-mongodb-update",schema,properties);
         // Then
         Assertions.assertThat(meta.inputShape.getKind()).isEqualTo(DataShapeKinds.JSON_SCHEMA);
+        Assertions.assertThat(meta.inputShape.getSpecification()).contains("fakeFilter");
+        Assertions.assertThat(meta.inputShape.getSpecification()).contains("fakeExpression");
         Assertions.assertThat(meta.outputShape).isEqualTo(schema);
     }
 
