@@ -24,8 +24,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
-
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -48,7 +47,7 @@ public class OpenApiUnifiedShapeGeneratorExampleTests extends BaseOpenApiGenerat
 
     @Test
     public void specificationsShouldNotContainErrors() {
-        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
     }

@@ -15,38 +15,20 @@
  */
 package io.syndesis.server.api.generator.swagger.util;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.github.fge.jsonschema.core.exceptions.ProcessingException;
-import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
-import com.github.fge.jsonschema.core.report.ProcessingMessage;
-import com.github.fge.jsonschema.core.report.ProcessingReport;
-import com.github.fge.jsonschema.main.JsonSchema;
-import com.github.fge.jsonschema.main.JsonSchemaFactory;
-import io.apicurio.datamodels.Library;
-import io.apicurio.datamodels.core.models.Document;
 import io.apicurio.datamodels.openapi.models.IOasPropertySchema;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
@@ -58,48 +40,14 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
-import io.syndesis.common.model.Violation;
-import io.syndesis.common.util.IOStreams;
-import io.syndesis.common.util.Resources;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.OpenApiModelInfo;
-import io.syndesis.server.api.generator.swagger.OpenApiValidationRules;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.yaml.snakeyaml.Yaml;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class Oas20ModelHelper {
 
-    private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
-
     private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
-
-    private static final Logger LOG = LoggerFactory.getLogger(Oas20ModelHelper.class);
-
-    private static final JsonSchema SWAGGER_2_0_SCHEMA;
-
-    private static final String SWAGGER_2_0_SCHEMA_FILE = "schema/swagger-2.0-schema.json";
-
-    private static final String SWAGGER_IO_V2_SCHEMA_URI = "http://swagger.io/v2/schema.json#";
-
-    private static final Yaml YAML_PARSER = new Yaml();
-
-    static {
-        try {
-            final JsonNode swagger20Schema = JsonUtils.reader().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
-            final LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
-                .preloadSchema(SWAGGER_IO_V2_SCHEMA_URI, swagger20Schema)
-                .freeze();
-            SWAGGER_2_0_SCHEMA = JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze().getJsonSchema(SWAGGER_IO_V2_SCHEMA_URI);
-        } catch (final ProcessingException | IOException ex) {
-            throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
-        }
-    }
 
     private Oas20ModelHelper() {
         // utility class
@@ -108,86 +56,6 @@ public final class Oas20ModelHelper {
     public static Oas20SchemaDefinition dereference(final OasSchema model, final Oas20Document openApiDoc) {
         String reference = getReferenceName(model.$ref);
         return openApiDoc.definitions.getDefinition(reference);
-    }
-
-    /**
-     * Removes all properties from the given Swagger document that are not used
-     * by the REST Swagger Camel component in order to minimize the amount of
-     * data stored in the configured properties.
-     */
-    public static String minimalOpenApiUsedByComponent(final Oas20Document openApiDoc) {
-        final ObjectNode json = (ObjectNode) Library.writeNode(openApiDoc);
-        json.remove(Arrays.asList("info", "tags", "definitions", "externalDocs"));
-
-        final JsonNode paths = json.get("paths");
-
-        if (paths != null) {
-            paths.forEach(path -> {
-                JsonNode globalParameters = ((ObjectNode)path).remove("parameters");
-                final List<JsonNode> globalParametersList = new ArrayList<>();
-
-                if (globalParameters != null) {
-                    final List<JsonNode> parametersList = StreamSupport.stream(globalParameters.spliterator(), false).collect(Collectors.toList());
-                    for (JsonNode jsonNode : parametersList) {
-                        final ObjectNode param = (ObjectNode) jsonNode;
-                        param.remove(Arrays.asList("description", "type", "required", "format"));
-
-                        if (isPathOrQueryParameter(param)) {
-                            globalParametersList.add(param);
-                        }
-                    }
-
-                    ((ArrayNode) globalParameters).removeAll();
-                    ((ArrayNode) globalParameters).addAll(globalParametersList);
-                }
-
-                StreamSupport.stream(path.spliterator(), false)
-                    .filter(JsonNode::isObject)
-                    .forEach(operation -> {
-                    final ObjectNode operationNode = (ObjectNode) operation;
-                    operationNode.remove(Arrays.asList("tags", "summary", "description"));
-                    final ArrayNode parameters = (ArrayNode) operation.get("parameters");
-
-                    if (parameters != null) {
-                        final List<JsonNode> parametersList = StreamSupport.stream(parameters.spliterator(), false).collect(Collectors.toList());
-                        for (final ListIterator<JsonNode> i = parametersList.listIterator(); i.hasNext();) {
-                            final ObjectNode param = (ObjectNode) i.next();
-                            param.remove(Arrays.asList("description", "type", "required", "format"));
-
-                            if (!isPathOrQueryParameter(param)) {
-                                i.remove();
-                            }
-                        }
-
-                        if (parameters.size() == 0 && globalParametersList.isEmpty()) {
-                            operationNode.remove("parameters");
-                        }
-
-                        if (parametersList.isEmpty() && globalParametersList.isEmpty()) {
-                            operationNode.remove("parameters");
-                        } else {
-                            parameters.removeAll();
-                            parameters.addAll(parametersList);
-                            parameters.addAll(globalParametersList);
-                        }
-                    } else if (!globalParametersList.isEmpty()) {
-                        operationNode.set("parameters", globalParameters);
-                    }
-
-                    operationNode.remove("responses");
-                });
-            });
-        }
-
-        try {
-            return JsonUtils.writer().writeValueAsString(json);
-        } catch (final JsonProcessingException e) {
-            throw new IllegalStateException("Unable to serialize minified OpenAPI document", e);
-        }
-    }
-
-    private static boolean isPathOrQueryParameter(ObjectNode param) {
-        return param.get("in") != null && ("path".equals(param.get("in").textValue()) || "query".equals(param.get("in").textValue()));
     }
 
     public static OperationDescription operationDescriptionOf(final Oas20Document openApiDoc, final OasOperation operation,
@@ -269,61 +137,6 @@ public final class Oas20ModelHelper {
                 .collect(Collectors.toList());
     }
 
-    public static OpenApiModelInfo parse(final String specification, final APIValidationContext validationContext) {
-        final OpenApiModelInfo.Builder resultBuilder = new OpenApiModelInfo.Builder();
-
-        final String resolvedSpecification;
-        try {
-            resolvedSpecification = resolve(specification);
-            resultBuilder.resolvedSpecification(resolvedSpecification);
-        } catch (final Exception e) {
-            LOG.debug("Unable to resolve OpenAPI document\n{}\n", specification, e);
-            return resultBuilder
-                .addError(new Violation.Builder().error("error").property("").message("Unable to resolve OpenAPI document from: "
-                    + ofNullable(specification).map(s -> StringUtils.abbreviate(s, 100)).orElse("")).build())
-                .build();
-        }
-
-        final JsonNode tree;
-        try {
-            tree = JsonUtils.reader().readTree(resolvedSpecification);
-        } catch (final IOException e) {
-            return new OpenApiModelInfo.Builder()
-                .addError(new Violation.Builder()
-                    .property("")
-                    .error("ureadable-document")
-                    .message("Unable to read OpenAPI document: " + e.getMessage())
-                    .build())
-                .build();
-        }
-
-        final JsonNode swaggerVersion = tree.get("swagger");
-        if (swaggerVersion == null || swaggerVersion.isNull() || !"2.0".equals(swaggerVersion.textValue())) {
-            return new OpenApiModelInfo.Builder()
-                .addError(new Violation.Builder()
-                    .property("")
-                    .error("unsupported-version")
-                    .message("This document cannot be uploaded. Provide an OpenAPI 2.0 document.")
-                    .build())
-                .build();
-        }
-
-        final Document parsed = Library.readDocumentFromJSONString(resolvedSpecification);
-        if (!(parsed instanceof Oas20Document)) {
-            LOG.debug("Unable to read OpenAPI document\n{}\n", specification);
-            return resultBuilder
-                .addError(new Violation.Builder().error("error").property("").message("Unable to read OpenAPI document from: '"
-                    + StringUtils.abbreviate(specification, 100)).build())
-                .build();
-        }
-
-        if (validationContext != APIValidationContext.NONE) {
-            final OpenApiModelInfo swaggerModelInfo = validateJSonSchema(resolvedSpecification, (Oas20Document) parsed);
-            return OpenApiValidationRules.get(validationContext).apply(swaggerModelInfo);
-        }
-        return resultBuilder.model((Oas20Document) parsed).build();
-    }
-
     /**
      * Makes sure that the tag used as a key in a JSON object is a valid key
      * determined by
@@ -351,73 +164,6 @@ public final class Oas20ModelHelper {
         return list.stream().map(Oas20ModelHelper::sanitizeTag).filter(Objects::nonNull).distinct();
     }
 
-    static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
-        final JsonNode specRoot;
-        if (JSON_TEST.matcher(specification).matches()) {
-            specRoot = JsonUtils.reader().readTree(specification);
-        } else {
-            specRoot = JsonUtils.convertValue(YAML_PARSER.load(specification), JsonNode.class);
-        }
-        return specRoot;
-    }
-
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    static String resolve(final String specification) throws Exception {
-        final String specificationToUse;
-        if (specification.toLowerCase(Locale.US).startsWith("http")) {
-            specificationToUse = resolve(new URL(specification));
-        } else {
-            specificationToUse = specification;
-        }
-
-        final JsonNode node = convertToJson(specificationToUse);
-
-        return JsonUtils.writer().writeValueAsString(node);
-    }
-
-    static String resolve(URL url) {
-        HttpURLConnection con = null;
-        try {
-            con = (HttpURLConnection) url.openConnection();
-            con.setRequestMethod("GET");
-
-            int status = con.getResponseCode();
-            if (status > 299) {
-                throw new IllegalStateException(String.format("Failed to retrieve Open API specification from %s", url),
-                    new IOException(IOStreams.readText(con.getErrorStream())));
-            } else {
-                return IOStreams.readText(con.getInputStream());
-            }
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to retrieve Open API specification: " + url.toString(), e);
-        } finally {
-            if (con != null) {
-                con.disconnect();
-            }
-        }
-    }
-
-    private static boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {
-        if (requiredLevel.isPresent()) {
-            final Optional<String> level = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("level")))
-                .flatMap(node -> ofNullable(node.textValue()));
-
-            if (!level.equals(requiredLevel)) {
-                return false; // skip
-            }
-        }
-
-        final Optional<String> property = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("instance")))
-            .flatMap(node -> ofNullable(node.get("pointer"))).flatMap(node -> ofNullable(node.textValue()));
-
-        final Optional<String> error = ofNullable(message.asJson()).flatMap(node -> ofNullable(node.get("domain")))
-            .flatMap(node -> ofNullable(node.textValue()));
-
-        violations.add(new Violation.Builder().error(error.orElse("")).message(message.getMessage()).property(property.orElse("")).build());
-
-        return true;
-    }
-
     private static String toLiteralNull(final String given) {
         if (given == null) {
             return null;
@@ -430,29 +176,6 @@ public final class Oas20ModelHelper {
         }
 
         return given;
-    }
-
-    private static OpenApiModelInfo validateJSonSchema(final String specification, final Oas20Document model) {
-        try {
-            final JsonNode specRoot = convertToJson(specification);
-            final ProcessingReport report = SWAGGER_2_0_SCHEMA.validate(specRoot);
-            final List<Violation> errors = new ArrayList<>();
-            final List<Violation> warnings = new ArrayList<>();
-            for (final ProcessingMessage message : report) {
-                final boolean added = append(errors, message, Optional.of("error"));
-                if (!added) {
-                    append(warnings, message, Optional.empty());
-                }
-            }
-
-            return new OpenApiModelInfo.Builder().errors(errors).warnings(warnings).model(model).resolvedSpecification(specification)
-                .build();
-
-        } catch (IOException | ProcessingException ex) {
-            LOG.error("Unable to load the schema file embedded in the artifact", ex);
-            return new OpenApiModelInfo.Builder().addError(new Violation.Builder().error("error").property("")
-                .message("Unable to load the OpenAPI schema file embedded in the artifact").build()).build();
-        }
     }
 
     /**

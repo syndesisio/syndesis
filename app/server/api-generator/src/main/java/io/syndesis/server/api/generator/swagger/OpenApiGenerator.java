@@ -60,6 +60,7 @@ import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -81,7 +82,7 @@ public class OpenApiGenerator implements APIGenerator {
     @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     public APIIntegration generateIntegration(final String specification, final ProvidedApiTemplate template) {
 
-        final OpenApiModelInfo info = Oas20ModelHelper.parse(specification, APIValidationContext.NONE);
+        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.NONE);
         final Oas20Document openApiDoc = info.getModel();
 
         final String name = Optional.ofNullable(openApiDoc.info)
@@ -224,7 +225,7 @@ public class OpenApiGenerator implements APIGenerator {
 
     @Override
     public APISummary info(final String specification, final APIValidationContext validation) {
-        final OpenApiModelInfo swaggerInfo = Oas20ModelHelper.parse(specification, validation);
+        final OpenApiModelInfo swaggerInfo = Oas20ModelParser.parse(specification, validation);
 
         final Oas20Document model = swaggerInfo.getModel();
         if (model == null) {

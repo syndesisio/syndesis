@@ -55,6 +55,8 @@ import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
+import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
@@ -250,7 +252,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         actions.sort(ActionComparator.INSTANCE);
         builder.addAllActions(actions);
 
-        builder.putConfiguredProperty("specification", Oas20ModelHelper.minimalOpenApiUsedByComponent(openApiDoc));
+        builder.putConfiguredProperty("specification", SpecificationOptimizer.minimizeForComponent(openApiDoc));
 
         return builder.build();
     }
@@ -362,7 +364,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
     static OpenApiModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
         final String specification = requiredSpecification(connectorSettings);
-        return Oas20ModelHelper.parse(specification, validationContext);
+        return Oas20ModelParser.parse(specification, validationContext);
     }
 
     static String requiredSpecification(final ConnectorSettings connectorSettings) {
