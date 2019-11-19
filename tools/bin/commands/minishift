@@ -133,6 +133,12 @@ minishift::run() {
             check_error "$result"
         fi
 
+        if [[ "system:admin" != "$user" ]]; then
+            echo "Grant user $user permissions"
+            local result=$($OPERATOR_BINARY grant --user $user)
+            check_error "$result"
+        fi
+
         # Install Camel-K CRD
         if [ $(hasflag --camel-k) ]; then
           echo "Installing Camel-K CRDs"
