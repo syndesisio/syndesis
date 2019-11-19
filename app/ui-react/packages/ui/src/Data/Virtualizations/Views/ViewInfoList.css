@@ -1,0 +1,4 @@
+.view-info-list {
+    max-height: 40em;
+    overflow-y: auto;
+}
