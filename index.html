@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-13397-gf9399428b5,</span>
+<span id="revnumber">version 1.1.3-13399-gebdb8dc4dd,</span>
 <span id="revdate">2019-11-19</span>
 </div>
 <div id="toc" class="toc2">
@@ -2298,42 +2298,43 @@ features specific to these local development environments.</p>
 <h4 id="syndesis-install-usage">2.9.1. Usage</h4>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>-s  --setup               Install CRDs clusterwide. Use --grant if you want a specific user to be
-                          able to install Syndesis. You have to run this option once as
-                          cluster admin.
--u  --grant &lt;user&gt;        Add permissions for the given user so that user can install
-                          the operator in her projects. Must be run as cluster admin.
-    --cluster             Add the permission for all projects in the cluster
-                          (only when used together with --grant)
--p  --project             Install into this project. Delete this project
-                          if it already exists. By default, install into the current project
-                          (without deleting)
-    --operator-only       Only install the operator but no resource
-    --route               Route to use. If not given, the route is trying to be detected
-                          from the currently connected cluster.
-    --console             The URL to the OpenShift console
-    --tag &lt;tag&gt;           Syndesis version/tag to install. If not given, then the latest
-                          version from master is installed
-    --dev                 Prepare for development of Syndesis so that S2I builds of
-                          Syndesis images are picked up properly (implies --watch)
-    --force               Override an existing "Syndesis" if present
--r  --route &lt;route&gt;       Use the given route.
-                          By default "syndesis-&lt;project_name&gt;.apps-crc.testing" is used.
--w  --watch               Wait until cluster is up
-    --local               install from local Git repo when using. By default the
-                          resource descriptor is downloaded from GitHub remotely.
--o  --open                Open Syndesis in browser when installation is ready (implies --watch)
--y  --yes                 Assume 'yes' automatically when asking for deleting
-                          a given project.
-    --memory-server &lt;mem&gt; Memory limit to set for syndesis-server. Specify as "800Mi"
-    --memory-meta &lt;mem&gt;   Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support        Allow test support endpoint for syndesis-server
-    --datavirt            Install Data Virtualizations
-    --maven-mirror        Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
-
-You have to run <code>--setup --grant &lt;user&gt;</code> as a cluster-admin before you can
-install Fuse Online as a user.</code></pre>
+<pre class="CodeRay highlight"><code>Options for install:
+-s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --grant &lt;user&gt;            Add permissions for the given user so that user can install the operator
+                              in her projects. Must be run as cluster admin.
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --grant)
+-p  --project                 Install into this project. Delete this project
+                              if it already exists. By default, install into the current project (without deleting)
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
+    --tag &lt;tag&gt;               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
+    --force                   Override an existing "Syndesis" if present
+-w  --watch                   Wait until cluster is up
+    --local                   install from local Git repo when using. By default the resource descriptor is
+                              downloaded from GitHub remotely.
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
+-o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
+    --memory-server &lt;mem&gt;     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support            Allow test support endpoint for syndesis-server
+    --camel-k &lt;version&gt;       Install camel-k operator version &lt;version&gt;
+                              (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
+    --datavirt                Install Data Virtualizations.
+    --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
+    --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>You have to run <code>--setup --grant &lt;user&gt;</code> as a cluster-admin before you can install Fuse Online as a user.</p>
 </div>
 <div class="paragraph">
 <p>The deployment happens to the currently connected OpenShift cluster.
@@ -3598,8 +3599,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-13397-gf9399428b5<br>
-Last updated 2019-11-19 12:55:27 UTC
+Version 1.1.3-13399-gebdb8dc4dd<br>
+Last updated 2019-11-19 15:22:20 UTC
 </div>
 </div>
 </body>
