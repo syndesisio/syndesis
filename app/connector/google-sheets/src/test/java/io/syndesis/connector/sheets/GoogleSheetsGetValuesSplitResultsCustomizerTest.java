@@ -88,9 +88,8 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
 
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE, sheetName + "!" + range);
         inbound.getIn().setHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION, majorDimension);
-        //TODO: Backport https://github.com/apache/camel/commit/47f173822d6730300e28d60117d513c89f78fa2b#diff-d2785fb9fb2a0831cfc0c911ec5bc06e to 2.23.x.redhat-7-x
-        //inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
-        //inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.RANGE_INDEX, 1);
+        inbound.getIn().setHeader(GoogleSheetsStreamConstants.VALUE_INDEX, 1);
 
         inbound.getIn().setBody(values);
         getComponent().getBeforeConsumer().process(inbound);
