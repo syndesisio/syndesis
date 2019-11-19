@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -25,26 +24,24 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.models.ArrayModel;
-import io.swagger.models.Model;
-import io.swagger.models.ModelImpl;
-import io.swagger.models.Operation;
-import io.swagger.models.RefModel;
-import io.swagger.models.Response;
-import io.swagger.models.Swagger;
-import io.swagger.models.Xml;
-import io.swagger.models.parameters.AbstractSerializableParameter;
-import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.Parameter;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.models.OasXML;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
+import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
-import org.apache.commons.lang3.ClassUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -55,9 +52,6 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
 public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static final Class<AbstractSerializableParameter<?>> PARAM_CLASS = (Class) AbstractSerializableParameter.class;
 
     private static final String SCHEMA_SET_NS = "http://atlasmap.io/xml/schemaset/v2";
 
@@ -77,7 +71,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     @Override
-    public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
+    public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
         final Document document = DocumentHelper.createDocument();
 
         final Element schemaSet = document.addElement("d:SchemaSet", SCHEMA_SET_NS);
@@ -87,11 +81,11 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         schema.addAttribute("targetNamespace", SYNDESIS_REQUEST_NS);
         schema.addAttribute("elementFormDefault", "qualified");
 
-        final Element parametersSchema = createParametersSchema(operation);
+        final Element parametersSchema = createParametersSchema(openApiDoc, operation);
 
         final Map<String, SchemaPrefixAndElement> moreSchemas = new HashMap<>();
 
-        final Element bodySchema = createRequestBodySchema(swagger, operation, moreSchemas);
+        final Element bodySchema = createRequestBodySchema(openApiDoc, operation, moreSchemas);
 
         if (bodySchema == null && parametersSchema == null) {
             return DATA_SHAPE_NONE;
@@ -143,8 +137,8 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     @Override
-    public DataShape createShapeFromResponse(final ObjectNode json, final Swagger swagger, final Operation operation) {
-        final Optional<Response> maybeResponse = findResponse(operation);
+    public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
+        final Optional<Oas20Response> maybeResponse = findResponse(operation);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -157,7 +151,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
         final Map<String, SchemaPrefixAndElement> moreSchemas = new HashMap<>();
 
-        final Element bodySchema = createResponseBodySchema(swagger, operation, moreSchemas);
+        final Element bodySchema = createResponseBodySchema(openApiDoc, operation, moreSchemas);
         if (bodySchema == null) {
             return DATA_SHAPE_NONE;
         }
@@ -180,14 +174,12 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
             .build();
     }
 
-    static void defineArrayElement(final Property property, final String propertyName, final Element parent, final Swagger swagger,
-        final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final ArrayProperty array = (ArrayProperty) property;
-
+    static void defineArrayElement(final Oas20Schema property, final String propertyName, final Element parent, final Oas20Document openApiDoc,
+                                   final Map<String, SchemaPrefixAndElement> moreSchemas) {
         final Element sequence;
-        final Xml arrayXml = array.getXml();
-        if (arrayXml != null && Boolean.TRUE.equals(arrayXml.getWrapped())) {
-            final String arrayElementName = determineArrayElementName(propertyName, array);
+        final OasXML arrayXml = property.xml;
+        if (arrayXml != null && Boolean.TRUE.equals(arrayXml.wrapped)) {
+            final String arrayElementName = determineArrayElementName(propertyName, property);
 
             final Element arrayElement = XmlSchemaHelper.addElement(parent, "element");
             arrayElement.addAttribute("name", requireNonNull(arrayElementName, "missing array property name"));
@@ -198,39 +190,38 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
             sequence = parent;
         }
 
-        final Property items = array.getItems();
+        final OasSchema items = (OasSchema) property.items;
 
         final Element itemsElement;
-        final String arrayItemsType = items.getType();
-        if ("ref".equals(arrayItemsType)) {
-            itemsElement = defineComplexElement((RefProperty) items, sequence, swagger, moreSchemas);
+        if (Oas20ModelHelper.isReferenceType(items)) {
+            itemsElement = defineComplexElement(items, sequence, openApiDoc, moreSchemas);
         } else {
             itemsElement = XmlSchemaHelper.addElement(sequence, "element");
-            itemsElement.addAttribute("name", determineArrayItemName(propertyName, array));
-            itemsElement.addAttribute("type", XmlSchemaHelper.toXsdType(arrayItemsType));
+            itemsElement.addAttribute("name", determineArrayItemName(propertyName, property));
+            itemsElement.addAttribute("type", XmlSchemaHelper.toXsdType(items.type));
         }
 
-        if (array.getMaxItems() == null) {
+        if (property.maxItems == null) {
             itemsElement.addAttribute("maxOccurs", "unbounded");
         } else {
-            itemsElement.addAttribute("maxOccurs", String.valueOf(array.getMaxItems()));
+            itemsElement.addAttribute("maxOccurs", String.valueOf(property.maxItems));
         }
 
-        if (array.getMinItems() == null) {
+        if (property.minItems == null) {
             itemsElement.addAttribute("minOccurs", "0");
         } else {
-            itemsElement.addAttribute("minOccurs", String.valueOf(array.getMinItems()));
+            itemsElement.addAttribute("minOccurs", String.valueOf(property.minItems));
         }
     }
 
-    static String determineArrayElementName(final String propertyName, final ArrayProperty array) {
-        final Xml xml = array.getXml();
+    static String determineArrayElementName(final String propertyName, final Oas20Schema array) {
+        final OasXML xml = array.xml;
 
-        if (xml == null || xml.getWrapped() == null || Boolean.FALSE.equals(xml.getWrapped())) {
+        if (xml == null || xml.wrapped == null || Boolean.FALSE.equals(xml.wrapped)) {
             return null;
         }
 
-        final String xmlName = xml.getName();
+        final String xmlName = xml.name;
         if (xmlName != null) {
             return xmlName;
         }
@@ -238,17 +229,17 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         return propertyName;
     }
 
-    static String determineArrayItemName(final String propertyName, final ArrayProperty array) {
-        final Property items = array.getItems();
+    static String determineArrayItemName(final String propertyName, final Oas20Schema array) {
+        final OasSchema items = (OasSchema) array.items;
 
-        final Xml itemXml = items.getXml();
-        if (itemXml != null && itemXml.getName() != null) {
-            return itemXml.getName();
+        final OasXML itemXml = items.xml;
+        if (itemXml != null && itemXml.name != null) {
+            return itemXml.name;
         }
 
-        final Xml xml = array.getXml();
-        if (xml != null && xml.getName() != null) {
-            return xml.getName();
+        final OasXML xml = array.xml;
+        if (xml != null && xml.name != null) {
+            return xml.name;
         }
 
         return propertyName;
@@ -265,25 +256,16 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static void addEnumsTo(final Element element, final AbstractSerializableParameter<?> serializableParameter) {
-        if (serializableParameter.getItems() != null) {
-            final Property items = serializableParameter.getItems();
+    private static void addEnumsTo(final Element element, final Oas20Parameter serializableParameter) {
+        if (serializableParameter.items != null) {
+            final Oas20Items items = serializableParameter.items;
 
-            List<?> enums;
-            try {
-                final Method method = ClassUtils.getPublicMethod(items.getClass(), "getEnum");
-                final List<?> tmp = (List<?>) method.invoke(items);
-
-                enums = tmp;
-            } catch (@SuppressWarnings("unused") final ReflectiveOperationException ignored) {
-                enums = Collections.emptyList();
-            }
-
-            if (enums != null && !enums.isEmpty()) {
+            List<String> enums = ofNullable(items.enum_).orElse(Collections.emptyList());
+            if (!enums.isEmpty()) {
                 addEnumerationsTo(element, enums);
             }
         } else {
-            final List<String> enums = serializableParameter.getEnum();
+            final List<String> enums = serializableParameter.enum_;
 
             if (enums != null && !enums.isEmpty()) {
                 addEnumerationsTo(element, enums);
@@ -291,12 +273,24 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static Element createParametersSchema(final Operation operation) {
-        final List<Parameter> operationParameters = operation.getParameters();
+    private static Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
+        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation, Oas20Parameter.class);
 
-        final List<AbstractSerializableParameter<?>> serializableParameters = operationParameters.stream()//
-            .filter(PARAM_CLASS::isInstance)//
-            .map(PARAM_CLASS::cast)//
+        OasPathItem parent = Optional.of(operation.parent())
+            .filter(OasPathItem.class::isInstance)
+            .map(OasPathItem.class::cast)
+            .orElse(null);
+        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent, Oas20Parameter.class);
+        operationParameters.addAll(pathParameters);
+
+        final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
+            .map(Oas20ParameterDefinitions::getItems)
+            .orElse(Collections.emptyList());
+        operationParameters.addAll(globalParameters);
+
+        final List<Oas20Parameter> serializableParameters = operationParameters.stream()
+            .filter(p -> p.type != null)
+            .filter(Oas20ModelHelper::isSerializable)
             .collect(Collectors.toList());
 
         if (serializableParameters.isEmpty()) {
@@ -311,8 +305,8 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final Element complex = XmlSchemaHelper.addElement(parameters, "complexType");
         final Element sequence = XmlSchemaHelper.addElement(complex, "sequence");
 
-        for (final AbstractSerializableParameter<?> serializableParameter : serializableParameters) {
-            final String type = XmlSchemaHelper.toXsdType(serializableParameter.getType());
+        for (final Oas20Parameter serializableParameter : serializableParameters) {
+            final String type = XmlSchemaHelper.toXsdType(serializableParameter.type);
             final String name = trimToNull(serializableParameter.getName());
 
             if ("file".equals(type)) {
@@ -322,11 +316,9 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
             final Element element = XmlSchemaHelper.addElement(sequence, "element");
             element.addAttribute("name", name);
-            if (type != null) {
-                element.addAttribute("type", type);
-            }
+            element.addAttribute("type", type);
 
-            final Object defaultValue = serializableParameter.getDefault();
+            final Object defaultValue = serializableParameter.default_;
             if (defaultValue != null) {
                 element.addAttribute("default", String.valueOf(defaultValue));
             }
@@ -337,35 +329,34 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         return schema;
     }
 
-    private static Element createRequestBodySchema(final Swagger swagger, final Operation operation,
+    private static Element createRequestBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<BodyParameter> bodyParameter = findBodyParameter(operation);
+        final Optional<OasParameter> bodyParameter = findBodyParameter(operation);
 
         if (!bodyParameter.isPresent()) {
             return null;
         }
 
-        final BodyParameter body = bodyParameter.get();
+        final OasParameter body = bodyParameter.get();
 
-        final Model bodySchema = body.getSchema();
+        final Oas20Schema bodySchema = (Oas20Schema) body.schema;
 
-        final ModelImpl bodySchemaToUse;
-        if (bodySchema instanceof RefModel) {
-            bodySchemaToUse = SwaggerHelper.dereference((RefModel) bodySchema, swagger);
-        } else if (bodySchema instanceof ArrayModel) {
-            final Property items = ((ArrayModel) bodySchema).getItems();
+        final Oas20SchemaDefinition bodySchemaToUse;
+        if (Oas20ModelHelper.isReferenceType(bodySchema)) {
+            bodySchemaToUse = Oas20ModelHelper.dereference(bodySchema, openApiDoc);
+        } else if (Oas20ModelHelper.isArrayType(bodySchema)) {
+            final Oas20Schema items = (Oas20Schema) bodySchema.items;
 
-            if (items instanceof RefProperty) {
-                bodySchemaToUse = SwaggerHelper.dereference((RefProperty) items, swagger);
+            if (Oas20ModelHelper.isReferenceType(items)) {
+                bodySchemaToUse = Oas20ModelHelper.dereference(items, openApiDoc);
             } else {
-                bodySchemaToUse = new ModelImpl();
                 final String name = XmlSchemaHelper.nameOrDefault(items, "array");
-                bodySchemaToUse.name(name);
+                bodySchemaToUse = new Oas20SchemaDefinition(name);
                 bodySchemaToUse.addProperty(name, items);
 
             }
         } else {
-            bodySchemaToUse = (ModelImpl) bodySchema;
+            bodySchemaToUse = (Oas20SchemaDefinition) bodySchema;
         }
 
         final String targetNamespace = XmlSchemaHelper.xmlTargetNamespaceOrNull(bodySchemaToUse);
@@ -378,33 +369,31 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final Element complexBody = XmlSchemaHelper.addElement(bodyElement, "complexType");
         final Element bodySequence = XmlSchemaHelper.addElement(complexBody, "sequence");
 
-        defineElementPropertiesOf(bodySequence, bodySchemaToUse, swagger, moreSchemas);
+        defineElementPropertiesOf(bodySequence, bodySchemaToUse, openApiDoc, moreSchemas);
 
         defineAttributePropertiesOf(complexBody, bodySchemaToUse);
 
         return schema;
     }
 
-    private static Element createResponseBodySchema(final Swagger swagger, final Operation operation,
+    private static Element createResponseBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<Response> maybeResponse = findResponse(operation);
+        final Optional<Oas20Response> maybeResponse = findResponse(operation);
 
         if (!maybeResponse.isPresent()) {
             return null;
         }
 
-        final Response body = maybeResponse.get();
-
-        final Property bodySchema = body.getSchema();
-        if (bodySchema instanceof RefProperty) {
-            return defineComplexElement((RefProperty) bodySchema, null, swagger, moreSchemas);
-        } else if (bodySchema instanceof ArrayProperty) {
-            final ArrayProperty array = (ArrayProperty) bodySchema;
-
-            final String targetNamespace = XmlSchemaHelper.xmlTargetNamespaceOrNull(array);
+        final Oas20Response body = maybeResponse.get();
+        final Oas20Schema bodySchema = body.schema;
+        if (Oas20ModelHelper.isReferenceType(bodySchema)) {
+            return defineComplexElement(bodySchema, null, openApiDoc, moreSchemas);
+        } else if (Oas20ModelHelper.isArrayType(bodySchema)) {
+            final String targetNamespace = XmlSchemaHelper.xmlTargetNamespaceOrNull(bodySchema);
             final Element schema = XmlSchemaHelper.newXmlSchema(targetNamespace);
 
-            defineElementProperty(ofNullable(array.getName()).orElse("array"), array, schema, swagger, moreSchemas);
+            OasSchema propertySchema = ofNullable(bodySchema.items).map(OasSchema.class::cast).orElse(null);
+            defineElementProperty(Oas20ModelHelper.getPropertyName(propertySchema, "array"), bodySchema, schema, openApiDoc, moreSchemas);
 
             return schema;
         } else {
@@ -412,12 +401,12 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static void defineAttributePropertiesOf(final Element parent, final ModelImpl model) {
-        final Map<String, Property> properties = model.getProperties();
+    private static void defineAttributePropertiesOf(final Element parent, final Oas20SchemaDefinition model) {
+        final Map<String, OasSchema> properties = model.properties;
 
-        for (final Entry<String, Property> propertyEntry : properties.entrySet()) {
+        for (final Entry<String, OasSchema> propertyEntry : properties.entrySet()) {
             final String propertyName = propertyEntry.getKey();
-            final Property property = propertyEntry.getValue();
+            final OasSchema property = propertyEntry.getValue();
 
             if (XmlSchemaHelper.isAttribute(property)) {
                 defineAttributeProperty(propertyName, property, parent);
@@ -425,8 +414,8 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         }
     }
 
-    private static void defineAttributeProperty(final String propertyName, final Property property, final Element parent) {
-        final String type = property.getType();
+    private static void defineAttributeProperty(final String propertyName, final OasSchema property, final Element parent) {
+        final String type = property.type;
 
         final Element propertyElement = XmlSchemaHelper.addElement(parent, "attribute");
         propertyElement.addAttribute("name", requireNonNull(propertyName, "missing property name"));
@@ -434,9 +423,9 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         propertyElement.addAttribute("type", XmlSchemaHelper.toXsdType(type));
     }
 
-    private static Element defineComplexElement(final RefProperty property, final Element parent, final Swagger swagger,
+    private static Element defineComplexElement(final OasSchema property, final Element parent, final Oas20Document openApiDoc,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final ModelImpl model = SwaggerHelper.dereference(property, swagger);
+        final Oas20SchemaDefinition model = Oas20ModelHelper.dereference(property, openApiDoc);
 
         Element ret;
         Element elementToDeclareIn;
@@ -475,44 +464,37 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final Element complex = XmlSchemaHelper.addElement(elementToDeclareIn, "complexType");
         final Element sequence = XmlSchemaHelper.addElement(complex, "sequence");
 
-        defineElementPropertiesOf(sequence, model, swagger, moreSchemas);
+        defineElementPropertiesOf(sequence, model, openApiDoc, moreSchemas);
 
         defineAttributePropertiesOf(complex, model);
 
         return ret;
     }
 
-    private static void defineElementPropertiesOf(final Element parent, final Model model, final Swagger swagger,
-        final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Map<String, Property> properties = model.getProperties();
+    private static void defineElementPropertiesOf(final Element parent, final Oas20Schema model, final Oas20Document openApiDoc,
+                                                  final Map<String, SchemaPrefixAndElement> moreSchemas) {
+        final Map<String, OasSchema> properties = model.properties;
 
-        for (final Entry<String, Property> propertyEntry : properties.entrySet()) {
+        for (final Entry<String, OasSchema> propertyEntry : properties.entrySet()) {
             final String propertyName = propertyEntry.getKey();
-            final Property property = propertyEntry.getValue();
+            final Oas20Schema property = (Oas20Schema) propertyEntry.getValue();
 
             if (XmlSchemaHelper.isElement(property)) {
-                defineElementProperty(propertyName, property, parent, swagger, moreSchemas);
+                defineElementProperty(propertyName, property, parent, openApiDoc, moreSchemas);
             }
         }
     }
 
-    private static void defineElementProperty(final String propertyName, final Property property, final Element parent,
-        final Swagger swagger, final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final String type = property.getType();
-
-        switch (type) {
-        case "ref":
-            defineComplexElement((RefProperty) property, parent, swagger, moreSchemas);
-            break;
-        case "array":
-            defineArrayElement(property, propertyName, parent, swagger, moreSchemas);
-            break;
-        default:
+    private static void defineElementProperty(final String propertyName, final Oas20Schema property, final Element parent,
+                                              final Oas20Document openApiDoc, final Map<String, SchemaPrefixAndElement> moreSchemas) {
+        if (Oas20ModelHelper.isReferenceType(property)) {
+            defineComplexElement(property, parent, openApiDoc, moreSchemas);
+        } else if (Oas20ModelHelper.isArrayType(property)) {
+            defineArrayElement(property, propertyName, parent, openApiDoc, moreSchemas);
+        } else {
             final Element propertyElement = XmlSchemaHelper.addElement(parent, "element");
             propertyElement.addAttribute("name", requireNonNull(propertyName, "missing property name"));
-
-            propertyElement.addAttribute("type", XmlSchemaHelper.toXsdType(type));
-            break;
+            propertyElement.addAttribute("type", XmlSchemaHelper.toXsdType(property.type));
         }
     }
 

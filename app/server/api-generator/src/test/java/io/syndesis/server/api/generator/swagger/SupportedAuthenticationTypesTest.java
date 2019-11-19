@@ -15,9 +15,8 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
-import io.swagger.models.auth.BasicAuthDefinition;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -38,10 +37,11 @@ public class SupportedAuthenticationTypesTest {
 
     @Test
     public void shouldGenerateLabelsWithDescription() {
-        final BasicAuthDefinition withDescription = new BasicAuthDefinition();
-        withDescription.setDescription("description");
+        final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
+        securityScheme.type = PropertyGenerators.SchemeType.BASIC.getName();
+        securityScheme.description = "description";
 
-        assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", withDescription))
+        assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
             .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()
                 .createFrom(SupportedAuthenticationTypes.basic.propertyValue)
                 .label("HTTP Basic Authentication - basic_auth (description)")
@@ -51,7 +51,10 @@ public class SupportedAuthenticationTypesTest {
 
     @Test
     public void shouldGenerateLabelsWithoutDescription() {
-        assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", new BasicAuthDefinition()))
+        final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
+        securityScheme.type = PropertyGenerators.SchemeType.BASIC.getName();
+
+        assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
             .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()
                 .createFrom(SupportedAuthenticationTypes.basic.propertyValue)
                 .label("HTTP Basic Authentication - basic_auth")

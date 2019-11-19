@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
+import javax.xml.transform.Source;
+import javax.xml.transform.stream.StreamSource;
+import javax.xml.validation.Schema;
+import javax.xml.validation.SchemaFactory;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,19 +30,16 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.xml.transform.Source;
-import javax.xml.transform.stream.StreamSource;
-import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
-
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.BodyParameter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.common.util.openapi.OpenApiHelper;
-
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,8 +54,6 @@ import org.xmlunit.validation.Languages;
 import org.xmlunit.validation.ValidationProblem;
 import org.xmlunit.validation.ValidationResult;
 import org.xmlunit.validation.Validator;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -87,13 +86,13 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
     public ObjectNode json;
 
     @Parameter(2)
-    public Operation operation;
+    public Oas20Operation operation;
 
     @Parameter(3)
     public String specification;
 
     @Parameter(1)
-    public Swagger swagger;
+    public Oas20Document openApiDoc;
 
     private final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
@@ -142,7 +141,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     @Test
     public void shouldGenerateValidInputSchemasets() {
-        final DataShape input = generator.createShapeFromRequest(json, swagger, operation);
+        final DataShape input = generator.createShapeFromRequest(json, openApiDoc, operation);
 
         if (input.getKind() != DataShapeKinds.XML_SCHEMA) {
             return;
@@ -152,7 +151,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         final ValidationResult result = VALIDATOR.validateInstance(source(inputSpecification));
         assertThat(result.isValid())//
             .as("Non valid input XML schemaset was generated for specification: %s, operation: %s, errors: %s", specification,
-                operation.getOperationId(),
+                operation.operationId,
                 StreamSupport.stream(result.getProblems().spliterator(), false).map(ValidationProblem::toString)//
                     .collect(Collectors.joining("\n")))//
             .isTrue();
@@ -160,7 +159,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     @Test
     public void shouldGenerateValidOutputSchemasets() throws IOException {
-        final DataShape output = generator.createShapeFromResponse(json, swagger, operation);
+        final DataShape output = generator.createShapeFromResponse(json, openApiDoc, operation);
 
         if (output.getKind() != DataShapeKinds.XML_SCHEMA) {
             return;
@@ -173,7 +172,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             final ValidationResult result = validator.validateInstance(source(outputSpecification));
             assertThat(result.isValid())//
                 .as("Non valid output XML schemaset was generated for specification: %s, operation: %s, errors: %s", specification,
-                    operation.getOperationId(),
+                    operation.operationId,
                     StreamSupport.stream(result.getProblems().spliterator(), false).map(ValidationProblem::toString)//
                         .collect(Collectors.joining("\n")))//
                 .isTrue();
@@ -216,19 +215,23 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             } catch (final IOException e) {
                 throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
             }
-            final Swagger swagger = OpenApiHelper.parse(specificationContent);
+            final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specificationContent);
 
-            swagger.getPaths().forEach((path, operations) -> {
-                operations.getOperationMap().forEach((method, operation) -> {
-                    final Optional<BodyParameter> bodyParameter = BaseDataShapeGenerator.findBodyParameter(operation);
-                    if (!bodyParameter.isPresent()) {
-                        // by default we resort to JSON for payloads without
-                        // body, i.e.
-                        // only parameters
-                        return;
-                    }
+            openApiDoc.paths.getPathItems()
+                .stream()
+                .filter(Oas20PathItem.class::isInstance)
+                .map(Oas20PathItem.class::cast)
+                .forEach(pathItem -> {
+                    Oas20ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
+                        final Optional<OasParameter> bodyParameter = BaseDataShapeGenerator.findBodyParameter(operation);
+                        if (!bodyParameter.isPresent()) {
+                            // by default we resort to JSON for payloads without
+                            // body, i.e.
+                            // only parameters
+                            return;
+                        }
 
-                    parameters.add(new Object[] {json, swagger, operation, specification});
+                        parameters.add(new Object[] {json, openApiDoc, operation, specification});
                 });
             });
         });

@@ -13,7 +13,7 @@
   "connectorFactory": "io.syndesis.connector.rest.swagger.ConnectorFactory",
   "dependencies": [
     {
-      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
       "type": "MAVEN"
     },
     {

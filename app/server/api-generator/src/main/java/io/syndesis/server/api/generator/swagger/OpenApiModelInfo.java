@@ -19,25 +19,23 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import io.swagger.models.Swagger;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
-
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 /**
- * Class holding information about a swagger model and related validations.
+ * Class holding information about a open api model and related validations.
  */
 @Value.Immutable
-@JsonDeserialize(builder = SwaggerModelInfo.Builder.class)
-public interface SwaggerModelInfo {
+@JsonDeserialize(builder = OpenApiModelInfo.Builder.class)
+public interface OpenApiModelInfo {
 
-    class Builder extends ImmutableSwaggerModelInfo.Builder {
-        // make ImmutableSwaggerModelInfo.Builder accessible
+    class Builder extends ImmutableOpenApiModelInfo.Builder {
+        // make ImmutableOpenApiModelInfo.Builder accessible
     }
 
     @Value.Default
@@ -45,7 +43,7 @@ public interface SwaggerModelInfo {
         return Collections.emptyList();
     }
 
-    Swagger getModel();
+    Oas20Document getModel();
 
     @Value.Lazy
     default ObjectNode getResolvedJsonGraph() {

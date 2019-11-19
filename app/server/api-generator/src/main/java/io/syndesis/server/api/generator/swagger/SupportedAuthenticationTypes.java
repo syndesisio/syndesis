@@ -21,11 +21,9 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import io.swagger.models.auth.OAuth2Definition;
-import io.swagger.models.auth.SecuritySchemeDefinition;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
-
 import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("ImmutableEnumChecker")
@@ -34,20 +32,21 @@ enum SupportedAuthenticationTypes {
     basic("HTTP Basic Authentication"),
     oauth2("OAuth 2.0", SupportedAuthenticationTypes::authorizationFlow);
 
-    private static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values()).map(SupportedAuthenticationTypes::name)
+    private static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values())
+        .map(SupportedAuthenticationTypes::name)
         .collect(Collectors.toSet());
 
     final String label;
 
     final transient ConfigurationProperty.PropertyValue propertyValue;
 
-    private final Predicate<SecuritySchemeDefinition> filter;
+    private final Predicate<Oas20SecurityScheme> filter;
 
     SupportedAuthenticationTypes(final String label) {
         this(label, SupportedAuthenticationTypes::any);
     }
 
-    SupportedAuthenticationTypes(final String label, final Predicate<SecuritySchemeDefinition> filter) {
+    SupportedAuthenticationTypes(final String label, final Predicate<Oas20SecurityScheme> filter) {
         this.label = label;
         this.filter = filter;
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
@@ -63,8 +62,8 @@ enum SupportedAuthenticationTypes {
         return valueOf(value);
     }
 
-    static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final SecuritySchemeDefinition def) {
-        final PropertyValue template = valueOf(def.getType()).propertyValue;
+    static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final Oas20SecurityScheme scheme) {
+        final PropertyValue template = valueOf(scheme.type).propertyValue;
 
         final PropertyValue propertyValue = new ConfigurationProperty.PropertyValue.Builder()
             .createFrom(template)
@@ -72,7 +71,7 @@ enum SupportedAuthenticationTypes {
             .value(template.getValue() + ":" + name)
             .build();
 
-        final String description = def.getDescription();
+        final String description = scheme.description;
         if (StringUtils.isEmpty(description)) {
             return propertyValue;
         }
@@ -84,23 +83,20 @@ enum SupportedAuthenticationTypes {
             .build();
     }
 
-    static boolean supports(final SecuritySchemeDefinition def) {
-        final String type = def.getType();
-
-        return SUPPORTED.contains(type) && valueOf(type).filter.test(def);
+    static boolean supports(final Oas20SecurityScheme scheme) {
+        final String type = scheme.type;
+        return SUPPORTED.contains(type) && valueOf(type).filter.test(scheme);
     }
 
-    private static boolean any(@SuppressWarnings("unused") final SecuritySchemeDefinition def) {
+    private static boolean any(@SuppressWarnings("unused") final Oas20SecurityScheme scheme) {
         return true;
     }
 
-    private static boolean authorizationFlow(final SecuritySchemeDefinition def) {
-        if (!(def instanceof OAuth2Definition)) {
+    private static boolean authorizationFlow(final Oas20SecurityScheme scheme) {
+        if (!"oauth2".equals(scheme.type)) {
             return false;
         }
 
-        final OAuth2Definition oauth = (OAuth2Definition) def;
-
-        return "accessCode".equals(oauth.getFlow());
+        return "accessCode".equals(scheme.flow);
     }
 }

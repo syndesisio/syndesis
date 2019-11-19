@@ -17,37 +17,36 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.util.function.Supplier;
 
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
-public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConnectorGenerator {
+public final class OpenApiUnifiedShapeConnectorGenerator extends BaseOpenApiConnectorGenerator {
 
     private final DataShapeGenerator dataShapeGenerator = new UnifiedDataShapeGenerator();
 
-    public SwaggerUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector) {
+    public OpenApiUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector) {
         super(restSwaggerConnector);
     }
 
-    SwaggerUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector, final Supplier<String> operationIdGenerator) {
+    OpenApiUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector, final Supplier<String> operationIdGenerator) {
         super(restSwaggerConnector, operationIdGenerator);
     }
 
     @Override
-    ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
+    ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
         final ConnectorDescriptor.Builder actionDescriptor = new ConnectorDescriptor.Builder();
 
-        final DataShape inputDataShape = dataShapeGenerator.createShapeFromRequest(json, swagger, operation);
+        final DataShape inputDataShape = dataShapeGenerator.createShapeFromRequest(json, openApiDoc, operation);
         actionDescriptor.inputDataShape(inputDataShape);
 
-        final DataShape outputDataShape = dataShapeGenerator.createShapeFromResponse(json, swagger, operation);
+        final DataShape outputDataShape = dataShapeGenerator.createShapeFromResponse(json, openApiDoc, operation);
         actionDescriptor.outputDataShape(outputDataShape);
 
-        actionDescriptor.putConfiguredProperty("operationId", operation.getOperationId());
+        actionDescriptor.putConfiguredProperty("operationId", operation.operationId);
 
         return actionDescriptor;
     }

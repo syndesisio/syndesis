@@ -17,18 +17,20 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import io.swagger.models.Info;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Swagger;
-import io.swagger.models.auth.ApiKeyAuthDefinition;
-import io.swagger.models.auth.In;
-import io.swagger.models.parameters.Parameter;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Info;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -38,33 +40,27 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIValidationContext;
-
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import static io.syndesis.server.api.generator.swagger.TestHelper.reformatJson;
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BaseSwaggerConnectorGeneratorTest {
+public class BaseOpenApiConnectorGeneratorTest {
 
-    private final BaseSwaggerConnectorGenerator generator;
+    private final BaseOpenApiConnectorGenerator generator;
 
-    public BaseSwaggerConnectorGeneratorTest() {
-        try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+    public BaseOpenApiConnectorGeneratorTest() {
+        try (InputStream stream = OpenApiUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
-            generator = new BaseSwaggerConnectorGenerator(restSwagger) {
+            generator = new BaseOpenApiConnectorGenerator(restSwagger) {
                 @Override
-                ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
+                ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
                     return new ConnectorDescriptor.Builder();
                 }
             };
@@ -108,11 +104,10 @@ public class BaseSwaggerConnectorGeneratorTest {
     @Test
     public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
         final String specification = resource("/swagger/petstore.swagger.json");
-        final Swagger swagger = OpenApiHelper.parse(specification);
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
+        final Oas20Parameter petIdPathParameter = (Oas20Parameter) openApiDoc.paths.getPathItem("/pet/{petId}").get.getParameters().get(0);
 
-        final Parameter petIdPathParameter = swagger.getPath("/pet/{petId}").getGet().getParameters().get(0);
-
-        final Optional<ConfigurationProperty> maybeConfigurationProperty = BaseSwaggerConnectorGenerator
+        final Optional<ConfigurationProperty> maybeConfigurationProperty = BaseOpenApiConnectorGenerator
             .createPropertyFromParameter(petIdPathParameter);
 
         final ConfigurationProperty expected = new ConfigurationProperty.Builder()//
@@ -173,41 +168,51 @@ public class BaseSwaggerConnectorGeneratorTest {
 
     @Test
     public void shouldDetermineConnectorDescription() {
-        final Swagger swagger = new Swagger();
+        final Oas20Document openApiDoc = new Oas20Document();
 
-        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc)))
             .isEqualTo("unspecified");
 
-        final Info info = new Info();
-        swagger.info(info);
-        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+        final Oas20Info info = (Oas20Info) openApiDoc.createInfo();
+        openApiDoc.info = info;
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc)))
             .isEqualTo("unspecified");
 
-        info.description("description");
-        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger)))
+        info.description = "description";
+        assertThat(generator.determineConnectorDescription(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc)))
             .isEqualTo("description");
     }
 
     @Test
     public void shouldDetermineConnectorName() {
-        final Swagger swagger = new Swagger();
+        final Oas20Document openApiDoc = new Oas20Document();
 
-        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc))).isEqualTo("unspecified");
 
-        final Info info = new Info();
-        swagger.info(info);
-        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("unspecified");
+        final Oas20Info info = (Oas20Info) openApiDoc.createInfo();
+        openApiDoc.info = info;
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc))).isEqualTo("unspecified");
 
-        info.title("title");
-        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("title");
+        info.title = "title";
+        assertThat(generator.determineConnectorName(ApiConnectorTemplate.SWAGGER_TEMPLATE, createSettingsFrom(openApiDoc))).isEqualTo("title");
     }
 
     @Test
-    public void shouldGeneratePropertiesForChoosenAuthenticationType() {
-        final Swagger swagger = new Swagger()
-            .securityDefinition("one", new ApiKeyAuthDefinition("query", In.QUERY))
-            .securityDefinition("two", new ApiKeyAuthDefinition("query", In.HEADER));
-        final String specification = OpenApiHelper.serialize(swagger);
+    public void shouldGeneratePropertiesForChosenAuthenticationType() throws JsonProcessingException {
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+
+        Oas20SecurityScheme scheme1 = openApiDoc.securityDefinitions.createSecurityScheme("one");
+        scheme1.in = "query";
+        scheme1.type = "apiKey";
+
+        Oas20SecurityScheme scheme2 = openApiDoc.securityDefinitions.createSecurityScheme("two");
+        scheme2.in = "header";
+        scheme2.type = "apiKey";
+
+        openApiDoc.securityDefinitions.addSecurityScheme("one", scheme1);
+        openApiDoc.securityDefinitions.addSecurityScheme("two", scheme2);
+        final String specification = JsonUtils.writer().writeValueAsString(Library.writeNode(openApiDoc));
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", specification)
@@ -243,12 +248,22 @@ public class BaseSwaggerConnectorGeneratorTest {
 
     @Test
     public void shouldMakeNonUniqueOperationIdsUnique() {
-        final Swagger swagger = new Swagger().path("/path", new Path().get(new Operation().operationId("foo"))
-            .post(new Operation().operationId("foo")).put(new Operation().operationId("bar")));
+        final Oas20Document openApiDoc = new Oas20Document();
+
+        openApiDoc.paths = openApiDoc.createPaths();
+        Oas20PathItem pathItem = (Oas20PathItem) openApiDoc.paths.createPathItem("/path");
+        pathItem.get = pathItem.createOperation("get");
+        pathItem.get.operationId = "foo";
+        pathItem.post = pathItem.createOperation("post");
+        pathItem.post.operationId = "foo";
+        pathItem.put = pathItem.createOperation("put");
+        pathItem.put.operationId = "bar";
+
+        openApiDoc.paths.addPathItem("/path", pathItem);
 
         final Connector generated = generator.configureConnector(ApiConnectorTemplate.SWAGGER_TEMPLATE,
             new Connector.Builder().id("connector1").build(),
-            createSettingsFrom(swagger));
+            createSettingsFrom(openApiDoc));
         final List<ConnectorAction> actions = generated.getActions();
         assertThat(actions).hasSize(3);
         assertThat(actions.get(0).getId()).hasValueSatisfying(id -> assertThat(id).endsWith("foo"));
@@ -279,10 +294,20 @@ public class BaseSwaggerConnectorGeneratorTest {
 
     @Test
     public void shouldNotProvideAuthenticationPropertiesWithMultipleSecurityDefinitionsMatching() {
-        final Swagger swagger = new Swagger()
-            .securityDefinition("one", new ApiKeyAuthDefinition("query", In.QUERY))
-            .securityDefinition("two", new ApiKeyAuthDefinition("query", In.HEADER));
-        final String specification = OpenApiHelper.serialize(swagger);
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+
+        Oas20SecurityScheme scheme1 = openApiDoc.securityDefinitions.createSecurityScheme("one");
+        scheme1.in = "query";
+        scheme1.type = "apiKey";
+
+        Oas20SecurityScheme scheme2 = openApiDoc.securityDefinitions.createSecurityScheme("two");
+        scheme2.in = "header";
+        scheme2.type = "apiKey";
+
+        openApiDoc.securityDefinitions.addSecurityScheme("one", scheme1);
+        openApiDoc.securityDefinitions.addSecurityScheme("two", scheme2);
+        final String specification = Library.writeDocumentToJSONString(openApiDoc);
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", specification)
@@ -295,13 +320,15 @@ public class BaseSwaggerConnectorGeneratorTest {
 
     @Test
     public void shouldParseSpecificationWithSecurityRequirements() throws JSONException {
-        final SwaggerModelInfo info = BaseSwaggerConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
+        final OpenApiModelInfo info = BaseOpenApiConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}")
             .build(),
             APIValidationContext.CONSUMED_API);
 
-        final Swagger model = info.getModel();
-        assertThat(model.getPath("/api").getGet().getSecurity()).containsOnly(Collections.singletonMap("secured", Collections.emptyList()));
+        final Oas20Document model = info.getModel();
+        assertThat(model.paths.getPathItem("/api").get.security).hasSize(1);
+        assertThat(model.paths.getPathItem("/api").get.security.get(0).getSecurityRequirementNames()).containsExactly("secured");
+        assertThat(model.paths.getPathItem("/api").get.security.get(0).getScopes("secured")).isEmpty();
 
         final String resolvedSpecification = info.getResolvedSpecification();
         JSONAssert.assertEquals(
@@ -363,9 +390,9 @@ public class BaseSwaggerConnectorGeneratorTest {
             .build();
     }
 
-    private static ConnectorSettings createSettingsFrom(final Swagger swagger) {
+    private static ConnectorSettings createSettingsFrom(final Oas20Document openApiDoc) {
         return new ConnectorSettings.Builder()//
-            .putConfiguredProperty("specification", OpenApiHelper.serialize(swagger))//
+            .putConfiguredProperty("specification", Library.writeDocumentToJSONString(openApiDoc))//
             .build();
     }
 

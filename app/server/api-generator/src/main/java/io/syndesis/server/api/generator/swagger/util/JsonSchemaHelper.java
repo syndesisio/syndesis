@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -28,10 +29,9 @@ import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.swagger.models.parameters.SerializableParameter;
-import io.swagger.models.properties.ArrayProperty;
-import io.swagger.models.properties.Property;
-import io.swagger.models.properties.RefProperty;
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.syndesis.common.util.json.JsonUtils;
 import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
@@ -57,31 +57,27 @@ public final class JsonSchemaHelper {
         return schemaNode;
     }
 
-    public static String determineSchemaReference(final Property schema) {
-        if (schema instanceof RefProperty) {
-            return ((RefProperty) schema).get$ref();
-        } else if (schema instanceof ArrayProperty) {
-            final Property property = ((ArrayProperty) schema).getItems();
-
-            return determineSchemaReference(property);
+    public static Optional<String> determineSchemaReference(final OasSchema schema) {
+        if (Oas20ModelHelper.isReferenceType(schema)) {
+            return Optional.of(schema.$ref);
+        } else if (Oas20ModelHelper.isArrayType(schema) && schema.items != null) {
+            return determineSchemaReference((OasSchema) schema.items);
         }
 
-        throw new IllegalArgumentException("Only references to schemas are supported");
+        return Optional.empty();
     }
 
-    public static String javaTypeFor(final SerializableParameter parameter) {
-        final String type = parameter.getType();
-
-        if ("array".equals(type)) {
-            final Property items = parameter.getItems();
-            final String elementType = items.getType();
-            final String elementFormat = items.getFormat();
+    public static String javaTypeFor(final Oas20Parameter parameter) {
+        if (Oas20ModelHelper.isArrayType(parameter)) {
+            final Oas20Items items = parameter.items;
+            final String elementType = items.type;
+            final String elementFormat = items.format;
 
             return javaTypeFor(elementType, elementFormat) + "[]";
         }
 
-        final String format = parameter.getFormat();
-        return javaTypeFor(type, format);
+        final String format = parameter.format;
+        return javaTypeFor(parameter.type, format);
     }
 
     public static ObjectNode newJsonObjectSchema() {

@@ -17,11 +17,10 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.util.List;
 
-import io.swagger.models.Operation;
-import io.swagger.models.Swagger;
-import io.syndesis.common.model.DataShape;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.syndesis.common.model.DataShape;
 
 public final class UnifiedDataShapeGenerator implements DataShapeGenerator {
 
@@ -34,28 +33,28 @@ public final class UnifiedDataShapeGenerator implements DataShapeGenerator {
     private static final DataShapeGenerator XML = new UnifiedXmlDataShapeGenerator();
 
     @Override
-    public DataShape createShapeFromRequest(final ObjectNode json, final Swagger swagger, final Operation operation) {
-        if (supports(APPLICATION_JSON, swagger.getConsumes(), operation.getConsumes())) {
-            return JSON.createShapeFromRequest(json, swagger, operation);
-        } else if (supports(APPLICATION_XML, swagger.getConsumes(), operation.getConsumes())) {
-            return XML.createShapeFromRequest(json, swagger, operation);
+    public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
+        if (supports(APPLICATION_JSON, openApiDoc.consumes, operation.consumes)) {
+            return JSON.createShapeFromRequest(json, openApiDoc, operation);
+        } else if (supports(APPLICATION_XML, openApiDoc.consumes, operation.consumes)) {
+            return XML.createShapeFromRequest(json, openApiDoc, operation);
         } else {
             // most likely a body-less request, i.e. only with parameters, we'll
             // use JSON to define those parameters
-            return JSON.createShapeFromRequest(json, swagger, operation);
+            return JSON.createShapeFromRequest(json, openApiDoc, operation);
         }
     }
 
     @Override
-    public DataShape createShapeFromResponse(final ObjectNode json, final Swagger swagger, final Operation operation) {
-        if (supports(APPLICATION_JSON, swagger.getProduces(), operation.getProduces())) {
-            return JSON.createShapeFromResponse(json, swagger, operation);
-        } else if (supports(APPLICATION_XML, swagger.getProduces(), operation.getProduces())) {
-            return XML.createShapeFromResponse(json, swagger, operation);
+    public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
+        if (supports(APPLICATION_JSON, openApiDoc.produces, operation.produces)) {
+            return JSON.createShapeFromResponse(json, openApiDoc, operation);
+        } else if (supports(APPLICATION_XML, openApiDoc.produces, operation.produces)) {
+            return XML.createShapeFromResponse(json, openApiDoc, operation);
         } else {
             // most likely a body-less request, i.e. only with parameters, we'll
             // use JSON to define those parameters
-            return JSON.createShapeFromResponse(json, swagger, operation);
+            return JSON.createShapeFromResponse(json, openApiDoc, operation);
         }
     }
 

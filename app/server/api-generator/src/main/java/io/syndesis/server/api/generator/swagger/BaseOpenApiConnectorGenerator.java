@@ -29,15 +29,16 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import io.swagger.models.HttpMethod;
-import io.swagger.models.Info;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Swagger;
-import io.swagger.models.parameters.AbstractSerializableParameter;
-import io.swagger.models.parameters.BodyParameter;
-import io.swagger.models.parameters.Parameter;
-import io.swagger.models.parameters.RefParameter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.core.models.Extension;
+import io.apicurio.datamodels.core.models.common.Info;
+import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasPaths;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
@@ -53,17 +54,16 @@ import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
+import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.swagger.util.OperationDescription;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import static java.util.Optional.ofNullable;
-
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
+abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
     static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
@@ -85,14 +85,14 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     final Supplier<String> operationIdGenerator;
 
-    public BaseSwaggerConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
+    public BaseOpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
         super(baseConnector);
 
         this.operationIdGenerator = operationIdGenerator;
     }
 
-    BaseSwaggerConnectorGenerator(final Connector baseConnector) {
-        this(baseConnector, BaseSwaggerConnectorGenerator::randomUUID);
+    BaseOpenApiConnectorGenerator(final Connector baseConnector) {
+        this(baseConnector, BaseOpenApiConnectorGenerator::randomUUID);
     }
 
     @Override
@@ -104,16 +104,16 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     public final APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final SwaggerModelInfo swaggerInfo = parseSpecification(connectorSettings, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo modelInfo = parseSpecification(connectorSettings, APIValidationContext.CONSUMED_API);
 
-        final Swagger model = swaggerInfo.getModel();
+        final Oas20Document model = modelInfo.getModel();
         if (model == null) {
             final APISummary.Builder summaryBuilder = new APISummary.Builder()
-                .errors(swaggerInfo.getErrors())
-                .warnings(swaggerInfo.getWarnings());
+                .errors(modelInfo.getErrors())
+                .warnings(modelInfo.getWarnings());
 
-            if (swaggerInfo.getResolvedSpecification() != null) {
-                summaryBuilder.putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification());
+            if (modelInfo.getResolvedSpecification() != null) {
+                summaryBuilder.putConfiguredProperty("specification", modelInfo.getResolvedSpecification());
             }
 
             return summaryBuilder.build();
@@ -122,18 +122,17 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         // No matter if the validation fails, try to process the swagger
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
 
-        final Map<String, Path> paths = model.getPaths();
-
+        final OasPaths paths = model.paths;
         final AtomicInteger total = new AtomicInteger(0);
-
         final Map<String, Integer> tagCounts;
         if (paths == null) {
             tagCounts = Collections.emptyMap();
         } else {
-            tagCounts = paths.entrySet().stream()
-                .flatMap(p -> p.getValue().getOperations().stream())
+            tagCounts = Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)
+                .stream()
+                .flatMap(p -> Oas20ModelHelper.getOperationMap(p).values().stream())
                 .peek(o -> total.incrementAndGet())
-                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()).distinct())
+                .flatMap(o -> Oas20ModelHelper.sanitizeTags(o.tags).distinct())
                 .collect(
                     Collectors.groupingBy(
                         Function.identity(),
@@ -148,23 +147,26 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         return new APISummary.Builder()
             .createFrom(connector)
             .actionsSummary(actionsSummary)
-            .errors(swaggerInfo.getErrors())
-            .warnings(swaggerInfo.getWarnings())
+            .errors(modelInfo.getErrors())
+            .warnings(modelInfo.getWarnings())
             .putAllConfiguredProperties(connectorSettings.getConfiguredProperties())
-            .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())
+            .putConfiguredProperty("specification", modelInfo.getResolvedSpecification())
             .build();
     }
 
-    abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Swagger swagger, Operation operation);
+    abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
 
     protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
+        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
 
         // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
 
         if (specification.startsWith("http")) {
-            swagger.vendorExtension(URL_EXTENSION, URI.create(specification));
+            Extension urlExtension = new Extension();
+            urlExtension.name = URL_EXTENSION;
+            urlExtension.value = URI.create(specification);
+            openApiDoc.addExtension(URL_EXTENSION, urlExtension);
         }
 
         final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
@@ -174,7 +176,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> alreadyConfiguredProperties = builder.build().getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
-            final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template, connectorSettings);
+            final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, openApiDoc, template, connectorSettings);
 
             maybeProperty.ifPresent(property -> {
                 builder.putProperty(propertyName, property);
@@ -196,26 +198,23 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
-        final SwaggerModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
-        final Swagger swagger = info.getModel();
-        addGlobalParameters(builder, swagger);
+        final OpenApiModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
+        final Oas20Document openApiDoc = info.getModel();
+        addGlobalParameters(builder, openApiDoc);
 
-        final Map<String, Path> paths = swagger.getPaths();
-
-        final String connectorId = connector.getId().get();
-
+        final OasPaths paths = ofNullable(openApiDoc.paths)
+                                   .orElse(openApiDoc.createPaths());
+        final String connectorId = connector.getId().orElseThrow(() -> new IllegalArgumentException("Missing connector identifier"));
         final List<ConnectorAction> actions = new ArrayList<>();
         final Map<String, Integer> operationIdCounts = new HashMap<>();
-        for (final Entry<String, Path> pathEntry : paths.entrySet()) {
-            final Path path = pathEntry.getValue();
+        for (final Oas20PathItem path : Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)) {
+            final Map<String, Oas20Operation> operationMap = Oas20ModelHelper.getOperationMap(path);
 
-            final Map<HttpMethod, Operation> operationMap = path.getOperationMap();
-
-            for (final Entry<HttpMethod, Operation> entry : operationMap.entrySet()) {
-                final Operation operation = entry.getValue();
-                final String operationId = operation.getOperationId();
+            for (final Entry<String, Oas20Operation> entry : operationMap.entrySet()) {
+                final Oas20Operation operation = entry.getValue();
+                final String operationId = operation.operationId;
                 if (operationId == null) {
-                    operation.operationId(operationIdGenerator.get());
+                    operation.operationId = operationIdGenerator.get();
                 } else {
                     // we tolerate that some operations might have the same
                     // operationId, if that's the case we generate a unique
@@ -228,22 +227,22 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                         (id, currentCount) -> ofNullable(currentCount).map(c -> ++c).orElse(0));
 
                     if (count > 0) {
-                        operation.operationId(operationId + count);
+                        operation.operationId = operationId + count;
                     }
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), swagger, operation)
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), openApiDoc, operation)
                     .connectorId(connectorId)
                     .build();
 
-                final OperationDescription description = SwaggerHelper.operationDescriptionOf(swagger, operation, (m, p) -> "Send " + m + " request to " + p);
+                final OperationDescription description = Oas20ModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p);
 
                 final ConnectorAction action = new ConnectorAction.Builder()
                     .id(createActionId(connectorId, operation))
                     .name(description.name)
                     .description(description.description)
                     .pattern(Action.Pattern.To)
-                    .descriptor(descriptor).tags(SwaggerHelper.sanitizeTags(operation.getTags()).distinct()::iterator)
+                    .descriptor(descriptor).tags(Oas20ModelHelper.sanitizeTags(operation.tags).distinct()::iterator)
                     .build();
 
                 actions.add(action);
@@ -253,7 +252,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         actions.sort(ActionComparator.INSTANCE);
         builder.addAllActions(actions);
 
-        builder.putConfiguredProperty("specification", SwaggerHelper.minimalSwaggerUsedByComponent(swagger));
+        builder.putConfiguredProperty("specification", SpecificationOptimizer.minimizeForComponent(openApiDoc));
 
         return builder.build();
     }
@@ -261,14 +260,14 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
     @Override
     protected final String determineConnectorDescription(final ConnectorTemplate connectorTemplate,
         final ConnectorSettings connectorSettings) {
-        final Swagger swagger = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
+        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
 
-        final Info info = swagger.getInfo();
+        final Info info = openApiDoc.info;
         if (info == null) {
             return super.determineConnectorDescription(connectorTemplate, connectorSettings);
         }
 
-        final String description = info.getDescription();
+        final String description = info.description;
         if (description == null) {
             return super.determineConnectorDescription(connectorTemplate, connectorSettings);
         }
@@ -278,19 +277,19 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     @Override
     protected final String determineConnectorName(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final SwaggerModelInfo modelInfo = parseSpecification(connectorSettings, APIValidationContext.NONE);
+        final OpenApiModelInfo modelInfo = parseSpecification(connectorSettings, APIValidationContext.NONE);
         if (!modelInfo.getErrors().isEmpty()) {
             throw new IllegalArgumentException("Given OpenAPI specification contains errors: " + modelInfo);
         }
 
-        final Swagger swagger = modelInfo.getModel();
+        final Oas20Document openApiDoc = modelInfo.getModel();
 
-        final Info info = swagger.getInfo();
+        final Info info = openApiDoc.info;
         if (info == null) {
             return super.determineConnectorName(connectorTemplate, connectorSettings);
         }
 
-        final String title = info.getTitle();
+        final String title = info.title;
         if (title == null) {
             return super.determineConnectorName(connectorTemplate, connectorSettings);
         }
@@ -298,40 +297,42 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         return title;
     }
 
-    static void addGlobalParameters(final Connector.Builder builder, final Swagger swagger) {
-        final Map<String, Parameter> globalParameters = swagger.getParameters();
-        if (globalParameters != null) {
-            globalParameters.forEach((name, parameter) -> {
-                createPropertyFromParameter(parameter).ifPresent(property -> {
-                    builder.putProperty(name, property);
-                });
-            });
+    static void addGlobalParameters(final Connector.Builder builder, final Oas20Document openApiDoc) {
+        final Oas20ParameterDefinitions globalParameters = openApiDoc.parameters;
+        if (globalParameters == null) {
+            return;
         }
+
+        globalParameters.getItems().forEach(parameter -> {
+            createPropertyFromParameter(parameter).ifPresent(property -> {
+                builder.putProperty(parameter.getName(), property);
+            });
+        });
     }
 
-    static String createActionId(final String connectorId, final Operation operation) {
-        return connectorId + ":" + operation.getOperationId();
+    static String createActionId(final String connectorId, final OasOperation operation) {
+        return connectorId + ":" + operation.operationId;
     }
 
     static List<PropertyValue> createEnums(final List<String> enums) {
-        return enums.stream().map(BaseSwaggerConnectorGenerator::createPropertyValue).collect(Collectors.toList());
+        return enums.stream().map(BaseOpenApiConnectorGenerator::createPropertyValue).collect(Collectors.toList());
     }
 
-    static Optional<ConfigurationProperty> createPropertyFromParameter(final Parameter parameter) {
-        if (parameter instanceof RefParameter || parameter instanceof BodyParameter) {
+    static Optional<ConfigurationProperty> createPropertyFromParameter(final Oas20Parameter parameter) {
+        if (Oas20ModelHelper.isReferenceType(parameter) || Oas20ModelHelper.isBody(parameter)) {
             // Reference parameters are not supported, body parameters are
             // handled in createShape* methods
 
             return Optional.empty();
         }
 
-        if (!(parameter instanceof AbstractSerializableParameter<?>)) {
+        if (!Oas20ModelHelper.isSerializable(parameter)) {
             throw new IllegalArgumentException("Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 
-        final String name = trimToNull(parameter.getName());
-        final String description = trimToNull(parameter.getDescription());
-        final boolean required = parameter.getRequired();
+        final String name = trimToNull(parameter.name);
+        final String description = trimToNull(parameter.description);
+        final boolean required = parameter.required;
 
         final ConfigurationProperty.Builder propertyBuilder = new ConfigurationProperty.Builder()
             .kind("property")
@@ -343,17 +344,15 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             .deprecated(false)
             .secret(false);
 
-        final AbstractSerializableParameter<?> serializableParameter = (AbstractSerializableParameter<?>) parameter;
-
-        final Object defaultValue = serializableParameter.getDefaultValue();
+        final Object defaultValue = parameter.default_;
         if (defaultValue != null) {
             propertyBuilder.defaultValue(String.valueOf(defaultValue));
         }
 
-        final String type = serializableParameter.getType();
-        propertyBuilder.type(type).javaType(JsonSchemaHelper.javaTypeFor(serializableParameter));
+        final String type = parameter.type;
+        propertyBuilder.type(type).javaType(JsonSchemaHelper.javaTypeFor(parameter));
 
-        final List<String> enums = serializableParameter.getEnum();
+        final List<String> enums = parameter.enum_;
         if (enums != null) {
             propertyBuilder.addAllEnum(createEnums(enums));
         }
@@ -365,9 +364,9 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         return new PropertyValue.Builder().label(value).value(value).build();
     }
 
-    static SwaggerModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
+    static OpenApiModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
         final String specification = requiredSpecification(connectorSettings);
-        return SwaggerHelper.parse(specification, validationContext);
+        return Oas20ModelParser.parse(specification, validationContext);
     }
 
     static String requiredSpecification(final ConnectorSettings connectorSettings) {

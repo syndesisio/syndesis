@@ -29,12 +29,14 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Strings;
-import io.swagger.models.HttpMethod;
-import io.swagger.models.Info;
-import io.swagger.models.Operation;
-import io.swagger.models.Path;
-import io.swagger.models.Response;
-import io.swagger.models.Swagger;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.core.models.common.Info;
+import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasPaths;
+import io.apicurio.datamodels.openapi.models.OasResponse;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -51,18 +53,16 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
-import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
-import static java.util.Optional.ofNullable;
-
-public class SwaggerAPIGenerator implements APIGenerator {
+public class OpenApiGenerator implements APIGenerator {
 
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
     private static final String EXCERPT_METADATA_KEY = "excerpt";
@@ -72,7 +72,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
     private final DataShapeGenerator dataShapeGenerator;
 
-    public SwaggerAPIGenerator() {
+    public OpenApiGenerator() {
         dataShapeGenerator = new UnifiedDataShapeGenerator();
     }
 
@@ -80,12 +80,12 @@ public class SwaggerAPIGenerator implements APIGenerator {
     @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     public APIIntegration generateIntegration(final String specification, final ProvidedApiTemplate template) {
 
-        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
-        final Swagger swagger = info.getModel();
+        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.NONE);
+        final Oas20Document openApiDoc = info.getModel();
 
-        final String name = ofNullable(swagger.getInfo())
-            .flatMap(i -> ofNullable(i.getTitle()))
-            .orElse(null);
+        final String name = Optional.ofNullable(openApiDoc.info)
+                                .flatMap(i -> Optional.ofNullable(i.title))
+                                .orElse("Untitled");
 
         final Integration.Builder integration = new Integration.Builder()
             .addTag("api-provider")
@@ -93,22 +93,21 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .name(name);
 
         final Set<String> alreadyUsedOperationIds = new HashSet<>();
-        final Map<String, Path> paths = swagger.getPaths();
+        final OasPaths paths = Optional.ofNullable(openApiDoc.paths)
+                                       .orElse(openApiDoc.createPaths());
 
-        for (final Map.Entry<String, Path> pathEntry : paths.entrySet()) {
-            final Path path = pathEntry.getValue();
+        for (final Oas20PathItem pathEntry : Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)) {
+            for (final Map.Entry<String, Oas20Operation> operationEntry : Oas20ModelHelper.getOperationMap(pathEntry).entrySet()) {
+                final Oas20Operation operation = operationEntry.getValue();
 
-            for (final Map.Entry<HttpMethod, Operation> operationEntry : path.getOperationMap().entrySet()) {
-                final Operation operation = operationEntry.getValue();
+                String operationName = operation.summary;
+                final String operationDescription = operationEntry.getKey() + " " + pathEntry.getPath();
 
-                String operationName = operation.getSummary();
-                final String operationDescription = operationEntry.getKey() + " " + pathEntry.getKey();
-
-                final String operationId = requireUniqueOperationId(operation.getOperationId(), alreadyUsedOperationIds);
+                final String operationId = requireUniqueOperationId(operation.operationId, alreadyUsedOperationIds);
                 alreadyUsedOperationIds.add(operationId);
-                operation.setOperationId(operationId); // Update swagger spec
+                operation.operationId = operationId; // Update open api spec
 
-                final DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), swagger, operation);
+                final DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), openApiDoc, operation);
                 final Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
                 final ConnectorAction.Builder modifiedStartActionBuilder = new ConnectorAction.Builder()
                     .createFrom(startAction)
@@ -118,7 +117,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                         .outputDataShape(startDataShape)
                         .build());
 
-                final String basePath = swagger.getBasePath();
+                final String basePath = openApiDoc.basePath;
                 if (!Strings.isNullOrEmpty(basePath)) {
                     // pass the basePath so it gets picked up by
                     // EndpointController
@@ -136,7 +135,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .putMetadata("configured", "true")
                     .build();
 
-                final DataShape endDataShape = dataShapeGenerator.createShapeFromResponse(info.getResolvedJsonGraph(), swagger, operation);
+                final DataShape endDataShape = dataShapeGenerator.createShapeFromResponse(info.getResolvedJsonGraph(), openApiDoc, operation);
                 final Action endAction = template.getEndAction().orElseThrow(() -> new IllegalStateException("cannot find end action"));
                 final Action modifiedEndAction = new ConnectorAction.Builder()
                     .createFrom(endAction)
@@ -162,14 +161,14 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .build();
 
                 if (Strings.isNullOrEmpty(operationName)) {
-                    operationName = SwaggerHelper.operationDescriptionOf(
-                        swagger,
+                    operationName = Oas20ModelHelper.operationDescriptionOf(
+                        openApiDoc,
                         operation,
                         (m, p) -> "Receiving " + m + " request on " + p).description;
                 }
 
                 String defaultCode = "200";
-                final Optional<Pair<String, Response>> defaultResponse = findResponseCode(operation);
+                final Optional<Pair<String, OasResponse>> defaultResponse = findResponseCode(operation);
                 if (defaultResponse.isPresent() && NumberUtils.isDigits(defaultResponse.get().getKey())) {
                     defaultCode = defaultResponse.get().getKey();
                 }
@@ -193,9 +192,8 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
         }
 
-        // TODO: evaluate what can be shrinked (e.g.
-        // SwaggerHelper#minimalSwaggerUsedByComponent)
-        final byte[] updatedSwagger = OpenApiHelper.serialize(swagger).getBytes(StandardCharsets.UTF_8);
+        // TODO: evaluate what can be shrinked (e.g. Oas20Helper#minimalOpenApiUsedByComponent)
+        final byte[] updatedSpecification = Library.writeDocumentToJSONString(openApiDoc).getBytes(StandardCharsets.UTF_8);
 
         // same check SwaggerParser is performing
         final String specificationContentType;
@@ -211,7 +209,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
         final OpenApi api = new OpenApi.Builder()
             .id(apiId)
             .name(name)
-            .document(updatedSwagger)
+            .document(updatedSpecification)
             .putMetadata("Content-Type", specificationContentType)
             .build();
 
@@ -225,20 +223,19 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
     @Override
     public APISummary info(final String specification, final APIValidationContext validation) {
-        final SwaggerModelInfo swaggerInfo = SwaggerHelper.parse(specification, validation);
+        final OpenApiModelInfo swaggerInfo = Oas20ModelParser.parse(specification, validation);
 
-        final Swagger model = swaggerInfo.getModel();
+        final Oas20Document model = swaggerInfo.getModel();
         if (model == null) {
             return new APISummary.Builder().errors(swaggerInfo.getErrors()).warnings(swaggerInfo.getWarnings()).build();
         }
 
-        final Map<String, Path> paths = model.getPaths();
+        final OasPaths paths = model.paths;
+        final ActionsSummary actionsSummary = determineSummaryFrom(Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class));
 
-        final ActionsSummary actionsSummary = determineSummaryFrom(paths);
-
-        final Info info = model.getInfo();
-        final String title = ofNullable(info).map(Info::getTitle).orElse("unspecified");
-        final String description = ofNullable(info).map(Info::getDescription).orElse("unspecified");
+        final Info info = model.info;
+        final String title = Optional.ofNullable(info).map(i -> i.title).orElse("unspecified");
+        final String description = Optional.ofNullable(info).map(i -> i.description).orElse("unspecified");
 
         return new APISummary.Builder()//
             .name(title)//
@@ -276,7 +273,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             return code;
         }
         final Optional<String> httpCodeDescription = lastAction
-            .flatMap(a -> ofNullable(a.getProperties().get(HTTP_RESPONSE_CODE_PROPERTY)))
+            .flatMap(a -> Optional.ofNullable(a.getProperties().get(HTTP_RESPONSE_CODE_PROPERTY)))
             .flatMap(prop -> prop.getEnum().stream()
                 .filter(e -> code.equals(e.getValue()))
                 .map(ConfigurationProperty.PropertyValue::getLabel)
@@ -325,17 +322,17 @@ public class SwaggerAPIGenerator implements APIGenerator {
         return newId;
     }
 
-    static ActionsSummary determineSummaryFrom(final Map<String, Path> paths) {
+    static ActionsSummary determineSummaryFrom(final List<Oas20PathItem> paths) {
         if (paths == null || paths.isEmpty()) {
             return new ActionsSummary.Builder().build();
         }
 
         final AtomicInteger total = new AtomicInteger(0);
 
-        final Map<String, Integer> tagCounts = paths.entrySet().stream()//
-            .flatMap(p -> p.getValue().getOperations().stream())//
+        final Map<String, Integer> tagCounts = paths.stream()//
+            .flatMap(p -> Oas20ModelHelper.getOperationMap(p).values().stream())//
             .peek(o -> total.incrementAndGet())//
-            .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()))//
+            .flatMap(o -> Oas20ModelHelper.sanitizeTags(o.tags))//
             .collect(//
                 Collectors.groupingBy(//
                     Function.identity(), //
@@ -348,7 +345,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .build();
     }
 
-    static String extendedPropertiesMapSet(final Operation operation) {
+    static String extendedPropertiesMapSet(final OasOperation operation) {
         List<ConfigurationProperty.PropertyValue> statusList = httpStatusList(operation);
         String enumJson = "[]";
         if (! statusList.isEmpty()) {
@@ -366,50 +363,58 @@ public class SwaggerAPIGenerator implements APIGenerator {
         return mapsetJsonTemplate.replace("@enum@", enumJson);
     }
 
-    Optional<Pair<String, Response>> findResponseCode(final Operation operation) {
+    Optional<Pair<String, OasResponse>> findResponseCode(final OasOperation operation) {
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
+
         // Return the Response object related to the first 2xx return code found
-        Optional<Pair<String, Response>> responseOk = operation.getResponses().entrySet().stream()
-            .map(e -> Pair.of(e.getKey(), e.getValue()))
-            .filter(p -> p.getKey().startsWith("2"))
+        Optional<Pair<String, OasResponse>> responseOk = responses.stream()
+            .filter(response -> response.getStatusCode() != null && response.getStatusCode().startsWith("2"))
+            .map(response -> Pair.of(response.getStatusCode(), response))
             .findFirst();
 
         if (responseOk.isPresent()) {
             return responseOk;
         }
 
-        return operation.getResponses().entrySet().stream()
-            .map(e -> Pair.of(e.getKey(), e.getValue()))
+        return responses.stream()
+            .map(response -> Pair.of(response.getStatusCode(), response))
             .findFirst();
     }
 
-    String getResponseCode(final Operation operation) {
+    String getResponseCode(final OasOperation operation) {
         return findResponseCode(operation).get().getKey();
     }
 
-    static List<ConfigurationProperty.PropertyValue> httpStatusList(final Operation operation) {
+    static List<ConfigurationProperty.PropertyValue> httpStatusList(final OasOperation operation) {
         List<ConfigurationProperty.PropertyValue> httpStatusList = new ArrayList<>();
-        operation.getResponses()
-        .keySet()
-        .stream()
-        .filter(NumberUtils::isDigits)
-        .forEach(statusCode -> httpStatusList.add(
-                ConfigurationProperty.PropertyValue.Builder.of(statusCode, getMessage(operation, statusCode))));
+
+        if (operation.responses == null) {
+            return httpStatusList;
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
+        responses.stream()
+            .filter(r -> NumberUtils.isDigits(r.getStatusCode()))
+            .forEach(r -> httpStatusList.add(
+                ConfigurationProperty.PropertyValue.Builder.of(r.getStatusCode(), getMessage(r))));
         return httpStatusList;
     }
 
     /**
      * Obtains the description for this statusCode set in the Swagger API, or defaults
      * to the HttpStatus description if not set.
-     * @param operation Swagger fragment
-     * @param statusCode for which we want the message
+     * @param response the operation response
      * @return HttpStatus message
      */
-    private static String getMessage(final Operation operation, String statusCode) {
-        Response response = operation.getResponses().get(statusCode);
-        if (response!=null && response.getDescription()!=null && !response.getDescription().isEmpty()) {
-            return statusCode + " " + response.getDescription();
+    private static String getMessage(final OasResponse response) {
+        if (response.description != null && !response.description.isEmpty()) {
+            return response.getStatusCode() + " " + response.description;
         } else {
-            return HttpStatus.message(Integer.valueOf(statusCode));
+            return HttpStatus.message(Integer.valueOf(response.getStatusCode()));
         }
     }
 }
