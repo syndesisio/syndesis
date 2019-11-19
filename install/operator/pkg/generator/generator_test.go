@@ -30,7 +30,7 @@ func TestGenerator(t *testing.T) {
 				},
 				CamelK: v1alpha1.CamelKConfiguration{
 					Enabled:       true,
-					CamelVersion:  "2.21.0.fuse-760006",
+					CamelVersion:  "2.21.0.fuse-760011",
 					CamelKRuntime: "0.3.4.fuse-740008",
 					Image:         "fabric8/s2i-java:3.0-java8",
 				},
