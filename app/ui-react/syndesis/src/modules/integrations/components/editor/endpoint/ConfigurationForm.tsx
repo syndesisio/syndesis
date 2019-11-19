@@ -66,7 +66,7 @@ export const ConfigurationForm: React.FunctionComponent<
                 ...action,
                 descriptor,
               })
-            : action;
+            : { ...action, descriptor };
         await onUpdatedIntegration({
           action,
           moreConfigurationSteps,
