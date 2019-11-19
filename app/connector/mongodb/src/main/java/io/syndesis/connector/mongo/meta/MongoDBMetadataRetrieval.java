@@ -72,8 +72,14 @@ public final class MongoDBMetadataRetrieval extends ComponentMetadataRetrieval {
 
     public SyndesisMetadata buildDatashape(String actionId, DataShape schema, Map<String, Object> properties) {
         if (isFilterAction(actionId)) {
+            String filterExpression = ConnectorOptions.extractOption(properties,"filter");
+            if ("io.syndesis.connector:connector-mongodb-update".equals(actionId)){
+                String updateExpression = ConnectorOptions.extractOption(properties,"updateExpression");
+                // merge the update expression to aggregate all variables
+                filterExpression = String.format("[%s, %s]", filterExpression, updateExpression);
+            }
             return SyndesisMetadata.of(
-                MongoDBMetadataRetrieval.criteria(ConnectorOptions.extractOption(properties,"filter")),
+                MongoDBMetadataRetrieval.criteria(filterExpression),
                 schema);
         } else if ("io.syndesis.connector:connector-mongodb-insert".equals(actionId)) {
             return SyndesisMetadata.of(schema);

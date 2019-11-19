@@ -35,6 +35,11 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     }
 
     protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection, String operation, String filter) {
+        return this.fromDirectToMongo(directStart, connector, db, collection, operation, filter, null);
+    }
+
+    protected List<Step> fromDirectToMongo(String directStart, String connector, String db, String collection, String operation,
+                                           String filter, String updateExession) {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
             newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
@@ -47,6 +52,9 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                 if (filter != null) {
                     builder.putConfiguredProperty("filter", filter);
                 }
+                if (updateExession != null) {
+                    builder.putConfiguredProperty("updateExpression", updateExession);
+                }
                 if (operation != null) {
                     builder.putConfiguredProperty("operation", operation);
                 }
@@ -54,13 +62,13 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     }
 
     protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
-                                         String tailTrackIncreasingField) {
+                                             String tailTrackIncreasingField) {
         return this.fromMongoTailToMock(mock, connector, db, collection, tailTrackIncreasingField, true, null, null, null, null);
     }
 
     protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
-                                         String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
-                                         String tailTrackDb, String tailTrackCollection, String tailTrackField) {
+                                             String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
+                                             String tailTrackDb, String tailTrackCollection, String tailTrackField) {
         return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
             builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
             builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);

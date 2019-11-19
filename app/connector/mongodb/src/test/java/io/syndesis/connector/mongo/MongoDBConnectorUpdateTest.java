@@ -36,16 +36,17 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorProducerTestSupp
     @Override
     protected List<Step> createSteps() {
         String filter = null;
+        String updateExpression = "{$set: {\"test\": \":#someText\"}}";
         switch (getTestMethodName()) {
             case "mongoUpdateSingleTest":
-                filter = "[{\"_id\": :#id},{$set: {\"test\":\":#someText\"}}]";
+                filter = "{\"_id\": :#id}";
                 break;
             case "mongoUpdateMultiTest":
-                filter = "[{\"batchNo\": :#batchNo},{$set: {\"test\":\":#someText\"}}]";
+                filter = "{\"batchNo\": :#batchNo}";
                 break;
         }
         return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION, null,
-            filter);
+            filter, updateExpression);
     }
 
     @Test
