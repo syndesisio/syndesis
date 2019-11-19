@@ -62,7 +62,7 @@ import static org.junit.Assert.assertTrue;
         DirtiesContextTestExecutionListener.class
     }
 )
-//TODO: Backport https://github.com/jboss-fuse/camel/commit/aef5e1ae9386b3ad74681b51ebcbe660bd4a9d0a#diff-bf0286fb993e0269f87f5f1db4355aec to 2.23.x.redhat-7-x
+
 public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
 
     //
@@ -73,7 +73,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testSimpleODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                                 .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
@@ -96,7 +95,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testAuthenticatedODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(
                                                     new PropertyBuilder<String>()
@@ -127,7 +125,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
      * certificate authorities that is loaded into the keystore by default
      */
     @Test
-    @Ignore
     public void testSSLODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, sslTestServer.serviceSSLUri())
@@ -150,7 +147,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testEmptyServiceUri() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>());
 
@@ -168,7 +164,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testEndSlashOnServiceUri() throws Exception {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                                 .property(SERVICE_URI, defaultTestServer.servicePlainUri() + FORWARD_SLASH));
@@ -200,7 +195,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
      * certificate authorities that is loaded into the keystore by default
      */
     @Test
-    @Ignore
     public void testSSLAuthenticatedODataRoute() throws Exception {
         Connector odataConnector = createODataConnector(
                                                         new PropertyBuilder<String>()
@@ -229,7 +223,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testReferenceODataRouteWithCertificate() throws Exception {
         String resourcePath = "People";
         String queryParam = "$count=true";
@@ -261,7 +254,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
      * a server certifcate.
      */
     @Test
-    @Ignore
     public void testReferenceODataRouteWithoutCertificate() throws Exception {
         String resourcePath = "People";
         String queryParam = "$count=true";
@@ -287,7 +279,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testReferenceODataRouteKeyPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "KLAX";
@@ -313,7 +304,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testReferenceODataRouteKeyPredicateAndSubPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "('KLAX')/Location";
@@ -343,7 +333,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
      * support for complex properties is working against ref server
      */
     @Test
-    @Ignore
     public void testReferenceODataRouteComplexValue() throws Exception {
         String resourcePath = "Airports";
 
@@ -370,7 +359,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
      * Tests a query with $expand and $filter.
      */
     @Test
-    @Ignore
     public void testReferenceODataRouteQueryWithFilterAndExpand() throws Exception {
         String resourcePath = "People";
 
@@ -395,7 +383,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithSimpleQuery() throws Exception {
         String queryParams = "$filter=ID eq 1";
 
@@ -418,7 +405,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithCountQuery() throws Exception {
         String queryParams = "$count=true";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
@@ -443,7 +429,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithMoreComplexQuery() throws Exception {
         String queryParams = "$filter=ID le 2&$orderby=ID desc";
 
@@ -474,7 +459,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithKeyPredicate() throws Exception {
         String keyPredicate = "1";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
@@ -496,7 +480,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithKeyPredicateWithBrackets() throws Exception {
         String keyPredicate = "(1)";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
@@ -518,7 +501,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteWithConsumerDelayProperties() throws Exception {
         String initialDelayValue = "500";
         String delayValue = "1000";
@@ -553,7 +535,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testODataRouteAlreadySeen() throws Exception {
         String backoffIdleThreshold = "1";
         String backoffMultiplier = "1";
@@ -618,7 +599,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    @Ignore
     public void testReferenceODataRouteAlreadySeenWithKeyPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "KSFO";
