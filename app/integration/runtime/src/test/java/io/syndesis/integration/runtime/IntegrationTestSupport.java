@@ -19,9 +19,21 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
 import javax.xml.bind.JAXBException;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.model.ModelCamelContext;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.support.SimpleRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
@@ -29,21 +41,6 @@ import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.RoutesDefinition;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public final class IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -54,9 +51,9 @@ public final class IntegrationTestSupport {
       // utility class
     }
 
-    public static CamelContext getDefaultCamelContextWithMyBeanInRegistry(){
+    public static DefaultCamelContext getDefaultCamelContextWithMyBeanInRegistry(){
         SimpleRegistry sr = new SimpleRegistry();
-        sr.put("myBean", new MyBean());
+        sr.bind("myBean", new MyBean());
         DefaultCamelContext ctx = new DefaultCamelContext(sr);
         return ctx;
     }
@@ -79,7 +76,7 @@ public final class IntegrationTestSupport {
         }
     }
 
-    public static void dumpRoutes(CamelContext context) {
+    public static void dumpRoutes(ModelCamelContext context) {
         RoutesDefinition definition = new RoutesDefinition();
         definition.setRoutes(context.getRouteDefinitions());
 

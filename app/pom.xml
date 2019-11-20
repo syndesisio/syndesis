@@ -93,7 +93,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-760024</camel.version>
+    <camel.version>3.0.0-RC3</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->

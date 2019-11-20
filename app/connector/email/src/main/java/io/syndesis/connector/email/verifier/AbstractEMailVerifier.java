@@ -25,7 +25,7 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.mail.JavaMailSender;
 import org.apache.camel.component.mail.MailConfiguration;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.EMailUtil;
 import io.syndesis.connector.support.util.ConnectorOptions;

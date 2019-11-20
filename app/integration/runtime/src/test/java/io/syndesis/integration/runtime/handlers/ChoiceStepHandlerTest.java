@@ -15,9 +15,30 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import java.util.Arrays;
 import java.util.List;
-
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.support.SimpleRegistry;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -28,32 +49,6 @@ import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class ChoiceStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChoiceStepHandlerTest.class);
@@ -140,7 +135,7 @@ public class ChoiceStepHandlerTest {
             context.addRoutes(integrationRoute);
 
             SimpleRegistry beanRegistry = new SimpleRegistry();
-            beanRegistry.put("bodyLogger", new BodyLogger.Default());
+            beanRegistry.bind("bodyLogger", new BodyLogger.Default());
             context.setRegistry(beanRegistry);
             context.start();
 
@@ -177,7 +172,7 @@ public class ChoiceStepHandlerTest {
 
     @Test
     public void testChoiceStepWithDefaultFlow() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,
@@ -298,7 +293,7 @@ public class ChoiceStepHandlerTest {
             context.addRoutes(integrationRoute);
 
             SimpleRegistry beanRegistry = new SimpleRegistry();
-            beanRegistry.put("bodyLogger", new BodyLogger.Default());
+            beanRegistry.bind("bodyLogger", new BodyLogger.Default());
             context.setRegistry(beanRegistry);
             context.start();
 
@@ -336,7 +331,7 @@ public class ChoiceStepHandlerTest {
 
     @Test
     public void testChoiceStepNoConfiguredFlows() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,

@@ -18,7 +18,7 @@ package io.syndesis.integration.runtime.tracing;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.spi.LogListener;
-import org.apache.camel.util.CamelLogger;
+import org.apache.camel.spi.CamelLogger;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;

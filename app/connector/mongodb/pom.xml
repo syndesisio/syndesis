@@ -59,7 +59,7 @@
   <dependencies>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-mongodb3</artifactId>
+      <artifactId>camel-mongodb</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

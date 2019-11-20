@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -26,10 +27,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-
-import io.syndesis.connector.support.verifier.api.Verifier;
-import io.syndesis.connector.support.verifier.api.VerifierResponse;
-import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.NoSuchBeanException;
 import org.apache.camel.spi.FactoryFinder;
 import org.slf4j.Logger;
@@ -38,6 +36,8 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import io.syndesis.connector.support.verifier.api.Verifier;
+import io.syndesis.connector.support.verifier.api.VerifierResponse;
 
 
 @Component
@@ -49,7 +49,7 @@ public class VerifierEndpoint {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
-    private CamelContext camelContext;
+    private ExtendedCamelContext camelContext;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -70,7 +70,8 @@ public class VerifierEndpoint {
             try {
                 // Then fallback to camel's factory finder
                 final FactoryFinder finder = camelContext.getFactoryFinder(RESOURCE_PATH);
-                final Class<?> type = finder.findClass(connectorId);
+                Optional<Class<?>> typeOptional = finder.findClass(connectorId);
+                final Class<?> type = typeOptional.orElse(null);
 
                 verifier = (Verifier) camelContext.getInjector().newInstance(type);
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {

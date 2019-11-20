@@ -29,8 +29,8 @@ import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
 import org.apache.camel.Exchange;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.support.DefaultExchange;
+import org.apache.camel.support.DefaultMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

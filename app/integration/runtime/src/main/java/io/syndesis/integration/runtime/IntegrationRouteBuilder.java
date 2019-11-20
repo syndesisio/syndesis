@@ -134,6 +134,14 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
     }
 
+    public ModelCamelContext getModelContext() {
+        if (getContext() instanceof ModelCamelContext) {
+            return (ModelCamelContext) getContext();
+        }
+
+        throw new UnsupportedOperationException("Camel context does not support modelling functionality");
+    }
+
     @Override
     public void configure() throws Exception {
         final Integration integration = loadIntegration();
@@ -378,11 +386,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 properties.put("timerName", "integration");
                 properties.put("period", scheduler.getExpression());
 
-                final RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
+                final RuntimeCamelCatalog catalog = getContext().getExtension(RuntimeCamelCatalog.class);
                 final String uri = catalog.asEndpointUri("timer", properties, false);
 
                 RouteDefinition route = this.from(uri);
-                route.getInputs().get(0).setId("integration-scheduler");
+                route.getInput().setId("integration-scheduler");
                 flow.getId().ifPresent(route::setId);
 
                 return route;
@@ -404,7 +412,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                                               String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
-            final CamelContext context = getContext();
+            final ModelCamelContext context = getModelContext();
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {

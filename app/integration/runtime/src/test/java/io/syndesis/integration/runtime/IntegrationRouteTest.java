@@ -97,8 +97,8 @@ public class IntegrationRouteTest {
         RouteDefinition route = routes.getRoutes().get(0);
 
         // Timer
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
         assertThat(route.getOutputs()).hasSize(5);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);
@@ -171,8 +171,8 @@ public class IntegrationRouteTest {
 
         RouteDefinition route = routes.getRoutes().get(0);
 
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
         assertThat(route.getOutputs()).hasSize(4);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);
@@ -246,8 +246,8 @@ public class IntegrationRouteTest {
 
         RouteDefinition route = routes.getRoutes().get(0);
 
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
         assertThat(route.getOutputs()).hasSize(5);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);

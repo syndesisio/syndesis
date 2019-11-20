@@ -15,10 +15,10 @@
  */
 package io.syndesis.integration.runtime.sb.logging;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.impl.DefaultUuidGenerator;
+import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.impl.engine.DefaultUuidGenerator;
 import org.apache.camel.spi.LogListener;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
@@ -30,12 +30,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingAutoConfiguration;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -56,7 +52,7 @@ public class IntegrationLoggingDisabledTest {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
-    private CamelContext camelContext;
+    private ExtendedCamelContext camelContext;
 
     @Test
     public void testDisabledContextConfiguration() {

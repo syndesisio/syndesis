@@ -17,12 +17,11 @@ package io.syndesis.connector.aws.ddb.customizer;
 
 
 import static org.junit.Assert.assertEquals;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.component.aws.ddb.DdbConstants;
 import org.apache.camel.component.aws.ddb.DdbOperations;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.junit.Test;
 
 public class AWSDDBLocalTest {

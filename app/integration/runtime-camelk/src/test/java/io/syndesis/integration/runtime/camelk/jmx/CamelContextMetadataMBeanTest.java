@@ -47,8 +47,9 @@ public class CamelContextMetadataMBeanTest {
         Properties properties = new Properties();
         properties.setProperty(Constants.PROPERTY_CAMEL_K_CUSTOMIZER, "metadata");
 
-        PropertiesComponent pc = context.getComponent("properties", PropertiesComponent.class);
+        PropertiesComponent pc  = new PropertiesComponent();
         pc.setInitialProperties(properties);
+        context.setPropertiesComponent(pc);
 
         RuntimeSupport.configureContext(context, new InMemoryRegistry());
 

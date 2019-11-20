@@ -34,11 +34,6 @@ import javax.ws.rs.HttpMethod;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.camel.CamelContext;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.component.extension.MetaDataExtension;
@@ -49,11 +44,15 @@ import org.apache.camel.component.servicenow.ServiceNowConfiguration;
 import org.apache.camel.component.servicenow.ServiceNowConstants;
 import org.apache.camel.component.servicenow.ServiceNowHelper;
 import org.apache.camel.component.servicenow.model.DictionaryEntry;
-import org.apache.camel.util.IntrospectionSupport;
+import org.apache.camel.support.PropertyBindingSupport;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
@@ -575,7 +574,7 @@ final class ServiceNowMetaDataExtension extends AbstractMetaDataExtension {
             this.stack = new ArrayDeque<>();
 
             try {
-                IntrospectionSupport.setProperties(configuration, new HashMap<>(parameters));
+                PropertyBindingSupport.bindProperties(getCamelContext(), configuration, new HashMap<>(parameters));
             } catch (Exception e) {
                 throw new IllegalStateException(e);
             }

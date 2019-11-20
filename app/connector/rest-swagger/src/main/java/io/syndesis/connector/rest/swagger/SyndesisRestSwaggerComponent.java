@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.Producer;
-import org.apache.camel.component.http4.HttpComponent;
-import org.apache.camel.component.http4.HttpProducer;
+import org.apache.camel.component.http.HttpComponent;
+import org.apache.camel.component.http.HttpProducer;
 import org.apache.camel.spi.RestConfiguration;
 
 public final class SyndesisRestSwaggerComponent extends HttpComponent {

@@ -26,7 +26,7 @@ import java.util.Map;
 import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
-import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.NoSuchBeanException;
 import org.apache.camel.spi.FactoryFinder;
 import org.slf4j.Logger;

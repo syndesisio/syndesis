@@ -15,10 +15,11 @@
  */
 package io.syndesis.connector.email;
 
-import java.util.Properties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.properties.DefaultPropertiesParser;
 import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.component.properties.PropertiesLocation;
+import org.apache.camel.component.properties.PropertiesLookup;
 import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.After;
@@ -41,7 +42,7 @@ public class AbstractEmailTest implements EMailConstants {
         public PropertiesParser propertiesParser(PropertyResolver propertyResolver) {
             return new DefaultPropertiesParser() {
                 @Override
-                public String parseProperty(String key, String value, Properties properties) {
+                public String parseProperty(String key, String value, PropertiesLookup properties) {
                     return propertyResolver.getProperty(key);
                 }
             };
@@ -73,8 +74,10 @@ public class AbstractEmailTest implements EMailConstants {
     protected CamelContext createCamelContext() {
         CamelContext ctx = new SpringCamelContext(applicationContext);
         ctx.disableJMX();
-        PropertiesComponent pc = new PropertiesComponent("classpath:mail-test-options.properties");
-        ctx.addComponent("properties", pc);
+
+        PropertiesComponent pc = new PropertiesComponent();
+        pc.addLocation(new PropertiesLocation("classpath:mail-test-options.properties"));
+        ctx.setPropertiesComponent(pc);
         return ctx;
     }
 

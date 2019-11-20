@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.odata;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -32,10 +35,6 @@ import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.core.ODataClientFactory;
 import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 public class BaseOlingo4Test extends AbstractODataTest {
 
@@ -63,9 +62,9 @@ public class BaseOlingo4Test extends AbstractODataTest {
         }
 
         @Override
-        protected CamelContext createContext() {
+        protected CamelContext createCamelContext() {
             if (context == null) {
-                return super.createContext();
+                return super.createCamelContext();
             }
 
             return context;
@@ -85,7 +84,7 @@ public class BaseOlingo4Test extends AbstractODataTest {
         //
         // Get a context we can play with
         //
-        CamelContext context = main.getOrCreateCamelContext();
+        CamelContext context = main.getCamelContext();
 
         //
         // Find the olingo4 component to configure

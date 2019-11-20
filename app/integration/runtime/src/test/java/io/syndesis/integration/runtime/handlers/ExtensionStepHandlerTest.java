@@ -48,7 +48,7 @@ public class ExtensionStepHandlerTest {
 
     @Test
     public void testEndpointExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -99,8 +99,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -136,7 +136,7 @@ public class ExtensionStepHandlerTest {
 
     @Test
     public void testBeanExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -187,8 +187,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -218,7 +218,7 @@ public class ExtensionStepHandlerTest {
 
     @Test
     public void testStepExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -266,8 +266,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
