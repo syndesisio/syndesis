@@ -2623,6 +2623,16 @@
         <artifactId>kubernetes-client</artifactId>
         <version>${kubernetes.client.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-model</artifactId>
+        <version>${kubernetes.client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>openshift-server-mock</artifactId>
+        <version>${kubernetes.client.version}</version>
+      </dependency>
 
       <!-- AWS -->
       <dependency>
