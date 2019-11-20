@@ -27,7 +27,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.component.mail.MailComponent;
 import org.apache.camel.component.mail.MailConfiguration;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.EMailUtil;
 import io.syndesis.integration.component.proxy.ComponentDefinition;

@@ -38,8 +38,9 @@ public class SyndesisContextCustomizerTest {
         Properties properties = new Properties();
         properties.setProperty(Constants.PROPERTY_CAMEL_K_CUSTOMIZER, "syndesis");
 
-        PropertiesComponent pc = context.getComponent("properties", PropertiesComponent.class);
+        PropertiesComponent pc  = new PropertiesComponent();
         pc.setInitialProperties(properties);
+        context.setPropertiesComponent(pc);
 
         Runtime.Registry registry = new InMemoryRegistry();
         context.setRegistry(registry);

@@ -19,15 +19,14 @@ package io.syndesis.connector.aws.ddb.util;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import org.apache.camel.CamelContext;
+import org.apache.camel.support.EndpointHelper;
+import org.apache.camel.support.PropertyBindingSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.connector.support.util.ConnectorOptions;
-import org.apache.camel.CamelContext;
-import org.apache.camel.TypeConverter;
-import org.apache.camel.util.EndpointHelper;
-import org.apache.camel.util.IntrospectionSupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Utility class for common procedures.
@@ -113,15 +112,18 @@ public final class Util {
 
         try {
             if (!properties.isEmpty()) {
-                final TypeConverter converter = camelContext.getTypeConverter();
-
-                IntrospectionSupport.setProperties(converter, instance, properties);
+                PropertyBindingSupport.bindProperties(camelContext, instance, properties);
 
                 for (Map.Entry<String, Object> entry : properties.entrySet()) {
                     if (entry.getValue() instanceof String) {
                         String value = (String) entry.getValue();
                         if (EndpointHelper.isReferenceParameter(value)) {
-                            IntrospectionSupport.setProperty(camelContext, converter, instance, entry.getKey(), null, value, true);
+                            new PropertyBindingSupport.Builder()
+                                .withCamelContext(camelContext)
+                                .withProperty(entry.getKey(), value)
+                                .withReference(true)
+                                .withTarget(instance)
+                                .bind();
                         }
                     }
                 }

@@ -34,8 +34,8 @@ public class IntegrationRouteLoaderTest {
         // initialize routes
         rb.configure();
         assertThat(rb.getRouteCollection().getRoutes()).hasSize(1);
-        assertThat(rb.getRouteCollection().getRoutes().get(0).getInputs()).hasSize(1);
-        assertThat(rb.getRouteCollection().getRoutes().get(0).getInputs().get(0).getEndpointUri()).isEqualTo("direct:expression");
+        assertThat(rb.getRouteCollection().getRoutes().get(0).getInput()).isNotNull();
+        assertThat(rb.getRouteCollection().getRoutes().get(0).getInput().getEndpointUri()).isEqualTo("direct:expression");
     }
 
 }

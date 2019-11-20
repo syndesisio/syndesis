@@ -71,7 +71,7 @@ public abstract class AbstractTemplateStepHandlerTest {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    protected CamelContext context;
+    protected DefaultCamelContext context;
 
     @Before
     public void setup() throws Exception {

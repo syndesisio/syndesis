@@ -28,7 +28,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.sql.SqlComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.camel.spi.Registry;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.assertj.core.api.Condition;
@@ -65,7 +65,7 @@ public class ComponentProxyWithCustomComponentTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind(component.getComponentId() + "-component", component);
 
         validate(registry);
     }
@@ -95,7 +95,7 @@ public class ComponentProxyWithCustomComponentTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind(component.getComponentId() + "-component", component);
 
         validate(registry);
     }
@@ -134,7 +134,7 @@ public class ComponentProxyWithCustomComponentTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind(component.getComponentId() + "-component", component);
 
         validate(registry);
     }

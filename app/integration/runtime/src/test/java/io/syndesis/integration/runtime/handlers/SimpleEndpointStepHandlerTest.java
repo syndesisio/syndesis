@@ -15,31 +15,9 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
-import io.syndesis.integration.runtime.util.JsonSupport;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.getDefaultCamelContextWithMyBeanInRegistry;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -49,6 +27,25 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
+import io.syndesis.integration.runtime.util.JsonSupport;
 
 public class SimpleEndpointStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SimpleEndpointStepHandlerTest.class);
@@ -72,7 +69,7 @@ public class SimpleEndpointStepHandlerTest {
 
     @Test
     public void testSimpleEndpointStep() throws Exception {
-        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
+        final DefaultCamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -135,7 +132,7 @@ public class SimpleEndpointStepHandlerTest {
 
     @Test
     public void testSimpleEndpointStepWithSplitAggregate() throws Exception {
-        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
+        final DefaultCamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,

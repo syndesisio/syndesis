@@ -18,16 +18,15 @@ package io.syndesis.integration.runtime.handlers;
 import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
-
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.util.ObjectHelper;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
-import org.apache.camel.util.ObjectHelper;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 
 /**
  * This is needed until connectors are migrated to the new architecture.
@@ -81,7 +80,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
         properties.putAll(descriptor.getConfiguredProperties());
 
         try {
-            final RuntimeCamelCatalog catalog = builder.getContext().getRuntimeCamelCatalog();
+            final RuntimeCamelCatalog catalog = builder.getContext().getExtension(RuntimeCamelCatalog.class);
             final String uri = catalog.asEndpointUri(componentScheme, Map.class.cast(properties), false);
 
             if (route == null) {

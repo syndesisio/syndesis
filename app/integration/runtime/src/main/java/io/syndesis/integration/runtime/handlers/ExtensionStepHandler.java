@@ -19,18 +19,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelContextAware;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.support.PropertyBindingSupport;
+import org.apache.camel.util.ObjectHelper;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.extension.api.Step;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.util.StringHelpers;
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.integration.StepKind;
-import org.apache.camel.CamelContext;
-import org.apache.camel.TypeConverter;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.util.IntrospectionSupport;
-import org.apache.camel.util.ObjectHelper;
 
 public class ExtensionStepHandler implements IntegrationStepHandler{
     @Override
@@ -96,7 +95,6 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
             definition = route.to(uri.toString());
         } else if (action.getDescriptor().getKind() == StepAction.Kind.STEP) {
             final String target = action.getDescriptor().getEntrypoint();
-            final TypeConverter converter = context.getTypeConverter();
 
             if (!ObjectHelper.isEmpty(target)) {
                 try {
@@ -105,7 +103,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     final Map<String, Object> props = new HashMap<>(properties);
 
                     try {
-                        IntrospectionSupport.setProperties(context, converter, stepExtension, props);
+                        PropertyBindingSupport.bindProperties(context, stepExtension, props);
                     } catch (Exception e) {
                         throw new IllegalStateException(e);
                     }
@@ -113,7 +111,7 @@ public class ExtensionStepHandler implements IntegrationStepHandler{
                     // Set the camel context if the step extension object implements
                     // CamelContextAware, this is a shortcut to retrieve it from
                     // the handler method.
-                    ObjectHelper.trySetCamelContext(stepExtension, context);
+                    CamelContextAware.trySetCamelContext(stepExtension, context);
 
                     return stepExtension.configure(context, route, props);
                 } catch (ClassNotFoundException e) {

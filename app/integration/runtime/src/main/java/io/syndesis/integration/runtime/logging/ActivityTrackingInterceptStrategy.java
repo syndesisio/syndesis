@@ -21,16 +21,20 @@ import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
 import org.apache.camel.model.NoOutputDefinition;
-import org.apache.camel.model.NoOutputExpressionNode;
+import org.apache.camel.model.OutputDefinition;
+import org.apache.camel.model.OutputExpressionNode;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.processor.DefaultExchangeFormatter;
-import org.apache.camel.processor.DelegateAsyncProcessor;
+import org.apache.camel.support.processor.DefaultExchangeFormatter;
+import org.apache.camel.support.processor.DelegateAsyncProcessor;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
+
+import java.util.List;
 
 public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
     private static final DefaultExchangeFormatter FORMATTER = new DefaultExchangeFormatter();
@@ -42,7 +46,7 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
     }
 
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) throws Exception {
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
         if (this.tracker == null) {
             return target;
         }
@@ -142,9 +146,9 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
      * @param definition
      * @return
      */
-    private static boolean shouldTrack(ProcessorDefinition<?> definition) {
+    private static boolean shouldTrack(NamedNode definition) {
         return definition instanceof PipelineDefinition &&
-                ObjectHelper.isNotEmpty(definition.getOutputs());
+                ObjectHelper.isNotEmpty(((PipelineDefinition) definition).getOutputs());
     }
 
     /**
@@ -155,20 +159,27 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
      * @param definition
      * @return
      */
-    private static boolean shouldTrackDoneEvent(ProcessorDefinition<?> definition) {
-        if (ObjectHelper.isEmpty(definition.getOutputs())) {
+    private static boolean shouldTrackDoneEvent(NamedNode definition) {
+        if (!(definition instanceof OutputDefinition)) {
+          return false;
+        }
+
+        final OutputDefinition<?> outputDefinition = (OutputDefinition) definition;
+        final List<ProcessorDefinition<?>> outputs = outputDefinition.getOutputs();
+
+        if (ObjectHelper.isEmpty(outputs)) {
             return false;
         }
 
         int stepIndexInPipeline = 0;
-        if (definition.getOutputs().size() > 1) {
+        if (outputs.size() > 1) {
             // 1st output in the pipeline should be the set header processor for the step id
             // 2nd output in the pipeline should be the actual step processor
             stepIndexInPipeline = 1;
         }
 
-        return definition.getOutputs().get(stepIndexInPipeline) instanceof NoOutputDefinition ||
-                definition.getOutputs().get(stepIndexInPipeline) instanceof NoOutputExpressionNode;
+        return outputs.get(stepIndexInPipeline) instanceof NoOutputDefinition ||
+               outputs.get(stepIndexInPipeline) instanceof OutputExpressionNode;
     }
 
     private static String failure(Exchange exchange) {

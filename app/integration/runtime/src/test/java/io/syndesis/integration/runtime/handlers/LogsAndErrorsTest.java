@@ -48,7 +48,7 @@ public class LogsAndErrorsTest {
 
     @Test
     public void testRoute() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(

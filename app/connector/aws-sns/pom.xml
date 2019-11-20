@@ -60,7 +60,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-aws</artifactId>
+      <artifactId>camel-aws-sns</artifactId>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>

@@ -15,17 +15,18 @@
  */
 package io.syndesis.integration.runtime.camelk.tracing;
 
+import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.k.ContextCustomizer;
+import org.apache.camel.k.Runtime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.tracing.TracingInterceptStrategy;
 import io.syndesis.integration.runtime.tracing.TracingLogListener;
-import org.apache.camel.CamelContext;
-import org.apache.camel.k.ContextCustomizer;
-import org.apache.camel.k.Runtime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IntegrationTracingContextCustomizer implements ContextCustomizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTracingContextCustomizer.class);
@@ -46,10 +47,13 @@ public class IntegrationTracingContextCustomizer implements ContextCustomizer {
 
         TracingInterceptStrategy tis = new TracingInterceptStrategy(tracer);
         runtimeRegistry.bind("integrationLoggingInterceptStrategy", tis);
-        camelContext.addInterceptStrategy(tis);
+        if (camelContext instanceof ExtendedCamelContext) {
+            ExtendedCamelContext ecc = (ExtendedCamelContext) camelContext;
+            ecc.addInterceptStrategy(tis);
 
-        // Log listener
-        camelContext.addLogListener(new TracingLogListener(tracer));
+            // Log listener
+            ecc.addLogListener(new TracingLogListener(tracer));
+        }
 
         LOGGER.info("Added opentracing to CamelContext.");
     }

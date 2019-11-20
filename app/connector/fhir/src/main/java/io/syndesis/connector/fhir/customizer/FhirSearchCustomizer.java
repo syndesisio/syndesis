@@ -22,7 +22,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.fhir.internal.FhirSearchApiMethod;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.component.ApiMethod;
+import org.apache.camel.support.component.ApiMethod;
 import org.hl7.fhir.dstu3.model.Bundle;
 
 import java.util.ArrayList;

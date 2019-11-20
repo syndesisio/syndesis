@@ -25,7 +25,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.file.remote.FtpEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -63,7 +63,7 @@ public class ComponentProxyWithCustomEndpointTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind(component.getComponentId() + "-component", component);
 
         final CamelContext context = new DefaultCamelContext(registry);
 
