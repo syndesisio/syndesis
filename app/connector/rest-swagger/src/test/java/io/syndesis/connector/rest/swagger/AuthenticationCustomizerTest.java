@@ -15,33 +15,29 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.spi.AsyncProcessorAwaitManager;
 import org.junit.Rule;
 import org.junit.Test;
-
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public class AuthenticationCustomizerTest {
 
@@ -197,7 +193,7 @@ public class AuthenticationCustomizerTest {
         when(exchange.getOut()).thenReturn(message);
         when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
-        final CamelContext context = mock(CamelContext.class);
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         when(exchange.getContext()).thenReturn(context);
 
         final AsyncProcessorAwaitManager async = mock(AsyncProcessorAwaitManager.class);

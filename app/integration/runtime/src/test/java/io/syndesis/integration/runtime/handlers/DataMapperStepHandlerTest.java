@@ -15,36 +15,32 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultMessage;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
+import org.apache.camel.support.DefaultExchange;
+import org.apache.camel.support.DefaultMessage;
 import org.junit.Test;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 
 public class DataMapperStepHandlerTest {
 
@@ -52,7 +48,7 @@ public class DataMapperStepHandlerTest {
 
     @Test
     public void testDataMapperStep() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(getTestSteps());
@@ -68,9 +64,10 @@ public class DataMapperStepHandlerTest {
             assertThat(routes).hasSize(1);
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
+
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -103,7 +100,7 @@ public class DataMapperStepHandlerTest {
 
     @Test
     public void testJsonTypeProcessors() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(getTestSteps("{" +
@@ -128,8 +125,8 @@ public class DataMapperStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -163,7 +160,7 @@ public class DataMapperStepHandlerTest {
 
     @Test
     public void testJsonTypeProcessorsSkip() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(getTestSteps("{" +
@@ -188,8 +185,8 @@ public class DataMapperStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);

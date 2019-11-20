@@ -23,7 +23,7 @@ import java.util.Map;
 import io.syndesis.connector.box.BoxFile;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.test.junit4.CamelTestSupport;
 import org.junit.Before;
 import org.junit.Test;

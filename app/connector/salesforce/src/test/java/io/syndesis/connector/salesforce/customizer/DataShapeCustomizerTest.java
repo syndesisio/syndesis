@@ -29,7 +29,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.component.salesforce.api.dto.AbstractDTOBase;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.processor.Pipeline;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;

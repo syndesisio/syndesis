@@ -19,7 +19,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.component.fhir.internal.FhirApiCollection;
-import org.apache.camel.util.component.ApiMethod;
+import org.apache.camel.support.component.ApiMethod;
 
 import java.util.Map;
 

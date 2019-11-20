@@ -21,10 +21,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
 import javax.xml.bind.JAXBException;
-
-import io.syndesis.common.util.Resources;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.CamelContext;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -38,8 +36,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -64,7 +64,7 @@ public class IntegrationTestSupport implements StringConstants {
         }
     }
 
-    protected void dumpRoutes(CamelContext context) {
+    protected void dumpRoutes(ModelCamelContext context) {
         RoutesDefinition definition = new RoutesDefinition();
         definition.setRoutes(context.getRouteDefinitions());
 

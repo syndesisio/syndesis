@@ -25,7 +25,7 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.sql.SqlComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.commons.dbcp.BasicDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -54,7 +54,7 @@ public class ComponentOptionsTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind(component.getComponentId() + "-component", component);
 
         DefaultCamelContext context = new DefaultCamelContext(registry);
         try {
@@ -105,8 +105,8 @@ public class ComponentOptionsTest {
         component.setOptions(properties);
 
         SimpleRegistry registry = new SimpleRegistry();
-        registry.put("ds", this.ds);
-        registry.put(component.getComponentId() + "-component", component);
+        registry.bind("ds", this.ds);
+        registry.bind(component.getComponentId() + "-component", component);
 
         DefaultCamelContext context = new DefaultCamelContext(registry);
         try {

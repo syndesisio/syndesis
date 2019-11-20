@@ -23,13 +23,14 @@ import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
 import org.apache.camel.model.NoOutputDefinition;
-import org.apache.camel.model.NoOutputExpressionNode;
+import org.apache.camel.model.OutputExpressionNode;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.processor.DefaultExchangeFormatter;
-import org.apache.camel.processor.DelegateAsyncProcessor;
+import org.apache.camel.support.processor.DefaultExchangeFormatter;
+import org.apache.camel.support.processor.DelegateAsyncProcessor;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
@@ -41,6 +42,33 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
 
     public ActivityTrackingInterceptStrategy(ActivityTracker tracker) {
         this.tracker = tracker;
+    }
+
+    @Override
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
+        if (this.tracker == null) {
+            return target;
+        }
+
+        if (shouldTrack(definition)) {
+            final String id = definition.getId();
+            if (ObjectHelper.isEmpty(id)) {
+                return target;
+            }
+
+            final String stepId = StringHelper.after(id, "step:");
+            if (ObjectHelper.isEmpty(stepId)) {
+                return target;
+            }
+
+            if (shouldTrackDoneEvent(definition)) {
+                return new TrackDoneEventProcessor(target, stepId);
+            }
+
+            return new TrackStartEventProcessor(target, stepId);
+        }
+
+        return target;
     }
 
     @Override
@@ -170,7 +198,7 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
         }
 
         return definition.getOutputs().get(stepIndexInPipeline) instanceof NoOutputDefinition ||
-                definition.getOutputs().get(stepIndexInPipeline) instanceof NoOutputExpressionNode;
+                definition.getOutputs().get(stepIndexInPipeline) instanceof OutputExpressionNode;
     }
 
     private static String failure(Exchange exchange) {

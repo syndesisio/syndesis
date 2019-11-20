@@ -18,7 +18,7 @@ package io.syndesis.connector.kudu;
 
 import io.syndesis.connector.kudu.model.KuduTable;
 import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.kudu.Schema;
 import org.apache.kudu.client.CreateTableOptions;
 import org.junit.Assert;

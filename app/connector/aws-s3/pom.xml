@@ -54,7 +54,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-aws</artifactId>
+      <artifactId>camel-aws-s3</artifactId>
     </dependency>
     <dependency>
       <groupId>com.amazonaws</groupId>

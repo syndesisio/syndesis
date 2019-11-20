@@ -35,7 +35,7 @@ public class JiraConfiguration {
     private String accessToken;
 
     @UriParam
-    @Metadata(required = "true")
+    @Metadata(required = true)
     private String jiraUrl;
 
     @UriParam(label = "security", secret = true)

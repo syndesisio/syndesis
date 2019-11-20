@@ -39,7 +39,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -159,7 +159,7 @@ public class AggregateStepHandlerTest {
             context.addRoutes(routes);
 
             SimpleRegistry beanRegistry = new SimpleRegistry();
-            beanRegistry.put("bodyLogger", new BodyLogger.Default());
+            beanRegistry.bind("bodyLogger", new BodyLogger.Default());
             context.setRegistry(beanRegistry);
 
             context.start();

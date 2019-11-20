@@ -30,7 +30,25 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.Processor;
+import org.apache.camel.builder.DefaultErrorHandlerBuilder;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.ExpressionNode;
+import org.apache.camel.model.LogDefinition;
+import org.apache.camel.model.ModelCamelContext;
+import org.apache.camel.model.ModelHelper;
+import org.apache.camel.model.PipelineDefinition;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.model.RouteDefinition;
+import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.processor.errorhandler.ExceptionPolicyKey;
+import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.spi.RoutePolicy;
+import org.apache.camel.support.ResourceHelper;
+import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Flow.FlowType;
@@ -38,30 +56,12 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Properties;
 import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.Properties;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Processor;
-import org.apache.camel.builder.DefaultErrorHandlerBuilder;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.model.ExpressionNode;
-import org.apache.camel.model.LogDefinition;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.OnExceptionDefinition;
-import org.apache.camel.model.PipelineDefinition;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.model.RouteDefinition;
-import org.apache.camel.model.RoutesDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
-import org.apache.camel.spi.RoutePolicy;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.ResourceHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -131,6 +131,14 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
         LOGGER.info("Loading integration from: {}", configurationUri);
         return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
+    }
+
+    public ModelCamelContext getModelContext() {
+        if (getContext() instanceof ModelCamelContext) {
+            return (ModelCamelContext) getContext();
+        }
+
+        throw new UnsupportedOperationException("Camel context does not support modelling functionality");
     }
 
     @Override
@@ -303,13 +311,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     rd.routePolicy(factory.createRoutePolicy(flowId));
                 }
             }
-            rd.getInputs().get(0).id(stepId);
+            rd.getInput().id(stepId);
 
             //Adding an errorHandler on API-Provider integrations
             if (FlowType.API_PROVIDER.equals(flow.getType())) {
-                final OnExceptionDefinition onException = new OnExceptionDefinition(Throwable.class)
-                        .handled(true)
-                        .maximumRedeliveries(0);
+                final ExceptionPolicyKey policyKey = new ExceptionPolicyKey(rd.getId(), Throwable.class, null);
 
                 final Processor errorHandler = (Processor) mandatoryLoadResource(
                         this.getContext(), "class:io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler");
@@ -317,10 +323,10 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 ((Properties) errorHandler).setProperties(endStep.getConfiguredProperties());
 
                 final DefaultErrorHandlerBuilder builder = new DefaultErrorHandlerBuilder();
-                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onException);
+                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> policyKey);
                 builder.setOnExceptionOccurred(errorHandler);
 
-                rd.setErrorHandlerBuilder(builder);
+                rd.setErrorHandlerFactory(builder);
             }
         }
 
@@ -366,11 +372,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 properties.put("timerName", "integration");
                 properties.put("period", scheduler.getExpression());
 
-                final RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
+                final RuntimeCamelCatalog catalog = getContext().getExtension(RuntimeCamelCatalog.class);
                 final String uri = catalog.asEndpointUri("timer", properties, false);
 
                 RouteDefinition route = this.from(uri);
-                route.getInputs().get(0).setId("integration-scheduler");
+                route.getInput().setId("integration-scheduler");
                 flow.getId().ifPresent(route::setId);
 
                 return route;
@@ -392,7 +398,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                                               String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
-            final CamelContext context = getContext();
+            final ModelCamelContext context = getModelContext();
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {

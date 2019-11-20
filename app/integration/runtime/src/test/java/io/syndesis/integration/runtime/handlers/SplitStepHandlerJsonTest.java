@@ -30,7 +30,7 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.junit.Test;
 
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
@@ -45,7 +45,7 @@ public class SplitStepHandlerJsonTest {
      */
     @Test
     public void testSplitToEnd() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = new IntegrationRouteBuilder(
@@ -208,8 +208,8 @@ public class SplitStepHandlerJsonTest {
             context.addRoutes(routes);
 
             SimpleRegistry beanRegistry = new SimpleRegistry();
-            beanRegistry.put("bodyLogger", new BodyLogger.Default());
-            beanRegistry.put("myMock", (Processor) exchange -> exchange.getIn().setBody(Arrays.asList("d", "e", "f")));
+            beanRegistry.bind("bodyLogger", new BodyLogger.Default());
+            beanRegistry.bind("myMock", (Processor) exchange -> exchange.getIn().setBody(Arrays.asList("d", "e", "f")));
             context.setRegistry(beanRegistry);
 
             context.start();
@@ -402,7 +402,7 @@ public class SplitStepHandlerJsonTest {
 
     private static void addBodyLogger(DefaultCamelContext context) {
         SimpleRegistry beanRegistry = new SimpleRegistry();
-        beanRegistry.put("bodyLogger", new BodyLogger.Default());
+        beanRegistry.bind("bodyLogger", new BodyLogger.Default());
         context.setRegistry(beanRegistry);
     }
 }

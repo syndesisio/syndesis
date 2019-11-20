@@ -34,7 +34,7 @@ import org.apache.camel.component.jira.producer.DeleteIssueProducer;
 import org.apache.camel.component.jira.producer.TransitionIssueProducer;
 import org.apache.camel.component.jira.producer.UpdateIssueProducer;
 import org.apache.camel.component.jira.producer.WatcherProducer;
-import org.apache.camel.impl.DefaultEndpoint;
+import org.apache.camel.support.DefaultEndpoint;
 import org.apache.camel.spi.Metadata;
 import org.apache.camel.spi.Registry;
 import org.apache.camel.spi.UriEndpoint;
@@ -67,7 +67,7 @@ public class JiraEndpoint extends DefaultEndpoint {
     private static final transient Logger LOG = LoggerFactory.getLogger(JiraEndpoint.class);
 
     @UriPath
-    @Metadata(required = "true")
+    @Metadata(required = true)
     private JiraType type;
 
     @UriParam(label = "consumer")

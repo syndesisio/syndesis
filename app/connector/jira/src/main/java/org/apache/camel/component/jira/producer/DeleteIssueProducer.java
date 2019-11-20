@@ -19,7 +19,7 @@ import com.atlassian.jira.rest.client.api.IssueRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.jira.JiraEndpoint;
-import org.apache.camel.impl.DefaultProducer;
+import org.apache.camel.support.DefaultProducer;
 
 import static org.apache.camel.component.jira.JiraConstants.ISSUE_KEY;
 

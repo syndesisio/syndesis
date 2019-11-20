@@ -39,7 +39,7 @@ import org.apache.camel.Predicate;
 import org.apache.camel.language.bean.RuntimeBeanExpressionException;
 import org.apache.camel.spi.Language;
 import org.apache.camel.spi.Registry;
-import org.apache.camel.util.ExchangeHelper;
+import org.apache.camel.support.ExchangeHelper;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

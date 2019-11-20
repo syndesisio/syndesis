@@ -16,13 +16,14 @@
 package io.syndesis.integration.runtime.jmx;
 
 import java.util.Date;
-import javax.management.ObjectName;
-
+import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.apache.camel.Service;
 import org.apache.camel.api.management.ManagedAttribute;
+import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.ManagedResource;
+import org.apache.camel.api.management.mbean.ManagedCamelContextMBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,46 +40,63 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
 
     private CamelContext camelContext;
 
+    private ManagedCamelContextMBean getManagedCamelContext() {
+        ManagedCamelContext mcc = camelContext.getExtension(ManagedCamelContext.class);
+        return Optional.of(mcc)
+            .map(m -> m.getManagedCamelContext())
+            .orElse(null);
+    }
+
     @ManagedAttribute
     public Long getStartTimestamp() {
-        return camelContext.getManagedCamelContext().getStartTimestamp().getTime();
+        ManagedCamelContextMBean mcc = getManagedCamelContext();
+        return mcc == null ? null : mcc.getStartTimestamp().getTime();
     }
 
     @ManagedAttribute
     public Long getResetTimestamp() {
-        final Date resetTimestamp = camelContext.getManagedCamelContext().getResetTimestamp();
+        ManagedCamelContextMBean mcc = getManagedCamelContext();
+        final Date resetTimestamp = mcc == null ? null : mcc.getResetTimestamp();
         return resetTimestamp == null ? null : resetTimestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeCompletedTimestamp() {
-        final Date timestamp = camelContext.getManagedCamelContext()
-                .getLastExchangeCompletedTimestamp();
+        ManagedCamelContextMBean mcc = getManagedCamelContext();
+        final Date timestamp = mcc == null ? null : mcc.getLastExchangeCompletedTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeFailureTimestamp() {
-        final Date timestamp = camelContext.getManagedCamelContext()
-                .getLastExchangeFailureTimestamp();
+        ManagedCamelContextMBean mcc = getManagedCamelContext();
+        final Date timestamp = mcc == null ? null : mcc.getLastExchangeFailureTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         // register mbean
         final String contextName = camelContext.getName();
         final String name = String.format("io.syndesis.camel:context=%s,type=context,name=\"%s\"", contextName, contextName);
-        final ObjectName instance = ObjectName.getInstance(name);
 
-        camelContext.getManagementStrategy().manageNamedObject(this, instance);
-        LOG.info("Registered mbean {}", instance);
+        try {
+            camelContext.getManagementStrategy().manageObject(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        LOG.info("Registered mbean {}", name);
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         // unregister mbean
-        camelContext.getManagementStrategy().unmanageObject(this);
+        try {
+            camelContext.getManagementStrategy().unmanageObject(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

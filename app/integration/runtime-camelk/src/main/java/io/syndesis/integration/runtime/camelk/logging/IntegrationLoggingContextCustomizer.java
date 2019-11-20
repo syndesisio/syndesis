@@ -21,6 +21,7 @@ import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.k.ContextCustomizer;
 import org.apache.camel.k.Runtime;
 import org.slf4j.Logger;
@@ -47,8 +48,11 @@ public class IntegrationLoggingContextCustomizer implements ContextCustomizer {
         runtimeRegistry.bind("integrationLoggingInterceptStrategy", atis);
 
         // Log listener
-        camelContext.addLogListener(new IntegrationLoggingListener(activityTracker));
-        camelContext.addInterceptStrategy(atis);
+        if (camelContext instanceof ExtendedCamelContext) {
+            ExtendedCamelContext ecc = (ExtendedCamelContext) camelContext;
+            ecc.addLogListener(new IntegrationLoggingListener(activityTracker));
+            ecc.addInterceptStrategy(atis);
+        }
 
         LOGGER.info("Added IntegrationLoggingListener with {} to CamelContext.", activityTracker.getClass());
     }

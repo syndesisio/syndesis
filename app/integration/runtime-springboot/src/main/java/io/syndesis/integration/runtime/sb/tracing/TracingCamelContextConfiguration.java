@@ -16,8 +16,8 @@
 package io.syndesis.integration.runtime.sb.tracing;
 
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
-
 import io.opentracing.Tracer;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.tracing.TracingLogListener;
@@ -37,7 +37,9 @@ class TracingCamelContextConfiguration implements CamelContextConfiguration {
         camelContext.setUuidGenerator(KeyGenerator::createKey);
 
         // Log listener
-        camelContext.addLogListener(new TracingLogListener(tracer));
+        if (camelContext instanceof ExtendedCamelContext) {
+            ((ExtendedCamelContext) camelContext).addLogListener(new TracingLogListener(tracer));
+        }
     }
 
     @Override

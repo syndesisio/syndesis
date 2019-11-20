@@ -42,7 +42,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
+import org.apache.camel.support.SimpleRegistry;
 import org.apache.camel.model.ModelCamelContext;
 import org.junit.After;
 import org.junit.Before;
@@ -390,7 +390,7 @@ public class RestSwaggerConnectorIntegrationTest {
     }
 
     private RouteBuilder createRouteBuilder() {
-        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
+        IntegrationRouteBuilder irb = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
 
             @Override
             public void configure() throws Exception {
@@ -400,44 +400,36 @@ public class RestSwaggerConnectorIntegrationTest {
             }
 
             @Override
-            protected ModelCamelContext createContainer() {
-                final Properties properties = new Properties();
-
-                properties.put("flow-3.rest-swagger-1.password", "supersecret");
-
-                properties.put("flow-4.rest-swagger-1.accessToken", "access-token");
-
-                properties.put("flow-6.rest-swagger-1.clientSecret", "client-secret");
-                properties.put("flow-6.rest-swagger-1.accessToken", "access-token");
-                properties.put("flow-6.rest-swagger-1.refreshToken", "refresh-token");
-
-                properties.put("flow-7.rest-swagger-1.clientSecret", "client-secret");
-                properties.put("flow-7.rest-swagger-1.accessToken", "access-token");
-                properties.put("flow-7.rest-swagger-1.refreshToken", "refresh-token");
-
-                properties.put("flow-8.rest-swagger-1.authenticationParameterValue", "supersecret");
-
-                properties.put("flow-9.rest-swagger-1.authenticationParameterValue", "supersecret");
-
-                properties.put("flow-10.rest-swagger-1.authenticationParameterValue", "supersecret");
-
-                final PropertiesComponent propertiesComponent = new PropertiesComponent();
-                propertiesComponent.setInitialProperties(properties);
-
-                final SimpleRegistry registry = new SimpleRegistry();
-                registry.put("properties", propertiesComponent);
-
-                final ModelCamelContext leanContext = new DefaultCamelContext(registry);
-                leanContext.disableJMX();
-
-                return leanContext;
-            }
-
-            @Override
             protected Integration loadIntegration() {
                 return createIntegration();
             }
+            
         };
+
+        final Properties properties = new Properties();
+        properties.put("flow-3.rest-swagger-1.password", "supersecret");
+        properties.put("flow-4.rest-swagger-1.accessToken", "access-token");
+        properties.put("flow-6.rest-swagger-1.clientSecret", "client-secret");
+        properties.put("flow-6.rest-swagger-1.accessToken", "access-token");
+        properties.put("flow-6.rest-swagger-1.refreshToken", "refresh-token");
+        properties.put("flow-7.rest-swagger-1.clientSecret", "client-secret");
+        properties.put("flow-7.rest-swagger-1.accessToken", "access-token");
+        properties.put("flow-7.rest-swagger-1.refreshToken", "refresh-token");
+        properties.put("flow-8.rest-swagger-1.authenticationParameterValue", "supersecret");
+        properties.put("flow-9.rest-swagger-1.authenticationParameterValue", "supersecret");
+        properties.put("flow-10.rest-swagger-1.authenticationParameterValue", "supersecret");
+
+        final PropertiesComponent propertiesComponent = new PropertiesComponent();
+        propertiesComponent.setInitialProperties(properties);
+
+        final SimpleRegistry registry = new SimpleRegistry();
+        registry.bind("properties", propertiesComponent);
+
+        final ModelCamelContext leanContext = new DefaultCamelContext(registry);
+        leanContext.disableJMX();
+
+        irb.setContext(leanContext);
+        return irb;
     }
 
     private Flow headerAuthenticationFlow() {

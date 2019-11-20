@@ -19,8 +19,8 @@ import java.util.function.Consumer;
 
 import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
-import org.apache.camel.component.http4.HttpEndpoint;
-import org.apache.camel.component.http4.HttpProducer;
+import org.apache.camel.component.http.HttpEndpoint;
+import org.apache.camel.component.http.HttpProducer;
 
 public final class WithSyndesisHeaderFilterStrategy implements Consumer<HttpProducer> {
 

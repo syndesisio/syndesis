@@ -21,7 +21,7 @@ import java.util.Optional;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
-import org.apache.camel.impl.DefaultComponent;
+import org.apache.camel.support.DefaultComponent;
 
 public class PetstoreComponent extends DefaultComponent {
 

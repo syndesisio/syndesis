@@ -19,7 +19,7 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultUuidGenerator;
+import org.apache.camel.impl.engine.DefaultUuidGenerator;
 import org.apache.camel.k.Constants;
 import org.apache.camel.k.InMemoryRegistry;
 import org.apache.camel.k.Runtime;
@@ -39,8 +39,9 @@ public class IntegrationLoggingEnabledTest {
         Properties properties = new Properties();
         properties.setProperty(Constants.PROPERTY_CAMEL_K_CUSTOMIZER, "logging");
 
-        PropertiesComponent pc = context.getComponent("properties", PropertiesComponent.class);
+        PropertiesComponent pc = new PropertiesComponent();
         pc.setInitialProperties(properties);
+        context.setPropertiesComponent(pc);
 
         Runtime.Registry registry = new InMemoryRegistry();
         context.setRegistry(registry);
