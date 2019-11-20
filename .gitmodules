@@ -1,3 +1,0 @@
-[submodule "app/dv"]
-	path = app/dv
-	url = git@github.com:teiid/teiid-syndesis
