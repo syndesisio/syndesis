@@ -77,7 +77,7 @@ public class JiraEndpoint extends DefaultEndpoint {
     private Integer maxResults = 50;
 
     @UriParam
-    private JiraConfiguration configuration;
+    private final JiraConfiguration configuration;
 
     private JiraRestClient client;
 

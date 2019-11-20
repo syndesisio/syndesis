@@ -35,7 +35,7 @@ import com.google.api.client.repackaged.org.apache.commons.codec.binary.Base64;
  */
 public class JiraOAuthAuthenticationHandler implements AuthenticationHandler {
 
-    private OAuthParameters parameters;
+    private final OAuthParameters parameters;
 
     public JiraOAuthAuthenticationHandler(String consumerKey, String verificationCode, String privateKey, String accessToken,
             String jiraUrl) {
@@ -67,7 +67,7 @@ public class JiraOAuthAuthenticationHandler implements AuthenticationHandler {
         }
     }
 
-    private OAuthRsaSigner getOAuthRsaSigner(String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    private static OAuthRsaSigner getOAuthRsaSigner(String privateKey) throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] privateBytes = Base64.decodeBase64(privateKey);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(privateBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");

@@ -107,7 +107,7 @@ public class AddIssueProducer extends DefaultProducer {
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    private void addWatchers(Issue issue, IssueRestClient issueClient, List<?> watchers) {
+    private static void addWatchers(Issue issue, IssueRestClient issueClient, List<?> watchers) {
         if (ObjectHelper.isNotEmpty(watchers) && issue.getWatchers() != null) {
             for (Object watcher: watchers) {
                 issueClient.addWatcher(issue.getWatchers().getSelf(), Optional.ofNullable(watcher)
