@@ -15,17 +15,18 @@
  */
 package io.syndesis.integration.runtime.camelk.logging;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Properties;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.impl.engine.DefaultUuidGenerator;
-import org.apache.camel.k.InMemoryRegistry;
 import org.apache.camel.k.support.RuntimeSupport;
 import org.apache.camel.spi.LogListener;
 import org.assertj.core.api.Condition;
 import org.junit.Test;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 
 public class IntegrationLoggingDisabledTest {
 
@@ -39,7 +40,7 @@ public class IntegrationLoggingDisabledTest {
         pc.setInitialProperties(properties);
         context.setPropertiesComponent(pc);
 
-        RuntimeSupport.configureContext(context, new InMemoryRegistry());
+        RuntimeSupport.configureContextCustomizers(context);
 
         context.start();
 

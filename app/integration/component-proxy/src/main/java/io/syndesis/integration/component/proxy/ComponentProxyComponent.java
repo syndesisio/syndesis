@@ -32,6 +32,7 @@ import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.TypeConversionException;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.catalog.CamelCatalog;
@@ -41,7 +42,7 @@ import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.support.DefaultComponent;
-import org.apache.camel.support.PropertyBindingSupport;
+import org.apache.camel.support.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 import org.apache.camel.util.URISupport;
@@ -94,7 +95,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         this.componentSchemeAlias = Optional.empty();
         this.configuredOptions = new HashMap<>();
         this.remainingOptions = new HashMap<>();
-        this.catalog = ObjectHelper.notNull(catalog, "catalog");
+        this.catalog = new DefaultCamelCatalog(false);
 
         if (ObjectHelper.isNotEmpty(componentClass)) {
             this.catalog.addComponent(componentScheme, componentClass);
@@ -103,7 +104,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         try {
             this.definition = ComponentDefinition.forScheme(catalog, componentScheme);
         } catch (IOException e) {
-            throw ObjectHelper.wrapRuntimeCamelException(e);
+            throw RuntimeCamelException.wrapRuntimeCamelException(e);
         }
 
         registerExtension(this::getComponentVerifierExtension);
@@ -354,13 +355,12 @@ public class ComponentProxyComponent extends DefaultComponent {
                 }
 
                 String key = entry.getKey();
-                boolean bound = new PropertyBindingSupport.Builder()
-                                                .withCamelContext(context)
-                                                .withProperty(key, val)
-                                                .withTarget(component)
-                                                .bind();
-                if (bound) {
-                    options.remove(key);
+                try {
+                    if (IntrospectionSupport.setProperty(context, component, key, val)) {
+                        options.remove(key);
+                    }
+                } catch (Exception e) {
+                    LOGGER.warn("Couldn't configure property " + key);
                 }
             }
         }

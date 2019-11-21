@@ -15,23 +15,22 @@
  */
 package io.syndesis.connector.calendar;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import com.google.api.services.calendar.model.Event;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.impl.DefaultExchange;
-import org.apache.camel.impl.DefaultMessage;
+import org.apache.camel.support.DefaultExchange;
+import org.apache.camel.support.DefaultMessage;
 import org.junit.Test;
-
-import com.google.api.services.calendar.model.Event;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GoogleCalendarEventsCustomizerTest {
 
     @Test
     public void shouldConvertGoogleEventToConnectorEventModel() {
         Exchange exchange = new DefaultExchange((CamelContext) null);
-        Message in = new DefaultMessage(null);
+        Message in = new DefaultMessage((CamelContext) null);
         in.setBody(new Event());
         exchange.setIn(in);
 

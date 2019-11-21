@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.meta;
 
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
@@ -29,7 +28,6 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.kudu.common.KuduSupport;
-import io.syndesis.connector.kudu.meta.KuduMetaData;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;

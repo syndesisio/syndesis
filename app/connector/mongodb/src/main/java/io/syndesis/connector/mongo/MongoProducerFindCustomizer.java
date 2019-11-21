@@ -16,11 +16,10 @@
 package io.syndesis.connector.mongo;
 
 import java.util.Map;
-
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-import org.apache.camel.component.mongodb3.MongoDbConstants;
+import org.apache.camel.component.mongodb.MongoDbConstants;
 
 public class MongoProducerFindCustomizer implements ComponentProxyCustomizer {
 

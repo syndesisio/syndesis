@@ -149,7 +149,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-servlet-starter:@camel.version@",
+      "id": "org.apache.camel.springboot:camel-servlet-starter:@camel.version@",
       "type": "MAVEN"
     }
   ],

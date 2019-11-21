@@ -134,12 +134,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
     }
 
-    public ModelCamelContext getModelContext() {
-        if (getContext() instanceof ModelCamelContext) {
-            return (ModelCamelContext) getContext();
+    @Override
+    public ModelCamelContext getContext() {
+        CamelContext ctx = super.getContext();
+        ModelCamelContext context;
+        if(ctx instanceof ModelCamelContext) {
+            context = (ModelCamelContext) ctx;
+        } else {
+            context = new DefaultCamelContext();
+            this.setContext(context);
         }
 
-        throw new UnsupportedOperationException("Camel context does not support modelling functionality");
+        return context;
     }
 
     @Override
@@ -412,7 +418,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                                               String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
-            final ModelCamelContext context = getModelContext();
+            final ModelCamelContext context = getContext();
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {

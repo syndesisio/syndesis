@@ -23,6 +23,9 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -30,9 +33,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.integration.runtime.util.JsonSupport;
 
 public abstract class AbstractActivityLoggingTest {
 

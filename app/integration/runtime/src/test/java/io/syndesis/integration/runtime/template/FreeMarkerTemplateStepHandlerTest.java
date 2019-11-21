@@ -16,10 +16,11 @@
 package io.syndesis.integration.runtime.template;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import org.junit.Test;
+
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
+import org.junit.Test;
 
 public class FreeMarkerTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest {
 

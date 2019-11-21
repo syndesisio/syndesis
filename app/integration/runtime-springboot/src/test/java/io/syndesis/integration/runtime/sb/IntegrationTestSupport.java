@@ -66,7 +66,7 @@ public class IntegrationTestSupport implements StringConstants {
 
     protected void dumpRoutes(ModelCamelContext context) {
         RoutesDefinition definition = new RoutesDefinition();
-        definition.setRoutes(context.getRouteDefinitions());
+        definition.setRoutes(context.adapt(ModelCamelContext.class).getRouteDefinitions());
 
         dumpRoutes(context, definition);
     }

@@ -15,10 +15,26 @@
  */
 package io.syndesis.connector.odata.producer;
 
+import java.util.Map;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import java.util.Map;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.odata.AbstractODataRouteTest;
+import io.syndesis.connector.odata.component.ODataComponentFactory;
+import io.syndesis.connector.odata.consumer.AbstractODataReadRouteTest;
+import io.syndesis.connector.odata.customizer.ODataReadToCustomizer;
+import io.syndesis.connector.support.util.PropertyBuilder;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
@@ -35,20 +51,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.connector.odata.AbstractODataRouteTest;
-import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.consumer.AbstractODataReadRouteTest;
-import io.syndesis.connector.odata.customizer.ODataReadToCustomizer;
-import io.syndesis.connector.support.util.PropertyBuilder;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -159,7 +161,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_TO_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
         assertThat(consumerProperties).isEmpty();
     }
 

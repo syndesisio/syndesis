@@ -14,19 +14,14 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.common;
 
-import io.syndesis.connector.support.verifier.api.ComponentVerifier;
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.ComponentVerifierExtension;
+public final class KuduDbOperations {
+    public static final String INSERT = "insert";
+    public static final String CREATE_TABLE = "create_table";
+    public static final String SCAN = "scan";
 
-public class KuduVerifier extends ComponentVerifier {
-    public KuduVerifier() {
-        super("kudu");
-    }
-
-    @Override
-    protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new KuduConnectorVerifierExtension(context);
+    private KuduDbOperations() {
+      // holds constants
     }
 }

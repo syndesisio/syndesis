@@ -44,7 +44,7 @@
       "actionType": "connector",
       "description": "Specify a cron utility expression for a more complex integration execution schedule.",
       "descriptor": {
-        "componentScheme": "quartz2",
+        "componentScheme": "quartz",
         "configuredProperties": {
           "triggerName": "syndesis-quartz"
         },
@@ -88,7 +88,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-quartz2:@camel.version@",
+      "id": "org.apache.camel:camel-quartz:@camel.version@",
       "type": "MAVEN"
     }
   ],

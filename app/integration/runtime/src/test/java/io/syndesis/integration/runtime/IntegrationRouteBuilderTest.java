@@ -18,13 +18,16 @@ package io.syndesis.integration.runtime;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.LogDefinition;
@@ -36,11 +39,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationRouteBuilderTest {
 

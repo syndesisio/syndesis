@@ -31,10 +31,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -62,63 +70,41 @@ import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
-@RunWith(Parameterized.class)
 public class ProjectGeneratorTest {
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-    @Rule
-    public TestName testName = new TestName();
 
-    private final String basePath;
+    private final Map<String, List<ProjectGeneratorConfiguration.Templates.Resource>> parameters =
+        new HashMap<String, List<ProjectGeneratorConfiguration.Templates.Resource>>();
+    private final List<Throwable> errors = new ArrayList<>();
     private final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
+    private final String basePath;
 
-    private final List<Throwable> errors;
+    public ProjectGeneratorTest() {
+        parameters.put("", Collections.emptyList());
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-            {
-                "",
-                Collections.emptyList()
-            },
-            {
-                "redhat",
-                Arrays.asList(
-                    new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8/deployment.yml"),
-                    new ProjectGeneratorConfiguration.Templates.Resource("settings.xml", "configuration/settings.xml")
-                )
-            }
-        });
-    }
-
-    public ProjectGeneratorTest(String basePath, List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources) {
-        this.basePath = basePath;
-        this.additionalResources = additionalResources;
-        this.errors = new ArrayList<>();
+        parameters.put("redhat", Arrays.asList(
+                new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8/deployment.yml"),
+                new ProjectGeneratorConfiguration.Templates.Resource("settings.xml", "configuration/settings.xml")
+            ));
     }
 
     // ***************************
     // Tests
     // ***************************
 
-    @Test
-    public void testGenerateProject() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateProject(@TempDir Path testFolder, TestInfo testInfo, String basePath) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
@@ -210,14 +196,14 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
-        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
         assertFileContentsJson(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
-        assertFileContents(configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
-        assertFileContents(configuration, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
 
         assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
@@ -225,35 +211,35 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
 
         // lets validate configuration when activity tracing is enabled.
-        try( Stream<Path> stream = Files.walk(testFolder.getRoot().toPath().resolve("integration-project")) ) {
+        try (Stream<Path> stream = Files.walk(testFolder.resolve("integration-project"))) {
             stream.sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
         }
         configuration.setActivityTracing(true);
-        runtimeDir = generate(integration, configuration, resourceManager);
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application-tracing.properties");
+        runtimeDir = generate(integration, configuration, resourceManager, testFolder);
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application-tracing.properties");
 
         assertThat(errors).isEmpty();
     }
 
     @Test
-    public void testGenerateProjectErrorHandling() throws Exception {
+    public void testGenerateProjectErrorHandling(@TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
-                new Step.Builder()
-                        .stepKind(StepKind.endpoint)
-                        .connection(new Connection.Builder()
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
                                 .id("timer-connection")
                                 .connector(TestConstants.TIMER_CONNECTOR)
                                 .build())
-                        .putConfiguredProperty("period", "5000")
-                        .action(TestConstants.PERIODIC_TIMER_ACTION)
-                        .build(),
-                new Step.Builder()
-                        .stepKind(StepKind.log)
-                        .build()
+                .putConfiguredProperty("period", "5000")
+                .action(TestConstants.PERIODIC_TIMER_ACTION)
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.log)
+                .build()
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
@@ -263,7 +249,7 @@ public class ProjectGeneratorTest {
                 new ProjectGeneratorConfiguration.Templates.Resource("file-that-does-not-exist.yml", "deployment.yml"));
         configuration.setSecretMaskingEnabled(true);
 
-        generate(integration, configuration, resourceManager);
+        generate(integration, configuration, resourceManager, testFolder);
         await().atMost(5000L, TimeUnit.MILLISECONDS).until(() -> !errors.isEmpty());
         assertThat(errors.get(0)).isExactlyInstanceOf(IllegalArgumentException.class);
     }
@@ -392,7 +378,7 @@ public class ProjectGeneratorTest {
             .putConfiguredProperty("integration", "property")
             .build();
 
-        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() ->  generator.generateApplicationProperties(integration))
+        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> generator.generateApplicationProperties(integration))
             .withMessage("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
     }
 
@@ -465,19 +451,19 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
 
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
         assertThat(errors).isEmpty();
     }
 
     @Test
-    public void testGenerateApplicationWithOpenApiV3RestDSL() throws Exception {
+    public void testGenerateApplicationWithOpenApiV3RestDSL(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         // ******************
@@ -544,14 +530,14 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
 
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
         assertThat(errors).isEmpty();
     }
 
@@ -612,7 +598,7 @@ public class ProjectGeneratorTest {
     }
 
     @Test
-    public void testGenerateTemplateStepProjectDependencies() throws Exception {
+    public void testGenerateTemplateStepProjectDependencies(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
@@ -656,16 +642,16 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
-        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
         assertThat(errors).isEmpty();
     }
 
-    private void assertFileContents(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
+    private static void assertFileContents(TestInfo testInfo, ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
-        String methodName = testName.getMethodName();
+        String methodName = testInfo.getTestMethod().get().getName();
 
         int index = methodName.indexOf('[');
         if (index != -1) {
@@ -688,10 +674,10 @@ public class ProjectGeneratorTest {
         assertThat(actual).isEqualTo(expected);
     }
 
-    private void assertFileContentsJson(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
+    private static void assertFileContentsJson(TestInfo testInfo, ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
-        String methodName = testName.getMethodName();
+        String methodName = testInfo.getTestMethod().get().getName();
 
         int index = methodName.indexOf('[');
         if (index != -1) {
@@ -714,8 +700,8 @@ public class ProjectGeneratorTest {
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
 
-    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        Path destination = testFolder.newFolder("integration-project").toPath();
+    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager, Path testFolder) throws IOException {
+        Path destination = Files.createDirectory(testFolder.resolve("integration-project"));
 
         generate(destination, integration, generatorConfiguration, resourceManager);
 
@@ -739,7 +725,7 @@ public class ProjectGeneratorTest {
                         destPath.getParentFile().mkdirs();
                         destPath.createNewFile();
 
-                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                        try (BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
                             IOUtils.copy(tis, bout);
                         }
                     }

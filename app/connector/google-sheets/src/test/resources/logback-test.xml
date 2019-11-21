@@ -29,7 +29,7 @@
     <file>target/google-sheets-connector.log</file>
   </appender>
 
-  <logger name="org.apache.camel.util.IntrospectionSupport" level="INFO"/>
+  <logger name="org.apache.camel.support.IntrospectionSupport" level="INFO"/>
   <logger name="org.apache.camel" level="INFO"/>
   <logger name="io.syndesis" level="DEBUG"/>
   <logger name="com.consol.citrus" level="DEBUG"/>

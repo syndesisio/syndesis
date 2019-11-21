@@ -16,14 +16,17 @@
 package io.syndesis.integration.runtime.jmx;
 
 import java.util.Date;
-import java.util.Optional;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.Service;
 import org.apache.camel.api.management.ManagedAttribute;
 import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.ManagedResource;
-import org.apache.camel.api.management.mbean.ManagedCamelContextMBean;
+import org.apache.camel.management.DefaultManagementObjectNameStrategy;
+import org.apache.camel.spi.ManagementObjectNameStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,37 +43,28 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
 
     private CamelContext camelContext;
 
-    private ManagedCamelContextMBean getManagedCamelContext() {
-        ManagedCamelContext mcc = camelContext.getExtension(ManagedCamelContext.class);
-        return Optional.of(mcc)
-            .map(m -> m.getManagedCamelContext())
-            .orElse(null);
-    }
-
     @ManagedAttribute
     public Long getStartTimestamp() {
-        ManagedCamelContextMBean mcc = getManagedCamelContext();
-        return mcc == null ? null : mcc.getStartTimestamp().getTime();
+        return camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getStartTimestamp().getTime();
     }
 
     @ManagedAttribute
     public Long getResetTimestamp() {
-        ManagedCamelContextMBean mcc = getManagedCamelContext();
-        final Date resetTimestamp = mcc == null ? null : mcc.getResetTimestamp();
+        final Date resetTimestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getResetTimestamp();
         return resetTimestamp == null ? null : resetTimestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeCompletedTimestamp() {
-        ManagedCamelContextMBean mcc = getManagedCamelContext();
-        final Date timestamp = mcc == null ? null : mcc.getLastExchangeCompletedTimestamp();
+        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
+                .getLastExchangeCompletedTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeFailureTimestamp() {
-        ManagedCamelContextMBean mcc = getManagedCamelContext();
-        final Date timestamp = mcc == null ? null : mcc.getLastExchangeFailureTimestamp();
+        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
+                .getLastExchangeFailureTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
@@ -79,14 +73,33 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
         // register mbean
         final String contextName = camelContext.getName();
         final String name = String.format("io.syndesis.camel:context=%s,type=context,name=\"%s\"", contextName, contextName);
+        final ObjectName instanceName;
+        try {
+            instanceName = ObjectName.getInstance(name);
+        } catch (MalformedObjectNameException e) {
+            throw new RuntimeCamelException(e);
+        }
+        final Object currentInstance = this;
 
+        camelContext.getManagementStrategy().setManagementObjectNameStrategy(new DefaultManagementObjectNameStrategy() {
+            @Override
+            public ObjectName getObjectName(Object managedObject) throws MalformedObjectNameException {
+                if (currentInstance.equals(managedObject)) {
+                    return instanceName;
+                } else {
+                    return super.getObjectName(managedObject);
+                }
+            }
+        });
         try {
             camelContext.getManagementStrategy().manageObject(this);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeCamelException(e);
         }
+        ManagementObjectNameStrategy defaultNameStrategy = camelContext.getManagementStrategy().getManagementObjectNameStrategy();
+        camelContext.getManagementStrategy().setManagementObjectNameStrategy(defaultNameStrategy);
 
-        LOG.info("Registered mbean {}", name);
+        LOG.info("Registered mbean {}", instanceName);
     }
 
     @Override
@@ -95,7 +108,7 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
         try {
             camelContext.getManagementStrategy().unmanageObject(this);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeCamelException(e);
         }
     }
 
