@@ -1,0 +1,1 @@
+alter table data_virtualization add column dirty boolean not null default false;

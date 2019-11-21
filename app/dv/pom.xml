@@ -1,0 +1,1082 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.9-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.syndesis</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>dv-server</artifactId>
+  <name>DV Server</name>
+
+  <packaging>jar</packaging>
+  <description>Tool that allows creating, editing and managing dynamic VDBs for the Teiid OpenShift Deployment.</description>
+
+  <developers>
+    <developer>
+      <name>Barry Lafond</name>
+      <id>blafond</id>
+      <email>blafond@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Project Lead</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <name>Steve Hawkins</name>
+      <id>shawkins</id>
+      <email>shawkins@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Project Lead</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <name>Ramesh Reddy</name>
+      <id>rareddy</id>
+      <email>rareddy@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Project Lead</role>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <name>Dan Florian</name>
+      <id>danflo</id>
+      <email>dflorian@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <name>Paul Richardson</name>
+      <id>phantomjinx</id>
+      <email>p.g.richardson@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>0</timezone>
+    </developer>
+    <developer>
+      <name>Mark Drilling</name>
+      <id>mdrilling</id>
+      <email>mdrillin@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+    <developer>
+      <name>Ted Jones</name>
+      <id>tejones</id>
+      <email>tejones@redhat.com</email>
+      <organization>Red Hat</organization>
+      <roles>
+        <role>Developer</role>
+      </roles>
+      <timezone>-6</timezone>
+    </developer>
+  </developers>
+
+  <contributors>
+  </contributors>
+
+    <!-- Metadata need to publish to central -->
+  <url>https://teiid.io/</url>
+  <inceptionYear>2013</inceptionYear>
+
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <scm>
+    <connection>scm:git:git://github.com/teiid/teiid-syndesis.git</connection>
+    <developerConnection>scm:git:git@github.com:teiid/teiid-syndesis.git</developerConnection>
+    <url>http://github.com/teiid/teiid-syndesis</url>
+  </scm>
+
+  <distributionManagement>
+    <repository>
+      <id>oss.sonatype.org</id>
+      <name>oss.sonatype.org</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>oss.sonatype.org</id>
+      <name>oss.sonatype.org</name>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+  <issueManagement>
+    <system>jira</system>
+    <url>http://issues.jboss.org/browse/TEIIDTOOLS</url>
+  </issueManagement>
+
+  <repositories>
+    <repository>
+      <id>jboss-fuse</id>
+      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+    </repository>
+    <repository>
+      <id>mrrc-redhat</id>
+      <url>https://maven.repository.redhat.com/ga</url>
+    </repository>
+    <repository>
+      <id>jboss-public-repository-group</id>
+      <name>JBoss Public Repository Group</name>
+      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+  <properties>
+    <!-- Image names -->
+    <java.base.image>fabric8/s2i-java</java.base.image>
+    <fabric8.maven.plugin.version>3.5.41</fabric8.maven.plugin.version> <!-- or above 3.5.39 see THORN-1859 -->
+
+    <!-- Global camel version used everywhere -->
+    <camel.version>2.21.0.fuse-720028</camel.version>
+
+    <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
+    <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
+    <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
+
+    <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
+    <basepom.check.skip-pmd>true</basepom.check.skip-pmd>
+    <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
+    <basepom.check.skip-license>true</basepom.check.skip-license>
+    <basepom.test.timeout>600</basepom.test.timeout>
+    <basepom.git-id.skip>true</basepom.git-id.skip>
+    <basepom.test.fork-count>1</basepom.test.fork-count>
+
+    <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
+    <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
+    <basepom.check.skip-dependency-management>true</basepom.check.skip-dependency-management>
+    <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
+    <basepom.it.memory>1024m</basepom.it.memory>
+
+    <javac.werror></javac.werror>
+
+    <rootDir>${project.basedir}</rootDir>
+    <version.h2>1.4.196</version.h2>
+    <version.io.swagger>1.5.22</version.io.swagger>
+    <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
+    <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
+
+    <!-- <spring-cloud.version>Dalston.SR5</spring-cloud.version> -->
+
+    <version.org.teiid>12.3.0</version.org.teiid>
+
+    <!-- Instruct the build to use only UTF-8 encoding for source code -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    <debug.argline />
+
+    <!-- overriding the BOM 1.6 source/target -->
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+
+    <!--Skip long running tests by default -->
+    <skipLongRunningTests>true</skipLongRunningTests>
+
+    <!-- PLUGIN BUG: Test dependencies not correctly checked -->
+    <managed-deps.checkProfiles>false</managed-deps.checkProfiles>
+    <junit.version>4.12</junit.version>
+    <spotbugs.version>3.1.5</spotbugs.version>
+    <!-- The version of jgit -->
+    <version.jgit>4.4.1.201607150455-r</version.jgit>
+
+    <!-- Common dependencies -->
+    <version.springfox>2.9.2</version.springfox>
+    <assertj-core.version>3.11.1</assertj-core.version>
+    <shrinkwrap.version>2.2.6</shrinkwrap.version>
+
+
+    <version.org.mockito>2.21.0</version.org.mockito>
+    <version.com.fasterxml.jackson>2.9.9</version.com.fasterxml.jackson>
+    <version.com.fasterxml.jackson.databind>2.9.9.3</version.com.fasterxml.jackson.databind>
+    <version.io.fabric8.openshift-client>3.0.3</version.io.fabric8.openshift-client>
+    <version.io.fabric8.kubernetes-api>3.0.8</version.io.fabric8.kubernetes-api>
+    <version.org.hamcrest>1.3</version.org.hamcrest> <!-- tesing only -->
+    <arquillian.version>1.4.0.Final</arquillian.version>
+
+    <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE At s2i -->
+    <spring-boot.version>2.1.7.RELEASE</spring-boot.version>
+    <!-- this is simply a version no dependencies involved right now -->
+    <version.springboot.teiid>1.2.0</version.springboot.teiid>
+    <version.mysql>8.0.17</version.mysql>
+    <version.org.mongodb>3.6.3</version.org.mongodb>
+    <version.postgresql>42.1.4</version.postgresql>
+    <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE -->
+  </properties>
+
+  <profiles>
+
+    <!--
+    =========================================================================
+    Profiles (which can and should be combined)
+    =========================================================================
+    -->
+
+    <!-- Profile for building Docker images -->
+    <profile>
+      <id>image</id>
+      <activation>
+        <property>
+          <name>::image</name>
+        </property>
+      </activation>
+      <properties>
+        <fabric8.generator.name>teiid/syndesis-dv:%l</fabric8.generator.name>
+      </properties>
+      <build>
+        <defaultGoal>install</defaultGoal>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>build</id>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+                <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+
+    </profile>
+
+    <!-- Release profile -->
+    <profile>
+      <id>release</id>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.sonatype.plugins</groupId>
+            <artifactId>nexus-staging-maven-plugin</artifactId>
+            <version>1.6.8</version>
+            <executions>
+              <execution>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
+                <goals>
+                  <goal>deploy</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+              <serverId>oss.sonatype.org</serverId>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <configuration>
+              <skip>false</skip>
+            </configuration>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <phase>verify</phase>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <configuration>
+              <skipSource>false</skipSource>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <configuration>
+              <skip>false</skip>
+              <additionalparam>-Xdoclint:none</additionalparam>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-javadocs</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>core-release</id>
+      <build>
+        <plugins>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <configuration>
+              <skip>true</skip>
+            </configuration>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <configuration>
+              <skipSource>false</skipSource>
+            </configuration>
+            <executions>
+              <execution>
+                <id>attach-sources</id>
+                <goals>
+                  <goal>jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+        </plugins>
+      </build>
+    </profile>
+
+  </profiles>
+
+  <build>
+    <!-- Write out the app properties to file -->
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>**/*.*</include>
+        </includes>
+      </resource>
+    </resources>
+
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>com.github.spotbugs</groupId>
+          <artifactId>spotbugs-maven-plugin</artifactId>
+          <version>${spotbugs.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.basepom.maven</groupId>
+          <artifactId>duplicate-finder-maven-plugin</artifactId>
+          <version>1.3.0</version>
+          <configuration>
+            <ignoredResourcePatterns combine.children="append">
+              <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
+              <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>
+              <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
+              <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
+              <ignoredResourcePattern>git.properties</ignoredResourcePattern>
+            </ignoredResourcePatterns>
+            <exceptions>
+              <!-- TODO
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-core</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>org.apache.camel</groupId>
+                    <artifactId>camel-catalog</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.apache.camel.json.simple</package>
+                </packages>
+              </exception>
+              -->
+            </exceptions>
+            <ignoredDependencies>
+              <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
+                   wiremock-standalone, which packages duplicate classes/resources already
+                   present in other dependencies. It's used only in tests so let's ignore it
+                   completely -->
+              <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock-standalone</artifactId>
+              </dependency>
+            </ignoredDependencies>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>io.fabric8</groupId>
+          <artifactId>fabric8-maven-plugin</artifactId>
+          <version>${fabric8.maven.plugin.version}</version>
+          <configuration>
+            <generator>
+                <includes>
+                    <include>spring-boot</include>
+                </includes>
+                <config>
+                    <thorntail-v2>
+                        <from>${java.base.image}</from>
+                    </thorntail-v2>
+                </config>
+            </generator>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <version>2.10.4</version>
+          <executions>
+            <execution>
+              <id>attach-javadocs</id>
+              <goals>
+                <goal>jar</goal>
+              </goals>
+              <configuration>
+                <additionalparam>-Xdoclint:none</additionalparam>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-surefire-plugin</artifactId>
+          <configuration>
+             <!-- Fix "There was a timeout or other error in the fork" errors -->
+            <forkedProcessTimeoutInSeconds>${basepom.test.timeout}</forkedProcessTimeoutInSeconds>
+            <systemProperties combine.children="append">
+              <property>
+                <name>java.io.tmpdir</name>
+                <value>${basedir}/target</value>
+              </property>
+              <property>
+                <name>skipLongRunningTests</name>
+                <value>${skipLongRunningTests}</value>
+              </property>
+            </systemProperties>
+            <includes>
+              <include>**/*TestCase.java</include>
+              <include>**/*Test.java</include>
+              <include>**/Test*.java</include>
+            </includes>
+            <excludes>
+              <exclude>**/Abstract*TestCase.java</exclude>
+              <exclude>**/Abstract*Test.java</exclude>
+              <exclude>**/IT_*.java</exclude>
+              <!-- hack to prevent anonymous inner classes in Tests from being run as tests -->
+              <include>**/Test*$*.java</include>
+            </excludes>
+            <argLine>-Xmx1524M ${debug.argline} -Djava.awt.headless=true</argLine>
+            <useFile>false</useFile>
+            <enableAssertions>true</enableAssertions>
+          </configuration>
+        </plugin>
+
+        <plugin>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-maven-plugin</artifactId>
+          <version>${spring-boot.version}</version>
+        </plugin>
+
+        <plugin>
+          <artifactId>maven-plugin-plugin</artifactId>
+          <version>3.5</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>templating-maven-plugin</artifactId>
+          <version>1.0.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.syndesis.connector</groupId>
+          <artifactId>connector-support-maven-plugin</artifactId>
+          <version>${project.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-connector-maven-plugin</artifactId>
+          <version>${camel.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-package-maven-plugin</artifactId>
+          <version>${camel.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>io.github.swagger2markup</groupId>
+          <artifactId>swagger2markup-maven-plugin</artifactId>
+          <version>1.1.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.kongchen</groupId>
+          <artifactId>swagger-maven-plugin</artifactId>
+          <version>3.1.6</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.asciidoctor</groupId>
+          <artifactId>asciidoctor-maven-plugin</artifactId>
+          <version>1.5.3</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>truezip-maven-plugin</artifactId>
+          <version>1.2</version>
+        </plugin>
+
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>exec-maven-plugin</artifactId>
+          <version>1.5.0</version>
+        </plugin>
+
+        <plugin>
+          <groupId>com.github.eirslett</groupId>
+          <artifactId>frontend-maven-plugin</artifactId>
+          <version>1.6</version>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <configuration>
+          <rules combine.children="append">
+            <evaluateBeanshell>
+              <message>Your JVM has limited cryptography, please upgrade
+                to 1.8.0_162 or newer or install Unlimited Strength
+                Jurisdiction Policy Files to this
+                JVM.</message>
+              <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES")
+                > 128</condition>
+            </evaluateBeanshell>
+          </rules>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <forkCount>1</forkCount>
+          <reuseForks>false</reuseForks>
+          <argLine>-Xmx1024m -XX:MaxPermSize=256m</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <!-- Common dependencies -->
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- BOMs -->
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-spring-boot-dependencies</artifactId>
+        <version>${camel.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>${spring-boot.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+<!--       <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency> -->
+
+      <dependency>
+          <groupId>io.springfox</groupId>
+          <artifactId>springfox-swagger2</artifactId>
+          <version>${version.springfox}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger-ui</artifactId>
+        <version>${version.springfox}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-client-bom-with-deps</artifactId>
+        <version>${kubernetes.client.version}</version>
+        <scope>import</scope>
+        <type>pom</type>
+      </dependency>
+
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-model</artifactId>
+        <version>2.0.10</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.shrinkwrap.resolver</groupId>
+        <artifactId>shrinkwrap-resolver-bom</artifactId>
+        <version>${shrinkwrap.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.jboss.arquillian</groupId>
+        <artifactId>arquillian-bom</artifactId>
+        <version>${arquillian.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hamcrest</groupId>
+        <artifactId>hamcrest-core</artifactId>
+        <scope>test</scope>
+        <version>${version.org.hamcrest}</version>
+      </dependency>
+    <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+      <version>${version.io.opentracing.contrib}</version>
+    </dependency>
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.mockito</groupId>
+        <artifactId>mockito-core</artifactId>
+        <version>${version.org.mockito}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>dv-server</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-common-core</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-api</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-engine</artifactId>
+        <version>${version.org.teiid}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.wololo</groupId>
+            <artifactId>jts2geojson</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-runtime</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-admin</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-client</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid.connectors</groupId>
+        <artifactId>translator-jdbc</artifactId>
+        <version>${version.org.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>openshift-client</artifactId>
+        <version>${version.io.fabric8.openshift-client}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.fabric8</groupId>
+        <artifactId>kubernetes-api</artifactId>
+        <version>${version.io.fabric8.kubernetes-api}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.postgresql</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${version.postgresql}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-annotations</artifactId>
+        <version>${version.io.swagger}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-core</artifactId>
+        <version>${version.io.swagger}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-models</artifactId>
+        <version>${version.io.swagger}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.swagger</groupId>
+        <artifactId>swagger-jaxrs</artifactId>
+        <version>${version.io.swagger}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${version.com.fasterxml.jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${version.com.fasterxml.jackson.databind}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.dataformat</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
+        <version>${version.com.fasterxml.jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-annotations</artifactId>
+        <version>${version.com.fasterxml.jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>mysql</groupId>
+        <artifactId>mysql-connector-java</artifactId>
+        <version>${version.mysql}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.mongodb</groupId>
+        <artifactId>mongo-java-driver</artifactId>
+        <version>${version.org.mongodb}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>spring-data-mongodb</artifactId>
+        <version>${version.springboot.teiid}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>spring-data-salesforce</artifactId>
+        <version>${version.springboot.teiid}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+        <!-- Teiid level dependencies -->
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid-common-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid-engine</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.teiid</groupId>
+        <artifactId>teiid-runtime</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid.connectors</groupId>
+      <artifactId>translator-jdbc</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <!-- Teiid level dependencies -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-web</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-webmvc</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>io.springfox</groupId>
+        <artifactId>springfox-swagger2</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.dataformat</groupId>
+      <artifactId>jackson-dataformat-yaml</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>javax.xml.bind</groupId>
+        <artifactId>jaxb-api</artifactId>
+    </dependency>
+    <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <!-- for commons logging -->
+    <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-jcl</artifactId>
+    </dependency>
+    <!-- for servlet api -->
+    <dependency>
+        <groupId> org.apache.tomcat.embed</groupId>
+        <artifactId>tomcat-embed-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.opentracing.contrib</groupId>
+      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-client</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.dataformat</groupId>
+          <artifactId>jackson-dataformat-yaml</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>kubernetes-api</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.dataformat</groupId>
+          <artifactId>jackson-dataformat-yaml</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>com.fasterxml.jackson.core</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+        <groupId>org.jboss.shrinkwrap</groupId>
+        <artifactId>shrinkwrap-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap</groupId>
+      <artifactId>shrinkwrap-impl-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.zaxxer</groupId>
+      <artifactId>HikariCP</artifactId>
+    </dependency>
+    <!-- data source driver dependencies -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>spring-data-salesforce</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>spring-data-mongodb</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.h2database</groupId>
+      <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Required for unit testing the rest resources rather than integration testing -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.shrinkwrap.resolver</groupId>
+      <artifactId>shrinkwrap-resolver-depchain</artifactId>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+    
+    <!-- to remove when we're aligned with syndesis on spring-boot -->
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-core</artifactId>
+      <version>5.1.6.RELEASE</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <version>5.1.9.RELEASE</version>
+    </dependency>
+    
+  </dependencies>
+
+  <reporting>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>cobertura-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </reporting>
+
+</project>
