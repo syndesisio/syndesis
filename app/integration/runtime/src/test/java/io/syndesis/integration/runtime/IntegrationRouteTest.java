@@ -15,6 +15,12 @@
  */
 package io.syndesis.integration.runtime;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
@@ -23,7 +29,6 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Resources;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
@@ -34,14 +39,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-
-import static java.util.Collections.singleton;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationRouteTest {
     @Test

@@ -15,12 +15,12 @@
  */
 package io.syndesis.integration.project.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
 
 public class ProjectGeneratorHelperTest {
 

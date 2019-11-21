@@ -220,7 +220,8 @@ public class DescriptorTest {
             .addDependencies(
                 mavenDependency("io.syndesis.connector:connector-rest-swagger:" + SYNDESIS_VERSION),
                 mavenDependency("org.apache.camel:camel-rest-swagger:" + CAMEL_VERSION),
-                mavenDependency("org.apache.camel:camel-http4:" + CAMEL_VERSION))
+                //FIXME the 3.0.0 version is not yet published and freely available
+                mavenDependency("org.apache.camel:camel-http:" + CAMEL_VERSION))
             .build();
 
         final Connector defined;

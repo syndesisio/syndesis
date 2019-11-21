@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.customizer;
 
 import io.syndesis.connector.kudu.model.KuduTable;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -22,7 +22,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.kudu.KuduDbOperations;
+import io.syndesis.connector.kudu.common.KuduDbOperations;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.kudu.ColumnSchema;
 import org.apache.kudu.Schema;

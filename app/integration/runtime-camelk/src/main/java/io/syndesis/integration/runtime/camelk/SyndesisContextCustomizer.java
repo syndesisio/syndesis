@@ -18,7 +18,6 @@ package io.syndesis.integration.runtime.camelk;
 import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.CamelContext;
 import org.apache.camel.k.ContextCustomizer;
-import org.apache.camel.k.Runtime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,8 +25,8 @@ public class SyndesisContextCustomizer implements ContextCustomizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(SyndesisContextCustomizer.class);
 
     @Override
-    public void apply(CamelContext context, Runtime.Registry registry) {
-        registry.bind("syndesisHeaderStrategy", new SyndesisHeaderStrategy());
+    public void apply(CamelContext context) {
+        context.getRegistry().bind("syndesisHeaderStrategy", new SyndesisHeaderStrategy());
 
         LOGGER.info("Added SyndesisHeaderStrategy to CamelContext.");
     }

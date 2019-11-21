@@ -15,22 +15,20 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
-import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.WebApplicationException;
 
-import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Test;
+import static java.util.Objects.requireNonNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
+import org.junit.jupiter.api.Test;
 
 public class JaegerActivityTrackingServiceTest {
 

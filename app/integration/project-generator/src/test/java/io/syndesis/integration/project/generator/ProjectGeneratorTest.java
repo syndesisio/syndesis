@@ -15,12 +15,6 @@
  */
 package io.syndesis.integration.project.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -37,24 +31,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.await;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -77,58 +65,64 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EmptySource;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
-@SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
-@RunWith(Parameterized.class)
+@SuppressWarnings( {"PMD.ExcessiveImports", "PMD.ExcessiveMethodLength"})
+
 public class ProjectGeneratorTest {
-    @Rule
-    public TemporaryFolder testFolder = new TemporaryFolder();
-    @Rule
-    public TestName testName = new TestName();
 
-    private final String basePath;
-    private final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
+    private final Map<String, List<ProjectGeneratorConfiguration.Templates.Resource>> parameters =
+        new HashMap<String,
+                       List<ProjectGeneratorConfiguration.Templates.Resource>>();
+    private final List<Throwable> errors = new ArrayList<>();
+    private List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
+    private String basePath;
 
-    private final List<Throwable> errors;
+    public ProjectGeneratorTest() {
+        parameters.put("",
+            Collections.emptyList());
 
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
-            {
-                "",
-                Collections.emptyList()
-            },
-            {
-                "redhat",
-                Arrays.asList(
-                    new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8/deployment.yml"),
-                    new ProjectGeneratorConfiguration.Templates.Resource("settings.xml", "configuration/settings.xml")
-                )
-            }
-        });
-    }
+        parameters.put("redhat",
+            Arrays.asList(
+                new ProjectGeneratorConfiguration.Templates.Resource("deployment.yml", "src/main/fabric8" +
+                                                                                           "/deployment.yml"),
+                new ProjectGeneratorConfiguration.Templates.Resource("settings.xml", "configuration/settings.xml")
+            ));
 
-    public ProjectGeneratorTest(String basePath, List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources) {
-        this.basePath = basePath;
-        this.additionalResources = additionalResources;
-        this.errors = new ArrayList<>();
     }
 
     // ***************************
     // Tests
     // ***************************
 
-    @Test
-    public void testGenerateProject() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateProject(@TempDir Path testFolder, TestInfo testInfo, String basePath) throws Exception {
+        additionalResources = parameters.get(basePath);
+        this.basePath = basePath;
+
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                    .id("timer-connection")
-                    .connector(TestConstants.TIMER_CONNECTOR)
-                    .build())
+                                .id("timer-connection")
+                                .connector(TestConstants.TIMER_CONNECTOR)
+                                .build())
                 .putConfiguredProperty("period", "5000")
                 .action(TestConstants.PERIODIC_TIMER_ACTION)
                 .build(),
@@ -139,65 +133,66 @@ public class ProjectGeneratorTest {
             new Step.Builder()
                 .stepKind(StepKind.ruleFilter)
                 .putConfiguredProperty("predicate", "AND")
-                .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
+                .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\"" +
+                                                    " }]")
                 .build(),
             new Step.Builder()
                 .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
-                    .id("my-extension-1")
-                    .extensionId("my-extension-1")
-                    .addDependency(Dependency.maven("org.slf4j:slf4j-api:1.7.11"))
-                    .addDependency(Dependency.maven("org.slf4j:slf4j-simple:1.7.11"))
-                    .addDependency(Dependency.maven("org.apache.camel:camel-spring-boot-starter:2.10.0"))
-                    .build())
+                               .id("my-extension-1")
+                               .extensionId("my-extension-1")
+                               .addDependency(Dependency.maven("org.slf4j:slf4j-api:1.7.11"))
+                               .addDependency(Dependency.maven("org.slf4j:slf4j-simple:1.7.11"))
+                               .addDependency(Dependency.maven("org.apache.camel:camel-spring-boot-starter:2.10.0"))
+                               .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
                 .action(new StepAction.Builder()
-                    .id("my-extension-1-action-1")
-                    .descriptor(new StepDescriptor.Builder()
-                        .kind(StepAction.Kind.ENDPOINT)
-                        .entrypoint("direct:extension")
-                        .build()
-                    ).build())
+                            .id("my-extension-1-action-1")
+                            .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.ENDPOINT)
+                                            .entrypoint("direct:extension")
+                                            .build()
+                            ).build())
                 .build(),
             new Step.Builder()
                 .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
-                    .id("my-extension-2")
-                    .extensionId("my-extension-2")
-                    .build())
+                               .id("my-extension-2")
+                               .extensionId("my-extension-2")
+                               .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
                 .action(new StepAction.Builder()
-                    .id("my-extension-1-action-1")
-                    .descriptor(new StepDescriptor.Builder()
-                        .kind(StepAction.Kind.BEAN)
-                        .entrypoint("com.example.MyExtension::action")
-                        .build()
-                    ).build())
+                            .id("my-extension-1-action-1")
+                            .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.BEAN)
+                                            .entrypoint("com.example.MyExtension::action")
+                                            .build()
+                            ).build())
                 .build(),
             new Step.Builder()
                 .stepKind(StepKind.extension)
                 .extension(new Extension.Builder()
-                    .id("my-extension-3")
-                    .extensionId("my-extension-3")
-                    .build())
+                               .id("my-extension-3")
+                               .extensionId("my-extension-3")
+                               .build())
                 .putConfiguredProperty("key-1", "val-1")
                 .putConfiguredProperty("key-2", "val-2")
                 .action(new StepAction.Builder()
-                    .id("my-extension-2-action-1")
-                    .descriptor(new StepDescriptor.Builder()
-                        .kind(StepAction.Kind.STEP)
-                        .entrypoint("com.example.MyStep")
-                        .build()
-                    ).build())
+                            .id("my-extension-2-action-1")
+                            .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.STEP)
+                                            .entrypoint("com.example.MyStep")
+                                            .build()
+                            ).build())
                 .build(),
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                    .id("http-connection")
-                    .connector(TestConstants.HTTP_CONNECTOR)
-                    .build())
+                                .id("http-connection")
+                                .connector(TestConstants.HTTP_CONNECTOR)
+                                .build())
                 .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
                 .putConfiguredProperty("username", "admin")
                 .putConfiguredProperty("password", "admin")
@@ -211,14 +206,18 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
-        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
-        assertFileContentsJson(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
-        assertFileContents(configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
-        assertFileContents(configuration, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config.yml");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertFileContentsJson(testInfo, configuration, runtimeDir.resolve("src/main/resources/syndesis/integration" +
+                                                                               "/integration.json"), "integration.json");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/application.properties"),
+            "application.properties");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/loader.properties"),
+            "loader.properties");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("prometheus-config.yml"), "prometheus-config" +
+                                                                                                     ".yml");
 
         assertThat(runtimeDir.resolve("extensions/my-extension-1.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
@@ -226,45 +225,46 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
 
         // lets validate configuration when activity tracing is enabled.
-        try( Stream<Path> stream = Files.walk(testFolder.getRoot().toPath().resolve("integration-project")) ) {
+        try (Stream<Path> stream = Files.walk(testFolder.resolve("integration-project"))) {
             stream.sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
         }
         configuration.setActivityTracing(true);
-        runtimeDir = generate(integration, configuration, resourceManager);
-        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application-tracing.properties");
+        runtimeDir = generate(integration, configuration, resourceManager, testFolder);
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/application.properties"),
+            "application-tracing.properties");
 
         assertThat(errors).isEmpty();
     }
 
     @Test
-    public void testGenerateProjectErrorHandling() throws Exception {
+    public void testGenerateProjectErrorHandling(@TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
-                new Step.Builder()
-                        .stepKind(StepKind.endpoint)
-                        .connection(new Connection.Builder()
+            new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .connection(new Connection.Builder()
                                 .id("timer-connection")
                                 .connector(TestConstants.TIMER_CONNECTOR)
                                 .build())
-                        .putConfiguredProperty("period", "5000")
-                        .action(TestConstants.PERIODIC_TIMER_ACTION)
-                        .build(),
-                new Step.Builder()
-                        .stepKind(StepKind.log)
-                        .build()
+                .putConfiguredProperty("period", "5000")
+                .action(TestConstants.PERIODIC_TIMER_ACTION)
+                .build(),
+            new Step.Builder()
+                .stepKind(StepKind.log)
+                .build()
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         configuration.getTemplates().setOverridePath(this.basePath);
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.getTemplates().getAdditionalResources().add(
-                new ProjectGeneratorConfiguration.Templates.Resource("file-that-does-not-exist.yml", "deployment.yml"));
+            new ProjectGeneratorConfiguration.Templates.Resource("file-that-does-not-exist.yml", "deployment.yml"));
         configuration.setSecretMaskingEnabled(true);
 
-        generate(integration, configuration, resourceManager);
+        generate(integration, configuration, resourceManager, testFolder);
         await().atMost(5000L, TimeUnit.MILLISECONDS).until(() -> !errors.isEmpty());
         assertThat(errors.get(0)).isExactlyInstanceOf(IllegalArgumentException.class);
     }
@@ -277,55 +277,56 @@ public class ProjectGeneratorTest {
         // ******************
 
         final ConnectorAction newAction = new ConnectorAction.Builder()
-            .id(KeyGenerator.createKey())
-            .descriptor(new ConnectorDescriptor.Builder()
-                .connectorId("new")
-                .componentScheme("http4")
-                .build())
-            .build();
+                                              .id(KeyGenerator.createKey())
+                                              .descriptor(new ConnectorDescriptor.Builder()
+                                                              .connectorId("new")
+                                                              .componentScheme("http4")
+                                                              .build())
+                                              .build();
         final Connector newConnector = new Connector.Builder()
-            .id("new")
-            .addAction(newAction)
-            .putProperty("username",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("password",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("token",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(true)
-                    .secret(true)
-                    .build())
-            .build();
+                                           .id("new")
+                                           .addAction(newAction)
+                                           .putProperty("username",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(false)
+                                                   .secret(true)
+                                                   .build())
+                                           .putProperty("password",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(false)
+                                                   .secret(true)
+                                                   .build())
+                                           .putProperty("token",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(true)
+                                                   .secret(true)
+                                                   .build())
+                                           .build();
 
         // ******************
         // Integration
         // ******************
 
         Step s1 = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .connection(new Connection.Builder()
-                .id(KeyGenerator.createKey())
-                .connector(newConnector)
-                .build())
-            .putConfiguredProperty("username", "my-username-2")
-            .putConfiguredProperty("password", "my-password-2")
-            .putConfiguredProperty("token", "my-token-2")
-            .action(newAction)
-            .build();
+                      .stepKind(StepKind.endpoint)
+                      .connection(new Connection.Builder()
+                                      .id(KeyGenerator.createKey())
+                                      .connector(newConnector)
+                                      .build())
+                      .putConfiguredProperty("username", "my-username-2")
+                      .putConfiguredProperty("password", "my-password-2")
+                      .putConfiguredProperty("token", "my-token-2")
+                      .action(newAction)
+                      .build();
 
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager,
+            TestConstants.MAVEN_PROPERTIES);
         Integration integration = new Integration.Builder()
-            .createFrom(resourceManager.newIntegration(s1))
-            .putConfiguredProperty("integration", "property")
-            .build();
+                                      .createFrom(resourceManager.newIntegration(s1))
+                                      .putConfiguredProperty("integration", "property")
+                                      .build();
         Properties properties = generator.generateApplicationProperties(integration);
 
         assertThat(properties).containsOnly(
@@ -344,62 +345,65 @@ public class ProjectGeneratorTest {
         // ******************
 
         final ConnectorAction oldAction = new ConnectorAction.Builder()
-            .id(KeyGenerator.createKey())
-            .descriptor(new ConnectorDescriptor.Builder()
-                .connectorId("old")
-                .build())
-            .build();
+                                              .id(KeyGenerator.createKey())
+                                              .descriptor(new ConnectorDescriptor.Builder()
+                                                              .connectorId("old")
+                                                              .build())
+                                              .build();
         final Connector oldConnector = new Connector.Builder()
-            .id("old")
-            .addAction(oldAction)
-            .putProperty("username",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("password",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("token",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(true)
-                    .secret(true)
-                    .build())
-            .build();
+                                           .id("old")
+                                           .addAction(oldAction)
+                                           .putProperty("username",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(false)
+                                                   .secret(true)
+                                                   .build())
+                                           .putProperty("password",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(false)
+                                                   .secret(true)
+                                                   .build())
+                                           .putProperty("token",
+                                               new ConfigurationProperty.Builder()
+                                                   .componentProperty(true)
+                                                   .secret(true)
+                                                   .build())
+                                           .build();
 
         // ******************
         // Integration
         // ******************
 
         Step s1 = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .connection(new Connection.Builder()
-                .id(KeyGenerator.createKey())
-                .connector(oldConnector)
-                .build())
-            .putConfiguredProperty("username", "my-username-1")
-            .putConfiguredProperty("password", "my-password-1")
-            .putConfiguredProperty("token", "my-token-1")
-            .action(oldAction)
-            .build();
+                      .stepKind(StepKind.endpoint)
+                      .connection(new Connection.Builder()
+                                      .id(KeyGenerator.createKey())
+                                      .connector(oldConnector)
+                                      .build())
+                      .putConfiguredProperty("username", "my-username-1")
+                      .putConfiguredProperty("password", "my-password-1")
+                      .putConfiguredProperty("token", "my-token-1")
+                      .action(oldAction)
+                      .build();
 
         TestResourceManager resourceManager = new TestResourceManager();
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager,
+            TestConstants.MAVEN_PROPERTIES);
         Integration integration = new Integration.Builder()
-            .createFrom(resourceManager.newIntegration(s1))
-            .putConfiguredProperty("integration", "property")
-            .build();
+                                      .createFrom(resourceManager.newIntegration(s1))
+                                      .putConfiguredProperty("integration", "property")
+                                      .build();
 
-        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() ->  generator.generateApplicationProperties(integration))
-            .withMessage("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
+        assertThatExceptionOfType(UnsupportedOperationException.class).isThrownBy(() -> generator.generateApplicationProperties(integration))
+            .withMessage("Old style of connectors from camel-connector are not supported anymore, please be sure that" +
+                             " integration json satisfy connector.getComponentScheme().isPresent() || descriptor" +
+                             ".getComponentScheme().isPresent()");
     }
 
 
     @Test
-    public void testGenerateApplicationWithRestDSL() throws Exception {
+    public void testGenerateApplicationWithRestDSL(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         // ******************
@@ -417,64 +421,68 @@ public class ProjectGeneratorTest {
         // ******************
 
         Step s1 = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(new ConnectorAction.Builder()
-                .id(KeyGenerator.createKey())
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("new")
-                    .componentScheme("direct")
-                    .putConfiguredProperty("name", "start")
-                    .build())
-                .build())
-            .connection(new Connection.Builder()
-                .connector(
-                    new Connector.Builder()
-                        .id("api-provider")
-                        .addDependency(new Dependency.Builder()
-                            .type(Dependency.Type.MAVEN)
-                            .id("io.syndesis.connector:connector-api-provider:1.x.x")
-                            .build())
-                        .build())
-                .build())
-            .build();
+                      .stepKind(StepKind.endpoint)
+                      .action(new ConnectorAction.Builder()
+                                  .id(KeyGenerator.createKey())
+                                  .descriptor(new ConnectorDescriptor.Builder()
+                                                  .connectorId("new")
+                                                  .componentScheme("direct")
+                                                  .putConfiguredProperty("name", "start")
+                                                  .build())
+                                  .build())
+                      .connection(new Connection.Builder()
+                                      .connector(
+                                          new Connector.Builder()
+                                              .id("api-provider")
+                                              .addDependency(new Dependency.Builder()
+                                                                 .type(Dependency.Type.MAVEN)
+                                                                 .id("io.syndesis.connector:connector-api-provider:1" +
+                                                                         ".x.x")
+                                                                 .build())
+                                              .build())
+                                      .build())
+                      .build();
         Step s2 = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .action(new ConnectorAction.Builder()
-                .id(KeyGenerator.createKey())
-                .descriptor(new ConnectorDescriptor.Builder()
-                    .connectorId("new")
-                    .componentScheme("log")
-                    .putConfiguredProperty("loggerName", "end")
-                    .build())
-                .build())
-            .build();
+                      .stepKind(StepKind.endpoint)
+                      .action(new ConnectorAction.Builder()
+                                  .id(KeyGenerator.createKey())
+                                  .descriptor(new ConnectorDescriptor.Builder()
+                                                  .connectorId("new")
+                                                  .componentScheme("log")
+                                                  .putConfiguredProperty("loggerName", "end")
+                                                  .build())
+                                  .build())
+                      .build();
 
         Integration integration = new Integration.Builder()
-            .id("test-integration")
-            .name("Test Integration")
-            .description("This is a test integration!")
-            .addResource(new ResourceIdentifier.Builder()
-                .kind(Kind.OpenApi)
-                .id("petstore")
-                .build())
-            .addFlow(new Flow.Builder()
-                .steps(Arrays.asList(s1, s2))
-                .build())
-            .build();
+                                      .id("test-integration")
+                                      .name("Test Integration")
+                                      .description("This is a test integration!")
+                                      .addResource(new ResourceIdentifier.Builder()
+                                                       .kind(Kind.OpenApi)
+                                                       .id("petstore")
+                                                       .build())
+                                      .addFlow(new Flow.Builder()
+                                                   .steps(Arrays.asList(s1, s2))
+                                                   .build())
+                                      .build();
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         configuration.getTemplates().setOverridePath(this.basePath);
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
         assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
 
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
-        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute" +
+                                                                           ".java"), "RestRoute.java");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/java/io/syndesis/example" +
+                                                                           "/RestRouteConfiguration.java"),
+            "RestRouteConfiguration.java");
         assertThat(errors).isEmpty();
     }
 
@@ -494,9 +502,9 @@ public class ProjectGeneratorTest {
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                    .id("timer-connection")
-                    .connector(TestConstants.TIMER_CONNECTOR)
-                    .build())
+                                .id("timer-connection")
+                                .connector(TestConstants.TIMER_CONNECTOR)
+                                .build())
                 .putConfiguredProperty("period", "5000")
                 .action(TestConstants.PERIODIC_TIMER_ACTION)
                 .build(),
@@ -507,7 +515,8 @@ public class ProjectGeneratorTest {
             new Step.Builder()
                 .stepKind(StepKind.ruleFilter)
                 .putConfiguredProperty("predicate", "AND")
-                .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\" }]")
+                .putConfiguredProperty("rules", "[{ \"path\": \"in.header.counter\", \"op\": \">\", \"value\": \"10\"" +
+                                                    " }]")
                 .addDependency(Dependency.maven("org.myStep:someLib1:1.0"))
                 .addDependency(Dependency.maven("org.myStep:someLib2:1.0"))
                 .addDependency(Dependency.maven("org.myStep:someLib3:1.0"))
@@ -515,9 +524,9 @@ public class ProjectGeneratorTest {
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .connection(new Connection.Builder()
-                    .id("http-connection")
-                    .connector(TestConstants.HTTP_CONNECTOR)
-                    .build())
+                                .id("http-connection")
+                                .connector(TestConstants.HTTP_CONNECTOR)
+                                .build())
                 .putConfiguredProperty("httpUri", "http://localhost:8080/hello")
                 .putConfiguredProperty("username", "admin")
                 .putConfiguredProperty("password", "admin")
@@ -535,42 +544,42 @@ public class ProjectGeneratorTest {
     }
 
     @Test
-    public void testGenerateTemplateStepProjectDependencies() throws Exception {
+    public void testGenerateTemplateStepProjectDependencies(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                                    .putConfiguredProperty("name", "Test-Connector")
-                                    .build())
-                        .build())
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                            .putConfiguredProperty("name", "Test-Connector")
+                                            .build())
+                            .build())
                 .build(),
             new Step.Builder()
                 .id("templating")
                 .stepKind(StepKind.template)
                 .action(new StepAction.Builder()
-                        .descriptor(new StepDescriptor.Builder()
-                                    .kind(StepAction.Kind.STEP)
-                                    .inputDataShape(new DataShape.Builder()
-                                                    .kind(DataShapeKinds.JSON_SCHEMA)
-                                                    .build())
-                                    .outputDataShape(new DataShape.Builder()
-                                                     .kind(DataShapeKinds.JSON_SCHEMA)
-                                                     .build())
-                                    .build())
-                        .build())
+                            .descriptor(new StepDescriptor.Builder()
+                                            .kind(StepAction.Kind.STEP)
+                                            .inputDataShape(new DataShape.Builder()
+                                                                .kind(DataShapeKinds.JSON_SCHEMA)
+                                                                .build())
+                                            .outputDataShape(new DataShape.Builder()
+                                                                 .kind(DataShapeKinds.JSON_SCHEMA)
+                                                                 .build())
+                                            .build())
+                            .build())
                 .putConfiguredProperty("template", "{{text}}")
                 .putConfiguredProperty("language", TemplateStepLanguage.MUSTACHE.toString())
                 .build(),
             new Step.Builder()
                 .stepKind(StepKind.endpoint)
                 .action(new ConnectorAction.Builder()
-                        .descriptor(new ConnectorDescriptor.Builder()
-                                    .putConfiguredProperty("name", "result")
-                                    .build())
-                        .build())
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                            .putConfiguredProperty("name", "result")
+                                            .build())
+                            .build())
                 .build()
         );
 
@@ -579,16 +588,17 @@ public class ProjectGeneratorTest {
         configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
-        Path runtimeDir = generate(integration, configuration, resourceManager);
+        Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
-        assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertFileContents(testInfo, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
         assertThat(errors).isEmpty();
     }
 
-    private void assertFileContents(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
+    private static void assertFileContents(TestInfo testName, ProjectGeneratorConfiguration generatorConfiguration,
+                                    Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
-        String methodName = testName.getMethodName();
+        String methodName = testName.getTestMethod().get().getName();
 
         int index = methodName.indexOf('[');
         if (index != -1) {
@@ -606,15 +616,17 @@ public class ProjectGeneratorTest {
         }
 
         final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
-        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
+        final String expected =
+            new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
 
         assertThat(actual).isEqualTo(expected);
     }
 
-    private void assertFileContentsJson(ProjectGeneratorConfiguration generatorConfiguration, Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
+    private static void assertFileContentsJson(TestInfo testName, ProjectGeneratorConfiguration generatorConfiguration,
+                                        Path actualFilePath, String expectedFileName) throws URISyntaxException, IOException, JSONException {
         URL resource = null;
         String overridePath = generatorConfiguration.getTemplates().getOverridePath();
-        String methodName = testName.getMethodName();
+        String methodName = testName.getTestMethod().get().getName();
 
         int index = methodName.indexOf('[');
         if (index != -1) {
@@ -632,21 +644,27 @@ public class ProjectGeneratorTest {
         }
 
         final String actual = new String(Files.readAllBytes(actualFilePath), StandardCharsets.UTF_8).trim();
-        final String expected = new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
+        final String expected =
+            new String(Files.readAllBytes(Paths.get(resource.toURI())), StandardCharsets.UTF_8).trim();
 
         JSONAssert.assertEquals(expected, actual, JSONCompareMode.STRICT);
     }
 
-    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        Path destination = testFolder.newFolder("integration-project").toPath();
+    private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration,
+                          TestResourceManager resourceManager, Path testFolder) throws IOException {
+        Path destination =
+            Files.createDirectory(testFolder.resolve("integration-project"));
 
         generate(destination, integration, generatorConfiguration, resourceManager);
 
         return destination;
     }
 
-    private void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
-        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,TestConstants.MAVEN_PROPERTIES);
+    private void generate(Path destination, Integration integration,
+                          ProjectGeneratorConfiguration generatorConfiguration,
+                          TestResourceManager resourceManager) throws IOException {
+        final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,
+            TestConstants.MAVEN_PROPERTIES);
 
         try (InputStream is = generator.generate(integration, errors::add)) {
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
@@ -662,7 +680,7 @@ public class ProjectGeneratorTest {
                         destPath.getParentFile().mkdirs();
                         destPath.createNewFile();
 
-                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                        try (BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
                             IOUtils.copy(tis, bout);
                         }
                     }

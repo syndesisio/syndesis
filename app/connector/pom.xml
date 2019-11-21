@@ -59,7 +59,8 @@
     <module>kafka</module>
     <module>log</module>
     <module>mqtt</module>
-    <module>rest-swagger</module>
+    <!-- TODO: Camel 3 Enable once camel-connector dependency is removed -->
+    <!-- <module>rest-swagger</module> -->
     <module>salesforce</module>
     <module>sftp</module>
     <module>slack</module>

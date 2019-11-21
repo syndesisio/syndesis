@@ -15,22 +15,21 @@
  */
 package io.syndesis.integration.runtime.tracing;
 
-import org.apache.camel.AsyncCallback;
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.Message;
-import org.apache.camel.Processor;
-import org.apache.camel.model.PipelineDefinition;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.support.processor.DelegateAsyncProcessor;
-import org.apache.camel.spi.InterceptStrategy;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.StringHelper;
-
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
+import org.apache.camel.AsyncCallback;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.NamedNode;
+import org.apache.camel.Processor;
+import org.apache.camel.model.PipelineDefinition;
+import org.apache.camel.spi.InterceptStrategy;
+import org.apache.camel.support.processor.DelegateAsyncProcessor;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.StringHelper;
 
 public class TracingInterceptStrategy implements InterceptStrategy {
     private final Tracer tracer;
@@ -40,7 +39,7 @@ public class TracingInterceptStrategy implements InterceptStrategy {
     }
 
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) throws Exception {
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
         if (definition instanceof PipelineDefinition) {
             final String id = definition.getId();
             if (ObjectHelper.isEmpty(id)) {

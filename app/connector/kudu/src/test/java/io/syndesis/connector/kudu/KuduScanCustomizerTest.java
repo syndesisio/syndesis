@@ -24,6 +24,7 @@ import java.util.Map;
 
 import io.syndesis.connector.kudu.common.KuduSupport;
 
+import io.syndesis.connector.kudu.customizer.KuduScanCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.kudu.ColumnSchema;

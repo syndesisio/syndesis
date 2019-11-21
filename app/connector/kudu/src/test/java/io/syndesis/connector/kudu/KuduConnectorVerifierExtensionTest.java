@@ -16,6 +16,7 @@
 
 package io.syndesis.connector.kudu;
 
+import io.syndesis.connector.kudu.verifier.KuduConnectorVerifierExtension;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.DefaultResultVerificationError;
 import org.junit.Assert;

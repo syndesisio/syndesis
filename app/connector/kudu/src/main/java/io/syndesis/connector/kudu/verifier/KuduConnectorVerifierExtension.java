@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.verifier;
 
 import io.syndesis.connector.kudu.common.KuduSupport;
 import org.apache.camel.CamelContext;

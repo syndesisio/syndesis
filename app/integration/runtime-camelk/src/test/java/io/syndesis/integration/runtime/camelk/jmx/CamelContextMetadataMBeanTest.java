@@ -15,23 +15,22 @@
  */
 package io.syndesis.integration.runtime.camelk.jmx;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.k.Constants;
-import org.apache.camel.k.InMemoryRegistry;
-import org.apache.camel.k.support.RuntimeSupport;
-import org.junit.Test;
-
+import java.lang.management.ManagementFactory;
+import java.util.Properties;
+import java.util.Set;
 import javax.management.AttributeList;
 import javax.management.MBeanServer;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
-import java.lang.management.ManagementFactory;
-import java.util.Properties;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.k.Constants;
+import org.apache.camel.k.support.RuntimeSupport;
+import org.junit.Test;
 
 public class CamelContextMetadataMBeanTest {
 
@@ -51,7 +50,7 @@ public class CamelContextMetadataMBeanTest {
         pc.setInitialProperties(properties);
         context.setPropertiesComponent(pc);
 
-        RuntimeSupport.configureContext(context, new InMemoryRegistry());
+        RuntimeSupport.configureContextCustomizers(context);
 
         context.start();
 

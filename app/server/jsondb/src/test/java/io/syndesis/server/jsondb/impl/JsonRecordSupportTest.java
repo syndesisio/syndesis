@@ -15,12 +15,13 @@
  */
 package io.syndesis.server.jsondb.impl;
 
+import java.util.regex.Pattern;
+
 import static io.syndesis.server.jsondb.impl.JsonRecordSupport.toLexSortableString;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.util.regex.Pattern;
+import org.junit.jupiter.api.Test;
 
-import org.junit.Test;
 
 
 /**

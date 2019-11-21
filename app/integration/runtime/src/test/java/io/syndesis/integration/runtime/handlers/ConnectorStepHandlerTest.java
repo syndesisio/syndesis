@@ -17,6 +17,10 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.util.Properties;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -26,19 +30,12 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.component.twitter.timeline.TwitterTimelineEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorStepHandlerTest {
     private static final ConnectorAction TWITTER_MENTION_ACTION = new ConnectorAction.Builder()

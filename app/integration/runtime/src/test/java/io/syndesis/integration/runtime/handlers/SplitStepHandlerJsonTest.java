@@ -19,12 +19,13 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.BodyLogger;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -32,10 +33,6 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.support.SimpleRegistry;
 import org.junit.Test;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class SplitStepHandlerJsonTest {
 

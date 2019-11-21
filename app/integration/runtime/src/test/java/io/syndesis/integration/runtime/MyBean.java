@@ -16,7 +16,6 @@
 package io.syndesis.integration.runtime;
 
 import java.util.Locale;
-
 import org.apache.camel.Body;
 
 public final class MyBean {

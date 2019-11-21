@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.customizer;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.syndesis.common.util.SyndesisServerException;
@@ -23,7 +23,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.kudu.KuduDbOperations;
+import io.syndesis.connector.kudu.common.KuduDbOperations;
 import org.apache.kudu.Type;
 import org.apache.kudu.client.KuduException;
 import org.apache.kudu.client.KuduScanner;

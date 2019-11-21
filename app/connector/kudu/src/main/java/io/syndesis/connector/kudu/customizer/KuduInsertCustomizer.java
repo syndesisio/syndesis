@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.customizer;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.kudu.common.KuduDbOperations;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.kudu.KuduDbOperations;
 import org.apache.camel.util.ObjectHelper;
 
 public class KuduInsertCustomizer implements ComponentProxyCustomizer {

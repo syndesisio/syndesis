@@ -30,10 +30,24 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Flow.FlowType;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.Properties;
+import io.syndesis.common.util.Resources;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.builder.DefaultErrorHandlerBuilder;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.LogDefinition;
 import org.apache.camel.model.ModelCamelContext;
@@ -49,19 +63,6 @@ import org.apache.camel.support.ResourceHelper;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Flow.FlowType;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.Properties;
-import io.syndesis.common.util.Resources;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
@@ -133,12 +134,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
     }
 
-    public ModelCamelContext getModelContext() {
-        if (getContext() instanceof ModelCamelContext) {
-            return (ModelCamelContext) getContext();
+    @Override
+    public ModelCamelContext getContext() {
+        CamelContext ctx = super.getContext();
+        ModelCamelContext context;
+        if(ctx instanceof ModelCamelContext) {
+            context = (ModelCamelContext) ctx;
+        } else {
+            context = new DefaultCamelContext();
+            this.setContext(context);
         }
 
-        throw new UnsupportedOperationException("Camel context does not support modelling functionality");
+        return context;
     }
 
     @Override
@@ -398,7 +405,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                                               String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
-            final ModelCamelContext context = getModelContext();
+            final ModelCamelContext context = getContext();
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
