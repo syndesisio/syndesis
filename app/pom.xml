@@ -688,6 +688,7 @@
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
               <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
               <exclude>integration/runtime-camelk/src/main/resources/META-INF/catalog/**</exclude>
+              <exclude>dv/src/main/resources/static/**</exclude>
             </excludes>
           </configuration>
           <dependencies>
