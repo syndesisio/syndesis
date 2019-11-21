@@ -233,7 +233,6 @@ update_pom_versions() {
 update_image_versions() {
     local topdir="$1"
     local version="$2"
-    local moving_tag="$3"
 
     echo "==== Updating image versions to $version"
     for image in syndesis-dv syndesis-ui syndesis-s2i syndesis-upgrade syndesis-meta syndesis-server; do
