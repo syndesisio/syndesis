@@ -20,7 +20,8 @@ stories
     <OpenApiSelectMethod
       i18nBtnNext={'Next'}
       i18nMethodFromFile={'Upload an OpenAPI file'}
-      i18nMethodFromScratch={'Create from scratch'}
+      i18nMethodFromScratch2x={'Create a new OpenAPI 2.x document'}
+      i18nMethodFromScratch3x={'Create a new OpenAPI 3.x document'}
       i18nMethodFromUrl={'Use a URL'}
       i18nUrlNote={
         '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'

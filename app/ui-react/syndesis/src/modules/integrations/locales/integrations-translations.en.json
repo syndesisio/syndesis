@@ -137,7 +137,7 @@
   "apiProvider": {
     "editSpecification": {
       "title": "Provide API Definition",
-      "description": "An OpenAPI 2.0 document that defines the REST API operations is required."
+      "description": "An OpenAPI document that defines the REST API operations is required."
     },
     "reviewActions": {
       "btnReviewEdit": "Review/Edit",
@@ -165,7 +165,8 @@
       "dndNoFileSelectedLabel": "No file selected",
       "dndSelectedFileLabel": "Selected file:",
       "methodFromFile": "Upload an OpenAPI file",
-      "methodFromScratch": "Create",
+      "methodFromScratch2x": "Create a new OpenAPI 2.x document",
+      "methodFromScratch3x": "Create a new OpenAPI 3.x document",
       "methodFromUrl": "Use a URL",
       "title": "Start integration with an API call",
       "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."
@@ -202,7 +203,7 @@
     "template-upload-helper-text-size-type": "Max: 1 file (up to 1MB)",
     "template-editor-placeholder": "Drop a file, paste text, or start typing.",
     "template-editor-drag-enter": "Drop file here to upload.",
-    "template-validation-errors": "Vaidation errors",
+    "template-validation-errors": "Validation errors",
     "template-file-upload-dnd": "Drag and drop your template file here.",
     "template-upload-invalid-file": "'{{0}}' is not a valid file. Only text files can be uploaded.",
     "template-url-upload": "Use a URL",

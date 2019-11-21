@@ -16,15 +16,32 @@ import {
   IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export const EMPTY_SPEC = `{
+export const EMPTY_API_20: string = `
+{
   "swagger": "2.0",
   "info": {
     "title": "Untitled API",
     "description": "",
     "version": "0.0.0"
   },
-  "paths": {}
+  "paths": {
+  },
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ]
 }`;
+
+export const EMPTY_API_30: string = `
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Untitled API",
+    "description": "",
+    "version": "0.0.0"
+  },
+  "paths": {
+  }
+}
+`;
 
 export interface ISelectMethodPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
@@ -66,9 +83,14 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                       this.props.getReviewHref(specification, params, state)
                     );
                     break;
-                  case 'scratch':
+                  case 'scratch3x':
                     history.push(
-                      this.props.getEditorHref(EMPTY_SPEC, params, state)
+                      this.props.getEditorHref(EMPTY_API_30, params, state)
+                    );
+                    break;
+                  case 'scratch2x':
+                    history.push(
+                      this.props.getEditorHref(EMPTY_API_20, params, state)
                     );
                     break;
                   default:
@@ -120,8 +142,11 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nMethodFromFile={t(
                             'integrations:apiProvider:selectMethod:methodFromFile'
                           )}
-                          i18nMethodFromScratch={t(
-                            'integrations:apiProvider:selectMethod:methodFromScratch'
+                          i18nMethodFromScratch2x={t(
+                            'integrations:apiProvider:selectMethod:methodFromScratch2x'
+                          )}
+                          i18nMethodFromScratch3x={t(
+                            'integrations:apiProvider:selectMethod:methodFromScratch3x'
                           )}
                           i18nMethodFromUrl={t(
                             'integrations:apiProvider:selectMethod:methodFromUrl'
