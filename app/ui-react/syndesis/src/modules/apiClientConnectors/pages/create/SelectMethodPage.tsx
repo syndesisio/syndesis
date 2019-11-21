@@ -58,9 +58,6 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                   i18nMethodFromFile={t(
                     'apiClientConnectors:create:selectMethod:methodFromFile'
                   )}
-                  i18nMethodFromScratch={t(
-                    'apiClientConnectors:create:selectMethod:methodFromScratch'
-                  )}
                   i18nMethodFromUrl={t(
                     'apiClientConnectors:create:selectMethod:methodFromUrl'
                   )}

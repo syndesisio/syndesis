@@ -13,7 +13,7 @@ import { ButtonLink } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
-export type Method = 'file' | 'url' | 'scratch';
+export type Method = 'file' | 'url' | 'scratch2x' | 'scratch3x';
 
 export interface IOpenApiSelectMethodProps {
   allowFromScratch?: boolean;
@@ -27,7 +27,9 @@ export interface IOpenApiSelectMethodProps {
   i18nInstructions: string;
   i18nMethodFromFile: string;
   i18nMethodFromUrl: string;
-  i18nMethodFromScratch: string;
+  // These aren't needed if allowFromScratch is false
+  i18nMethodFromScratch2x?: string;
+  i18nMethodFromScratch3x?: string;
   i18nNoFileSelectedMessage: string;
   i18nSelectedFileLabel: string;
   i18nUploadFailedMessage?: string;
@@ -48,6 +50,7 @@ export interface IOpenApiSelectMethodState {
    */
   method?: Method;
   specification?: string;
+  url?: string;
   /**
    * Used to handle D&D upload success/fail messages
    */
@@ -74,6 +77,7 @@ export class OpenApiSelectMethod extends React.Component<
       disableDropzone: false,
       method: 'file',
       specification: '',
+      url: '',
       valid: false,
     };
 
@@ -82,6 +86,7 @@ export class OpenApiSelectMethod extends React.Component<
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
     this.onUploadRejected = this.onUploadRejected.bind(this);
+    this.handleClickNext = this.handleClickNext.bind(this);
   }
 
   /**
@@ -116,7 +121,7 @@ export class OpenApiSelectMethod extends React.Component<
    * @param e
    */
   public onAddUrlSpecification(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ specification: e.currentTarget.value });
+    this.setState({ url: e.currentTarget.value });
 
     if (
       this.state.method === 'url' &&
@@ -139,7 +144,7 @@ export class OpenApiSelectMethod extends React.Component<
       specification: '',
       uploadFailedMessage: '',
       uploadSuccessMessage: '',
-      valid: newMethod === 'scratch',
+      valid: newMethod === 'scratch2x' || newMethod === 'scratch3x',
     });
   }
 
@@ -181,6 +186,14 @@ export class OpenApiSelectMethod extends React.Component<
     );
   }
 
+  public handleClickNext() {
+    if (this.state.method === 'url') {
+      this.props.onNext(this.state.method, this.state.url);
+    } else {
+      this.props.onNext(this.state.method, this.state.specification);
+    }
+  }
+
   public render() {
     return (
       <Card className={'open-api-review-actions'}>
@@ -198,32 +211,34 @@ export class OpenApiSelectMethod extends React.Component<
                       readOnly={true}
                     >
                       <div>{this.props.i18nMethodFromFile}</div>
-                      {this.state.method === 'file' && (
-                        <div className="open-api-select-method__dnd-container">
-                          <DndFileChooser
-                            allowMultiple={false}
-                            disableDropzone={this.props.disableDropzone}
-                            fileExtensions={this.props.fileExtensions}
-                            i18nHelpMessage={this.props.i18nHelpMessage}
-                            i18nInstructions={this.props.i18nInstructions}
-                            i18nNoFileSelectedMessage={
-                              this.props.i18nNoFileSelectedMessage
-                            }
-                            i18nSelectedFileLabel={
-                              this.props.i18nSelectedFileLabel
-                            }
-                            i18nUploadFailedMessage={
-                              this.state.uploadFailedMessage
-                            }
-                            i18nUploadSuccessMessage={
-                              this.state.uploadSuccessMessage
-                            }
-                            onUploadAccepted={this.onUploadAccepted}
-                            onUploadRejected={this.onUploadRejected}
-                          />
-                        </div>
-                      )}
+                      <div className="open-api-select-method__dnd-container">
+                        <DndFileChooser
+                          allowMultiple={false}
+                          disableDropzone={
+                            this.props.disableDropzone ||
+                            this.state.method !== 'file'
+                          }
+                          fileExtensions={this.props.fileExtensions}
+                          i18nHelpMessage={this.props.i18nHelpMessage}
+                          i18nInstructions={this.props.i18nInstructions}
+                          i18nNoFileSelectedMessage={
+                            this.props.i18nNoFileSelectedMessage
+                          }
+                          i18nSelectedFileLabel={
+                            this.props.i18nSelectedFileLabel
+                          }
+                          i18nUploadFailedMessage={
+                            this.state.uploadFailedMessage
+                          }
+                          i18nUploadSuccessMessage={
+                            this.state.uploadSuccessMessage
+                          }
+                          onUploadAccepted={this.onUploadAccepted}
+                          onUploadRejected={this.onUploadRejected}
+                        />
+                      </div>
                     </Radio>
+
                     <Radio
                       id={'method-url'}
                       name={'method'}
@@ -231,30 +246,41 @@ export class OpenApiSelectMethod extends React.Component<
                       readOnly={true}
                     >
                       <div>{this.props.i18nMethodFromUrl}</div>
-                      {this.state.method === 'url' && (
-                        <div>
-                          <FormControl
-                            type={'text'}
-                            disabled={false}
-                            value={this.state.specification}
-                            onChange={this.onAddUrlSpecification}
-                          />
-                          <br />
-                          <span className={'url-note'}>
-                            {this.props.i18nUrlNote}
-                          </span>
-                        </div>
-                      )}
+                      <div className={'open-api-select-method__url-container'}>
+                        <FormControl
+                          type={'text'}
+                          disabled={this.state.method !== 'url'}
+                          value={this.state.url}
+
+                          onChange={this.onAddUrlSpecification}
+                        />
+                        <br />
+                        <span className={'url-note'}>
+                          {this.props.i18nUrlNote}
+                        </span>
+                      </div>
                     </Radio>
+
                     {this.props.allowFromScratch && (
-                      <Radio
-                        id={'method-scratch'}
-                        name={'method'}
-                        onClick={() => this.onSelectMethod('scratch')}
-                        readOnly={true}
-                      >
-                        <div>{this.props.i18nMethodFromScratch}</div>
-                      </Radio>
+                      <>
+                        <Radio
+                          id={'method-scratch-3x'}
+                          name={'method'}
+                          onClick={() => this.onSelectMethod('scratch3x')}
+                          readOnly={true}
+                        >
+                          <div>{this.props.i18nMethodFromScratch3x}</div>
+                        </Radio>
+
+                        <Radio
+                          id={'method-scratch-2x'}
+                          name={'method'}
+                          onClick={() => this.onSelectMethod('scratch2x')}
+                          readOnly={true}
+                        >
+                          <div>{this.props.i18nMethodFromScratch2x}</div>
+                        </Radio>
+                      </>
                     )}
                   </div>
                 </FormGroup>
@@ -263,9 +289,7 @@ export class OpenApiSelectMethod extends React.Component<
               <ButtonLink
                 disabled={!this.state.valid}
                 as={'primary'}
-                onClick={() =>
-                  this.props.onNext(this.state.method, this.state.specification)
-                }
+                onClick={this.handleClickNext}
               >
                 {this.props.i18nBtnNext}
               </ButtonLink>
