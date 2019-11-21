@@ -99,16 +99,16 @@ type S2IConfiguration struct {
 }
 
 type DatabaseConfiguration struct {
-	User                 string                // Username for PostgreSQL user that will be used for accessing the database
-	Name                 string                // Name of the PostgreSQL database accessed
-	URL                  string                // Host and port of the PostgreSQL database to access
-	ExternalDbURL        string                // If specified, use an external database instead of the installed by syndesis
-	Resources            ResourcesWithVolume   // Resources, memory and database volume size
-	Exporter             ExporterConfiguration // The exporter exports metrics in prometheus format
-	Image                string                // Docker image for database
-	ImageStreamNamespace string                // Namespace where the database image is located
-	Password             string                // Password for the PostgreSQL connection user
-	SampledbPassword     string                // Password for the PostgreSQL sampledb user
+	User                 string                        // Username for PostgreSQL user that will be used for accessing the database
+	Name                 string                        // Name of the PostgreSQL database accessed
+	URL                  string                        // Host and port of the PostgreSQL database to access
+	ExternalDbURL        string                        // If specified, use an external database instead of the installed by syndesis
+	Resources            ResourcesWithPersistentVolume // Resources, memory and database volume size
+	Exporter             ExporterConfiguration         // The exporter exports metrics in prometheus format
+	Image                string                        // Docker image for database
+	ImageStreamNamespace string                        // Namespace where the database image is located
+	Password             string                        // Password for the PostgreSQL connection user
+	SampledbPassword     string                        // Password for the PostgreSQL sampledb user
 }
 
 type ExporterConfiguration struct {
@@ -151,6 +151,15 @@ type Resources struct {
 type ResourcesWithVolume struct {
 	Memory         string
 	VolumeCapacity string
+}
+
+type ResourcesWithPersistentVolume struct {
+	Memory             string
+	VolumeCapacity     string
+	VolumeName         string
+	VolumeAccessMode   string
+	VolumeStorageClass string
+	VolumeLabels       map[string]string
 }
 
 type VolumeOnlyResources struct {
@@ -348,6 +357,11 @@ func (config *Config) setConfigFromEnv() error {
 				Database: DatabaseConfiguration{
 					Image: os.Getenv("DATABASE_IMAGE"), ImageStreamNamespace: os.Getenv("DATABASE_NAMESPACE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
+					Resources: ResourcesWithPersistentVolume{
+						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
+						VolumeStorageClass: os.Getenv("DATABASE_STORAGE_CLASS"),
+						VolumeName:         os.Getenv("DATABASE_VOLUME_NAME"),
+					},
 				},
 				Server: ServerConfiguration{
 					Image: os.Getenv("SERVER_IMAGE"),

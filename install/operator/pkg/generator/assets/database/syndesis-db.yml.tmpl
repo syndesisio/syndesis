@@ -174,10 +174,22 @@
       syndesis.io/component: syndesis-db
   spec:
     accessModes:
-    - ReadWriteOnce
+    - {{.Syndesis.Components.Database.Resources.VolumeAccessMode}}
     resources:
       requests:
         storage: {{.Syndesis.Components.Database.Resources.VolumeCapacity}}
+{{- if .Syndesis.Components.Database.Resources.VolumeStorageClass}}
+    storageClassName: {{.Syndesis.Components.Database.Resources.VolumeStorageClass}}
+{{- end}}
+{{- if .Syndesis.Components.Database.Resources.VolumeName}}
+    volumeName: {{.Syndesis.Components.Database.Resources.VolumeName}}
+{{end}}
+{{- if .Syndesis.Components.Database.Resources.VolumeLabels}}
+    matchLabels:
+    {{- range $key, $value := .Syndesis.Components.Database.Resources.VolumeLabels}}
+      {{ $key }}: {{ $value }}
+    {{- end }}
+{{- end}}
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
