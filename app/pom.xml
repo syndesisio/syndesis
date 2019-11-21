@@ -766,7 +766,7 @@
                 <conflictingDependencies>
                   <dependency>
                     <groupId>org.apache.camel</groupId>
-                    <artifactId>camel-core</artifactId>
+                    <artifactId>camel-util-json</artifactId>
                   </dependency>
                   <dependency>
                     <groupId>org.apache.camel</groupId>
@@ -774,7 +774,7 @@
                   </dependency>
                 </conflictingDependencies>
                 <packages>
-                  <package>org.apache.camel.json.simple</package>
+                  <package>org.apache.camel.util.json</package>
                 </packages>
               </exception>
               <exception>

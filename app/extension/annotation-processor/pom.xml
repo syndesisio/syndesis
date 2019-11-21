@@ -46,18 +46,6 @@
     </dependency>
 
     <dependency>
-      <groupId>io.syndesis.extension</groupId>
-      <artifactId>extension-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>com.google.testing.compile</groupId>
       <artifactId>compile-testing</artifactId>
       <version>0.12</version>
