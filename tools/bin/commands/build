@@ -100,7 +100,7 @@ build::run() {
 
 maven_args() {
     local project=${1:-}
-    local args=""
+    local args="--no-transfer-progress"
 
     if [ $(hasflag --flash -f) ]; then
         args="$args -Pflash"
