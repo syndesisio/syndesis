@@ -224,7 +224,7 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
 
         // lets validate configuration when activity tracing is enabled.
-        try( Stream<Path> stream = Files.walk(testFolder.getRoot().toPath().resolve("integration-project")) ) {
+        try (Stream<Path> stream = Files.walk(testFolder.getRoot().toPath().resolve("integration-project")) ) {
             stream.sorted(Comparator.reverseOrder())
                 .map(Path::toFile)
                 .forEach(File::delete);
@@ -738,7 +738,7 @@ public class ProjectGeneratorTest {
                         destPath.getParentFile().mkdirs();
                         destPath.createNewFile();
 
-                        try(BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
+                        try (BufferedOutputStream bout = new BufferedOutputStream(new FileOutputStream(destPath))) {
                             IOUtils.copy(tis, bout);
                         }
                     }

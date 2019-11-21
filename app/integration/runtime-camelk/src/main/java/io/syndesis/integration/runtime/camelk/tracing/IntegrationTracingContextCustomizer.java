@@ -15,18 +15,17 @@
  */
 package io.syndesis.integration.runtime.camelk.tracing;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.ExtendedCamelContext;
-import org.apache.camel.k.ContextCustomizer;
-import org.apache.camel.k.Runtime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.jaegertracing.Configuration;
 import io.opentracing.Tracer;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.tracing.TracingInterceptStrategy;
 import io.syndesis.integration.runtime.tracing.TracingLogListener;
+import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.k.ContextCustomizer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IntegrationTracingContextCustomizer implements ContextCustomizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTracingContextCustomizer.class);
@@ -34,19 +33,19 @@ public class IntegrationTracingContextCustomizer implements ContextCustomizer {
     private String serviceName;
 
     @Override
-    public void apply(CamelContext camelContext, Runtime.Registry runtimeRegistry) {
+    public void apply(CamelContext camelContext) {
         // Lets generates always incrementing lexically sortable unique
         // uuids. These uuids are also more compact than the camel default
         // and contain an embedded timestamp.
         camelContext.setUuidGenerator(KeyGenerator::createKey);
 
         Tracer tracer = Configuration.fromEnv(serviceName).getTracer();
-        runtimeRegistry.bind("tracer", tracer);
+        camelContext.getRegistry().bind("tracer", tracer);
 
-        runtimeRegistry.bind("bodyLogger", new BodyLogger.Default());
+        camelContext.getRegistry().bind("bodyLogger", new BodyLogger.Default());
 
         TracingInterceptStrategy tis = new TracingInterceptStrategy(tracer);
-        runtimeRegistry.bind("integrationLoggingInterceptStrategy", tis);
+        camelContext.getRegistry().bind("integrationLoggingInterceptStrategy", tis);
         if (camelContext instanceof ExtendedCamelContext) {
             ExtendedCamelContext ecc = (ExtendedCamelContext) camelContext;
             ecc.addInterceptStrategy(tis);

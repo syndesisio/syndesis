@@ -160,7 +160,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_TO_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
         assertThat(consumerProperties).isEmpty();
     }
 

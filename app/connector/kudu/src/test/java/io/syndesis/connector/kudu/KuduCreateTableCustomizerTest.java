@@ -16,6 +16,7 @@
 
 package io.syndesis.connector.kudu;
 
+import io.syndesis.connector.kudu.customizer.KuduCreateTableCustomizer;
 import io.syndesis.connector.kudu.model.KuduTable;
 import org.apache.camel.Exchange;
 import org.apache.camel.support.DefaultExchange;

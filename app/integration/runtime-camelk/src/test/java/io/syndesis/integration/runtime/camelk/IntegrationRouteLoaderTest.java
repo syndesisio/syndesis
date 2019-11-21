@@ -15,20 +15,23 @@
  */
 package io.syndesis.integration.runtime.camelk;
 
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.k.InMemoryRegistry;
-import org.apache.camel.k.Source;
-import org.junit.Test;
-
 import static org.assertj.core.api.Assertions.assertThat;
+
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.k.Sources;
+import org.junit.Test;
 
 public class IntegrationRouteLoaderTest {
 
     @Test
     public void integrationRouteLoaderTest() throws Exception {
         IntegrationRouteLoader irl = new IntegrationRouteLoader();
+        DefaultCamelContext context = new DefaultCamelContext();
 
-        RouteBuilder rb = irl.load(new InMemoryRegistry(), Source.create("classpath:/syndesis/integration/integration.syndesis?language=syndesis"));
+        RouteBuilder rb = irl.load(context,
+            Sources.fromURI("classpath:/syndesis/integration/integration.syndesis?language=syndesis"));
+        context.start();
 
         assertThat(rb).isNotNull();
         // initialize routes

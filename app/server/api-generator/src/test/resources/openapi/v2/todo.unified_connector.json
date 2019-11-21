@@ -191,7 +191,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-http4:@camel.version@",
+      "id": "org.apache.camel:camel-http:@camel.version@",
       "type": "MAVEN"
     }
   ],

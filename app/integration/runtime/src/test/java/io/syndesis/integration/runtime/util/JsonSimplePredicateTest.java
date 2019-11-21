@@ -24,6 +24,9 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static io.syndesis.integration.runtime.util.JsonSimplePredicate.convertSimpleToOGNLForMaps;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.util.IOStreams;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
@@ -33,9 +36,6 @@ import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import static io.syndesis.integration.runtime.util.JsonSimplePredicate.convertSimpleToOGNLForMaps;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnitParamsRunner.class)
 public class JsonSimplePredicateTest {

@@ -30,6 +30,15 @@
 
   <properties>
     <olingoVersion>4.6.0</olingoVersion>
+    <!-- To be removed once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component -->
+    <schemeName>olingo4</schemeName>
+    <componentName>Olingo4</componentName>
+    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
+    <maven.exe.file.extension />
+    <camel.osgi.export.pkg>${componentPackage}</camel.osgi.export.pkg>
+    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
+    <outPackage>org.apache.camel.component.olingo4.internal</outPackage>
+    <camel.osgi.private.pkg>${outPackage}</camel.osgi.private.pkg>
   </properties>
 
   <dependencyManagement>
@@ -101,6 +110,7 @@
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
+
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
@@ -168,7 +178,35 @@
 
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
+      <artifactId>camel-main</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-mock</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-direct</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

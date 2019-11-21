@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.integration.api.IntegrationResourceManager;
@@ -41,7 +40,7 @@ public class DependenciesCustomizer implements CamelKIntegrationCustomizer {
     private final VersionService versionService;
     private final IntegrationResourceManager resourceManager;
     private final List<MavenGav> filteredOutDependencies = Collections.unmodifiableList(Arrays.asList(
-        new MavenGav("org.apache.camel:camel-servlet-starter")));
+        new MavenGav("org.apache.camel.springboot:camel-servlet-starter")));
 
     public DependenciesCustomizer(VersionService versionService, IntegrationResourceManager resourceManager) {
         this.versionService = versionService;

@@ -14,16 +14,15 @@
  * limitations under the License.
  */
 
-package io.syndesis.connector.kudu;
+package io.syndesis.connector.kudu.meta;
 
 import java.util.Map;
 import java.util.Optional;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
 import org.apache.camel.util.ObjectHelper;
-import io.syndesis.connector.kudu.meta.KuduMetaData;
-import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class KuduMetaDataExtension extends AbstractMetaDataExtension {
     private static final MetaData EMPTY_METADATA = new DefaultMetaData(null, null, null);

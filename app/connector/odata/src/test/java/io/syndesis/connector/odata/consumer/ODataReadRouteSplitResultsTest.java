@@ -526,7 +526,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
 
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
         assertNotNull(consumerProperties);
         assertTrue(consumerProperties.size() > 0);
         assertEquals(delayValue, consumerProperties.get(DELAY));
@@ -590,7 +590,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
         assertNotNull(consumerProperties);
         assertTrue(consumerProperties.size() > 0);
         assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
@@ -635,7 +635,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
         assertNotNull(consumerProperties);
         assertTrue(consumerProperties.size() > 0);
         assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));

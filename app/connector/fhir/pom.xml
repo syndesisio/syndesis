@@ -29,10 +29,46 @@
   <packaging>jar</packaging>
 
   <properties>
-    <hapi-fhir-version>3.5.0</hapi-fhir-version>
+    <hapi-fhir-version>4.1.0</hapi-fhir-version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-fhir</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
@@ -58,6 +94,18 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -123,7 +171,7 @@
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-structures-dstu3</artifactId>
+      <artifactId>org.hl7.fhir.dstu3</artifactId>
       <version>${hapi-fhir-version}</version>
     </dependency>
     <dependency>
@@ -136,7 +184,19 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
+      <!--   Scope compile was expected by artifact: org.fhir:ucum:1.0.2 -->
+      <!--   $ mvn dependency:tree
+        [...]
+        [INFO] +- org.apache.camel:camel-fhir:jar:3.0.0:compile
+        [INFO] |  +- org.apache.camel:camel-fhir-api:jar:3.0.0:compile
+        [INFO] |  +- ca.uhn.hapi.fhir:hapi-fhir-structures-r5:jar:4.1.0:compile
+        [INFO] |  |  +- ca.uhn.hapi.fhir:org.hl7.fhir.utilities:jar:4.1.0:compile
+        [INFO] |  |  +- ca.uhn.hapi.fhir:org.hl7.fhir.r5:jar:4.1.0:compile
+        [INFO] |  |  \- org.fhir:ucum:jar:1.0.2:compile
+        [...]
+      -->
+      <!-- <scope>test</scope>-->
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>

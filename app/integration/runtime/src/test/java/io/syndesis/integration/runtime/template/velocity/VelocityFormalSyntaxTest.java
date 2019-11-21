@@ -15,8 +15,10 @@
  */
 package io.syndesis.integration.runtime.template.velocity;
 
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.Arrays;
+
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import org.apache.camel.builder.RouteBuilder;
 import org.junit.Test;
 

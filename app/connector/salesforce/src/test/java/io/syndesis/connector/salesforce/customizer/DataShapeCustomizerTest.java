@@ -78,16 +78,17 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
 
         final Pipeline beforePipeline = (Pipeline) createdBeforeProducer;
         Assertions.assertThat(beforePipeline.getProcessors()).isInstanceOf(List.class).hasSize(2);
-        Assertions.assertThat(((List<Processor>) beforePipeline.getProcessors()).get(0)).isInstanceOf(DataShapeCustomizer.UnmarshallProcessor.class);
-        Assertions.assertThat(((List<Processor>) beforePipeline.getProcessors()).get(1)).isSameAs(BEFORE_PROCESSOR);
+        //Using toString() since there's no direct access to a processor in Camel 3, which is wrapped in AsyncProcessorConverterHelper.ProcessorToAsyncProcessorBridge
+        Assertions.assertThat(beforePipeline.getProcessors().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
+        Assertions.assertThat(beforePipeline.getProcessors().get(1).toString()).isEqualTo(BEFORE_PROCESSOR.toString());
 
         final Processor createdAfterProducer = component.getAfterProducer();
         Assertions.assertThat(createdAfterProducer).isInstanceOf(Pipeline.class);
 
         final Pipeline afterPipeline = (Pipeline) createdAfterProducer;
         Assertions.assertThat(afterPipeline.getProcessors()).isInstanceOf(List.class).hasSize(2);
-        Assertions.assertThat(((List<Processor>) afterPipeline.getProcessors()).get(0)).isInstanceOf(DataShapeCustomizer.UnmarshallProcessor.class);
-        Assertions.assertThat(((List<Processor>) afterPipeline.getProcessors()).get(1)).isSameAs(AFTER_PROCESSOR);
+        Assertions.assertThat(afterPipeline.getProcessors().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
+        Assertions.assertThat(afterPipeline.getProcessors().get(1).toString()).isEqualTo(AFTER_PROCESSOR.toString());
     }
 
     @Test
