@@ -17,6 +17,7 @@ import { Container } from '../Layout';
 import './OpenApiReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
+  actions?: React.ReactNode;
   apiProviderDescription?: string;
   apiProviderName?: string;
   errorMessages?: string[];
@@ -148,6 +149,12 @@ export class OpenApiReviewActions extends React.Component<
                   : null}
               </Container>
             </TextContent>
+          )}
+          {this.props.actions && (
+            <>
+              <br />
+              {this.props.actions}
+            </>
           )}
         </CardBody>
       </Card>

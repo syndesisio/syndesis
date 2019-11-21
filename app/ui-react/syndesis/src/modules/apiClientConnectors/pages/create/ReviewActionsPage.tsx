@@ -106,33 +106,35 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                                   )
                                 : undefined
                             }
+                            actions={
+                              <div>
+                                <ButtonLink href={resolvers.create.upload()}>
+                                  {t('Back')}
+                                </ButtonLink>
+                                &nbsp;&nbsp;&nbsp;
+                                <ButtonLink
+                                  href={resolvers.create.specification({
+                                    specification: apiSummary!
+                                      .configuredProperties!.specification,
+                                  })}
+                                >
+                                  {t(
+                                    'apiClientConnectors:create:review:btnReviewEdit'
+                                  )}
+                                </ButtonLink>
+                                &nbsp;
+                                <ButtonLink
+                                  as={'primary'}
+                                  disabled={apiSummary!.errors}
+                                  href={resolvers.create.security({
+                                    specification: apiSummary!,
+                                  })}
+                                >
+                                  {t('Next')}
+                                </ButtonLink>
+                              </div>
+                            }
                           />
-                          <div>
-                            <ButtonLink href={resolvers.create.upload()}>
-                              {t('Back')}
-                            </ButtonLink>
-                            &nbsp;&nbsp;&nbsp;
-                            <ButtonLink
-                              href={resolvers.create.specification({
-                                specification: apiSummary!.configuredProperties!
-                                  .specification,
-                              })}
-                            >
-                              {t(
-                                'apiClientConnectors:create:review:btnReviewEdit'
-                              )}
-                            </ButtonLink>
-                            &nbsp;
-                            <ButtonLink
-                              as={'primary'}
-                              disabled={apiSummary!.errors}
-                              href={resolvers.create.security({
-                                specification: apiSummary!,
-                              })}
-                            >
-                              {t('Next')}
-                            </ButtonLink>
-                          </div>
                         </>
                       )}
                     </WithLoader>

@@ -145,28 +145,30 @@ export const ReviewActionsPage: React.FunctionComponent<
                               )
                             : undefined
                         }
+                        actions={
+                          <div>
+                            <ButtonLink
+                              href={editHref(params, {
+                                ...state,
+                                specification: apiSummary!.configuredProperties!
+                                  .specification,
+                              })}
+                            >
+                              {t(
+                                'integrations:apiProvider:reviewActions:btnReviewEdit'
+                              )}
+                            </ButtonLink>
+                            <ButtonLink
+                              onClick={onNext}
+                              disabled={nextDisabled || apiSummary!.errors}
+                              as={'primary'}
+                              style={{ marginLeft: '10px' }}
+                            >
+                              {t('shared:Next')}
+                            </ButtonLink>
+                          </div>
+                        }
                       />
-                      <div>
-                        <ButtonLink
-                          href={editHref(params, {
-                            ...state,
-                            specification: apiSummary!.configuredProperties!
-                              .specification,
-                          })}
-                        >
-                          {t(
-                            'integrations:apiProvider:reviewActions:btnReviewEdit'
-                          )}
-                        </ButtonLink>
-                        <ButtonLink
-                          onClick={onNext}
-                          disabled={nextDisabled || apiSummary!.errors}
-                          as={'primary'}
-                          style={{ marginLeft: '10px' }}
-                        >
-                          {t('shared:Next')}
-                        </ButtonLink>
-                      </div>
                     </>
                   )}
                 </WithLoader>
