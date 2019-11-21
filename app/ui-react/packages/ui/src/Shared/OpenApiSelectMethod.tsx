@@ -50,6 +50,7 @@ export interface IOpenApiSelectMethodState {
    */
   method?: Method;
   specification?: string;
+  url?: string;
   /**
    * Used to handle D&D upload success/fail messages
    */
@@ -76,6 +77,7 @@ export class OpenApiSelectMethod extends React.Component<
       disableDropzone: false,
       method: 'file',
       specification: '',
+      url: '',
       valid: false,
     };
 
@@ -84,6 +86,7 @@ export class OpenApiSelectMethod extends React.Component<
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
     this.onUploadRejected = this.onUploadRejected.bind(this);
+    this.handleClickNext = this.handleClickNext.bind(this);
   }
 
   /**
@@ -118,7 +121,7 @@ export class OpenApiSelectMethod extends React.Component<
    * @param e
    */
   public onAddUrlSpecification(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ specification: e.currentTarget.value });
+    this.setState({ url: e.currentTarget.value });
 
     if (
       this.state.method === 'url' &&
@@ -183,6 +186,14 @@ export class OpenApiSelectMethod extends React.Component<
     );
   }
 
+  public handleClickNext() {
+    if (this.state.method === 'url') {
+      this.props.onNext(this.state.method, this.state.url);
+    } else {
+      this.props.onNext(this.state.method, this.state.specification);
+    }
+  }
+
   public render() {
     return (
       <Card className={'open-api-review-actions'}>
@@ -239,7 +250,8 @@ export class OpenApiSelectMethod extends React.Component<
                         <FormControl
                           type={'text'}
                           disabled={this.state.method !== 'url'}
-                          value={this.state.specification}
+                          value={this.state.url}
+
                           onChange={this.onAddUrlSpecification}
                         />
                         <br />
@@ -277,9 +289,7 @@ export class OpenApiSelectMethod extends React.Component<
               <ButtonLink
                 disabled={!this.state.valid}
                 as={'primary'}
-                onClick={() =>
-                  this.props.onNext(this.state.method, this.state.specification)
-                }
+                onClick={this.handleClickNext}
               >
                 {this.props.i18nBtnNext}
               </ButtonLink>
