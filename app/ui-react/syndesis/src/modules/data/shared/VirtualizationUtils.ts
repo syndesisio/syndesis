@@ -544,3 +544,54 @@ export function generateTableColumns(sourceInfo: ViewSourceInfo): ITableInfo[] {
   });
   return tblColumns;
 }
+
+/**
+ * A virtualization can be deleted if it is not running, if it is running but has no integration using it,
+ * or if it has never been published.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be deleted
+ */
+export function canDelete(virtualization: Virtualization): boolean {
+  // TODO: fix logic if necessary. Can be a draft and never been published.
+  return virtualization.publishedState !== 'RUNNING'
+         || (virtualization.publishedState === 'RUNNING' && virtualization.usedBy.length === 0);
+}
+
+/**
+ * A virtualization can always be exported.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true`
+ */
+export function canExport(virtualization: Virtualization): boolean {
+  return true;
+}
+
+/**
+ * A virtualization can be published if a draft exists.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be published
+ */
+export function canPublish(virtualization: Virtualization): boolean {
+  // TODO: Fix logic if necessary. Must have a draft. If already running must not be used by any integrations?
+  return virtualization.publishedState === 'NOTFOUND';
+}
+
+/**
+ * A virtualization can be started if there is no draft and it had previously been stopped.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be started
+ */
+export function canStart(virtualization: Virtualization): boolean {
+  // TODO: Fix logic if necessary. Need to make sure there is no draft.
+  return virtualization.publishedState === 'NOTFOUND';
+}
+
+/**
+ * A virtualization can be stopped if it is running.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be stopped
+ */
+export function canStop(virtualization: Virtualization): boolean {
+  // TODO: Fix logic if necessary. Do we need to check if any integrations are using it?
+  return virtualization.publishedState === 'RUNNING';
+}
