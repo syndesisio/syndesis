@@ -58,6 +58,8 @@ import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.util.OperationDescription;
 import io.syndesis.server.api.generator.openapi.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
+import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
 import static java.util.Optional.ofNullable;
@@ -65,11 +67,11 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
-    static final String URL_EXTENSION = "x-syndesis-swagger-url";
+    private static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
-    final Supplier<String> operationIdGenerator;
+    private final Supplier<String> operationIdGenerator;
 
-    public BaseOpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
+    BaseOpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
         super(baseConnector);
 
         this.operationIdGenerator = operationIdGenerator;
@@ -140,8 +142,8 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
     abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
 
-    protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getV2Model();
+    private Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
+        final OpenApiModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
 
         // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
@@ -150,7 +152,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
             Extension urlExtension = new Extension();
             urlExtension.name = URL_EXTENSION;
             urlExtension.value = URI.create(specification);
-            openApiDoc.addExtension(URL_EXTENSION, urlExtension);
+            info.getModel().addExtension(URL_EXTENSION, urlExtension);
         }
 
         final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
@@ -160,7 +162,12 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> alreadyConfiguredProperties = builder.build().getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
-            final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, openApiDoc, template, connectorSettings);
+            Optional<ConfigurationProperty> maybeProperty = Optional.empty();
+            if (info.isOpenApiV2()) {
+                maybeProperty = Oas20PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+            } else if (info.isOpenApiV3()) {
+                maybeProperty = Oas30PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+            }
 
             maybeProperty.ifPresent(property -> {
                 builder.putProperty(propertyName, property);

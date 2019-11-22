@@ -42,6 +42,7 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -136,7 +137,7 @@ public class BaseOpenApiConnectorGeneratorTest {
             .description("Invokes Concur List API")
             .icon("fa-globe")
             .putConfiguredProperty("specification", specification)
-            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:concur_oauth2")
+            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "oauth2:concur_oauth2")
             .build();
 
         final Connector generated = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
@@ -156,14 +157,14 @@ public class BaseOpenApiConnectorGeneratorTest {
             .description("Invokes Reverb API")
             .icon("fa-music")
             .putConfiguredProperty("specification", specification)
-            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:oauth2")
+            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "oauth2:oauth2")
             .build();
 
         final Connector generated = generator.generate(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
             "clientSecret");
-        assertThat(generated.getProperties().get(PropertyGenerators.authenticationType.name()).getEnum())
+        assertThat(generated.getProperties().get(Oas20PropertyGenerators.authenticationType.name()).getEnum())
             .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2:oauth2").label("OAuth 2.0 - oauth2").build());
     }
 
@@ -217,18 +218,18 @@ public class BaseOpenApiConnectorGeneratorTest {
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", specification)
-            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "apiKey:two")
+            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "apiKey:two")
             .build();
 
         final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(summary.getConfiguredProperties())
             .containsEntry("specification", specification)
-            .containsEntry(PropertyGenerators.authenticationType.name(), "apiKey:two");
+            .containsEntry(Oas20PropertyGenerators.authenticationType.name(), "apiKey:two");
 
         final Map<String, ConfigurationProperty> properties = summary.getProperties();
         assertThat(properties.keySet()).containsOnly("authenticationParameterName", "authenticationParameterPlacement",
-            "authenticationParameterValue", PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
+            "authenticationParameterValue", Oas20PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
     }
 
     @Test
@@ -316,7 +317,7 @@ public class BaseOpenApiConnectorGeneratorTest {
 
         final APISummary summary = generator.info(ApiConnectorTemplate.SWAGGER_TEMPLATE, connectorSettings);
 
-        assertThat(summary.getProperties().keySet()).containsOnly(PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
+        assertThat(summary.getProperties().keySet()).containsOnly(Oas20PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
     }
 
     @Test
@@ -363,7 +364,7 @@ public class BaseOpenApiConnectorGeneratorTest {
         assertThat(summary.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
         assertThat(summary.getProperties().keySet()).containsOnly("authenticationParameterName", "authenticationParameterPlacement",
-            "authenticationParameterValue", PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
+            "authenticationParameterValue", Oas20PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
         assertThat(summary.getConfiguredProperties().keySet()).containsOnly("specification");
         assertThat(reformatJson(summary.getConfiguredProperties().get("specification"))).isEqualTo(reformatJson(specification));
     }
