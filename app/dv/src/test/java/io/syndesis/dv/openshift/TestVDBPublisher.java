@@ -15,8 +15,6 @@
  */
 package io.syndesis.dv.openshift;
 
-import static org.hamcrest.CoreMatchers.*;
-import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 import java.io.File;
@@ -36,6 +34,8 @@ import org.teiid.adminapi.Model;
 import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.util.ObjectConverterUtil;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.syndesis.dv.KException;
@@ -126,7 +126,7 @@ public class TestVDBPublisher {
         credentialData.put("url", "jdbc:mysql://localhost:1521/sampledb");
         credentialData.put("user", "johnny");
         Map<String, String> decrypted = ec.decrypt(credentialData);
-        assertThat(credentialData.get("password").equals(decrypted.get("password")), is(false));
+        assertThat(credentialData.get("password")).isNotEqualTo(decrypted.get("password"));
     }
 
     @Test
@@ -162,7 +162,7 @@ public class TestVDBPublisher {
         PublishConfiguration config = new PublishConfiguration();
         Collection<EnvVar> variables = generator
                 .getEnvironmentVariablesForVDBDataSources(vdb, config, TeiidOpenShiftClient.getOpenShiftName(vdb.getName()));
-        assertThat( variables.size(), is(9));
+        assertThat(variables).hasSize(9);
 
         String javaOptions=
                   " -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
@@ -173,17 +173,13 @@ public class TestVDBPublisher {
                 + " -Dorg.teiid.hiddenMetadataResolvable=false"
                 + " -Dorg.teiid.allowAlter=false";
 
-        assertThat(variables, hasItem(generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.username")));
-        assertThat(variables, hasItem(generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.jdbc-url")));
-        assertThat(variables, hasItem(generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.password")));
-
-//        assertThat(variables, hasItem(new EnvVarBuilder().withName(EncryptionComponent.SYNDESIS_ENC_KEY)
-//                .withValueFrom(new EnvVarSourceBuilder().withConfigMapKeyRef(new ConfigMapKeySelectorBuilder()
-//                        .withName("syndesis-server-config").withKey("encrypt.key").build()).build()).build()));
-
-        assertThat(variables, hasItem(new EnvVar("GC_MAX_METASPACE_SIZE", "256", null)));
-
-        assertThat(variables, hasItem(new EnvVar("JAVA_OPTIONS", javaOptions, null)));
+        assertThat(variables).contains(
+            generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.username"),
+            generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.jdbc-url"),
+            generator.envFromSecret("dv-myservice-secret", "spring.datasource.accounts-xyz.password"),
+            new EnvVar("GC_MAX_METASPACE_SIZE", "256", null),
+            new EnvVar("JAVA_OPTIONS", javaOptions, null)
+        );
     }
 
 }
