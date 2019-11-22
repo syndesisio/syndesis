@@ -16,21 +16,37 @@
 package io.syndesis.connector.mongo.embedded;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+import org.bson.Document;
+import org.slf4j.LoggerFactory;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+
+import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
+import de.flapdoodle.embed.mongo.config.DownloadConfigBuilder;
+import de.flapdoodle.embed.mongo.config.ExtractedArtifactStoreBuilder;
 import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
+import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Storage;
-import org.bson.Document;
+import de.flapdoodle.embed.process.config.IRuntimeConfig;
+import de.flapdoodle.embed.process.config.io.ProcessOutput;
+import de.flapdoodle.embed.process.io.IStreamProcessor;
+import de.flapdoodle.embed.process.io.Processors;
+import de.flapdoodle.embed.process.io.Slf4jLevel;
+import de.flapdoodle.embed.process.io.Slf4jStreamProcessor;
+import de.flapdoodle.embed.process.io.directories.FixedPath;
 
+import static org.springframework.util.SocketUtils.findAvailableTcpPort;
 import static de.flapdoodle.embed.mongo.distribution.Version.Main.V3_6;
 import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
-import static org.springframework.util.SocketUtils.findAvailableTcpPort;
 
 public class EmbedMongoConfiguration {
 
@@ -41,21 +57,40 @@ public class EmbedMongoConfiguration {
     public final static String PASSWORD = "test-pwd";
     public final static String ADMIN_DB = "admin";
     // Client connections
-    @SuppressWarnings("ConstantField")
-    public static MongoClient CLIENT;
-    @SuppressWarnings("ConstantField")
-    public static MongoDatabase DATABASE;
+    public final static MongoClient CLIENT;
+    public final static MongoDatabase DATABASE;
 
     private EmbedMongoConfiguration(){}
 
     static {
         try {
+            final Path storagePath = Files.createTempDirectory("embeddeddmongo");
+            storagePath.toFile().deleteOnExit();
             IMongodConfig mongodConfig = new MongodConfigBuilder()
                     .version(V3_6)
                     .net(new Net(PORT, localhostIsIPv6()))
-                    .replication(new Storage(null, "replicationName", 5000))
+                    .replication(new Storage(storagePath.toString(), "replicationName", 5000))
                     .build();
-            MongodExecutable mongodExecutable = MongodStarter.getDefaultInstance().prepare(mongodConfig);
+
+            final IStreamProcessor logDestination = new Slf4jStreamProcessor(LoggerFactory.getLogger("embeddeddmongo"), Slf4jLevel.INFO);
+            final IStreamProcessor daemon = Processors.named("mongod", logDestination);
+            final IStreamProcessor error = Processors.named("mongod-error", logDestination);
+            final IStreamProcessor command = Processors.named("mongod-command", logDestination);
+            final ProcessOutput processOutput = new ProcessOutput(daemon, error, command);
+            final IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+                .defaults(Command.MongoD)
+                .artifactStore(new ExtractedArtifactStoreBuilder()
+                    .defaults(Command.MongoD)
+                    .extractDir(new FixedPath(".extracted"))
+                    .download(new DownloadConfigBuilder()
+                        .defaultsForCommand(Command.MongoD)
+                        .artifactStorePath(new FixedPath(".cache"))
+                        .build())
+                    .build())
+                .processOutput(processOutput)
+                .build();
+            MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
+                    .prepare(mongodConfig);
             mongodExecutable.start();
             // init replica set
             CLIENT = new MongoClient(HOST, PORT);
