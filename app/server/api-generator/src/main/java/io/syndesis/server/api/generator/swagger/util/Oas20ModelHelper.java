@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.apicurio.datamodels.openapi.models.IOasPropertySchema;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
@@ -58,8 +59,8 @@ public final class Oas20ModelHelper {
         return openApiDoc.definitions.getDefinition(reference);
     }
 
-    public static OperationDescription operationDescriptionOf(final Oas20Document openApiDoc, final OasOperation operation,
-        final BiFunction<String, String, String> consumer) {
+    public static OperationDescription operationDescriptionOf(final OasDocument openApiDoc, final OasOperation operation,
+                                                              final BiFunction<String, String, String> consumer) {
         final List<Oas20PathItem> pathItems = getPathItems(openApiDoc.paths, Oas20PathItem.class);
         for (Oas20PathItem pathEntry : pathItems) {
             final String path = pathEntry.getPath();

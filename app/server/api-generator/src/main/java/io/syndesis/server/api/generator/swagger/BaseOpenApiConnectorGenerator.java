@@ -32,6 +32,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -39,8 +40,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -53,33 +52,18 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelParser;
-import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.swagger.util.OperationDescription;
+import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
-
-    static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
-
-    static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()
-        .kind("property")
-        .displayName("Operation ID")
-        .group("producer")
-        .label("producer")
-        .required(true)
-        .type("hidden")
-        .javaType("java.lang.String")
-        .deprecated(false)
-        .secret(false)
-        .componentProperty(false)
-        .description("ID of operation to invoke")
-        .build();
 
     static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
@@ -106,7 +90,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
     public final APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final OpenApiModelInfo modelInfo = parseSpecification(connectorSettings, APIValidationContext.CONSUMED_API);
 
-        final Oas20Document model = modelInfo.getModel();
+        final OasDocument model = modelInfo.getModel();
         if (model == null) {
             final APISummary.Builder summaryBuilder = new APISummary.Builder()
                 .errors(modelInfo.getErrors())
@@ -157,7 +141,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
     abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
 
     protected final Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
-        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
+        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getV2Model();
 
         // could be either JSON of the Swagger specification or a URL to one
         final String specification = requiredSpecification(connectorSettings);
@@ -199,7 +183,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
         final OpenApiModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
-        final Oas20Document openApiDoc = info.getModel();
+        final Oas20Document openApiDoc = info.getV2Model();
         addGlobalParameters(builder, openApiDoc);
 
         final OasPaths paths = ofNullable(openApiDoc.paths)
@@ -260,7 +244,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
     @Override
     protected final String determineConnectorDescription(final ConnectorTemplate connectorTemplate,
         final ConnectorSettings connectorSettings) {
-        final Oas20Document openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
+        final OasDocument openApiDoc = parseSpecification(connectorSettings, APIValidationContext.NONE).getModel();
 
         final Info info = openApiDoc.info;
         if (info == null) {
@@ -282,7 +266,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
             throw new IllegalArgumentException("Given OpenAPI specification contains errors: " + modelInfo);
         }
 
-        final Oas20Document openApiDoc = modelInfo.getModel();
+        final OasDocument openApiDoc = modelInfo.getModel();
 
         final Info info = openApiDoc.info;
         if (info == null) {
@@ -366,7 +350,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
 
     static OpenApiModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
         final String specification = requiredSpecification(connectorSettings);
-        return Oas20ModelParser.parse(specification, validationContext);
+        return OpenApiModelParser.parse(specification, validationContext);
     }
 
     static String requiredSpecification(final ConnectorSettings connectorSettings) {

@@ -13,15 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
@@ -43,7 +46,35 @@ public interface OpenApiModelInfo {
         return Collections.emptyList();
     }
 
-    Oas20Document getModel();
+    OasDocument getModel();
+
+    @JsonIgnore
+    default boolean isOpenApiV2() {
+        return getModel() instanceof Oas20Document;
+    }
+
+    @JsonIgnore
+    default Oas20Document getV2Model() {
+        if (!isOpenApiV2()) {
+            throw new IllegalStateException("Unable to retrieve OpenAPI 2.x document.");
+        }
+
+        return (Oas20Document) getModel();
+    }
+
+    @JsonIgnore
+    default boolean isOpenApiV3() {
+        return getModel() instanceof Oas20Document;
+    }
+
+    @JsonIgnore
+    default Oas30Document getV3Model() {
+        if (!isOpenApiV3()) {
+            throw new IllegalStateException("Unable to retrieve OpenAPI 3.x document.");
+        }
+
+        return (Oas30Document) getModel();
+    }
 
     @Value.Lazy
     default ObjectNode getResolvedJsonGraph() {

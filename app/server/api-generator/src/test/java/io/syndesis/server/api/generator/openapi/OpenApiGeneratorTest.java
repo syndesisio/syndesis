@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +30,7 @@ import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
-
+import io.syndesis.server.api.generator.swagger.TestHelper;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

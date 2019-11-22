@@ -21,7 +21,7 @@ import java.util.concurrent.Future;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.OpenApiGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiGenerator;
 import io.syndesis.server.api.generator.swagger.OpenApiUnifiedShapeConnectorGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 

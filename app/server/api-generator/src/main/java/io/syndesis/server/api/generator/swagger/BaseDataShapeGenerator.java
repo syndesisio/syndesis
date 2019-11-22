@@ -23,6 +23,7 @@ import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
+import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import org.apache.commons.lang3.tuple.Pair;
 
 abstract class BaseDataShapeGenerator implements DataShapeGenerator {

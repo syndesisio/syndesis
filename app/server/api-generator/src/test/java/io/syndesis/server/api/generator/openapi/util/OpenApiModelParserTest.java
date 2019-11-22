@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.swagger.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Christoph Deppisch
  */
-public class Oas20ModelParserTest {
+public class OpenApiModelParserTest {
 
     @Test
     public void convertingToJsonShouldNotLooseSecurityDefinitions() throws IOException {
@@ -50,7 +50,7 @@ public class Oas20ModelParserTest {
             "        }\n" +
             "    }}";
 
-        final JsonNode node = Oas20ModelParser.convertToJson(definition);
+        final JsonNode node = OpenApiModelParser.convertToJson(definition);
 
         final JsonNode securityDefinitions = node.get("securityDefinitions");
 
@@ -68,7 +68,7 @@ public class Oas20ModelParserTest {
     @Test
     public void convertingToJsonShouldNotLooseSecurityRequirements() throws IOException {
         final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[\"scope\"]}]}}}}";
-        final JsonNode node = Oas20ModelParser.convertToJson(definition);
+        final JsonNode node = OpenApiModelParser.convertToJson(definition);
         assertThat(node.get("paths").get("/api").get("get").get("security"))
             .hasOnlyOneElementSatisfying(securityRequirement -> assertThat(securityRequirement.get("secured"))
                 .hasOnlyOneElementSatisfying(scope -> assertThat(scope.asText()).isEqualTo("scope")));
@@ -76,7 +76,7 @@ public class Oas20ModelParserTest {
 
     @Test
     public void shouldNotReportIssuesWithSupportedVersions() {
-        final OpenApiModelInfo validated = Oas20ModelParser.parse(
+        final OpenApiModelInfo validated = OpenApiModelParser.parse(
             "{\"swagger\": \"2.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
@@ -86,7 +86,7 @@ public class Oas20ModelParserTest {
 
     @Test
     public void shouldReportIssuesWithUnsupportedVersions() {
-        final OpenApiModelInfo validated = Oas20ModelParser.parse(
+        final OpenApiModelInfo validated = OpenApiModelParser.parse(
             "{\"openapi\": \"3.0.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
@@ -105,7 +105,7 @@ public class Oas20ModelParserTest {
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
-            final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
+            final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
             assertThat(info.getErrors())
                 .withFailMessage("Specification " + specificationFile + " has errors: " + info.getErrors()).isEmpty();
@@ -115,7 +115,7 @@ public class Oas20ModelParserTest {
     @Test
     public void testThatInvalidFieldPetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
-        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -128,7 +128,7 @@ public class Oas20ModelParserTest {
     @Test
     public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
-        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).hasSize(1);
@@ -143,7 +143,7 @@ public class Oas20ModelParserTest {
     @Test
     public void testThatInvalidTypePetstoreSwaggerIsInvalid() throws IOException {
         final String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
-        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
         assertThat(info.getWarnings()).isEmpty();
@@ -155,7 +155,7 @@ public class Oas20ModelParserTest {
     @Test
     public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
         final String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
-        final OpenApiModelInfo info = Oas20ModelParser.parse(specification, APIValidationContext.CONSUMED_API);
+        final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
         assertThat(info.getWarnings()).hasSize(2);

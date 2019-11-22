@@ -41,6 +41,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
+import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -325,7 +326,7 @@ public class BaseOpenApiConnectorGeneratorTest {
             .build(),
             APIValidationContext.CONSUMED_API);
 
-        final Oas20Document model = info.getModel();
+        final Oas20Document model = info.getV2Model();
         assertThat(model.paths.getPathItem("/api").get.security).hasSize(1);
         assertThat(model.paths.getPathItem("/api").get.security.get(0).getSecurityRequirementNames()).containsExactly("secured");
         assertThat(model.paths.getPathItem("/api").get.security.get(0).getScopes("secured")).isEmpty();

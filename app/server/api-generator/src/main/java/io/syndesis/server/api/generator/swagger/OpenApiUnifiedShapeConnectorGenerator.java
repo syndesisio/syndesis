@@ -23,6 +23,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 
 public final class OpenApiUnifiedShapeConnectorGenerator extends BaseOpenApiConnectorGenerator {
 

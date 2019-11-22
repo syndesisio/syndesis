@@ -13,25 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+
+package io.syndesis.server.api.generator.openapi.v2;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasResponses;
@@ -43,65 +40,34 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityDefinitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.Violation;
-import io.syndesis.server.api.generator.APIValidationContext;
+import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 
 /**
- * This class contains Syndesis custom validation rules for swagger definitions.
+ * @author Christoph Deppisch
  */
-public final class OpenApiValidationRules implements Function<OpenApiModelInfo, OpenApiModelInfo> {
+public final class Oas20ValidationRules {
 
     private static final Set<String> SUPPORTED_CONSUMED_AUTH_TYPES = new HashSet<>(Arrays.asList("apiKey", "basic", "oauth2"));
 
-    private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> rules = new ArrayList<>();
-
-    private OpenApiValidationRules(final APIValidationContext context) {
-        switch (context) {
-        case CONSUMED_API:
-            rules.add(OpenApiValidationRules::validateResponses);
-            rules.add(OpenApiValidationRules::validateConsumedAuthTypes);
-            rules.add(OpenApiValidationRules::validateScheme);
-            rules.add(OpenApiValidationRules::validateUniqueOperationIds);
-            rules.add(OpenApiValidationRules::validateCyclicReferences);
-            rules.add(OpenApiValidationRules::validateOperationsGiven);
-            return;
-        case PROVIDED_API:
-            rules.add(OpenApiValidationRules::validateResponses);
-            rules.add(OpenApiValidationRules::validateProvidedAuthTypes);
-            rules.add(OpenApiValidationRules::validateUniqueOperationIds);
-            rules.add(OpenApiValidationRules::validateNoMissingOperationIds);
-            rules.add(OpenApiValidationRules::validateCyclicReferences);
-            rules.add(OpenApiValidationRules::validateOperationsGiven);
-            return;
-        case NONE:
-            return;
-        default:
-            throw new IllegalArgumentException("Unsupported validation context " + context);
-        }
-    }
-
-    @Override
-    public OpenApiModelInfo apply(final OpenApiModelInfo modelInfo) {
-        return rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
-    }
-
-    public static OpenApiValidationRules get(final APIValidationContext context) {
-        return new OpenApiValidationRules(context);
+    private Oas20ValidationRules() {
+        // utility class
     }
 
     /**
      * Check if all operations contains valid authentication types
      */
-    static OpenApiModelInfo validateAuthTypesIn(final OpenApiModelInfo modelInfo, final Set<String> validAuthTypes) {
-        if (modelInfo.getModel() == null) {
+    private static OpenApiModelInfo validateAuthTypesIn(final OpenApiModelInfo modelInfo, final Set<String> validAuthTypes) {
+        if (modelInfo.getV2Model() == null) {
             return modelInfo;
         }
 
         final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(modelInfo);
 
-        List<Oas20SecurityScheme> securitySchemes = Optional.ofNullable(modelInfo.getModel().securityDefinitions)
-                                                            .map(Oas20SecurityDefinitions::getItems)
-                                                            .orElse(Collections.emptyList());
+        List<Oas20SecurityScheme> securitySchemes = Optional.ofNullable(modelInfo.getV2Model().securityDefinitions)
+            .map(Oas20SecurityDefinitions::getItems)
+            .orElse(Collections.emptyList());
         for (final Oas20SecurityScheme definitionEntry : securitySchemes) {
             final String authType = definitionEntry.type;
             if (!validAuthTypes.contains(authType)) {
@@ -120,12 +86,16 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
      * Check if all operations contains valid authentication types for consumed
      * APIs.
      */
-    static OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
+    public static OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
         return validateAuthTypesIn(modelInfo, SUPPORTED_CONSUMED_AUTH_TYPES);
     }
 
-    static OpenApiModelInfo validateCyclicReferences(final OpenApiModelInfo info) {
-        if (CyclicValidationCheck.hasCyclicReferences(info.getModel())) {
+    public static OpenApiModelInfo validateCyclicReferences(final OpenApiModelInfo info) {
+        if (info.getModel() == null) {
+            return info;
+        }
+
+        if (CyclicValidationCheck.hasCyclicReferences(info.getV2Model())) {
             return new OpenApiModelInfo.Builder().createFrom(info)
                 .addError(new Violation.Builder()
                     .error("cyclic-schema")
@@ -137,8 +107,8 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
         return info;
     }
 
-    static OpenApiModelInfo validateNoMissingOperationIds(final OpenApiModelInfo info) {
-        final Oas20Document openApiDoc = info.getModel();
+    public static OpenApiModelInfo validateNoMissingOperationIds(final OpenApiModelInfo info) {
+        final Oas20Document openApiDoc = info.getV2Model();
         if (openApiDoc == null || openApiDoc.paths == null) {
             return info;
         }
@@ -161,8 +131,8 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
         return withWarnings.build();
     }
 
-    static OpenApiModelInfo validateOperationsGiven(final OpenApiModelInfo modelInfo) {
-        final Oas20Document openApiDoc = modelInfo.getModel();
+    public static OpenApiModelInfo validateOperationsGiven(final OpenApiModelInfo modelInfo) {
+        final Oas20Document openApiDoc = modelInfo.getV2Model();
         if (openApiDoc == null) {
             return modelInfo;
         }
@@ -191,7 +161,7 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
      * Check if all operations contains valid authentication types for provided
      * APIs.
      */
-    static OpenApiModelInfo validateProvidedAuthTypes(final OpenApiModelInfo modelInfo) {
+    public static OpenApiModelInfo validateProvidedAuthTypes(final OpenApiModelInfo modelInfo) {
         return validateAuthTypesIn(modelInfo, Collections.emptySet());
     }
 
@@ -199,8 +169,8 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
      * Check if a request/response JSON schema is present
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
-    static OpenApiModelInfo validateResponses(final OpenApiModelInfo modelInfo) {
-        final Oas20Document openApiDoc = modelInfo.getModel();
+    public static OpenApiModelInfo validateResponses(final OpenApiModelInfo modelInfo) {
+        final Oas20Document openApiDoc = modelInfo.getV2Model();
         if (openApiDoc == null) {
             return modelInfo;
         }
@@ -212,12 +182,12 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
             for (final Map.Entry<String, Oas20Operation> operationEntry : Oas20ModelHelper.getOperationMap(pathEntry).entrySet()) {
 
                 // Check requests
-                for (final OasParameter parameter : notNull(operationEntry.getValue().getParameters())) {
+                for (final OasParameter parameter : OasModelHelper.getParameters(operationEntry.getValue())) {
                     if (!Oas20ModelHelper.isBody(parameter)) {
                         continue;
                     }
                     final OasSchema schema = (OasSchema) parameter.schema;
-                    if (schemaIsNotSpecified(schema)) {
+                    if (OasModelHelper.schemaIsNotSpecified(schema)) {
                         final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getPath()
                             + " does not provide a schema for the body parameter";
 
@@ -231,8 +201,8 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
 
                 // Check responses
                 List<OasResponse> responses = Optional.ofNullable(operationEntry.getValue().responses)
-                                                    .map(OasResponses::getResponses)
-                                                    .orElse(Collections.emptyList());
+                    .map(OasResponses::getResponses)
+                    .orElse(Collections.emptyList());
 
                 for (final OasResponse responseEntry : responses) {
                     if (responseEntry.getStatusCode() == null || responseEntry.getStatusCode().charAt(0) != '2') {
@@ -258,15 +228,15 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
         return withWarnings.build();
     }
 
-    static OpenApiModelInfo validateScheme(final OpenApiModelInfo info) {
-        final Oas20Document openApiDoc = info.getModel();
+    public static OpenApiModelInfo validateScheme(final OpenApiModelInfo info) {
+        final Oas20Document openApiDoc = info.getV2Model();
         if (openApiDoc == null) {
             return info;
         }
 
         final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(info);
 
-        final URI specificationUrl = specificationUriFrom(openApiDoc);
+        final URI specificationUrl = OasModelHelper.specificationUriFrom(openApiDoc);
 
         final List<String> schemes = openApiDoc.schemes;
         if (schemes == null || schemes.isEmpty()) {
@@ -295,8 +265,8 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
         return withWarnings.build();
     }
 
-    static OpenApiModelInfo validateUniqueOperationIds(final OpenApiModelInfo info) {
-        final Oas20Document openApiDoc = info.getModel();
+    public static OpenApiModelInfo validateUniqueOperationIds(final OpenApiModelInfo info) {
+        final Oas20Document openApiDoc = info.getV2Model();
         if (openApiDoc == null || openApiDoc.paths == null) {
             return info;
         }
@@ -309,7 +279,7 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
             .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
         final Map<String, Long> nonUnique = operationIdCounts.entrySet().stream().filter(e -> e.getValue() > 1)
-            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         if (nonUnique.isEmpty()) {
             return info;
@@ -322,37 +292,4 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
 
         return withWarnings.build();
     }
-
-    private static <T> List<T> notNull(final List<T> value) {
-        return value != null ? value : Collections.emptyList();
-    }
-
-    private static boolean schemaIsNotSpecified(final OasSchema schema) {
-        if (schema == null) {
-            return true;
-        }
-
-        if (Oas20ModelHelper.isArrayType(schema)) {
-            return schema.items == null;
-        }
-
-        final Map<String, OasSchema> properties = schema.properties;
-        final boolean noProperties = properties == null || properties.isEmpty();
-        final boolean noReference = schema.$ref == null;
-        return noProperties && noReference;
-    }
-
-    private static URI specificationUriFrom(final Oas20Document openApiDoc) {
-        final Collection<Extension> vendorExtensions = openApiDoc.getExtensions();
-
-        if (vendorExtensions == null) {
-            return null;
-        }
-
-        return vendorExtensions.stream().filter(extension -> BaseOpenApiConnectorGenerator.URL_EXTENSION.equals(extension.name))
-                                     .map(extension -> (URI) extension.value)
-                                     .findFirst()
-                                     .orElse(null);
-    }
-
 }

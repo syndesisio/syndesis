@@ -13,7 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ImmutablesStyle
-package io.syndesis.server.api.generator.swagger;
 
-import io.syndesis.common.util.immutable.ImmutablesStyle;
+package io.syndesis.common.model.integration;
+
+/**
+ * @author Christoph Deppisch
+ */
+public enum FlowMetadata {
+    EXCERPT("excerpt");
+
+    private final String key;
+
+    FlowMetadata(String key) {
+        this.key = key;
+    }
+
+    public String getKey() {
+        return key;
+    }
+}
