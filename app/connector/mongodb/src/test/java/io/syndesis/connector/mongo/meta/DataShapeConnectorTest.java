@@ -42,7 +42,6 @@ public class DataShapeConnectorTest {
     @Test
     public void verifyMetadataFilter() throws IOException {
         DataShape criteriaParams = MongoDBMetadataRetrieval.criteria("{test: \":#someText\", xyz.moreTest: /:#more/}");
-        System.out.println("!!!!!!!!!! "+criteriaParams.getSpecification());
         JsonNode json = OBJECT_MAPPER.readTree(criteriaParams.getSpecification());
         Assertions.assertThat(criteriaParams.getKind()).isEqualTo(DataShapeKinds.JSON_SCHEMA);
         Assertions.assertThat(json.get("properties").get("someText")).isNotNull();
