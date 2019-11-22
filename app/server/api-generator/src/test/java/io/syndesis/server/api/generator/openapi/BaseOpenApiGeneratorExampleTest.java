@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import javax.xml.crypto.NodeSetData;
 import javax.xml.crypto.OctetStreamData;
@@ -46,8 +46,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import static io.syndesis.server.api.generator.swagger.TestHelper.reformatJson;
-import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
+import static io.syndesis.server.api.generator.openapi.TestHelper.reformatJson;
+import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
 abstract class BaseOpenApiGeneratorExampleTest {
@@ -59,7 +59,7 @@ abstract class BaseOpenApiGeneratorExampleTest {
     final String specification;
 
     public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
-        specification = resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
+        specification = TestHelper.resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
         expected = JsonUtils.reader().forType(Connector.class)
             .readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
     }

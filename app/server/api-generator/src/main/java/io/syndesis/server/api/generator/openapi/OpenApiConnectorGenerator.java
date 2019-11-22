@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -29,56 +29,51 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.util.OperationDescription;
 import io.syndesis.server.api.generator.openapi.util.SpecificationOptimizer;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ConnectorGeneratorSupport;
 import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
+import io.syndesis.server.api.generator.openapi.v3.Oas30ConnectorGeneratorSupport;
 import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
 import static java.util.Optional.ofNullable;
-import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
+public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
     private static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
     private final Supplier<String> operationIdGenerator;
 
-    BaseOpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
+    OpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
         super(baseConnector);
 
         this.operationIdGenerator = operationIdGenerator;
     }
 
-    BaseOpenApiConnectorGenerator(final Connector baseConnector) {
-        this(baseConnector, BaseOpenApiConnectorGenerator::randomUUID);
+    public OpenApiConnectorGenerator(final Connector baseConnector) {
+        this(baseConnector, OpenApiConnectorGenerator::randomUUID);
     }
 
     @Override
@@ -140,7 +135,19 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
             .build();
     }
 
-    abstract ConnectorDescriptor.Builder createDescriptor(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
+    protected ConnectorDescriptor createDescriptor(String connectorId, OpenApiModelInfo info, OasOperation operation) {
+        if (info.isOpenApiV2()) {
+            return Oas20ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV2Model(), (Oas20Operation) operation)
+                .connectorId(connectorId)
+                .build();
+        } else if (info.isOpenApiV3()) {
+            return Oas30ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV3Model(), (Oas30Operation) operation)
+                .connectorId(connectorId)
+                .build();
+        } else {
+            throw new IllegalStateException(String.format("Unable to build connector descriptor for OpenAPI document type '%s'", info.getModel().getClass()));
+        }
+    }
 
     private Connector basicConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final OpenApiModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
@@ -184,14 +191,14 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         return builder.build();
     }
 
-    protected final Connector configureConnector(final ConnectorTemplate connectorTemplate, final Connector connector,
-        final ConnectorSettings connectorSettings) {
+    final Connector configureConnector(final ConnectorTemplate connectorTemplate, final Connector connector,
+                                       final ConnectorSettings connectorSettings) {
 
         final Connector.Builder builder = new Connector.Builder().createFrom(connector);
 
         final OpenApiModelInfo info = parseSpecification(connectorSettings, APIValidationContext.NONE);
-        final Oas20Document openApiDoc = info.getV2Model();
-        addGlobalParameters(builder, openApiDoc);
+        final OasDocument openApiDoc = info.getModel();
+        addGlobalParameters(builder, info);
 
         final OasPaths paths = ofNullable(openApiDoc.paths)
                                    .orElse(openApiDoc.createPaths());
@@ -199,10 +206,10 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         final List<ConnectorAction> actions = new ArrayList<>();
         final Map<String, Integer> operationIdCounts = new HashMap<>();
         for (final OasPathItem path : OasModelHelper.getPathItems(paths)) {
-            final Map<String, Oas20Operation> operationMap = OasModelHelper.getOperationMap(path, Oas20Operation.class);
+            final Map<String, OasOperation> operationMap = OasModelHelper.getOperationMap(path);
 
-            for (final Entry<String, Oas20Operation> entry : operationMap.entrySet()) {
-                final Oas20Operation operation = entry.getValue();
+            for (final Entry<String, OasOperation> entry : operationMap.entrySet()) {
+                final OasOperation operation = entry.getValue();
                 final String operationId = operation.operationId;
                 if (operationId == null) {
                     operation.operationId = operationIdGenerator.get();
@@ -222,9 +229,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
                     }
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), openApiDoc, operation)
-                    .connectorId(connectorId)
-                    .build();
+                final ConnectorDescriptor descriptor = createDescriptor(connectorId, info, operation);
 
                 final OperationDescription description = OasModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p);
 
@@ -288,71 +293,18 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         return title;
     }
 
-    static void addGlobalParameters(final Connector.Builder builder, final Oas20Document openApiDoc) {
-        final Oas20ParameterDefinitions globalParameters = openApiDoc.parameters;
-        if (globalParameters == null) {
-            return;
+    private static void addGlobalParameters(final Connector.Builder builder, final OpenApiModelInfo info) {
+        if (info.isOpenApiV2()) {
+            Oas20ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV2Model());
+        } else if (info.isOpenApiV3()) {
+            Oas30ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV3Model());
+        } else {
+            throw new IllegalStateException(String.format("Unable to build connector for OpenAPI document type '%s'", info.getModel().getClass()));
         }
-
-        globalParameters.getItems().forEach(parameter -> {
-            createPropertyFromParameter(parameter).ifPresent(property -> {
-                builder.putProperty(parameter.getName(), property);
-            });
-        });
     }
 
-    static String createActionId(final String connectorId, final OasOperation operation) {
+    private static String createActionId(final String connectorId, final OasOperation operation) {
         return connectorId + ":" + operation.operationId;
-    }
-
-    static List<PropertyValue> createEnums(final List<String> enums) {
-        return enums.stream().map(BaseOpenApiConnectorGenerator::createPropertyValue).collect(Collectors.toList());
-    }
-
-    static Optional<ConfigurationProperty> createPropertyFromParameter(final Oas20Parameter parameter) {
-        if (OasModelHelper.isReferenceType(parameter) || OasModelHelper.isBody(parameter)) {
-            // Reference parameters are not supported, body parameters are
-            // handled in createShape* methods
-
-            return Optional.empty();
-        }
-
-        if (!OasModelHelper.isSerializable(parameter)) {
-            throw new IllegalArgumentException("Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
-        }
-
-        final String name = trimToNull(parameter.name);
-        final String description = trimToNull(parameter.description);
-        final boolean required = parameter.required;
-
-        final ConfigurationProperty.Builder propertyBuilder = new ConfigurationProperty.Builder()
-            .kind("property")
-            .displayName(name)
-            .description(description)
-            .group("producer")
-            .required(required)
-            .componentProperty(false)
-            .deprecated(false)
-            .secret(false);
-
-        final Object defaultValue = parameter.default_;
-        if (defaultValue != null) {
-            propertyBuilder.defaultValue(String.valueOf(defaultValue));
-        }
-
-        final String type = parameter.type;
-        propertyBuilder.type(type).javaType(Oas20ModelHelper.javaTypeFor(parameter));
-
-        final List<String> enums = parameter.enum_;
-        if (enums != null) {
-            propertyBuilder.addAllEnum(createEnums(enums));
-        }
-
-        return Optional.of(propertyBuilder.build());
-    }
-
-    static PropertyValue createPropertyValue(final String value) {
-        return new PropertyValue.Builder().label(value).value(value).build();
     }
 
     static OpenApiModelInfo parseSpecification(final ConnectorSettings connectorSettings, final APIValidationContext validationContext) {
@@ -360,7 +312,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         return OpenApiModelParser.parse(specification, validationContext);
     }
 
-    static String requiredSpecification(final ConnectorSettings connectorSettings) {
+    private static String requiredSpecification(final ConnectorSettings connectorSettings) {
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
 
         final String specification = configuredProperties.get("specification");
@@ -375,5 +327,4 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
     private static String randomUUID() {
         return UUID.randomUUID().toString();
     }
-
 }

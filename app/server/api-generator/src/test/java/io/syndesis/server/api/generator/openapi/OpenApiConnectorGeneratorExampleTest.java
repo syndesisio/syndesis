@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,7 +24,6 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +33,9 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
-public class OpenApiUnifiedShapeGeneratorExampleTests extends BaseOpenApiGeneratorExampleTest {
+public class OpenApiConnectorGeneratorExampleTest extends BaseOpenApiGeneratorExampleTest {
 
-    public OpenApiUnifiedShapeGeneratorExampleTests(final String name) throws IOException {
+    public OpenApiConnectorGeneratorExampleTest(final String name) throws IOException {
         super("unified", name);
     }
 
@@ -55,11 +54,11 @@ public class OpenApiUnifiedShapeGeneratorExampleTests extends BaseOpenApiGenerat
 
     @Override
     ConnectorGenerator generator() {
-        try (InputStream stream = OpenApiUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+        try (InputStream stream = OpenApiConnectorGeneratorExampleTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
             final AtomicInteger cnt = new AtomicInteger();
-            return new OpenApiUnifiedShapeConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
+            return new OpenApiConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
         } catch (final IOException e) {
             throw new AssertionError(e);
         }

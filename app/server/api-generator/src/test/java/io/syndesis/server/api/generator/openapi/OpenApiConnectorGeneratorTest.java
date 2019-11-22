@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Info;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.Dependency;
@@ -41,29 +39,28 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
 import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
 
-import static io.syndesis.server.api.generator.swagger.TestHelper.reformatJson;
-import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
+import static io.syndesis.server.api.generator.openapi.TestHelper.reformatJson;
+import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class BaseOpenApiConnectorGeneratorTest {
+public class OpenApiConnectorGeneratorTest {
 
-    private final BaseOpenApiConnectorGenerator generator;
+    private final OpenApiConnectorGenerator generator;
 
-    public BaseOpenApiConnectorGeneratorTest() {
-        try (InputStream stream = OpenApiUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+    public OpenApiConnectorGeneratorTest() {
+        try (InputStream stream = OpenApiConnectorGeneratorExampleTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
-            generator = new BaseOpenApiConnectorGenerator(restSwagger) {
+            generator = new OpenApiConnectorGenerator(restSwagger) {
                 @Override
-                ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-                    return new ConnectorDescriptor.Builder();
+                protected ConnectorDescriptor createDescriptor(String connectorId, OpenApiModelInfo info, OasOperation operation) {
+                    return new ConnectorDescriptor.Builder().build();
                 }
             };
         } catch (final IOException e) {
@@ -101,31 +98,6 @@ public class BaseOpenApiConnectorGeneratorTest {
 
         assertThat(connector.getConnectorFactory()).isPresent();
         assertThat(connector.getConnectorFactory()).hasValue("io.syndesis.connector.rest.swagger.ConnectorFactory");
-    }
-
-    @Test
-    public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
-        final String specification = resource("/swagger/petstore.swagger.json");
-        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
-        final Oas20Parameter petIdPathParameter = (Oas20Parameter) openApiDoc.paths.getPathItem("/pet/{petId}").get.getParameters().get(0);
-
-        final Optional<ConfigurationProperty> maybeConfigurationProperty = BaseOpenApiConnectorGenerator
-            .createPropertyFromParameter(petIdPathParameter);
-
-        final ConfigurationProperty expected = new ConfigurationProperty.Builder()//
-            .componentProperty(false)//
-            .deprecated(false)//
-            .description("ID of pet to return")//
-            .displayName("petId")//
-            .group("producer")//
-            .javaType(Long.class.getName())//
-            .kind("property")//
-            .required(true)//
-            .secret(false)//
-            .type("integer")//
-            .build();
-
-        assertThat(maybeConfigurationProperty).hasValue(expected);
     }
 
     @Test
@@ -322,7 +294,7 @@ public class BaseOpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldParseSpecificationWithSecurityRequirements() throws JSONException {
-        final OpenApiModelInfo info = BaseOpenApiConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
+        final OpenApiModelInfo info = OpenApiConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}")
             .build(),
             APIValidationContext.CONSUMED_API);

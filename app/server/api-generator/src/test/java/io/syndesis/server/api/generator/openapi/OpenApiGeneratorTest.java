@@ -30,7 +30,6 @@ import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
-import io.syndesis.server.api.generator.swagger.TestHelper;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
