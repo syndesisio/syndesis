@@ -96,6 +96,8 @@
       https://github.com/pmd/pmd/issues/1969
     -->
     <dep.pmd.version>6.17.0</dep.pmd.version>
+    <!-- TODO: revisit when we upgrade basepom version -->
+    <dep.plugin.git-commit-id.version>4.0.0</dep.plugin.git-commit-id.version>
 
     <!-- Maven versions -->
     <maven-archetype-packaging.version>2.0</maven-archetype-packaging.version>
@@ -1004,6 +1006,19 @@
           <groupId>com.googlecode.maven-download-plugin</groupId>
           <artifactId>download-maven-plugin</artifactId>
           <version>${maven-download.version}</version>
+        </plugin>
+
+        <plugin>
+          <groupId>pl.project13.maven</groupId>
+          <artifactId>git-commit-id-plugin</artifactId>
+          <version>${dep.plugin.git-commit-id.version}</version>
+          <configuration>
+            <injectAllReactorProjects>true</injectAllReactorProjects>
+            <offline>true</offline>
+            <runOnlyOnce>true</runOnlyOnce>
+            <skipPoms>false</skipPoms>
+            <useNativeGit>true</useNativeGit>
+          </configuration>
         </plugin>
 
       </plugins>
