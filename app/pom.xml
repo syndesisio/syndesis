@@ -44,6 +44,7 @@
     <image.server>syndesis/syndesis-server:%l</image.server>
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
+    <image.dv>teiid/syndesis-dv:%l</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
@@ -613,18 +614,6 @@
         <errorprone.autofix.arg1>-XepPatchChecks:BadImport,DeadException,DefaultCharset,MissingOverride,UnnecessaryParentheses,UnusedVariable,UnusedMethod,FieldCanBeFinal,MethodCanBeStatic,ClassCanBeStatic,RemoveUnusedImports,ThrowsUncheckedException</errorprone.autofix.arg1>
         <errorprone.autofix.arg2>-XepPatchLocation:IN_PLACE</errorprone.autofix.arg2>
       </properties>
-    </profile>
-
-    <profile>
-      <id>dv</id>
-       <properties>
-        <!-- skip license header chedk for now, teiid has failures -->
-        <basepom.check.skip-license>true</basepom.check.skip-license>
-       </properties>
-
-      <modules>
-        <module>dv</module>
-      </modules>
     </profile>
 
   </profiles>

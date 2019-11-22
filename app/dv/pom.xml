@@ -276,7 +276,7 @@
         </property>
       </activation>
       <properties>
-        <fabric8.generator.name>teiid/syndesis-dv:%l</fabric8.generator.name>
+        <fabric8.generator.name>${image.dv}</fabric8.generator.name>
       </properties>
       <build>
         <defaultGoal>install</defaultGoal>
@@ -1055,7 +1055,7 @@
       <type>pom</type>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- to remove when we're aligned with syndesis on spring-boot -->
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -1067,7 +1067,7 @@
       <artifactId>spring-core</artifactId>
       <version>5.1.9.RELEASE</version>
     </dependency>
-    
+
   </dependencies>
 
   <reporting>
