@@ -181,10 +181,10 @@
   <properties>
     <!-- Image names -->
     <java.base.image>fabric8/s2i-java</java.base.image>
-    <fabric8.maven.plugin.version>3.5.41</fabric8.maven.plugin.version> <!-- or above 3.5.39 see THORN-1859 -->
+    <!--fabric8.maven.plugin.version>3.5.41</fabric8.maven.plugin.version--> <!-- or above 3.5.39 see THORN-1859 -->
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-720028</camel.version>
+    <!--camel.version>2.21.0.fuse-720028</camel.version-->
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
@@ -208,7 +208,9 @@
 
     <rootDir>${project.basedir}</rootDir>
     <version.h2>1.4.196</version.h2>
-    <version.io.swagger>1.5.22</version.io.swagger>
+
+    <!--version.io.swagger>1.5.22</version.io.swagger-->
+    <version.io.swagger>${swagger.version}</version.io.swagger>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
     <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
 
@@ -230,7 +232,7 @@
 
     <!-- PLUGIN BUG: Test dependencies not correctly checked -->
     <managed-deps.checkProfiles>false</managed-deps.checkProfiles>
-    <junit.version>4.12</junit.version>
+    <!--junit.version>4.12</junit.version-->
     <spotbugs.version>3.1.5</spotbugs.version>
     <!-- The version of jgit -->
     <version.jgit>4.4.1.201607150455-r</version.jgit>
@@ -247,7 +249,7 @@
     <version.io.fabric8.openshift-client>3.0.3</version.io.fabric8.openshift-client>
     <version.io.fabric8.kubernetes-api>3.0.8</version.io.fabric8.kubernetes-api>
     <version.org.hamcrest>1.3</version.org.hamcrest> <!-- tesing only -->
-    <arquillian.version>1.4.0.Final</arquillian.version>
+    <!--arquillian.version>1.4.0.Final</arquillian.version-->
 
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE At s2i -->
     <spring-boot.version>2.1.7.RELEASE</spring-boot.version>
@@ -276,7 +278,7 @@
         </property>
       </activation>
       <properties>
-        <fabric8.generator.name>teiid/syndesis-dv:%l</fabric8.generator.name>
+        <fabric8.generator.name>${image.dv}</fabric8.generator.name>
       </properties>
       <build>
         <defaultGoal>install</defaultGoal>
@@ -1055,7 +1057,7 @@
       <type>pom</type>
       <scope>test</scope>
     </dependency>
-    
+
     <!-- to remove when we're aligned with syndesis on spring-boot -->
     <dependency>
       <groupId>org.springframework.security</groupId>
@@ -1067,7 +1069,7 @@
       <artifactId>spring-core</artifactId>
       <version>5.1.9.RELEASE</version>
     </dependency>
-    
+
   </dependencies>
 
   <reporting>
