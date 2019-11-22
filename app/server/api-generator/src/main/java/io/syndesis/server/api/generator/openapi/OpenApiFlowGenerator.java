@@ -29,7 +29,6 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
-import io.syndesis.server.api.generator.swagger.HttpStatus;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 

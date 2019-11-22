@@ -20,8 +20,6 @@ import java.util.Arrays;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;

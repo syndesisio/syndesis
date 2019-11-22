@@ -17,8 +17,10 @@ package io.syndesis.server.api.generator.openapi.v2;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 public final class Oas20ModelHelper {
@@ -39,5 +41,18 @@ public final class Oas20ModelHelper {
      */
     public static boolean isArrayType(Oas20Parameter parameter) {
         return "array".equals(parameter.type);
+    }
+
+    public static String javaTypeFor(final Oas20Parameter parameter) {
+        if (isArrayType(parameter)) {
+            final Oas20Items items = parameter.items;
+            final String elementType = items.type;
+            final String elementFormat = items.format;
+
+            return JsonSchemaHelper.javaTypeFor(elementType, elementFormat) + "[]";
+        }
+
+        final String format = parameter.format;
+        return JsonSchemaHelper.javaTypeFor(parameter.type, format);
     }
 }

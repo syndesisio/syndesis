@@ -40,7 +40,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
+import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;

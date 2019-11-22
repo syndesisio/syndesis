@@ -39,7 +39,6 @@ import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Optional.ofNullable;

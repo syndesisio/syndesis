@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.util.Objects;
 

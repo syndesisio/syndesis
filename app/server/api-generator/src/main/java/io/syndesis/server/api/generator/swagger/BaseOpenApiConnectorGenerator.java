@@ -55,9 +55,9 @@ import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
-import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
-import io.syndesis.server.api.generator.swagger.util.OperationDescription;
-import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
+import io.syndesis.server.api.generator.openapi.util.OperationDescription;
+import io.syndesis.server.api.generator.openapi.util.SpecificationOptimizer;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
 import static java.util.Optional.ofNullable;
@@ -334,7 +334,7 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         }
 
         final String type = parameter.type;
-        propertyBuilder.type(type).javaType(JsonSchemaHelper.javaTypeFor(parameter));
+        propertyBuilder.type(type).javaType(Oas20ModelHelper.javaTypeFor(parameter));
 
         final List<String> enums = parameter.enum_;
         if (enums != null) {

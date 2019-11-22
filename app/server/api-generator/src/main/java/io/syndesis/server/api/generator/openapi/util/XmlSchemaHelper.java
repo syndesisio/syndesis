@@ -13,15 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.io.IOException;
 import java.io.StringWriter;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.models.OasXML;
-import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -72,10 +70,6 @@ public final class XmlSchemaHelper {
         final Boolean attribute = xml.attribute;
 
         return attribute == null || Boolean.FALSE.equals(attribute);
-    }
-
-    public static String nameOf(final Oas20SchemaDefinition model) {
-        return xmlNameOrDefault(model.xml, model.getName());
     }
 
     public static String nameOf(final OasSchema property) {
@@ -137,28 +131,12 @@ public final class XmlSchemaHelper {
         }
     }
 
-    public static boolean xmlIsWrapped(final OasSchema array) {
-        if (array == null || array.xml == null) {
-            return false;
-        }
-
-        return Boolean.TRUE.equals(array.xml.wrapped);
-    }
-
     public static String xmlNameOrDefault(final OasXML xml, final String defaultName) {
         if (xml == null || xml.name == null) {
             return defaultName;
         }
 
         return xml.name;
-    }
-
-    public static String xmlTargetNamespaceOrNull(final Oas20SchemaDefinition model) {
-        if (model == null || model.xml == null) {
-            return null;
-        }
-
-        return model.xml.namespace;
     }
 
     public static String xmlTargetNamespaceOrNull(final OasSchema property) {

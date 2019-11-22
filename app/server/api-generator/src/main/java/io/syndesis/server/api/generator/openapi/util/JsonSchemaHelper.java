@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,11 +30,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
 import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
@@ -67,19 +63,6 @@ public final class JsonSchemaHelper {
         }
 
         return Optional.empty();
-    }
-
-    public static String javaTypeFor(final Oas20Parameter parameter) {
-        if (Oas20ModelHelper.isArrayType(parameter)) {
-            final Oas20Items items = parameter.items;
-            final String elementType = items.type;
-            final String elementFormat = items.format;
-
-            return javaTypeFor(elementType, elementFormat) + "[]";
-        }
-
-        final String format = parameter.format;
-        return javaTypeFor(parameter.type, format);
     }
 
     public static ObjectNode newJsonObjectSchema() {
@@ -162,7 +145,7 @@ public final class JsonSchemaHelper {
                 .anyMatch(jsonSchemaFormat -> jsonSchemaFormat.equals(format));
     }
 
-    static String javaTypeFor(final String type, final String format) {
+    public static String javaTypeFor(final String type, final String format) {
         switch (type) {
         case "string":
             return String.class.getName();

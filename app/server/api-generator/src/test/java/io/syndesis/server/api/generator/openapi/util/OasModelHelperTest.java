@@ -23,8 +23,6 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 import org.junit.Test;
 

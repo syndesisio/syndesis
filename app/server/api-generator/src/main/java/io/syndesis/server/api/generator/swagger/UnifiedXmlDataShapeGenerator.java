@@ -42,7 +42,7 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
-import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
+import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
@@ -365,7 +365,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final Element schema = XmlSchemaHelper.newXmlSchema(targetNamespace);
 
         final Element bodyElement = XmlSchemaHelper.addElement(schema, "element");
-        bodyElement.addAttribute("name", XmlSchemaHelper.nameOf(bodySchemaToUse));
+        bodyElement.addAttribute("name", XmlSchemaHelper.xmlNameOrDefault(bodySchemaToUse.xml, bodySchemaToUse.getName()));
 
         final Element complexBody = XmlSchemaHelper.addElement(bodyElement, "complexType");
         final Element bodySequence = XmlSchemaHelper.addElement(complexBody, "sequence");
@@ -432,7 +432,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         Element elementToDeclareIn;
 
         final String namespace = XmlSchemaHelper.xmlTargetNamespaceOrNull(model);
-        final String name = XmlSchemaHelper.nameOf(model);
+        final String name = XmlSchemaHelper.xmlNameOrDefault(model.xml, model.getName());
 
         if (namespace != null && parent != null) {
             // this is element that could be in a (possibly) previously unknown

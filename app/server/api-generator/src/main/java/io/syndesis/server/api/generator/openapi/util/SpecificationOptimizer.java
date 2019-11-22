@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
