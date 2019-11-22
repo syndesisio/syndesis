@@ -33,6 +33,8 @@ import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
 import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
@@ -58,9 +60,9 @@ public final class JsonSchemaHelper {
     }
 
     public static Optional<String> determineSchemaReference(final OasSchema schema) {
-        if (Oas20ModelHelper.isReferenceType(schema)) {
+        if (OasModelHelper.isReferenceType(schema)) {
             return Optional.of(schema.$ref);
-        } else if (Oas20ModelHelper.isArrayType(schema) && schema.items != null) {
+        } else if (OasModelHelper.isArrayType(schema) && schema.items != null) {
             return determineSchemaReference((OasSchema) schema.items);
         }
 

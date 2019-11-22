@@ -43,8 +43,8 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiFlowGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.swagger.UnifiedDataShapeGenerator;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -67,8 +67,8 @@ public class Oas20FlowGenerator implements OpenApiFlowGenerator<Oas20Document> {
         final OasPaths paths = Optional.ofNullable(openApiDoc.paths)
             .orElse(openApiDoc.createPaths());
 
-        for (final Oas20PathItem pathEntry : Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)) {
-            for (final Map.Entry<String, Oas20Operation> operationEntry : Oas20ModelHelper.getOperationMap(pathEntry).entrySet()) {
+        for (final Oas20PathItem pathEntry : OasModelHelper.getPathItems(paths, Oas20PathItem.class)) {
+            for (final Map.Entry<String, Oas20Operation> operationEntry : OasModelHelper.getOperationMap(pathEntry, Oas20Operation.class).entrySet()) {
                 final Oas20Operation operation = operationEntry.getValue();
 
                 String operationName = operation.summary;
@@ -132,7 +132,7 @@ public class Oas20FlowGenerator implements OpenApiFlowGenerator<Oas20Document> {
                     .build();
 
                 if (Strings.isNullOrEmpty(operationName)) {
-                    operationName = Oas20ModelHelper.operationDescriptionOf(
+                    operationName = OasModelHelper.operationDescriptionOf(
                         openApiDoc,
                         operation,
                         (m, p) -> "Receiving " + m + " request on " + p).description;

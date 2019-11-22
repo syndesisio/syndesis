@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -23,13 +23,15 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
-public class Oas20ModelHelperTest {
+public class OasModelHelperTest {
 
     @Test
     public void minimizingShouldNotLooseMultipleKeySecurityRequirements() {
@@ -91,20 +93,20 @@ public class Oas20ModelHelperTest {
 
     @Test
     public void shouldSanitizeListOfTags() {
-        assertThat(Oas20ModelHelper.sanitizeTags(Arrays.asList("tag", "wag ", " bag", ".]t%a$g#[/")))
+        assertThat(OasModelHelper.sanitizeTags(Arrays.asList("tag", "wag ", " bag", ".]t%a$g#[/")))
             .containsExactly("tag", "wag", "bag");
     }
 
     @Test
     public void shouldSanitizeTags() {
-        assertThat(Oas20ModelHelper.sanitizeTag("tag")).isEqualTo("tag");
-        assertThat(Oas20ModelHelper.sanitizeTag(".]t%a$g#[/")).isEqualTo("tag");
+        assertThat(OasModelHelper.sanitizeTag("tag")).isEqualTo("tag");
+        assertThat(OasModelHelper.sanitizeTag(".]t%a$g#[/")).isEqualTo("tag");
 
         final char[] str = new char[1024];
         final String randomString = IntStream.range(0, str.length)
             .map(x -> (int) (Character.MAX_CODE_POINT * Math.random())).mapToObj(i -> new String(Character.toChars(i)))
             .collect(Collectors.joining(""));
-        final String sanitized = Oas20ModelHelper.sanitizeTag(randomString);
+        final String sanitized = OasModelHelper.sanitizeTag(randomString);
         assertThatCode(() -> JsonRecordSupport.validateKey(sanitized)).doesNotThrowAnyException();
     }
 }

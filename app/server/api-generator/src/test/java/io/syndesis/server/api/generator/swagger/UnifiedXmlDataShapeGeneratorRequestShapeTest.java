@@ -24,11 +24,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.io.IOUtils;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
@@ -69,7 +68,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
 
     @Test
     public void shouldGenerateAtlasmapSchemaSetForUpdatePetRequest() throws IOException {
-        final Oas20Operation openApiOperation = Oas20ModelHelper.getOperationMap((Oas20PathItem) openApiDoc.paths.getPathItem(path)).get(operation);
+        final Oas20Operation openApiOperation = OasModelHelper.getOperationMap(openApiDoc.paths.getPathItem(path), Oas20Operation.class).get(operation);
 
         final DataShape shape = generator.createShapeFromRequest(json, openApiDoc, openApiOperation);
 

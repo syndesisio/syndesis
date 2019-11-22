@@ -40,7 +40,8 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
 import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -193,7 +194,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final OasSchema items = (OasSchema) property.items;
 
         final Element itemsElement;
-        if (Oas20ModelHelper.isReferenceType(items)) {
+        if (OasModelHelper.isReferenceType(items)) {
             itemsElement = defineComplexElement(items, sequence, openApiDoc, moreSchemas);
         } else {
             itemsElement = XmlSchemaHelper.addElement(sequence, "element");
@@ -274,13 +275,13 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     private static Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation, Oas20Parameter.class);
+        final List<Oas20Parameter> operationParameters = OasModelHelper.getParameters(operation, Oas20Parameter.class);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent, Oas20Parameter.class);
+        final List<Oas20Parameter> pathParameters = OasModelHelper.getParameters(parent, Oas20Parameter.class);
         operationParameters.addAll(pathParameters);
 
         final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
@@ -290,7 +291,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
         final List<Oas20Parameter> serializableParameters = operationParameters.stream()
             .filter(p -> p.type != null)
-            .filter(Oas20ModelHelper::isSerializable)
+            .filter(OasModelHelper::isSerializable)
             .collect(Collectors.toList());
 
         if (serializableParameters.isEmpty()) {
@@ -342,12 +343,12 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         final Oas20Schema bodySchema = (Oas20Schema) body.schema;
 
         final Oas20SchemaDefinition bodySchemaToUse;
-        if (Oas20ModelHelper.isReferenceType(bodySchema)) {
+        if (OasModelHelper.isReferenceType(bodySchema)) {
             bodySchemaToUse = Oas20ModelHelper.dereference(bodySchema, openApiDoc);
-        } else if (Oas20ModelHelper.isArrayType(bodySchema)) {
+        } else if (OasModelHelper.isArrayType(bodySchema)) {
             final Oas20Schema items = (Oas20Schema) bodySchema.items;
 
-            if (Oas20ModelHelper.isReferenceType(items)) {
+            if (OasModelHelper.isReferenceType(items)) {
                 bodySchemaToUse = Oas20ModelHelper.dereference(items, openApiDoc);
             } else {
                 final String name = XmlSchemaHelper.nameOrDefault(items, "array");
@@ -386,14 +387,14 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
         final Oas20Response body = maybeResponse.get();
         final Oas20Schema bodySchema = body.schema;
-        if (Oas20ModelHelper.isReferenceType(bodySchema)) {
+        if (OasModelHelper.isReferenceType(bodySchema)) {
             return defineComplexElement(bodySchema, null, openApiDoc, moreSchemas);
-        } else if (Oas20ModelHelper.isArrayType(bodySchema)) {
+        } else if (OasModelHelper.isArrayType(bodySchema)) {
             final String targetNamespace = XmlSchemaHelper.xmlTargetNamespaceOrNull(bodySchema);
             final Element schema = XmlSchemaHelper.newXmlSchema(targetNamespace);
 
             OasSchema propertySchema = ofNullable(bodySchema.items).map(OasSchema.class::cast).orElse(null);
-            defineElementProperty(Oas20ModelHelper.getPropertyName(propertySchema, "array"), bodySchema, schema, openApiDoc, moreSchemas);
+            defineElementProperty(OasModelHelper.getPropertyName(propertySchema, "array"), bodySchema, schema, openApiDoc, moreSchemas);
 
             return schema;
         } else {
@@ -487,9 +488,9 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
     private static void defineElementProperty(final String propertyName, final Oas20Schema property, final Element parent,
                                               final Oas20Document openApiDoc, final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        if (Oas20ModelHelper.isReferenceType(property)) {
+        if (OasModelHelper.isReferenceType(property)) {
             defineComplexElement(property, parent, openApiDoc, moreSchemas);
-        } else if (Oas20ModelHelper.isArrayType(property)) {
+        } else if (OasModelHelper.isArrayType(property)) {
             defineArrayElement(property, propertyName, parent, openApiDoc, moreSchemas);
         } else {
             final Element propertyElement = XmlSchemaHelper.addElement(parent, "element");

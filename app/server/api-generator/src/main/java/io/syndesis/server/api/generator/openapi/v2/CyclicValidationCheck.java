@@ -24,7 +24,7 @@ import java.util.TreeMap;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 final class CyclicValidationCheck {
 
@@ -56,9 +56,9 @@ final class CyclicValidationCheck {
             final String name = definition.getName();
             references.putIfAbsent(name, new HashSet<>());
 
-            if (Oas20ModelHelper.isReferenceType(definition)) {
+            if (OasModelHelper.isReferenceType(definition)) {
                 referenceFrom(references, name, definition);
-            } else if (Oas20ModelHelper.isArrayType(definition)) {
+            } else if (OasModelHelper.isArrayType(definition)) {
                 final OasSchema property = (OasSchema) definition.items;
                 collectReferencesFromProperty(references, name, property);
             } else {
@@ -80,7 +80,7 @@ final class CyclicValidationCheck {
     }
 
     private static void collectReferencesFromProperty(final Map<String, Set<String>> allReferences, final String from, final OasSchema property) {
-        if (Oas20ModelHelper.isReferenceType(property)) {
+        if (OasModelHelper.isReferenceType(property)) {
             referenceFrom(allReferences, from, property);
         } else if ("object".equals(property.type)) {
             collectReferencesFromProperties(allReferences, from, property.properties);
@@ -119,7 +119,7 @@ final class CyclicValidationCheck {
     }
 
     private static void referenceFrom(final Map<String, Set<String>> allReferences, final String from, final OasSchema to) {
-        final String simpleRef = Oas20ModelHelper.getReferenceName(to.$ref);
+        final String simpleRef = OasModelHelper.getReferenceName(to.$ref);
         allReferences.putIfAbsent(from, new HashSet<>());
         allReferences.get(from).add(simpleRef);
     }

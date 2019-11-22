@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger.util;
+package io.syndesis.server.api.generator.openapi.util;
 
 import java.util.Arrays;
 
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -28,7 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
-public class Oas20OperationDescriptionGenerationTest {
+public class OperationDescriptionGenerationTest {
 
     private final OperationDescription expected;
 
@@ -36,8 +38,8 @@ public class Oas20OperationDescriptionGenerationTest {
 
     private final Oas20Document openApiDoc;
 
-    public Oas20OperationDescriptionGenerationTest(final String operationSummary, final String operationDescription,
-                                                   final String expectedName, final String expectedDescription) {
+    public OperationDescriptionGenerationTest(final String operationSummary, final String operationDescription,
+                                              final String expectedName, final String expectedDescription) {
         operation = new Oas20Operation("get");
         operation.description = operationDescription;
         operation.summary = operationSummary;
@@ -52,7 +54,7 @@ public class Oas20OperationDescriptionGenerationTest {
 
     @Test
     public void shouldDetermineOperationDescriptions() {
-        assertThat(Oas20ModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
+        assertThat(OasModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p)).isEqualTo(expected);
     }
 
     @Parameters

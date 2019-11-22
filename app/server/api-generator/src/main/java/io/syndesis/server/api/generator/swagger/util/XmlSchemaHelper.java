@@ -21,6 +21,7 @@ import java.io.StringWriter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.models.OasXML;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -78,11 +79,11 @@ public final class XmlSchemaHelper {
     }
 
     public static String nameOf(final OasSchema property) {
-        if (Oas20ModelHelper.isReferenceType(property)) {
+        if (OasModelHelper.isReferenceType(property)) {
             throw new IllegalArgumentException("Make sure that you dereference property, given: " + property);
         }
 
-        return xmlNameOrDefault(property.xml, Oas20ModelHelper.getPropertyName(property));
+        return xmlNameOrDefault(property.xml, OasModelHelper.getPropertyName(property));
     }
 
     public static String nameOrDefault(final OasSchema property, final String name) {

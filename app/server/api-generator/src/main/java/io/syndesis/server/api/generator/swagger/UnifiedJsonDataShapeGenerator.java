@@ -39,8 +39,8 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
@@ -117,13 +117,13 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     private static ObjectNode createJsonSchemaForParametersOf(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation, Oas20Parameter.class);
+        final List<Oas20Parameter> operationParameters = OasModelHelper.getParameters(operation, Oas20Parameter.class);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent, Oas20Parameter.class);
+        final List<Oas20Parameter> pathParameters = OasModelHelper.getParameters(parent, Oas20Parameter.class);
         operationParameters.addAll(pathParameters);
 
         final List<Oas20ParameterDefinition> globalParameters = Optional.ofNullable(openApiDoc.parameters)
@@ -133,7 +133,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
         return createSchemaFor(operationParameters.stream()
             .filter(p -> p.type != null)
-            .filter(Oas20ModelHelper::isSerializable)
+            .filter(OasModelHelper::isSerializable)
             .collect(Collectors.toList()));
     }
 
@@ -207,7 +207,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     private static ObjectNode createSchemaFromModel(final ObjectNode json, final String name, final Oas20Schema schema) {
-        if (Oas20ModelHelper.isArrayType(schema)) {
+        if (OasModelHelper.isArrayType(schema)) {
             final Oas20Schema items = (Oas20Schema) schema.items;
 
             final ObjectNode itemSchema = createSchemaFromProperty(json, name, items);
@@ -218,7 +218,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             jsonSchema.set("items", itemSchema);
 
             return jsonSchema;
-        } else if (Oas20ModelHelper.isReferenceType(schema)) {
+        } else if (OasModelHelper.isReferenceType(schema)) {
             final String title = determineTitleOf(name, schema);
             return JsonSchemaHelper.resolveSchemaForReference(json, title, schema.$ref);
         }
@@ -241,7 +241,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             } catch (final Exception e) {
                 throw new IllegalStateException("Unable to serialize/read given JSON specification in response schema: " + schema, e);
             }
-        } else if (Oas20ModelHelper.isReferenceType(schema) || Oas20ModelHelper.isArrayType(schema)) {
+        } else if (OasModelHelper.isReferenceType(schema) || OasModelHelper.isArrayType(schema)) {
             final String reference = JsonSchemaHelper.determineSchemaReference(schema)
                                                      .orElseThrow(() -> new IllegalArgumentException("Only references to schemas are supported"));
             final String title = determineTitleOf(name, schema);
@@ -263,7 +263,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         }
 
         final Optional<String> reference = JsonSchemaHelper.determineSchemaReference(schema);
-        return reference.map(Oas20ModelHelper::getReferenceName)
+        return reference.map(OasModelHelper::getReferenceName)
                         .orElse(name);
     }
 

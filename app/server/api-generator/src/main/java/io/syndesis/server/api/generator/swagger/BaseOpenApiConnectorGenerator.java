@@ -34,12 +34,12 @@ import io.apicurio.datamodels.core.models.Extension;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -53,9 +53,9 @@ import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import io.syndesis.server.api.generator.swagger.util.SpecificationOptimizer;
 import io.syndesis.server.api.generator.util.ActionComparator;
@@ -112,11 +112,11 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         if (paths == null) {
             tagCounts = Collections.emptyMap();
         } else {
-            tagCounts = Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)
+            tagCounts = OasModelHelper.getPathItems(paths)
                 .stream()
-                .flatMap(p -> Oas20ModelHelper.getOperationMap(p).values().stream())
+                .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())
                 .peek(o -> total.incrementAndGet())
-                .flatMap(o -> Oas20ModelHelper.sanitizeTags(o.tags).distinct())
+                .flatMap(o -> OasModelHelper.sanitizeTags(o.tags).distinct())
                 .collect(
                     Collectors.groupingBy(
                         Function.identity(),
@@ -191,8 +191,8 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
         final String connectorId = connector.getId().orElseThrow(() -> new IllegalArgumentException("Missing connector identifier"));
         final List<ConnectorAction> actions = new ArrayList<>();
         final Map<String, Integer> operationIdCounts = new HashMap<>();
-        for (final Oas20PathItem path : Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class)) {
-            final Map<String, Oas20Operation> operationMap = Oas20ModelHelper.getOperationMap(path);
+        for (final OasPathItem path : OasModelHelper.getPathItems(paths)) {
+            final Map<String, Oas20Operation> operationMap = OasModelHelper.getOperationMap(path, Oas20Operation.class);
 
             for (final Entry<String, Oas20Operation> entry : operationMap.entrySet()) {
                 final Oas20Operation operation = entry.getValue();
@@ -219,14 +219,14 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
                     .connectorId(connectorId)
                     .build();
 
-                final OperationDescription description = Oas20ModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p);
+                final OperationDescription description = OasModelHelper.operationDescriptionOf(openApiDoc, operation, (m, p) -> "Send " + m + " request to " + p);
 
                 final ConnectorAction action = new ConnectorAction.Builder()
                     .id(createActionId(connectorId, operation))
                     .name(description.name)
                     .description(description.description)
                     .pattern(Action.Pattern.To)
-                    .descriptor(descriptor).tags(Oas20ModelHelper.sanitizeTags(operation.tags).distinct()::iterator)
+                    .descriptor(descriptor).tags(OasModelHelper.sanitizeTags(operation.tags).distinct()::iterator)
                     .build();
 
                 actions.add(action);
@@ -303,14 +303,14 @@ abstract class BaseOpenApiConnectorGenerator extends ConnectorGenerator {
     }
 
     static Optional<ConfigurationProperty> createPropertyFromParameter(final Oas20Parameter parameter) {
-        if (Oas20ModelHelper.isReferenceType(parameter) || Oas20ModelHelper.isBody(parameter)) {
+        if (OasModelHelper.isReferenceType(parameter) || OasModelHelper.isBody(parameter)) {
             // Reference parameters are not supported, body parameters are
             // handled in createShape* methods
 
             return Optional.empty();
         }
 
-        if (!Oas20ModelHelper.isSerializable(parameter)) {
+        if (!OasModelHelper.isSerializable(parameter)) {
             throw new IllegalArgumentException("Unexpected parameter type received, neither ref, body nor serializable: " + parameter);
         }
 

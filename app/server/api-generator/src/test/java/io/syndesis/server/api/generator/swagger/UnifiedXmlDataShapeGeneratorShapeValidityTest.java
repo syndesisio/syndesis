@@ -39,7 +39,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -222,7 +222,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
                 .filter(Oas20PathItem.class::isInstance)
                 .map(Oas20PathItem.class::cast)
                 .forEach(pathItem -> {
-                    Oas20ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
+                    OasModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
                         final Optional<OasParameter> bodyParameter = BaseDataShapeGenerator.findBodyParameter(operation);
                         if (!bodyParameter.isPresent()) {
                             // by default we resort to JSON for payloads without

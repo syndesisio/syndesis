@@ -45,10 +45,10 @@ import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.v2.Oas20FlowGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30FlowGenerator;
-import io.syndesis.server.api.generator.swagger.util.Oas20ModelHelper;
 
 /**
  * Basic API generator generates integrations from Open API specifications. Supports both Open API v2 and V3 by delegating
@@ -120,7 +120,7 @@ public class OpenApiGenerator implements APIGenerator {
         }
 
         final OasPaths paths = model.paths;
-        final ActionsSummary actionsSummary = determineSummaryFrom(Oas20ModelHelper.getPathItems(paths, Oas20PathItem.class));
+        final ActionsSummary actionsSummary = determineSummaryFrom(OasModelHelper.getPathItems(paths, Oas20PathItem.class));
 
         final Info info = model.info;
         final String title = Optional.ofNullable(info).map(i -> i.title).orElse("unspecified");
@@ -203,9 +203,9 @@ public class OpenApiGenerator implements APIGenerator {
         final AtomicInteger total = new AtomicInteger(0);
 
         final Map<String, Integer> tagCounts = paths.stream()//
-            .flatMap(p -> Oas20ModelHelper.getOperationMap(p).values().stream())//
+            .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())//
             .peek(o -> total.incrementAndGet())//
-            .flatMap(o -> Oas20ModelHelper.sanitizeTags(o.tags))//
+            .flatMap(o -> OasModelHelper.sanitizeTags(o.tags))//
             .collect(//
                 Collectors.groupingBy(//
                     Function.identity(), //
