@@ -81,8 +81,9 @@ download_operator_binary() {
     fi
 
     case "$OSTYPE" in
-        darwin*)  pattern="darwin" ;;
+        darwin*)  pattern="darwin-amd64" ;;
         linux*)   pattern="linux-amd64" ;;
+        msys*)    pattern="windows-amd64" ;;  #using mingw64 on windows
         *)        pattern="unknown" ;;
     esac
 
