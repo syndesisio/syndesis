@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -101,7 +102,7 @@ public class OpenApiGenerator implements APIGenerator {
                 final Oas20Operation operation = operationEntry.getValue();
 
                 String operationName = operation.summary;
-                final String operationDescription = operationEntry.getKey() + " " + pathEntry.getPath();
+                final String operationDescription = operationEntry.getKey().toUpperCase(Locale.US) + " " + pathEntry.getPath();
 
                 final String operationId = requireUniqueOperationId(operation.operationId, alreadyUsedOperationIds);
                 alreadyUsedOperationIds.add(operationId);
