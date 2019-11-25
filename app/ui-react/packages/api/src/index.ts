@@ -24,6 +24,7 @@ export * from './useIntegrationHelpers';
 export * from './usePolling';
 export * from './useViewDefinition';
 export * from './useViewDefinitionDescriptors';
+export * from './useVirtualizationEditions';
 export * from './useVirtualizationHelpers';
 export * from './useVirtualizationConnectionSchema';
 export * from './useVirtualizationConnectionStatuses';

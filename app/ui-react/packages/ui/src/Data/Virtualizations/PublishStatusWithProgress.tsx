@@ -6,12 +6,14 @@ import './PublishStatusWithProgress.css';
 export interface IPublishStatusWithProgressProps {
   isProgressWithLink: boolean;
   i18nPublishState: string;
-  labelType: 'danger' | 'primary' | 'default';
   i18nPublishLogUrlText: string;
+  labelType: 'danger' | 'primary' | 'default';
+  modified: boolean;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
   publishingStepText?: string;
+  publishVersion?: number;
 }
 
 export const PublishStatusWithProgress: React.FunctionComponent<
@@ -34,17 +36,25 @@ export const PublishStatusWithProgress: React.FunctionComponent<
           }
           i18nLogUrlText={props.i18nPublishLogUrlText}
         />
+        {props.publishVersion
+          ? '(version: ' + props.publishVersion + ') '
+          : null}
+        {props.modified ? ' M ' : null}
       </div>
     );
   }
 
   // no progress bar needed so just show a label
   return (
-    <Label
-      className={'publish-status-with-progress__label'}
-      type={props.labelType}
-    >
-      {props.i18nPublishState}
-    </Label>
+    <React.Fragment>
+      <Label
+        className={'publish-status-with-progress__label'}
+        type={props.labelType}
+      >
+        {props.i18nPublishState}
+      </Label>
+      {props.publishVersion ? '(version: ' + props.publishVersion + ') ' : null}
+      {props.modified ? ' M ' : null}
+    </React.Fragment>
   );
 };

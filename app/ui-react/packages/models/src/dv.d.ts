@@ -2,6 +2,7 @@
 export interface Virtualization {
   empty: boolean;
   id: string;
+  modified: boolean;
   name: string;
   odataHostName?: string;
   podNamespace?: string;
@@ -18,9 +19,18 @@ export interface Virtualization {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
+  publishedRevision?: number;
   serviceViewModel: string;
   description: string;
   usedBy: string[];
+}
+
+export interface VirtualizationEdition {
+  id: string;
+  description: string;
+  revision: number;
+  dataVirtualizationName: string;
+  createdAt: string;
 }
 
 export interface SchemaNode {

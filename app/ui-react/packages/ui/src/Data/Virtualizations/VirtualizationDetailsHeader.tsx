@@ -10,12 +10,14 @@ import './VirtualizationDetailsHeader.css';
 export interface IVirtualizationDetailsHeaderProps {
   isProgressWithLink: boolean;
   i18nPublishState: string;
-  labelType: 'danger' | 'primary' | 'default';
   i18nDescriptionPlaceholder: string;
   i18nInUseText: string;
   i18nPublishLogUrlText: string;
+  labelType: 'danger' | 'primary' | 'default';
+  modified: boolean;
   odataUrl?: string;
   publishedState: VirtualizationPublishState;
+  publishedVersion?: number;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -46,12 +48,14 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                 <PublishStatusWithProgress
                   isProgressWithLink={props.isProgressWithLink}
                   i18nPublishState={props.i18nPublishState}
-                  labelType={props.labelType}
                   i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+                  labelType={props.labelType}
+                  modified={props.modified}
                   publishingCurrentStep={props.publishingCurrentStep}
                   publishingLogUrl={props.publishingLogUrl}
                   publishingTotalSteps={props.publishingTotalSteps}
                   publishingStepText={props.publishingStepText}
+                  publishVersion={props.publishedVersion}
                 />
               ) : (
                 <Loader size={'sm'} inline={true} />

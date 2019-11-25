@@ -1,6 +1,6 @@
 import { Bullseye } from '@patternfly/react-core';
 import { action } from '@storybook/addon-actions';
-import { text } from '@storybook/addon-knobs';
+import { boolean, text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -82,45 +82,47 @@ stories
   .add(
     'sample virtualization item',
     withNotes(publishedVirtualizationNotes)(() => (
-    <Router>
-      <Bullseye>
-        <VirtualizationListItem
-          isProgressWithLink={true}
-          i18nDeleteInProgressText={'Deleting...'}
-          i18nPublishInProgressText={publishInProgressText}
-          i18nUnpublishInProgressText={unpublishInProgressText}
-          i18nPublishState={'Unpublishing...'}
-          labelType={'default'}
-          publishingStepText={'Building'}
-          hasViews={true}
-          virtualizationName={virtualizationName}
-          virtualizationDescription={virtualizationDescription}
-          i18nCancelText={cancelText}
-          i18nDelete={deleteText}
-          i18nDeleteModalMessage={confirmDeleteMessage}
-          i18nDeleteModalTitle={confirmDeleteTitle}
-          icon={text('icon', virtualizationIconData)}
-          i18nEdit={editText}
-          i18nEditTip={editTip}
-          i18nExport={'Export'}
-          i18nInUseText={'The virtualization is in use by an integration.'}
-          i18nUnpublish={unpublishText}
-          i18nPublish={publishText}
-          i18nPublishLogUrlText={publishLogUrlText}
-          i18nUnpublishModalMessage={confirmUnpublishMessage}
-          i18nUnpublishModalTitle={confirmUnpublishTitle}
-          detailsPageLink={'/details/page/link'}
-          onDelete={action(deleteText)}
-          onExport={action(exportText)}
-          onUnpublish={action(unpublishText)}
-          onPublish={action(publishText)}
-          currentPublishedState={'BUILDING'}
-          publishingLogUrl={text('publishLogUrl', publishLogUrl)}
-          usedBy={['stuff']}
-        />
-      </Bullseye>
-    </Router>
-  )))
+      <Router>
+        <Bullseye>
+          <VirtualizationListItem
+            isProgressWithLink={true}
+            i18nDeleteInProgressText={'Deleting...'}
+            i18nPublishInProgressText={publishInProgressText}
+            i18nUnpublishInProgressText={unpublishInProgressText}
+            i18nPublishState={'Unpublishing...'}
+            labelType={'default'}
+            publishingStepText={'Building'}
+            hasViews={true}
+            virtualizationName={virtualizationName}
+            virtualizationDescription={virtualizationDescription}
+            i18nCancelText={cancelText}
+            i18nDelete={deleteText}
+            i18nDeleteModalMessage={confirmDeleteMessage}
+            i18nDeleteModalTitle={confirmDeleteTitle}
+            icon={text('icon', virtualizationIconData)}
+            i18nEdit={editText}
+            i18nEditTip={editTip}
+            i18nExport={'Export'}
+            i18nInUseText={'The virtualization is in use by an integration.'}
+            i18nUnpublish={unpublishText}
+            i18nPublish={publishText}
+            i18nPublishLogUrlText={publishLogUrlText}
+            i18nUnpublishModalMessage={confirmUnpublishMessage}
+            i18nUnpublishModalTitle={confirmUnpublishTitle}
+            modified={boolean('modified', false)}
+            detailsPageLink={'/details/page/link'}
+            onDelete={action(deleteText)}
+            onExport={action(exportText)}
+            onUnpublish={action(unpublishText)}
+            onPublish={action(publishText)}
+            currentPublishedState={'BUILDING'}
+            publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+            usedBy={['stuff']}
+          />
+        </Bullseye>
+      </Router>
+    ))
+  )
 
   .add('virtualization item with odata', () => (
     <Router>
@@ -150,6 +152,7 @@ stories
           i18nPublishLogUrlText={publishLogUrlText}
           i18nUnpublishModalMessage={confirmUnpublishMessage}
           i18nUnpublishModalTitle={confirmUnpublishTitle}
+          modified={boolean('modified', false)}
           detailsPageLink={'/details/page/link'}
           onDelete={action(deleteText)}
           onExport={action(exportText)}

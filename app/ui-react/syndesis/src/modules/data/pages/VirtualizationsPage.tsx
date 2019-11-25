@@ -284,6 +284,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             detailsPageLink={resolvers.virtualizations.views.root(
                               { virtualization }
                             )}
+                            modified={virtualization.modified}
                             hasViews={!virtualization.empty}
                             virtualizationName={virtualization.name}
                             virtualizationDescription={getDescription(
@@ -316,6 +317,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             onUnpublish={doUnpublish}
                             onPublish={doPublish}
                             currentPublishedState={publishingDetails.state}
+                            currentPublishedVersion={
+                              virtualization.publishedRevision
+                            }
                             publishingLogUrl={publishingDetails.logUrl}
                             publishingCurrentStep={publishingDetails.stepNumber}
                             publishingTotalSteps={publishingDetails.stepTotal}
