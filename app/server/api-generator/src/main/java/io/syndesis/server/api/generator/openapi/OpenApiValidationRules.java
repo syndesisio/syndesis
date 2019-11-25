@@ -61,15 +61,15 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
 
     @Override
     public OpenApiModelInfo apply(final OpenApiModelInfo modelInfo) {
-        if (modelInfo.isOpenApiV2()) {
-            return v2Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
+        switch (modelInfo.getApiVersion()) {
+            case V2:
+                return v2Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
+            case V3:
+                return v3Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
+            default:
+                LOG.warn(String.format("Unable to apply custom validation rules on OpenAPI document type '%s'", modelInfo.getModel().getClass()));
         }
 
-        if (modelInfo.isOpenApiV3()) {
-            return v3Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
-        }
-
-        LOG.warn(String.format("Unable to apply custom validation rules on OpenAPI document type '%s'", modelInfo.getModel().getClass()));
         return modelInfo;
     }
 

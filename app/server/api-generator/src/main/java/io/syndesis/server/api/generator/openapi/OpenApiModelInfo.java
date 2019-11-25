@@ -49,13 +49,13 @@ public interface OpenApiModelInfo {
     OasDocument getModel();
 
     @JsonIgnore
-    default boolean isOpenApiV2() {
-        return getModel() instanceof Oas20Document;
+    default OpenApiVersion getApiVersion() {
+        return OpenApiVersion.fromDocumentType(getModel());
     }
 
     @JsonIgnore
     default Oas20Document getV2Model() {
-        if (!isOpenApiV2()) {
+        if (getApiVersion() != OpenApiVersion.V2) {
             throw new IllegalStateException("Unable to retrieve OpenAPI 2.x document.");
         }
 
@@ -63,13 +63,8 @@ public interface OpenApiModelInfo {
     }
 
     @JsonIgnore
-    default boolean isOpenApiV3() {
-        return getModel() instanceof Oas20Document;
-    }
-
-    @JsonIgnore
     default Oas30Document getV3Model() {
-        if (!isOpenApiV3()) {
+        if (getApiVersion() != OpenApiVersion.V3) {
             throw new IllegalStateException("Unable to retrieve OpenAPI 3.x document.");
         }
 

@@ -74,12 +74,15 @@ public class OpenApiGenerator implements APIGenerator {
             .createdAt(System.currentTimeMillis())
             .name(name);
 
-        if (info.isOpenApiV2()) {
-            new Oas20FlowGenerator().generateFlows(info.getV2Model(), integration, info, template);
-        } else if (info.isOpenApiV3()) {
-            new Oas30FlowGenerator().generateFlows(info.getV3Model(), integration, info, template);
-        } else {
-            throw new IllegalStateException(String.format("Unable to retrieve integration flow generator for OpenAPI document type '%s'", openApiDoc.getClass()));
+        switch (info.getApiVersion()) {
+            case V2:
+                new Oas20FlowGenerator().generateFlows(info.getV2Model(), integration, info, template);
+                break;
+            case V3:
+                new Oas30FlowGenerator().generateFlows(info.getV3Model(), integration, info, template);
+                break;
+            default:
+                throw new IllegalStateException(String.format("Unable to retrieve integration flow generator for OpenAPI document type '%s'", openApiDoc.getClass()));
         }
 
         // TODO: evaluate what can be shrinked (e.g. Oas20Helper#minimalOpenApiUsedByComponent)

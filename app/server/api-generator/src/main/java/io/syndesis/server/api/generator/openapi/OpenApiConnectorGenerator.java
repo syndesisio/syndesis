@@ -136,16 +136,17 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     }
 
     protected ConnectorDescriptor createDescriptor(String connectorId, OpenApiModelInfo info, OasOperation operation) {
-        if (info.isOpenApiV2()) {
-            return Oas20ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV2Model(), (Oas20Operation) operation)
-                .connectorId(connectorId)
-                .build();
-        } else if (info.isOpenApiV3()) {
-            return Oas30ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV3Model(), (Oas30Operation) operation)
-                .connectorId(connectorId)
-                .build();
-        } else {
-            throw new IllegalStateException(String.format("Unable to build connector descriptor for OpenAPI document type '%s'", info.getModel().getClass()));
+        switch (info.getApiVersion()) {
+            case V2:
+                return Oas20ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV2Model(), (Oas20Operation) operation)
+                    .connectorId(connectorId)
+                    .build();
+            case V3:
+                return Oas30ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV3Model(), (Oas30Operation) operation)
+                    .connectorId(connectorId)
+                    .build();
+            default:
+                throw new IllegalStateException(String.format("Unable to build connector descriptor for OpenAPI document type '%s'", info.getModel().getClass()));
         }
     }
 
@@ -169,11 +170,16 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> alreadyConfiguredProperties = builder.build().getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
-            Optional<ConfigurationProperty> maybeProperty = Optional.empty();
-            if (info.isOpenApiV2()) {
-                maybeProperty = Oas20PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
-            } else if (info.isOpenApiV3()) {
-                maybeProperty = Oas30PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+            Optional<ConfigurationProperty> maybeProperty;
+            switch (info.getApiVersion()) {
+                case V2:
+                    maybeProperty = Oas20PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+                    break;
+                case V3:
+                    maybeProperty = Oas30PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+                    break;
+                default:
+                    maybeProperty = Optional.empty();
             }
 
             maybeProperty.ifPresent(property -> {
@@ -294,12 +300,15 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     }
 
     private static void addGlobalParameters(final Connector.Builder builder, final OpenApiModelInfo info) {
-        if (info.isOpenApiV2()) {
-            Oas20ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV2Model());
-        } else if (info.isOpenApiV3()) {
-            Oas30ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV3Model());
-        } else {
-            throw new IllegalStateException(String.format("Unable to build connector for OpenAPI document type '%s'", info.getModel().getClass()));
+        switch (info.getApiVersion()) {
+            case V2:
+                Oas20ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV2Model());
+                break;
+            case V3:
+                Oas30ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV3Model());
+                break;
+            default:
+                throw new IllegalStateException(String.format("Unable to build connector for OpenAPI document type '%s'", info.getModel().getClass()));
         }
     }
 
