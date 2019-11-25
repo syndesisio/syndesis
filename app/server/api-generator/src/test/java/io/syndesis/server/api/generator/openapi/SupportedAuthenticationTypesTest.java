@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi;
 
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -38,7 +38,7 @@ public class SupportedAuthenticationTypesTest {
     @Test
     public void shouldGenerateLabelsWithDescription() {
         final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
-        securityScheme.type = Oas20PropertyGenerators.SchemeType.BASIC.getName();
+        securityScheme.type = SchemeType.BASIC.getName();
         securityScheme.description = "description";
 
         assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
@@ -52,7 +52,7 @@ public class SupportedAuthenticationTypesTest {
     @Test
     public void shouldGenerateLabelsWithoutDescription() {
         final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
-        securityScheme.type = Oas20PropertyGenerators.SchemeType.BASIC.getName();
+        securityScheme.type = SchemeType.BASIC.getName();
 
         assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
             .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()

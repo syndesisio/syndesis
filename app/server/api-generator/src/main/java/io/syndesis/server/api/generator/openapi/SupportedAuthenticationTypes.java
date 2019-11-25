@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -21,34 +21,33 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
+import io.apicurio.datamodels.core.models.common.SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("ImmutableEnumChecker")
-enum SupportedAuthenticationTypes {
+public enum SupportedAuthenticationTypes {
     apiKey("API Key"),
     basic("HTTP Basic Authentication"),
-    oauth2("OAuth 2.0", SupportedAuthenticationTypes::authorizationFlow);
+    oauth2("OAuth 2.0", SupportedAuthenticationTypes::oauthType, SupportedAuthenticationTypes::oauthFlow);
 
     private static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values())
         .map(SupportedAuthenticationTypes::name)
         .collect(Collectors.toSet());
 
-    final String label;
-
     final transient ConfigurationProperty.PropertyValue propertyValue;
 
-    private final Predicate<Oas20SecurityScheme> filter;
+    private final Predicate<String> authTypeFilter;
+    private final Predicate<String> authFlowFilter;
 
     SupportedAuthenticationTypes(final String label) {
-        this(label, SupportedAuthenticationTypes::any);
+        this(label, SupportedAuthenticationTypes::any, SupportedAuthenticationTypes::any);
     }
 
-    SupportedAuthenticationTypes(final String label, final Predicate<Oas20SecurityScheme> filter) {
-        this.label = label;
-        this.filter = filter;
+    SupportedAuthenticationTypes(final String label, final Predicate<String> authTypeFilter, final Predicate<String> authFlowFilter) {
+        this.authTypeFilter = authTypeFilter;
+        this.authFlowFilter = authFlowFilter;
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
     }
 
@@ -62,7 +61,7 @@ enum SupportedAuthenticationTypes {
         return valueOf(value);
     }
 
-    static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final Oas20SecurityScheme scheme) {
+    public static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final SecurityScheme scheme) {
         final PropertyValue template = valueOf(scheme.type).propertyValue;
 
         final PropertyValue propertyValue = new ConfigurationProperty.PropertyValue.Builder()
@@ -83,20 +82,22 @@ enum SupportedAuthenticationTypes {
             .build();
     }
 
-    static boolean supports(final Oas20SecurityScheme scheme) {
-        final String type = scheme.type;
-        return SUPPORTED.contains(type) && valueOf(type).filter.test(scheme);
+    public static boolean supports(final String schemeType, final String flow) {
+        SupportedAuthenticationTypes supported = fromSecurityDefinition(schemeType);
+        return SUPPORTED.contains(schemeType) &&
+            supported.authTypeFilter.test(schemeType) &&
+            supported.authFlowFilter.test(flow);
     }
 
-    private static boolean any(@SuppressWarnings("unused") final Oas20SecurityScheme scheme) {
+    private static boolean any(@SuppressWarnings("unused") final String typeOrScheme) {
         return true;
     }
 
-    private static boolean authorizationFlow(final Oas20SecurityScheme scheme) {
-        if (!"oauth2".equals(scheme.type)) {
-            return false;
-        }
+    private static boolean oauthType(final String type) {
+        return "oauth2".equals(type);
+    }
 
-        return "accessCode".equals(scheme.flow);
+    private static boolean oauthFlow(final String scheme) {
+        return "accessCode".equals(scheme);
     }
 }

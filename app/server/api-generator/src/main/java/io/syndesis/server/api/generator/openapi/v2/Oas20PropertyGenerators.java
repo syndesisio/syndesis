@@ -34,6 +34,8 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.PropertyGenerator;
+import io.syndesis.server.api.generator.openapi.SchemeType;
+import io.syndesis.server.api.generator.openapi.SupportedAuthenticationTypes;
 import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Optional.empty;
@@ -89,7 +91,7 @@ public enum Oas20PropertyGenerators {
                 }
 
                 final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.stream()
-                    .filter(SupportedAuthenticationTypes::supports)
+                    .filter(scheme -> SupportedAuthenticationTypes.supports(scheme.type, scheme.flow))
                     .map(e -> SupportedAuthenticationTypes.asPropertyValue(e.getSchemeName(), e))
                     .toArray(ConfigurationProperty.PropertyValue[]::new);
 
@@ -201,29 +203,6 @@ public enum Oas20PropertyGenerators {
         .addEnum(ConfigurationProperty.PropertyValue.Builder.of("none", "No Security"))
         .build();
 
-    /**
-     * Supported security schemes.
-     */
-    enum SchemeType {
-        OAUTH2("oauth2"),
-        BASIC("basic"),
-        API_KEY("apiKey");
-
-        private final String name;
-        SchemeType(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        @Override
-        public String toString() {
-            return name;
-        }
-    }
-
     protected abstract PropertyGenerator propertyGenerator();
 
     static String createHostUri(final String scheme, final String host, final int port) {
@@ -294,7 +273,7 @@ public enum Oas20PropertyGenerators {
 
         final List<Oas20SecurityScheme> supportedSecuritySchemes = securitySchemes.stream()
             .filter(scheme -> type.getName().equals(scheme.type))
-            .filter(SupportedAuthenticationTypes::supports)
+            .filter(scheme -> SupportedAuthenticationTypes.supports(scheme.type, scheme.flow))
             .collect(Collectors.toList());
 
         if (supportedSecuritySchemes.isEmpty()) {

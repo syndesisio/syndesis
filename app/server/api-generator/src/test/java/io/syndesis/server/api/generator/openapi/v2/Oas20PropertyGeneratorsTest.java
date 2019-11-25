@@ -26,6 +26,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.SchemeType;
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators.createHostUri;
@@ -141,7 +142,7 @@ public class Oas20PropertyGeneratorsTest {
             .build();
 
         final Optional<Oas20SecurityScheme> got = Oas20PropertyGenerators.securityDefinition(
-            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, Oas20PropertyGenerators.SchemeType.BASIC);
+            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, SchemeType.BASIC);
         assertThat(got).containsSame(securityScheme);
     }
 
@@ -158,7 +159,7 @@ public class Oas20PropertyGeneratorsTest {
             .build();
 
         final Optional<Oas20SecurityScheme> got = Oas20PropertyGenerators.securityDefinition(
-            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, Oas20PropertyGenerators.SchemeType.BASIC);
+            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, SchemeType.BASIC);
         assertThat(got).containsSame(securityScheme);
     }
 
@@ -222,7 +223,7 @@ public class Oas20PropertyGeneratorsTest {
 
     private static Oas20SecurityScheme oauth2SecurityScheme(String name, String flow, String tokenUrl, String authorizationUrl) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = Oas20PropertyGenerators.SchemeType.OAUTH2.getName();
+        securityScheme.type = SchemeType.OAUTH2.getName();
         securityScheme.tokenUrl = tokenUrl;
         securityScheme.authorizationUrl = authorizationUrl;
         securityScheme.flow = flow;
@@ -231,13 +232,13 @@ public class Oas20PropertyGeneratorsTest {
 
     private static Oas20SecurityScheme basicAuthSecurityScheme(String name) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = Oas20PropertyGenerators.SchemeType.BASIC.getName();
+        securityScheme.type = SchemeType.BASIC.getName();
         return  securityScheme;
     }
 
     private static Oas20SecurityScheme apiKeySecurityScheme(String name) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = Oas20PropertyGenerators.SchemeType.API_KEY.getName();
+        securityScheme.type = SchemeType.API_KEY.getName();
         return  securityScheme;
     }
 }
