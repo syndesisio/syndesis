@@ -17,6 +17,7 @@ package io.syndesis.server.api.generator.swagger;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
 import io.syndesis.common.model.action.ConnectorAction;
@@ -82,9 +83,15 @@ public class OpenApiGeneratorTest {
 
         final List<Flow> flows = apiIntegration.getIntegration().getFlows();
 
-        assertThat(flows).filteredOn(operationIdEquals("operation-1")).first().hasFieldOrPropertyWithValue("name", "Receiving GET request on /hi");
-        assertThat(flows).filteredOn(operationIdEquals("operation-2")).first().hasFieldOrPropertyWithValue("name", "post operation");
-        assertThat(flows).filteredOn(operationIdEquals("operation-3")).first().hasFieldOrPropertyWithValue("name", "Receiving PUT request on /hi");
+        assertThat(flows).filteredOn(operationIdEquals("operation-1")).first()
+            .hasFieldOrPropertyWithValue("description", Optional.of("GET /hi"))
+            .hasFieldOrPropertyWithValue("name", "Receiving GET request on /hi");
+        assertThat(flows).filteredOn(operationIdEquals("operation-2")).first()
+            .hasFieldOrPropertyWithValue("description", Optional.of("POST /hi"))
+            .hasFieldOrPropertyWithValue("name", "post operation");
+        assertThat(flows).filteredOn(operationIdEquals("operation-3")).first()
+            .hasFieldOrPropertyWithValue("description", Optional.of("PUT /hi"))
+            .hasFieldOrPropertyWithValue("name", "Receiving PUT request on /hi");
     }
 
     private static Connection dummyConnection() {
