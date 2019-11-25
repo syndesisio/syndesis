@@ -212,7 +212,7 @@
     <!--version.io.swagger>1.5.22</version.io.swagger-->
     <version.io.swagger>${swagger.version}</version.io.swagger>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
-    <!--kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version-->
+    <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
 
     <!-- <spring-cloud.version>Dalston.SR5</spring-cloud.version> -->
 
