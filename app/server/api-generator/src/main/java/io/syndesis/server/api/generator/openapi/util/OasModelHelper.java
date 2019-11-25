@@ -26,7 +26,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,6 +40,7 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import org.apache.commons.lang3.StringUtils;
 
@@ -358,5 +361,58 @@ public final class OasModelHelper {
             .map(extension -> (URI) extension.value)
             .findFirst()
             .orElse(null);
+    }
+
+    /**
+     * Find parameter that is specified to live in the body.
+     * @param operation holding some parameters.
+     * @return the body parameter.
+     */
+    public static Optional<OasParameter> findBodyParameter(final OasOperation operation) {
+        if (operation.parameters == null) {
+            return Optional.empty();
+        }
+
+        final List<OasParameter> operationParameters = operation.parameters;
+
+        return operationParameters.stream()
+            .filter(p -> "body".equals(p.in) && p.schema != null)
+            .findFirst();
+    }
+
+    /**
+     * Find response for given operation. Favors positive responses with status code 2xx and a body schema.
+     * Only in case no positive response is present pick the first response with a schema present.
+     * @param operation the operation holding some response definitions.
+     * @param hasSchema predicate checks that response has a schema defined.
+     * @param responseType the target response type.
+     * @param <T> type of the response to return.
+     * @return a response on the given operation that has a schema or empty.
+     */
+    public static <T extends OasResponse> Optional<T> findResponse(final OasOperation operation,
+                                                                   final Predicate<T> hasSchema, Class<T> responseType) {
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
+
+        // Return the Response object related to the first 2xx return code found
+        Optional<T> responseOk = responses.stream()
+            .filter(responseType::isInstance)
+            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+            .map(responseType::cast)
+            .filter(hasSchema)
+            .findFirst();
+
+        if (responseOk.isPresent()) {
+            return responseOk;
+        }
+
+        return responses.stream()
+            .filter(responseType::isInstance)
+            .map(responseType::cast)
+            .filter(hasSchema)
+            .findFirst();
     }
 }

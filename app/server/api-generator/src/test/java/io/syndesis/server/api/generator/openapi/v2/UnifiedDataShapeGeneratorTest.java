@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.List;
-
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,8 +23,10 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import static io.syndesis.server.api.generator.swagger.UnifiedDataShapeGenerator.supports;
-
+import static io.syndesis.server.api.generator.openapi.v2.UnifiedDataShapeGenerator.supports;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)

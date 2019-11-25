@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -39,16 +40,17 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
-public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
+class UnifiedJsonDataShapeGenerator implements Oas20DataShapeGenerator {
 
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
+    private static final Predicate<Oas20Response> RESPONSE_HAS_SCHEMA = response -> response.schema != null;
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
@@ -61,7 +63,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = findResponse(operation);
+        final Optional<Oas20Response> maybeResponse = OasModelHelper.findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -102,7 +104,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     }
 
     private static ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final Oas20Operation operation) {
-        final Optional<OasParameter> maybeRequestBody = findBodyParameter(operation);
+        final Optional<OasParameter> maybeRequestBody = OasModelHelper.findBodyParameter(operation);
 
         if (!maybeRequestBody.isPresent()) {
             return null;

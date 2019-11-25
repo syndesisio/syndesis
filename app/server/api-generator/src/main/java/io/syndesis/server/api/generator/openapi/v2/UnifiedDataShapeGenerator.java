@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.List;
 
@@ -21,17 +21,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 
-public final class UnifiedDataShapeGenerator implements DataShapeGenerator {
+final class UnifiedDataShapeGenerator implements Oas20DataShapeGenerator {
 
     private static final String APPLICATION_JSON = "application/json";
 
     private static final String APPLICATION_XML = "application/xml";
 
-    private static final DataShapeGenerator JSON = new UnifiedJsonDataShapeGenerator();
+    private static final Oas20DataShapeGenerator JSON = new UnifiedJsonDataShapeGenerator();
 
-    private static final DataShapeGenerator XML = new UnifiedXmlDataShapeGenerator();
+    private static final Oas20DataShapeGenerator XML = new UnifiedXmlDataShapeGenerator();
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {

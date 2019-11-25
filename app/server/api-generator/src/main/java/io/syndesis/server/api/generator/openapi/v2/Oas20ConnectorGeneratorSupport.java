@@ -28,9 +28,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.swagger.UnifiedDataShapeGenerator;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -39,7 +37,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  */
 public final class Oas20ConnectorGeneratorSupport {
 
-    private final static DataShapeGenerator DATA_SHAPE_GENERATOR = new UnifiedDataShapeGenerator();
+    private final static Oas20DataShapeGenerator DATA_SHAPE_GENERATOR = new UnifiedDataShapeGenerator();
 
     private Oas20ConnectorGeneratorSupport() {
         // utility class.

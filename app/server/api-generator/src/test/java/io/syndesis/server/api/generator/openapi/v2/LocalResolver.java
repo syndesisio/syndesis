@@ -13,13 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
-
-import java.net.URI;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.net.URI;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.ls.DOMImplementationLS;

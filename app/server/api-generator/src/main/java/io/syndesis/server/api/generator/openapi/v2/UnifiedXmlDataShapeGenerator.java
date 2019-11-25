@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -41,7 +42,6 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ModelHelper;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -52,13 +52,15 @@ import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
-public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
+class UnifiedXmlDataShapeGenerator implements Oas20DataShapeGenerator {
 
     private static final String SCHEMA_SET_NS = "http://atlasmap.io/xml/schemaset/v2";
 
     private static final String SYNDESIS_PARAMETERS_NS = "http://syndesis.io/v1/swagger-connector-template/parameters";
 
     private static final String SYNDESIS_REQUEST_NS = "http://syndesis.io/v1/swagger-connector-template/request";
+
+    private static final Predicate<Oas20Response> RESPONSE_HAS_SCHEMA = response -> response.schema != null;
 
     static class SchemaPrefixAndElement {
         private final String prefix;
@@ -139,7 +141,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = findResponse(operation);
+        final Optional<Oas20Response> maybeResponse = OasModelHelper.findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -152,7 +154,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
         final Map<String, SchemaPrefixAndElement> moreSchemas = new HashMap<>();
 
-        final Element bodySchema = createResponseBodySchema(openApiDoc, operation, moreSchemas);
+        final Element bodySchema = createResponseBodySchema(openApiDoc, maybeResponse.get().schema, moreSchemas);
         if (bodySchema == null) {
             return DATA_SHAPE_NONE;
         }
@@ -332,7 +334,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
 
     private static Element createRequestBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<OasParameter> bodyParameter = findBodyParameter(operation);
+        final Optional<OasParameter> bodyParameter = OasModelHelper.findBodyParameter(operation);
 
         if (!bodyParameter.isPresent()) {
             return null;
@@ -377,16 +379,8 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
         return schema;
     }
 
-    private static Element createResponseBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
+    private static Element createResponseBodySchema(final Oas20Document openApiDoc, final Oas20Schema bodySchema,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<Oas20Response> maybeResponse = findResponse(operation);
-
-        if (!maybeResponse.isPresent()) {
-            return null;
-        }
-
-        final Oas20Response body = maybeResponse.get();
-        final Oas20Schema bodySchema = body.schema;
         if (OasModelHelper.isReferenceType(bodySchema)) {
             return defineComplexElement(bodySchema, null, openApiDoc, moreSchemas);
         } else if (OasModelHelper.isArrayType(bodySchema)) {

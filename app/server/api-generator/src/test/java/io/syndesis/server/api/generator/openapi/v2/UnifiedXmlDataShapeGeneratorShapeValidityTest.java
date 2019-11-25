@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.swagger;
+package io.syndesis.server.api.generator.openapi.v2;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -223,7 +223,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
                 .map(Oas20PathItem.class::cast)
                 .forEach(pathItem -> {
                     OasModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
-                        final Optional<OasParameter> bodyParameter = BaseDataShapeGenerator.findBodyParameter(operation);
+                        final Optional<OasParameter> bodyParameter = OasModelHelper.findBodyParameter(operation);
                         if (!bodyParameter.isPresent()) {
                             // by default we resort to JSON for payloads without
                             // body, i.e.

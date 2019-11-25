@@ -16,17 +16,22 @@
 package io.syndesis.server.api.generator.openapi;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.models.OasDocument;
+import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 
-public interface DataShapeGenerator {
+/**
+ * Data shape generator creates request and response data shapes from OpenAPI operations.
+ * @param <DOC> the OpenAPI document type representing version 2.x or 3.x.
+ * @param <OP> the OpenAPI operation type.
+ */
+public interface DataShapeGenerator<DOC extends OasDocument, OP extends OasOperation> {
 
     DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
-    DataShape createShapeFromRequest(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
+    DataShape createShapeFromRequest(ObjectNode json, DOC openApiDoc, OP operation);
 
-    DataShape createShapeFromResponse(ObjectNode json, Oas20Document openApiDoc, Oas20Operation operation);
+    DataShape createShapeFromResponse(ObjectNode json, DOC openApiDoc, OP operation);
 
 }

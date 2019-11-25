@@ -40,11 +40,9 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiFlowGenerator;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
-import io.syndesis.server.api.generator.swagger.UnifiedDataShapeGenerator;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.commons.lang3.tuple.Pair;
 
@@ -53,7 +51,7 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class Oas20FlowGenerator implements OpenApiFlowGenerator<Oas20Document> {
 
-    private final DataShapeGenerator dataShapeGenerator;
+    private final Oas20DataShapeGenerator dataShapeGenerator;
 
     public Oas20FlowGenerator() {
         dataShapeGenerator = new UnifiedDataShapeGenerator();
