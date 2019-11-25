@@ -1,3 +1,4 @@
+export * from './Metrics';
 export * from './Views';
 export * from './ViewEditor';
 export * from './PublishStatusWithProgress';
