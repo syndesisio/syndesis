@@ -4,6 +4,7 @@ import {
   VirtualizationCreatePage,
   VirtualizationDetailsPage,
   VirtualizationImportPage,
+  VirtualizationMetricsPage,
   VirtualizationsPage,
   VirtualizationSqlClientPage,
   VirtualizationViewsPage,
@@ -70,6 +71,11 @@ export class DataModule extends React.Component {
             path={routes.virtualizations.virtualization.details}
             exact={true}
             component={VirtualizationDetailsPage}
+          />
+          <Route
+            path={routes.virtualizations.virtualization.metrics}
+            exact={true}
+            component={VirtualizationMetricsPage}
           />
         </Switch>
       </>

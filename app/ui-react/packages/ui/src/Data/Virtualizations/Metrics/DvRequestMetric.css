@@ -1,0 +1,13 @@
+.dv-request-metric__content {
+  align-items: center;
+}
+
+.dv-request-metric__count {
+  font-size: large;
+  font-weight: 600;
+  width: 50%;
+}
+
+.dv-request-metric__countIcon {
+  font-size: small;
+}

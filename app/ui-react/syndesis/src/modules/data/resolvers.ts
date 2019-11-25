@@ -116,6 +116,17 @@ export default {
         },
       })
     ),
+    metrics: makeResolver<{ virtualization: Virtualization }>(
+      routes.virtualizations.virtualization.metrics,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.name,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
     sqlClient: makeResolver<{ virtualization: Virtualization }>(
       routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({
