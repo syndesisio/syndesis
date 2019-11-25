@@ -18,6 +18,7 @@ When {prodname} publishes an API provider integration, any client with
 network access to the integration endpoints can trigger execution of 
 the integration.
 
+ifeval::["{location}" == "downstream"]
 [NOTE]
 ====
 If you are using {prodname} on OpenShift Container Platform on-site, 
@@ -33,8 +34,9 @@ documentation that is available from
 https://access.redhat.com/documentation/en-us/red_hat_3scale/2.3/[the Red Hat 3scale documentation page.]
 
 See also: 
-link:{LinkFuseOnlineIntegrationGuide}#exposing-apis-in-3scale_ocp[Configuring {prodname} to enable 3scale discovery of APIs].
+link:{LinkFuseOnlineOnOCP}#exposing-apis-in-3scale_manage[Configuring {prodname} to enable 3scale discovery of APIs].
 ====
+endif::[]
 
 The following topics provide information and 
 instructions for creating API provider integrations: 
