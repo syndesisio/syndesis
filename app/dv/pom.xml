@@ -216,7 +216,7 @@
 
     <!-- <spring-cloud.version>Dalston.SR5</spring-cloud.version> -->
 
-    <version.org.teiid>12.3.0</version.org.teiid>
+    <version.org.teiid>${teiid.version}</version.org.teiid>
 
     <!-- Instruct the build to use only UTF-8 encoding for source code -->
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -239,8 +239,8 @@
 
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
-    <assertj-core.version>3.11.1</assertj-core.version>
-    <shrinkwrap.version>2.2.6</shrinkwrap.version>
+    <!--assertj-core.version>3.11.1</assertj-core.version-->
+    <!--shrinkwrap.version>2.2.6</shrinkwrap.version-->
 
 
     <version.org.mockito>2.21.0</version.org.mockito>
