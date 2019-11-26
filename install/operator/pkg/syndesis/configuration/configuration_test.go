@@ -41,7 +41,7 @@ func Test_loadFromFile(t *testing.T) {
 	}{
 		{
 			name:    "When loading the from file, a valid configuration should be loaded",
-			args:    args{file: "../../../build/conf/config.yaml"},
+			args:    args{file: "../../../build/conf/config-test.yaml"},
 			want:    getConfigLiteral(),
 			wantErr: false,
 		},
