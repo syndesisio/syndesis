@@ -1,7 +1,6 @@
 import * as H from '@syndesis/history';
 import {
   DropdownKebab,
-  Label,
   ListViewIcon,
   ListViewInfoItem,
   ListViewItem,
@@ -17,6 +16,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../../Shared';
+import './ViewListItem.css';
 
 export interface IViewListItemProps {
   viewDescription: string;
@@ -120,9 +120,9 @@ export const ViewListItem: React.FunctionComponent<
             ? []
             : [
                 <ListViewInfoItem key={1}>
-                  <Label type={'danger'}>
+                  <div className={'view-list-item__invalidView'}>
                     {props.i18nInvalid}
-                  </Label>
+                  </div>
                 </ListViewInfoItem>
               ]
         }
