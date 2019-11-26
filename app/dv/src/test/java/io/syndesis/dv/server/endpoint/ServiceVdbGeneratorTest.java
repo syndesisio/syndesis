@@ -15,7 +15,6 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.hamcrest.core.Is.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -45,6 +44,8 @@ import org.teiid.metadata.Schema;
 import org.teiid.metadata.Table;
 import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.parser.QueryParser;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.syndesis.dv.KException;
 
@@ -421,7 +422,7 @@ public class ServiceVdbGeneratorTest {
 
         List<org.teiid.adminapi.Model> models = serviceVdb.getModels();
 
-        assertThat(models.size(), is(2));
+        assertThat(models).hasSize(2);
         ModelMetaData viewModel = serviceVdb.getModel("servicevdb");
         assertNotNull(viewModel);
         assertEquals("CREATE VIEW orderInfoView (ID, orderDate, name) OPTIONS (ANNOTATION 'test view description text') AS \n" +
@@ -451,7 +452,7 @@ public class ServiceVdbGeneratorTest {
 
         List<org.teiid.adminapi.Model> models = serviceVdb.getModels();
 
-        assertThat(models.size(), is(3));
+        assertThat(models).hasSize(3);
         ModelMetaData viewModel = serviceVdb.getModel("servicevdb");
         assertNotNull(viewModel);
         assertEquals("CREATE VIEW orderInfoView (ID, orderDate, customerName) OPTIONS (ANNOTATION 'test view description text') AS \n" +

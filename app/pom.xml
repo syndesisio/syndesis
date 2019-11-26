@@ -1045,6 +1045,13 @@
               <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES")
                 > 128</condition>
             </evaluateBeanshell>
+            <bannedDependencies>
+              <excludes>
+                <exclude>org.hamcrest:*</exclude>
+              </excludes>
+              <message>Prefer using AssertJ for assertions</message>
+              <searchTransitive>false</searchTransitive>
+            </bannedDependencies>
           </rules>
         </configuration>
       </plugin>

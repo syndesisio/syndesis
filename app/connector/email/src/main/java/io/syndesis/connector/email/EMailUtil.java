@@ -31,7 +31,11 @@ import org.apache.camel.util.jsse.TrustManagersParameters;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
 
-public class EMailUtil implements EMailConstants {
+public final class EMailUtil implements EMailConstants {
+
+    private EMailUtil() {
+        // utility class
+    }
 
     private static boolean isSecure(String protocol) {
         if (ObjectHelper.isEmpty(protocol)) {

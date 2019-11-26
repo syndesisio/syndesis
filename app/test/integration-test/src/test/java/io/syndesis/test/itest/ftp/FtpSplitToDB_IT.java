@@ -18,13 +18,14 @@ package io.syndesis.test.itest.ftp;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
+import com.consol.citrus.container.IteratingConditionExpression;
+import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.ftp.message.FtpMessage;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
 import org.apache.ftpserver.DataConnectionConfigurationFactory;
-import org.hamcrest.Matchers;
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
@@ -71,7 +72,12 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
         runner.repeatOnError()
                 .startsWith(1)
                 .autoSleep(1000L)
-                .until(Matchers.greaterThan(10))
+                .until(new IteratingConditionExpression() {
+                    @Override
+                    public boolean evaluate(int index, TestContext context) {
+                        return index > 10;
+                    }
+                })
                 .actions(runner.query(builder -> builder.dataSource(sampleDb)
                         .statement("select count(*) as found_records from todo")
                         .validate("found_records", String.valueOf(3))));

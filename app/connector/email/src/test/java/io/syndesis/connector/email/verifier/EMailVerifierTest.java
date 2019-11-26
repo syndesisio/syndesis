@@ -15,20 +15,20 @@
  */
 package io.syndesis.connector.email.verifier;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assume.assumeThat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.hamcrest.CoreMatchers;
+
 import org.junit.Test;
 import io.syndesis.connector.email.AbstractEmailServerTest;
 import io.syndesis.connector.email.verifier.receive.ReceiveEMailVerifier;
 import io.syndesis.connector.email.verifier.send.SendEMailVerifier;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 public class EMailVerifierTest extends AbstractEmailServerTest {
 
@@ -99,7 +99,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         long stopTime = System.currentTimeMillis();
 
         // Time should be roughly equal to the timeout set
-        assertTrue((stopTime - startTime) <= (timeout + 1000L)); // extra second for processing time
+        assertThat(stopTime - startTime).isLessThanOrEqualTo(timeout + 1000L); // extra second for processing time
 
         assertThat(responses).hasSize(2);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -138,7 +138,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         long stopTime = System.currentTimeMillis();
 
         // Time should be roughly equal to the timeout set
-        assertTrue((stopTime - startTime) <= (timeout + 5000L)); // pop3 connect is quite slow so few extra seconds for processing time
+        assertThat(stopTime - startTime).isLessThanOrEqualTo(timeout + 5000L); // pop3 connect is quite slow so few extra seconds for processing time
 
         assertThat(responses).hasSize(2);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -177,7 +177,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         long stopTime = System.currentTimeMillis();
 
         // Time should be roughly equal to the timeout set
-        assertTrue((stopTime - startTime) <= (timeout + 3000L)); // pop3 connect is quite slow so few extra seconds for processing time
+        assertThat(stopTime - startTime).isLessThanOrEqualTo(timeout + 3000L); // pop3 connect is quite slow so few extra seconds for processing time
 
         assertThat(responses).hasSize(2);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -313,7 +313,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
      */
     @Test
     public void testVerifyWithStartTLSServer() throws Exception {
-        assumeThat(TLS_HOSTNAME, CoreMatchers.is(CoreMatchers.not(NO_HOST)));
+        assumeThat(TLS_HOSTNAME).isNotEqualTo(NO_HOST);
 
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PROTOCOL, Protocol.IMAP.id());
