@@ -35,7 +35,6 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
@@ -94,7 +93,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
     @Parameter(1)
     public Oas20Document openApiDoc;
 
-    private final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
+    private static final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
     private static final class FixedSchemaValidator extends SchemaFactory {
         private final Schema schema;
@@ -218,12 +217,9 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specificationContent);
 
             openApiDoc.paths.getPathItems()
-                .stream()
-                .filter(Oas20PathItem.class::isInstance)
-                .map(Oas20PathItem.class::cast)
                 .forEach(pathItem -> {
                     OasModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
-                        final Optional<OasParameter> bodyParameter = OasModelHelper.findBodyParameter(operation);
+                        final Optional<OasParameter> bodyParameter = generator.findBodyParameter(operation);
                         if (!bodyParameter.isPresent()) {
                             // by default we resort to JSON for payloads without
                             // body, i.e.

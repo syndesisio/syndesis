@@ -27,8 +27,8 @@ import java.util.stream.Collectors;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.core.models.common.Info;
 import io.apicurio.datamodels.openapi.models.OasDocument;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.action.Action;
@@ -85,7 +85,7 @@ public class OpenApiGenerator implements APIGenerator {
                 throw new IllegalStateException(String.format("Unable to retrieve integration flow generator for OpenAPI document type '%s'", openApiDoc.getClass()));
         }
 
-        // TODO: evaluate what can be shrinked (e.g. Oas20Helper#minimalOpenApiUsedByComponent)
+        // TODO: evaluate what can be shrunk (e.g. SpecificationOptimizer#minimizeForComponent)
         final byte[] updatedSpecification = Library.writeDocumentToJSONString(openApiDoc).getBytes(StandardCharsets.UTF_8);
 
         final String specificationContentType;
@@ -123,7 +123,7 @@ public class OpenApiGenerator implements APIGenerator {
         }
 
         final OasPaths paths = model.paths;
-        final ActionsSummary actionsSummary = determineSummaryFrom(OasModelHelper.getPathItems(paths, Oas20PathItem.class));
+        final ActionsSummary actionsSummary = determineSummaryFrom(OasModelHelper.getPathItems(paths));
 
         final Info info = model.info;
         final String title = Optional.ofNullable(info).map(i -> i.title).orElse("unspecified");
@@ -198,7 +198,7 @@ public class OpenApiGenerator implements APIGenerator {
         return flow;
     }
 
-    private static ActionsSummary determineSummaryFrom(final List<Oas20PathItem> paths) {
+    private static ActionsSummary determineSummaryFrom(final List<OasPathItem> paths) {
         if (paths == null || paths.isEmpty()) {
             return new ActionsSummary.Builder().build();
         }

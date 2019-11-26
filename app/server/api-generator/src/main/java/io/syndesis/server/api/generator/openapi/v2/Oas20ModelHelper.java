@@ -15,21 +15,67 @@
  */
 package io.syndesis.server.api.generator.openapi.v2;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
+import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
+import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
-public final class Oas20ModelHelper {
+final class Oas20ModelHelper {
 
     private Oas20ModelHelper() {
         // utility class
     }
 
-    public static Oas20SchemaDefinition dereference(final OasSchema model, final Oas20Document openApiDoc) {
+    /**
+     * Iterate through list of generic path parameters on the given operation and collect those of given type.
+     * @param operation given path item.
+     * @return typed list of path parameters.
+     */
+    static List<Oas20Parameter> getParameters(OasOperation operation) {
+        return OasModelHelper.getParameters(operation)
+            .stream()
+            .filter(Oas20Parameter.class::isInstance)
+            .map(Oas20Parameter.class::cast)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Iterate through list of generic path parameters on the given path item and collect those of given type.
+     * @param pathItem given path item.
+     * @return typed list of path parameters.
+     */
+    static List<Oas20Parameter> getParameters(OasPathItem pathItem) {
+        return OasModelHelper.getParameters(pathItem)
+            .stream()
+            .filter(Oas20Parameter.class::isInstance)
+            .map(Oas20Parameter.class::cast)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Iterate through list of generic path items and collect path items of given type.
+     * @param paths given path items.
+     * @return typed list of path items.
+     */
+    static List<Oas20PathItem> getPathItems(OasPaths paths) {
+        return OasModelHelper.getPathItems(paths)
+            .stream()
+            .filter(Oas20PathItem.class::isInstance)
+            .map(Oas20PathItem.class::cast)
+            .collect(Collectors.toList());
+    }
+
+    static Oas20SchemaDefinition dereference(final OasSchema model, final Oas20Document openApiDoc) {
         String reference = OasModelHelper.getReferenceName(model.$ref);
         return openApiDoc.definitions.getDefinition(reference);
     }
@@ -39,11 +85,11 @@ public final class Oas20ModelHelper {
      * @param parameter to check
      * @return true if given parameter is an array.
      */
-    public static boolean isArrayType(Oas20Parameter parameter) {
+    private static boolean isArrayType(Oas20Parameter parameter) {
         return "array".equals(parameter.type);
     }
 
-    public static String javaTypeFor(final Oas20Parameter parameter) {
+    static String javaTypeFor(final Oas20Parameter parameter) {
         if (isArrayType(parameter)) {
             final Oas20Items items = parameter.items;
             final String elementType = items.type;

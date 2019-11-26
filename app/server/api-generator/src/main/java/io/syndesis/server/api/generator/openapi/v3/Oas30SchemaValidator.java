@@ -27,6 +27,6 @@ public class Oas30SchemaValidator implements OpenApiSchemaValidator {
 
     @Override
     public void validateJSonSchema(JsonNode specRoot, OpenApiModelInfo.Builder modelBuilder) {
-
+        //TODO: add logic for OpenAPI 3.x
     }
 }

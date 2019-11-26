@@ -30,6 +30,6 @@ public class Oas30FlowGenerator implements OpenApiFlowGenerator<Oas30Document> {
     @Override
     public void generateFlows(Oas30Document openApiDoc, Integration.Builder integration,
                               OpenApiModelInfo info, ProvidedApiTemplate template) {
-
+        //TODO: add logic for OpenAPI 3.x
     }
 }

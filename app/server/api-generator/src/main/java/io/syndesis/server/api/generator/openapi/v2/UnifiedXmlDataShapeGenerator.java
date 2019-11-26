@@ -141,7 +141,7 @@ class UnifiedXmlDataShapeGenerator implements Oas20DataShapeGenerator {
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = OasModelHelper.findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
+        final Optional<Oas20Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -277,13 +277,13 @@ class UnifiedXmlDataShapeGenerator implements Oas20DataShapeGenerator {
     }
 
     private static Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = OasModelHelper.getParameters(operation, Oas20Parameter.class);
+        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = OasModelHelper.getParameters(parent, Oas20Parameter.class);
+        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
         operationParameters.addAll(pathParameters);
 
         final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
@@ -332,9 +332,9 @@ class UnifiedXmlDataShapeGenerator implements Oas20DataShapeGenerator {
         return schema;
     }
 
-    private static Element createRequestBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
+    private Element createRequestBodySchema(final Oas20Document openApiDoc, final Oas20Operation operation,
         final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<OasParameter> bodyParameter = OasModelHelper.findBodyParameter(operation);
+        final Optional<OasParameter> bodyParameter = findBodyParameter(operation);
 
         if (!bodyParameter.isPresent()) {
             return null;

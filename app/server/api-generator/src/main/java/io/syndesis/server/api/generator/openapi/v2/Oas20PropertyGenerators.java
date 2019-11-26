@@ -36,6 +36,7 @@ import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.PropertyGenerator;
 import io.syndesis.server.api.generator.openapi.SchemeType;
 import io.syndesis.server.api.generator.openapi.SupportedAuthenticationTypes;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
 import static java.util.Optional.empty;
@@ -227,7 +228,7 @@ public enum Oas20PropertyGenerators {
     static String determineHost(final OpenApiModelInfo info) {
         final Collection<Extension> vendorExtensions = ofNullable(info.getV2Model().getExtensions()).orElse(Collections.emptyList());
         final URI specificationUrl = vendorExtensions.stream()
-                                                     .filter(extension -> "x-syndesis-swagger-url".equals(extension.name))
+                                                     .filter(extension -> OasModelHelper.URL_EXTENSION.equals(extension.name))
                                                      .findFirst()
                                                      .map(extension -> (URI) extension.value)
                                                      .orElse(null);

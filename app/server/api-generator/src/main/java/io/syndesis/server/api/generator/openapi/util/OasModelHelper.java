@@ -26,9 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.BiFunction;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -40,7 +38,6 @@ import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
-import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,6 +49,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  */
 public final class OasModelHelper {
 
+    public static final String URL_EXTENSION = "x-syndesis-swagger-url";
     private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
     private OasModelHelper() {
@@ -96,38 +94,6 @@ public final class OasModelHelper {
         return paths.getItems();
     }
 
-    /**
-     * Iterate through list of generic path items and collect path items of given type.
-     * @param paths given path items.
-     * @param type the target path item type to collect.
-     * @return typed list of path items.
-     */
-    public static <T extends OasPathItem> List<T> getPathItems(OasPaths paths, Class<T> type) {
-        return getPathItems(paths)
-            .stream()
-            .filter(type::isInstance)
-            .map(type::cast)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Iterate through list of generic path parameters on the given path item and collect those of given type.
-     * @param pathItem given path item.
-     * @param type the target path parameter type to collect.
-     * @return typed list of path parameters.
-     */
-    public static <T extends OasParameter> List<T> getParameters(OasPathItem pathItem, Class<T> type) {
-        if (pathItem == null || pathItem.getParameters() == null) {
-            return new ArrayList<>();
-        }
-
-        return pathItem.getParameters()
-            .stream()
-            .filter(type::isInstance)
-            .map(type::cast)
-            .collect(Collectors.toList());
-    }
-
     public static List<OasParameter> getParameters(final OasOperation operation) {
         if (operation == null || operation.getParameters() == null) {
             return new ArrayList<>();
@@ -136,18 +102,12 @@ public final class OasModelHelper {
         return operation.getParameters();
     }
 
-    /**
-     * Iterate through list of generic path parameters on the given operation and collect those of given type.
-     * @param operation given path item.
-     * @param type the target path parameter type to collect.
-     * @return typed list of path parameters.
-     */
-    public static <T extends OasParameter> List<T> getParameters(OasOperation operation, Class<T> type) {
-        return getParameters(operation)
-            .stream()
-            .filter(type::isInstance)
-            .map(type::cast)
-            .collect(Collectors.toList());
+    public static List<OasParameter> getParameters(final OasPathItem pathItem) {
+        if (pathItem == null || pathItem.getParameters() == null) {
+            return new ArrayList<>();
+        }
+
+        return pathItem.getParameters();
     }
 
     /**
@@ -357,62 +317,9 @@ public final class OasModelHelper {
             return null;
         }
 
-        return vendorExtensions.stream().filter(extension -> "x-syndesis-swagger-url".equals(extension.name))
+        return vendorExtensions.stream().filter(extension -> URL_EXTENSION.equals(extension.name))
             .map(extension -> (URI) extension.value)
             .findFirst()
             .orElse(null);
-    }
-
-    /**
-     * Find parameter that is specified to live in the body.
-     * @param operation holding some parameters.
-     * @return the body parameter.
-     */
-    public static Optional<OasParameter> findBodyParameter(final OasOperation operation) {
-        if (operation.parameters == null) {
-            return Optional.empty();
-        }
-
-        final List<OasParameter> operationParameters = operation.parameters;
-
-        return operationParameters.stream()
-            .filter(p -> "body".equals(p.in) && p.schema != null)
-            .findFirst();
-    }
-
-    /**
-     * Find response for given operation. Favors positive responses with status code 2xx and a body schema.
-     * Only in case no positive response is present pick the first response with a schema present.
-     * @param operation the operation holding some response definitions.
-     * @param hasSchema predicate checks that response has a schema defined.
-     * @param responseType the target response type.
-     * @param <T> type of the response to return.
-     * @return a response on the given operation that has a schema or empty.
-     */
-    public static <T extends OasResponse> Optional<T> findResponse(final OasOperation operation,
-                                                                   final Predicate<T> hasSchema, Class<T> responseType) {
-        if (operation.responses == null) {
-            return Optional.empty();
-        }
-
-        List<OasResponse> responses = operation.responses.getResponses();
-
-        // Return the Response object related to the first 2xx return code found
-        Optional<T> responseOk = responses.stream()
-            .filter(responseType::isInstance)
-            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
-            .map(responseType::cast)
-            .filter(hasSchema)
-            .findFirst();
-
-        if (responseOk.isPresent()) {
-            return responseOk;
-        }
-
-        return responses.stream()
-            .filter(responseType::isInstance)
-            .map(responseType::cast)
-            .filter(hasSchema)
-            .findFirst();
     }
 }

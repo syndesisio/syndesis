@@ -112,7 +112,7 @@ public final class Oas20ValidationRules {
             return info;
         }
 
-        final long countNoOpId = OasModelHelper.getPathItems(openApiDoc.paths, Oas20PathItem.class)
+        final long countNoOpId = Oas20ModelHelper.getPathItems(openApiDoc.paths)
             .stream()
             .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())
             .filter(o -> o.operationId == null)
@@ -138,7 +138,7 @@ public final class Oas20ValidationRules {
 
         final OpenApiModelInfo.Builder withErrors = new OpenApiModelInfo.Builder().createFrom(modelInfo);
 
-        final List<Oas20PathItem> paths = OasModelHelper.getPathItems(openApiDoc.paths, Oas20PathItem.class);
+        final List<Oas20PathItem> paths = Oas20ModelHelper.getPathItems(openApiDoc.paths);
         if (paths.isEmpty()) {
             withErrors.addError(new Violation.Builder()
                 .property("paths")
@@ -176,7 +176,7 @@ public final class Oas20ValidationRules {
 
         final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(modelInfo);
 
-        final List<Oas20PathItem> paths = OasModelHelper.getPathItems(openApiDoc.paths, Oas20PathItem.class);
+        final List<Oas20PathItem> paths = Oas20ModelHelper.getPathItems(openApiDoc.paths);
         for (final Oas20PathItem pathEntry : paths) {
             for (final Map.Entry<String, Oas20Operation> operationEntry : OasModelHelper.getOperationMap(pathEntry, Oas20Operation.class).entrySet()) {
 
@@ -270,7 +270,7 @@ public final class Oas20ValidationRules {
             return info;
         }
 
-        final Map<String, Long> operationIdCounts = OasModelHelper.getPathItems(openApiDoc.paths, Oas20PathItem.class)
+        final Map<String, Long> operationIdCounts = Oas20ModelHelper.getPathItems(openApiDoc.paths)
             .stream()
             .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())//
             .map(o -> o.operationId)//

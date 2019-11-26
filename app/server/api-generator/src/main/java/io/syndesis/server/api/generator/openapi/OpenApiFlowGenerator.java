@@ -52,7 +52,7 @@ public interface OpenApiFlowGenerator<T extends OasDocument> {
      * @param template the provided api template.
      */
     void generateFlows(T openApiDoc, Integration.Builder integration,
-                       OpenApiModelInfo info, final ProvidedApiTemplate template);
+                       OpenApiModelInfo info, ProvidedApiTemplate template);
 
     default String requireUniqueOperationId(final String preferredOperationId, final Set<String> alreadyUsedOperationIds) {
         String baseId = preferredOperationId;

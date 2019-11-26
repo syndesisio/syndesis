@@ -15,23 +15,82 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Predicate;
+
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 
 /**
  * Data shape generator creates request and response data shapes from OpenAPI operations.
- * @param <DOC> the OpenAPI document type representing version 2.x or 3.x.
- * @param <OP> the OpenAPI operation type.
+ * @param <T> the OpenAPI document type representing version 2.x or 3.x.
+ * @param <O> the OpenAPI operation type.
  */
-public interface DataShapeGenerator<DOC extends OasDocument, OP extends OasOperation> {
+public interface DataShapeGenerator<T extends OasDocument, O extends OasOperation> {
 
     DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
-    DataShape createShapeFromRequest(ObjectNode json, DOC openApiDoc, OP operation);
+    DataShape createShapeFromRequest(ObjectNode json, T openApiDoc, O operation);
 
-    DataShape createShapeFromResponse(ObjectNode json, DOC openApiDoc, OP operation);
+    DataShape createShapeFromResponse(ObjectNode json, T openApiDoc, O operation);
+
+    /**
+     * Find parameter that is specified to live in the body.
+     * @param operation holding some parameters.
+     * @return the body parameter.
+     */
+    default Optional<OasParameter> findBodyParameter(final OasOperation operation) {
+        if (operation.parameters == null) {
+            return Optional.empty();
+        }
+
+        final List<OasParameter> operationParameters = operation.parameters;
+
+        return operationParameters.stream()
+            .filter(p -> "body".equals(p.in) && p.schema != null)
+            .findFirst();
+    }
+
+    /**
+     * Find response for given operation. Favors positive responses with status code 2xx and a body schema.
+     * Only in case no positive response is present pick the first response with a schema present.
+     * @param operation the operation holding some response definitions.
+     * @param hasSchema predicate checks that response has a schema defined.
+     * @param responseType the target response type.
+     * @param <R> type of the response to return.
+     * @return a response on the given operation that has a schema or empty.
+     */
+    default <R extends OasResponse> Optional<R> findResponse(final OasOperation operation,
+                                                                   final Predicate<R> hasSchema, Class<R> responseType) {
+        if (operation.responses == null) {
+            return Optional.empty();
+        }
+
+        List<OasResponse> responses = operation.responses.getResponses();
+
+        // Return the Response object related to the first 2xx return code found
+        Optional<R> responseOk = responses.stream()
+            .filter(responseType::isInstance)
+            .filter(r -> r.getStatusCode() != null && r.getStatusCode().startsWith("2"))
+            .map(responseType::cast)
+            .filter(hasSchema)
+            .findFirst();
+
+        if (responseOk.isPresent()) {
+            return responseOk;
+        }
+
+        return responses.stream()
+            .filter(responseType::isInstance)
+            .map(responseType::cast)
+            .filter(hasSchema)
+            .findFirst();
+    }
 
 }

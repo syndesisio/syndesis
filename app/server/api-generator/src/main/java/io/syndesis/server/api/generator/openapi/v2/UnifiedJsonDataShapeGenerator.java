@@ -63,7 +63,7 @@ class UnifiedJsonDataShapeGenerator implements Oas20DataShapeGenerator {
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = OasModelHelper.findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
+        final Optional<Oas20Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -103,8 +103,8 @@ class UnifiedJsonDataShapeGenerator implements Oas20DataShapeGenerator {
         }
     }
 
-    private static ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final Oas20Operation operation) {
-        final Optional<OasParameter> maybeRequestBody = OasModelHelper.findBodyParameter(operation);
+    private ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final Oas20Operation operation) {
+        final Optional<OasParameter> maybeRequestBody = findBodyParameter(operation);
 
         if (!maybeRequestBody.isPresent()) {
             return null;
@@ -119,13 +119,13 @@ class UnifiedJsonDataShapeGenerator implements Oas20DataShapeGenerator {
     }
 
     private static ObjectNode createJsonSchemaForParametersOf(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = OasModelHelper.getParameters(operation, Oas20Parameter.class);
+        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = OasModelHelper.getParameters(parent, Oas20Parameter.class);
+        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
         operationParameters.addAll(pathParameters);
 
         final List<Oas20ParameterDefinition> globalParameters = Optional.ofNullable(openApiDoc.parameters)

@@ -62,8 +62,6 @@ import static java.util.Optional.ofNullable;
 
 public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
-    private static final String URL_EXTENSION = "x-syndesis-swagger-url";
-
     private final Supplier<String> operationIdGenerator;
 
     OpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
@@ -158,9 +156,9 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
 
         if (specification.startsWith("http")) {
             Extension urlExtension = new Extension();
-            urlExtension.name = URL_EXTENSION;
+            urlExtension.name = OasModelHelper.URL_EXTENSION;
             urlExtension.value = URI.create(specification);
-            info.getModel().addExtension(URL_EXTENSION, urlExtension);
+            info.getModel().addExtension(OasModelHelper.URL_EXTENSION, urlExtension);
         }
 
         final Connector baseConnector = baseConnectorFrom(connectorTemplate, connectorSettings);
@@ -180,6 +178,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
                     break;
                 default:
                     maybeProperty = Optional.empty();
+                    break;
             }
 
             maybeProperty.ifPresent(property -> {

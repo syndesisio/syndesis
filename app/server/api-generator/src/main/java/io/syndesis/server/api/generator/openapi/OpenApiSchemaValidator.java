@@ -35,7 +35,7 @@ public interface OpenApiSchemaValidator {
      * @param specRoot the specification as Json root.
      * @param modelBuilder the model builder receiving all validation errors and warnings.
      */
-    void validateJSonSchema(final JsonNode specRoot, final OpenApiModelInfo.Builder modelBuilder);
+    void validateJSonSchema(JsonNode specRoot, OpenApiModelInfo.Builder modelBuilder);
 
     default boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {
         if (requiredLevel.isPresent()) {

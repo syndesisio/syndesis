@@ -81,7 +81,7 @@ public final class OpenApiModelParser {
             return new OpenApiModelInfo.Builder()
                 .addError(new Violation.Builder()
                     .property("")
-                    .error("ureadable-document")
+                    .error("unreadable-document")
                     .message("Unable to read OpenAPI document: " + e.getMessage())
                     .build())
                 .build();

@@ -35,12 +35,14 @@ public final class Oas30ConnectorGeneratorSupport {
                                                                final Oas30Document openApiDoc, final Oas30Operation operation) {
         final ConnectorDescriptor.Builder actionDescriptor = new ConnectorDescriptor.Builder();
 
+        //TODO: add logic for OpenAPI 3.x
+
         actionDescriptor.putConfiguredProperty("operationId", operation.operationId);
 
         return actionDescriptor;
     }
 
     public static void addGlobalParameters(Connector.Builder builder, Oas30Document openApiDoc) {
-
+        //TODO: add logic for OpenAPI 3.x
     }
 }

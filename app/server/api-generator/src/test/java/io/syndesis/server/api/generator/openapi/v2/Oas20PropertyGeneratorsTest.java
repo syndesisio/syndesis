@@ -27,6 +27,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.SchemeType;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators.createHostUri;
@@ -34,8 +35,6 @@ import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerator
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Oas20PropertyGeneratorsTest {
-
-    private static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
     @Test
     public void shouldConsiderOnlyAuthorizationCodeOAuthFlows() {
@@ -116,9 +115,9 @@ public class Oas20PropertyGeneratorsTest {
         final URI specificationUrl = URI.create("https://api.example.com/swagger.json");
         Oas20Document openApiDoc = new Oas20Document();
         Extension extension = new Extension();
-        extension.name = URL_EXTENSION;
+        extension.name = OasModelHelper.URL_EXTENSION;
         extension.value = specificationUrl;
-        openApiDoc.addExtension(URL_EXTENSION, extension);
+        openApiDoc.addExtension(OasModelHelper.URL_EXTENSION, extension);
 
         assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
         openApiDoc.schemes = new ArrayList<>();

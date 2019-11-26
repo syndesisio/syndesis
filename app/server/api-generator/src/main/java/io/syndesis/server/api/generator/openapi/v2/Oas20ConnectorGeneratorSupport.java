@@ -37,7 +37,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
  */
 public final class Oas20ConnectorGeneratorSupport {
 
-    private final static Oas20DataShapeGenerator DATA_SHAPE_GENERATOR = new UnifiedDataShapeGenerator();
+    private static final Oas20DataShapeGenerator DATA_SHAPE_GENERATOR = new UnifiedDataShapeGenerator();
 
     private Oas20ConnectorGeneratorSupport() {
         // utility class.

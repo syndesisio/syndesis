@@ -68,6 +68,7 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
                 return v3Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
             default:
                 LOG.warn(String.format("Unable to apply custom validation rules on OpenAPI document type '%s'", modelInfo.getModel().getClass()));
+                break;
         }
 
         return modelInfo;
