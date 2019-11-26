@@ -53,8 +53,10 @@ interface IPromptActionOptions {
 /**
  * @property {IVirtualizationAction} deleteActionProps - the customization of the delete action or `undefined` if the
  * default action properties are wanted
+ * @example { disabled: false }
  * @property {IVirtualizationAction} exportActionProps - the customization of the export action or `undefined` if the
  * default action properties are wanted
+ * @example { as: 'primary', i18nLabel: 'My Export' }
  * @property {VirtualizationActionId[]} includeActions - the IDs of the actions wanted as buttons.
  * Leave `undefined` if the default actions are wanted. Set to an empty array of no action buttons are wanted.
  * @property {VirtualizationActionId[]} includeItems - the IDs of the actions wanted as kebab menu items.
@@ -122,6 +124,30 @@ export const VirtualizationActionContainer: React.FunctionComponent<
   const [showDialog, setShowDialog] = React.useState(false);
 
   /**
+   * Hook to indicate when published or publishing is in-progress.
+   */
+  const [isPublish, setPublish] = React.useState(false);
+
+  /**
+   * Update publishing details whenever virtualization changes.
+   */
+  React.useEffect(() => {
+    const publishedState = props.virtualization.publishedState;
+    switch (publishedState) {
+      case "BUILDING":
+      case "CONFIGURING":
+      case "DEPLOYING":
+      case "RUNNING":
+      case "SUBMITTED":
+        setPublish(true);
+        break;
+      default:
+        setPublish(false);
+        break;
+    }
+  }, [props.virtualization]);
+
+  /**
    * Hook that makes the backend calls.
    */
   const {
@@ -147,6 +173,43 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createDeleteAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default delete action.
+     */
+    const deleteAction: IVirtualizationAction = {
+      disabled: props.virtualization.usedBy.length > 0 || isPublish,
+      i18nLabel: t('shared:Delete'),
+      id: VirtualizationActionId.Delete,
+      onClick: async () => {
+        setPromptActionOptions({
+          buttonText: t('shared:Delete'),
+          handleAction: async () => {
+            await deleteVirtualization(props.virtualization.name).catch(
+              (e: any) => {
+                // inform user of error
+                pushNotification(
+                  t('deleteVirtualizationFailed', {
+                    details: e.errorMessage || e.message || e,
+                    name: props.virtualization.name,
+                  }),
+                  'error'
+                );
+              }
+            );
+
+            // redirect if requested
+            if (props.postDeleteHref) {
+              history.push(props.postDeleteHref);
+            }
+          },
+          icon: ConfirmationIconType.DANGER,
+          message: 'Are you sure you want to delete?',
+          title: 'Confirm Delete?',
+        } as IPromptActionOptions);
+        setShowDialog(true);
+      },
+    };
+
     if (!customProps) {
       return deleteAction;
     }
@@ -155,43 +218,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...deleteAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default delete action.
-   */
-  const deleteAction: IVirtualizationAction = {
-    disabled: false,
-    i18nLabel: t('shared:Delete'),
-    id: VirtualizationActionId.Delete,
-    onClick: async () => {
-      setPromptActionOptions({
-        buttonText: 'Delete',
-        handleAction: async () => {
-          await deleteVirtualization(props.virtualization.name).catch(
-            (e: any) => {
-              // inform user of error
-              pushNotification(
-                t('deleteVirtualizationFailed', {
-                  details: e.errorMessage || e.message || e,
-                  name: props.virtualization.name,
-                }),
-                'error'
-              );
-            }
-          );
-
-          // redirect if requested
-          if (props.postDeleteHref) {
-            history.push(props.postDeleteHref);
-          }
-        },
-        icon: ConfirmationIconType.DANGER,
-        message: 'Are you sure you want to delete?',
-        title: 'Confirm Delete?',
-      } as IPromptActionOptions);
-      setShowDialog(true);
-    },
   };
 
   /**
@@ -208,6 +234,28 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createExportAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default export action.
+     */
+    const exportAction: IVirtualizationAction = {
+      as: 'default',
+      disabled: false,
+      i18nLabel: t('shared:Export'),
+      id: VirtualizationActionId.Export,
+      onClick: async () => {
+        exportVirtualization(props.virtualization.name).catch((e: any) => {
+          // notify user of error
+          pushNotification(
+            t('exportVirtualizationFailed', {
+              details: e.errorMessage || e.message || e,
+              name: props.virtualization.name,
+            }),
+            'error'
+          );
+        });
+      },
+    };
+
     if (!customProps) {
       return exportAction;
     }
@@ -216,28 +264,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...exportAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default export action.
-   */
-  const exportAction: IVirtualizationAction = {
-    as: 'default',
-    disabled: false,
-    i18nLabel: t('shared:Export'),
-    id: VirtualizationActionId.Export,
-    onClick: async () => {
-      exportVirtualization(props.virtualization.name).catch((e: any) => {
-        // notify user of error
-        pushNotification(
-          t('exportVirtualizationFailed', {
-            details: e.errorMessage || e.message || e,
-            name: props.virtualization.name,
-          }),
-          'error'
-        );
-      });
-    },
   };
 
   /**
@@ -254,6 +280,41 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createPublishAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default publish action.
+     */
+    const publishAction: IVirtualizationAction = {
+      as: 'primary',
+      disabled: false,
+      i18nLabel: t('shared:Publish'),
+      id: VirtualizationActionId.Publish,
+      onClick: async () => {
+        setPublish(true);
+
+        if (props.virtualization.empty) {
+          pushNotification(
+            t('publishVirtualizationNoViews', {
+              name: props.virtualization.name,
+            }),
+            'info'
+          );
+          const e = new Error();
+          e.name = 'NoViews';
+          throw e;
+        }
+
+        publishVirtualization(props.virtualization.name).catch((e: any) => {
+          pushNotification(
+            t('publishVirtualizationFailed', {
+              details: e.errorMessage || e.message || e,
+              name: props.virtualization.name,
+            }),
+            'error'
+          );
+        });
+      },
+    };
+
     if (!customProps) {
       return publishAction;
     }
@@ -262,39 +323,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...publishAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default publish action.
-   */
-  const publishAction: IVirtualizationAction = {
-    as: 'primary',
-    disabled: false,
-    i18nLabel: t('shared:Publish'),
-    id: VirtualizationActionId.Publish,
-    onClick: async () => {
-      if (props.virtualization.empty) {
-        pushNotification(
-          t('publishVirtualizationNoViews', {
-            name: props.virtualization.name,
-          }),
-          'info'
-        );
-        const e = new Error();
-        e.name = 'NoViews';
-        throw e;
-      }
-
-      publishVirtualization(props.virtualization.name).catch((e: any) => {
-        pushNotification(
-          t('publishVirtualizationFailed', {
-            details: e.errorMessage || e.message || e,
-            name: props.virtualization.name,
-          }),
-          'error'
-        );
-      });
-    },
   };
 
   /**
@@ -311,6 +339,43 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createRevertAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default revert action.
+     */
+    const revertAction: IVirtualizationAction = {
+      as: 'primary',
+      disabled: false,
+      i18nLabel: t('shared:Revert'),
+      id: VirtualizationActionId.Revert,
+      onClick: async () => {
+        setPromptActionOptions({
+          buttonText: t('shared:Revert'),
+          handleAction: async () => {
+            await revertVirtualization(
+              props.virtualization.name,
+              props.revision!
+            ).catch((e: any) => {
+              // inform user of error
+              pushNotification(
+                t('revertVirtualizationFailed', {
+                  details: e.errorMessage || e.message || e,
+                  name: props.virtualization.name,
+                }),
+                'error'
+              );
+            });
+          },
+          icon: ConfirmationIconType.DANGER,
+          message: t('revertVirtualizationConfirmMsg', {
+            name: props.virtualization.name,
+            version: props.revision,
+          }),
+          title: t('revertVirtualizationConfirmTitle'),
+        } as IPromptActionOptions);
+        setShowDialog(true);
+      },
+    };
+
     if (!customProps) {
       return revertAction;
     }
@@ -319,43 +384,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...revertAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default revert action.
-   */
-  const revertAction: IVirtualizationAction = {
-    as: 'primary',
-    disabled: false,
-    i18nLabel: t('shared:Revert'),
-    id: VirtualizationActionId.Revert,
-    onClick: async () => {
-      setPromptActionOptions({
-        buttonText: 'Revert',
-        handleAction: async () => {
-          await revertVirtualization(
-            props.virtualization.name,
-            props.revision!
-          ).catch((e: any) => {
-            // inform user of error
-            pushNotification(
-              t('revertVirtualizationFailed', {
-                details: e.errorMessage || e.message || e,
-                name: props.virtualization.name,
-              }),
-              'error'
-            );
-          });
-        },
-        icon: ConfirmationIconType.DANGER,
-        message: t('revertVirtualizationConfirmMsg', {
-          name: props.virtualization.name,
-          version: props.revision,
-        }),
-        title: t('revertVirtualizationConfirmTitle'),
-      } as IPromptActionOptions);
-      setShowDialog(true);
-    },
   };
 
   /**
@@ -372,6 +400,42 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createStartAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default start action.
+     */
+    const startAction: IVirtualizationAction = {
+      disabled: false,
+      i18nLabel: t('shared:Start'),
+      id: VirtualizationActionId.Start,
+      onClick: async () => {
+        setPromptActionOptions({
+          buttonText: t('shared:Start'),
+          handleAction: async () => {
+            await startVirtualization(
+              props.virtualization.name,
+              props.revision!
+            ).catch((e: any) => {
+              // inform user of error
+              pushNotification(
+                t('startVirtualizationFailed', {
+                  details: e.errorMessage || e.message || e,
+                  name: props.virtualization.name,
+                }),
+                'error'
+              );
+            });
+          },
+          icon: ConfirmationIconType.DANGER,
+          message: t('startVirtualizationConfirmMsg', {
+            name: props.virtualization.name,
+            version: props.revision,
+          }),
+          title: t('startVirtualizationConfirmTitle'),
+        } as IPromptActionOptions);
+        setShowDialog(true);
+      },
+    };
+
     if (!customProps) {
       return startAction;
     }
@@ -380,42 +444,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...startAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default start action.
-   */
-  const startAction: IVirtualizationAction = {
-    disabled: false,
-    i18nLabel: t('shared:Start'),
-    id: VirtualizationActionId.Start,
-    onClick: async () => {
-      setPromptActionOptions({
-        buttonText: 'start',
-        handleAction: async () => {
-          await startVirtualization(
-            props.virtualization.name,
-            props.revision!
-          ).catch((e: any) => {
-            // inform user of error
-            pushNotification(
-              t('startVirtualizationFailed', {
-                details: e.errorMessage || e.message || e,
-                name: props.virtualization.name,
-              }),
-              'error'
-            );
-          });
-        },
-        icon: ConfirmationIconType.DANGER,
-        message: t('startVirtualizationConfirmMsg', {
-          name: props.virtualization.name,
-          version: props.revision,
-        }),
-        title: t('startVirtualizationConfirmTitle'),
-      } as IPromptActionOptions);
-      setShowDialog(true);
-    },
   };
 
   /**
@@ -432,6 +460,35 @@ export const VirtualizationActionContainer: React.FunctionComponent<
    * @param customProps the values used instead of the default values
    */
   const createStopAction = (customProps?: any): IVirtualizationAction => {
+    /**
+     * The default stop/unpublish action.
+     */
+    const stopAction: IVirtualizationAction = {
+      disabled: false,
+      i18nLabel: t('shared:Stop'),
+      id: VirtualizationActionId.Stop,
+      onClick: async () => {
+        unpublishVirtualization(props.virtualization.name).catch((e: any) => {
+          if (e.name === 'AlreadyUnpublished') {
+            pushNotification(
+              t('unpublishedVirtualization', {
+                name: props.virtualization.name,
+              }),
+              'info'
+            );
+          } else {
+            pushNotification(
+              t('unpublishVirtualizationFailed', {
+                details: e.errorMessage || e.message || e,
+                name: props.virtualization.name,
+              }),
+              'error'
+            );
+          }
+        });
+      },
+    };
+
     if (!customProps) {
       return stopAction;
     }
@@ -440,35 +497,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       ...stopAction,
       ...customProps,
     };
-  };
-
-  /**
-   * The default stop/unpublish action.
-   */
-  const stopAction: IVirtualizationAction = {
-    disabled: false,
-    i18nLabel: t('shared:Stop'),
-    id: VirtualizationActionId.Stop,
-    onClick: async () => {
-      unpublishVirtualization(props.virtualization.name).catch((e: any) => {
-        if (e.name === 'AlreadyUnpublished') {
-          pushNotification(
-            t('unpublishedVirtualization', {
-              name: props.virtualization.name,
-            }),
-            'info'
-          );
-        } else {
-          pushNotification(
-            t('unpublishVirtualizationFailed', {
-              details: e.errorMessage || e.message || e,
-              name: props.virtualization.name,
-            }),
-            'error'
-          );
-        }
-      });
-    },
   };
 
   /*
@@ -489,28 +517,16 @@ export const VirtualizationActionContainer: React.FunctionComponent<
     // default actions
     if (!props.includeActions) {
       if (canRevert(props.virtualization, props.revision)) {
-        actions.push(
-          props.revertActionProps
-            ? createRevertAction(props.revertActionProps)
-            : revertAction
-        );
+        actions.push(createRevertAction(props.revertActionProps));
       }
       if (canExport(props.virtualization)) {
-        actions.push(
-          props.exportActionProps
-            ? createExportAction(props.exportActionProps)
-            : exportAction
-        );
+        actions.push(createExportAction(props.exportActionProps));
       }
       // The publish is always included, but may be disabled
       if (!canPublish(props.virtualization)) {
         actions.push(createPublishAction({ disabled: true }));
       } else {
-        actions.push(
-          props.publishActionProps
-            ? createPublishAction(props.publishActionProps)
-            : publishAction
-        );
+        actions.push(createPublishAction(props.publishActionProps));
       }
 
       return actions;
@@ -526,56 +542,32 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       switch (actionId) {
         case VirtualizationActionId.Delete:
           if (canDelete(props.virtualization)) {
-            actions.push(
-              props.deleteActionProps
-                ? createDeleteAction(props.deleteActionProps)
-                : deleteAction
-            );
+            actions.push(createDeleteAction(props.deleteActionProps));
           }
           break;
         case VirtualizationActionId.Export:
           if (canExport(props.virtualization)) {
-            actions.push(
-              props.exportActionProps
-                ? createExportAction(props.exportActionProps)
-                : exportAction
-            );
+            actions.push(createExportAction(props.exportActionProps));
           }
           break;
         case VirtualizationActionId.Publish:
           if (canPublish(props.virtualization)) {
-            actions.push(
-              props.publishActionProps
-                ? createPublishAction(props.publishActionProps)
-                : publishAction
-            );
+            actions.push(createPublishAction(props.publishActionProps));
           }
           break;
         case VirtualizationActionId.Revert:
           if (canRevert(props.virtualization, props.revision)) {
-            actions.push(
-              props.revertActionProps
-                ? createRevertAction(props.revertActionProps)
-                : revertAction
-            );
+            actions.push(createRevertAction(props.revertActionProps));
           }
           break;
         case VirtualizationActionId.Start:
           if (canStart(props.virtualization, props.revision)) {
-            actions.push(
-              props.startActionProps
-                ? createStartAction(props.startActionProps)
-                : startAction
-            );
+            actions.push(createStartAction(props.startActionProps));
           }
           break;
         case VirtualizationActionId.Stop:
           if (canStop(props.virtualization)) {
-            actions.push(
-              props.stopActionProps
-                ? createStopAction(props.stopActionProps)
-                : stopAction
-            );
+            actions.push(createStopAction(props.stopActionProps));
           }
           break;
         default:
@@ -593,19 +585,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
     // default items
     if (!props.includeItems) {
       if (canStop(props.virtualization)) {
-        items.push(
-          props.stopActionProps
-            ? createStopAction(props.stopActionProps)
-            : stopAction
-        );
+        items.push(createStopAction(props.stopActionProps));
       }
 
       if (canDelete(props.virtualization)) {
-        items.push(
-          props.deleteActionProps
-            ? createDeleteAction(props.deleteActionProps)
-            : deleteAction
-        );
+        items.push(createDeleteAction(props.deleteActionProps));
       }
 
       return items;
@@ -621,56 +605,32 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       switch (actionId) {
         case VirtualizationActionId.Delete:
           if (canDelete(props.virtualization)) {
-            items.push(
-              props.deleteActionProps
-                ? createDeleteAction(props.deleteActionProps)
-                : deleteAction
-            );
+            items.push(createDeleteAction(props.deleteActionProps));
           }
           break;
         case VirtualizationActionId.Export:
           if (canExport(props.virtualization)) {
-            items.push(
-              props.exportActionProps
-                ? createExportAction(props.exportActionProps)
-                : exportAction
-            );
+            items.push(createExportAction(props.exportActionProps));
           }
           break;
         case VirtualizationActionId.Publish:
           if (canPublish(props.virtualization)) {
-            items.push(
-              props.publishActionProps
-                ? createPublishAction(props.publishActionProps)
-                : publishAction
-            );
+            items.push(createPublishAction(props.publishActionProps));
           }
           break;
         case VirtualizationActionId.Revert:
           if (canRevert(props.virtualization, props.revision)) {
-            items.push(
-              props.revertActionProps
-                ? createRevertAction(props.revertActionProps)
-                : revertAction
-            );
+            items.push(createRevertAction(props.revertActionProps));
           }
           break;
         case VirtualizationActionId.Start:
           if (canStart(props.virtualization, props.revision)) {
-            items.push(
-              props.startActionProps
-                ? createStartAction(props.startActionProps)
-                : startAction
-            );
+            items.push(createStartAction(props.startActionProps));
           }
           break;
         case VirtualizationActionId.Stop:
           if (canStop(props.virtualization)) {
-            items.push(
-              props.stopActionProps
-                ? createStopAction(props.stopActionProps)
-                : stopAction
-            );
+            items.push(createStopAction(props.stopActionProps));
           }
           break;
         default:

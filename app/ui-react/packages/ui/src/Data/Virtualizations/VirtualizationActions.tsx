@@ -107,7 +107,7 @@ export const VirtualizationActions: React.FunctionComponent<
                   className={'virtualization-actions__menuItem'}
                   component={'button'}
                   data-testid={`virtualization-actions-${toValidHtmlId(item.id)}`}
-                  isDisabled={item.isDisabled}
+                  isDisabled={item.disabled}
                   key={index}
                 >
                   <Link to={item.href}>{item.i18nLabel}</Link>
@@ -117,7 +117,7 @@ export const VirtualizationActions: React.FunctionComponent<
                   className={'virtualization-actions__menuItem'}
                   component={'button'}
                   data-testid={`virtualization-actions-${toValidHtmlId(item.id)}`}
-                  isDisabled={item.isDisabled}
+                  isDisabled={item.disabled}
                   key={index}
                   onClick={item.onClick}
                 >
