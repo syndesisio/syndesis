@@ -27,7 +27,7 @@
     "react-dom": "^16.6.0",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
-    "react-testing-library": "^7.0.0",
+    "react-testing-library": "^8.0.1",
     "rimraf": "^2.6.2",
     "ts-jest": "^24.0.0",
     "ts-loader": "^6.0.4",
