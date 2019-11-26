@@ -19,13 +19,13 @@ package io.syndesis.server.api.generator.openapi;
 /**
  * Supported security schemes.
  */
-public enum SchemeType {
+public enum SecurityScheme {
     OAUTH2("oauth2"),
     BASIC("basic"),
     API_KEY("apiKey");
 
     private final String name;
-    SchemeType(String name) {
+    SecurityScheme(String name) {
         this.name = name;
     }
 

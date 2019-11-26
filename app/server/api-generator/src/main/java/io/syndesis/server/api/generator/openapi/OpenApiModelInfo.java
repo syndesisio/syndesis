@@ -48,7 +48,7 @@ public interface OpenApiModelInfo {
 
     OasDocument getModel();
 
-    @JsonIgnore
+    @Value.Lazy
     default OpenApiVersion getApiVersion() {
         return OpenApiVersion.fromDocumentType(getModel());
     }

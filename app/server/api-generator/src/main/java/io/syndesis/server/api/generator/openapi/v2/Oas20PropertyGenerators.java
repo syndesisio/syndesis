@@ -26,7 +26,6 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.Extension;
-import io.apicurio.datamodels.core.models.common.SecurityScheme;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Scopes;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityDefinitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
@@ -34,7 +33,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.PropertyGenerator;
-import io.syndesis.server.api.generator.openapi.SchemeType;
+import io.syndesis.server.api.generator.openapi.SecurityScheme;
 import io.syndesis.server.api.generator.openapi.SupportedAuthenticationTypes;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
@@ -60,13 +59,13 @@ public enum Oas20PropertyGenerators {
     authenticationParameterName {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> apiKeyProperty(info, template, settings, SecurityScheme::getSchemeName);
+            return (info, template, settings) -> apiKeyProperty(info, template, settings, io.apicurio.datamodels.core.models.common.SecurityScheme::getSchemeName);
         }
     },
     authenticationParameterPlacement {
         @Override
         protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> securityDefinition(info, settings, SchemeType.API_KEY)
+            return (info, template, settings) -> securityDefinition(info, settings, SecurityScheme.API_KEY)
                 .map(definition -> new ConfigurationProperty.Builder()
                     .createFrom(template)
                     .getEnum(Collections.emptyList())
@@ -264,7 +263,7 @@ public enum Oas20PropertyGenerators {
     }
 
     static Optional<Oas20SecurityScheme> securityDefinition(final OpenApiModelInfo info,
-                                                            final ConnectorSettings connectorSettings, final SchemeType type) {
+                                                            final ConnectorSettings connectorSettings, final SecurityScheme type) {
         final List<Oas20SecurityScheme> securitySchemes = ofNullable(info.getV2Model().securityDefinitions)
                                                               .map(Oas20SecurityDefinitions::getSecuritySchemes)
                                                               .orElse(Collections.emptyList());
@@ -317,7 +316,7 @@ public enum Oas20PropertyGenerators {
     private static Optional<ConfigurationProperty> apiKeyProperty(final OpenApiModelInfo info, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
         final Function<Oas20SecurityScheme, String> defaultValueExtractor) {
-        return securityDefinition(info, connectorSettings, SchemeType.API_KEY)
+        return securityDefinition(info, connectorSettings, SecurityScheme.API_KEY)
             .map(definition -> new ConfigurationProperty.Builder()
                 .createFrom(template)
                 .defaultValue(defaultValueExtractor.apply(definition))
@@ -352,21 +351,21 @@ public enum Oas20PropertyGenerators {
 
     private static Optional<ConfigurationProperty> ifHasApiKeysSecurityDefinition(final OpenApiModelInfo info,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(info, template, connectorSettings, SchemeType.API_KEY);
+        return ifHasSecurityDefinition(info, template, connectorSettings, SecurityScheme.API_KEY);
     }
 
     private static Optional<ConfigurationProperty> ifHasBasicSecurityDefinition(final OpenApiModelInfo info,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(info, template, connectorSettings, SchemeType.BASIC);
+        return ifHasSecurityDefinition(info, template, connectorSettings, SecurityScheme.BASIC);
     }
 
     private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final OpenApiModelInfo info,
         final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        return ifHasSecurityDefinition(info, template, connectorSettings, SchemeType.OAUTH2);
+        return ifHasSecurityDefinition(info, template, connectorSettings, SecurityScheme.OAUTH2);
     }
 
     private static Optional<ConfigurationProperty> ifHasSecurityDefinition(final OpenApiModelInfo info, final ConfigurationProperty template,
-        final ConnectorSettings connectorSettings, final SchemeType type) {
+        final ConnectorSettings connectorSettings, final SecurityScheme type) {
         final Optional<Oas20SecurityScheme> securityDefinition = securityDefinition(info, connectorSettings, type);
 
         if (securityDefinition.isPresent()) {
@@ -379,14 +378,14 @@ public enum Oas20PropertyGenerators {
     private static Optional<ConfigurationProperty> oauthProperty(final OpenApiModelInfo info, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
         final Function<Oas20SecurityScheme, String> defaultValueExtractor) {
-        return securityDefinition(info, connectorSettings, SchemeType.OAUTH2).map(definition -> new ConfigurationProperty.Builder()
+        return securityDefinition(info, connectorSettings, SecurityScheme.OAUTH2).map(definition -> new ConfigurationProperty.Builder()
             .createFrom(template).defaultValue(defaultValueExtractor.apply(definition)).build());
     }
 
     private static Optional<ConfigurationProperty> oauthVendorProperty(final OpenApiModelInfo info, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
         final String name) {
-        return securityDefinition(info, connectorSettings, SchemeType.OAUTH2).flatMap(definition -> vendorExtension(definition, template, name));
+        return securityDefinition(info, connectorSettings, SecurityScheme.OAUTH2).flatMap(definition -> vendorExtension(definition, template, name));
     }
 
     private static Optional<ConfigurationProperty> vendorExtension(final Oas20SecurityScheme definition,
