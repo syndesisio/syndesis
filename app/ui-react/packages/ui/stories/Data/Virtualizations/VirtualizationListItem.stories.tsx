@@ -23,17 +23,17 @@ const publishedText = 'Published';
 const confirmDeleteTitle = 'Delete Virtualization';
 const confirmDeleteMessage =
   'This will permanently delete the Virtualization.  Proceed with the delete?';
-const confirmUnpublishTitle = 'Unpublish Virtualization';
-const confirmUnpublishMessage =
-  'This Virtualization has been published.  Please unpublish the Virtualization first.';
+const confirmStopTitle = 'Stop Virtualization';
+const confirmStopMessage =
+  'This Virtualization has been published.  Please stop the Virtualization first.';
 const cancelText = 'Cancel';
 const deleteText = 'Delete';
 const errorText = 'Error';
 const exportText = 'Export';
-const unpublishText = 'Unpublish';
+const stopText = 'Stop';
 const publishText = 'Publish';
 const publishInProgressText = 'publish in progress...';
-const unpublishInProgressText = 'unpublish in progress...';
+const stopInProgressText = 'stop in progress...';
 const publishLogUrl = 'testUrl';
 const publishLogUrlText = 'View Logs';
 
@@ -61,7 +61,7 @@ const publishedVirtualizationNotes =
   exportText +
   '"\n' +
   '- Verify the dropdown menu contains "' +
-  unpublishText +
+  stopText +
   '"\n' +
   '[ ACTION ] Select KNOBS tab and delete all text in the icon area\n' +
   '-- >  Verify the custom virtualization icon changes to the default' +
@@ -88,7 +88,7 @@ stories
             isProgressWithLink={true}
             i18nDeleteInProgressText={'Deleting...'}
             i18nPublishInProgressText={publishInProgressText}
-            i18nUnpublishInProgressText={unpublishInProgressText}
+            i18nStopInProgressText={stopInProgressText}
             i18nPublishState={'Unpublishing...'}
             labelType={'default'}
             publishingStepText={'Building'}
@@ -104,16 +104,16 @@ stories
             i18nEditTip={editTip}
             i18nExport={'Export'}
             i18nInUseText={'The virtualization is in use by an integration.'}
-            i18nUnpublish={unpublishText}
+            i18nStop={stopText}
             i18nPublish={publishText}
             i18nPublishLogUrlText={publishLogUrlText}
-            i18nUnpublishModalMessage={confirmUnpublishMessage}
-            i18nUnpublishModalTitle={confirmUnpublishTitle}
+            i18nStopModalMessage={confirmStopMessage}
+            i18nStopModalTitle={confirmStopTitle}
             modified={boolean('modified', false)}
             detailsPageLink={'/details/page/link'}
             onDelete={action(deleteText)}
             onExport={action(exportText)}
-            onUnpublish={action(unpublishText)}
+            onStop={action(stopText)}
             onPublish={action(publishText)}
             currentPublishedState={'BUILDING'}
             publishingLogUrl={text('publishLogUrl', publishLogUrl)}
@@ -131,7 +131,7 @@ stories
           isProgressWithLink={false}
           i18nDeleteInProgressText={'Deleting...'}
           i18nPublishInProgressText={publishInProgressText}
-          i18nUnpublishInProgressText={unpublishInProgressText}
+          i18nStopInProgressText={stopInProgressText}
           i18nPublishState={publishedText}
           labelType={'primary'}
           hasViews={true}
@@ -147,16 +147,16 @@ stories
           i18nEditTip={editTip}
           i18nExport={'Export'}
           i18nInUseText={'The virtualization is not in use by an integration.'}
-          i18nUnpublish={unpublishText}
+          i18nStop={stopText}
           i18nPublish={publishText}
           i18nPublishLogUrlText={publishLogUrlText}
-          i18nUnpublishModalMessage={confirmUnpublishMessage}
-          i18nUnpublishModalTitle={confirmUnpublishTitle}
+          i18nStopModalMessage={confirmStopMessage}
+          i18nStopModalTitle={confirmStopTitle}
           modified={boolean('modified', false)}
           detailsPageLink={'/details/page/link'}
           onDelete={action(deleteText)}
           onExport={action(exportText)}
-          onUnpublish={action(unpublishText)}
+          onStop={action(stopText)}
           onPublish={action(publishText)}
           currentPublishedState={'RUNNING'}
           publishingLogUrl={text('publishLogUrl', publishLogUrl)}

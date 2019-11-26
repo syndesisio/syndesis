@@ -434,7 +434,7 @@ export function getStateLabelText(
     case 'DELETE_SUBMITTED':
     case 'DELETE_REQUEUE':
     case 'DELETE_DONE':
-      result = i18n.t('data:unpublishInProgress');
+      result = i18n.t('data:stopInProgress');
       break;
     default:
       // should not get here as exhausted all cases
