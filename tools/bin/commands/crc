@@ -18,6 +18,8 @@ crc::usage() {
     --full-reset              Full reset and initialie by
                               'crc stop && rm -rf ~/.crc/* && crc start'
     --operator-only           Only install the operator but no custom resource
+    --tag <tag>               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
     --memory <mem>            How much memory to use when doing a reset. Default: $DEFAULT_RAM
     --cpus <nr cpus>          How many CPUs to use when doing a reset. Default: $DEFAULT_CPUS
     --pull-secret-file <file> File holding the OCP4 pull secret
@@ -50,7 +52,8 @@ crc::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    if [ $(hasflag -f --force-binary-download) ]; then
+    release_tag="$(readopt --tag)"
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi
