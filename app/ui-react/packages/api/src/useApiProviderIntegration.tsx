@@ -1,8 +1,8 @@
-import { Integration } from '@syndesis/models';
+import { ErrorResponse, Integration } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-import { isIntegrationEmpty } from './helpers';
+import { isIntegrationEmpty, throwStandardError } from './helpers';
 
 export function useApiProviderIntegration() {
   const apiContext = React.useContext(ApiContext);
@@ -20,7 +20,7 @@ export function useApiProviderIntegration() {
     });
     const integration = await response.json();
     if (integration.errorCode) {
-      throw new Error(integration.userMsg);
+      throw integration as ErrorResponse;
     }
     return integration;
   };
@@ -46,15 +46,13 @@ export function useApiProviderIntegration() {
     if (response.status === 202) {
       const updatedIntegration = await response.json();
       if (updatedIntegration.errorCode) {
-        throw new Error(updatedIntegration.userMsg);
+        throw updatedIntegration as ErrorResponse;
       }
       return updatedIntegration;
     } else if (response.status === 304) {
       return integration;
     } else {
-      throw new Error(
-        `Unexpected return code ${response.status}: ${response.statusText}`
-      );
+      await throwStandardError(response);
     }
   };
 

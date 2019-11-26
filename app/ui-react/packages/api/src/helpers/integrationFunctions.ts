@@ -362,11 +362,14 @@ export async function throwStandardError(response: Response) {
   try {
     json = JSON.parse(text);
   } catch (e) {
-    throw { errorCode: response.status, userMsg: text || response.statusText };
+    throw {
+      developerMsg: text,
+      errorCode: response.status,
+      userMsg: `An unexpected error has occurred: ${response.statusText}`,
+    };
   }
   throw json;
 }
-
 
 /**
  * Sets an arbitrary property on an integration
@@ -711,16 +714,21 @@ export async function setFlow(
  */
 export function reconcileIntegration(
   integration: Integration,
-  updatedFlow: Flow) {
+  updatedFlow: Flow
+) {
   let reconciledIntegration = { ...integration };
 
-  const conditionalFlowsSteps = updatedFlow.steps!.filter(step => step.stepKind === CHOICE);
+  const conditionalFlowsSteps = updatedFlow.steps!.filter(
+    step => step.stepKind === CHOICE
+  );
   for (const cfStep of conditionalFlowsSteps) {
-    reconciledIntegration = reconcileConditionalFlows(reconciledIntegration,
+    reconciledIntegration = reconcileConditionalFlows(
+      reconciledIntegration,
       getFlowsWithLinkedStepId(reconciledIntegration.flows!, cfStep.id!),
       cfStep.id!,
       cfStep.action!.descriptor!.inputDataShape!,
-      cfStep.action!.descriptor!.outputDataShape!)
+      cfStep.action!.descriptor!.outputDataShape!
+    );
   }
 
   return reconciledIntegration;
@@ -921,9 +929,11 @@ export function removeStepFromFlow(
  * @param step
  */
 export function getChoiceConfigMode(step: StepKind) {
-  if (step.stepKind === CHOICE &&
-      typeof step.configuredProperties!.flows !== 'undefined' &&
-      step.configuredProperties!.flows.length > 0) {
+  if (
+    step.stepKind === CHOICE &&
+    typeof step.configuredProperties!.flows !== 'undefined' &&
+    step.configuredProperties!.flows.length > 0
+  ) {
     const flows = JSON.parse(step.configuredProperties!.flows) as any[];
     if (flows.find(flow => flow.condition!.length > 0)) {
       return 'advanced';
@@ -1301,8 +1311,7 @@ export function getOutputDataShapeFromPreviousStep(
       position
     );
     dataShape =
-      prevStep!.action!.descriptor!.outputDataShape ||
-      ({} as DataShape);
+      prevStep!.action!.descriptor!.outputDataShape || ({} as DataShape);
   } catch (err) {
     // ignore
   }
