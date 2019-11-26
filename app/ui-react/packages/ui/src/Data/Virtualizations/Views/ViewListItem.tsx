@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import {
   DropdownKebab,
   ListViewIcon,
+  ListViewInfoItem,
   ListViewItem,
   MenuItem,
   OverlayTrigger,
@@ -15,6 +16,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../../Shared';
+import './ViewListItem.css';
 
 export interface IViewListItemProps {
   viewDescription: string;
@@ -29,6 +31,8 @@ export interface IViewListItemProps {
   i18nDeleteModalTitle: string;
   i18nEdit: string;
   i18nEditTip?: string;
+  i18nInvalid: string;
+  isValid: boolean;
   onDelete: (viewId: string, viewName: string) => void;
 }
 
@@ -111,6 +115,17 @@ export const ViewListItem: React.FunctionComponent<
             </DropdownKebab>
           </div>
         }
+        additionalInfo={
+          props.isValid
+            ? []
+            : [
+                <ListViewInfoItem key={1}>
+                  <div className={'view-list-item__invalidView'}>
+                    {props.i18nInvalid}
+                  </div>
+                </ListViewInfoItem>
+              ]
+        }
         heading={props.viewName}
         description={
           props.viewDescription ? props.viewDescription : ''
@@ -129,7 +144,7 @@ export const ViewListItem: React.FunctionComponent<
               <ListViewIcon name={'table'} />
             )
         }
-        stacked={false}
+        stacked={true}
       />
     </>
   );

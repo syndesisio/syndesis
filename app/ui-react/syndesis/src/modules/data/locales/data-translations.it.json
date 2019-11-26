@@ -65,6 +65,7 @@
   "importVirtualizationSuccess": "\"{{fileName}}\" importato con successo.",
   "importVirtualizationTip": "Importa una virtualizzazione dei dati",
   "importVirtualizationZipInvalid": "Il file zip non è valido (dv.json non trovato).",
+  "Invalid": "Invalido",
   "Metrics": "Metrica",
   "preview": {
     "hidePreview": "Nascondi Anteprima",

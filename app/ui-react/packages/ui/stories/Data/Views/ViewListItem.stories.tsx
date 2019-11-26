@@ -41,7 +41,7 @@ const sampleViewNotes =
   '" in the ACTION LOGGER';
 
 stories.add(
-  'sample view item',
+  'valid view item',
   withNotes(sampleViewNotes)(() => (
     <ViewListItem
       viewId="viewListItem1"
@@ -56,6 +56,31 @@ stories.add(
       i18nDeleteModalTitle={'Confirm Delete'}
       i18nEdit={text('editText', editText)}
       i18nEditTip={text('editTip', editTip)}
+      i18nInvalid={'Invalid'}
+      isValid={true}
+      onDelete={action(deleteActionText)}
+    />
+  ))
+);
+
+stories.add(
+  'invalid view item',
+  withNotes(sampleViewNotes)(() => (
+    <ViewListItem
+      viewId="invalidViewListItem"
+      viewName={text('viewName', viewName)}
+      viewDescription={text('viewDescription', viewDescription)}
+      viewEditPageLink={''}
+      viewIcon={text('icon', null)}
+      i18nCancelText={'Cancel'}
+      i18nDelete={text('deleteText', deleteText)}
+      i18nDeleteTip={text('deleteTip', deleteTip)}
+      i18nDeleteModalMessage={'Do you really want to delete the view?'}
+      i18nDeleteModalTitle={'Confirm Delete'}
+      i18nEdit={text('editText', editText)}
+      i18nEditTip={text('editTip', editTip)}
+      i18nInvalid={'Invalid'}
+      isValid={false}
       onDelete={action(deleteActionText)}
     />
   ))
