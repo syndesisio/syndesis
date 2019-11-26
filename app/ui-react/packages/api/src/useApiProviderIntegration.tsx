@@ -43,16 +43,17 @@ export function useApiProviderIntegration() {
       method: 'PUT',
       url: `${apiContext.apiUri}/apis/generator`,
     });
-    if (response.status === 202) {
-      const updatedIntegration = await response.json();
-      if (updatedIntegration.errorCode) {
-        throw updatedIntegration as ErrorResponse;
-      }
-      return updatedIntegration;
-    } else if (response.status === 304) {
-      return integration;
-    } else {
-      await throwStandardError(response);
+    switch (response.status) {
+      case 202:
+        const updatedIntegration = await response.json();
+        if (updatedIntegration.errorCode) {
+          throw updatedIntegration as ErrorResponse;
+        }
+        return updatedIntegration;
+      case 304:
+        return integration;
+      default:
+        await throwStandardError(response);
     }
   };
 

@@ -21,6 +21,8 @@ import { WindowRef } from './WindowRef';
       [api]="apiDefinition"
       [embedded]="true"
       (onCommandExecuted)="onChanges()"
+      (onUndo)="onChanges()"
+      (onRedo)="onChanges()"
     >
     </api-editor>
   `,

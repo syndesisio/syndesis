@@ -4348,17 +4348,17 @@ anymatch@^2.0.0:
     micromatch "^3.1.4"
     normalize-path "^2.1.1"
 
-apicurio-data-models@1.0.13:
-  version "1.0.13"
-  resolved "https://registry.yarnpkg.com/apicurio-data-models/-/apicurio-data-models-1.0.13.tgz#b2f4361fd7be2b076529b0b6598ffb930ed388e7"
-  integrity sha512-y7NIQ9dIWRDmeziLN0TzYGKwMq6KpAo3q6A1aOEkgzWuAzkXqnjaRGJ5BEto3z3Q+99uXrUZH44ZH+ZvCll6ZQ==
+apicurio-data-models@1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/apicurio-data-models/-/apicurio-data-models-1.0.17.tgz#78a941ddf79bcee74c50abc5329d4d51bbc77265"
+  integrity sha512-sC7V7lvjrTbNJcqbo745tzWq/JMGwTJMVMb9JHfbxzghVr52Uu1Q37T5zt3yWEcINbKYWxUVbCkk/sUc89V5fA==
   dependencies:
-    core-js "3.2.1"
+    core-js "3.4.1"
 
-apicurio-design-studio@0.2.40:
-  version "0.2.40"
-  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.40.tgz#92e24ffe99f2e0801328b15e05f00f7ff3dd378b"
-  integrity sha512-HAAlMNVW6WXKljFP8f7nJRO0g75N+3PdjLhqAdLu7XyEDfNToqa5yy7H3l7qIII0LF7eeU0dIiaV6zrAK2GAAQ==
+apicurio-design-studio@0.2.44:
+  version "0.2.44"
+  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.44.tgz#41ca43a799cb8465710c49a4c062527c48d09c7a"
+  integrity sha512-s4XwLz+TUXjf2jjvGK8aWrTVErGSoaTNFgMcvVw5xlAoHDF82H83NyhDvlMD8s5ljeb1+kraUNSixH6/vdbw2Q==
   dependencies:
     tslib "^1.9.0"
 
@@ -7147,10 +7147,10 @@ core-js@3.0.1:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.0.1.tgz#1343182634298f7f38622f95e73f54e48ddf4738"
   integrity sha512-sco40rF+2KlE0ROMvydjkrVMMG1vYilP2ALoRXcYR4obqbYIuV3Bg+51GEDW+HF8n7NRA+iaA4qD0nD9lo9mew==
 
-core-js@3.2.1:
-  version "3.2.1"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.2.1.tgz#cd41f38534da6cc59f7db050fe67307de9868b09"
-  integrity sha512-Qa5XSVefSVPRxy2XfUC13WbvqkxhkwB3ve+pgCQveNgYzbM/UxZeu1dcOX/xr4UmfUd+muuvsaxilQzCyUurMw==
+core-js@3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.4.1.tgz#76dd6828412900ab27c8ce0b22e6114d7ce21b18"
+  integrity sha512-KX/dnuY/J8FtEwbnrzmAjUYgLqtk+cxM86hfG60LGiW3MmltIc2yAmDgBgEkfm0blZhUrdr1Zd84J2Y14mLxzg==
 
 core-js@^1.0.0:
   version "1.2.7"
