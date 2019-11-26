@@ -20,7 +20,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.apicurio.datamodels.Library;
@@ -34,9 +33,9 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
+import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
 import io.syndesis.server.api.generator.openapi.v2.Oas20SchemaValidator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30SchemaValidator;
-import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,8 +47,6 @@ import static java.util.Optional.ofNullable;
  * @author Christoph Deppisch
  */
 public final class OpenApiModelParser {
-
-    private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
 
     private static final Logger LOG = LoggerFactory.getLogger(OpenApiModelParser.class);
 
@@ -127,7 +124,7 @@ public final class OpenApiModelParser {
     }
 
     public static boolean isJsonSpec(final String specification) {
-        return JSON_TEST.matcher(specification).matches();
+        return specification.trim().startsWith("{");
     }
 
     private static OpenApiSchemaValidator getSchemaValidator(OasDocument openApiDoc) {
@@ -156,7 +153,7 @@ public final class OpenApiModelParser {
         return JsonUtils.writer().writeValueAsString(node);
     }
 
-    private static String resolve(URL url) {
+    public static String resolve(URL url) {
         HttpURLConnection con = null;
         try {
             con = (HttpURLConnection) url.openConnection();

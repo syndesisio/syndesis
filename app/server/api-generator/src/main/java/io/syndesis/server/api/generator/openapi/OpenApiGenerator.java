@@ -15,9 +15,12 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,12 +52,16 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.v2.Oas20FlowGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30FlowGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Basic API generator generates integrations from Open API specifications. Supports both Open API v2 and V3 by delegating
  * to specific integration generator implementations.
  */
 public class OpenApiGenerator implements APIGenerator {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OpenApiGenerator.class);
 
     private static final String HTTP_RESPONSE_CODE_PROPERTY = "httpResponseCode";
 
@@ -88,21 +95,12 @@ public class OpenApiGenerator implements APIGenerator {
         // TODO: evaluate what can be shrunk (e.g. SpecificationOptimizer#minimizeForComponent)
         final byte[] updatedSpecification = Library.writeDocumentToJSONString(openApiDoc).getBytes(StandardCharsets.UTF_8);
 
-        final String specificationContentType;
-        if (OpenApiModelParser.isJsonSpec(info.getResolvedSpecification())) {
-            // means it's JSON (kinda)
-            specificationContentType = "application/vnd.oai.openapi+json";
-        } else {
-            // YAML
-            specificationContentType = "application/vnd.oai.openapi";
-        }
-
         final String apiId = KeyGenerator.createKey();
         final OpenApi api = new OpenApi.Builder()
             .id(apiId)
             .name(name)
             .document(updatedSpecification)
-            .putMetadata("Content-Type", specificationContentType)
+            .putMetadata("Content-Type", getContentType(specification))
             .build();
 
         integration.addResource(new ResourceIdentifier.Builder()
@@ -171,6 +169,31 @@ public class OpenApiGenerator implements APIGenerator {
                 .map(ConfigurationProperty.PropertyValue::getLabel)
                 .findFirst());
         return httpCodeDescription.orElse(code);
+    }
+
+    /**
+     * Determine content type for given specification (Json or YAML). When specification is a Http URL
+     * this method requests the specification content from that endpoint.
+     * @param specification the specification or Http URL pointing to it.
+     * @return content type for given specification. Usually Json or YAML content type.
+     */
+    private static String getContentType(String specification) {
+        String resolvedSpecification = specification;
+        try {
+            if (specification.toLowerCase(Locale.US).startsWith("http")) {
+                resolvedSpecification = OpenApiModelParser.resolve(new URL(specification));
+            }
+        } catch (MalformedURLException e) {
+            LOG.warn("Unable to resolve OpenAPI document\n{}\n", specification, e);
+        }
+
+        if (OpenApiModelParser.isJsonSpec(resolvedSpecification)) {
+            // means it's JSON (kinda)
+            return "application/vnd.oai.openapi+json";
+        } else {
+            // YAML
+            return "application/vnd.oai.openapi";
+        }
     }
 
     private static Flow flowWithExcerpts(final Flow flow) {
