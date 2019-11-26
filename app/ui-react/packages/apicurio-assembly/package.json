@@ -86,7 +86,7 @@
     "js-yaml": "3.12.2",
     "marked": "0.6.0",
     "moment": "2.23.0",
-    "bootstrap": "~3.4",
+    "bootstrap": "~4.1",
     "ngx-bootstrap": "3.2.0",
     "ngx-clipboard": "11.1.9",
     "patternfly": "3.59.1",
