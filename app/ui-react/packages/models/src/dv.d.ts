@@ -71,6 +71,7 @@ export interface ViewDefinitionDescriptor {
   id: string;
   name: string;
   description: string;
+  valid: boolean;
 }
 
 export interface ViewDefinition {

@@ -243,6 +243,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('shared:Edit')}
+                            i18nInvalid={t('Invalid')}
+                            isValid={viewDefinitionDescriptor.valid}
                             onDelete={handleDeleteView}
                           />
                         )

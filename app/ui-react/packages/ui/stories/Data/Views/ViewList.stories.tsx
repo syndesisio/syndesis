@@ -12,7 +12,7 @@ const stories = storiesOf('Data/Views/ViewList', module);
 const viewName1 = 'CustomerInfo';
 const viewDescription1 = 'Description for CustomerInfo';
 const viewName2 = 'AccountsSummary';
-const viewDescription2 = 'Description for AccountsSummary';
+const viewDescription2 = 'Description for AccountsSummary is a long description and keeps on getting longer the more I type';
 const editText = 'Edit';
 const editTip1 = 'Edit ' + viewName1 + ' view';
 const editTip2 = 'Edit ' + viewName2 + ' view';
@@ -35,6 +35,8 @@ const viewItems = [
     i18nDeleteModalTitle={'Confirm Delete'}
     i18nEdit={text('i18nEdit', editText)}
     i18nEditTip={text('i18nEditTip1', editTip1)}
+    i18nInvalid={'Invalid'}
+    isValid={true}
     onDelete={action(deleteActionText)}
   />,
   <ViewListItem
@@ -50,6 +52,25 @@ const viewItems = [
     i18nDeleteModalTitle={'Confirm Delete'}
     i18nEdit={text('i18nEdit', editText)}
     i18nEditTip={text('i18nEditTip2', editTip2)}
+    i18nInvalid={'Invalid'}
+    isValid={false}
+    onDelete={action(deleteActionText)}
+  />,
+  <ViewListItem
+    key="viewListItem3"
+    viewId="viewListItem3"
+    viewName={'Employee'}
+    viewEditPageLink={''}
+    i18nCancelText={'Cancel'}
+    viewDescription={''}
+    i18nDelete={text('i18nDelete', deleteText)}
+    i18nDeleteTip={text('i18nDeleteTip2', deleteTip2)}
+    i18nDeleteModalMessage={'Do you really want to delete the view?'}
+    i18nDeleteModalTitle={'Confirm Delete'}
+    i18nEdit={text('i18nEdit', editText)}
+    i18nEditTip={text('i18nEditTip2', editTip2)}
+    i18nInvalid={'Invalid'}
+    isValid={false}
     onDelete={action(deleteActionText)}
   />,
 ];
