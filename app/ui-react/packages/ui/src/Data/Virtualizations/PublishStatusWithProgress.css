@@ -5,7 +5,24 @@
     margin-right: 10px;
 }
 
-.publish-status-with-progress__label {
+.publish-status-with-progress_Label {
+    margin-right: 15px;
+}
+
+.publish-status-with-progress-margin10 {
     margin-right: 10px;
 }
+
+.publish-status-with-progress_text {
+    margin-right: 15px;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.publish-status-with-progress-badge{
+    margin-right: 10px;
+    background-color: #6CA100 !important;
+    padding: 2px;
+}
+
   
