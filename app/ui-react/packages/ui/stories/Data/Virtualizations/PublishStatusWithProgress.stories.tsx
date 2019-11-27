@@ -19,6 +19,7 @@ stories
         i18nPublishState={'Running'}
         i18nPublishVersion={2}
         isProgressWithLink={false}
+        inListView={false}
         labelType={'primary'}
       />
     </Bullseye>
@@ -30,6 +31,7 @@ stories
         i18nPublishState={'Publishing...'}
         i18nPublishVersion={2}
         isProgressWithLink={false}
+        inListView={false}
         labelType={'default'}
       />
     </Bullseye>
@@ -39,6 +41,7 @@ stories
       <Bullseye style={{ margin: 40 }}>
         <PublishStatusWithProgress
           isProgressWithLink={true}
+          inListView={false}
           i18nPublishState={'BUILDING'}
           i18nPublishLogUrlText={'View Log'}
           i18nPublishVersion={2}

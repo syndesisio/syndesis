@@ -172,7 +172,8 @@ export const VirtualizationListItem: React.FunctionComponent<
     const saveLabelType = labelType;
     setLabelType('default');
     setPublishStateText(props.i18nPublishInProgressText);
-    await props.onPublish(props.virtualizationName, props.hasViews).catch(() => {
+    await props.onPublish(props.virtualizationName, props.hasViews)
+      .catch(() => {
         // restore previous values
         setPublishStateText(saveText);
         setLabelType(saveLabelType);
@@ -243,6 +244,7 @@ export const VirtualizationListItem: React.FunctionComponent<
           <div className="form-group">
             <PublishStatusWithProgress
               isProgressWithLink={props.isProgressWithLink}
+              inListView={true}
               i18nPublishState={publishStateText}
               i18nPublishLogUrlText={props.i18nPublishLogUrlText}
               labelType={labelType}

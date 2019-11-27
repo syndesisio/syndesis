@@ -37,7 +37,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
 > = props => {
   return (
     <PageSection className={'virtualization-details-header'} variant={'light'}>
-      <Stack gutter="md">
+      <Stack>
         <StackItem>
           <Split gutter="md" className={'virtualization-details-header__row'}>
             <SplitItem className="virtualization-details-header__virtualizationName">
@@ -47,6 +47,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               {!props.isWorking ? (
                 <PublishStatusWithProgress
                   isProgressWithLink={props.isProgressWithLink}
+                  inListView={false}
                   i18nPublishState={props.i18nPublishState}
                   i18nPublishLogUrlText={props.i18nPublishLogUrlText}
                   labelType={props.labelType}
