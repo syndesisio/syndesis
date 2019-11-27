@@ -78,13 +78,27 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               ) : (
                 <>
                   <Grid gutter={'lg'}>
-                    <GridItem xl={7} xlRowSpan={12}>
+                    <GridItem
+                      className={'dashboard__integrations-grid-item'}
+                      xl={7}
+                      xlRowSpan={12}
+                    >
                       {this.props.topIntegrations}
                     </GridItem>
-                    <GridItem lg={6} xl={5} xlRowSpan={6}>
+                    <GridItem
+                      className={'dashboard__integrations-grid-item'}
+                      lg={6}
+                      xl={5}
+                      xlRowSpan={6}
+                    >
                       {this.props.integrationBoard}
                     </GridItem>
-                    <GridItem lg={6} xl={5} xlRowSpan={6}>
+                    <GridItem
+                      className={'dashboard__integrations-grid-item'}
+                      lg={6}
+                      xl={5}
+                      xlRowSpan={6}
+                    >
                       {this.props.integrationUpdates}
                     </GridItem>
                   </Grid>
