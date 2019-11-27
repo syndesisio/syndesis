@@ -79,6 +79,12 @@
     <errorprone.version>2.3.3</errorprone.version>
     <commons.compress.version>1.18</commons.compress.version>
 
+    <!-- opentracing dependencies -->
+    <jaeger.core.version>1.0.0</jaeger.core.version>
+    <jaeger.thrift.version>1.0.0</jaeger.thrift.version>
+    <opentracing.noop.version>0.33.0</opentracing.noop.version>
+    <opentracing.api.version>0.31.0</opentracing.api.version>
+
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-760011</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
