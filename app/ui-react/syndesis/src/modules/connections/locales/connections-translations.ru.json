@@ -1,0 +1,43 @@
+{
+  "connectionListDescription": "Следующие Соединения могут быть добавлены в Интеграции. Нажмите на Соединение, чтобы посмотреть настройки.",
+  "cannotDelete": "Нельзя удалить Соединение, которое используется в Интеграциях",
+  "connectionCardMenuTitle": "Действия Соединений",
+  "connectionDeletedFailed": "Произошла ошибка удаления соединения \"{{connectionName}}.\" Детали ошибки: {{details}}",
+  "connectionDeletedSuccess": "Соединение \"{{connectionName}}\" было успешно удалено.",
+  "connectionDetailPageTitle": "Детали Соединения",
+  "configurationRequired": "Необходима настройка",
+  "deleteModalMessage": "Вы уверены, что хотите удалить Соединение \"{{connectionName}}\"?",
+  "deleteModalTitle": "Подтверждаете удаление?",
+  "descriptionPlaceholder": "Введите описание...",
+  "detailsSectionTitle": "Настройки {{connectionName}}",
+  "duplicateNameError": "Имя уже занято, попробуйте другое.",
+  "errorSavingConnection": "Неизвестная ошибка сервера при сохранении Соедиенения.",
+  "errorValidatingDetails": "Неизвестная ошибка сервера при проверке настроек Соедиенения.",
+  "errorValidatingName": "Неизвестная ошибка сервера при проверке имени Соединения.",
+  "namePlaceholder": "Нужно ввести имя Соединения...",
+  "usedByOne": "Используется 1 Интеграцией",
+  "usedByMulti": "Используется в {{count}} Интеграциях",
+  "create": {
+    "unsavedChangesTitle": "Вы уверены, что хотите отменить?",
+    "unsavedChangesMessage": "Вы не закончили создание Соединения. Если вы отмените, то потеряете введенные данные. Все еще хотите отменить??",
+    "connector": {
+      "title": "Выберите Коннектор"
+    },
+    "configure": {
+      "title": "Настройте Соединение",
+      "configurationTitle": "Настройки {{name}}",
+      "configurationDescription": "Войдите в свой аккаунт {{name}} для предоставления доступа для $t(shared:project:name), чтобы действовать от вашего имени.",
+      "configurationButton": "Соединиться с {{name}}"
+    },
+    "review": {
+      "title": "Назвать Соединение"
+    }
+  },
+  "oauth": {
+    "title": "Настройки {{name}}",
+    "description": "Это соединение настроено с использованием OAuth. Используйте кнопку Проверить, чтобы убедиться, что Соединение все еще авторизовано.",
+    "validateButton": "Проверить",
+    "reconnectButton": "Переподключиться",
+    "settingsMissing": "Настройки OAuth, необходимые для создания Соединения отсутствуют. Настройте параметры OAuth."
+  }
+}

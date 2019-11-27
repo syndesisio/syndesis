@@ -1,0 +1,17 @@
+{
+  "integrationStatePending": "В процессе",
+  "integrationStateRunning": "Запущено",
+  "integrationStateStopped": "Остановлено",
+  "lastNumberOfDays": "Последние {{numberOfDays}} дней",
+  "linkToConnections": "Посмотреть все Соединения",
+  "linkToIntegrations": "Посмотреть все Интеграции",
+  "title": "Системные метрики",
+  "description": "Сообщения, обработанные Интеграциями за последние 30 дней, включая остановленные или удаленные Интеграции.",
+  "titleIntegrationBoard": "Панель Интеграций",
+  "titleIntegrationUpdates": "Последние обновления",
+  "titleTopIntegrations": "Топ {{count}} Интеграций",
+  "titleTotalConnections": "{{count}} Соединений",
+  "titleTotalIntegrations": "Интеграции",
+  "titleTotalMessages": "Сообщения",
+  "titleUptimeMetric": "Доступность"
+}
