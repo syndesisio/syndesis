@@ -18,6 +18,7 @@ import './OpenApiReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
   actions?: React.ReactNode;
+  alert?: React.ReactNode;
   apiProviderDescription?: string;
   apiProviderName?: string;
   errorMessages?: string[];
@@ -46,6 +47,7 @@ export class OpenApiReviewActions extends React.Component<
             </h5>
           ) : (
             <TextContent>
+              {this.props.alert && this.props.alert}
               <Title
                 headingLevel={'h5'}
                 size={'md'}
