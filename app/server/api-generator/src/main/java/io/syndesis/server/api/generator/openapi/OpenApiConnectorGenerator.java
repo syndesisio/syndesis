@@ -52,9 +52,11 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.OpenApiModelParser;
 import io.syndesis.server.api.generator.openapi.util.OperationDescription;
 import io.syndesis.server.api.generator.openapi.util.SpecificationOptimizer;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ConnectorGeneratorSupport;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ParameterGenerator;
+import io.syndesis.server.api.generator.openapi.v2.Oas20DescriptorGenerator;
 import io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators;
-import io.syndesis.server.api.generator.openapi.v3.Oas30ConnectorGeneratorSupport;
+import io.syndesis.server.api.generator.openapi.v3.Oas30ParameterGenerator;
+import io.syndesis.server.api.generator.openapi.v3.Oas30DescriptorGenerator;
 import io.syndesis.server.api.generator.openapi.v3.Oas30PropertyGenerators;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
@@ -136,11 +138,11 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     protected ConnectorDescriptor createDescriptor(String connectorId, OpenApiModelInfo info, OasOperation operation) {
         switch (info.getApiVersion()) {
             case V2:
-                return Oas20ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV2Model(), (Oas20Operation) operation)
+                return new Oas20DescriptorGenerator().createDescriptor(info.getResolvedJsonGraph(), info.getV2Model(), (Oas20Operation) operation)
                     .connectorId(connectorId)
                     .build();
             case V3:
-                return Oas30ConnectorGeneratorSupport.createDescriptor(info.getResolvedJsonGraph(), info.getV3Model(), (Oas30Operation) operation)
+                return new Oas30DescriptorGenerator().createDescriptor(info.getResolvedJsonGraph(), info.getV3Model(), (Oas30Operation) operation)
                     .connectorId(connectorId)
                     .build();
             default:
@@ -301,10 +303,10 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     private static void addGlobalParameters(final Connector.Builder builder, final OpenApiModelInfo info) {
         switch (info.getApiVersion()) {
             case V2:
-                Oas20ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV2Model());
+                new Oas20ParameterGenerator().addGlobalParameters(builder, info.getV2Model());
                 break;
             case V3:
-                Oas30ConnectorGeneratorSupport.addGlobalParameters(builder, info.getV3Model());
+                new Oas30ParameterGenerator().addGlobalParameters(builder, info.getV3Model());
                 break;
             default:
                 throw new IllegalStateException(String.format("Unable to build connector for OpenAPI document type '%s'", info.getModel().getClass()));

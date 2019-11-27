@@ -13,25 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
+import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.UnifiedXmlDataShapeSupport;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
@@ -42,64 +41,62 @@ import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
-class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Document, Oas20Operation, Oas20Response> implements DataShapeGenerator<Oas20Document, Oas20Operation> {
+class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Document, Oas30Operation, Oas30Response> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
     @Override
-    protected OasSchema dereference(OasSchema property, Oas20Document openApiDoc) {
-        return Oas20ModelHelper.dereference(property, openApiDoc);
+    protected OasSchema dereference(OasSchema property, Oas30Document openApiDoc) {
+        return Oas30ModelHelper.dereference(property, openApiDoc);
     }
 
     @Override
     protected String getName(OasSchema schema) {
-        if (schema instanceof Oas20SchemaDefinition) {
-            return ((Oas20SchemaDefinition) schema).getName();
+        if (schema instanceof Oas30SchemaDefinition) {
+            return ((Oas30SchemaDefinition) schema).getName();
         }
 
         return null;
     }
 
     @Override
-    protected Class<Oas20Response> getResponseType() {
-        return Oas20Response.class;
+    protected Class<Oas30Response> getResponseType() {
+        return Oas30Response.class;
     }
 
     @Override
-    protected Predicate<Oas20Response> hasSchema() {
-        return response -> response.schema != null;
+    protected Predicate<Oas30Response> hasSchema() {
+        return response -> Oas30ModelHelper.getSchema(response, APPLICATION_XML) != null;
     }
 
     @Override
-    protected Oas20Schema getSchema(Oas20Response response) {
-        return response.schema;
+    protected OasSchema getSchema(Oas30Response response) {
+        return Oas30ModelHelper.getSchema(response, APPLICATION_XML);
     }
 
     @Override
     protected OasSchema createSchemaDefinition(String name) {
-        return new Oas20SchemaDefinition(name);
+        return new Oas30SchemaDefinition(name);
     }
 
     @Override
-    protected Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
+    protected Element createParametersSchema(final Oas30Document openApiDoc, final Oas30Operation operation) {
+        final List<Oas30Parameter> operationParameters = Oas30ModelHelper.getParameters(operation);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
+        final List<Oas30Parameter> pathParameters = Oas30ModelHelper.getParameters(parent);
         operationParameters.addAll(pathParameters);
 
-        final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
-            .map(Oas20ParameterDefinitions::getItems)
-            .orElse(Collections.emptyList());
-        operationParameters.addAll(globalParameters);
+        final Map<String, Oas30ParameterDefinition> globalParameters = Oas30ModelHelper.getParameters(openApiDoc);
+        operationParameters.addAll(globalParameters.values());
 
-        final List<Oas20Parameter> serializableParameters = operationParameters.stream()
-            .filter(p -> p.type != null)
+        final List<Oas30Parameter> parameterList = operationParameters.stream()
+            .filter(p -> p.schema instanceof Oas30Schema && ((Oas30Schema) p.schema).type != null)
             .filter(OasModelHelper::isSerializable)
             .collect(Collectors.toList());
 
-        if (serializableParameters.isEmpty()) {
+        if (parameterList.isEmpty()) {
             return null;
         }
 
@@ -111,9 +108,15 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
         final Element complex = XmlSchemaHelper.addElement(parameters, "complexType");
         final Element sequence = XmlSchemaHelper.addElement(complex, "sequence");
 
-        for (final Oas20Parameter serializableParameter : serializableParameters) {
-            final String type = XmlSchemaHelper.toXsdType(serializableParameter.type);
-            final String name = trimToNull(serializableParameter.getName());
+        for (final Oas30Parameter parameter : parameterList) {
+            final Oas30Schema parameterSchema = Oas30ModelHelper.getSchema(parameter);
+
+            if (parameterSchema == null) {
+                continue;
+            }
+
+            final String type = XmlSchemaHelper.toXsdType(parameterSchema.type);
+            final String name = trimToNull(parameter.getName());
 
             if ("file".equals(type)) {
                 // 'file' type is not allowed in JSON schema
@@ -124,27 +127,27 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
             element.addAttribute("name", name);
             element.addAttribute("type", type);
 
-            final Object defaultValue = serializableParameter.default_;
+            final Object defaultValue = parameterSchema.default_;
             if (defaultValue != null) {
                 element.addAttribute("default", String.valueOf(defaultValue));
             }
 
-            addEnumsTo(element, serializableParameter);
+            addEnumsTo(element, parameterSchema);
         }
 
         return schema;
     }
 
-    private static void addEnumsTo(final Element element, final Oas20Parameter serializableParameter) {
-        if (serializableParameter.items != null) {
-            final Oas20Items items = serializableParameter.items;
+    private static void addEnumsTo(final Element element, final Oas30Schema schema) {
+        if (schema.items != null) {
+            final Oas30Schema items = (Oas30Schema) schema.items;
 
             List<String> enums = ofNullable(items.enum_).orElse(Collections.emptyList());
             if (!enums.isEmpty()) {
                 addEnumerationsTo(element, enums);
             }
         } else {
-            final List<String> enums = serializableParameter.enum_;
+            final List<String> enums = schema.enum_;
 
             if (enums != null && !enums.isEmpty()) {
                 addEnumerationsTo(element, enums);

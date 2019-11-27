@@ -28,6 +28,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.api.generator.openapi.UnifiedXmlDataShapeSupport;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -43,7 +44,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(Parameterized.class)
 public class UnifiedXmlDataShapeGeneratorTest {
 
-    private static final Map<String, UnifiedXmlDataShapeGenerator.SchemaPrefixAndElement> NO_MORE_SCHEMAS = null;
+    private static final Map<String, UnifiedXmlDataShapeSupport.SchemaPrefixAndElement> NO_MORE_SCHEMAS = null;
 
     private static final Oas20Document NO_OPEN_API_DOC = null;
 
@@ -70,10 +71,12 @@ public class UnifiedXmlDataShapeGeneratorTest {
         final Document document = DocumentHelper.createDocument();
         final Element parent = document.addElement("xsd:sequence", XmlSchemaHelper.XML_SCHEMA_NS);
 
-        assertThat(UnifiedXmlDataShapeGenerator.determineArrayItemName(propertyName, array)).isEqualTo(arrayItemName);
-        assertThat(UnifiedXmlDataShapeGenerator.determineArrayElementName(propertyName, array)).isEqualTo(arrayElementName);
 
-        UnifiedXmlDataShapeGenerator.defineArrayElement(array, propertyName, parent, NO_OPEN_API_DOC, NO_MORE_SCHEMAS);
+        assertThat(UnifiedXmlDataShapeSupport.determineArrayItemName(propertyName, array)).isEqualTo(arrayItemName);
+        assertThat(UnifiedXmlDataShapeSupport.determineArrayElementName(propertyName, array)).isEqualTo(arrayElementName);
+
+        UnifiedXmlDataShapeGenerator unifiedXmlDataShapeGenerator = new UnifiedXmlDataShapeGenerator();
+        unifiedXmlDataShapeGenerator.defineArrayElement(array, propertyName, parent, NO_OPEN_API_DOC, NO_MORE_SCHEMAS);
         assertThat(XmlSchemaHelper.serialize(document)).isXmlEqualTo(schema(xmlSchemaSnippet));
     }
 

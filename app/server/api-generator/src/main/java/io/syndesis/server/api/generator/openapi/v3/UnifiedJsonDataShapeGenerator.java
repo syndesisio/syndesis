@@ -13,10 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -24,14 +25,12 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
+import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.UnifiedJsonDataShapeSupport;
@@ -42,12 +41,12 @@ import org.apache.commons.lang3.StringUtils;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
-class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Document, Oas20Operation> implements DataShapeGenerator<Oas20Document, Oas20Operation> {
+class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Document, Oas30Operation> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
-    private static final Predicate<Oas20Response> RESPONSE_HAS_SCHEMA = response -> response.schema != null;
+    private static final Predicate<Oas30Response> RESPONSE_HAS_SCHEMA = response -> Oas30ModelHelper.getSchema(response, APPLICATION_JSON) != null;
 
     @Override
-    public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
+    public DataShape createShapeFromRequest(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
         final ObjectNode bodySchema = createJsonSchemaForBodyOf(json, operation);
 
         final ObjectNode parametersSchema = createJsonSchemaForParametersOf(openApiDoc, operation);
@@ -56,15 +55,15 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
     }
 
     @Override
-    public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
+    public DataShape createShapeFromResponse(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
+        final Optional<Oas30Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas30Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
         }
 
-        final Oas20Response response = maybeResponse.get();
-        final Oas20Schema responseSchema = response.schema;
+        final Oas30Response response = maybeResponse.get();
+        final Oas30Schema responseSchema = Oas30ModelHelper.getSchema(response, APPLICATION_JSON);
         final String description = response.description;
 
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
@@ -72,9 +71,9 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         return unifiedJsonSchema("Response", "API response payload", bodySchema, null);
     }
 
-    private static void addEnumsTo(final ObjectNode parameterParameter, final Oas20Parameter parameter) {
-        if (parameter.items != null) {
-            final Oas20Items items = parameter.items;
+    private static void addEnumsTo(final ObjectNode parameterParameter, final Oas30Schema schema) {
+        if (schema.items != null) {
+            final Oas30Schema items = (Oas30Schema) schema.items;
 
             List<String> enums = Optional.ofNullable(items.enum_).orElse(Collections.emptyList());
             final ObjectNode itemsNode = parameterParameter.putObject("items");
@@ -88,7 +87,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
                 enums.forEach(e -> enumArray.add(String.valueOf(e)));
             }
         } else {
-            final List<String> enums = parameter.enum_;
+            final List<String> enums = schema.enum_;
 
             if (enums != null && !enums.isEmpty()) {
                 final ArrayNode enumArray = parameterParameter.putArray("enum");
@@ -97,28 +96,26 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         }
     }
 
-    private static ObjectNode createJsonSchemaForParametersOf(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
+    private static ObjectNode createJsonSchemaForParametersOf(final Oas30Document openApiDoc, final Oas30Operation operation) {
+        final List<Oas30Parameter> operationParameters = Oas30ModelHelper.getParameters(operation);
 
         OasPathItem parent = Optional.of(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
+        final List<Oas30Parameter> pathParameters = Oas30ModelHelper.getParameters(parent);
         operationParameters.addAll(pathParameters);
 
-        final List<Oas20ParameterDefinition> globalParameters = Optional.ofNullable(openApiDoc.parameters)
-                .map(Oas20ParameterDefinitions::getItems)
-                .orElse(Collections.emptyList());
-        operationParameters.addAll(globalParameters);
+        final Map<String, Oas30ParameterDefinition> globalParameters = Oas30ModelHelper.getParameters(openApiDoc);
+        operationParameters.addAll(globalParameters.values());
 
         return createSchemaFor(operationParameters.stream()
-            .filter(p -> p.type != null)
+            .filter(p -> p.schema instanceof Oas30Schema && ((Oas30Schema) p.schema).type != null)
             .filter(OasModelHelper::isSerializable)
             .collect(Collectors.toList()));
     }
 
-    private static ObjectNode createSchemaFor(final List<Oas20Parameter> parameterList) {
+    private static ObjectNode createSchemaFor(final List<Oas30Parameter> parameterList) {
         if (parameterList.isEmpty()) {
             return null;
         }
@@ -130,8 +127,14 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         parameters.put("type", "object");
         final ObjectNode parametersProperties = parameters.putObject("properties");
 
-        for (final Oas20Parameter parameter : parameterList) {
-            final String type = parameter.type;
+        for (final Oas30Parameter parameter : parameterList) {
+            final Oas30Schema parameterSchema = Oas30ModelHelper.getSchema(parameter);
+
+            if (parameterSchema == null) {
+                continue;
+            }
+
+            final String type = parameterSchema.type;
             final String name = trimToNull(parameter.getName());
             final String description = trimToNull(parameter.description);
 
@@ -153,12 +156,12 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
                 parameterParameter.put("description", description);
             }
 
-            final Object defaultValue = parameter.default_;
+            final Object defaultValue = parameterSchema.default_;
             if (defaultValue != null) {
                 parameterParameter.put("default", String.valueOf(defaultValue));
             }
 
-            addEnumsTo(parameterParameter, parameter);
+            addEnumsTo(parameterParameter, parameterSchema);
         }
         return schema;
     }

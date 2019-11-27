@@ -34,6 +34,10 @@ import io.syndesis.common.model.DataShapeKinds;
  */
 public interface DataShapeGenerator<T extends OasDocument, O extends OasOperation> {
 
+    String APPLICATION_JSON = "application/json";
+
+    String APPLICATION_XML = "application/xml";
+
     DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
     DataShape createShapeFromRequest(ObjectNode json, T openApiDoc, O operation);
@@ -92,5 +96,4 @@ public interface DataShapeGenerator<T extends OasDocument, O extends OasOperatio
             .filter(hasSchema)
             .findFirst();
     }
-
 }

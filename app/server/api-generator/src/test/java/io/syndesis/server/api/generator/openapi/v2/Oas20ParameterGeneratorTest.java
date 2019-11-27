@@ -17,7 +17,6 @@
 package io.syndesis.server.api.generator.openapi.v2;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -31,7 +30,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author Christoph Deppisch
  */
-public class Oas20ConnectorGeneratorSupportTest {
+public class Oas20ParameterGeneratorTest {
 
     @Test
     public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
@@ -39,8 +38,9 @@ public class Oas20ConnectorGeneratorSupportTest {
         final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
         final Oas20Parameter petIdPathParameter = (Oas20Parameter) openApiDoc.paths.getPathItem("/pet/{petId}").get.getParameters().get(0);
 
-        final Optional<ConfigurationProperty> maybeConfigurationProperty = Oas20ConnectorGeneratorSupport
-            .createPropertyFromParameter(petIdPathParameter);
+        final ConfigurationProperty configurationProperty =
+            Oas20ParameterGenerator.createPropertyFromParameter(petIdPathParameter, petIdPathParameter.type, Oas20ModelHelper.javaTypeFor(petIdPathParameter),
+                                                                petIdPathParameter.default_, petIdPathParameter.enum_);
 
         final ConfigurationProperty expected = new ConfigurationProperty.Builder()//
             .componentProperty(false)//
@@ -55,6 +55,6 @@ public class Oas20ConnectorGeneratorSupportTest {
             .type("integer")//
             .build();
 
-        assertThat(maybeConfigurationProperty).hasValue(expected);
+        assertThat(configurationProperty).isEqualTo(expected);
     }
 }
