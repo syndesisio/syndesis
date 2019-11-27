@@ -41,6 +41,7 @@ type images struct {
 	Syndesis                    syndesisImages
 	ImageStreamNamespace        string
 	SyndesisImagesPrefix        string
+	PostgresqlImagesPrefix      string
 	OAuthProxyImagePrefix       string
 	PrometheusImagePrefix       string
 	PostgresExporterImagePrefix string

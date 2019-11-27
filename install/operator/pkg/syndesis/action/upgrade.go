@@ -8,6 +8,10 @@ import (
 	"strings"
 	"time"
 
+	v14 "github.com/openshift/api/apps/v1"
+
+	v13 "github.com/openshift/api/image/v1"
+
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -74,6 +78,24 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 		if syndesis.Status.Version != targetVersion {
 			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
+
+			kd := &v14.DeploymentConfig{}
+			err := a.client.Get(ctx, util.NewObjectKey("komodo-server", syndesis.Namespace), kd)
+			if err == nil {
+				a.log.Info("Deleting old komodo deployment", "name", "komodo-server")
+				if err := a.client.Delete(ctx, kd); err != nil {
+					return err
+				}
+			}
+
+			ki := &v13.ImageStream{}
+			err = a.client.Get(ctx, util.NewObjectKey("fuse-komodo-server", syndesis.Namespace), ki)
+			if err == nil {
+				a.log.Info("Deleting old komodo imagestream", "name", "komodo-server")
+				if err := a.client.Delete(ctx, ki); err != nil {
+					return err
+				}
+			}
 
 			for _, res := range resources {
 				operation.SetNamespaceAndOwnerReference(res, target)

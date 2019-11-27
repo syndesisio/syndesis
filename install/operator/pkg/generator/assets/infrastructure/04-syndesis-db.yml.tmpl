@@ -309,8 +309,8 @@
         - postgresql
         from:
           kind: ImageStreamTag
-          name: {{ .Images.Support.Postgresql }}:{{ .Syndesis.Spec.Components.Db.Tag }}
-          namespace: {{.Syndesis.Spec.Components.Db.ImageStreamNamespace}}
+          name: syndesis-postgresql:{{ .Tags.Postgresql }}
+          namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
     - imageChangeParams:
         automatic: true
@@ -321,3 +321,23 @@
           name: {{ .Images.Support.PostgresExporter }}:{{ .Syndesis.Spec.Components.PostgresExporter.Tag }}
           namespace: {{.Syndesis.Spec.ImageStreamNamespace}}
       type: ImageChange
+
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: syndesis-postgresql
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: database
+  spec:
+    tags:
+    - name: "{{ .Tags.Postgresql }}"
+      from:
+        kind: DockerImage
+        name: "{{ .Syndesis.Spec.Components.Db.Registry }}/{{ .Syndesis.Spec.Components.Db.ImagePrefix }}/{{ .Syndesis.Spec.Components.Db.Image }}:{{ .Syndesis.Spec.Components.Db.Tag }}"
+      {{if .Syndesis.Spec.Components.Scheduled}}
+      importPolicy:
+        scheduled: true
+      {{end}}
