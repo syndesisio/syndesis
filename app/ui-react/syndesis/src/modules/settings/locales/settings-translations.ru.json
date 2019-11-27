@@ -1,0 +1,10 @@
+{
+  "OAuthApplicationManagement": "OAuth Application Management",
+  "OAuthApplicationManagementPageDescription": "To connect to an application that uses the OAuth protocol, obtain a client ID and a client secret from the application.  See the <a target=\"blank\" href=\"{{docLink}}\">documentation</a> for help.",
+  "OAuthCallbackDescription": "During registration, enter this callback URL.",
+  "OAuthAppNotConfigured": "Access to this application is not configured.",
+  "RemoveOAuthAppTitle": "Confirm Remove?",
+  "RemoveOAuthAppCredentials": "Are you sure you want to remove the OAuth credentials for '{{name}}'?",
+  "RegistrationSuccessful": "Registration Successful!",
+  "RegistrationSuccessAlertDetail": "You can validate these values when creating a connection to {{name}}."
+}

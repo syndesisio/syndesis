@@ -1,0 +1,43 @@
+{
+  "connectionListDescription": "The following connections are available to be added to integrations. Click a connection to view its configuration details.",
+  "cannotDelete": "Unable to delete this connection as it is being used by one or more integrations",
+  "connectionCardMenuTitle": "Connection Actions",
+  "connectionDeletedFailed": "An error occurred deleting connection \"{{connectionName}}.\" Details: {{details}}",
+  "connectionDeletedSuccess": "Connection \"{{connectionName}}\" was successfully deleted.",
+  "connectionDetailPageTitle": "Connection Details",
+  "configurationRequired": "Configuration Required",
+  "deleteModalMessage": "Are you sure you want to delete the \"{{connectionName}}\" connection?",
+  "deleteModalTitle": "Confirm Delete?",
+  "descriptionPlaceholder": "Enter connection description...",
+  "detailsSectionTitle": "{{connectionName}} Configuration",
+  "duplicateNameError": "That name is taken. Try another.",
+  "errorSavingConnection": "Unexpected server error saving the connection.",
+  "errorValidatingDetails": "Unexpected server error validating the connection details.",
+  "errorValidatingName": "Unexpected server error validating connection name.",
+  "namePlaceholder": "Must enter a connection name...",
+  "usedByOne": "Used by 1 integration",
+  "usedByMulti": "Used by integrations {{count}} times",
+  "create": {
+    "unsavedChangesTitle": "Do you really want to cancel?",
+    "unsavedChangesMessage": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+    "connector": {
+      "title": "Select connector"
+    },
+    "configure": {
+      "title": "Configure connection",
+      "configurationTitle": "{{name}} Configuration",
+      "configurationDescription": "Log into your {{name}} account to grant authorization for $t(shared:project:name) to act on your behalf.",
+      "configurationButton": "Connect {{name}}"
+    },
+    "review": {
+      "title": "Name connection"
+    }
+  },
+  "oauth": {
+    "title": "{{name}} Configuration",
+    "description": "This connection is configured using OAuth. Use the validate button to check if the connection is still authorized.",
+    "validateButton": "Validate",
+    "reconnectButton": "Reconnect",
+    "settingsMissing": "OAuth settings needed to create this connection are missing. Provide the required parameters in the OAuth settings."
+  }
+}

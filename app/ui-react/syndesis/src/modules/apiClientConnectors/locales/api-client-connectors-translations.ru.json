@@ -1,0 +1,74 @@
+{
+  "action": "<strong>{{actionName}}</strong> - {{actionDescription}}",
+  "apiConnectorDetailsPageTitle": "Connector Details",
+  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.",
+  "apiConnectorsPageTitle": "API Client Connectors",
+  "basePath": "Base URL",
+  "ConnectorIcon": "Connector Icon",
+  "CreateApiConnector": "Create API Connector",
+  "createApiConnectorTip": "Upload file or use URL to create API connector",
+  "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" API client connector?",
+  "deleteModalTitle": "Confirm Delete?",
+  "detailsApiConnectorTip": "View API connector details",
+  "emptyStateInfo": "There are no currently available API connectors. Click the button below to create one.",
+  "errorDeletingApiConnector": "Unexpected server error deleting API client connector \"{{connectorId}}\".",
+  "errorSavingApiConnector": "Unexpected server error saving the API client connector.",
+  "Host": "Host",
+  "invalidImageFileUpload": "Please select an image file",
+  "reviewActionsTitle": "Review Actions",
+  "reviewApiDefinitionHeading": "API DEFINITION",
+  "reviewErrorsHeading": "Errors {{count}}",
+  "reviewImportedHeading": "IMPORTED",
+  "reviewOperationsMessage": "<strong>{{count}}</strong> operations",
+  "reviewOperationsTaggedMessage": "- <strong>{{count}}</strong> tagged {{tag}}",
+  "reviewValidationFallback": "No connector details are currently available.",
+  "reviewWarningsHeading": "Warnings {{count}}",
+  "usedByOne": "Used by 1 integration",
+  "usedByMulti": "Used by integrations {{count}} times",
+  "create": {
+    "unsavedChangesTitle": "Do you really want to cancel?",
+    "unsavedChangesMessage": "You have not finished creating the API client connector. If you cancel now you will lose data you already entered. Do you still want to cancel?",
+    "selectMethod": {
+      "dndUploadFailedMessage": " could not be uploaded",
+      "dndUploadSuccessMessage": "Process file ",
+      "dndFileExtensions": ".json,.yaml,.yml",
+      "dndHelpMessage": "Accepted file type: .json, .yaml, and .yml",
+      "dndInstructions": "Drag and drop a file here, or <strong>click</strong> to select a file by using a file chooser dialog.",
+      "dndNoFileSelectedLabel": "No file selected",
+      "dndSelectedFileLabel": "Selected file:",
+      "methodFromFile": "Upload an OpenAPI file",
+      "methodFromUrl": "Use a URL",
+      "title": "Upload OpenAPI Document",
+      "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."
+    },
+    "review": {
+      "btnReviewEdit": "Review/Edit",
+      "description": "This description has not yet been actually defined, please send help.",
+      "descriptionLabel": "Description",
+      "nameLabel": "Name",
+      "operations": "operations",
+      "sectionApiDefinition": "API DEFINITION",
+      "sectionImported": "IMPORTED",
+      "sectionWarnings": "WARNINGS",
+      "sectionErrors": "ERRORS",
+      "title": "Review Actions"
+    },
+    "specification": {
+      "title": "Edit API Definition"
+    },
+    "security": {
+      "accessTokenUrl": "Access Token URL",
+      "authTypeLabel": "Authentication Type",
+      "authorizationUrl": "Authorization URL",
+      "description": "$t(shared:project.name) reads the OpenAPI definition to determine the information needed to configure the connector to meet the API’s security requirements. Connections created from this connector always use the authentication type that you select here.",
+      "noSecurity": "No Security",
+      "required": "All fields are required.",
+      "title": "Specify Security"
+    },
+    "details": {
+      "title": "Review/Edit Connector Details",
+      "saveButton": "Create API Connector",
+      "successNotification": "API Connector successfully created"
+    }
+  }
+}
