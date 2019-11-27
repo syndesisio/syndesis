@@ -186,7 +186,7 @@
   },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
-  "ReplaceDraftMOdalTitle": "Replace Draft?",
+  "ReplaceDraftModalTitle": "Replace Draft?",
   "ReplacedDraftMessage": "<strong>Updating draft.</strong> Replacing the current draft of the integration. ",
   "publishDeploymentModal": "Are you sure you want to start version \"{{version}}\" of integration \"{{name}}\"?",
   "publishDeploymentModalTitle": "Start Deployment?",

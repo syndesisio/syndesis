@@ -1,5 +1,5 @@
 {
-  "BuildIdLabel": "Build ID:",
-  "CommitIdLabel": "Commit ID:",
-  "Logout": "Logout"
+  "BuildIdLabel": "ID Сборки:",
+  "CommitIdLabel": "ID коммита:",
+  "Logout": "Выйти"
 }
