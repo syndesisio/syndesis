@@ -21,10 +21,9 @@ import java.util.concurrent.Future;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.OpenApiGenerator;
-import io.syndesis.server.api.generator.swagger.OpenApiUnifiedShapeConnectorGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiConnectorGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiGenerator;
 import io.syndesis.server.dao.manager.DataManager;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -51,7 +50,7 @@ public class APIGeneratorConfiguration {
             final Connector restSwaggerConnector = Objects.requireNonNull(dataManager.fetch(Connector.class, "rest-swagger"),
                 "No Connector with ID `rest-swagger` in the database");
 
-            return new OpenApiUnifiedShapeConnectorGenerator(restSwaggerConnector);
+            return new OpenApiConnectorGenerator(restSwaggerConnector);
         });
     }
 }
