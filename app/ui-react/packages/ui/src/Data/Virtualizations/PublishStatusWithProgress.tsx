@@ -40,15 +40,13 @@ export const PublishStatusWithProgress: React.FunctionComponent<
           i18nLogUrlText={props.i18nPublishLogUrlText}
         />
         <span className={'publish-status-with-progress_text'}>
-          {props.publishVersion
-            ? ' (Version' + props.publishVersion + ') '
-            : null}
+          {props.publishVersion && ` (Version ${props.publishVersion}) `}
         </span>
-        {props.modified ? (
+        {props.modified && (
           <Badge key={1} className={'publish-status-with-progress-badge'}>
             Modified
           </Badge>
-        ) : null}
+        )}
       </div>
     );
   }

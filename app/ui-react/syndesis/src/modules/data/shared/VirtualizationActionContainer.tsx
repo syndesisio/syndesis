@@ -134,11 +134,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
   React.useEffect(() => {
     const publishedState = props.virtualization.publishedState;
     switch (publishedState) {
-      case "BUILDING":
-      case "CONFIGURING":
-      case "DEPLOYING":
-      case "RUNNING":
-      case "SUBMITTED":
+      case 'BUILDING':
+      case 'CONFIGURING':
+      case 'DEPLOYING':
+      case 'RUNNING':
+      case 'SUBMITTED':
         setPublish(true);
         break;
       default:
@@ -351,7 +351,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
         setPromptActionOptions({
           buttonText: t('shared:Revert'),
           handleAction: async () => {
-            await revertVirtualization(
+            const status = await revertVirtualization(
               props.virtualization.name,
               props.revision!
             ).catch((e: any) => {
@@ -364,6 +364,16 @@ export const VirtualizationActionContainer: React.FunctionComponent<
                 'error'
               );
             });
+            if (status) {
+              // inform user that revert succeeded
+              pushNotification(
+                t('revertVirtualizationSuccess', {
+                  name: props.virtualization.name,
+                  version: props.revision,
+                }),
+                'success'
+              );
+            }
           },
           icon: ConfirmationIconType.DANGER,
           message: t('revertVirtualizationConfirmMsg', {
