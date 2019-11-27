@@ -55,7 +55,8 @@ minishift::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    if [ $(hasflag -f --force-binary-download) ]; then
+    release_tag="$(readopt --tag)"
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi

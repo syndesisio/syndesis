@@ -46,7 +46,8 @@ install::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    if [ $(hasflag -f --force-binary-download) ]; then
+    release_tag="$(readopt --tag)"
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi
@@ -54,7 +55,7 @@ install::run() {
     download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
     local prep_only="false"
-    if [ $(hasflag -s --setup) ]; then
+    if [[ $(hasflag -s --setup) ]]; then
         echo "Installing Syndesis CRD"
         result=$($OPERATOR_BINARY install cluster)
         check_error "$result"
