@@ -1,5 +1,5 @@
 import { Badge } from '@patternfly/react-core';
-import { OkIcon, WrenchIcon } from '@patternfly/react-icons';
+import { OkIcon } from '@patternfly/react-icons';
 import { Label } from 'patternfly-react';
 import * as React from 'react';
 import { ProgressWithLink } from '../../Shared';
@@ -61,19 +61,22 @@ export const PublishStatusWithProgress: React.FunctionComponent<
         >
           {props.i18nPublishState}
         </Label>
-
+        {props.publishVersion ? (
+          <span className={'publish-status-with-progress_text'}>
+            {' (Version' + props.publishVersion + ') '}
+          </span>
+        ) : (
+          // tslint:disable-next-line: jsx-self-close
+          <span className={'publish-status-with-progress_version-container'} />
+        )}
         {props.modified ? (
-          <>
-            <WrenchIcon
-              height={'1.25rem'}
-              width={'1.25rem'}
-              className={'publish-status-with-progress-margin10'}
-            />
-            <span className={'publish-status-with-progress_text'}>
-              Modified
-            </span>
-          </>
-        ) : null}
+          <Badge key={2} className={'publish-status-with-progress-badge'}>
+            Modified
+          </Badge>
+        ) : (
+          // tslint:disable-next-line: jsx-self-close
+          <span className={'publish-status-with-progress-badge-container'} />
+        )}
       </React.Fragment>
     );
   }

@@ -25,4 +25,14 @@
     padding: 2px;
 }
 
+.publish-status-with-progress_version-container {
+    width: 100px;
+    display: inline-block;
+}
+
+.publish-status-with-progress-badge-container {
+    width: 78px;
+    display: inline-block;
+}
+
   
