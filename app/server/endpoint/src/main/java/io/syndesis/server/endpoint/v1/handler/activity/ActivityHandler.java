@@ -18,7 +18,6 @@ package io.syndesis.server.endpoint.v1.handler.activity;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -28,9 +27,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.springframework.stereotype.Component;
-
 import io.swagger.annotations.Api;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * Provides an REST api to an optional ActivityTrackingService.
@@ -40,8 +40,11 @@ import io.swagger.annotations.Api;
 @Component
 public class ActivityHandler {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ActivityHandler.class);
     private final Optional<ActivityTrackingService> service;
+
     public ActivityHandler(Optional<ActivityTrackingService> resource) {
+        resource.ifPresent(svc -> LOG.info("ActivityTracking: {}", svc.getClass().getName()));
         this.service = resource;
     }
 

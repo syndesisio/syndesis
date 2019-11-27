@@ -15,6 +15,10 @@
  */
 package io.syndesis.integration.runtime.tracing;
 
+import io.opentracing.Scope;
+import io.opentracing.Span;
+import io.opentracing.Tracer;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
@@ -26,11 +30,6 @@ import org.apache.camel.processor.DelegateAsyncProcessor;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
-
-import io.opentracing.Scope;
-import io.opentracing.Span;
-import io.opentracing.Tracer;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 
 public class TracingInterceptStrategy implements InterceptStrategy {
     private final Tracer tracer;
@@ -65,22 +64,18 @@ public class TracingInterceptStrategy implements InterceptStrategy {
             this.stepId = stepId;
         }
 
+        @SuppressWarnings("try")
         @Override
         public boolean process(final Exchange exchange, final AsyncCallback callback) {
             final Message in = exchange.getIn();
             final Span activitySpan = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, Span.class);
-            Scope activityScope = tracer.scopeManager().activate(activitySpan, false);
-            try {
-                try (Scope scope = tracer.buildSpan(stepId).withTag("kind", "step").startActive(false)) {
-                    final Span span = scope.span();
-                    in.setHeader(IntegrationLoggingConstants.STEP_SPAN, span);
-                    return super.process(exchange, doneSync -> {
-                        span.finish();
-                        callback.done(doneSync);
-                    });
-                }
-            } finally {
-                activityScope.close();
+            try (Scope activityScope = tracer.scopeManager().activate(activitySpan)) {
+                Span span = tracer.buildSpan(stepId).withTag("kind", "step").start();
+                in.setHeader(IntegrationLoggingConstants.STEP_SPAN, span);
+                return super.process(exchange, doneSync -> {
+                    span.finish();
+                    callback.done(doneSync);
+                });
             }
         }
     }
