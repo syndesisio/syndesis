@@ -276,8 +276,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             isProgressWithLink={isProgressWithLink}
                             i18nDeleteInProgressText={t('deleteInProgress')}
                             i18nPublishInProgressText={t('publishInProgress')}
-                            i18nUnpublishInProgressText={t(
-                              'unpublishInProgress'
+                            i18nStopInProgressText={t(
+                              'stopInProgress'
                             )}
                             i18nPublishState={publishStateText}
                             labelType={labelType}
@@ -304,17 +304,17 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               virtualization.usedBy
                             )}
                             i18nPublish={t('shared:Publish')}
-                            i18nUnpublish={t('shared:Unpublish')}
-                            i18nUnpublishModalMessage={t(
-                              'unpublishModalMessage',
+                            i18nStop={t('shared:Stop')}
+                            i18nStopModalMessage={t(
+                              'stopModalMessage',
                               {
                                 name: virtualization.name,
                               }
                             )}
-                            i18nUnpublishModalTitle={t('unpublishModalTitle')}
+                            i18nStopModalTitle={t('stopModalTitle')}
                             onDelete={doDelete}
                             onExport={doExport}
-                            onUnpublish={doUnpublish}
+                            onStop={doUnpublish}
                             onPublish={doPublish}
                             currentPublishedState={publishingDetails.state}
                             currentPublishedVersion={
