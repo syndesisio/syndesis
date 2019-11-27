@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
@@ -24,6 +25,7 @@ import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
+import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
@@ -100,5 +102,14 @@ final class Oas20ModelHelper {
 
         final String format = parameter.format;
         return JsonSchemaHelper.javaTypeFor(parameter.type, format);
+    }
+
+    /**
+     * Delegates to common model helper with OpenAPI 2.x model type parameter.
+     * @param pathItem holding the operations.
+     * @return typed map of OpenAPI 2.x operations where the key is the Http method of the operation.
+     */
+    static Map<String, Oas20Operation> getOperationMap(OasPathItem pathItem) {
+        return OasModelHelper.getOperationMap(pathItem, Oas20Operation.class);
     }
 }

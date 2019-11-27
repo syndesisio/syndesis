@@ -16,20 +16,29 @@
 
 package io.syndesis.server.api.generator.openapi.v3;
 
+import java.util.Map;
+
+import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.server.api.generator.ProvidedApiTemplate;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.syndesis.server.api.generator.openapi.OpenApiFlowGenerator;
-import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 
 /**
  * @author Christoph Deppisch
  */
-public class Oas30FlowGenerator implements OpenApiFlowGenerator<Oas30Document> {
+public class Oas30FlowGenerator extends OpenApiFlowGenerator<Oas30Document, Oas30Operation> {
+
+    public Oas30FlowGenerator() {
+        super(new UnifiedDataShapeGenerator());
+    }
 
     @Override
-    public void generateFlows(Oas30Document openApiDoc, Integration.Builder integration,
-                              OpenApiModelInfo info, ProvidedApiTemplate template) {
-        //TODO: add logic for OpenAPI 3.x
+    protected String getBasePath(Oas30Document openApiDoc) {
+        return Oas30ModelHelper.getBasePath(openApiDoc);
+    }
+
+    @Override
+    protected Map<String, Oas30Operation> getOperationsMap(OasPathItem pathItem) {
+        return Oas30ModelHelper.getOperationMap(pathItem);
     }
 }
