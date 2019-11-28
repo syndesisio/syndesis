@@ -297,6 +297,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nInUseText={getUsedByMessage()}
           i18nPublishLogUrlText={t('shared:viewLogs')}
+          i18nODataUrlText={t('viewOData')}
           modified={props.virtualization.modified}
           odataUrl={getOdataUrl(
             props.virtualization || props.routeState.virtualization

@@ -276,9 +276,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             isProgressWithLink={isProgressWithLink}
                             i18nDeleteInProgressText={t('deleteInProgress')}
                             i18nPublishInProgressText={t('publishInProgress')}
-                            i18nStopInProgressText={t(
-                              'stopInProgress'
-                            )}
+                            i18nStopInProgressText={t('stopInProgress')}
                             i18nPublishState={publishStateText}
                             labelType={labelType}
                             detailsPageLink={resolvers.virtualizations.views.root(
@@ -296,6 +294,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nDeleteModalMessage={t('deleteModalMessage', {
                               name: virtualization.name,
                             })}
+                            i18nViewODataUrlText={t('viewOData')}
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
@@ -305,12 +304,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             )}
                             i18nPublish={t('shared:Publish')}
                             i18nStop={t('shared:Stop')}
-                            i18nStopModalMessage={t(
-                              'stopModalMessage',
-                              {
-                                name: virtualization.name,
-                              }
-                            )}
+                            i18nStopModalMessage={t('stopModalMessage', {
+                              name: virtualization.name,
+                            })}
                             i18nStopModalTitle={t('stopModalTitle')}
                             onDelete={doDelete}
                             onExport={doExport}

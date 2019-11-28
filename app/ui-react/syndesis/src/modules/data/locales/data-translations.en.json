@@ -107,6 +107,7 @@
   "usedByOne": "Used by 1 integration",
   "validationResultsTitle": "DDL Validation",
   "View": "View",
+  "viewOData": "View OData",
   "viewEmptyStateInfo": "There are no views available. Click one of the buttons below to create views.",
   "viewEmptyStateTitle": "Create Views",
   "viewDdlDisplay": "DDL",
