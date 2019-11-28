@@ -183,7 +183,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Registry)
 
 	ifMissingSet(&syndesis.Spec.Components.ImagePrefix, renderContext.Images.SyndesisImagesPrefix)
-	ifMissingSet(&syndesis.Spec.Components.Db.ImagePrefix, renderContext.Images.PostgresqlImagesPrefix)
+	ifMissingSet(&syndesis.Spec.Components.Db.ImagePrefix, renderContext.Images.PostgresqlImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Server.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
