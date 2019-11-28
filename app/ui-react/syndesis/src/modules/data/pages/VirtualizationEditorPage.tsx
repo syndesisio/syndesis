@@ -75,6 +75,10 @@ export interface IVirtualizationEditorPageProps {
    * The virtualization being edited.
    */
   virtualization: Virtualization;
+  /**
+   * If virtualization contain valid views.
+   */
+  haveValidView: boolean;
 }
 
 export const VirtualizationEditorPage: React.FunctionComponent<
@@ -276,6 +280,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<
               startActionProps={props.startActionCustomProps}
               stopActionProps={props.stopActionCustomProps}
               virtualization={props.virtualization}
+              haveValidView={props.haveValidView}
             />
           }
           dataPageHref={resolvers.data.root()}

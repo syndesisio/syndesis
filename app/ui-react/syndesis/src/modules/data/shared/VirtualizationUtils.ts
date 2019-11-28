@@ -4,6 +4,7 @@ import {
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
+  ViewDefinitionDescriptor,
   ViewInfo,
   ViewSourceInfo,
   Virtualization,
@@ -574,10 +575,11 @@ export function canExport(virtualization: Virtualization): boolean {
 /**
  * A virtualization can be published if a draft exists.
  * @param {Virtualization} virtualization the virtualization being checked
+ * @param {boolean} haveValidView if virtualization contain any valid view
  * @returns `true` if the virtualization can be published
  */
-export function canPublish(virtualization: Virtualization): boolean {
-  return virtualization.modified && !virtualization.empty;
+export function canPublish(virtualization: Virtualization, haveValidView:boolean): boolean {
+  return virtualization.modified && !virtualization.empty && haveValidView;
 }
 
 /**
@@ -614,4 +616,19 @@ export function canStart(
 export function canStop(virtualization: Virtualization): boolean {
   // TODO: Fix logic if necessary. Do we need to check if any integrations are using it?
   return virtualization.publishedState === 'RUNNING';
+}
+
+/**
+ * Publish action need to be disable does not contain any valid views
+ * @param {ViewDefinitionDescriptor} viewDescriptors the virtualization being checked
+ * @returns `true` if the virtualization contains any valid views
+ */
+export function checkIfVirtualizationValidViews (viewDescriptors: ViewDefinitionDescriptor[]): boolean{
+  let haveValidView:boolean = false;
+  viewDescriptors.forEach(view =>{
+    if(view.valid){
+      haveValidView = true;
+    }
+  })
+  return haveValidView;
 }

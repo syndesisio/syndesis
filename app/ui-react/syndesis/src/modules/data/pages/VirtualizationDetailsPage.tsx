@@ -1,4 +1,4 @@
-import { useVirtualization, useVirtualizationEditions } from '@syndesis/api';
+import { useViewDefinitionDescriptors, useVirtualization, useVirtualizationEditions } from '@syndesis/api';
 import { Virtualization, VirtualizationEdition } from '@syndesis/models';
 import {
   IVirtualizationHistoryItem,
@@ -15,13 +15,14 @@ import {
   VirtualizationActionContainer,
   VirtualizationActionId,
 } from '../shared/VirtualizationActionContainer';
+import { checkIfVirtualizationValidViews } from '../shared/VirtualizationUtils';
 import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
 
-const getVersionActions = (virtualization: Virtualization, edition: number) => {
+const getVersionActions = (virtualization: Virtualization, edition: number, haveValidView: boolean) => {
   const kebabItems =
     virtualization.publishedState === 'RUNNING' &&
     edition === virtualization.publishedRevision
@@ -37,6 +38,7 @@ const getVersionActions = (virtualization: Virtualization, edition: number) => {
       includeItems={kebabItems}
       virtualization={virtualization}
       revision={edition}
+      haveValidView={haveValidView}
     />
   );
   return versionActions;
@@ -44,7 +46,8 @@ const getVersionActions = (virtualization: Virtualization, edition: number) => {
 
 const getSortedEditions = (
   editions: VirtualizationEdition[],
-  virtualization: Virtualization
+  virtualization: Virtualization,
+  haveValidView: boolean
 ) => {
   const sorted = editions.sort((a, b) => {
     return b.revision - a.revision;
@@ -53,7 +56,7 @@ const getSortedEditions = (
   const historyItems: IVirtualizationHistoryItem[] = [];
   for (const edition of sorted) {
     const historyItem: IVirtualizationHistoryItem = {
-      actions: getVersionActions(virtualization, edition.revision),
+      actions: getVersionActions(virtualization, edition.revision, haveValidView),
       publishedState: getVersionPublishedState(
         edition.revision,
         virtualization.publishedState,
@@ -117,6 +120,13 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
     params.virtualizationId
   );
 
+  /**
+   * Hook to obtain view descriptors. Also does polling to get any view descriptor updates.
+   */
+  const {
+    model: viewDefinitionDescriptors,
+  } = useViewDefinitionDescriptors(params.virtualizationId);
+
   const colHeaders = [
     t('detailsVersionTableVersion'),
     t('detailsVersionTablePublishedTime'),
@@ -124,11 +134,14 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
     '',
   ];
 
+  const haveValidView = checkIfVirtualizationValidViews(viewDefinitionDescriptors);
+
   return (
     <VirtualizationEditorPage
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      haveValidView= {haveValidView}
     >
       <PageSection>
         <WithLoader
@@ -143,7 +156,7 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
               i18nEmptyVersionsTitle={t('detailsVersionTableEmptyTitle')}
               i18nEmptyVersionsMsg={t('detailsVersionTableEmptyMsg')}
               tableHeaders={colHeaders}
-              historyItems={getSortedEditions(editions, virtualization)}
+              historyItems={getSortedEditions(editions, virtualization, haveValidView)}
             />
           )}
         </WithLoader>

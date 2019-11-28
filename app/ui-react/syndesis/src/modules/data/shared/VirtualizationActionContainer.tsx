@@ -88,6 +88,7 @@ export interface IVirtualizationActionContainerProps {
   startActionProps?: IVirtualizationAction;
   stopActionProps?: IVirtualizationAction;
   virtualization: Virtualization;
+  haveValidView: boolean;
 }
 
 /**
@@ -523,7 +524,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
         actions.push(createExportAction(props.exportActionProps));
       }
       // The publish is always included, but may be disabled
-      if (!canPublish(props.virtualization)) {
+      if (!canPublish(props.virtualization, props.haveValidView)) {
         actions.push(createPublishAction({ disabled: true }));
       } else {
         actions.push(createPublishAction(props.publishActionProps));
@@ -551,7 +552,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           }
           break;
         case VirtualizationActionId.Publish:
-          if (canPublish(props.virtualization)) {
+          if (canPublish(props.virtualization, props.haveValidView)) {
             actions.push(createPublishAction(props.publishActionProps));
           }
           break;
@@ -614,7 +615,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           }
           break;
         case VirtualizationActionId.Publish:
-          if (canPublish(props.virtualization)) {
+          if (canPublish(props.virtualization, props.haveValidView)) {
             items.push(createPublishAction(props.publishActionProps));
           }
           break;

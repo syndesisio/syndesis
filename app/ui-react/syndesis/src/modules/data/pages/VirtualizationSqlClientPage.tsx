@@ -7,7 +7,7 @@ import * as React from 'react';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import { 
-  WithVirtualizationSqlClientForm 
+  checkIfVirtualizationValidViews, WithVirtualizationSqlClientForm 
 } from '../shared';
 import {
   IVirtualizationEditorPageRouteParams,
@@ -47,6 +47,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      haveValidView= {checkIfVirtualizationValidViews(viewDefinitionDescriptors)}
     >
       <WithLoader
         error={error !== false}

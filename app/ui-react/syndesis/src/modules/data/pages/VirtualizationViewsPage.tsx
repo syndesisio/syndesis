@@ -24,6 +24,9 @@ import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 import {
+  checkIfVirtualizationValidViews
+} from '../shared/VirtualizationUtils';
+import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
   VirtualizationEditorPage,
@@ -155,6 +158,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      haveValidView= {checkIfVirtualizationValidViews(viewDefinitionDescriptors)}
     >
       <WithListViewToolbarHelpers
         defaultFilterType={filterByName}
