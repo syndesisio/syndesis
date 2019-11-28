@@ -26,6 +26,7 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.common.model.Violation;
+import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import org.junit.Test;
 
@@ -33,11 +34,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class Oas20ValidationRulesTest {
 
+    private static final Oas20ValidationRules RULES = new Oas20ValidationRules(APIValidationContext.NONE);
+
     @Test
     public void cyclicSchemaReferencesValidationShouldOperateOnParsedModel() {
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateCyclicReferences(info);
+        final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
         assertThat(validated).isSameAs(info);
     }
 
@@ -51,7 +54,7 @@ public class Oas20ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateOperationsGiven(info);
+        final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).isEmpty();
     }
@@ -79,7 +82,7 @@ public class Oas20ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateCyclicReferences(info);
+        final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
         assertThat(validated).isEqualTo(info);
     }
 
@@ -88,7 +91,7 @@ public class Oas20ValidationRulesTest {
         final Oas20Document openApiDoc = new Oas20Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateCyclicReferences(info);
+        final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
         assertThat(validated).isEqualTo(info);
     }
 
@@ -113,7 +116,7 @@ public class Oas20ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateCyclicReferences(info);
+        final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
         assertThat(validated.getErrors()).containsOnly(new Violation.Builder().error("cyclic-schema").message("Cyclic references are not suported").build());
     }
 
@@ -126,7 +129,7 @@ public class Oas20ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateOperationsGiven(info);
+        final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).containsExactly(new Violation.Builder()
             .property("")
@@ -167,7 +170,7 @@ public class Oas20ValidationRulesTest {
         openApiDoc.paths.addPathItem("/more", morePathItem);
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateUniqueOperationIds(info);
+        final OpenApiModelInfo validated = RULES.validateUniqueOperationIds(info);
 
         final List<Violation> warnings = validated.getWarnings();
         assertThat(warnings).hasSize(1);
@@ -182,7 +185,7 @@ public class Oas20ValidationRulesTest {
         final Oas20Document openApiDoc = new Oas20Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = Oas20ValidationRules.validateOperationsGiven(info);
+        final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).containsExactly(new Violation.Builder()
             .property("paths")

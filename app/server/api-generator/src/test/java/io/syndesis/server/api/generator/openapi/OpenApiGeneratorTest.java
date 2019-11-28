@@ -44,7 +44,7 @@ public class OpenApiGeneratorTest {
 
         assertThat(summary).isNotNull();
         assertThat(summary.getErrors()).hasSize(1)
-            .allSatisfy(v -> assertThat(v.message()).startsWith("This document cannot be uploaded. Provide an OpenAPI 2.0 document"));
+            .allSatisfy(v -> assertThat(v.message()).startsWith("This document cannot be uploaded. Please provide an OpenAPI document"));
         assertThat(summary.getWarnings()).isEmpty();
     }
 

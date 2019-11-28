@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
 import io.apicurio.datamodels.openapi.models.OasSchema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 final class CyclicValidationCheck {
@@ -32,28 +29,22 @@ final class CyclicValidationCheck {
         // utility class
     }
 
-    static boolean hasCyclicReferences(final Oas20Document openApiDoc) {
-        if (openApiDoc == null
-            || openApiDoc.definitions == null
-            || openApiDoc.definitions.getDefinitions().isEmpty()) {
+    static boolean hasCyclicReferences(final Map<String, ? extends OasSchema> schemaDefinitions) {
+        if (schemaDefinitions.isEmpty()) {
             return false;
         }
 
-        final Map<String, Set<String>> references = collectReferences(openApiDoc);
+        final Map<String, Set<String>> references = collectReferences(schemaDefinitions);
 
         return isCyclic(references);
     }
 
-    private static Map<String, Set<String>> collectReferences(final Oas20Document openApiDoc) {
+    private static Map<String, Set<String>> collectReferences(final Map<String, ? extends OasSchema> schemaDefinitions) {
         final Map<String, Set<String>> references = new TreeMap<>();
 
-        if (openApiDoc.definitions == null) {
-            return references;
-        }
-
-        List<Oas20SchemaDefinition> schemaDefinitions = openApiDoc.definitions.getDefinitions();
-        for (final Oas20SchemaDefinition definition : schemaDefinitions) {
-            final String name = definition.getName();
+        for (final Map.Entry<String, ? extends OasSchema> entry : schemaDefinitions.entrySet()) {
+            final String name = entry.getKey();
+            final OasSchema definition = entry.getValue();
             references.putIfAbsent(name, new HashSet<>());
 
             if (OasModelHelper.isReferenceType(definition)) {

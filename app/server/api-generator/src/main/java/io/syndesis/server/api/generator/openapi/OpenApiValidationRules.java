@@ -15,42 +15,58 @@
  */
 package io.syndesis.server.api.generator.openapi;
 
+import java.net.URI;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
+import io.apicurio.datamodels.core.models.common.SecurityScheme;
+import io.apicurio.datamodels.openapi.models.OasDocument;
+import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasResponse;
+import io.apicurio.datamodels.openapi.models.OasSchema;
+import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
-import io.syndesis.server.api.generator.openapi.v2.Oas20ValidationRules;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 /**
  * This class contains Syndesis custom validation rules for Open API specifications.
+ *
  */
-public final class OpenApiValidationRules implements Function<OpenApiModelInfo, OpenApiModelInfo> {
+public abstract class OpenApiValidationRules<T extends OasResponse, S extends SecurityScheme, D extends OasSchema> implements Function<OpenApiModelInfo, OpenApiModelInfo> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OpenApiValidationRules.class);
+    private static final Set<String> SUPPORTED_CONSUMED_AUTH_TYPES = new HashSet<>(Arrays.asList("apiKey", "basic", "oauth2"));
 
-    private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> v2Rules = new ArrayList<>();
-    private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> v3Rules = new ArrayList<>();
+    private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> rules = new ArrayList<>();
 
-    private OpenApiValidationRules(final APIValidationContext context) {
+    protected OpenApiValidationRules(final APIValidationContext context) {
         switch (context) {
         case CONSUMED_API:
-            v2Rules.add(Oas20ValidationRules::validateResponses);
-            v2Rules.add(Oas20ValidationRules::validateConsumedAuthTypes);
-            v2Rules.add(Oas20ValidationRules::validateScheme);
-            v2Rules.add(Oas20ValidationRules::validateUniqueOperationIds);
-            v2Rules.add(Oas20ValidationRules::validateCyclicReferences);
-            v2Rules.add(Oas20ValidationRules::validateOperationsGiven);
+            rules.add(this::validateResponses);
+            rules.add(this::validateConsumedAuthTypes);
+            rules.add(this::validateScheme);
+            rules.add(this::validateUniqueOperationIds);
+            rules.add(this::validateCyclicReferences);
+            rules.add(this::validateOperationsGiven);
             return;
         case PROVIDED_API:
-            v2Rules.add(Oas20ValidationRules::validateResponses);
-            v2Rules.add(Oas20ValidationRules::validateProvidedAuthTypes);
-            v2Rules.add(Oas20ValidationRules::validateUniqueOperationIds);
-            v2Rules.add(Oas20ValidationRules::validateNoMissingOperationIds);
-            v2Rules.add(Oas20ValidationRules::validateCyclicReferences);
-            v2Rules.add(Oas20ValidationRules::validateOperationsGiven);
+            rules.add(this::validateResponses);
+            rules.add(this::validateProvidedAuthTypes);
+            rules.add(this::validateUniqueOperationIds);
+            rules.add(OpenApiValidationRules::validateNoMissingOperationIds);
+            rules.add(this::validateCyclicReferences);
+            rules.add(this::validateOperationsGiven);
             return;
         case NONE:
             return;
@@ -61,20 +77,248 @@ public final class OpenApiValidationRules implements Function<OpenApiModelInfo, 
 
     @Override
     public OpenApiModelInfo apply(final OpenApiModelInfo modelInfo) {
-        switch (modelInfo.getApiVersion()) {
-            case V2:
-                return v2Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
-            case V3:
-                return v3Rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
-            default:
-                LOG.warn(String.format("Unable to apply custom validation rules on OpenAPI document type '%s'", modelInfo.getModel().getClass()));
-                break;
-        }
-
-        return modelInfo;
+        return rules.stream().reduce(Function::compose).map(f -> f.apply(modelInfo)).orElse(modelInfo);
     }
 
-    public static OpenApiValidationRules get(final APIValidationContext context) {
-        return new OpenApiValidationRules(context);
+    protected abstract List<T> getResponses(OasOperation operation);
+
+    protected abstract boolean hasResponseSchema(T responseEntry);
+
+    protected abstract Map<String, D> getSchemaDefinitions(OpenApiModelInfo info);
+
+    protected abstract List<String> getSchemes(OpenApiModelInfo info);
+
+    protected abstract Collection<S> getSecuritySchemes(OpenApiModelInfo info);
+
+    /**
+     * Check if all operations contains valid authentication types
+     */
+    private OpenApiModelInfo validateAuthTypesIn(final OpenApiModelInfo modelInfo, final Set<String> validAuthTypes) {
+        if (modelInfo.getModel() == null) {
+            return modelInfo;
+        }
+
+        final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(modelInfo);
+
+        Collection<S> securitySchemes = getSecuritySchemes(modelInfo);
+        for (final S definitionEntry : securitySchemes) {
+            final String authType = definitionEntry.type;
+            if (!validAuthTypes.contains(authType)) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("")//
+                    .error("unsupported-auth")//
+                    .message("Authentication type " + authType + " is currently not supported")//
+                    .build());
+            }
+        }
+
+        return withWarnings.build();
+    }
+
+    /**
+     * Check if all operations contains valid authentication types for consumed
+     * APIs.
+     */
+    private OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
+        return validateAuthTypesIn(modelInfo, SUPPORTED_CONSUMED_AUTH_TYPES);
+    }
+
+    public OpenApiModelInfo validateCyclicReferences(final OpenApiModelInfo info) {
+        if (info.getModel() == null) {
+            return info;
+        }
+
+        if (CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(info))) {
+            return new OpenApiModelInfo.Builder().createFrom(info)
+                .addError(new Violation.Builder()
+                    .error("cyclic-schema")
+                    .message("Cyclic references are not suported")
+                    .build())
+                .build();
+        }
+
+        return info;
+    }
+
+    private static OpenApiModelInfo validateNoMissingOperationIds(final OpenApiModelInfo info) {
+        final OasDocument openApiDoc = info.getModel();
+        if (openApiDoc == null || openApiDoc.paths == null) {
+            return info;
+        }
+
+        final long countNoOpId = OasModelHelper.getPathItems(openApiDoc.paths)
+            .stream()
+            .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())
+            .filter(o -> o.operationId == null)
+            .count();
+
+        if (countNoOpId == 0) {
+            return info;
+        }
+
+        final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(info);
+        withWarnings.addWarning(new Violation.Builder()//
+            .error("missing-operation-ids")
+            .message("Some operations (" + countNoOpId + ") have no operationId").build());
+
+        return withWarnings.build();
+    }
+
+    public OpenApiModelInfo validateOperationsGiven(final OpenApiModelInfo modelInfo) {
+        final OasDocument openApiDoc = modelInfo.getModel();
+        if (openApiDoc == null) {
+            return modelInfo;
+        }
+
+        final OpenApiModelInfo.Builder withErrors = new OpenApiModelInfo.Builder().createFrom(modelInfo);
+
+        final List<OasPathItem> paths = OasModelHelper.getPathItems(openApiDoc.paths);
+        if (paths.isEmpty()) {
+            withErrors.addError(new Violation.Builder()
+                .property("paths")
+                .error("missing-paths")
+                .message("No paths defined")
+                .build());
+        } else if (paths.stream().allMatch(p -> OasModelHelper.getOperationMap(p).isEmpty())) {
+            withErrors.addError(new Violation.Builder()
+                .property("")
+                .error("missing-operations")
+                .message("No operations defined")
+                .build());
+        }
+
+        return withErrors.build();
+    }
+
+    /**
+     * Check if all operations contains valid authentication types for provided
+     * APIs.
+     */
+    private OpenApiModelInfo validateProvidedAuthTypes(final OpenApiModelInfo modelInfo) {
+        return validateAuthTypesIn(modelInfo, Collections.emptySet());
+    }
+
+    /**
+     * Check if a request/response JSON schema is present
+     */
+    @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
+    private OpenApiModelInfo validateResponses(final OpenApiModelInfo modelInfo) {
+        final OasDocument openApiDoc = modelInfo.getModel();
+        if (openApiDoc == null) {
+            return modelInfo;
+        }
+
+        final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(modelInfo);
+
+        final List<OasPathItem> paths = OasModelHelper.getPathItems(openApiDoc.paths);
+        for (final OasPathItem pathEntry : paths) {
+            for (final Map.Entry<String, OasOperation> operationEntry : OasModelHelper.getOperationMap(pathEntry).entrySet()) {
+
+                // Check requests
+                for (final OasParameter parameter : OasModelHelper.getParameters(operationEntry.getValue())) {
+                    if (!OasModelHelper.isBody(parameter)) {
+                        continue;
+                    }
+                    final OasSchema schema = (OasSchema) parameter.schema;
+                    if (OasModelHelper.schemaIsNotSpecified(schema)) {
+                        final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getPath()
+                            + " does not provide a schema for the body parameter";
+
+                        withWarnings.addWarning(new Violation.Builder()//
+                            .property("")//
+                            .error("missing-parameter-schema")//
+                            .message(message)//
+                            .build());
+                    }
+                }
+
+                // Check responses
+                List<T> responses = getResponses(operationEntry.getValue());
+                for (final T responseEntry : responses) {
+                    if (responseEntry.getStatusCode() == null || responseEntry.getStatusCode().charAt(0) != '2') {
+                        continue; // check only correct responses
+                    }
+
+                    if (!hasResponseSchema(responseEntry)) {
+                        final String message = "Operation " + operationEntry.getKey().toUpperCase(Locale.US) + " " + pathEntry.getPath()
+                            + " does not provide a response schema for code " + responseEntry.getStatusCode();
+
+                        withWarnings.addWarning(new Violation.Builder()//
+                            .property("")//
+                            .error("missing-response-schema")//
+                            .message(message)//
+                            .build());
+                    }
+                }
+                // Assume that operations without 2xx responses do not provide a
+                // response
+            }
+        }
+
+        return withWarnings.build();
+    }
+
+    private OpenApiModelInfo validateScheme(final OpenApiModelInfo info) {
+        if (info.getModel() == null) {
+            return info;
+        }
+
+        final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(info);
+
+        final URI specificationUrl = OasModelHelper.specificationUriFrom(info.getModel());
+
+        final List<String> schemes = getSchemes(info);
+        if (schemes == null || schemes.isEmpty()) {
+            if (specificationUrl == null) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("/schemes")//
+                    .error("missing-schemes")
+                    .message("Unable to determine the scheme to use: OpenAPI document does not provide a `schemes` definition "
+                        + "and the document was uploaded so the originating URL is lost.")
+                    .build());
+            }
+        } else {
+            final boolean hasHttpSchemes = schemes.stream().anyMatch(s -> "http".equals(s) || "https".equals(s));
+            if (!hasHttpSchemes) {
+                withWarnings.addWarning(new Violation.Builder()//
+                    .property("/schemes")//
+                    .error("missing-schemes")
+                    .message("Unable to determine the scheme to use: no supported scheme found within the OpenAPI document. "
+                        + "Schemes given in the document: "
+                        + String.join(", ", schemes))
+                    .build());
+            }
+
+        }
+
+        return withWarnings.build();
+    }
+
+    public OpenApiModelInfo validateUniqueOperationIds(final OpenApiModelInfo info) {
+        final OasDocument openApiDoc = info.getModel();
+        if (openApiDoc == null || openApiDoc.paths == null) {
+            return info;
+        }
+
+        final Map<String, Long> operationIdCounts = OasModelHelper.getPathItems(openApiDoc.paths)
+            .stream()
+            .flatMap(p -> OasModelHelper.getOperationMap(p).values().stream())//
+            .map(o -> o.operationId)//
+            .filter(Objects::nonNull)//
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+        final Map<String, Long> nonUnique = operationIdCounts.entrySet().stream().filter(e -> e.getValue() > 1)
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (nonUnique.isEmpty()) {
+            return info;
+        }
+
+        final OpenApiModelInfo.Builder withWarnings = new OpenApiModelInfo.Builder().createFrom(info);
+        withWarnings.addWarning(new Violation.Builder()//
+            .error("non-unique-operation-ids")
+            .message("Found operations with non unique operationIds: " + String.join(", ", nonUnique.keySet())).build());
+
+        return withWarnings.build();
     }
 }
