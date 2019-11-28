@@ -24,6 +24,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
@@ -37,6 +38,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30SecurityScheme;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.slf4j.Logger;
@@ -218,5 +220,83 @@ final class Oas30ModelHelper {
         }
 
         return basePath.length() > 0 ? basePath : "/";
+    }
+
+    /**
+     * Extracts authorization flow name from security scheme. In OpenAPI 3.x the security scheme "oauth2" can define multiple authorization flow types.
+     * This method searches for authorizationCode flow type first in favor of any other flow type as this is the one Syndesis is supporting at the moment.
+     *
+     * Only if that specific flow type is not specified go and visit other flow types defined. Returns null when no authorization flow type is defined
+     * which is usually the case for non oauth2 security schemes.
+     * @param scheme the security scheme maybe holding authorization flows.
+     * @return the name of the authorization flow if any or null otherwise.
+     */
+    static String getAuthFlow(Oas30SecurityScheme scheme) {
+        if (scheme.flows == null) {
+            return null;
+        }
+
+        if (scheme.flows.authorizationCode != null) {
+            return "authorizationCode";
+        }
+
+        if (scheme.flows.clientCredentials != null) {
+            return "clientCredentials";
+        }
+
+        if (scheme.flows.password != null) {
+            return "password";
+        }
+
+        if (scheme.flows.implicit != null) {
+            return "implicit";
+        }
+
+        return null;
+    }
+
+    /**
+     * Determine server URL scheme. In case server URL is relative or no URL is set return "http" by default.
+     * @param server the server holding the server URL.
+     * @return server URL scheme or "http" as default
+     */
+    static String getScheme(Server server) {
+        String serverUrl = server.url;
+        if (serverUrl == null) {
+            return "http";
+        }
+
+        if (serverUrl.startsWith("http")) {
+            try {
+                return new URL(serverUrl).getProtocol();
+            } catch (MalformedURLException e) {
+                LOG.warn(String.format("Unable to determine base path from server URL: %s", serverUrl));
+            }
+        }
+
+        return "http";
+    }
+
+    /**
+     * Determine host information from server specification. Reads URL from first available server definition and extracts host from
+     * that URL. Defaults to null when no proper value is given.
+     * @param openApiDoc the OpenAPI document.
+     * @return server host of this API specification.
+     */
+    static String getHost(Oas30Document openApiDoc) {
+        if (openApiDoc.servers == null || openApiDoc.servers.isEmpty()) {
+            return null;
+        }
+
+        String serverUrl = Optional.ofNullable(openApiDoc.servers.get(0).url).orElse("/");
+        if (serverUrl.startsWith("http") || serverUrl.startsWith("ws")) {
+            try {
+                return new URL(serverUrl).getHost();
+            } catch (MalformedURLException e) {
+                LOG.warn(String.format("Unable to determine base path from server URL: %s", serverUrl));
+            }
+        }
+
+        return null;
     }
 }

@@ -15,143 +15,86 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
-import java.util.Optional;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.ConnectorSettings;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30SecurityScheme;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
-import io.syndesis.server.api.generator.openapi.PropertyGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiPropertyGenerator;
 
-@SuppressWarnings("PMD.GodClass")
-public enum Oas30PropertyGenerators {
+import static java.util.Optional.ofNullable;
 
-    accessToken {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    accessTokenExpiresAt {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authenticationParameterName {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authenticationParameterPlacement {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authenticationParameterValue {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authenticationType {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authorizationEndpoint {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    authorizeUsingParameters {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    basePath {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    clientId {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    clientSecret {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    host {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    oauthScopes {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    password {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    refreshToken {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    refreshTokenRetryStatuses {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    specification {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    tokenEndpoint {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    tokenStrategy {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    },
-    username {
-        @Override
-        protected PropertyGenerator propertyGenerator() {
-            return (info, template, settings) -> Optional.empty();
-        }
-    };
+public class Oas30PropertyGenerators extends OpenApiPropertyGenerator<Oas30Document, Oas30SecurityScheme> {
 
-    protected abstract PropertyGenerator propertyGenerator();
+    @Override
+    protected Function<Oas30SecurityScheme, String> authorizationUrl() {
+        return scheme -> {
+            if (scheme.flows == null || scheme.flows.authorizationCode == null) {
+                return null;
+            }
 
-    public static Optional<ConfigurationProperty> createProperty(final String propertyName, final OpenApiModelInfo info,
-                                                                 final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
-        final Oas30PropertyGenerators propertyGenerator = Oas30PropertyGenerators.valueOf(propertyName);
+            return scheme.flows.authorizationCode.authorizationUrl;
+        };
+    }
 
-        return propertyGenerator.propertyGenerator().generate(info, template, connectorSettings);
+    @Override
+    protected String basePath(OpenApiModelInfo info) {
+        return Oas30ModelHelper.getBasePath(info.getV3Model());
+    }
+
+    @Override
+    protected Function<Oas30SecurityScheme, String> tokenUrl() {
+        return scheme -> {
+            if (scheme.flows == null || scheme.flows.authorizationCode == null) {
+                return null;
+            }
+
+            return scheme.flows.authorizationCode.tokenUrl;
+        };
+    }
+
+    @Override
+    protected Function<Oas30SecurityScheme, String> scopes() {
+        return scheme -> {
+            if (scheme.flows == null || scheme.flows.authorizationCode == null) {
+                return null;
+            }
+
+            return ofNullable(scheme.flows.authorizationCode.scopes).map(Map::keySet).map(scopes -> scopes.stream().sorted().collect(Collectors.joining(" "))).orElse(null);
+        };
+    }
+
+    @Override
+    protected Collection<Oas30SecurityScheme> getSecuritySchemes(OpenApiModelInfo info) {
+        if (info.getV3Model().components == null || info.getV3Model().components.securitySchemes == null) {
+            return Collections.emptyList();
+        }
+
+        final Map<String, Oas30SecurityScheme> securitySchemes = info.getV3Model().components.securitySchemes;
+        return securitySchemes.values();
+    }
+
+    @Override
+    protected String getFlow(Oas30SecurityScheme scheme) {
+        return Oas30ModelHelper.getAuthFlow(scheme);
+    }
+
+    @Override
+    protected String getHost(OpenApiModelInfo info) {
+        return Oas30ModelHelper.getHost(info.getV3Model());
+    }
+
+    @Override
+    protected List<String> getSchemes(OpenApiModelInfo info) {
+        if (info.getV3Model().servers == null) {
+            return null;
+        }
+
+        return info.getV3Model().servers.stream().map(Oas30ModelHelper::getScheme).collect(Collectors.toList());
     }
 }

@@ -173,10 +173,10 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
             Optional<ConfigurationProperty> maybeProperty;
             switch (info.getApiVersion()) {
                 case V2:
-                    maybeProperty = Oas20PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+                    maybeProperty = new Oas20PropertyGenerators().createProperty(propertyName, info, template, connectorSettings);
                     break;
                 case V3:
-                    maybeProperty = Oas30PropertyGenerators.createProperty(propertyName, info, template, connectorSettings);
+                    maybeProperty = new Oas30PropertyGenerators().createProperty(propertyName, info, template, connectorSettings);
                     break;
                 default:
                     maybeProperty = Optional.empty();

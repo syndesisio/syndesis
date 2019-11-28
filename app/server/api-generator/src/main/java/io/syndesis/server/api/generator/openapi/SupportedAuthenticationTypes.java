@@ -54,7 +54,7 @@ public enum SupportedAuthenticationTypes {
     public static SupportedAuthenticationTypes fromConfiguredPropertyValue(final String value) {
         final int idx = Objects.requireNonNull(value, "value").indexOf(':');
 
-        return SupportedAuthenticationTypes.valueOf(idx > 0 ? value.substring(0, idx) : value);
+        return fromSecurityDefinition(idx > 0 ? value.substring(0, idx) : value);
     }
 
     public static SupportedAuthenticationTypes fromSecurityDefinition(final String value) {
@@ -62,7 +62,7 @@ public enum SupportedAuthenticationTypes {
     }
 
     public static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final SecurityScheme scheme) {
-        final PropertyValue template = valueOf(scheme.type).propertyValue;
+        final PropertyValue template = fromSecurityDefinition(scheme.type).propertyValue;
 
         final PropertyValue propertyValue = new ConfigurationProperty.PropertyValue.Builder()
             .createFrom(template)
