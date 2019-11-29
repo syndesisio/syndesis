@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -34,8 +35,9 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
-        Set<String> consumes = Optional.of(operation.requestBody)
-            .map(req -> req.content.keySet())
+        Set<String> consumes = Optional.ofNullable(operation.requestBody)
+            .map(req -> req.content)
+            .map(Map::keySet)
             .orElse(Collections.emptySet());
 
         if (supports(APPLICATION_JSON, consumes)) {

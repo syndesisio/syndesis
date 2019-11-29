@@ -157,7 +157,7 @@ public abstract class OpenApiFlowGenerator<T extends OasDocument, O extends OasO
     }
 
     private static String getResponseCode(final OasOperation operation) {
-        return findResponseCode(operation).get().getKey();
+        return findResponseCode(operation).map(Pair::getKey).orElse("200");
     }
 
     private static List<ConfigurationProperty.PropertyValue> httpStatusList(final OasOperation operation) {

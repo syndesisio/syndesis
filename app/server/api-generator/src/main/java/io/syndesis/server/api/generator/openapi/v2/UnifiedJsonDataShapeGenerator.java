@@ -39,6 +39,7 @@ import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Document, Oas20Operation> implements DataShapeGenerator<Oas20Document, Oas20Operation> {
@@ -75,7 +76,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         if (parameter.items != null) {
             final Oas20Items items = parameter.items;
 
-            List<String> enums = Optional.ofNullable(items.enum_).orElse(Collections.emptyList());
+            List<String> enums = ofNullable(items.enum_).orElse(Collections.emptyList());
             final ObjectNode itemsNode = parameterParameter.putObject("items");
             final String itemType = items.type;
             if (StringUtils.isNotBlank(itemType)) {
@@ -99,14 +100,14 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
     private static ObjectNode createJsonSchemaForParametersOf(final Oas20Document openApiDoc, final Oas20Operation operation) {
         final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
 
-        OasPathItem parent = Optional.of(operation.parent())
+        OasPathItem parent = ofNullable(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
         final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
         operationParameters.addAll(pathParameters);
 
-        final List<Oas20ParameterDefinition> globalParameters = Optional.ofNullable(openApiDoc.parameters)
+        final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
                 .map(Oas20ParameterDefinitions::getItems)
                 .orElse(Collections.emptyList());
         operationParameters.addAll(globalParameters);
