@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
@@ -39,6 +41,7 @@ import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -70,6 +73,19 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
 
         return unifiedJsonSchema("Response", "API response payload", bodySchema, null);
+    }
+
+    @Override
+    public Optional<NameAndSchema> findBodySchema(Oas20Operation operation) {
+        Optional<OasParameter> maybeBody = Oas20ModelHelper.findBodyParameter(operation);
+
+        if (maybeBody.isPresent()) {
+            OasParameter body = maybeBody.get();
+            String name = ofNullable(body.getName()).orElse(body.description);
+            return Optional.of(new NameAndSchema(name, (OasSchema) body.schema));
+        }
+
+        return empty();
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final Oas20Parameter parameter) {

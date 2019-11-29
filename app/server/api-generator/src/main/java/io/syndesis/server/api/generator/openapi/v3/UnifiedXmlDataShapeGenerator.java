@@ -18,12 +18,14 @@ package io.syndesis.server.api.generator.openapi.v3;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
@@ -36,6 +38,7 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
 import org.dom4j.Element;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -68,6 +71,21 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Docum
     @Override
     protected OasSchema getSchema(Oas30Response response) {
         return Oas30ModelHelper.getSchema(response, APPLICATION_XML);
+    }
+
+    @Override
+    public Optional<NameAndSchema> findBodySchema(Oas30Operation operation) {
+        if (operation.requestBody == null) {
+            return empty();
+        }
+
+        Oas30MediaType body = Oas30ModelHelper.getMediaType(operation.requestBody, APPLICATION_XML);
+        if (body != null) {
+            String name = ofNullable(body.getName()).orElse(operation.requestBody.description);
+            return Optional.of(new NameAndSchema(name, body.schema));
+        }
+
+        return empty();
     }
 
     @Override

@@ -17,9 +17,11 @@ package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
@@ -111,5 +113,22 @@ final class Oas20ModelHelper {
      */
     static Map<String, Oas20Operation> getOperationMap(OasPathItem pathItem) {
         return OasModelHelper.getOperationMap(pathItem, Oas20Operation.class);
+    }
+
+    /**
+     * Find parameter that is defined to live in body.
+     * @param operation
+     * @return
+     */
+    static Optional<OasParameter> findBodyParameter(Oas20Operation operation) {
+        if (operation.parameters == null) {
+            return Optional.empty();
+        }
+
+        final List<OasParameter> operationParameters = operation.parameters;
+
+        return operationParameters.stream()
+            .filter(p -> "body".equals(p.in) && p.schema != null)
+            .findFirst();
     }
 }

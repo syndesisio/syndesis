@@ -32,13 +32,12 @@ import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
-import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
+import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -218,9 +217,9 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
             openApiDoc.paths.getPathItems()
                 .forEach(pathItem -> {
-                    OasModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
-                        final Optional<OasParameter> bodyParameter = generator.findBodyParameter(operation);
-                        if (!bodyParameter.isPresent()) {
+                    Oas20ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
+                        final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(operation);
+                        if (!bodySchema.isPresent()) {
                             // by default we resort to JSON for payloads without
                             // body, i.e.
                             // only parameters

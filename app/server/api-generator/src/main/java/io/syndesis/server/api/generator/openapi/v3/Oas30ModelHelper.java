@@ -35,6 +35,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
 import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
+import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
@@ -170,19 +171,42 @@ final class Oas30ModelHelper {
      * @return the schema associated with the given response.
      */
     static Oas30Schema getSchema(Oas30Response response, String mediaType) {
-        Map<String, Oas30MediaType> mediaTypes = response.content;
-        if (mediaTypes == null) {
+        return Optional.ofNullable(getMediaTypeWithSchema(response.content, mediaType))
+            .map(m -> m.schema)
+            .orElse(null);
+    }
+
+    /**
+     * Get media type from given request body that has a schema defined. This is inspecting the given content media types mappings on the request and
+     * preferably returns the schema associated with the given media type name. If given media type is not found return first finding in
+     * list of media types that has a schema.
+     * @param requestBody the response maybe holding a media type mapping with a schema.
+     * @param mediaType the media type to search for preferably when selecting the schema on the list of request media types.
+     * @return the schema associated with the given request.
+     */
+    static Oas30MediaType getMediaType(Oas30RequestBody requestBody, String mediaType) {
+        return getMediaTypeWithSchema(requestBody.content, mediaType);
+    }
+
+    /**
+     * Find media type associated with a schema. Search for media type with given name first. If no explicit media type
+     * entry is found return first media type that has a schema defined.
+     * @param content the list of media types.
+     * @param mediaType preferred media type to search first.
+     * @return media type with schema defined or null.
+     */
+    private static Oas30MediaType getMediaTypeWithSchema(Map<String, Oas30MediaType> content, String mediaType) {
+        if (content == null) {
             return null;
         }
 
-        if (mediaType != null && mediaTypes.containsKey(mediaType)) {
-            return mediaTypes.get(mediaType).schema;
+        if (mediaType != null && content.containsKey(mediaType)) {
+            return content.get(mediaType);
         }
 
-        return mediaTypes.values()
+        return content.values()
             .stream()
-            .map(media -> media.schema)
-            .filter(Objects::nonNull)
+            .filter(media -> media.schema != null)
             .findFirst()
             .orElse(null);
     }
