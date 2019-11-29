@@ -46,5 +46,7 @@ public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
             }
         }
         in.setBody(messageList);
+        // TODO Backport 2.23.x: disabled due to issue https://issues.jboss.org/browse/ENTESB-12348 once that is backported enable header again
+        // in.setHeader(SqsConstants.SQS_OPERATION, SqsOperations.sendBatchMessage);
     }
 }
