@@ -81,7 +81,7 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
     protected Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
         final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
 
-        OasPathItem parent = Optional.of(operation.parent())
+        OasPathItem parent = Optional.ofNullable(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
