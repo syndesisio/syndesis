@@ -17,7 +17,6 @@ package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -81,7 +80,7 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
     protected Element createParametersSchema(final Oas20Document openApiDoc, final Oas20Operation operation) {
         final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
 
-        OasPathItem parent = Optional.ofNullable(operation.parent())
+        OasPathItem parent = ofNullable(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);

@@ -38,6 +38,7 @@ import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Document, Oas30Operation> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
@@ -74,7 +75,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
         if (schema.items != null) {
             final Oas30Schema items = (Oas30Schema) schema.items;
 
-            List<String> enums = Optional.ofNullable(items.enum_).orElse(Collections.emptyList());
+            List<String> enums = ofNullable(items.enum_).orElse(Collections.emptyList());
             final ObjectNode itemsNode = parameterParameter.putObject("items");
             final String itemType = items.type;
             if (StringUtils.isNotBlank(itemType)) {
@@ -98,7 +99,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
     private static ObjectNode createJsonSchemaForParametersOf(final Oas30Document openApiDoc, final Oas30Operation operation) {
         final List<Oas30Parameter> operationParameters = Oas30ModelHelper.getParameters(operation);
 
-        OasPathItem parent = Optional.ofNullable(operation.parent())
+        OasPathItem parent = ofNullable(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
