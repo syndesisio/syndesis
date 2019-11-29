@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi.v3;
 
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.syndesis.server.api.generator.openapi.OpenApiDescriptorGenerator;
 
-interface Oas20DataShapeGenerator extends DataShapeGenerator<Oas20Document, Oas20Operation> {
+/**
+ * @author Christoph Deppisch
+ */
+public class Oas30DescriptorGenerator extends OpenApiDescriptorGenerator<Oas30Document, Oas30Operation> {
+
+    public Oas30DescriptorGenerator() {
+        super(new UnifiedDataShapeGenerator());
+    }
 }

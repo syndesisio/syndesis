@@ -16,29 +16,16 @@
 
 package io.syndesis.server.api.generator.openapi.v2;
 
-import java.util.Map;
-
-import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.syndesis.server.api.generator.openapi.OpenApiFlowGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiDescriptorGenerator;
 
 /**
  * @author Christoph Deppisch
  */
-public class Oas20FlowGenerator extends OpenApiFlowGenerator<Oas20Document, Oas20Operation> {
+public class Oas20DescriptorGenerator extends OpenApiDescriptorGenerator<Oas20Document, Oas20Operation> {
 
-    public Oas20FlowGenerator() {
+    public Oas20DescriptorGenerator() {
         super(new UnifiedDataShapeGenerator());
-    }
-
-    @Override
-    protected String getBasePath(Oas20Document openApiDoc) {
-        return openApiDoc.basePath;
-    }
-
-    @Override
-    protected Map<String, Oas20Operation> getOperationsMap(OasPathItem pathItem) {
-        return Oas20ModelHelper.getOperationMap(pathItem);
     }
 }

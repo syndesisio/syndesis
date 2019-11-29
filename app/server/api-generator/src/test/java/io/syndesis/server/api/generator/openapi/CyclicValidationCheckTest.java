@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
@@ -38,7 +42,7 @@ public class CyclicValidationCheckTest {
     public void shouldFindCyclicReferenceInOpenHabSwagger() throws IOException {
         final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(Resources.getResourceAsText("swagger/openhab.swagger.json"));
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -63,7 +67,7 @@ public class CyclicValidationCheckTest {
         openApiDoc.definitions = openApiDoc.createDefinitions();
         openApiDoc.definitions.addDefinition("A", schemaDefinition);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -92,7 +96,7 @@ public class CyclicValidationCheckTest {
         openApiDoc.definitions = openApiDoc.createDefinitions();
         openApiDoc.definitions.addDefinition("A", schemaDefinition);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -130,7 +134,7 @@ public class CyclicValidationCheckTest {
         schemaDefinition.properties.put("a", propertySchema);
         openApiDoc.definitions.addDefinition("Z", schemaDefinition);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -172,7 +176,7 @@ public class CyclicValidationCheckTest {
         schemaDefinition.properties.put("a", propertySchema);
         openApiDoc.definitions.addDefinition("Z", schemaDefinition);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -215,7 +219,7 @@ public class CyclicValidationCheckTest {
         responseSchemaDefinition.properties.put("resval", responsePropertySchema);
         openApiDoc.definitions.addDefinition("Request", responseSchemaDefinition);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isFalse();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isFalse();
     }
 
     @Test
@@ -256,7 +260,7 @@ public class CyclicValidationCheckTest {
         schemaDefinitionC.properties.put("a", propertySchemaC);
         openApiDoc.definitions.addDefinition("C", schemaDefinitionC);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -289,7 +293,7 @@ public class CyclicValidationCheckTest {
         schemaDefinitionB.properties.put("a", propertySchemaB);
         openApiDoc.definitions.addDefinition("B", schemaDefinitionB);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
@@ -326,16 +330,15 @@ public class CyclicValidationCheckTest {
         schemaDefinitionB.properties.put("a", propertySchemaB);
         openApiDoc.definitions.addDefinition("B", schemaDefinitionB);
 
-        assertThat(CyclicValidationCheck.hasCyclicReferences(openApiDoc)).isTrue();
-    }
-
-    @Test
-    public void shouldTolerateNullValue() {
-        assertThat(CyclicValidationCheck.hasCyclicReferences(null)).isFalse();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }
 
     @Test
     public void shouldTolerateTrivialValue() {
-        assertThat(CyclicValidationCheck.hasCyclicReferences(new Oas20Document())).isFalse();
+        assertThat(CyclicValidationCheck.hasCyclicReferences(Collections.emptyMap())).isFalse();
+    }
+
+    private static Map<String, ? extends OasSchema> getSchemaDefinitions(Oas20Document openApiDoc) {
+        return openApiDoc.definitions.getDefinitions().stream().collect(Collectors.toMap(Oas20SchemaDefinition::getName, def -> def));
     }
 }

@@ -38,7 +38,7 @@ public class SupportedAuthenticationTypesTest {
     @Test
     public void shouldGenerateLabelsWithDescription() {
         final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
-        securityScheme.type = SecurityScheme.BASIC.getName();
+        securityScheme.type = OpenApiSecurityScheme.BASIC.getName();
         securityScheme.description = "description";
 
         assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
@@ -52,7 +52,7 @@ public class SupportedAuthenticationTypesTest {
     @Test
     public void shouldGenerateLabelsWithoutDescription() {
         final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
-        securityScheme.type = SecurityScheme.BASIC.getName();
+        securityScheme.type = OpenApiSecurityScheme.BASIC.getName();
 
         assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
             .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()

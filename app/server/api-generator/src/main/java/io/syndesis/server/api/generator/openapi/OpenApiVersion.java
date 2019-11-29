@@ -17,6 +17,7 @@
 package io.syndesis.server.api.generator.openapi;
 
 import java.util.Arrays;
+import java.util.StringJoiner;
 
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -26,12 +27,14 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
  * List of supported OpenAPI specification versions and their corresponding model document types.
  */
 public enum OpenApiVersion {
-    V2(Oas20Document.class),
-    V3(Oas30Document.class);
+    V2("2.0", Oas20Document.class),
+    V3("3.0", Oas30Document.class);
 
+    private final String majorVersion;
     private final Class<? extends OasDocument> documentType;
 
-    OpenApiVersion(Class<? extends OasDocument> documentType) {
+    OpenApiVersion(String majorVersion, Class<? extends OasDocument> documentType) {
+        this.majorVersion = majorVersion;
         this.documentType = documentType;
     }
 
@@ -40,5 +43,19 @@ public enum OpenApiVersion {
             .filter(version -> version.documentType.isInstance(model))
             .findFirst()
             .orElseThrow(() -> new IllegalArgumentException("Unable get OpenAPI version from given document type"));
+    }
+
+    public boolean supports(String version) {
+        if (version == null) {
+            return false;
+        }
+
+        return version.startsWith(majorVersion);
+    }
+
+    public static String getSupportedVersions() {
+        StringJoiner joiner = new StringJoiner(", ");
+        Arrays.stream(values()).map(openApiVersion -> openApiVersion.majorVersion).forEach(joiner::add);
+        return joiner.toString();
     }
 }

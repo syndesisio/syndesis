@@ -75,7 +75,7 @@ public class OpenApiModelParserTest {
     }
 
     @Test
-    public void shouldNotReportIssuesWithSupportedVersions() {
+    public void shouldNotReportIssuesWithSupportedV2Versions() {
         final OpenApiModelInfo validated = OpenApiModelParser.parse(
             "{\"swagger\": \"2.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
@@ -85,16 +85,40 @@ public class OpenApiModelParserTest {
     }
 
     @Test
-    public void shouldReportIssuesWithUnsupportedVersions() {
+    public void shouldReportIssuesWithUnsupportedV2Versions() {
         final OpenApiModelInfo validated = OpenApiModelParser.parse(
-            "{\"openapi\": \"3.0.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            "{\"swagger\": \"1.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).containsOnly(new Violation.Builder()
             .property("")
             .error("unsupported-version")
-            .message("This document cannot be uploaded. Provide an OpenAPI 2.0 document.")
+            .message("This document cannot be uploaded. Provide an OpenAPI document (supported versions are 2.0, 3.0).")
+            .build());
+    }
+
+    @Test
+    public void shouldNotReportIssuesWithSupportedV3Versions() {
+        final OpenApiModelInfo validated = OpenApiModelParser.parse(
+            "{\"openapi\": \"3.0.2\", \"info\": { \"title\": \"test\", \"description\": \"\", \"version\": \"0.0.1\" }, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            APIValidationContext.CONSUMED_API);
+
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    public void shouldReportIssuesWithUnsupportedV3Versions() {
+        final OpenApiModelInfo validated = OpenApiModelParser.parse(
+            "{\"openapi\": \"4.0\", \"info\": { \"title\": \"test\", \"description\": \"\", \"version\": \"0.0.1\" }, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            APIValidationContext.CONSUMED_API);
+
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).containsOnly(new Violation.Builder()
+            .property("")
+            .error("unsupported-version")
+            .message("This document cannot be uploaded. Provide an OpenAPI document (supported versions are 2.0, 3.0).")
             .build());
     }
 

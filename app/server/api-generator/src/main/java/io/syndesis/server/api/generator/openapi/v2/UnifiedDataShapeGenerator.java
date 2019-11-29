@@ -21,16 +21,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.syndesis.common.model.DataShape;
+import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 
-final class UnifiedDataShapeGenerator implements Oas20DataShapeGenerator {
+final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas20Document, Oas20Operation> {
 
-    private static final String APPLICATION_JSON = "application/json";
+    private static final DataShapeGenerator<Oas20Document, Oas20Operation> JSON = new UnifiedJsonDataShapeGenerator();
 
-    private static final String APPLICATION_XML = "application/xml";
-
-    private static final Oas20DataShapeGenerator JSON = new UnifiedJsonDataShapeGenerator();
-
-    private static final Oas20DataShapeGenerator XML = new UnifiedXmlDataShapeGenerator();
+    private static final DataShapeGenerator<Oas20Document, Oas20Operation> XML = new UnifiedXmlDataShapeGenerator();
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
@@ -61,7 +58,7 @@ final class UnifiedDataShapeGenerator implements Oas20DataShapeGenerator {
     static boolean supports(final String mime, final List<String> defaultMimes, final List<String> mimes) {
         boolean supports = false;
         if (mimes != null && !mimes.isEmpty()) {
-            supports |= mimes.contains(mime);
+            supports = mimes.contains(mime);
         }
 
         if (defaultMimes != null && !defaultMimes.isEmpty()) {

@@ -26,15 +26,16 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
-import io.syndesis.server.api.generator.openapi.SecurityScheme;
+import io.syndesis.server.api.generator.openapi.OpenApiSecurityScheme;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.junit.Test;
 
 import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators.createHostUri;
-import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators.determineHost;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Oas20PropertyGeneratorsTest {
+
+    private static final Oas20PropertyGenerators GENERATOR = new Oas20PropertyGenerators();
 
     @Test
     public void shouldConsiderOnlyAuthorizationCodeOAuthFlows() {
@@ -48,8 +49,7 @@ public class Oas20PropertyGeneratorsTest {
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder().build();
-        final Optional<ConfigurationProperty> authenticationTypes = Oas20PropertyGenerators.authenticationType
-            .propertyGenerator()
+        final Optional<ConfigurationProperty> authenticationTypes = GENERATOR.forProperty("authenticationType")
             .generate(new OpenApiModelInfo.Builder().model(openApiDoc).build(), template, settings);
 
         assertThat(authenticationTypes)
@@ -75,8 +75,7 @@ public class Oas20PropertyGeneratorsTest {
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder().build();
-        final Optional<ConfigurationProperty> authenticationTypes = Oas20PropertyGenerators.authenticationType
-            .propertyGenerator()
+        final Optional<ConfigurationProperty> authenticationTypes = GENERATOR.forProperty("authenticationType")
             .generate(new OpenApiModelInfo.Builder().model(openApiDoc).build(), template, settings);
 
         assertThat(authenticationTypes)
@@ -92,7 +91,7 @@ public class Oas20PropertyGeneratorsTest {
         openApiDoc.host = "54.152.43.92:8080";
         openApiDoc.schemes = new ArrayList<>();
         openApiDoc.schemes.add("https");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://54.152.43.92:8080");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://54.152.43.92:8080");
     }
 
     @Test
@@ -101,13 +100,13 @@ public class Oas20PropertyGeneratorsTest {
         openApiDoc.host = "api.example.com";
         openApiDoc.schemes = new ArrayList<>();
         openApiDoc.schemes.add("https");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
 
         openApiDoc.schemes.add("http");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
 
         openApiDoc.schemes.remove("https");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api.example.com");
     }
 
     @Test
@@ -119,13 +118,13 @@ public class Oas20PropertyGeneratorsTest {
         extension.value = specificationUrl;
         openApiDoc.addExtension(OasModelHelper.URL_EXTENSION, extension);
 
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("https://api.example.com");
         openApiDoc.schemes = new ArrayList<>();
         openApiDoc.schemes.add("http");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api.example.com");
 
         openApiDoc.host = "api2.example.com";
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api2.example.com");
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isEqualTo("http://api2.example.com");
     }
 
     @Test
@@ -137,11 +136,11 @@ public class Oas20PropertyGeneratorsTest {
         openApiDoc.securityDefinitions.addSecurityScheme("username-password", securityScheme);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
-            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "basic:username-password")
+            .putConfiguredProperty("authenticationType", "basic:username-password")
             .build();
 
-        final Optional<Oas20SecurityScheme> got = Oas20PropertyGenerators.securityDefinition(
-            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, SecurityScheme.BASIC);
+        final Optional<Oas20SecurityScheme> got = GENERATOR.securityDefinition(
+            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, OpenApiSecurityScheme.BASIC);
         assertThat(got).containsSame(securityScheme);
     }
 
@@ -154,26 +153,26 @@ public class Oas20PropertyGeneratorsTest {
         openApiDoc.securityDefinitions.addSecurityScheme("username-password", securityScheme);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
-            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "basic:username-password")
+            .putConfiguredProperty("authenticationType", "basic:username-password")
             .build();
 
-        final Optional<Oas20SecurityScheme> got = Oas20PropertyGenerators.securityDefinition(
-            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, SecurityScheme.BASIC);
+        final Optional<Oas20SecurityScheme> got = GENERATOR.securityDefinition(
+            new OpenApiModelInfo.Builder().model(openApiDoc).build(), settings, OpenApiSecurityScheme.BASIC);
         assertThat(got).containsSame(securityScheme);
     }
 
     @Test
     public void shouldReturnNullIfNoHostGivenAnywhere() {
         Oas20Document openApiDoc = new Oas20Document();
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
 
         openApiDoc.schemes = new ArrayList<>();
         openApiDoc.schemes.add("http");
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
 
         openApiDoc = new Oas20Document();
         openApiDoc.host = "host";
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
     }
 
     @Test
@@ -183,7 +182,7 @@ public class Oas20PropertyGeneratorsTest {
         openApiDoc.schemes.add("ws");
         openApiDoc.schemes.add("wss");
 
-        assertThat(determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
+        assertThat(GENERATOR.determineHost(new OpenApiModelInfo.Builder().model(openApiDoc).build())).isNull();
     }
 
     @Test
@@ -199,10 +198,9 @@ public class Oas20PropertyGeneratorsTest {
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
         final ConnectorSettings settings = new ConnectorSettings.Builder()
-            .putConfiguredProperty(Oas20PropertyGenerators.authenticationType.name(), "oauth2:oauth-authorization-code")
+            .putConfiguredProperty("authenticationType", "oauth2:oauth-authorization-code")
             .build();
-        final Optional<ConfigurationProperty> authorizationEndpoint = Oas20PropertyGenerators.authorizationEndpoint
-            .propertyGenerator()
+        final Optional<ConfigurationProperty> authorizationEndpoint = GENERATOR.forProperty("authorizationEndpoint")
             .generate(new OpenApiModelInfo.Builder().model(openApiDoc).build(), template, settings);
 
         assertThat(authorizationEndpoint)
@@ -210,8 +208,7 @@ public class Oas20PropertyGeneratorsTest {
                 .defaultValue("https://api.example.com/authz")
                 .build());
 
-        final Optional<ConfigurationProperty> tokenEndpoint = Oas20PropertyGenerators.tokenEndpoint
-            .propertyGenerator()
+        final Optional<ConfigurationProperty> tokenEndpoint = GENERATOR.forProperty("tokenEndpoint")
             .generate(new OpenApiModelInfo.Builder().model(openApiDoc).build(), template, settings);
 
         assertThat(tokenEndpoint)
@@ -222,7 +219,7 @@ public class Oas20PropertyGeneratorsTest {
 
     private static Oas20SecurityScheme oauth2SecurityScheme(String name, String flow, String tokenUrl, String authorizationUrl) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = SecurityScheme.OAUTH2.getName();
+        securityScheme.type = OpenApiSecurityScheme.OAUTH2.getName();
         securityScheme.tokenUrl = tokenUrl;
         securityScheme.authorizationUrl = authorizationUrl;
         securityScheme.flow = flow;
@@ -231,13 +228,13 @@ public class Oas20PropertyGeneratorsTest {
 
     private static Oas20SecurityScheme basicAuthSecurityScheme(String name) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = SecurityScheme.BASIC.getName();
+        securityScheme.type = OpenApiSecurityScheme.BASIC.getName();
         return  securityScheme;
     }
 
     private static Oas20SecurityScheme apiKeySecurityScheme(String name) {
         Oas20SecurityScheme securityScheme = new Oas20SecurityScheme(name);
-        securityScheme.type = SecurityScheme.API_KEY.getName();
+        securityScheme.type = OpenApiSecurityScheme.API_KEY.getName();
         return  securityScheme;
     }
 }

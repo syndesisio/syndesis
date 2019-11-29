@@ -25,17 +25,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.core.models.Document;
 import io.apicurio.datamodels.openapi.models.OasDocument;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
-import io.syndesis.server.api.generator.openapi.OpenApiSchemaValidator;
-import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
+import io.syndesis.server.api.generator.openapi.OpenApiVersion;
 import io.syndesis.server.api.generator.openapi.v2.Oas20SchemaValidator;
+import io.syndesis.server.api.generator.openapi.v2.Oas20ValidationRules;
 import io.syndesis.server.api.generator.openapi.v3.Oas30SchemaValidator;
+import io.syndesis.server.api.generator.openapi.v3.Oas30ValidationRules;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -84,13 +83,14 @@ public final class OpenApiModelParser {
                 .build();
         }
 
-        final JsonNode swaggerVersion = tree.get("swagger");
-        if (swaggerVersion == null || swaggerVersion.isNull() || !"2.0".equals(swaggerVersion.textValue())) {
+        OpenApiVersion openApiVersion = getOpenApiVersion(tree);
+        if (openApiVersion == null) {
             return new OpenApiModelInfo.Builder()
                 .addError(new Violation.Builder()
                     .property("")
                     .error("unsupported-version")
-                    .message("This document cannot be uploaded. Provide an OpenAPI 2.0 document.")
+                    .message(String.format("This document cannot be uploaded. " +
+                        "Provide an OpenAPI document (supported versions are %s).", OpenApiVersion.getSupportedVersions()))
                     .build())
                 .build();
         }
@@ -109,7 +109,7 @@ public final class OpenApiModelParser {
         resultBuilder.model((OasDocument) parsed);
         if (validationContext != APIValidationContext.NONE) {
             try {
-                getSchemaValidator((OasDocument) parsed).validateJSonSchema(convertToJson(resolvedSpecification), resultBuilder);
+                validateJsonSchema(convertToJson(resolvedSpecification), resultBuilder, openApiVersion, parsed.getClass());
             } catch (IOException e) {
                 return resultBuilder
                     .addError(new Violation.Builder()
@@ -118,25 +118,53 @@ public final class OpenApiModelParser {
                         .message("Unable to read OpenAPI document from: '" + StringUtils.abbreviate(resolvedSpecification, 100)).build())
                     .build();
             }
-            return OpenApiValidationRules.get(validationContext).apply(resultBuilder.build());
+            return applyValidationRules(validationContext, resultBuilder.build(), openApiVersion);
         }
         return resultBuilder.build();
     }
 
-    public static boolean isJsonSpec(final String specification) {
-        return specification.trim().startsWith("{");
+    private static OpenApiModelInfo applyValidationRules(APIValidationContext validationContext, OpenApiModelInfo info,
+                                                         OpenApiVersion openApiVersion) {
+        switch (openApiVersion) {
+            case V2:
+                return Oas20ValidationRules.get(validationContext).apply(info);
+            case V3:
+                return Oas30ValidationRules.get(validationContext).apply(info);
+            default:
+                throw new IllegalStateException(String.format("Unable to apply validation rules for OpenAPI document type '%s'", info.getModel().getClass()));
+        }
     }
 
-    private static OpenApiSchemaValidator getSchemaValidator(OasDocument openApiDoc) {
-        if (openApiDoc instanceof Oas20Document) {
-            return new Oas20SchemaValidator();
+    private static void validateJsonSchema(JsonNode jsonNode, OpenApiModelInfo.Builder resultBuilder,
+                                           OpenApiVersion openApiVersion, Class<?> documentType) {
+        switch (openApiVersion) {
+            case V2:
+                new Oas20SchemaValidator().validateJSonSchema(jsonNode, resultBuilder);
+                break;
+            case V3:
+                new Oas30SchemaValidator().validateJSonSchema(jsonNode, resultBuilder);
+                break;
+            default:
+                throw new IllegalStateException(String.format("Unable to determine proper schema validator for OpenAPI document type '%s'", documentType));
+        }
+    }
+
+    private static OpenApiVersion getOpenApiVersion(JsonNode jsonNode) {
+        final JsonNode v2Version = jsonNode.get("swagger");
+        if (v2Version != null && !v2Version.isNull() && OpenApiVersion.V2.supports(v2Version.textValue())) {
+            return OpenApiVersion.V2;
         }
 
-        if (openApiDoc instanceof Oas30Document) {
-            return new Oas30SchemaValidator();
+        final JsonNode v3Version = jsonNode.get("openapi");
+        if (v3Version != null && !v3Version.isNull() && OpenApiVersion.V3.supports(v3Version.textValue())) {
+            return OpenApiVersion.V3;
         }
 
-        throw new IllegalStateException(String.format("Unable to determine proper schema validator for OpenAPI document type '%s'", openApiDoc.getClass()));
+        return null;
+    }
+
+    public static boolean isJsonSpec(final String specification) {
+        return specification.trim().startsWith("{");
     }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
