@@ -37,12 +37,11 @@ github:
   enabled: false
 
 management:
-  port: -1
+  server:
+    port: -1
   health:
     db:
       enabled: false
-  security:
-    enabled: true
 
 openshift:
   enabled: false

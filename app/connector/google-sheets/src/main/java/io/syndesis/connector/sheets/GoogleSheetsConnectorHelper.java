@@ -21,12 +21,13 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
 import java.util.Map;
-import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
-import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
-import org.apache.camel.util.ObjectHelper;
+
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.services.sheets.v4.Sheets;
 import io.syndesis.connector.support.util.ConnectorOptions;
+import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
+import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
+import org.apache.camel.util.ObjectHelper;
 
 /**
  * @author Christoph Deppisch

@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.credential.salesforce;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
+import io.syndesis.server.credential.SocialProperties;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @ConfigurationProperties(prefix = "spring.social.salesforce")

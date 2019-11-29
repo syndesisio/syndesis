@@ -20,9 +20,8 @@ import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
 import io.syndesis.server.credential.OAuth2ConnectorProperties;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
+import io.syndesis.server.credential.SocialProperties;
 import io.syndesis.server.credential.UnconfiguredProperties;
-
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
 import org.springframework.social.oauth2.GenericOAuth2ServiceProvider;
 import org.springframework.social.oauth2.OAuth2ServiceProvider;
@@ -35,6 +34,11 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
     public CredentialProvider create(final SocialProperties properties) {
         if (properties instanceof UnconfiguredProperties) {
             return new OAuth2CredentialProvider<>("oauth2");
+        }
+
+        if (!(properties instanceof OAuth2ConnectorProperties)) {
+            throw new IllegalArgumentException(String.format("Unsupported social properties instance - " +
+                    "expected properties of type %s, but found %s", OAuth2ConnectorProperties.class, properties.getClass()));
         }
 
         final OAuth2ConnectorProperties oauth2Properties = (OAuth2ConnectorProperties) properties;

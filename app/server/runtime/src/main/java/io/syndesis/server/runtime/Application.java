@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.runtime;
 
+import javax.validation.Validator;
+import java.io.IOException;
+import java.util.List;
+
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.endpoint.v1.state.ClientSideStateProperties;
 import io.syndesis.server.endpoint.v1.state.StaticEdition;
@@ -25,16 +29,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.social.FacebookAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.LinkedInAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.SocialWebAutoConfiguration;
-import org.springframework.boot.autoconfigure.social.TwitterAutoConfiguration;
-import org.springframework.boot.context.embedded.undertow.UndertowDeploymentInfoCustomizer;
-import org.springframework.boot.context.embedded.undertow.UndertowEmbeddedServletContainerFactory;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
+import org.springframework.boot.web.embedded.undertow.UndertowDeploymentInfoCustomizer;
+import org.springframework.boot.web.embedded.undertow.UndertowServletWebServerFactory;
+import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.security.crypto.encrypt.Encryptors;
@@ -43,19 +44,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-import javax.validation.Validator;
-import java.io.IOException;
-import java.util.List;
-
-@SpringBootApplication(
-    exclude = {
-        TwitterAutoConfiguration.class,
-        FacebookAutoConfiguration.class,
-        LinkedInAutoConfiguration.class,
-        SocialWebAutoConfiguration.class
-    })
+@SpringBootApplication
 @EnableConfigurationProperties({ClientSideStateProperties.class, SpringMavenProperties.class})
 public class Application extends SpringBootServletInitializer {
 
@@ -70,8 +60,8 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     @Autowired
-    public UndertowEmbeddedServletContainerFactory embeddedServletContainerFactory(List<UndertowDeploymentInfoCustomizer> customizers) {
-        UndertowEmbeddedServletContainerFactory factory = new UndertowEmbeddedServletContainerFactory();
+    public UndertowServletWebServerFactory embeddedServletContainerFactory(List<UndertowDeploymentInfoCustomizer> customizers) {
+        UndertowServletWebServerFactory factory = new UndertowServletWebServerFactory();
         for (UndertowDeploymentInfoCustomizer customizer : customizers) {
             factory.addDeploymentInfoCustomizers(customizer);
         }
@@ -80,7 +70,7 @@ public class Application extends SpringBootServletInitializer {
 
     @Bean
     public WebMvcConfigurer staticResourceConfigurer() {
-        return new WebMvcConfigurerAdapter() {
+        return new WebMvcConfigurer() {
             @Override
             public void addResourceHandlers(ResourceHandlerRegistry registry) {
                 registry
@@ -123,6 +113,14 @@ public class Application extends SpringBootServletInitializer {
         final StaticEdition edition = new StaticEdition(properties);
 
         return new ClientSideState(edition);
+    }
+
+    @Bean
+    public MessageSource messageSource() {
+        ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+        messageSource.setBasenames("classpath:messages", "classpath:validation-messages");
+        messageSource.setDefaultEncoding("UTF-8");
+        return messageSource;
     }
 
     @Bean

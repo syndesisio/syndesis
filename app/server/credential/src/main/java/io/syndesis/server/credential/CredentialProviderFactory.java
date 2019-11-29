@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.credential;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-
 /**
  * Creates the {@link CredentialProvider} from the given properties.
  */

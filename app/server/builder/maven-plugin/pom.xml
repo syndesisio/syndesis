@@ -125,6 +125,10 @@
             <artifactId>spring-boot-autoconfigure</artifactId>
           </exclusion>
           <exclusion>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+          </exclusion>
+          <exclusion>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
           </exclusion>

@@ -20,10 +20,9 @@ import java.util.Collections;
 import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
+import io.syndesis.server.credential.SocialProperties;
 import io.syndesis.server.credential.UnconfiguredProperties;
 import io.syndesis.server.credential.salesforce.SalesforceConfiguration.SalesforceApplicator;
-
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.oauth2.OAuth2Template;
 import org.springframework.social.salesforce.connect.SalesforceConnectionFactory;
 

@@ -15,25 +15,23 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.function.BiFunction;
-
-import javax.persistence.EntityNotFoundException;
 
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
-
 import org.springframework.context.ApplicationContext;
 
 abstract class BaseConnectorGeneratorHandler extends BaseHandler {
 
-    final ApplicationContext context;
+    private final ApplicationContext context;
 
-    protected BaseConnectorGeneratorHandler(final DataManager dataMgr, final ApplicationContext context) {
+    BaseConnectorGeneratorHandler(final DataManager dataMgr, final ApplicationContext context) {
         super(dataMgr);
         this.context = context;
     }
@@ -51,12 +49,8 @@ abstract class BaseConnectorGeneratorHandler extends BaseHandler {
         return callback.apply(connectorGenerator, connectorTemplate);
     }
 
-    ConnectorGenerator determineConnectorGenerator(final String templateId) {
+    private ConnectorGenerator determineConnectorGenerator(final String templateId) {
         final Object generatorBean = context.getBean(templateId);
-        if (generatorBean == null) {
-            throw new EntityNotFoundException("Unable to find connector generator for connector template with id: " + templateId);
-        }
-
         if (generatorBean instanceof ConnectorGenerator) {
             return (ConnectorGenerator) generatorBean;
         }
