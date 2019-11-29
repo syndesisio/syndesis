@@ -1,0 +1,1647 @@
+{
+    "connections": {
+        ":i-Lur4UmOJFaXprjen3d_z": {
+            "configuredProperties": {
+                "accessToken": "access-token",
+                "accessTokenExpiresAt": "1576608318164489",
+                "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+                "applicationName": "gmail-syndesis",
+                "authenticationType": "oauth2",
+                "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+                "clientId": "client-id",
+                "clientSecret": "client-secret",
+                "googleScopes": "https://mail.google.com/",
+                "refreshToken": "refresh-token",
+                "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+                "userId": "me"
+            },
+            "connector": {
+                "actions": [
+                    {
+                        "actionType": "connector",
+                        "description": "Send an email from the Gmail account that this connection is authorized to access.",
+                        "descriptor": {
+                            "componentScheme": "google-mail",
+                            "connectorCustomizers": [
+                                "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
+                            ],
+                            "inputDataShape": {
+                                "kind": "java",
+                                "name": "MailMessage",
+                                "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                            },
+                            "outputDataShape": {
+                                "kind": "none"
+                            },
+                            "propertyDefinitionSteps": [
+                                {
+                                    "description": "Specify email content and addresses to send the email to. ",
+                                    "name": "Send Email through Gmail",
+                                    "properties": {
+                                        "bcc": {
+                                            "deprecated": false,
+                                            "displayName": "Email bcc",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                                            "order": 5,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "cc": {
+                                            "deprecated": false,
+                                            "displayName": "Email cc",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                                            "order": 4,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "subject": {
+                                            "deprecated": false,
+                                            "displayName": "Email subject",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "The text to insert in the subject line of the email.",
+                                            "order": 2,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "text": {
+                                            "deprecated": false,
+                                            "displayName": "Email text",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "The email message that you want to send.",
+                                            "order": 3,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "textarea"
+                                        },
+                                        "to": {
+                                            "deprecated": false,
+                                            "displayName": "Email to",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "One or more comma-separated email addresses to send the email to.",
+                                            "order": 1,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "id": "io.syndesis:gmail-send-email-connector",
+                        "name": "Send Email",
+                        "pattern": "To"
+                    },
+                    {
+                        "actionType": "connector",
+                        "description": "Obtain email from the Gmail account that this connection is authorized to access.",
+                        "descriptor": {
+                            "componentScheme": "google-mail-stream",
+                            "connectorCustomizers": [
+                                "io.syndesis.connector.gmail.GmailReceiveEmailCustomizer"
+                            ],
+                            "inputDataShape": {
+                                "kind": "none"
+                            },
+                            "outputDataShape": {
+                                "kind": "java",
+                                "name": "MailMessage",
+                                "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                            },
+                            "propertyDefinitionSteps": [
+                                {
+                                    "description": "Specify the emails that you want to obtain.",
+                                    "name": "Obtain Email from Gmail",
+                                    "properties": {
+                                        "delay": {
+                                            "componentProperty": false,
+                                            "defaultValue": "30000",
+                                            "deprecated": false,
+                                            "displayName": "Delay",
+                                            "group": "scheduler",
+                                            "javaType": "long",
+                                            "kind": "parameter",
+                                            "label": "consumer,scheduler",
+                                            "labelHint": "Time interval between polls for emails.",
+                                            "order": 1,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "duration"
+                                        },
+                                        "labels": {
+                                            "deprecated": false,
+                                            "displayName": "Labels",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "Comma separated list of labels that are used in the Gmail account that this connection accesses.",
+                                            "order": 2,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "markAsRead": {
+                                            "componentProperty": false,
+                                            "defaultValue": "true",
+                                            "deprecated": false,
+                                            "displayName": "Mark as read",
+                                            "group": "producer",
+                                            "javaType": "boolean",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "Indicate that returned emails have been read.",
+                                            "order": 3,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "boolean"
+                                        },
+                                        "maxResults": {
+                                            "defaultValue": "5",
+                                            "deprecated": false,
+                                            "displayName": "Max results",
+                                            "group": "producer",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "label": "producer",
+                                            "labelHint": "Maximum number of emails to return.",
+                                            "order": 4,
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "id": "io.syndesis:gmail-receive-email-connector",
+                        "name": "Receive Email",
+                        "pattern": "From"
+                    }
+                ],
+                "configuredProperties": {
+                    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+                    "applicationName": "gmail-syndesis",
+                    "authenticationType": "oauth2",
+                    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+                    "clientId": "client-id",
+                    "clientSecret": "client-secret",
+                    "googleScopes": "https://mail.google.com/",
+                    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+                    "userId": "me"
+                },
+                "dependencies": [
+                    {
+                        "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                        "type": "MAVEN"
+                    }
+                ],
+                "description": "Receive and send messages.",
+                "icon": "assets:gmail.svg",
+                "id": "gmail",
+                "name": "Gmail",
+                "properties": {
+                    "accessToken": {
+                        "deprecated": false,
+                        "displayName": "Access Token",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "path",
+                        "labelHint": "String provided by Google that authorizes access to a Gmail account.",
+                        "order": 4,
+                        "raw": true,
+                        "required": true,
+                        "secret": true,
+                        "tags": [
+                            "oauth-access-token"
+                        ],
+                        "type": "string"
+                    },
+                    "additionalOAuthQueryParameters": {
+                        "deprecated": false,
+                        "displayName": "Additional OAuth query parameters",
+                        "group": "security",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "raw": true,
+                        "required": true,
+                        "secret": false,
+                        "tags": [
+                            "oauth-additional-query-parameters"
+                        ],
+                        "type": "hidden"
+                    },
+                    "applicationName": {
+                        "deprecated": false,
+                        "displayName": "Application Name",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "labelHint": "A name that you choose as the name of an OAuth 2.0 Gmail client. This name appears in the Google developers account list of OAuth clients.",
+                        "order": 3,
+                        "raw": true,
+                        "required": true,
+                        "secret": false,
+                        "type": "string"
+                    },
+                    "authenticationType": {
+                        "componentProperty": true,
+                        "deprecated": false,
+                        "description": "The access token",
+                        "displayName": "Authorization URL",
+                        "group": "security",
+                        "javaType": "java.lang.String",
+                        "kind": "property",
+                        "label": "security",
+                        "required": false,
+                        "secret": true,
+                        "tags": [
+                            "authentication-type"
+                        ],
+                        "type": "hidden"
+                    },
+                    "authorizationUrl": {
+                        "componentProperty": true,
+                        "deprecated": false,
+                        "description": "The access token",
+                        "displayName": "Authorization URL",
+                        "group": "security",
+                        "javaType": "java.lang.String",
+                        "kind": "property",
+                        "label": "security",
+                        "required": false,
+                        "secret": true,
+                        "tags": [
+                            "oauth-authorization-url"
+                        ],
+                        "type": "hidden"
+                    },
+                    "clientId": {
+                        "deprecated": false,
+                        "displayName": "Client ID",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "labelHint": "The client ID that Google provides when you register a client application.",
+                        "order": 1,
+                        "raw": true,
+                        "required": true,
+                        "secret": false,
+                        "tags": [
+                            "oauth-client-id"
+                        ],
+                        "type": "string"
+                    },
+                    "clientSecret": {
+                        "deprecated": false,
+                        "displayName": "Client Secret",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "labelHint": "The client secret that Google provides when you register a client application.",
+                        "order": 2,
+                        "raw": true,
+                        "required": true,
+                        "secret": true,
+                        "tags": [
+                            "oauth-client-secret"
+                        ],
+                        "type": "string"
+                    },
+                    "googleScopes": {
+                        "deprecated": false,
+                        "displayName": "Scopes",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "labelHint": "UserId",
+                        "raw": true,
+                        "required": true,
+                        "secret": false,
+                        "tags": [
+                            "oauth-scope"
+                        ],
+                        "type": "hidden"
+                    },
+                    "refreshToken": {
+                        "deprecated": false,
+                        "displayName": "Refresh Token",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "path",
+                        "labelHint": "String provided by Google that enables retrieval of a new access token.",
+                        "order": 5,
+                        "raw": true,
+                        "required": true,
+                        "secret": true,
+                        "type": "string"
+                    },
+                    "tokenUrl": {
+                        "componentProperty": true,
+                        "deprecated": false,
+                        "description": "The access token",
+                        "displayName": "Token URL",
+                        "group": "security",
+                        "javaType": "java.lang.String",
+                        "kind": "property",
+                        "label": "security",
+                        "required": false,
+                        "secret": true,
+                        "tags": [
+                            "oauth-access-token-url"
+                        ],
+                        "type": "hidden"
+                    },
+                    "userId": {
+                        "deprecated": false,
+                        "displayName": "User ID",
+                        "group": "common",
+                        "javaType": "java.lang.String",
+                        "kind": "parameter",
+                        "labelHint": "Gmail account name that is associated with this registration.",
+                        "order": 6,
+                        "raw": true,
+                        "required": true,
+                        "secret": false,
+                        "type": "string"
+                    }
+                },
+                "tags": [
+                    "verifier"
+                ],
+                "version": 4
+            },
+            "connectorId": "gmail",
+            "createdDate": 1575029701480,
+            "description": "Receive and send messages.",
+            "icon": "assets:gmail.svg",
+            "id": "i-Lur4UmOJFaXprjen3d_z",
+            "isDerived": true,
+            "lastUpdated": 1575029701710,
+            "name": "Gmail",
+            "userId": "developer",
+            "uses": 0
+        },
+        ":webhook": {
+            "connector": {
+                "actions": [
+                    {
+                        "actionType": "connector",
+                        "description": "Start an integration from a Webhook",
+                        "descriptor": {
+                            "componentScheme": "servlet",
+                            "configuredProperties": {
+                                "headerFilterStrategy": "syndesisHeaderStrategy",
+                                "httpMethodRestrict": "GET,POST"
+                            },
+                            "connectorCustomizers": [
+                                "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                            ],
+                            "inputDataShape": {
+                                "kind": "none"
+                            },
+                            "outputDataShape": {
+                                "kind": "any"
+                            },
+                            "propertyDefinitionSteps": [
+                                {
+                                    "description": "Webhook Configuration",
+                                    "name": "configuration",
+                                    "properties": {
+                                        "contextPath": {
+                                            "componentProperty": false,
+                                            "deprecated": false,
+                                            "description": "The Webhook token that will be set as final part of the URL",
+                                            "displayName": "Webhook Token",
+                                            "generator": "alphanum:50",
+                                            "javaType": "String",
+                                            "kind": "parameter",
+                                            "required": true,
+                                            "secret": false,
+                                            "tags": [
+                                                "context-path"
+                                            ],
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ]
+                        },
+                        "id": "io.syndesis:webhook-incoming",
+                        "metadata": {
+                            "serverBasePath": "/webhook"
+                        },
+                        "name": "Incoming Webhook",
+                        "pattern": "From",
+                        "tags": [
+                            "expose"
+                        ]
+                    }
+                ],
+                "dependencies": [
+                    {
+                        "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                        "type": "MAVEN"
+                    }
+                ],
+                "description": "Create direct connections with external systems through Webhooks",
+                "icon": "assets:webhook.svg",
+                "id": "webhook",
+                "metadata": {
+                    "hide-from-connection-pages": "true"
+                },
+                "name": "Webhook",
+                "version": 3
+            },
+            "connectorId": "webhook",
+            "description": "Create direct connections with external systems through Webhooks",
+            "icon": "assets:webhook.svg",
+            "id": "webhook",
+            "isDerived": false,
+            "metadata": {
+                "hide-from-connection-pages": "true"
+            },
+            "name": "Webhook",
+            "uses": 0
+        }
+    },
+    "connectors": {
+        ":gmail": {
+            "actions": [
+                {
+                    "actionType": "connector",
+                    "description": "Send an email from the Gmail account that this connection is authorized to access.",
+                    "descriptor": {
+                        "componentScheme": "google-mail",
+                        "connectorCustomizers": [
+                            "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
+                        ],
+                        "inputDataShape": {
+                            "kind": "java",
+                            "name": "MailMessage",
+                            "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                            "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                        },
+                        "outputDataShape": {
+                            "kind": "none"
+                        },
+                        "propertyDefinitionSteps": [
+                            {
+                                "description": "Specify email content and addresses to send the email to. ",
+                                "name": "Send Email through Gmail",
+                                "properties": {
+                                    "bcc": {
+                                        "deprecated": false,
+                                        "displayName": "Email bcc",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                                        "order": 5,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    },
+                                    "cc": {
+                                        "deprecated": false,
+                                        "displayName": "Email cc",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                                        "order": 4,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    },
+                                    "subject": {
+                                        "deprecated": false,
+                                        "displayName": "Email subject",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "The text to insert in the subject line of the email.",
+                                        "order": 2,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    },
+                                    "text": {
+                                        "deprecated": false,
+                                        "displayName": "Email text",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "The email message that you want to send.",
+                                        "order": 3,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "textarea"
+                                    },
+                                    "to": {
+                                        "deprecated": false,
+                                        "displayName": "Email to",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "One or more comma-separated email addresses to send the email to.",
+                                        "order": 1,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "id": "io.syndesis:gmail-send-email-connector",
+                    "name": "Send Email",
+                    "pattern": "To"
+                },
+                {
+                    "actionType": "connector",
+                    "description": "Obtain email from the Gmail account that this connection is authorized to access.",
+                    "descriptor": {
+                        "componentScheme": "google-mail-stream",
+                        "connectorCustomizers": [
+                            "io.syndesis.connector.gmail.GmailReceiveEmailCustomizer"
+                        ],
+                        "inputDataShape": {
+                            "kind": "none"
+                        },
+                        "outputDataShape": {
+                            "kind": "java",
+                            "name": "MailMessage",
+                            "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                            "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                        },
+                        "propertyDefinitionSteps": [
+                            {
+                                "description": "Specify the emails that you want to obtain.",
+                                "name": "Obtain Email from Gmail",
+                                "properties": {
+                                    "delay": {
+                                        "componentProperty": false,
+                                        "defaultValue": "30000",
+                                        "deprecated": false,
+                                        "displayName": "Delay",
+                                        "group": "scheduler",
+                                        "javaType": "long",
+                                        "kind": "parameter",
+                                        "label": "consumer,scheduler",
+                                        "labelHint": "Time interval between polls for emails.",
+                                        "order": 1,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "duration"
+                                    },
+                                    "labels": {
+                                        "deprecated": false,
+                                        "displayName": "Labels",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "Comma separated list of labels that are used in the Gmail account that this connection accesses.",
+                                        "order": 2,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    },
+                                    "markAsRead": {
+                                        "componentProperty": false,
+                                        "defaultValue": "true",
+                                        "deprecated": false,
+                                        "displayName": "Mark as read",
+                                        "group": "producer",
+                                        "javaType": "boolean",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "Indicate that returned emails have been read.",
+                                        "order": 3,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "boolean"
+                                    },
+                                    "maxResults": {
+                                        "defaultValue": "5",
+                                        "deprecated": false,
+                                        "displayName": "Max results",
+                                        "group": "producer",
+                                        "javaType": "java.lang.String",
+                                        "kind": "parameter",
+                                        "label": "producer",
+                                        "labelHint": "Maximum number of emails to return.",
+                                        "order": 4,
+                                        "required": false,
+                                        "secret": false,
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "id": "io.syndesis:gmail-receive-email-connector",
+                    "name": "Receive Email",
+                    "pattern": "From"
+                }
+            ],
+            "configuredProperties": {
+                "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+                "applicationName": "gmail-syndesis",
+                "authenticationType": "oauth2",
+                "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+                "clientId": "client-id",
+                "clientSecret": "client-secret",
+                "googleScopes": "https://mail.google.com/",
+                "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+                "userId": "me"
+            },
+            "dependencies": [
+                {
+                    "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                    "type": "MAVEN"
+                }
+            ],
+            "description": "Receive and send messages.",
+            "icon": "assets:gmail.svg",
+            "id": "gmail",
+            "name": "Gmail",
+            "properties": {
+                "accessToken": {
+                    "deprecated": false,
+                    "displayName": "Access Token",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "String provided by Google that authorizes access to a Gmail account.",
+                    "order": 4,
+                    "raw": true,
+                    "required": true,
+                    "secret": true,
+                    "tags": [
+                        "oauth-access-token"
+                    ],
+                    "type": "string"
+                },
+                "additionalOAuthQueryParameters": {
+                    "deprecated": false,
+                    "displayName": "Additional OAuth query parameters",
+                    "group": "security",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "raw": true,
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                        "oauth-additional-query-parameters"
+                    ],
+                    "type": "hidden"
+                },
+                "applicationName": {
+                    "deprecated": false,
+                    "displayName": "Application Name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "A name that you choose as the name of an OAuth 2.0 Gmail client. This name appears in the Google developers account list of OAuth clients.",
+                    "order": 3,
+                    "raw": true,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                },
+                "authenticationType": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "description": "The access token",
+                    "displayName": "Authorization URL",
+                    "group": "security",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "label": "security",
+                    "required": false,
+                    "secret": true,
+                    "tags": [
+                        "authentication-type"
+                    ],
+                    "type": "hidden"
+                },
+                "authorizationUrl": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "description": "The access token",
+                    "displayName": "Authorization URL",
+                    "group": "security",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "label": "security",
+                    "required": false,
+                    "secret": true,
+                    "tags": [
+                        "oauth-authorization-url"
+                    ],
+                    "type": "hidden"
+                },
+                "clientId": {
+                    "deprecated": false,
+                    "displayName": "Client ID",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The client ID that Google provides when you register a client application.",
+                    "order": 1,
+                    "raw": true,
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                        "oauth-client-id"
+                    ],
+                    "type": "string"
+                },
+                "clientSecret": {
+                    "deprecated": false,
+                    "displayName": "Client Secret",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The client secret that Google provides when you register a client application.",
+                    "order": 2,
+                    "raw": true,
+                    "required": true,
+                    "secret": true,
+                    "tags": [
+                        "oauth-client-secret"
+                    ],
+                    "type": "string"
+                },
+                "googleScopes": {
+                    "deprecated": false,
+                    "displayName": "Scopes",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "UserId",
+                    "raw": true,
+                    "required": true,
+                    "secret": false,
+                    "tags": [
+                        "oauth-scope"
+                    ],
+                    "type": "hidden"
+                },
+                "refreshToken": {
+                    "deprecated": false,
+                    "displayName": "Refresh Token",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "String provided by Google that enables retrieval of a new access token.",
+                    "order": 5,
+                    "raw": true,
+                    "required": true,
+                    "secret": true,
+                    "type": "string"
+                },
+                "tokenUrl": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "description": "The access token",
+                    "displayName": "Token URL",
+                    "group": "security",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "label": "security",
+                    "required": false,
+                    "secret": true,
+                    "tags": [
+                        "oauth-access-token-url"
+                    ],
+                    "type": "hidden"
+                },
+                "userId": {
+                    "deprecated": false,
+                    "displayName": "User ID",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Gmail account name that is associated with this registration.",
+                    "order": 6,
+                    "raw": true,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                }
+            },
+            "tags": [
+                "verifier"
+            ],
+            "version": 4
+        },
+        ":webhook": {
+            "actions": [
+                {
+                    "actionType": "connector",
+                    "description": "Start an integration from a Webhook",
+                    "descriptor": {
+                        "componentScheme": "servlet",
+                        "configuredProperties": {
+                            "headerFilterStrategy": "syndesisHeaderStrategy",
+                            "httpMethodRestrict": "GET,POST"
+                        },
+                        "connectorCustomizers": [
+                            "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                            "kind": "none"
+                        },
+                        "outputDataShape": {
+                            "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                            {
+                                "description": "Webhook Configuration",
+                                "name": "configuration",
+                                "properties": {
+                                    "contextPath": {
+                                        "componentProperty": false,
+                                        "deprecated": false,
+                                        "description": "The Webhook token that will be set as final part of the URL",
+                                        "displayName": "Webhook Token",
+                                        "generator": "alphanum:50",
+                                        "javaType": "String",
+                                        "kind": "parameter",
+                                        "required": true,
+                                        "secret": false,
+                                        "tags": [
+                                            "context-path"
+                                        ],
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "id": "io.syndesis:webhook-incoming",
+                    "metadata": {
+                        "serverBasePath": "/webhook"
+                    },
+                    "name": "Incoming Webhook",
+                    "pattern": "From",
+                    "tags": [
+                        "expose"
+                    ]
+                }
+            ],
+            "dependencies": [
+                {
+                    "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                    "type": "MAVEN"
+                }
+            ],
+            "description": "Create direct connections with external systems through Webhooks",
+            "icon": "assets:webhook.svg",
+            "id": "webhook",
+            "metadata": {
+                "hide-from-connection-pages": "true"
+            },
+            "name": "Webhook",
+            "version": 3
+        }
+    },
+    "integrations": {
+        ":i-Lur5ARTJFaXprjen3dbz": {
+            "createdAt": 1575029880606,
+            "flows": [
+                {
+                    "id": "-Lur4VqMg_XtOJittAbk",
+                    "steps": [
+                        {
+                            "action": {
+                                "actionType": "connector",
+                                "description": "Start an integration from a Webhook",
+                                "descriptor": {
+                                    "componentScheme": "servlet",
+                                    "configuredProperties": {
+                                        "headerFilterStrategy": "syndesisHeaderStrategy",
+                                        "httpMethodRestrict": "GET,POST"
+                                    },
+                                    "connectorCustomizers": [
+                                        "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                                    ],
+                                    "inputDataShape": {
+                                        "kind": "none"
+                                    },
+                                    "outputDataShape": {
+                                        "kind": "json-instance",
+                                        "metadata": {
+                                            "userDefined": "true"
+                                        },
+                                        "name": "mail",
+                                        "specification": "{\n  \"subject\": \"REQUEST FOR ASSISTANCE-STRICTLY CONFIDENTIAL\",\n  \"message\": \"I am Dr. Bakare Tunde, the cousin of Nigerian Astronaut, Air Force Major Abacha Tunde\"\n}"
+                                    },
+                                    "propertyDefinitionSteps": [
+                                        {
+                                            "description": "Webhook Configuration",
+                                            "name": "configuration",
+                                            "properties": {
+                                                "contextPath": {
+                                                    "componentProperty": false,
+                                                    "defaultValue": "f3N9GoMKLkEvV3D01JKIPKPx9hHF8ZTvIjvCXIo79NQShSBxEn",
+                                                    "deprecated": false,
+                                                    "description": "The Webhook token that will be set as final part of the URL",
+                                                    "displayName": "Webhook Token",
+                                                    "generator": "alphanum:50",
+                                                    "javaType": "String",
+                                                    "kind": "parameter",
+                                                    "required": true,
+                                                    "secret": false,
+                                                    "tags": [
+                                                        "context-path"
+                                                    ],
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "id": "io.syndesis:webhook-incoming",
+                                "metadata": {
+                                    "serverBasePath": "/webhook"
+                                },
+                                "name": "Incoming Webhook",
+                                "pattern": "From",
+                                "tags": [
+                                    "expose"
+                                ]
+                            },
+                            "configuredProperties": {
+                                "contextPath": "token"
+                            },
+                            "connection": {
+                                "connector": {
+                                    "actions": [
+                                        {
+                                            "actionType": "connector",
+                                            "description": "Start an integration from a Webhook",
+                                            "descriptor": {
+                                                "componentScheme": "servlet",
+                                                "configuredProperties": {
+                                                    "headerFilterStrategy": "syndesisHeaderStrategy",
+                                                    "httpMethodRestrict": "GET,POST"
+                                                },
+                                                "connectorCustomizers": [
+                                                    "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
+                                                ],
+                                                "inputDataShape": {
+                                                    "kind": "none"
+                                                },
+                                                "outputDataShape": {
+                                                    "kind": "any"
+                                                },
+                                                "propertyDefinitionSteps": [
+                                                    {
+                                                        "description": "Webhook Configuration",
+                                                        "name": "configuration",
+                                                        "properties": {
+                                                            "contextPath": {
+                                                                "componentProperty": false,
+                                                                "deprecated": false,
+                                                                "description": "The Webhook token that will be set as final part of the URL",
+                                                                "displayName": "Webhook Token",
+                                                                "generator": "alphanum:50",
+                                                                "javaType": "String",
+                                                                "kind": "parameter",
+                                                                "required": true,
+                                                                "secret": false,
+                                                                "tags": [
+                                                                    "context-path"
+                                                                ],
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "id": "io.syndesis:webhook-incoming",
+                                            "metadata": {
+                                                "serverBasePath": "/webhook"
+                                            },
+                                            "name": "Incoming Webhook",
+                                            "pattern": "From",
+                                            "tags": [
+                                                "expose"
+                                            ]
+                                        }
+                                    ],
+                                    "dependencies": [
+                                        {
+                                            "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                                            "type": "MAVEN"
+                                        }
+                                    ],
+                                    "description": "Create direct connections with external systems through Webhooks",
+                                    "icon": "assets:webhook.svg",
+                                    "id": "webhook",
+                                    "metadata": {
+                                        "hide-from-connection-pages": "true"
+                                    },
+                                    "name": "Webhook",
+                                    "version": 3
+                                },
+                                "connectorId": "webhook",
+                                "description": "Create direct connections with external systems through Webhooks",
+                                "icon": "assets:webhook.svg",
+                                "id": "webhook",
+                                "isDerived": false,
+                                "metadata": {
+                                    "hide-from-connection-pages": "true"
+                                },
+                                "name": "Webhook",
+                                "uses": 0
+                            },
+                            "id": "-Lur4zZpg_XtOJittAbk",
+                            "metadata": {
+                                "configured": "true"
+                            },
+                            "stepKind": "endpoint"
+                        },
+                        {
+                            "action": {
+                                "actionType": "step",
+                                "descriptor": {
+                                    "inputDataShape": {
+                                        "kind": "any",
+                                        "name": "All preceding outputs"
+                                    },
+                                    "outputDataShape": {
+                                        "kind": "java",
+                                        "name": "MailMessage",
+                                        "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                        "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                                    }
+                                }
+                            },
+                            "configuredProperties": {
+                                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-Lur4zZpg_XtOJittAbk\",\"uri\":\"atlas:json:-Lur4zZpg_XtOJittAbk\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.v2.DataSource\",\"id\":\"-Lur52Cqg_XtOJittAbk\",\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"dataSourceType\":\"TARGET\"}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.849784\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"message\",\"path\":\"/message\",\"fieldType\":\"STRING\",\"docId\":\"-Lur4zZpg_XtOJittAbk\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"text\",\"path\":\"/text\",\"fieldType\":\"STRING\",\"docId\":\"-Lur52Cqg_XtOJittAbk\"}]},{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"id\":\"mapping.123901\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"-Lur4zZpg_XtOJittAbk\",\"userCreated\":false}],\"outputField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"name\":\"subject\",\"path\":\"/subject\",\"fieldType\":\"STRING\",\"docId\":\"-Lur52Cqg_XtOJittAbk\"}]}]},\"name\":\"UI.569832\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+                            },
+                            "id": "-Lur56wog_XtOJittAbk",
+                            "metadata": {
+                                "configured": "true"
+                            },
+                            "name": "Data Mapper",
+                            "stepKind": "mapper"
+                        },
+                        {
+                            "action": {
+                                "actionType": "connector",
+                                "description": "Send an email from the Gmail account that this connection is authorized to access.",
+                                "descriptor": {
+                                    "componentScheme": "google-mail",
+                                    "connectorCustomizers": [
+                                        "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
+                                    ],
+                                    "inputDataShape": {
+                                        "kind": "java",
+                                        "name": "MailMessage",
+                                        "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                        "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                                    },
+                                    "outputDataShape": {
+                                        "kind": "none"
+                                    },
+                                    "propertyDefinitionSteps": [
+                                        {
+                                            "description": "Specify email content and addresses to send the email to. ",
+                                            "name": "Send Email through Gmail",
+                                            "properties": {
+                                                "bcc": {
+                                                    "deprecated": false,
+                                                    "displayName": "Email bcc",
+                                                    "group": "producer",
+                                                    "javaType": "java.lang.String",
+                                                    "kind": "parameter",
+                                                    "label": "producer",
+                                                    "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                                                    "order": 5,
+                                                    "required": false,
+                                                    "secret": false,
+                                                    "type": "string"
+                                                },
+                                                "cc": {
+                                                    "deprecated": false,
+                                                    "displayName": "Email cc",
+                                                    "group": "producer",
+                                                    "javaType": "java.lang.String",
+                                                    "kind": "parameter",
+                                                    "label": "producer",
+                                                    "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                                                    "order": 4,
+                                                    "required": false,
+                                                    "secret": false,
+                                                    "type": "string"
+                                                },
+                                                "subject": {
+                                                    "deprecated": false,
+                                                    "displayName": "Email subject",
+                                                    "group": "producer",
+                                                    "javaType": "java.lang.String",
+                                                    "kind": "parameter",
+                                                    "label": "producer",
+                                                    "labelHint": "The text to insert in the subject line of the email.",
+                                                    "order": 2,
+                                                    "required": false,
+                                                    "secret": false,
+                                                    "type": "string"
+                                                },
+                                                "text": {
+                                                    "deprecated": false,
+                                                    "displayName": "Email text",
+                                                    "group": "producer",
+                                                    "javaType": "java.lang.String",
+                                                    "kind": "parameter",
+                                                    "label": "producer",
+                                                    "labelHint": "The email message that you want to send.",
+                                                    "order": 3,
+                                                    "required": false,
+                                                    "secret": false,
+                                                    "type": "textarea"
+                                                },
+                                                "to": {
+                                                    "deprecated": false,
+                                                    "displayName": "Email to",
+                                                    "group": "producer",
+                                                    "javaType": "java.lang.String",
+                                                    "kind": "parameter",
+                                                    "label": "producer",
+                                                    "labelHint": "One or more comma-separated email addresses to send the email to.",
+                                                    "order": 1,
+                                                    "required": false,
+                                                    "secret": false,
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    ]
+                                },
+                                "id": "io.syndesis:gmail-send-email-connector",
+                                "name": "Send Email",
+                                "pattern": "To"
+                            },
+                            "configuredProperties": {
+                                "to": "all@internet.com"
+                            },
+                            "connection": {
+                                "configuredProperties": {
+                                    "accessToken": "access-token",
+                                    "accessTokenExpiresAt": "1576608318164489",
+                                    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+                                    "applicationName": "gmail-syndesis",
+                                    "authenticationType": "oauth2",
+                                    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+                                    "clientId": "client-id",
+                                    "clientSecret": "client-secret",
+                                    "googleScopes": "https://mail.google.com/",
+                                    "refreshToken": "refresh-token",
+                                    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+                                    "userId": "me"
+                                },
+                                "connector": {
+                                    "actions": [
+                                        {
+                                            "actionType": "connector",
+                                            "description": "Send an email from the Gmail account that this connection is authorized to access.",
+                                            "descriptor": {
+                                                "componentScheme": "google-mail",
+                                                "connectorCustomizers": [
+                                                    "io.syndesis.connector.gmail.GmailSendEmailCustomizer"
+                                                ],
+                                                "inputDataShape": {
+                                                    "kind": "java",
+                                                    "name": "MailMessage",
+                                                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                                    "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                                                },
+                                                "outputDataShape": {
+                                                    "kind": "none"
+                                                },
+                                                "propertyDefinitionSteps": [
+                                                    {
+                                                        "description": "Specify email content and addresses to send the email to. ",
+                                                        "name": "Send Email through Gmail",
+                                                        "properties": {
+                                                            "bcc": {
+                                                                "deprecated": false,
+                                                                "displayName": "Email bcc",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                                                                "order": 5,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            },
+                                                            "cc": {
+                                                                "deprecated": false,
+                                                                "displayName": "Email cc",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                                                                "order": 4,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            },
+                                                            "subject": {
+                                                                "deprecated": false,
+                                                                "displayName": "Email subject",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "The text to insert in the subject line of the email.",
+                                                                "order": 2,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            },
+                                                            "text": {
+                                                                "deprecated": false,
+                                                                "displayName": "Email text",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "The email message that you want to send.",
+                                                                "order": 3,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "textarea"
+                                                            },
+                                                            "to": {
+                                                                "deprecated": false,
+                                                                "displayName": "Email to",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "One or more comma-separated email addresses to send the email to.",
+                                                                "order": 1,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "id": "io.syndesis:gmail-send-email-connector",
+                                            "name": "Send Email",
+                                            "pattern": "To"
+                                        },
+                                        {
+                                            "actionType": "connector",
+                                            "description": "Obtain email from the Gmail account that this connection is authorized to access.",
+                                            "descriptor": {
+                                                "componentScheme": "google-mail-stream",
+                                                "connectorCustomizers": [
+                                                    "io.syndesis.connector.gmail.GmailReceiveEmailCustomizer"
+                                                ],
+                                                "inputDataShape": {
+                                                    "kind": "none"
+                                                },
+                                                "outputDataShape": {
+                                                    "kind": "java",
+                                                    "name": "MailMessage",
+                                                    "specification": "{\"JavaClass\":{\"jsonType\":\"io.atlasmap.java.v2.JavaClass\",\"collectionType\":\"NONE\",\"path\":\"/\",\"fieldType\":\"COMPLEX\",\"modifiers\":{\"modifier\":[\"PUBLIC\"]},\"className\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"canonicalClassName\":\"io.syndesis.connector.gmail.GmailMessageModel\",\"primitive\":false,\"synthetic\":false,\"javaEnumFields\":{\"javaEnumField\":[]},\"javaFields\":{\"javaField\":[{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/text\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"text\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getText\",\"setMethod\":\"setText\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/subject\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"subject\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getSubject\",\"setMethod\":\"setSubject\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/to\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"to\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getTo\",\"setMethod\":\"setTo\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/cc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"cc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getCc\",\"setMethod\":\"setCc\",\"primitive\":true,\"synthetic\":false},{\"jsonType\":\"io.atlasmap.java.v2.JavaField\",\"path\":\"/bcc\",\"status\":\"SUPPORTED\",\"fieldType\":\"STRING\",\"modifiers\":{\"modifier\":[\"PRIVATE\"]},\"name\":\"bcc\",\"className\":\"java.lang.String\",\"canonicalClassName\":\"java.lang.String\",\"getMethod\":\"getBcc\",\"setMethod\":\"setBcc\",\"primitive\":true,\"synthetic\":false}]},\"packageName\":\"io.syndesis.connector.gmail\",\"annotation\":false,\"annonymous\":false,\"enumeration\":false,\"localClass\":false,\"memberClass\":false,\"uri\":\"atlas:java?className=io.syndesis.connector.gmail.GmailMessageModel\",\"interface\":false}}",
+                                                    "type": "io.syndesis.connector.gmail.GmailMessageModel"
+                                                },
+                                                "propertyDefinitionSteps": [
+                                                    {
+                                                        "description": "Specify the emails that you want to obtain.",
+                                                        "name": "Obtain Email from Gmail",
+                                                        "properties": {
+                                                            "delay": {
+                                                                "componentProperty": false,
+                                                                "defaultValue": "30000",
+                                                                "deprecated": false,
+                                                                "displayName": "Delay",
+                                                                "group": "scheduler",
+                                                                "javaType": "long",
+                                                                "kind": "parameter",
+                                                                "label": "consumer,scheduler",
+                                                                "labelHint": "Time interval between polls for emails.",
+                                                                "order": 1,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "duration"
+                                                            },
+                                                            "labels": {
+                                                                "deprecated": false,
+                                                                "displayName": "Labels",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "Comma separated list of labels that are used in the Gmail account that this connection accesses.",
+                                                                "order": 2,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            },
+                                                            "markAsRead": {
+                                                                "componentProperty": false,
+                                                                "defaultValue": "true",
+                                                                "deprecated": false,
+                                                                "displayName": "Mark as read",
+                                                                "group": "producer",
+                                                                "javaType": "boolean",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "Indicate that returned emails have been read.",
+                                                                "order": 3,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "boolean"
+                                                            },
+                                                            "maxResults": {
+                                                                "defaultValue": "5",
+                                                                "deprecated": false,
+                                                                "displayName": "Max results",
+                                                                "group": "producer",
+                                                                "javaType": "java.lang.String",
+                                                                "kind": "parameter",
+                                                                "label": "producer",
+                                                                "labelHint": "Maximum number of emails to return.",
+                                                                "order": 4,
+                                                                "required": false,
+                                                                "secret": false,
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                ]
+                                            },
+                                            "id": "io.syndesis:gmail-receive-email-connector",
+                                            "name": "Receive Email",
+                                            "pattern": "From"
+                                        }
+                                    ],
+                                    "configuredProperties": {
+                                        "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+                                        "applicationName": "gmail-syndesis",
+                                        "authenticationType": "oauth2",
+                                        "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+                                        "clientId": "client-id",
+                                        "clientSecret": "client-secret",
+                                        "googleScopes": "https://mail.google.com/",
+                                        "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+                                        "userId": "me"
+                                    },
+                                    "dependencies": [
+                                        {
+                                            "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                                            "type": "MAVEN"
+                                        }
+                                    ],
+                                    "description": "Receive and send messages.",
+                                    "icon": "assets:gmail.svg",
+                                    "id": "gmail",
+                                    "name": "Gmail",
+                                    "properties": {
+                                        "accessToken": {
+                                            "deprecated": false,
+                                            "displayName": "Access Token",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "path",
+                                            "labelHint": "String provided by Google that authorizes access to a Gmail account.",
+                                            "order": 4,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": true,
+                                            "tags": [
+                                                "oauth-access-token"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "additionalOAuthQueryParameters": {
+                                            "deprecated": false,
+                                            "displayName": "Additional OAuth query parameters",
+                                            "group": "security",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": false,
+                                            "tags": [
+                                                "oauth-additional-query-parameters"
+                                            ],
+                                            "type": "hidden"
+                                        },
+                                        "applicationName": {
+                                            "deprecated": false,
+                                            "displayName": "Application Name",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "A name that you choose as the name of an OAuth 2.0 Gmail client. This name appears in the Google developers account list of OAuth clients.",
+                                            "order": 3,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "authenticationType": {
+                                            "componentProperty": true,
+                                            "deprecated": false,
+                                            "description": "The access token",
+                                            "displayName": "Authorization URL",
+                                            "group": "security",
+                                            "javaType": "java.lang.String",
+                                            "kind": "property",
+                                            "label": "security",
+                                            "required": false,
+                                            "secret": true,
+                                            "tags": [
+                                                "authentication-type"
+                                            ],
+                                            "type": "hidden"
+                                        },
+                                        "authorizationUrl": {
+                                            "componentProperty": true,
+                                            "deprecated": false,
+                                            "description": "The access token",
+                                            "displayName": "Authorization URL",
+                                            "group": "security",
+                                            "javaType": "java.lang.String",
+                                            "kind": "property",
+                                            "label": "security",
+                                            "required": false,
+                                            "secret": true,
+                                            "tags": [
+                                                "oauth-authorization-url"
+                                            ],
+                                            "type": "hidden"
+                                        },
+                                        "clientId": {
+                                            "deprecated": false,
+                                            "displayName": "Client ID",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "The client ID that Google provides when you register a client application.",
+                                            "order": 1,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": false,
+                                            "tags": [
+                                                "oauth-client-id"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "clientSecret": {
+                                            "deprecated": false,
+                                            "displayName": "Client Secret",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "The client secret that Google provides when you register a client application.",
+                                            "order": 2,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": true,
+                                            "tags": [
+                                                "oauth-client-secret"
+                                            ],
+                                            "type": "string"
+                                        },
+                                        "googleScopes": {
+                                            "deprecated": false,
+                                            "displayName": "Scopes",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "UserId",
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": false,
+                                            "tags": [
+                                                "oauth-scope"
+                                            ],
+                                            "type": "hidden"
+                                        },
+                                        "refreshToken": {
+                                            "deprecated": false,
+                                            "displayName": "Refresh Token",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "path",
+                                            "labelHint": "String provided by Google that enables retrieval of a new access token.",
+                                            "order": 5,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": true,
+                                            "type": "string"
+                                        },
+                                        "tokenUrl": {
+                                            "componentProperty": true,
+                                            "deprecated": false,
+                                            "description": "The access token",
+                                            "displayName": "Token URL",
+                                            "group": "security",
+                                            "javaType": "java.lang.String",
+                                            "kind": "property",
+                                            "label": "security",
+                                            "required": false,
+                                            "secret": true,
+                                            "tags": [
+                                                "oauth-access-token-url"
+                                            ],
+                                            "type": "hidden"
+                                        },
+                                        "userId": {
+                                            "deprecated": false,
+                                            "displayName": "User ID",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "Gmail account name that is associated with this registration.",
+                                            "order": 6,
+                                            "raw": true,
+                                            "required": true,
+                                            "secret": false,
+                                            "type": "string"
+                                        }
+                                    },
+                                    "tags": [
+                                        "verifier"
+                                    ],
+                                    "version": 4
+                                },
+                                "connectorId": "gmail",
+                                "createdDate": 1575029701480,
+                                "description": "Receive and send messages.",
+                                "icon": "assets:gmail.svg",
+                                "id": "i-Lur4UmOJFaXprjen3d_z",
+                                "isDerived": true,
+                                "lastUpdated": 1575029701710,
+                                "name": "Gmail",
+                                "userId": "developer",
+                                "uses": 0
+                            },
+                            "id": "-Lur52Cqg_XtOJittAbk",
+                            "metadata": {
+                                "configured": "true"
+                            },
+                            "stepKind": "endpoint"
+                        }
+                    ],
+                    "tags": [
+                        "i-Lur4UmOJFaXprjen3d_z",
+                        "webhook"
+                    ],
+                    "type": "PRIMARY"
+                }
+            ],
+            "id": "i-Lur5ARTJFaXprjen3dbz",
+            "name": "webhook-to-gmail",
+            "tags": [
+                "gmail",
+                "webhook"
+            ],
+            "updatedAt": 0,
+            "version": 1
+        }
+    }
+}

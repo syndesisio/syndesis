@@ -28,7 +28,6 @@
   <name>Connector :: Gmail</name>
   <packaging>jar</packaging>
 
-
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -76,7 +75,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-gmail</artifactId>
-      <version>v1-rev20190602-1.30.1</version>
+      <version>v1-rev81-1.22.0</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
