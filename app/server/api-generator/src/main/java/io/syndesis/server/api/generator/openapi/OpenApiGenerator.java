@@ -65,6 +65,9 @@ public class OpenApiGenerator implements APIGenerator {
 
     private static final String HTTP_RESPONSE_CODE_PROPERTY = "httpResponseCode";
 
+    private final Oas20FlowGenerator oas20FlowGenerator = new Oas20FlowGenerator();
+    private final Oas30FlowGenerator oas30FlowGenerator = new Oas30FlowGenerator();
+
     @Override
     @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     public APIIntegration generateIntegration(final String specification, final ProvidedApiTemplate template) {
@@ -83,10 +86,10 @@ public class OpenApiGenerator implements APIGenerator {
 
         switch (info.getApiVersion()) {
             case V2:
-                new Oas20FlowGenerator().generateFlows(info.getV2Model(), integration, info, template);
+                oas20FlowGenerator.generateFlows(info.getV2Model(), integration, info, template);
                 break;
             case V3:
-                new Oas30FlowGenerator().generateFlows(info.getV3Model(), integration, info, template);
+                oas30FlowGenerator.generateFlows(info.getV3Model(), integration, info, template);
                 break;
             default:
                 throw new IllegalStateException(String.format("Unable to retrieve integration flow generator for OpenAPI document type '%s'", openApiDoc.getClass()));

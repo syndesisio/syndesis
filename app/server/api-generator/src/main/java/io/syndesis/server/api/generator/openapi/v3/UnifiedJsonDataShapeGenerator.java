@@ -40,7 +40,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-@SuppressWarnings("PMD.GodClass")
 class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Document, Oas30Operation> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
     private static final Predicate<Oas30Response> RESPONSE_HAS_SCHEMA = response -> Oas30ModelHelper.getSchema(response, APPLICATION_JSON) != null;

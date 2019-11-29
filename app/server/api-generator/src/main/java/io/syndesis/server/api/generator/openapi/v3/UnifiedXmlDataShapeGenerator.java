@@ -40,7 +40,6 @@ import org.dom4j.Element;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-@SuppressWarnings("PMD.GodClass")
 class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Document, Oas30Operation, Oas30Response> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
     @Override

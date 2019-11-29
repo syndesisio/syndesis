@@ -90,7 +90,7 @@ public final class OpenApiModelParser {
                     .property("")
                     .error("unsupported-version")
                     .message(String.format("This document cannot be uploaded. " +
-                        "Please provide an OpenAPI document (supported versions are %s).", OpenApiVersion.getSupportedVersions()))
+                        "Provide an OpenAPI document (supported versions are %s).", OpenApiVersion.getSupportedVersions()))
                     .build())
                 .build();
         }

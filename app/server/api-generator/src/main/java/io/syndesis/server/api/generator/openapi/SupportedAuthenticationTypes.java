@@ -98,6 +98,7 @@ public enum SupportedAuthenticationTypes {
     }
 
     private static boolean oauthFlow(final String scheme) {
-        return "accessCode".equals(scheme);
+        return "accessCode".equals(scheme) ||  //OpenAPI 2.x
+            "authorizationCode".equals(scheme);  //OpenAPI 3.x
     }
 }

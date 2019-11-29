@@ -87,14 +87,14 @@ public class OpenApiModelParserTest {
     @Test
     public void shouldReportIssuesWithUnsupportedV2Versions() {
         final OpenApiModelInfo validated = OpenApiModelParser.parse(
-            "{\"swagger\": \"3.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            "{\"swagger\": \"1.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).containsOnly(new Violation.Builder()
             .property("")
             .error("unsupported-version")
-            .message("This document cannot be uploaded. Please provide an OpenAPI document (supported versions are 2.0, 3.0).")
+            .message("This document cannot be uploaded. Provide an OpenAPI document (supported versions are 2.0, 3.0).")
             .build());
     }
 
@@ -111,14 +111,14 @@ public class OpenApiModelParserTest {
     @Test
     public void shouldReportIssuesWithUnsupportedV3Versions() {
         final OpenApiModelInfo validated = OpenApiModelParser.parse(
-            "{\"openapi\": \"0.0.3\", \"info\": { \"title\": \"test\", \"description\": \"\", \"version\": \"0.0.1\" }, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            "{\"openapi\": \"4.0\", \"info\": { \"title\": \"test\", \"description\": \"\", \"version\": \"0.0.1\" }, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
             APIValidationContext.CONSUMED_API);
 
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).containsOnly(new Violation.Builder()
             .property("")
             .error("unsupported-version")
-            .message("This document cannot be uploaded. Please provide an OpenAPI document (supported versions are 2.0, 3.0).")
+            .message("This document cannot be uploaded. Provide an OpenAPI document (supported versions are 2.0, 3.0).")
             .build());
     }
 
