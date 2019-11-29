@@ -17,9 +17,11 @@ package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
+import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -37,6 +39,7 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import io.syndesis.server.api.generator.openapi.util.XmlSchemaHelper;
 import org.dom4j.Element;
 
+import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -69,6 +72,19 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
     @Override
     protected Oas20Schema getSchema(Oas20Response response) {
         return response.schema;
+    }
+
+    @Override
+    public Optional<NameAndSchema> findBodySchema(Oas20Operation operation) {
+        Optional<OasParameter> maybeBody = Oas20ModelHelper.findBodyParameter(operation);
+
+        if (maybeBody.isPresent()) {
+            OasParameter body = maybeBody.get();
+            String name = ofNullable(body.getName()).orElse(body.description);
+            return Optional.of(new NameAndSchema(name, (OasSchema) body.schema));
+        }
+
+        return empty();
     }
 
     @Override

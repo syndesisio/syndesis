@@ -25,7 +25,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -40,17 +39,15 @@ public abstract class UnifiedJsonDataShapeSupport<T extends OasDocument, O exten
 
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
 
-    protected ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final OasOperation operation) {
-        final Optional<OasParameter> maybeRequestBody = findBodyParameter(operation);
+    protected ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final O operation) {
+        final Optional<NameAndSchema> maybeRequestBody = findBodySchema(operation);
 
         if (!maybeRequestBody.isPresent()) {
             return null;
         }
 
-        final OasParameter requestBody = maybeRequestBody.get();
-
-        final OasSchema requestSchema = (OasSchema) requestBody.schema;
-        final String name = Optional.ofNullable(requestBody.getName()).orElse(requestBody.description);
+        final OasSchema requestSchema = maybeRequestBody.get().schema;
+        final String name = maybeRequestBody.get().name;
 
         return createSchemaFromModel(json, name, requestSchema);
     }

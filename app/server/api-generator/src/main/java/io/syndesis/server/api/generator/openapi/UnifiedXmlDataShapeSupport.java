@@ -25,7 +25,6 @@ import java.util.function.Predicate;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.models.OasXML;
@@ -169,15 +168,13 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
 
     private Element createRequestBodySchema(final T openApiDoc, final O operation,
                                               final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<OasParameter> bodyParameter = findBodyParameter(operation);
+        final Optional<NameAndSchema> maybeBodySchema = findBodySchema(operation);
 
-        if (!bodyParameter.isPresent()) {
+        if (!maybeBodySchema.isPresent()) {
             return null;
         }
 
-        final OasParameter body = bodyParameter.get();
-
-        final OasSchema bodySchema = (OasSchema) body.schema;
+        final OasSchema bodySchema = maybeBodySchema.get().schema;
 
         final OasSchema bodySchemaToUse;
         if (OasModelHelper.isReferenceType(bodySchema)) {

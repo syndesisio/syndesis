@@ -22,8 +22,8 @@ import java.util.function.Predicate;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasResponse;
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 
@@ -45,20 +45,25 @@ public interface DataShapeGenerator<T extends OasDocument, O extends OasOperatio
     DataShape createShapeFromResponse(ObjectNode json, T openApiDoc, O operation);
 
     /**
-     * Find parameter that is specified to live in the body.
-     * @param operation holding some parameters.
-     * @return the body parameter.
+     * Find schema that is specified to define the body if any.
+     * @param operation maybe holding a body schema.
+     * @return the body schema.
      */
-    default Optional<OasParameter> findBodyParameter(final OasOperation operation) {
-        if (operation.parameters == null) {
-            return Optional.empty();
+    default Optional<NameAndSchema> findBodySchema(final O operation) {
+        return Optional.empty();
+    }
+
+    /**
+     * Combination of schema and name for request body.
+     */
+    class NameAndSchema {
+        protected final String name;
+        protected final OasSchema schema;
+
+        public NameAndSchema(String name, OasSchema schema) {
+            this.name = name;
+            this.schema = schema;
         }
-
-        final List<OasParameter> operationParameters = operation.parameters;
-
-        return operationParameters.stream()
-            .filter(p -> "body".equals(p.in) && p.schema != null)
-            .findFirst();
     }
 
     /**
