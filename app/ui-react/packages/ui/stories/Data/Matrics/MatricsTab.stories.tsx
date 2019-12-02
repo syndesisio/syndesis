@@ -1,38 +1,43 @@
-import { useVirtualization } from '@syndesis/api';
-import { DvMetricsContainer, PageSection } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { action } from '@storybook/addon-actions';
+import { text } from '@storybook/addon-knobs';
+import { withKnobs } from '@storybook/addon-knobs';
+import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import {
-  IVirtualizationEditorPageRouteParams,
-  IVirtualizationEditorPageRouteState,
-  VirtualizationEditorPage,
-} from './VirtualizationEditorPage';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { DvMetricsContainer } from '../../../src';
 
-/**
- * A page that displays virtualization publish state and history.
- */
-export const VirtualizationMetricsPage: React.FunctionComponent = () => {
-  /**
-   * Hook to obtain route params and history.
-   */
-  const { params, state } = useRouteData<
-    IVirtualizationEditorPageRouteParams,
-    IVirtualizationEditorPageRouteState
-  >();
+const stories = storiesOf('Data/Matrics/MatricsTab', module);
+stories.addDecorator(withKnobs);
 
-  /**
-   * Hook to obtain the virtualization being edited. Also does polling to get virtualization descriptor updates.
-   */
-  const { model: virtualization } = useVirtualization(params.virtualizationId);
+const title = 'No metrics data available';
+const description = 'There is no Metrics details available for this virtualization.';
 
-  return (
-    <VirtualizationEditorPage
-      routeParams={params}
-      routeState={state}
-      virtualization={virtualization}
-    >
-      <PageSection>
-        {virtualization.publishedState === 'RUNNING' ? 
+const storyNotes =
+  '- Verify the cards Are shown.' +
+  '\n' +
+  '- Verify Client Sessions card is shown.' +
+  '\n' +
+  '- Verify the Total Request card is shown.' +
+  '\n' +
+  '- Verify Cache hit ratios card is shown.' +
+  '\n'+
+  '- Verify Uptime Card is shown.';
+
+
+stories
+.add(
+'Empty Matrics State',
+  () => (
+    <DvMetricsContainer
+      i18nNoDataTitle={title}
+      i18nNoDataDescription={description}
+      />
+  ),
+  { notes: 'Check If the Empty state message is shown.' }
+)
+.add(
+    'Matrics Tab',
+      () => (
         <DvMetricsContainer
         cacheHitProps={{
           a11yInfoCloseButton: 'Close info popover',
@@ -74,14 +79,6 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
           loading: false,
         }}
       />
-      :
-      <DvMetricsContainer
-      i18nNoDataTitle={'No metrics data available'}
-      i18nNoDataDescription={'There is no Metrics details available for this virtualization.'}
-      />
-    }
-        
-      </PageSection>
-    </VirtualizationEditorPage>
-  );
-};
+      ),
+      { notes: storyNotes }
+    );

@@ -1,9 +1,14 @@
 import {
+  Bullseye,
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
   Flex,
   FlexItem,
   Text,
   TextContent,
   TextVariants,
+  Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { DvCacheHitMetric, IDvCacheHitMetricProps } from './DvCacheHitMetric';
@@ -25,7 +30,8 @@ import { DvUptimeMetric, IDvUptimeMetricProps } from './DvUptimeMetric';
 export interface IDvMetricsContainer {
   cacheHitProps?: IDvCacheHitMetricProps;
   clientSessionProps?: IDvClientSessionMetricProps;
-  i18nNoData: string;
+  i18nNoDataTitle: string;
+  i18nNoDataDescription: string;
   requestProps?: IDvRequestMetricProps;
   uptimeProps?: IDvUptimeMetricProps;
 }
@@ -66,8 +72,17 @@ export const DvMetricsContainer: React.FunctionComponent<
   }
 
   return (
-    <TextContent>
-      <Text component={TextVariants.small}>{props.i18nNoData}</Text>
-    </TextContent>
+    <Bullseye>
+      <EmptyState variant={EmptyStateVariant.small}>
+        <Title headingLevel="h2" size="lg">
+         {props.i18nNoDataTitle}
+        </Title>
+        <EmptyStateBody>
+          <TextContent>
+            <Text component={TextVariants.small}>{props.i18nNoDataDescription}</Text>
+          </TextContent>
+        </EmptyStateBody>
+      </EmptyState>
+    </Bullseye>
   );
 };
