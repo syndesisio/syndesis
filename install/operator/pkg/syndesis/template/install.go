@@ -149,7 +149,6 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	cf.SetConfigurationFromEnvVars(config, syndesis)
 
 	ifMissingSet(&syndesis.Spec.OpenShiftMaster, cf.DefaultValue(cf.EnvOpenShiftMaster))
-	ifMissingSet(&syndesis.Spec.Components.Db.ImageStreamNamespace, cf.DefaultValue(cf.EnvPostgresqlImageStreamNamespace))
 	ifMissingSet(&syndesis.Spec.Components.Db.User, cf.DefaultValue(cf.EnvPostgresqlUser))
 	ifMissingSet(&syndesis.Spec.Components.Db.Database, cf.DefaultValue(cf.EnvPostgresqlDatabase))
 
@@ -175,6 +174,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 
 	ifMissingSet(&syndesis.Spec.Registry, renderContext.Registry)
 	ifMissingSet(&syndesis.Spec.Components.Meta.Registry, syndesis.Spec.Registry)
+	ifMissingSet(&syndesis.Spec.Components.Db.Registry, syndesis.Spec.Registry)
 	ifMissingSet(&syndesis.Spec.Components.Server.Registry, syndesis.Spec.Registry)
 	ifMissingSet(&syndesis.Spec.Components.UI.Registry, syndesis.Spec.Registry)
 	ifMissingSet(&syndesis.Spec.Components.S2I.Registry, syndesis.Spec.Registry)
@@ -183,6 +183,7 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.Registry, syndesis.Spec.Registry)
 
 	ifMissingSet(&syndesis.Spec.Components.ImagePrefix, renderContext.Images.SyndesisImagesPrefix)
+	ifMissingSet(&syndesis.Spec.Components.Db.ImagePrefix, renderContext.Images.PostgresqlImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Meta.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Server.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.UI.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
@@ -190,6 +191,8 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(&syndesis.Spec.Components.Upgrade.ImagePrefix, syndesis.Spec.Components.ImagePrefix)
 	ifMissingSet(&syndesis.Spec.Components.Komodo.ImagePrefix, renderContext.Images.KomodoImagesPrefix)
 	ifMissingSet(&syndesis.Spec.Components.PostgresExporter.ImagePrefix, renderContext.Images.PostgresExporterImagePrefix)
+
+	ifMissingSet(&syndesis.Spec.Components.Db.Image, renderContext.Images.Support.Postgresql)
 
 	if syndesis.Spec.DeployIntegrations == nil {
 		v := true

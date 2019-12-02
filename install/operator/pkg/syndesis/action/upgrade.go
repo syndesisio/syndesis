@@ -8,6 +8,10 @@ import (
 	"strings"
 	"time"
 
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+
+	"k8s.io/apimachinery/pkg/labels"
+
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -16,7 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -75,14 +78,30 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if syndesis.Status.Version != targetVersion {
 			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
 
-			for _, res := range resources {
-				operation.SetNamespaceAndOwnerReference(res, target)
-
-				err = createOrReplaceForce(ctx, a.client, res, true)
-				if err != nil {
-					return err
-				}
+			// Completely remove komodo install, it was renamed and this breaks the upgrade
+			labelSelector, err := labels.Parse("syndesis.io/component=komodo-server")
+			if err != nil {
+				panic(err)
 			}
+
+			options := client.ListOptions{
+				Namespace:     syndesis.Namespace,
+				LabelSelector: labelSelector,
+			}
+
+			err = ListInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+				for _, res := range list {
+					err := a.client.Delete(ctx, &res)
+					if err != nil {
+						if !k8serrors.IsNotFound(err) {
+							a.log.Error(err, "could not deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+						}
+					} else {
+						a.log.Info("resource deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+					}
+				}
+				return nil
+			})
 
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {

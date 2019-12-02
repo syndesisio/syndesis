@@ -102,11 +102,13 @@ type UIConfiguration struct {
 }
 
 type DbConfiguration struct {
-	Tag                  string              `json:"tag,omitempty"`
-	Resources            ResourcesWithVolume `json:"resources,omitempty"`
-	User                 string              `json:"user,omitempty"`
-	Database             string              `json:"database,omitempty"`
-	ImageStreamNamespace string              `json:"imageStreamNamespace,omitempty"`
+	Image       string              `json:"image,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Resources   ResourcesWithVolume `json:"resources,omitempty"`
+	User        string              `json:"user,omitempty"`
+	Database    string              `json:"database,omitempty"`
 }
 
 type PrometheusConfiguration struct {

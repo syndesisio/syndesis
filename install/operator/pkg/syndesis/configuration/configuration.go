@@ -13,37 +13,36 @@ type SyndesisEnvVar string
 var TemplateConfig string
 
 const (
-	EnvRouteHostname                  SyndesisEnvVar = "ROUTE_HOSTNAME"
-	EnvOpenShiftMaster                SyndesisEnvVar = "OPENSHIFT_MASTER"
-	EnvOpenShiftConsoleUrl            SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
-	EnvOpenShiftProject               SyndesisEnvVar = "OPENSHIFT_PROJECT"
-	EnvOpenShiftOauthClientSecret     SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
-	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
-	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
-	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"
-	EnvPostgresqlPassword             SyndesisEnvVar = "POSTGRESQL_PASSWORD"
-	EnvPostgresqlDatabase             SyndesisEnvVar = "POSTGRESQL_DATABASE"
-	EnvPostgresqlVolumeCapacity       SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
-	EnvPostgresqlSampledbPassword     SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
-	EnvTestSupport                    SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
-	EnvOauthCookieSecret              SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
-	EnvSyndesisEncryptKey             SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
-	EnvPrometheusVolumeCapacity       SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
-	EnvPrometheusMemoryLimit          SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
-	EnvMetaVolumeCapacity             SyndesisEnvVar = "META_VOLUME_CAPACITY"
-	EnvMetaMemoryLimit                SyndesisEnvVar = "META_MEMORY_LIMIT"
-	EnvServerMemoryLimit              SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
-	EnvClientStateAuthenticationKey   SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
-	EnvClientStateEncryptionKey       SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
-	EnvImageStreamNamespace           SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
-	EnvControllersIntegrationEnabled  SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
-	EnvSyndesisRegistry               SyndesisEnvVar = "SYNDESIS_REGISTRY"
-	EnvDemoDataEnabled                SyndesisEnvVar = "DEMO_DATA_ENABLED"
-	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
-	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
-	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
-	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
-	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
+	EnvRouteHostname                 SyndesisEnvVar = "ROUTE_HOSTNAME"
+	EnvOpenShiftMaster               SyndesisEnvVar = "OPENSHIFT_MASTER"
+	EnvOpenShiftConsoleUrl           SyndesisEnvVar = "OPENSHIFT_CONSOLE_URL"
+	EnvOpenShiftProject              SyndesisEnvVar = "OPENSHIFT_PROJECT"
+	EnvOpenShiftOauthClientSecret    SyndesisEnvVar = "OPENSHIFT_OAUTH_CLIENT_SECRET"
+	EnvPostgresqlMemoryLimit         SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
+	EnvPostgresqlUser                SyndesisEnvVar = "POSTGRESQL_USER"
+	EnvPostgresqlPassword            SyndesisEnvVar = "POSTGRESQL_PASSWORD"
+	EnvPostgresqlDatabase            SyndesisEnvVar = "POSTGRESQL_DATABASE"
+	EnvPostgresqlVolumeCapacity      SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
+	EnvPostgresqlSampledbPassword    SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
+	EnvTestSupport                   SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvOauthCookieSecret             SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
+	EnvSyndesisEncryptKey            SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
+	EnvPrometheusVolumeCapacity      SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
+	EnvPrometheusMemoryLimit         SyndesisEnvVar = "PROMETHEUS_MEMORY_LIMIT"
+	EnvMetaVolumeCapacity            SyndesisEnvVar = "META_VOLUME_CAPACITY"
+	EnvMetaMemoryLimit               SyndesisEnvVar = "META_MEMORY_LIMIT"
+	EnvServerMemoryLimit             SyndesisEnvVar = "SERVER_MEMORY_LIMIT"
+	EnvClientStateAuthenticationKey  SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
+	EnvClientStateEncryptionKey      SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
+	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
+	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
+	EnvSyndesisRegistry              SyndesisEnvVar = "SYNDESIS_REGISTRY"
+	EnvDemoDataEnabled               SyndesisEnvVar = "DEMO_DATA_ENABLED"
+	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
+	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
+	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
+	EnvKomodoMemoryLimit             SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
+	EnvDatavirtEnabled               SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
 	EnvSyndesisUITag       SyndesisEnvVar = "SYNDESIS_UI_TAG"
@@ -74,37 +73,36 @@ func (cs ConfigSpec) From() string {
 }
 
 var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
-	EnvRouteHostname:                  ConfigSpec{Description: "The external hostname to access Syndesis"},
-	EnvOpenShiftMaster:                ConfigSpec{Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
-	EnvOpenShiftConsoleUrl:            ConfigSpec{Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
-	EnvOpenShiftProject:               ConfigSpec{Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
-	EnvOpenShiftOauthClientSecret:     ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
-	EnvPostgresqlMemoryLimit:          ConfigSpec{Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
-	EnvPostgresqlImageStreamNamespace: ConfigSpec{Value: "openshift", Description: "The OpenShift Namespace where the PostgreSQL ImageStream resides"},
-	EnvPostgresqlUser:                 ConfigSpec{Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
-	EnvPostgresqlPassword:             ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL connection user"},
-	EnvPostgresqlDatabase:             ConfigSpec{Value: "syndesis", Required: true, Description: "Name of the PostgreSQL database accessed"},
-	EnvPostgresqlVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
-	EnvPostgresqlSampledbPassword:     ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
-	EnvTestSupport:                    ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
-	EnvOauthCookieSecret:              ConfigSpec{Generate: "expression", FromLen: 32, Description: "Secret to use to encrypt oauth cookies"},
-	EnvSyndesisEncryptKey:             ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "The encryption key used to encrypt/decrypt stored secrets"},
-	EnvPrometheusVolumeCapacity:       ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Prometheus data, e.g. 512Mi, 2Gi"},
-	EnvPrometheusMemoryLimit:          ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the Prometheus container can use"},
-	EnvMetaVolumeCapacity:             ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Meta data, e.g. 512Mi, 2Gi"},
-	EnvMetaMemoryLimit:                ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the syndesis-meta service might use"},
-	EnvServerMemoryLimit:              ConfigSpec{Value: "800Mi", Required: true, Description: "Maximum amount of memory the syndesis-server service might use"},
-	EnvClientStateAuthenticationKey:   ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
-	EnvClientStateEncryptionKey:       ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
-	EnvImageStreamNamespace:           ConfigSpec{Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
-	EnvControllersIntegrationEnabled:  ConfigSpec{Value: "true", Description: "Should deployment of integrations be enabled?"},
-	EnvSyndesisRegistry:               ConfigSpec{Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
-	EnvDemoDataEnabled:                ConfigSpec{Value: "false", Required: true, Description: "Enables starting up with demo data"},
-	EnvMaxIntegrationsPerUser:         ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
-	EnvIntegrationStateCheckInterval:  ConfigSpec{Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
-	EnvSarNamespace:                   ConfigSpec{Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
-	EnvKomodoMemoryLimit:              ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
-	EnvDatavirtEnabled:                ConfigSpec{Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
+	EnvRouteHostname:                 ConfigSpec{Description: "The external hostname to access Syndesis"},
+	EnvOpenShiftMaster:               ConfigSpec{Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
+	EnvOpenShiftConsoleUrl:           ConfigSpec{Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
+	EnvOpenShiftProject:              ConfigSpec{Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
+	EnvOpenShiftOauthClientSecret:    ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
+	EnvPostgresqlMemoryLimit:         ConfigSpec{Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
+	EnvPostgresqlUser:                ConfigSpec{Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
+	EnvPostgresqlPassword:            ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL connection user"},
+	EnvPostgresqlDatabase:            ConfigSpec{Value: "syndesis", Required: true, Description: "Name of the PostgreSQL database accessed"},
+	EnvPostgresqlVolumeCapacity:      ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
+	EnvPostgresqlSampledbPassword:    ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
+	EnvTestSupport:                   ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
+	EnvOauthCookieSecret:             ConfigSpec{Generate: "expression", FromLen: 32, Description: "Secret to use to encrypt oauth cookies"},
+	EnvSyndesisEncryptKey:            ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "The encryption key used to encrypt/decrypt stored secrets"},
+	EnvPrometheusVolumeCapacity:      ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Prometheus data, e.g. 512Mi, 2Gi"},
+	EnvPrometheusMemoryLimit:         ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the Prometheus container can use"},
+	EnvMetaVolumeCapacity:            ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Meta data, e.g. 512Mi, 2Gi"},
+	EnvMetaMemoryLimit:               ConfigSpec{Value: "512Mi", Required: true, Description: "Maximum amount of memory the syndesis-meta service might use"},
+	EnvServerMemoryLimit:             ConfigSpec{Value: "800Mi", Required: true, Description: "Maximum amount of memory the syndesis-server service might use"},
+	EnvClientStateAuthenticationKey:  ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
+	EnvClientStateEncryptionKey:      ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
+	EnvImageStreamNamespace:          ConfigSpec{Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
+	EnvControllersIntegrationEnabled: ConfigSpec{Value: "true", Description: "Should deployment of integrations be enabled?"},
+	EnvSyndesisRegistry:              ConfigSpec{Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
+	EnvDemoDataEnabled:               ConfigSpec{Value: "false", Required: true, Description: "Enables starting up with demo data"},
+	EnvMaxIntegrationsPerUser:        ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
+	EnvIntegrationStateCheckInterval: ConfigSpec{Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
+	EnvSarNamespace:                  ConfigSpec{Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
+	EnvKomodoMemoryLimit:             ConfigSpec{Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
+	EnvDatavirtEnabled:               ConfigSpec{Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
 
 	EnvSyndesisServerTag:   ConfigSpec{},
 	EnvSyndesisUITag:       ConfigSpec{},
@@ -133,7 +131,6 @@ var (
 		openshiftConsoleUrlFromEnv,
 
 		postgresqlMemoryLimitFromEnv,
-		postgresqlImageStreamNamespaceFromEnv,
 		postgresqlUserFromEnv,
 		postgresqlDatabaseFromEnv,
 		postgresqlVolumeCapacityFromEnv,
@@ -307,12 +304,6 @@ func imageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Sy
 
 func postgresqlMemoryLimitFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	resourceMemoryListFromEnv(&syndesis.Spec.Components.Db.Resources.Resources, config, EnvPostgresqlMemoryLimit)
-}
-
-func postgresqlImageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
-	if v, ok := getString(config, EnvPostgresqlImageStreamNamespace); ok && syndesis.Spec.Components.Db.ImageStreamNamespace == "" {
-		syndesis.Spec.Components.Db.ImageStreamNamespace = v
-	}
 }
 
 func postgresqlUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {

@@ -23,6 +23,9 @@ spec:
     components:
         scheduled: true
         db:
+            registry: registry.redhat.io
+            imagePrefix: rhscl
+            image: postgresql-95-rhel7
             resources:
                 limits:
                     memory: 255Mi
