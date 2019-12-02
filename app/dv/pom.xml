@@ -192,13 +192,10 @@
     <basepom.check.skip-license>true</basepom.check.skip-license>
     <basepom.test.timeout>600</basepom.test.timeout>
     <basepom.git-id.skip>true</basepom.git-id.skip>
-    <basepom.test.fork-count>1</basepom.test.fork-count>
 
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
-    <basepom.check.skip-dependency-versions-check>true</basepom.check.skip-dependency-versions-check>
     <basepom.check.skip-dependency-management>true</basepom.check.skip-dependency-management>
     <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
-    <basepom.it.memory>1024m</basepom.it.memory>
 
     <javac.werror></javac.werror>
 
@@ -236,8 +233,8 @@
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
 
-    <version.org.mockito>2.21.0</version.org.mockito>
-    <version.com.fasterxml.jackson>2.9.9</version.com.fasterxml.jackson>
+    <version.org.mockito>${mockito.version}</version.org.mockito>
+    <version.com.fasterxml.jackson>${jackson.version}</version.com.fasterxml.jackson>
     <version.com.fasterxml.jackson.databind>2.9.9.3</version.com.fasterxml.jackson.databind>
     <version.io.fabric8.openshift-client>3.0.3</version.io.fabric8.openshift-client>
     <version.io.fabric8.kubernetes-api>3.0.8</version.io.fabric8.kubernetes-api>
@@ -1046,12 +1043,14 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
-      <version>5.1.6.RELEASE</version>
+      <version>${spring-security.version}</version>
+      <!--version>5.1.6.RELEASE</version-->
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>5.1.9.RELEASE</version>
+      <version>${spring.version}</version>
+      <!--version>5.1.9.RELEASE</version-->
     </dependency>
 
   </dependencies>
