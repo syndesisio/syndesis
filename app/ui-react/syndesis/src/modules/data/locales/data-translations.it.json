@@ -1,6 +1,7 @@
 {
   "activeConnectionsEmptyStateInfo": "Non ci sono connessioni attive disponibili. Fai clic su Crea connessione per una nuova connessione.",
   "activeConnectionsEmptyStateTitle": "Nessuna Connessione Attiva",
+  "actionsColumnA11yMessage": "Colonna del menu azione versione",
   "buildStatus": {
     "BUILDING": "Costruzione",
     "CANCELLED": "Annullato",

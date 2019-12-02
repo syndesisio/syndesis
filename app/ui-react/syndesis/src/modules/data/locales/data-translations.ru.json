@@ -1,6 +1,7 @@
 {
   "activeConnectionsEmptyStateInfo": "Нет активных Соединений. Нажмите для создания нового Соединения.",
   "activeConnectionsEmptyStateTitle": "Нет активных Соединений",
+  "actionsColumnA11yMessage": "Колонка меню действий версии",
   "buildStatus": {
     "BUILDING": "Сборка",
     "CANCELLED": "Отменено",
