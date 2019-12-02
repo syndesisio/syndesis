@@ -1,6 +1,6 @@
 import * as React from 'react';
 import 'jest-dom/extend-expect';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { IntegrationStatusDetail } from '../../src/Integration';
 
 export default describe('IntegrationStatusDetail', () => {

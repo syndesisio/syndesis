@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { fireEvent, render, wait } from 'react-testing-library';
+import { fireEvent, render, wait } from '@testing-library/react';
 import { AutoForm, toValidHtmlId } from '../src';
 
 export default describe('AutoForm', () => {

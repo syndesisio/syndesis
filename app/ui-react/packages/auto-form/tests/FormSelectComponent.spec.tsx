@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { AutoForm, toValidHtmlId } from '../src';
 
 describe('FormSelectComponent: single', () => {
@@ -306,7 +306,7 @@ describe('FormSelectComponent: multiple - array input', () => {
   const fieldId = 'test01Select';
   const definition = {
     [fieldId]: {
-      defaultValue: ["INFO", "TRACE"] as any, // TODO interface is typed as string
+      defaultValue: ['INFO', 'TRACE'] as any, // TODO interface is typed as string
       description: 'Log Level.',
       displayName: 'log level',
       kind: 'parameter',
