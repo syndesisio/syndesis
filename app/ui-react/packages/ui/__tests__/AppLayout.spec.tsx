@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { AppLayout, PfVerticalNavItem } from '../src/';
 
 export default describe('ConnectionCard', () => {

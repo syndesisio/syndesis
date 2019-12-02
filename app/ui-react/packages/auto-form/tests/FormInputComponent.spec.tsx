@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { AutoForm, toValidHtmlId } from '../src';
 
 describe('FormInputComponent: text', () => {
@@ -41,7 +41,7 @@ describe('FormInputComponent: text', () => {
     const { getByTestId } = render(form);
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("INFO");
+    ).toEqual('INFO');
   });
 });
 
@@ -84,7 +84,7 @@ describe('FormInputComponent: password', () => {
     const { getByTestId } = render(form);
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("supersecret");
+    ).toEqual('supersecret');
   });
 });
 
@@ -127,6 +127,6 @@ describe('FormInputComponent: number', () => {
     const { getByTestId } = render(form);
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("123");
+    ).toEqual('123');
   });
 });

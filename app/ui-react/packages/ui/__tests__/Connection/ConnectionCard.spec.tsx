@@ -1,7 +1,7 @@
 import * as React from 'react';
 import 'jest-dom/extend-expect';
 import { MemoryRouter } from 'react-router';
-import { cleanup, fireEvent, render } from 'react-testing-library';
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import { ConnectionCard } from '../../src/Connection';
 
 export default describe('ConnectionCard', () => {

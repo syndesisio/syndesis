@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { MemoryRouter as Router } from 'react-router-dom';
 import {
   fireEvent,
   getByText as getDialogButton,
   render,
   wait,
-} from 'react-testing-library';
+} from '@testing-library/react';
 import {
   ExtensionDetail,
   IExtensionDetailProps,

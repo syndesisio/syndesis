@@ -5,7 +5,7 @@ import {
   getByText as getDialogButton,
   render,
   wait,
-} from 'react-testing-library';
+} from '@testing-library/react';
 import {
   ExtensionListItem,
   IExtensionListItemProps,
