@@ -200,6 +200,26 @@ type CamelKConfiguration struct {
 	Image         string
 }
 
+type AddonInstance struct {
+	Name    string
+	Enabled bool
+}
+
+/*
+/ Returns an array of the addons names and if configuration has been defined
+/ whether they've been enabled in that configuration instance
+*/
+func GetAddons(configuration Config) []AddonInstance {
+	return []AddonInstance{
+		{"jaeger", configuration.Syndesis.Addons.Jaeger.Enabled},
+		{"ops", configuration.Syndesis.Addons.Ops.Enabled},
+		{"dv", configuration.Syndesis.Addons.DV.Enabled},
+		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
+		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
+		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
+	}
+}
+
 /*
 / Returns all processed configurations for Syndesis
 

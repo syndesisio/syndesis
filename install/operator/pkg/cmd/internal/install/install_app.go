@@ -34,7 +34,7 @@ func (o *Install) installApplication() error {
 
 		if o.wait {
 			for {
-				o.Println("waiting for syndesis application deploymentto be ready...")
+				o.Println("waiting for syndesis application deployment to be ready...")
 				ready, err := WaitForSyndesisReady(o.Context, client, o.Namespace, "app", 5*time.Second)
 
 				if err != nil {
