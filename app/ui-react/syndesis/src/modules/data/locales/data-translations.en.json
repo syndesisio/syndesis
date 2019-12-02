@@ -89,6 +89,7 @@
   "revertVirtualizationFailed": "Revert failed for virtualization \"{{name}}\". Details: {{details}}",
   "revertVirtualizationConfirmTitle": "Confirm Revert Virtualization",
   "revertVirtualizationConfirmMsg": "Are you sure you want to revert virtualization \"{{name}}\" to version: {{version}}?",
+  "revertVirtualizationSuccess": "Virtualization \"{{name}}\" was successfully reverted to version: {{version}}",
   "saveViewFailed": "Save view \"{{name}}\" failed. Details: {{details}}",
   "sqlClient": "SQL Client",
   "startVirtualizationFailed": "Start failed for virtualization \"{{name}}\". Details: {{details}}",
