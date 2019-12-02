@@ -129,7 +129,7 @@
     <testcontainers.version>1.12.3</testcontainers.version>
     <citrus.version>2.8.0</citrus.version>
 
-    <spring-security.version>5.1.5.RELEASE</spring-security.version>
+    <spring-security.version>5.2.1.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>2.0.1.Final</resteasy-spring-boot-starter.version>
 
