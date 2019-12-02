@@ -41,6 +41,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
         publishedState={'RUNNING'}
         publishedVersion={3}
@@ -60,6 +61,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
         publishedState={'NOTFOUND'}
         virtualizationName={virtualizationName}
@@ -77,6 +79,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
         modified={boolean('modified', false)}
@@ -96,6 +99,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
         modified={boolean('modified', false)}
@@ -119,6 +123,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
         modified={boolean('modified', false)}
@@ -142,6 +147,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
         labelType={'default'}
         modified={boolean('modified', false)}
@@ -167,6 +173,7 @@ stories
         i18nDescriptionPlaceholder={descriptionPlaceholder}
         i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
+        i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
         publishedState={'RUNNING'}
         publishedVersion={3}

@@ -13,6 +13,7 @@ export interface IVirtualizationDetailsHeaderProps {
   i18nDescriptionPlaceholder: string;
   i18nInUseText: string;
   i18nPublishLogUrlText: string;
+  i18nODataUrlText: string;
   labelType: 'danger' | 'primary' | 'default';
   modified: boolean;
   odataUrl?: string;
@@ -68,7 +69,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                     target="_blank"
                     href={props.odataUrl}
                   >
-                    {props.odataUrl}
+                    {props.i18nODataUrlText}
                     <Icon
                       className={
                         'virtualization-details-header-odata-link-icon'

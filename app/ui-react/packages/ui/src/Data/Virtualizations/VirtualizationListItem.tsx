@@ -60,6 +60,7 @@ export interface IVirtualizationListItemProps {
   i18nInUseText: string;
   i18nPublish: string;
   i18nPublishLogUrlText: string;
+  i18nViewODataUrlText: string;
   i18nStop: string;
   i18nStopModalMessage: string;
   i18nStopModalTitle: string;
@@ -335,7 +336,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                   target="_blank"
                   href={props.odataUrl}
                 >
-                  {props.odataUrl}
+                  {props.i18nViewODataUrlText}
                   <Icon
                     className={'virtualization-list-item-odata-link-icon'}
                     name={'external-link'}
