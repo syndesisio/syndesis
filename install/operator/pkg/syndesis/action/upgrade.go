@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	v14 "github.com/openshift/api/apps/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
-	v13 "github.com/openshift/api/image/v1"
+	"k8s.io/apimachinery/pkg/labels"
 
 	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -20,7 +20,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/client"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -79,32 +78,30 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if syndesis.Status.Version != targetVersion {
 			a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", targetVersion)
 
-			kd := &v14.DeploymentConfig{}
-			err := a.client.Get(ctx, util.NewObjectKey("komodo-server", syndesis.Namespace), kd)
-			if err == nil {
-				a.log.Info("Deleting old komodo deployment", "name", "komodo-server")
-				if err := a.client.Delete(ctx, kd); err != nil {
-					return err
-				}
+			// Completely remove komodo install, it was renamed and this breaks the upgrade
+			labelSelector, err := labels.Parse("syndesis.io/component=komodo-server")
+			if err != nil {
+				panic(err)
 			}
 
-			ki := &v13.ImageStream{}
-			err = a.client.Get(ctx, util.NewObjectKey("fuse-komodo-server", syndesis.Namespace), ki)
-			if err == nil {
-				a.log.Info("Deleting old komodo imagestream", "name", "komodo-server")
-				if err := a.client.Delete(ctx, ki); err != nil {
-					return err
-				}
+			options := client.ListOptions{
+				Namespace:     syndesis.Namespace,
+				LabelSelector: labelSelector,
 			}
 
-			for _, res := range resources {
-				operation.SetNamespaceAndOwnerReference(res, target)
-
-				err = createOrReplaceForce(ctx, a.client, res, true)
-				if err != nil {
-					return err
+			err = ListInChunks(ctx, a.api, a.client, options, func(list []unstructured.Unstructured) error {
+				for _, res := range list {
+					err := a.client.Delete(ctx, &res)
+					if err != nil {
+						if !k8serrors.IsNotFound(err) {
+							a.log.Error(err, "could not deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+						}
+					} else {
+						a.log.Info("resource deleted", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+					}
 				}
-			}
+				return nil
+			})
 
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {
