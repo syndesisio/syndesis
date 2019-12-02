@@ -2,14 +2,46 @@ package install
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/pkg/errors"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"strconv"
-	"time"
 )
+
+func (o *Install) getAddonResources(directory string) ([]unstructured.Unstructured, error) {
+	resources := []unstructured.Unstructured{}
+
+	//
+	// Install any cluster-level resources from the addons
+	//
+	addons := configuration.GetAddons(configuration.Config{})
+	for _, addon := range addons {
+		addonDir := "./addons/" + addon.Name + "/" + directory + "/"
+		f, err := generator.GetAssetsFS().Open(addonDir)
+		if err != nil {
+			continue
+		}
+		defer f.Close()
+
+		addonResources, err := o.renderDir(addonDir)
+		if err != nil {
+			return nil, err
+		}
+		resources = append(resources, addonResources...)
+	}
+
+	return resources, nil
+}
+
+func (o *Install) getAddonClusterResources() ([]unstructured.Unstructured, error) {
+	return o.getAddonResources("cluster")
+}
 
 func (o *Install) installClusterResources() error {
 
@@ -17,6 +49,13 @@ func (o *Install) installClusterResources() error {
 	if err != nil {
 		return err
 	}
+
+	addonResources, err := o.getAddonClusterResources()
+	if err != nil {
+		return err
+	}
+
+	resources = append(resources, addonResources...)
 
 	if o.ejectedResources != nil {
 		o.ejectedResources = append(o.ejectedResources, resources...)
