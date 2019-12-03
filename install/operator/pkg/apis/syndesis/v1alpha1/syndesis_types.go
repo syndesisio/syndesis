@@ -26,7 +26,11 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
+	// Namespace where syndesis docker images are located and the operator should look after them
 	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
+
+	// The external hostname to access Syndesis
+	RouteHostname string `json:"routeHostname,omitempty"`
 
 	// Enable SampleDB and demo data for Syndesis
 	DemoData bool `json:"demoData,omitempty"`
@@ -72,19 +76,24 @@ type ComponentsSpec struct {
 }
 
 type OauthConfiguration struct {
-	DisableSarCheck bool   `json:"disable-sar-check,omitempty"`
-	SarNamespace    string `json:"sarNamespace,omitempty"`
-}
+	// Enable or disable SAR checks all together
+	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
 
-type DvConfiguration struct {
-	Enabled   bool      `json:"enabled,omitempty"`
-	Resources Resources `json:"resources,omitempty"`
+	// The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
+	SarNamespace string `json:"sarNamespace,omitempty"`
 }
 
 type DatabaseConfiguration struct {
-	User          string              `json:"user,omitempty"`
-	Name          string              `json:"name,omitempty"`
-	URL           string              `url:"url,omitempty"`
+	// Username for PostgreSQL user that will be used for accessing the database
+	User string `json:"user,omitempty"`
+
+	// Name of the PostgreSQL database accessed
+	Name string `json:"name,omitempty"`
+
+	// Host and port of the PostgreSQL database to access
+	URL string `url:"url,omitempty"`
+
+	// If specified, use an external database instead of the installed by syndesis
 	ExternalDbURL string              `json:"externalDbURL,omitempty"`
 	Resources     ResourcesWithVolume `json:"resources,omitempty"`
 }
@@ -101,6 +110,9 @@ type GrafanaConfiguration struct {
 type ServerConfiguration struct {
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
+
+	// Should deployment of integrations be enabled?
+	ControllersIntegrationEnabled bool `json:"controllersIntegrationEnabled,omitempty"`
 }
 
 type MetaConfiguration struct {
@@ -125,9 +137,20 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	MavenRepositories             map[string]string `json:"mavenRepositories,omitempty"`
-	ManagementUrlFor3scale        string            `json:"managementUrlFor3scale,omitempty"`
-	IntegrationStateCheckInterval int               `json:"integrationStateCheckInterval,omitempty"`
+	// Maximum number of integrations single user can create
+	IntegrationLimit int `json:"integrationLimit,omitempty"`
+
+	// Interval for checking the state of the integrations
+	IntegrationStateCheckInterval int `json:"integrationStateCheckInterval,omitempty"`
+
+	// Whether we deploy integrations
+	DeployIntegrations bool `json:"deployIntegrations,omitempty"`
+
+	// Set repositories for maven
+	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
+
+	// 3scale management URL
+	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
 type AddonsSpec struct {
@@ -136,7 +159,7 @@ type AddonsSpec struct {
 	Todo    AddonSpec           `json:"todo,omitempty"`
 	Knative AddonSpec           `json:"knative,omitempty"`
 	DV      DvConfiguration     `json:"dv,omitempty"`
-	CamelK  CamelKConfiguration `json:"camelk,omitempty"`
+	CamelK  AddonSpec           `json:"camelk,omitempty"`
 }
 
 type JaegerConfiguration struct {
@@ -149,11 +172,9 @@ type AddonSpec struct {
 	Enabled bool `json:"enabled,omitempty"`
 }
 
-type CamelKConfiguration struct {
-	Enabled       bool   `json:"enabled,omitempty"`
-	CamelVersion  string `json:"camelVersion,omitempty"`
-	CamelKRuntime string `json:"camelkRuntime,omitempty"`
-	Image         string `json:"image,omitempty"`
+type DvConfiguration struct {
+	Enabled   bool      `json:"enabled,omitempty"`
+	Resources Resources `json:"resources,omitempty"`
 }
 
 // =============================================================================

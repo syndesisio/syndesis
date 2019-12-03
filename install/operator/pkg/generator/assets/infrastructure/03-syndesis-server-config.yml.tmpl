@@ -15,9 +15,9 @@
         load-demo-data: '{{.Syndesis.DemoData}}'
       cors:
 {{- if (not .AllowLocalHost)}}
-        allowedOrigins: https://{{.RouteHostname}}
+        allowedOrigins: https://{{.Syndesis.RouteHostname}}
 {{- else}}
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{.RouteHostname}}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{.Syndesis.RouteHostname}}
 {{- end}}
       cache:
         cluster:

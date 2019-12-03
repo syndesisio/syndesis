@@ -72,16 +72,17 @@ func Test_setConfigFromEnv(t *testing.T) {
 		{
 			name: "When all environment variables are set for images, a valid configuration with all values should be created",
 			want: &Config{
-				Productized:   true,
-				ProductName:   "something",
-				DevSupport:    true,
-				RouteHostname: "route",
+				Productized: true,
+				ProductName: "something",
+				DevSupport:  true,
 				Syndesis: SyndesisConfig{
+					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
 							Enabled: true,
 							Image:   "DV_IMAGE",
 						},
+						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
@@ -110,6 +111,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				ProductName: "something",
 				DevSupport:  true,
 				Syndesis: SyndesisConfig{
+					RouteHostname: "route",
 					Addons: AddonsSpec{
 						DV: DvConfiguration{
 							Enabled: true,
@@ -137,7 +139,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"DV_IMAGE": "DV_IMAGE", "OAUTH_IMAGE": "OAUTH_IMAGE", "PROMETHEUS_IMAGE": "PROMETHEUS_IMAGE",
 				"UPGRADE_IMAGE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "DATABASE_IMAGE": "DATABASE_IMAGE",
 				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
-				"ROUTE_HOSTNAME": "route", "INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true",
+				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "CAMELK_IMAGE": "CAMELK_IMAGE",
 			},
 			wantErr: false,
 		},
@@ -202,7 +204,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						DV: v1alpha1.DvConfiguration{
 							Enabled: true,
 						},
-						CamelK: v1alpha1.CamelKConfiguration{Enabled: true},
+						CamelK: v1alpha1.AddonSpec{Enabled: true},
 					},
 				},
 			}},
@@ -310,9 +312,9 @@ func getConfigLiteral() *Config {
 		PrometheusRules:            "",
 		OpenShiftProject:           "",
 		OpenShiftOauthClientSecret: "",
-		RouteHostname:              "",
 		OpenShiftConsoleUrl:        "",
 		Syndesis: SyndesisConfig{
+			RouteHostname: "",
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
 					Enabled:      false,
@@ -459,7 +461,7 @@ func TestConfig_SetRoute(t *testing.T) {
 			if err := config.SetRoute(tt.args.ctx, tt.args.client, tt.args.syndesis); (err != nil) != tt.wantErr {
 				t.Errorf("SetRoute() error = %v, wantErr %v", err, tt.wantErr)
 			}
-			assert.Equal(t, config.RouteHostname, tt.want)
+			assert.Equal(t, config.Syndesis.RouteHostname, tt.want)
 
 			for k, _ := range tt.env {
 				os.Unsetenv(k)

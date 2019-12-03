@@ -26,7 +26,7 @@
       syndesis.io/component: todo
     name: todo
   spec:
-    host: todo-{{.RouteHostname}}
+    host: todo-{{.Syndesis.RouteHostname}}
     path: /
     port:
       targetPort: 8080

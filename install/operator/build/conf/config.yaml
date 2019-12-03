@@ -1,11 +1,11 @@
-ProductName: syndesis
 AllowLocalHost: false
 Productized: false
 DevSupport: false
 Scheduled: true
+ProductName: syndesis
 Syndesis:
-    ImageStreamNamespace: ""
     DemoData: false
+    ImageStreamNamespace: ""
     Addons:
         Jaeger:
             Enabled: false
@@ -30,6 +30,7 @@ Syndesis:
     Components:
         Oauth:
             Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
+            DisableSarCheck: false
         UI:
             Image: "docker.io/syndesis/syndesis-ui:latest"
         S2I:
