@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.endpoint.v1.handler.user;
 
+import java.security.Principal;
+
+import javax.ws.rs.core.SecurityContext;
+
 import io.fabric8.kubernetes.client.dsl.NonNamespaceOperation;
 import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.api.model.DoneableUser;
@@ -22,27 +26,18 @@ import io.fabric8.openshift.api.model.User;
 import io.fabric8.openshift.api.model.UserBuilder;
 import io.fabric8.openshift.api.model.UserList;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
-import io.fabric8.openshift.client.server.mock.OpenShiftServer;
 import io.syndesis.server.openshift.OpenShiftServiceImpl;
-
-import javax.ws.rs.core.SecurityContext;
 
 import org.assertj.core.api.Assertions;
 import org.junit.After;
-import org.junit.Rule;
 import org.junit.Test;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.security.Principal;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 
-public class UserHandlerTest {
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-    @Rule
-    public OpenShiftServer openShiftServer = new OpenShiftServer();
+public class UserHandlerTest {
 
     @After
     public void tearDown() {

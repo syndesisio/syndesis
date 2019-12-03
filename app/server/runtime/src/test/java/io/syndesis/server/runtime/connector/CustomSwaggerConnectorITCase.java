@@ -26,9 +26,9 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
+import io.syndesis.server.api.generator.openapi.OpenApiConnectorGenerator;
 import io.syndesis.server.runtime.BaseITCase;
-
+import okio.Okio;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.junit.Before;
@@ -47,8 +47,6 @@ import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import okio.Okio;
-
 @ContextConfiguration
 public class CustomSwaggerConnectorITCase extends BaseITCase {
 
@@ -64,7 +62,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {
-            return new SwaggerUnifiedShapeConnectorGenerator(new Connector.Builder()
+            return new OpenApiConnectorGenerator(new Connector.Builder()
                 .addTags("from-connector")
                 .build());
         }

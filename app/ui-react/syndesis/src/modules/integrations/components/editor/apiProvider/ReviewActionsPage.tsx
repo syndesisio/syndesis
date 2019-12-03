@@ -3,13 +3,15 @@ import {
   useApiProviderSummary,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration } from '@syndesis/models';
+import { ErrorResponse, Integration } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorLayout,
   OpenApiReviewActions,
   PageLoader,
   PageSection,
+  SyndesisAlert,
+  SyndesisAlertLevel,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -47,6 +49,9 @@ export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
 > = ({ cancelHref, editHref, nextHref, getBreadcrumb }) => {
   const uiContext = React.useContext(UIContext);
+  const [errorAlert, setErrorAlert] = React.useState<ErrorResponse | undefined>(
+    undefined
+  );
   const [nextDisabled, setNextDisabled] = React.useState(false);
   const { params, state, history } = useRouteData<
     IBaseApiProviderRouteParams,
@@ -58,6 +63,7 @@ export const ReviewActionsPage: React.FunctionComponent<
   const getIntegration = useApiProviderIntegration();
 
   const onNext = async () => {
+    setErrorAlert(undefined);
     setNextDisabled(true);
     try {
       const integration = await getIntegration(
@@ -68,7 +74,7 @@ export const ReviewActionsPage: React.FunctionComponent<
       integration.name = '';
       history.push(nextHref(integration, params, state));
     } catch (e) {
-      // todo show the error?
+      setErrorAlert(e as ErrorResponse);
     }
     setNextDisabled(false);
   };
@@ -120,6 +126,17 @@ export const ReviewActionsPage: React.FunctionComponent<
                         i18nNameLabel={t(
                           'integrations:apiProvider:reviewActions:nameLabel'
                         )}
+                        alert={
+                          errorAlert && (
+                            <SyndesisAlert
+                              level={SyndesisAlertLevel.WARN}
+                              message={errorAlert!.userMsg}
+                              detail={errorAlert!.developerMsg}
+                              i18nTextExpanded={t('shared:HideDetails')}
+                              i18nTextCollapsed={t('shared:ShowDetails')}
+                            />
+                          )
+                        }
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
                         i18nOperationsHtmlMessage={`${
@@ -145,28 +162,30 @@ export const ReviewActionsPage: React.FunctionComponent<
                               )
                             : undefined
                         }
+                        actions={
+                          <div>
+                            <ButtonLink
+                              href={editHref(params, {
+                                ...state,
+                                specification: apiSummary!.configuredProperties!
+                                  .specification,
+                              })}
+                            >
+                              {t(
+                                'integrations:apiProvider:reviewActions:btnReviewEdit'
+                              )}
+                            </ButtonLink>
+                            <ButtonLink
+                              onClick={onNext}
+                              disabled={nextDisabled || apiSummary!.errors}
+                              as={'primary'}
+                              style={{ marginLeft: '10px' }}
+                            >
+                              {t('shared:Next')}
+                            </ButtonLink>
+                          </div>
+                        }
                       />
-                      <div>
-                        <ButtonLink
-                          href={editHref(params, {
-                            ...state,
-                            specification: apiSummary!.configuredProperties!
-                              .specification,
-                          })}
-                        >
-                          {t(
-                            'integrations:apiProvider:reviewActions:btnReviewEdit'
-                          )}
-                        </ButtonLink>
-                        <ButtonLink
-                          onClick={onNext}
-                          disabled={nextDisabled || apiSummary!.errors}
-                          as={'primary'}
-                          style={{ marginLeft: '10px' }}
-                        >
-                          {t('shared:Next')}
-                        </ButtonLink>
-                      </div>
                     </>
                   )}
                 </WithLoader>

@@ -38,6 +38,8 @@ hs_err_pid*
 *.eclipse-pmd
 .factorypath
 .sts4-cache/
+.cache
+.extracted
 
 # System Files
 .DS_Store

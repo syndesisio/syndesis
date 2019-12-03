@@ -1,4 +1,4 @@
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ConnectionsListView } from '../../src/Connection';

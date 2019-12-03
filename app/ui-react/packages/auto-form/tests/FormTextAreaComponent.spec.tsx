@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { AutoForm, toValidHtmlId } from '../src';
 
 describe('FormTextareaComponent', () => {
@@ -41,7 +41,9 @@ describe('FormTextareaComponent', () => {
   it('Should render set to the default value', () => {
     const { getByTestId } = render(form);
     expect(
-      (getByTestId(toValidHtmlId(fieldId)) as HTMLTextAreaElement).value.substr(-6)
+      (getByTestId(toValidHtmlId(fieldId)) as HTMLTextAreaElement).value.substr(
+        -6
+      )
     ).toEqual('Error!');
   });
 });

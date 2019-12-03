@@ -81,16 +81,23 @@ download_operator_binary() {
     fi
 
     case "$OSTYPE" in
-        darwin*)  pattern="mac-64" ;;
+        darwin*)  pattern="darwin-amd64" ;;
         linux*)   pattern="linux-amd64" ;;
+        msys*)    pattern="windows-amd64" ;;  #using mingw64 on windows
         *)        pattern="unknown" ;;
     esac
 
     if [[ "${pattern}" != "unknown" ]]; then
-        url=$(curl -s https://api.github.com/repos/syndesisio/syndesis/releases?per_page=1 \
-                | grep browser_download_url \
-                | grep ${pattern} \
-                | cut -d '"' -f 4)
+        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases?per_page=1"
+        release_tag="$(readopt --tag)"
+        if [[ -n "$release_tag" ]]; then
+            release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
+        fi
+
+        url=$(curl -s $release_uri \
+            | grep browser_download_url \
+            | grep ${pattern} \
+            | cut -d '"' -f 4)
 
         if $(curl -sL ${url} | tar xz -C $(dirname ${OPERATOR_BINARY})); then
             chmod +x ${OPERATOR_BINARY}

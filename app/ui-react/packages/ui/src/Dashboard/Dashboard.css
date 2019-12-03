@@ -29,3 +29,7 @@
   --pf-c-card__body--FontSize: var(--pf-global--icon--FontSize--lg);
   font-weight: var(--pf-global--FontWeight--light);
 }
+
+.dashboard__integrations-grid-item > .pf-c-card {
+  height: 100%;
+}

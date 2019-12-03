@@ -1,0 +1,12 @@
+.dv-client-session-metric__connectionCount {
+  font-size: large;
+  font-weight: 600;
+}
+
+.dv-client-session-metric__connectionMessage {
+  font-size: small;
+}
+
+.dv-client-session-metric__content {
+  align-items: center;
+}

@@ -12,6 +12,11 @@
   cursor: default;
 }
 
+.dnd-file-chooser[disabled] .dnd-file-chooser__helpText,
+.dnd-file-chooser[disabled]:hover .dnd-file-chooser__helpText {
+  color: lightgray
+}
+
 .dnd-file-chooser:hover {
   border-color: #39a5dc; /* color-pf-blue-300 */
   background: #fafafa; /* color-pf-black-100 */

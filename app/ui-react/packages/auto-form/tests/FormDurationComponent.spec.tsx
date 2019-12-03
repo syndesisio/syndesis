@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { render } from 'react-testing-library';
+import { render } from '@testing-library/react';
 import { AutoForm, IFormDefinition, toValidHtmlId } from '../src';
 
 describe('FormDurationComponent', () => {
@@ -38,19 +38,23 @@ describe('FormDurationComponent', () => {
     const { getByTestId } = render(getForm(definition, {}));
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("30");
+    ).toEqual('30');
     expect(
-      (getByTestId(toValidHtmlId(`${fieldId}-duration`)) as HTMLButtonElement).textContent!.trim()
+      (getByTestId(
+        toValidHtmlId(`${fieldId}-duration`)
+      ) as HTMLButtonElement).textContent!.trim()
     ).toEqual('Seconds');
   });
 
   it('Should render set to the initial value', () => {
-    const { getByTestId } = render(getForm(definition, { [fieldId]: 60000}));
+    const { getByTestId } = render(getForm(definition, { [fieldId]: 60000 }));
     expect(
       (getByTestId(toValidHtmlId(fieldId)) as HTMLInputElement).value
-    ).toEqual("1");
+    ).toEqual('1');
     expect(
-      (getByTestId(toValidHtmlId(`${fieldId}-duration`)) as HTMLButtonElement).textContent!.trim()
+      (getByTestId(
+        toValidHtmlId(`${fieldId}-duration`)
+      ) as HTMLButtonElement).textContent!.trim()
     ).toEqual('Minutes');
   });
 });

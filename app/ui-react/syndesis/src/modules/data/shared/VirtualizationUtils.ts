@@ -388,7 +388,7 @@ export function getPublishingDetails(
  * @returns a suitable `Label` style for the publishing state
  */
 export function getStateLabelStyle(
-  currDetails: VirtualizationPublishingDetails,
+  currDetails: VirtualizationPublishingDetails
 ): 'primary' | 'danger' | 'default' {
   let result: 'primary' | 'danger' | 'default';
   switch (currDetails.state) {
@@ -398,7 +398,8 @@ export function getStateLabelStyle(
     case 'FAILED':
       result = 'danger';
       break;
-    default: // in-progress
+    default:
+      // in-progress
       result = 'default';
       break;
   }
@@ -410,7 +411,7 @@ export function getStateLabelStyle(
  * @returns the `Label` text representing the publish state
  */
 export function getStateLabelText(
-  currDetails: VirtualizationPublishingDetails,
+  currDetails: VirtualizationPublishingDetails
 ): string {
   let result = '';
   switch (currDetails.state) {
@@ -421,7 +422,7 @@ export function getStateLabelText(
       result = i18n.t('shared:Error');
       break;
     case 'NOTFOUND':
-      result = i18n.t('shared:Draft');
+      result = i18n.t('data:stoppedDataVirtualization');
       break;
     case 'BUILDING':
     case 'CONFIGURING':
@@ -433,9 +434,10 @@ export function getStateLabelText(
     case 'DELETE_SUBMITTED':
     case 'DELETE_REQUEUE':
     case 'DELETE_DONE':
-      result = i18n.t('data:unpublishInProgress');
+      result = i18n.t('data:stopInProgress');
       break;
-    default: // should not get here as exhausted all cases
+    default:
+      // should not get here as exhausted all cases
       break;
   }
   return result;
@@ -466,7 +468,7 @@ export function isPublishStep(
  * @returns `true` if a state operation is in-progress
  */
 export function isStateOperationInProgress(
-  currDetails: VirtualizationPublishingDetails,
+  currDetails: VirtualizationPublishingDetails
 ): boolean {
   let result = false;
   switch (currDetails.state) {
@@ -543,4 +545,73 @@ export function generateTableColumns(sourceInfo: ViewSourceInfo): ITableInfo[] {
     });
   });
   return tblColumns;
+}
+
+/**
+ * A virtualization can be deleted if it is not running, if it is running but has no integration using it,
+ * or if it has never been published.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be deleted
+ */
+export function canDelete(virtualization: Virtualization): boolean {
+  // TODO: fix logic if necessary. Can be a draft and never been published.
+  return (
+    virtualization.publishedState !== 'RUNNING' ||
+    (virtualization.publishedState === 'RUNNING' &&
+      virtualization.usedBy.length === 0)
+  );
+}
+
+/**
+ * A virtualization can always be exported.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true`
+ */
+export function canExport(virtualization: Virtualization): boolean {
+  return true;
+}
+
+/**
+ * A virtualization can be published if a draft exists.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be published
+ */
+export function canPublish(virtualization: Virtualization): boolean {
+  return virtualization.modified && !virtualization.empty;
+}
+
+/**
+ * A virtualization can be reverted if a revision is available
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @param {number} revision the revision for revert
+ * @returns `true`
+ */
+export function canRevert(
+  virtualization: Virtualization,
+  revision?: number
+): boolean {
+  return revision ? true : false;
+}
+
+/**
+ * A virtualization can be started if a revision is available, and not already running.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @param {number} revision the revision for revert
+ * @returns `true` if the virtualization can be started
+ */
+export function canStart(
+  virtualization: Virtualization,
+  revision?: number
+): boolean {
+  return revision ? virtualization.publishedState !== 'RUNNING' : false;
+}
+
+/**
+ * A virtualization can be stopped if it is running.
+ * @param {Virtualization} virtualization the virtualization being checked
+ * @returns `true` if the virtualization can be stopped
+ */
+export function canStop(virtualization: Virtualization): boolean {
+  // TODO: Fix logic if necessary. Do we need to check if any integrations are using it?
+  return virtualization.publishedState === 'RUNNING';
 }

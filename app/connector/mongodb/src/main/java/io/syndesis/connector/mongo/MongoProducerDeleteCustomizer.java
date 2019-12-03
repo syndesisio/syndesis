@@ -17,6 +17,7 @@ package io.syndesis.connector.mongo;
 
 import java.util.Map;
 
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -24,6 +25,9 @@ public class MongoProducerDeleteCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        component.setBeforeProducer(exchange ->
+            MongoCustomizersUtil.executeFilterComponent(exchange, ConnectorOptions.extractOption(options, "filter"))
+        );
         component.setAfterProducer(MongoCustomizersUtil::convertMongoResultToLong);
     }
 

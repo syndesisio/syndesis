@@ -95,7 +95,15 @@
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
-    <!-- Connection verifier -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.module</groupId>
+      <artifactId>jackson-module-jsonSchema</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+    <!-- Connection verification support -->
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
@@ -149,10 +157,15 @@
       <artifactId>de.flapdoodle.embed.mongo</artifactId>
       <scope>test</scope>
     </dependency>
-    <!-- Analyzer is requiring to explicit this dependency -->
     <dependency>
       <groupId>de.flapdoodle.embed</groupId>
       <artifactId>de.flapdoodle.embed.process</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Used at test time for tcp free port utility-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

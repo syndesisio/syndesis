@@ -19,8 +19,6 @@ import java.net.URI;
 
 import io.syndesis.common.model.connection.Connection;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
-
 public class TestCredentialProviderFactory implements CredentialProviderFactory {
 
     static class TestCredentialProvider implements CredentialProvider {

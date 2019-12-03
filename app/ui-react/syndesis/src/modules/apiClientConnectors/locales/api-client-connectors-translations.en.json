@@ -37,7 +37,6 @@
       "dndNoFileSelectedLabel": "No file selected",
       "dndSelectedFileLabel": "Selected file:",
       "methodFromFile": "Upload an OpenAPI file",
-      "methodFromScratch": "Create from scratch",
       "methodFromUrl": "Use a URL",
       "title": "Upload OpenAPI Document",
       "urlNote": "* Note: After uploading this document, updates to it are not automatically obtained."

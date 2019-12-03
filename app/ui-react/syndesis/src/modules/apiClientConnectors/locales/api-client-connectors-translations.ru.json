@@ -1,0 +1,74 @@
+{
+  "action": "<strong>{{actionName}}</strong> - {{actionDescription}}",
+  "apiConnectorDetailsPageTitle": "Детали Коннектора",
+  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> предоставляет API Коннектор когда вы загружаете валидную OpenAPI 2.0 спецификацию, описываюшая API, с которым Вы хотите работать.",
+  "apiConnectorsPageTitle": "API Коннектора",
+  "basePath": "Базовый URL",
+  "ConnectorIcon": "Иконка Коннектора",
+  "CreateApiConnector": "Создает API Коннектор",
+  "createApiConnectorTip": "Загрузите файл или используйте URL для создания API Коннектора",
+  "deleteModalMessage": "Вы уверены, что хотите удалить API Коннектор \"{{name}}\"?",
+  "deleteModalTitle": "Подтвердить удаление?",
+  "detailsApiConnectorTip": "Посмотреть детали API коннектора",
+  "emptyStateInfo": "Нет доступных API Коннекторов. Нажимите кнопку ниже, чтобы создать.",
+  "errorDeletingApiConnector": "Неизвестная ошибка сервера при удалении API Коннектора \"{{connectorId}}\".",
+  "errorSavingApiConnector": "Неизвестная ошибка сервера при сохранении API Коннектора.",
+  "Host": "Сервер",
+  "invalidImageFileUpload": "Выберите файл образа",
+  "reviewActionsTitle": "Посмотреть Действия",
+  "reviewApiDefinitionHeading": "НАСТРОЙКИ API",
+  "reviewErrorsHeading": "Ошибки {{count}}",
+  "reviewImportedHeading": "ИМПОРТИРОВАНО",
+  "reviewOperationsMessage": "<strong>{{count}}</strong> операций",
+  "reviewOperationsTaggedMessage": "- <strong>{{count}}</strong> отмечено {{tag}}",
+  "reviewValidationFallback": "Детали Коннектора пока недоступны.",
+  "reviewWarningsHeading": "Предупреждения {{count}}",
+  "usedByOne": "Используется 1 Интеграцией",
+  "usedByMulti": "Используется {{count}} Интеграциями",
+  "create": {
+    "unsavedChangesTitle": "Вы точно хотите отменить?",
+    "unsavedChangesMessage": "Вы не закончили создание API Коннектора. Если вы отмените сейчас вы потеряете введенные данные. Все еще хотите отменить?",
+    "selectMethod": {
+      "dndUploadFailedMessage": " не может быть загружен",
+      "dndUploadSuccessMessage": "Обработка файла ",
+      "dndFileExtensions": ".json,.yaml,.yml",
+      "dndHelpMessage": "Принимаются файлы с расширениями: .json, .yaml, and .yml",
+      "dndInstructions": "Перетащите файл сюда или <strong>нажмите</strong> чтобы выбрать файл у себя на устройстве.",
+      "dndNoFileSelectedLabel": "Файл не выбран",
+      "dndSelectedFileLabel": "Выбран файл:",
+      "methodFromFile": "Загрузите файл OpenAPI",
+      "methodFromUrl": "Используйте URL",
+      "title": "Загрузить OpenAPI Описание",
+      "urlNote": "* Подсказка: После загрузки загрузки этого документа, его обновления не будут автоматически получаться."
+    },
+    "review": {
+      "btnReviewEdit": "Посмотреть/Редактировать",
+      "description": "Описание пока не задано, пожалуйста помогите.",
+      "descriptionLabel": "Описание",
+      "nameLabel": "Имя",
+      "operations": "операции",
+      "sectionApiDefinition": "НАСТРОЙКИ API",
+      "sectionImported": "ИМПОРТИРОВАНО",
+      "sectionWarnings": "ПРЕДУПРЕЖДЕНИЯ",
+      "sectionErrors": "ОШИБКИ",
+      "title": "Посмотреть Действия"
+    },
+    "specification": {
+      "title": "Редактирование Описание API"
+    },
+    "security": {
+      "accessTokenUrl": "URL Токена Доступа",
+      "authTypeLabel": "Тип аутентификации",
+      "authorizationUrl": "URL Авторизации",
+      "description": "$t(shared:project.name) получает настройки OpenAPI для определения информации, необходимой для настройки Коннектора для соблюдения настроек безопасности API. Соединения с использованием этого Коннектора всегда будут использовать параметры аутентификации, которые вы здесь задали.",
+      "noSecurity": "Без настроек безопасности",
+      "required": "Все поля обязательны для заполнения.",
+      "title": "Задайте настройки безопасности"
+    },
+    "details": {
+      "title": "Посмотреть/Редактировать настройки Коннектора",
+      "saveButton": "Создать API Коннектор",
+      "successNotification": "API Коннектор успешно создан"
+    }
+  }
+}

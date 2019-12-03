@@ -227,6 +227,68 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
+   * Revert the virtualization with the specified name to the specified publish edition
+   * @param virtualizationName the name of the virtualization being published
+   * @param virtualizationRevision the revision to revert the working virtualization
+   * @returns the `TeiidStatus` model object
+   * @throws an `Error` if there was a problem reverting the virtualization
+   */
+  const revertVirtualization = async (
+    virtualizationName: string,
+    virtualizationRevision: number
+  ): Promise<TeiidStatus> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'POST',
+      url: `${
+        apiContext.dvApiUri
+      }virtualizations/publish/${virtualizationName}/${virtualizationRevision}/revert`,
+    });
+
+    if (!response.ok) {
+      return Promise.reject(new Error(response.statusText));
+    }
+
+    const status = (await response.json()) as TeiidStatus;
+    if (status.attributes.error) {
+      return Promise.reject(new Error(status.attributes.error));
+    }
+
+    return status;
+  };
+
+  /**
+   * Start the specified virtualization version.
+   * @param virtualizationName the name of the virtualization being started
+   * @param virtualizationRevision the version of the virtualization being started
+   * @returns the `TeiidStatus` model object
+   * @throws an `Error` if there was a problem starting the virtualization.
+   */
+  const startVirtualization = async (
+    virtualizationName: string,
+    virtualizationRevision: number
+  ): Promise<TeiidStatus> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'POST',
+      url: `${
+        apiContext.dvApiUri
+      }virtualizations/publish/${virtualizationName}/${virtualizationRevision}/start`,
+    });
+
+    if (!response.ok) {
+      return Promise.reject(new Error(response.statusText));
+    }
+
+    const status = (await response.json()) as TeiidStatus;
+    if (status.attributes.error) {
+      return Promise.reject(new Error(status.attributes.error));
+    }
+
+    return status;
+  };
+
+  /**
    * Get ViewDefinition for the supplied virtualization and view name
    * @param virtualizationName the name of the virtualization
    * @param viewName the name of the view
@@ -489,7 +551,9 @@ export const useVirtualizationHelpers = () => {
     importVirtualization,
     publishVirtualization,
     queryVirtualization,
+    revertVirtualization,
     saveViewDefinition,
+    startVirtualization,
     unpublishVirtualization,
     updateVirtualizationDescription,
     validateViewName,

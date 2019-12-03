@@ -15,9 +15,6 @@
  */
 package io.syndesis.connector.odata;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,6 +32,10 @@ import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.core.ODataClientFactory;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 public class BaseOlingo4Test extends AbstractODataTest {
 
@@ -166,6 +167,9 @@ public class BaseOlingo4Test extends AbstractODataTest {
             result.setMinimumExpectedMessageCount(1);
             result.assertIsSatisfied();
 
+            //
+            // Split is true by default hence the return of a client entity rather than an entity set
+            //
             Object body = result.getExchanges().get(0).getIn().getBody();
             assertTrue(body instanceof ClientEntity);
             ClientEntity cmEntity = (ClientEntity) body;

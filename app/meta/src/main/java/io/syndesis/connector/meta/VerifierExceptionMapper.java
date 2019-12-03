@@ -15,18 +15,17 @@
  */
 package io.syndesis.connector.meta;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.StringJoiner;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
+import java.nio.charset.StandardCharsets;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.Optional;
+import java.util.StringJoiner;
 
 import io.syndesis.common.util.SyndesisServerException;
-
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,7 +72,9 @@ public class VerifierExceptionMapper implements ExceptionMapper<Throwable> {
                 headersJoined.add(header + ": " + String.join("|", Collections.list(request.getHeaders(header))));
             }
             LOG.debug("Headers: \n{}", headersJoined.toString());
-            LOG.debug("Request content: \n{}", new String(requestCache.getContentAsByteArray(), StandardCharsets.UTF_8));
+            LOG.debug("Request content: \n{}", Optional.ofNullable(requestCache)
+                                                       .map(req -> new String(req.getContentAsByteArray(), StandardCharsets.UTF_8))
+                                                       .orElse(""));
         }
 
         final Error error = new Error(500, rootCauseMessage(exception), exception.getMessage());

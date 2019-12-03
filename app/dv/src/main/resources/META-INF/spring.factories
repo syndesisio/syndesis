@@ -1,0 +1,6 @@
+# Configurations
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.syndesis.dv.server.DvAutoConfiguration
+
+
+# Listeners

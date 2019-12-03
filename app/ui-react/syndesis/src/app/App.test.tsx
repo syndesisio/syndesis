@@ -1,4 +1,4 @@
-import { render, waitForElement } from 'react-testing-library';
+import { render, waitForElement } from '@testing-library/react';
 import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router';

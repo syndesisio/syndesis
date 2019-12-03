@@ -38,14 +38,20 @@ export const VirtualizationNavBar: React.FunctionComponent<
           })}
         />
         <TabBarItem
+          label={t('sqlClient')}
+          to={resolvers.virtualizations.sqlClient({
+            virtualization,
+          })}
+        />
+        <TabBarItem
           label={t('details')}
           to={resolvers.virtualizations.details({
             virtualization,
           })}
         />
         <TabBarItem
-          label={t('sqlClient')}
-          to={resolvers.virtualizations.sqlClient({
+          label={t('Metrics')}
+          to={resolvers.virtualizations.metrics({
             virtualization,
           })}
         />

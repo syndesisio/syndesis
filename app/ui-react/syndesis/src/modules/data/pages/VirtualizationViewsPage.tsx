@@ -79,9 +79,14 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
   const { pushNotification } = React.useContext(UIContext);
 
   /**
+   * Hook to handle localization.
+   */
+  const { t } = useTranslation(['data', 'shared']);
+
+  /**
    * Hook to obtain route params and history.
    */
-  const { params, state, history } = useRouteData<
+  const { params, state } = useRouteData<
     IVirtualizationEditorPageRouteParams,
     IVirtualizationEditorPageRouteState
   >();
@@ -90,11 +95,6 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
    * Hook to obtain the virtualization being edited. Also does polling to get virtualization descriptor updates.
    */
   const { model: virtualization } = useVirtualization(params.virtualizationId);
-
-  /**
-   * Hook to handle localization.
-   */
-  const { t } = useTranslation(['data', 'shared']);
 
   /**
    * Hook to obtain view descriptors. Also does polling to get any view descriptor updates.
@@ -150,17 +150,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
     }
   };
 
-  /**
-   * Callback for when a virtualization is successfully deleted. This will route to the virtualization
-   * list page.
-   */
-  const deleteCallback = React.useCallback(() => {
-    history.push(resolvers.data.virtualizations.list().pathname);
-  }, [history]);
-
   return (
     <VirtualizationEditorPage
-      onDeleteSuccess={deleteCallback}
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
@@ -252,6 +243,8 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('shared:Edit')}
+                            i18nInvalid={t('Invalid')}
+                            isValid={viewDefinitionDescriptor.valid}
                             onDelete={handleDeleteView}
                           />
                         )

@@ -175,7 +175,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
                       children={children}
-                      stepName={(s.action && s.action.name) || s.name!}
+                      stepName={`${idx + 1}. ${(s.action && s.action.name) || s.name!}`}
                       stepDescription={
                         (s.action! && s.action!.description) || ''
                       }

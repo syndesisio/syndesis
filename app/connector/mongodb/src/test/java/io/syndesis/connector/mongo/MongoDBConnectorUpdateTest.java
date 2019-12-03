@@ -24,11 +24,29 @@ import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
-public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
+public class MongoDBConnectorUpdateTest extends MongoDBConnectorProducerTestSupport {
+
+    private final static String COLLECTION = "updateCollection";
+
+    @Override
+    public String getCollectionName() {
+        return COLLECTION;
+    }
 
     @Override
     protected List<Step> createSteps() {
-        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION);
+        String filter = null;
+        String updateExpression = "{$set: {\"test\": \":#someText\"}}";
+        switch (getTestMethodName()) {
+            case "mongoUpdateSingleTest":
+                filter = "{\"_id\": :#id}";
+                break;
+            case "mongoUpdateMultiTest":
+                filter = "{\"batchNo\": :#batchNo}";
+                break;
+        }
+        return fromDirectToMongo("start", "io.syndesis.connector:connector-mongodb-update", DATABASE, COLLECTION, null,
+            filter, updateExpression);
     }
 
     @Test
@@ -39,13 +57,11 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json));
         collection.insertOne(Document.parse(json2));
         // Given
-        // { $set: { <field1>: <value1>, ... } }
-        String updateArguments = "[{\"_id\":11},{$set: {\"test\":\"updated!\"}}]";
+        String updateArguments = "{\"id\":11, \"someText\":\"updated!\"}";
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("_id", 11)).into(new ArrayList<>());
         Assertions.assertThat(docsFound).hasSize(1);
-        Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
         Assertions.assertThat(docsFound.get(0).getString("test")).isEqualTo("updated!");
         Assertions.assertThat(result).isEqualTo(1L);
     }
@@ -59,7 +75,7 @@ public class MongoDBConnectorUpdateTest extends MongoDBConnectorTestSupport {
         collection.insertOne(Document.parse(json2));
         // Given
         // { $set: { <field1>: <value1>, ... } }
-        String updateArguments = "[{\"batchNo\":33},{$set: {\"test\":\"updated!\"}}]";
+        String updateArguments = "{\"batchNo\":33, \"someText\":\"updated!\"}";
         Long result = template.requestBody("direct:start", updateArguments, Long.class);
         // Then
         List<Document> docsFound = collection.find(Filters.eq("batchNo", 33)).into(new ArrayList<>());

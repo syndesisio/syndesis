@@ -276,14 +276,13 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             isProgressWithLink={isProgressWithLink}
                             i18nDeleteInProgressText={t('deleteInProgress')}
                             i18nPublishInProgressText={t('publishInProgress')}
-                            i18nUnpublishInProgressText={t(
-                              'unpublishInProgress'
-                            )}
+                            i18nStopInProgressText={t('stopInProgress')}
                             i18nPublishState={publishStateText}
                             labelType={labelType}
                             detailsPageLink={resolvers.virtualizations.views.root(
                               { virtualization }
                             )}
+                            modified={virtualization.modified}
                             hasViews={!virtualization.empty}
                             virtualizationName={virtualization.name}
                             virtualizationDescription={getDescription(
@@ -295,6 +294,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nDeleteModalMessage={t('deleteModalMessage', {
                               name: virtualization.name,
                             })}
+                            i18nViewODataUrlText={t('viewOData')}
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
@@ -303,19 +303,19 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                               virtualization.usedBy
                             )}
                             i18nPublish={t('shared:Publish')}
-                            i18nUnpublish={t('shared:Unpublish')}
-                            i18nUnpublishModalMessage={t(
-                              'unpublishModalMessage',
-                              {
-                                name: virtualization.name,
-                              }
-                            )}
-                            i18nUnpublishModalTitle={t('unpublishModalTitle')}
+                            i18nStop={t('shared:Stop')}
+                            i18nStopModalMessage={t('stopModalMessage', {
+                              name: virtualization.name,
+                            })}
+                            i18nStopModalTitle={t('stopModalTitle')}
                             onDelete={doDelete}
                             onExport={doExport}
-                            onUnpublish={doUnpublish}
+                            onStop={doUnpublish}
                             onPublish={doPublish}
                             currentPublishedState={publishingDetails.state}
+                            currentPublishedVersion={
+                              virtualization.publishedRevision
+                            }
                             publishingLogUrl={publishingDetails.logUrl}
                             publishingCurrentStep={publishingDetails.stepNumber}
                             publishingTotalSteps={publishingDetails.stepTotal}

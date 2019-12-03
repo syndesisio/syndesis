@@ -62,10 +62,10 @@ public class IntegrationDeploymentITCase extends BaseITCase {
 
     @Test
     public void shouldCreateSubsequentDeploymentsAndAvailThem() {
-        final ResponseEntity<IntegrationDeployment> first = put("/api/v1/integrations/test-id/deployments", null,
+        put("/api/v1/integrations/test-id/deployments", null,
             IntegrationDeployment.class, tokenRule.validToken(), HttpStatus.OK);
 
-        final ResponseEntity<IntegrationDeployment> second = put("/api/v1/integrations/test-id/deployments", null,
+        put("/api/v1/integrations/test-id/deployments", null,
             IntegrationDeployment.class, tokenRule.validToken(), HttpStatus.OK);
 
         final ResponseEntity<IntegrationDeploymentResult> fetched = get("/api/v1/integrations/test-id/deployments",
@@ -75,12 +75,12 @@ public class IntegrationDeploymentITCase extends BaseITCase {
         assertThat(deployments.items).hasSize(2);
         assertThat(deployments.totalCount).isEqualTo(2);
 
-        assertThat(deployments.items.get(0))
-            .isEqualTo(first.getBody().withCurrentState(IntegrationDeploymentState.Unpublished)
-                .withTargetState(IntegrationDeploymentState.Unpublished));
-        assertThat(deployments.items.get(1))
-            .isEqualTo(second.getBody().withCurrentState(IntegrationDeploymentState.Pending)
-                .withTargetState(IntegrationDeploymentState.Published));
+        final IntegrationDeployment first = deployments.items.get(0);
+        assertThat(first.getCurrentState()).isIn(IntegrationDeploymentState.Unpublished, IntegrationDeploymentState.Pending);
+        assertThat(first.getTargetState()).isEqualTo(IntegrationDeploymentState.Unpublished);
+        final IntegrationDeployment second = deployments.items.get(1);
+        assertThat(second.getCurrentState()).isIn(IntegrationDeploymentState.Published, IntegrationDeploymentState.Pending);
+        assertThat(second.getTargetState()).isEqualTo(IntegrationDeploymentState.Published);
     }
 
     @Test

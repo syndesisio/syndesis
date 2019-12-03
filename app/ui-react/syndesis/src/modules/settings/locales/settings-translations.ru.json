@@ -1,0 +1,10 @@
+{
+  "OAuthApplicationManagement": "Управление OAuth",
+  "OAuthApplicationManagementPageDescription": "Для соединения с приложениями, использующими протокол OAuth, получити client ID и client secret для приложения.  См <a target=\"blank\" href=\"{{docLink}}\">документацию</a>.",
+  "OAuthCallbackDescription": "При регистрации введите этот callback URL.",
+  "OAuthAppNotConfigured": "Доступ в приложение не настроен.",
+  "RemoveOAuthAppTitle": "Подтверждате удаление?",
+  "RemoveOAuthAppCredentials": "Вы уверены, что хотите удалить credentials для '{{name}}'?",
+  "RegistrationSuccessful": "Регистрация успешна!",
+  "RegistrationSuccessAlertDetail": "Вы можете проверить эти значения при создании Соединения к {{name}}."
+}

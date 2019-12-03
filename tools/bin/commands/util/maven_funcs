@@ -6,41 +6,43 @@ POD_MODULES="meta server ui operator"
 call_maven() {
     local args=$1
     local maven_modules=$2
+    local args_to_use=$args
+
     check_error $maven_modules
     if [ -z "${maven_modules}" ]; then
       return
     fi
 
+    if [ $(hasflag --settings -s) ]; then
+      args_to_use+=" -s $(readopt --settings -s)"
+    fi
+
     pushd "$(appdir)" > /dev/null
 
     if [ "EVERYTHING" == "${maven_modules}" ]; then
-        echo "=============================================================================="
-        echo "./mvnw $args"
-        echo "=============================================================================="
-        ./mvnw $args
+      _call_maven_internal "$args_to_use" "Building everything"
     else
       echo "Modules: $maven_modules"
-      echo "=============================================================================="
-      echo "./mvnw -N --batch-mode install -Pflash ### Installing parent pom.xml"
-      ./mvnw -N --batch-mode install -Pflash
+      _call_maven_internal "-N $args_to_use -Pflash" "Installing parent"
       for module in $maven_modules; do
-        echo "=============================================================================="
         if [ "${module//:/}" != "${module}" ]; then
             # build submodule defined with [groupId]:artifactId
             if [ "$(hasflag --dependencies -d)" ]; then
-                args="-am ${args}"
+                args_to_use+=" -am"
             fi
-
-            echo "./mvnw -pl $module $args ### Processing submodule $module"
-            echo "=============================================================================="
-            ./mvnw -pl $module $args
+            _call_maven_internal "$args_to_use -pl $module" "Processing submodule $module"
         else
-            echo "./mvnw -f $module $args ### Processing module $module"
-            echo "=============================================================================="
-            ./mvnw -f $module $args
+            _call_maven_internal "$args_to_use -f $module" "Processing submodule $module"
         fi
       done
     fi
 
     popd >/dev/null
+}
+
+_call_maven_internal() {
+    echo "=============================================================================="
+    echo "./mvnw $1 ### $2"
+    echo "=============================================================================="
+    ./mvnw $1
 }

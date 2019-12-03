@@ -15,11 +15,9 @@
  */
 package io.syndesis.connector.email.consumer;
 
-import static org.junit.Assume.assumeThat;
 import java.util.Map;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,6 +26,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -41,6 +40,8 @@ import io.syndesis.connector.email.component.EMailComponentFactory;
 import io.syndesis.connector.email.customizer.EMailReceiveCustomizer;
 import io.syndesis.connector.email.model.EMailMessageModel;
 import io.syndesis.connector.support.util.PropertyBuilder;
+
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -94,7 +95,7 @@ public class EMailReadWithTLSRouteTest extends AbstractEmailTest implements Rout
      */
     @Test
     public void testImapEMailRouteWithStartTLS() throws Exception {
-        assumeThat(HOSTNAME, CoreMatchers.is(CoreMatchers.not(NO_HOST)));
+        assumeThat(HOSTNAME).isNotEqualTo(NO_HOST);
 
         Protocol protocol = Protocol.IMAP;
 

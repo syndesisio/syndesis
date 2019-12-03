@@ -233,14 +233,11 @@ update_pom_versions() {
 update_image_versions() {
     local topdir="$1"
     local version="$2"
-    local moving_tag="$3"
-    local next_version="$(get_next_version $moving_tag)"
 
     echo "==== Updating image versions to $version"
-    sed "s/Syndesis: latest/Syndesis: $version/" -i $topdir/install/operator/build/conf/config.yaml
-    sed "s/Upgrade: latest/Upgrade: $version/" -i $topdir/install/operator/build/conf/config.yaml
-    sed "s/TagMinor: .*$/TagMinor: \"$moving_tag\"/" -i $topdir/install/operator/build/conf/config.yaml
-    sed "s/TagMajor: .*$/TagMajor: \"$next_version\"/" -i $topdir/install/operator/build/conf/config.yaml
+    for image in syndesis-dv syndesis-ui syndesis-s2i syndesis-upgrade syndesis-meta syndesis-server; do
+        sed -E "s|($image):latest|\1:$version|" -i $topdir/install/operator/build/conf/config.yaml
+    done
 }
 
 check_github_username() {
@@ -326,14 +323,6 @@ publish_artifacts() {
           return
         fi
     done
-}
-
-get_next_version() {
-    local version="$1"
-    local prefix="${version%.*}"
-    local suffix="${version##*.}"
-
-    echo "$prefix"."$((suffix+1))"
 }
 
 build_and_stage_artefacts() {

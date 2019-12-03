@@ -144,7 +144,7 @@ public abstract class AbstractMavenProjectBuilder<T extends AbstractMavenProject
     }
 
     protected Properties customizeApplicationProperties(Properties applicationProperties) {
-        applicationProperties.put("management.port", String.valueOf(SyndesisTestEnvironment.getManagementPort()));
+        applicationProperties.put("management.server.port", String.valueOf(SyndesisTestEnvironment.getManagementPort()));
         return applicationProperties;
     }
 

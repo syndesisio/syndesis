@@ -11,7 +11,7 @@ require (
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.4
-	github.com/imdario/mergo v0.3.7
+	github.com/imdario/mergo v0.3.8
 	github.com/openshift/api v3.9.0+incompatible
 	github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
 	github.com/pkg/errors v0.8.1
@@ -31,7 +31,7 @@ require (
 	k8s.io/gengo v0.0.0-20190327210449-e17681d19d3a
 	k8s.io/kube-openapi v0.0.0-20190603182131-db7b694dc208
 	sigs.k8s.io/controller-runtime v0.4.0
-	sigs.k8s.io/controller-tools v0.2.2
+	sigs.k8s.io/controller-tools v0.2.4
 	sigs.k8s.io/yaml v1.1.0
 )
 

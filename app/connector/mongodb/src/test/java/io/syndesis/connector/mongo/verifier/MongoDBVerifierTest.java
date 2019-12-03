@@ -21,6 +21,7 @@ import java.util.Map;
 
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
+import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.assertj.core.api.Assertions;
@@ -30,6 +31,7 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
 
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
     private final static MongoDBVerifier VERIFIER = new MongoDBVerifier();
+    private final static String COLLECTION = "verifierCollection";
 
     @Override
     protected List<Step> createSteps() {
@@ -40,10 +42,10 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionOK() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
-        params.put("password", PASSWORD);
-        params.put("database", ADMIN_DB);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
+        params.put("database", EmbedMongoConfiguration.ADMIN_DB);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
@@ -57,9 +59,9 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionFallbackAdmin() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
-        params.put("password", PASSWORD);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
@@ -74,11 +76,11 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionFullParamsOK() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
-        params.put("password", PASSWORD);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
-        params.put("adminDB", ADMIN_DB);
+        params.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
             CONNECTOR_ID, params);
@@ -93,8 +95,8 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         //When
         Map<String, Object> params = new HashMap<>();
         params.put("host", "notReachableHost");
-        params.put("user", USER);
-        params.put("password", PASSWORD);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
@@ -108,8 +110,8 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionMissingParams() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
         params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,
@@ -123,8 +125,8 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionNotAuthenticated() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
         params.put("password", "wrongPassword");
         params.put("database", DATABASE);
         //Given
@@ -139,9 +141,9 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
     public void verifyConnectionAdminDBKO() {
         //When
         Map<String, Object> params = new HashMap<>();
-        params.put("host", HOST + ":" + PORT);
-        params.put("user", USER);
-        params.put("password", PASSWORD);
+        params.put("host", EmbedMongoConfiguration.HOST + ":" + EmbedMongoConfiguration.PORT);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("adminDB", "someAdminDB");
         params.put("database", DATABASE);
         //Given
@@ -157,8 +159,8 @@ public class MongoDBVerifierTest extends MongoDBConnectorTestSupport {
         //When
         Map<String, Object> params = new HashMap<>();
         params.put("host", "localhost:12343");
-        params.put("user", USER);
-        params.put("password", PASSWORD);
+        params.put("user", EmbedMongoConfiguration.USER);
+        params.put("password", EmbedMongoConfiguration.PASSWORD);
         params.put("database", DATABASE);
         //Given
         List<VerifierResponse> response = VERIFIER.verify(this.context,

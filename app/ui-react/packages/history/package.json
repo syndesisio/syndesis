@@ -34,7 +34,7 @@
   "dependencies": {
     "@babel/runtime": "^7.1.2",
     "loose-envify": "^1.2.0",
-    "resolve-pathname": "^2.2.0",
+    "resolve-pathname": "^3.0.0",
     "tiny-invariant": "^1.0.2",
     "tiny-warning": "^1.0.0",
     "value-equal": "^0.4.0"
@@ -45,7 +45,7 @@
     "@babel/plugin-transform-runtime": "^7.1.0",
     "@babel/preset-env": "^7.1.0",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-eslint": "^7.0.0",
+    "babel-eslint": "^9.0.0",
     "babel-loader": "^8.0.4",
     "babel-plugin-dev-expression": "^0.2.1",
     "eslint": "^3.3.0",

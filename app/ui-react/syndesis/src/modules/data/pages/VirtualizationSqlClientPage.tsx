@@ -1,10 +1,14 @@
 import { useViewDefinitionDescriptors, useVirtualization } from '@syndesis/api';
-import { SqlClientContentSkeleton } from '@syndesis/ui';
+import {
+  SqlClientContentSkeleton 
+} from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
-import { WithVirtualizationSqlClientForm } from '../shared';
+import { 
+  WithVirtualizationSqlClientForm 
+} from '../shared';
 import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
@@ -18,7 +22,7 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   /**
    * Hook to obtain route params and history.
    */
-  const { params, state, history } = useRouteData<
+  const { params, state } = useRouteData<
     IVirtualizationEditorPageRouteParams,
     IVirtualizationEditorPageRouteState
   >();
@@ -38,17 +42,8 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     model: viewDefinitionDescriptors,
   } = useViewDefinitionDescriptors(params.virtualizationId);
 
-  /**
-   * Callback for when a virtualization is successfully deleted. This will route to the virtualization
-   * list page.
-   */
-  const deleteCallback = React.useCallback(() => {
-    history.push(resolvers.data.virtualizations.list().pathname);
-  }, [history]);
-
   return (
     <VirtualizationEditorPage
-      onDeleteSuccess={deleteCallback}
       routeParams={params}
       routeState={state}
       virtualization={virtualization}

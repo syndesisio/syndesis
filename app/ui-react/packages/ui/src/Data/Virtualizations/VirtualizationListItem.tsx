@@ -34,7 +34,7 @@ export interface IVirtualizationListItemProps {
   isProgressWithLink: boolean;
   i18nDeleteInProgressText: string;
   i18nPublishInProgressText: string;
-  i18nUnpublishInProgressText: string;
+  i18nStopInProgressText: string;
   /**
    * The text to use for the label.
    */
@@ -44,9 +44,10 @@ export interface IVirtualizationListItemProps {
    */
   labelType: 'danger' | 'primary' | 'default';
   /**
-   * The publish state returned from the backend.
+   * The publish state and version returned from the backend.
    */
   currentPublishedState: VirtualizationPublishState;
+  currentPublishedVersion?: number;
   detailsPageLink: H.LocationDescriptor;
   hasViews: boolean;
   i18nCancelText: string;
@@ -59,10 +60,12 @@ export interface IVirtualizationListItemProps {
   i18nInUseText: string;
   i18nPublish: string;
   i18nPublishLogUrlText: string;
-  i18nUnpublish: string;
-  i18nUnpublishModalMessage: string;
-  i18nUnpublishModalTitle: string;
+  i18nViewODataUrlText: string;
+  i18nStop: string;
+  i18nStopModalMessage: string;
+  i18nStopModalTitle: string;
   icon?: string;
+  modified: boolean;
   odataUrl?: string;
 
   /**
@@ -81,9 +84,9 @@ export interface IVirtualizationListItemProps {
   onPublish: (virtualizationName: string, hasViews: boolean) => Promise<void>;
 
   /**
-   * @param virtualizationName the name of the virtualization being unpublished
+   * @param virtualizationName the name of the virtualization being stopped (unpublished)
    */
-  onUnpublish: (virtualizationName: string) => Promise<void>;
+  onStop: (virtualizationName: string) => Promise<void>;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -100,7 +103,9 @@ export const VirtualizationListItem: React.FunctionComponent<
     false
   );
   const [labelType, setLabelType] = React.useState(props.labelType);
-  const [publishStateText, setPublishStateText] = React.useState(props.i18nPublishState);
+  const [publishStateText, setPublishStateText] = React.useState(
+    props.i18nPublishState
+  );
   const [working, setWorking] = React.useState(false);
 
   React.useEffect(() => {
@@ -108,9 +113,9 @@ export const VirtualizationListItem: React.FunctionComponent<
 
     if (props.i18nPublishState) {
       if (
-        props.currentPublishedState !== NOTFOUND
-        && props.currentPublishedState !== RUNNING
-        && props.currentPublishedState !== FAILED
+        props.currentPublishedState !== NOTFOUND &&
+        props.currentPublishedState !== RUNNING &&
+        props.currentPublishedState !== FAILED
       ) {
         changeText = false;
       }
@@ -121,9 +126,9 @@ export const VirtualizationListItem: React.FunctionComponent<
     }
 
     setWorking(
-      props.currentPublishedState !== NOTFOUND
-      && props.currentPublishedState !== RUNNING
-      && props.currentPublishedState !== FAILED
+      props.currentPublishedState !== NOTFOUND &&
+        props.currentPublishedState !== RUNNING &&
+        props.currentPublishedState !== FAILED
     );
   }, [props.i18nPublishState, props.currentPublishedState]);
 
@@ -160,7 +165,7 @@ export const VirtualizationListItem: React.FunctionComponent<
 
   const doExport = () => {
     props.onExport(props.virtualizationName);
-  }
+  };
 
   const doPublish = async () => {
     setWorking(true);
@@ -168,25 +173,22 @@ export const VirtualizationListItem: React.FunctionComponent<
     const saveLabelType = labelType;
     setLabelType('default');
     setPublishStateText(props.i18nPublishInProgressText);
-    await props.onPublish(
-      props.virtualizationName,
-      props.hasViews
-    ).catch(() => {
-      // restore previous values
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-    });
+    await props.onPublish(props.virtualizationName, props.hasViews).catch(() => {
+        // restore previous values
+        setPublishStateText(saveText);
+        setLabelType(saveLabelType);
+      });
     setWorking(false);
   };
 
-  const doUnpublish = async () => {
+  const doStop = async () => {
     setWorking(true);
     const saveText = publishStateText;
     const saveLabelType = labelType;
     setLabelType('default');
-    setPublishStateText(props.i18nUnpublishInProgressText);
+    setPublishStateText(props.i18nStopInProgressText);
     setShowConfirmationDialog(false);
-    await props.onUnpublish(props.virtualizationName).catch(() => {
+    await props.onStop(props.virtualizationName).catch(() => {
       // restore previous values
       setPublishStateText(saveText);
       setLabelType(saveLabelType);
@@ -200,39 +202,46 @@ export const VirtualizationListItem: React.FunctionComponent<
     }
   };
 
-  // Determine published state
-  const isPublished = props.currentPublishedState === RUNNING;
+  // Determine if virtualization is running
+  const isRunning = props.currentPublishedState === RUNNING;
+
+  const shouldDisablePublish =
+    working ||
+    props.isProgressWithLink ||
+    !props.virtualizationName ||
+    (!props.modified && isRunning);
+
+  const shouldDisableStop =
+    props.usedBy.length > 0 ||
+    working ||
+    !isRunning ||
+    !props.virtualizationName;
+
+  const shouldDisableDelete =
+    props.usedBy.length > 0 || working || props.isProgressWithLink || isRunning;
 
   return (
     <>
       <ConfirmationDialog
         buttonStyle={
-          isPublished
+          isRunning
             ? ConfirmationButtonStyle.WARNING
             : ConfirmationButtonStyle.DANGER
         }
         i18nCancelButtonText={props.i18nCancelText}
-        i18nConfirmButtonText={
-          isPublished ? props.i18nUnpublish : props.i18nDelete
-        }
+        i18nConfirmButtonText={isRunning ? props.i18nStop : props.i18nDelete}
         i18nConfirmationMessage={
-          isPublished
-            ? props.i18nUnpublishModalMessage
-            : props.i18nDeleteModalMessage
+          isRunning ? props.i18nStopModalMessage : props.i18nDeleteModalMessage
         }
         i18nTitle={
-          isPublished
-            ? props.i18nUnpublishModalTitle
-            : props.i18nDeleteModalTitle
+          isRunning ? props.i18nStopModalTitle : props.i18nDeleteModalTitle
         }
         icon={
-          isPublished
-            ? ConfirmationIconType.WARNING
-            : ConfirmationIconType.DANGER
+          isRunning ? ConfirmationIconType.WARNING : ConfirmationIconType.DANGER
         }
         showDialog={showConfirmationDialog}
         onCancel={doCancel}
-        onConfirm={isPublished ? doUnpublish : doDelete}
+        onConfirm={isRunning ? doStop : doDelete}
       />
       <ListViewItem
         data-testid={`virtualization-list-item-${toValidHtmlId(
@@ -242,9 +251,12 @@ export const VirtualizationListItem: React.FunctionComponent<
           <div className="form-group">
             <PublishStatusWithProgress
               isProgressWithLink={props.isProgressWithLink}
+              inListView={true}
               i18nPublishState={publishStateText}
-              labelType={labelType}
               i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+              labelType={labelType}
+              modified={props.modified}
+              publishVersion={props.currentPublishedVersion}
               publishingCurrentStep={props.publishingCurrentStep}
               publishingLogUrl={props.publishingLogUrl}
               publishingTotalSteps={props.publishingTotalSteps}
@@ -268,30 +280,33 @@ export const VirtualizationListItem: React.FunctionComponent<
             >
               <MenuItem
                 className={'virtualization-list-item__menuItem'}
+                onClick={doPublish}
+                disabled={shouldDisablePublish}
+                data-testid={`virtualization-list-item-${
+                  props.virtualizationName
+                }-publish`}
+              >
+                {props.i18nPublish}
+              </MenuItem>
+              <MenuItem
+                className={'virtualization-list-item__menuItem'}
+                onClick={doStop}
+                disabled={shouldDisableStop}
+                data-testid={`virtualization-list-item-${
+                  props.virtualizationName
+                }-stop`}
+              >
+                {props.i18nStop}
+              </MenuItem>
+              <MenuItem
+                className={'virtualization-list-item__menuItem'}
                 onClick={showConfirmDialog}
-                disabled={
-                  props.usedBy.length > 0 ||
-                  working ||
-                  props.isProgressWithLink ||
-                  isPublished
-                }
+                disabled={shouldDisableDelete}
                 data-testid={`virtualization-list-item-${
                   props.virtualizationName
                 }-delete`}
               >
                 {props.i18nDelete}
-              </MenuItem>
-              <MenuItem
-                className={'virtualization-list-item__menuItem'}
-                onClick={isPublished ? doUnpublish : doPublish}
-                disabled={
-                  props.usedBy.length > 0 ||
-                  working ||
-                  props.isProgressWithLink ||
-                  !props.virtualizationName
-                }
-              >
-                {isPublished ? props.i18nUnpublish : props.i18nPublish}
               </MenuItem>
               <MenuItem
                 data-testid={`virtualization-list-item-${
@@ -321,7 +336,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                   target="_blank"
                   href={props.odataUrl}
                 >
-                  {props.odataUrl}
+                  {props.i18nViewODataUrlText}
                   <Icon
                     className={'virtualization-list-item-odata-link-icon'}
                     name={'external-link'}

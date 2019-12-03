@@ -10,12 +10,15 @@ import './VirtualizationDetailsHeader.css';
 export interface IVirtualizationDetailsHeaderProps {
   isProgressWithLink: boolean;
   i18nPublishState: string;
-  labelType: 'danger' | 'primary' | 'default';
   i18nDescriptionPlaceholder: string;
   i18nInUseText: string;
   i18nPublishLogUrlText: string;
+  i18nODataUrlText: string;
+  labelType: 'danger' | 'primary' | 'default';
+  modified: boolean;
   odataUrl?: string;
   publishedState: VirtualizationPublishState;
+  publishedVersion?: number;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
   publishingTotalSteps?: number;
@@ -35,7 +38,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
 > = props => {
   return (
     <PageSection className={'virtualization-details-header'} variant={'light'}>
-      <Stack gutter="md">
+      <Stack>
         <StackItem>
           <Split gutter="md" className={'virtualization-details-header__row'}>
             <SplitItem className="virtualization-details-header__virtualizationName">
@@ -45,13 +48,16 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               {!props.isWorking ? (
                 <PublishStatusWithProgress
                   isProgressWithLink={props.isProgressWithLink}
+                  inListView={false}
                   i18nPublishState={props.i18nPublishState}
-                  labelType={props.labelType}
                   i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+                  labelType={props.labelType}
+                  modified={props.modified}
                   publishingCurrentStep={props.publishingCurrentStep}
                   publishingLogUrl={props.publishingLogUrl}
                   publishingTotalSteps={props.publishingTotalSteps}
                   publishingStepText={props.publishingStepText}
+                  publishVersion={props.publishedVersion}
                 />
               ) : (
                 <Loader size={'sm'} inline={true} />
@@ -63,7 +69,7 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                     target="_blank"
                     href={props.odataUrl}
                   >
-                    {props.odataUrl}
+                    {props.i18nODataUrlText}
                     <Icon
                       className={
                         'virtualization-details-header-odata-link-icon'

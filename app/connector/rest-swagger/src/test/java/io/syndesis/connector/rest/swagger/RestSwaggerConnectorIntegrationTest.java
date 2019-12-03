@@ -181,6 +181,23 @@ public class RestSwaggerConnectorIntegrationTest {
     }
 
     @Test
+    public void shouldPassArrayQueryParameters() {
+        final String doggieArray = "[" + DOGGIE + "]";
+
+        wiremock.givenThat(get("/v2/pet/findByStatus?status=available&status=pending")
+            .willReturn(ok(doggieArray)
+                .withHeader("Content-Type", "application/json")));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:findPetsByStatus",
+            "{\"parameters\":{\"status\":[\"available\",\"pending\"]}}", String.class))
+                .isEqualTo(doggieArray);
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/findByStatus?status=available&status=pending"))
+            .withHeader("Accept", equalTo("application/json"))
+            .withRequestBody(WireMock.equalTo("")));
+    }
+
+    @Test
     public void shouldPassAuthenticationParameterHeader() throws Exception {
         wiremock.givenThat(get("/v2/user/logout")
             .withHeader("apiKey", equalTo("supersecret"))

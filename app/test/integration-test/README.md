@@ -22,7 +22,6 @@ the database.
 * [Syndesis server container](#syndesis-server-container)
 * [Infrastructure containers](#infrastructure-containers)
   * [AMQ Message Broker](#amq-message-broker)
-  * [Kafka Message Broker](#kafka-message-broker)
 * [Simulate 3rd party interfaces](#simulate-3rd-party-interfaces)
 * [Customize integrations](#customize-integrations)
 * [Logging](#logging)
@@ -191,11 +190,11 @@ public void timeToLogExportTest() {
 
     try (SyndesisIntegrationRuntimeContainer integrationContainer = integrationContainerBuilder.build()) {
         integrationContainer.start();
-    
+
         //do something with the integration runtime container
     }
-}   
-``` 
+}
+```
 
 The `try-with-resources` block ensures that the container is stopped once the test is finished.
 
@@ -214,7 +213,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                 .fromExport(TimerToLog_IT.class.getResourceAsStream("TimerToLog-export.zip"))
                 .build();
 ```
- 
+
 ### From integration model
 
 You can create the integration model and run that integration in the runtime container. The integration model can be seen easily within the test and you can
@@ -257,7 +256,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
                     .build()))
             .build())
         .build();
-``` 
+```
 
 ### From integration fat jar 
 
@@ -593,7 +592,7 @@ public static SyndesisIntegrationRuntimeContainer integrationContainer = new Syn
         .fromExport(HttpToHttp_IT.class.getResourceAsStream("HttpToHttp-export.zip"))
         .enableLogging()
         .build();
-``` 
+```
 
 The `enableLogging` setting enables container logging to the logback logger. By default the container logs are sent to a separate log file `target/integration-runtime.log`.
 

@@ -55,7 +55,8 @@ minishift::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    if [ $(hasflag -f --force-binary-download) ]; then
+    release_tag="$(readopt --tag)"
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi
@@ -130,6 +131,12 @@ minishift::run() {
         if ! $(oc get crd | grep "syndesises.syndesis.io" >/dev/null 2>&1); then
             echo "Installing Syndesis CRD"
             local result=$($OPERATOR_BINARY install cluster)
+            check_error "$result"
+        fi
+
+        if [[ "system:admin" != "$user" ]]; then
+            echo "Grant user $user permissions"
+            local result=$($OPERATOR_BINARY grant --user $user)
             check_error "$result"
         fi
 

@@ -4,15 +4,20 @@ import {
   VirtualizationPublishingDetails,
 } from '@syndesis/models';
 import {
+  IVirtualizationAction,
   PageSection,
-  ViewHeaderBreadcrumb,
+  VirtualizationBreadcrumb,
   VirtualizationDetailsHeader,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { AppContext, UIContext } from '../../../app';
 import resolvers from '../../resolvers';
-import { VirtualizationNavBar } from '../shared';
+import {
+  VirtualizationActionContainer,
+  VirtualizationActionId,
+  VirtualizationNavBar,
+} from '../shared';
 import {
   getOdataUrl,
   getPublishingDetails,
@@ -40,6 +45,23 @@ export interface IVirtualizationEditorPageRouteState {
 
 export interface IVirtualizationEditorPageProps {
   /**
+   * The breadcrumb button actions. Leave `undefined` if default actions are wanted.
+   */
+  actions?: VirtualizationActionId[];
+
+  deleteActionCustomProps?: IVirtualizationAction;
+  exportActionCustomProps?: IVirtualizationAction;
+  publishActionCustomProps?: IVirtualizationAction;
+  saveActionCustomProps?: IVirtualizationAction;
+  startActionCustomProps?: IVirtualizationAction;
+  stopActionCustomProps?: IVirtualizationAction;
+
+  /**
+   * The breadcrumb kebab menu items. Leave `undefined` if default kebab menu items are wanted.
+   */
+  items?: VirtualizationActionId[];
+
+  /**
    * The route parameters.
    */
   routeParams: IVirtualizationEditorPageRouteParams;
@@ -53,11 +75,6 @@ export interface IVirtualizationEditorPageProps {
    * The virtualization being edited.
    */
   virtualization: Virtualization;
-
-  /**
-   * The callback for when a virtualization has been successfully deleted.
-   */
-  onDeleteSuccess: () => void;
 }
 
 export const VirtualizationEditorPage: React.FunctionComponent<
@@ -81,39 +98,18 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   /**
    * Hook that provides helper methods.
    */
-  const {
-    deleteVirtualization,
-    exportVirtualization,
-    publishVirtualization,
-    unpublishVirtualization,
-    updateVirtualizationDescription,
-  } = useVirtualizationHelpers();
+  const { updateVirtualizationDescription } = useVirtualizationHelpers();
 
-  // **********************
-  // state
-  // **********************
+  /**
+   * State for the current published state.
+   */
   const [currPublishedState, setCurrPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
-  const [isProgressWithLink, setProgressWithLink] = React.useState(false);
-  const [isSubmitted, setSubmitted] = React.useState(false);
-  const [labelType, setLabelType] = React.useState('default' as
-    | 'danger'
-    | 'primary'
-    | 'default');
-  const [publishStateText, setPublishStateText] = React.useState(
-    () => {
-      if (props.routeState.virtualization) {
-        return props.routeState.virtualization.publishedState;
-      }
 
-      if (props.virtualization) {
-        return props.virtualization.publishedState;
-      }
-
-      return '';
-    }
-  );
+  /**
+   * State for the virtualization description.
+   */
   const [description, setDescription] = React.useState(() => {
     if (
       props.routeState.virtualization &&
@@ -124,6 +120,39 @@ export const VirtualizationEditorPage: React.FunctionComponent<
 
     if (props.virtualization && props.virtualization.description) {
       return props.virtualization.description;
+    }
+
+    return '';
+  });
+
+  /**
+   * State indicating if a published state is a step state.
+   */
+  const [isProgressWithLink, setProgressWithLink] = React.useState(false);
+
+  /**
+   * State indicating if an operation is in progress.
+   */
+  const [isSubmitted, setSubmitted] = React.useState(false);
+
+  /**
+   * State identifying the type that should be used by labels.
+   */
+  const [labelType, setLabelType] = React.useState('default' as
+    | 'danger'
+    | 'primary'
+    | 'default');
+
+  /**
+   * State for the user-friendly text of the current published state.
+   */
+  const [publishStateText, setPublishStateText] = React.useState(() => {
+    if (props.routeState.virtualization) {
+      return props.routeState.virtualization.publishedState;
+    }
+
+    if (props.virtualization) {
+      return props.virtualization.publishedState;
     }
 
     return '';
@@ -164,96 +193,6 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
   /**
-   * Callback that deletes the virtualization.
-   */
-  const doDelete = async (): Promise<void> => {
-    setSubmitted(true);
-
-    // save current values in case we need to restore
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-
-    setLabelType('default');
-    setPublishStateText(t('deleteInProgress'));
-    await deleteVirtualization(props.virtualization.name).catch((e: any) => {
-      // inform user of error
-      pushNotification(
-        t('deleteVirtualizationFailed', {
-          details: e.errorMessage || e.message || e,
-          name: props.virtualization.name,
-        }),
-        'error'
-      );
-
-      // restore previous state
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-      setSubmitted(false);
-      throw e;
-    });
-
-    // successfully deleted so let page know
-    props.onDeleteSuccess();
-  };
-
-  /**
-   * Callback that exports the virtualization.
-   */
-  const doExport = () => {
-    exportVirtualization(props.virtualization.name).catch((e: any) => {
-      // notify user of error
-      pushNotification(
-        t('exportVirtualizationFailed', {
-          details: e.errorMessage || e.message || e,
-          name: props.virtualization.name,
-        }),
-        'error'
-      );
-    });
-  };
-
-  /**
-   * Callback that publishes the virtualization.
-   */
-  const doPublish = async (): Promise<void> => {
-    if (props.virtualization.empty) {
-      pushNotification(
-        t('publishVirtualizationNoViews', {
-          name: props.virtualization.name,
-        }),
-        'info'
-      );
-      const e = new Error();
-      e.name = 'NoViews';
-      throw e;
-    }
-
-    setSubmitted(true);
-
-    // save current values in case we need to restore
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-
-    setLabelType('default');
-    setPublishStateText(t('publishInProgress'));
-    await publishVirtualization(props.virtualization.name).catch((e: any) => {
-      pushNotification(
-        t('publishVirtualizationFailed', {
-          details: e.errorMessage || e.message || e,
-          name: props.virtualization.name,
-        }),
-        'error'
-      );
-
-      // restore previous state
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-      setSubmitted(false);
-      throw e;
-    });
-  };
-
-  /**
    * Updates the virtualization description.
    * @param newDescription the value of the description being set
    */
@@ -279,44 +218,6 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   };
 
   /**
-   * Callback that will unpublish the virtualization.
-   */
-  const doUnpublish = async (): Promise<void> => {
-    setSubmitted(true);
-
-    // save current values in case we need to restore
-    const saveText = publishStateText;
-    const saveLabelType = labelType;
-
-    setLabelType('default');
-    setPublishStateText(t('unpublishInProgress'));
-    await unpublishVirtualization(props.virtualization.name).catch((e: any) => {
-      if (e.name === 'AlreadyUnpublished') {
-        pushNotification(
-          t('unpublishedVirtualization', {
-            name: props.virtualization.name,
-          }),
-          'info'
-        );
-      } else {
-        pushNotification(
-          t('unpublishVirtualizationFailed', {
-            details: e.errorMessage || e.message || e,
-            name: props.virtualization.name,
-          }),
-          'error'
-        );
-      }
-
-      // restore previous state
-      setPublishStateText(saveText);
-      setLabelType(saveLabelType);
-      setSubmitted(false);
-      throw e;
-    });
-  };
-
-  /**
    * Using this method instead of using `description` directly prevented the description in the details
    * header from displaying the description placeholder initially.
    */
@@ -329,12 +230,15 @@ export const VirtualizationEditorPage: React.FunctionComponent<
       return props.virtualization.description;
     }
 
-    if (props.routeState.virtualization && props.routeState.virtualization.description) {
+    if (
+      props.routeState.virtualization &&
+      props.routeState.virtualization.description
+    ) {
       return props.routeState.virtualization.description;
     }
-    
+
     return '';
-}
+  };
 
   /**
    *
@@ -359,32 +263,26 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   return (
     <>
       <PageSection variant={'light'} noPadding={true}>
-        <ViewHeaderBreadcrumb
-          isSubmitted={isSubmitted}
-          currentPublishedState={currPublishedState.state}
+        <VirtualizationBreadcrumb
+          actions={
+            <VirtualizationActionContainer
+              deleteActionProps={props.deleteActionCustomProps}
+              exportActionProps={props.exportActionCustomProps}
+              includeActions={props.actions}
+              includeItems={props.items}
+              postDeleteHref={resolvers.data.root()}
+              publishActionProps={props.publishActionCustomProps}
+              saveActionProps={props.saveActionCustomProps}
+              startActionProps={props.startActionCustomProps}
+              stopActionProps={props.stopActionCustomProps}
+              virtualization={props.virtualization}
+            />
+          }
+          dataPageHref={resolvers.data.root()}
+          homePageHref={resolvers.dashboard.root()}
+          i18nDataPageTitle={t('shared:Virtualizations')}
+          i18nHomePageTitle={t('shared:Home')}
           virtualizationName={props.routeParams.virtualizationId}
-          dashboardHref={resolvers.dashboard.root()}
-          dashboardString={t('shared:Home')}
-          dataHref={resolvers.data.root()}
-          dataString={t('shared:Virtualizations')}
-          i18nCancelText={t('shared:Cancel')}
-          i18nDelete={t('shared:Delete')}
-          i18nDeleteModalMessage={t('deleteModalMessage', {
-            name: props.routeParams.virtualizationId,
-          })}
-          i18nDeleteModalTitle={t('deleteModalTitle')}
-          i18nExport={t('shared:Export')}
-          i18nPublish={t('shared:Publish')}
-          i18nUnpublish={t('shared:Unpublish')}
-          i18nUnpublishModalMessage={t('unpublishModalMessage', {
-            name: props.routeParams.virtualizationId,
-          })}
-          i18nUnpublishModalTitle={t('unpublishModalTitle')}
-          onDelete={doDelete}
-          onExport={doExport}
-          onUnpublish={doUnpublish}
-          onPublish={doPublish}
-          usedInIntegration={props.virtualization ? props.virtualization.usedBy.length > 0 : true}
         />
       </PageSection>
       <PageSection
@@ -399,8 +297,13 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nInUseText={getUsedByMessage()}
           i18nPublishLogUrlText={t('shared:viewLogs')}
-          odataUrl={getOdataUrl(props.virtualization || props.routeState.virtualization)}
+          i18nODataUrlText={t('viewOData')}
+          modified={props.virtualization.modified}
+          odataUrl={getOdataUrl(
+            props.virtualization || props.routeState.virtualization
+          )}
           publishedState={currPublishedState.state}
+          publishedVersion={props.virtualization.publishedRevision}
           publishingCurrentStep={currPublishedState.stepNumber}
           publishingLogUrl={currPublishedState.logUrl}
           publishingTotalSteps={currPublishedState.stepTotal}

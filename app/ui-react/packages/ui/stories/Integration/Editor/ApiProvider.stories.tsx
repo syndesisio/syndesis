@@ -3,7 +3,12 @@ import { boolean, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import { OpenApiReviewActions, OpenApiSelectMethod } from '../../../src';
+import {
+  OpenApiReviewActions,
+  OpenApiSelectMethod,
+  SyndesisAlert,
+  SyndesisAlertLevel,
+} from '../../../src';
 
 const fileExtensions = '.json, .yaml and .yml';
 const helpMessage = 'Accepted file type: .json, .yaml and .yml';
@@ -20,7 +25,8 @@ stories
     <OpenApiSelectMethod
       i18nBtnNext={'Next'}
       i18nMethodFromFile={'Upload an OpenAPI file'}
-      i18nMethodFromScratch={'Create from scratch'}
+      i18nMethodFromScratch2x={'Create a new OpenAPI 2.x document'}
+      i18nMethodFromScratch3x={'Create a new OpenAPI 3.x document'}
       i18nMethodFromUrl={'Use a URL'}
       i18nUrlNote={
         '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'
@@ -38,6 +44,15 @@ stories
   ))
   .add('Review Actions', () => (
     <OpenApiReviewActions
+      alert={
+        <SyndesisAlert
+          level={SyndesisAlertLevel.WARN}
+          message={'Some weird error has occurred'}
+          detail={'this is the detail'}
+          i18nTextCollapsed={'Show Details'}
+          i18nTextExpanded={'Hide Details'}
+        />
+      }
       apiProviderDescription={'the description'}
       apiProviderName={'theName'}
       i18nApiDefinitionHeading={'API DEFINITION'}

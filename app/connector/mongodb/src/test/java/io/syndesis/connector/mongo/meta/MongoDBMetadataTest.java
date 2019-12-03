@@ -28,7 +28,9 @@ import com.mongodb.client.model.ValidationOptions;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.MongoDBConnectorTestSupport;
+import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
 
@@ -37,6 +39,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
     private final static String SCHEME = "mongodb3";
+    private final static String COLLECTION = "metadataCollection";
 
     @Override
     protected List<Step> createSteps() {
@@ -50,10 +53,10 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         Map<String, Object> properties = new HashMap<>();
         properties.put("database", DATABASE);
         properties.put("collection", collection);
-        properties.put("host", String.format("%s:%s", HOST, PORT));
-        properties.put("user", USER);
-        properties.put("password", PASSWORD);
-        properties.put("adminDB", ADMIN_DB);
+        properties.put("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
+        properties.put("user", EmbedMongoConfiguration.USER);
+        properties.put("password", EmbedMongoConfiguration.PASSWORD);
+        properties.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
         // When
         Document jsonSchema = Document.parse("{ \n"
             + "      bsonType: \"object\", \n"
@@ -79,7 +82,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
             + "            description: \"can be only M or F\" } \n"
             + "      }}");
         ValidationOptions collOptions = new ValidationOptions().validator(Filters.eq("$jsonSchema",jsonSchema));
-        mongoClient.getDatabase(DATABASE).createCollection(collection,
+        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection,
             new CreateCollectionOptions().validationOptions(collOptions));
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
@@ -91,28 +94,29 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         );
         // format as json the datashape
         JsonNode json = OBJECT_MAPPER.readTree(metadata.outputShape.getSpecification());
-        assertNotNull(json);
-        assertNotNull(json.get("properties"));
-        assertNotNull(json.get("$schema"));
-        assertNotNull(json.get("required"));
-        assertEquals("http://json-schema.org/schema#", json.get("$schema").asText());
-        assertNotNull(json.get("id"));
-        assertNotNull(json.get("type"));
+        Assertions.assertThat(json.get("$schema").asText()).isEqualTo("http://json-schema.org/schema#");
+        Assertions.assertThat(json.get("required").isArray()).isTrue();
+        Assertions.assertThat(json.get("properties").isObject()).isTrue();
+        Assertions.assertThat(json.get("properties").get("name")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("surname")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("email")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("year_of_birth")).isNotNull();
+        Assertions.assertThat(json.get("properties").get("gender")).isNotNull();
     }
 
     @Test
-    public void verifyMetadataJsonSchemaMissing() throws IOException {
+    public void verifyMetadataJsonSchemaMissing() {
         // Given
         String collection = "noSchema";
         Map<String, Object> properties = new HashMap<>();
         properties.put("database", DATABASE);
         properties.put("collection", collection);
-        properties.put("host", String.format("%s:%s", HOST, PORT));
-        properties.put("user", USER);
-        properties.put("password", PASSWORD);
-        properties.put("adminDB", ADMIN_DB);
+        properties.put("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
+        properties.put("user", EmbedMongoConfiguration.USER);
+        properties.put("password", EmbedMongoConfiguration.PASSWORD);
+        properties.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
         // When
-        mongoClient.getDatabase(DATABASE).createCollection(collection);
+        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection);
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
         SyndesisMetadata metadata = metaBridge.fetch(
@@ -121,8 +125,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
             CONNECTOR_ID,
             properties
         );
-        assertEquals(DataShapeKinds.JAVA, metadata.inputShape.getKind());
-        assertEquals(DataShapeKinds.ANY, metadata.outputShape.getKind());
+        Assertions.assertThat(metadata.outputShape.getKind()).isEqualTo(DataShapeKinds.ANY);
     }
 
 }

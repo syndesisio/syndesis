@@ -19,7 +19,6 @@ import java.util.Date;
 
 import io.syndesis.common.model.connection.Connection;
 
-import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.ConnectionFactory;
 import org.springframework.social.oauth2.AccessGrant;
 

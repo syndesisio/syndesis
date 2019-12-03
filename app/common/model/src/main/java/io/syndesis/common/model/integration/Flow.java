@@ -40,6 +40,11 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
 
     class Builder extends ImmutableFlow.Builder {
         // allow access to ImmutableIntegration.Builder
+
+        public Builder putMetadata(FlowMetadata metadata, String value) {
+            this.putMetadata(metadata.getKey(), value);
+            return this;
+        }
     }
 
     enum FlowType {
@@ -98,6 +103,11 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
         return getSteps().stream()
             .flatMap(s -> s.getExtensionIds().stream())
             .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    default Optional<String> getMetadata(FlowMetadata metadata) {
+        return this.getMetadata(metadata.getKey());
     }
 
     @JsonIgnore

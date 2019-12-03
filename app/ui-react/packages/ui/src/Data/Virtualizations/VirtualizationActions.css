@@ -1,0 +1,4 @@
+/* Disable click events when MenuItem is disabled */
+.virtualization-actions__menuItem.disabled {
+  pointer-events: none;
+}

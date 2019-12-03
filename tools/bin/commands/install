@@ -37,7 +37,6 @@ install::usage() {
                               Use quotes and start with a space before appending the options.
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
-    --nodev                   Do not set the devSupport flag in CR (deploys all images)
 EOT
 }
 
@@ -47,7 +46,8 @@ install::run() {
     source "$(basedir)/commands/util/camel_k_funcs"
     source "$(basedir)/commands/util/operator_funcs"
 
-    if [ $(hasflag -f --force-binary-download) ]; then
+    release_tag="$(readopt --tag)"
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi
@@ -55,7 +55,7 @@ install::run() {
     download_operator_binary || print_error_and_exit "unable to download the operator binary, exit"
 
     local prep_only="false"
-    if [ $(hasflag -s --setup) ]; then
+    if [[ $(hasflag -s --setup) ]]; then
         echo "Installing Syndesis CRD"
         result=$($OPERATOR_BINARY install cluster)
         check_error "$result"
@@ -130,17 +130,12 @@ install::run() {
         exit 0
     else
         echo "Deploying syndesis app."
-        if [ $(hasflag --nodev) ] ; then
-            result=$($OPERATOR_BINARY install app)
-        else
-            result=$($OPERATOR_BINARY install app --dev)
-            echo "To complete the installation please go ahead and run local dev builds for syndesis-server syndesis-ui syndesis-meta syndesis-s2i."
-        fi
+        result=$($OPERATOR_BINARY install app)
         check_error "$result"
     fi
 
     echo "Install finished."
-    if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
+    if [ $(hasflag --watch -w) ] || [ $(hasflag --open -o) ]; then
         wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
     fi
 

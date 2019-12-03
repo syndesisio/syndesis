@@ -47,6 +47,8 @@ public final class Utils {
             .registerModules(new Jdk8Module(), new EpochMillisTimeModule(), new JavaTimeModule())
             .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
+            // disable read as nanoseconds as the values are read as integers from prometheus, with no nano part
+            .disable(DeserializationFeature.READ_DATE_TIMESTAMPS_AS_NANOSECONDS)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)
             .disable(JsonParser.Feature.AUTO_CLOSE_SOURCE);

@@ -15,11 +15,14 @@
  */
 package io.syndesis.connector.odata.consumer;
 
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import java.util.Map;
+
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.odata.server.ODataTestServer;
+import io.syndesis.connector.support.util.PropertyBuilder;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -35,12 +38,11 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.connector.odata.server.ODataTestServer;
-import io.syndesis.connector.support.util.PropertyBuilder;
+
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -59,6 +61,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
         DirtiesContextTestExecutionListener.class
     }
 )
+
 public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
 
     //

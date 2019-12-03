@@ -13,42 +13,42 @@ features specific to these local development environments.
 
 [source,indent=0,subs="verbatim,quotes"]
 ----
--s  --setup               Install CRDs clusterwide. Use --grant if you want a specific user to be
-                          able to install Syndesis. You have to run this option once as
-                          cluster admin.
--u  --grant <user>        Add permissions for the given user so that user can install
-                          the operator in her projects. Must be run as cluster admin.
-    --cluster             Add the permission for all projects in the cluster
-                          (only when used together with --grant)
--p  --project             Install into this project. Delete this project
-                          if it already exists. By default, install into the current project
-                          (without deleting)
-    --operator-only       Only install the operator but no resource
-    --route               Route to use. If not given, the route is trying to be detected
-                          from the currently connected cluster.
-    --console             The URL to the OpenShift console
-    --tag <tag>           Syndesis version/tag to install. If not given, then the latest
-                          version from master is installed
-    --dev                 Prepare for development of Syndesis so that S2I builds of
-                          Syndesis images are picked up properly (implies --watch)
-    --force               Override an existing "Syndesis" if present
--r  --route <route>       Use the given route.
-                          By default "syndesis-<project_name>.apps-crc.testing" is used.
--w  --watch               Wait until cluster is up
-    --local               install from local Git repo when using. By default the
-                          resource descriptor is downloaded from GitHub remotely.
--o  --open                Open Syndesis in browser when installation is ready (implies --watch)
--y  --yes                 Assume 'yes' automatically when asking for deleting
-                          a given project.
-    --memory-server <mem> Memory limit to set for syndesis-server. Specify as "800Mi"
-    --memory-meta <mem>   Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support        Allow test support endpoint for syndesis-server
-    --datavirt            Install Data Virtualizations
-    --maven-mirror        Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
-
-You have to run `--setup --grant <user>` as a cluster-admin before you can
-install Fuse Online as a user.
+Options for install:
+-s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --grant <user>            Add permissions for the given user so that user can install the operator
+                              in her projects. Must be run as cluster admin.
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --grant)
+-p  --project                 Install into this project. Delete this project
+                              if it already exists. By default, install into the current project (without deleting)
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
+    --tag <tag>               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
+    --force                   Override an existing "Syndesis" if present
+-w  --watch                   Wait until cluster is up
+    --local                   install from local Git repo when using. By default the resource descriptor is
+                              downloaded from GitHub remotely.
+-f  --force-binary-download   By default if the binary cli is present in the expected path, it will
+                              be used. With this option enabled, the binary will be removed and downloaded,
+                              ensuring it is the latest version
+-o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
+    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support            Allow test support endpoint for syndesis-server
+    --camel-k <version>       Install camel-k operator version <version>
+                              (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
+    --datavirt                Install Data Virtualizations.
+    --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
+    --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
+
+You have to run `--setup --grant <user>` as a cluster-admin before you can install Fuse Online as a user.
 
 The deployment happens to the currently connected OpenShift cluster.
 So it's mandatory that you have logged into the cluster with `oc login` before.

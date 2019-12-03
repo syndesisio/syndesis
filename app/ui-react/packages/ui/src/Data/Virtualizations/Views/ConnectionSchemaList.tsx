@@ -33,7 +33,9 @@ export const ConnectionSchemaList: React.FunctionComponent<
           >
             {props.i18nLinkCreateConnection}
           </ButtonLink>
-          <ListView>{props.children}</ListView>
+          <div className={'connection-schema-list'}>
+            <ListView>{props.children}</ListView>
+          </div>
         </>
       ) : (
         <EmptyState variant={EmptyStateVariant.full}>
