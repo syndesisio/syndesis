@@ -1,6 +1,7 @@
 {
   "activeConnectionsEmptyStateInfo": "There are no active connections available. Click Create Connection for new connection.",
   "activeConnectionsEmptyStateTitle": "No Active Connections",
+  "actionsColumnA11yMessage": "Version action menu column",
   "buildStatus": {
     "BUILDING": "Building",
     "CANCELLED": "Cancelled",

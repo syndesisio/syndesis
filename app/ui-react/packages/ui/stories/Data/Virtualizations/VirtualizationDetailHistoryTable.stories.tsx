@@ -1,4 +1,4 @@
-import { boolean, text } from '@storybook/addon-knobs';
+import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
@@ -8,9 +8,9 @@ import {
 
 const colHeaders = ['History', 'Published Time', 'Published', ''];
 
-const version1Actions = <React.Fragment>Version1 Actions</React.Fragment>;
-const version2Actions = <React.Fragment>Version2 Actions</React.Fragment>;
-const version3Actions = <React.Fragment>Version3 Actions</React.Fragment>;
+const version1Actions = <div>Version1 Actions</div>;
+const version2Actions = <div>Version2 Actions</div>;
+const version3Actions = <div>Version3 Actions</div>;
 
 const version3Item: IVirtualizationHistoryItem = {
   actions: version3Actions,
@@ -37,6 +37,7 @@ const emptyVersionsMsg = 'There is no version history for this virtualization.';
 storiesOf('Data/Virtualizations/VirtualizationDetailHistoryTable', module)
   .add('Details', () => (
     <VirtualizationDetailHistoryTable
+      a11yActionMenuColumn={'Version action menu column'}
       historyItems={versionItems}
       i18nEmptyVersionsTitle={emptyVersionsTitle}
       i18nEmptyVersionsMsg={emptyVersionsMsg}
@@ -46,6 +47,7 @@ storiesOf('Data/Virtualizations/VirtualizationDetailHistoryTable', module)
   ))
   .add('Details - no history items', () => (
     <VirtualizationDetailHistoryTable
+      a11yActionMenuColumn={'Version action menu column'}
       historyItems={[]}
       i18nEmptyVersionsTitle={emptyVersionsTitle}
       i18nEmptyVersionsMsg={emptyVersionsMsg}

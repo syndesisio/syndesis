@@ -3,13 +3,10 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
-  PageSection,
-  Stack,
-  StackItem,
   Title,
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
-import { Table, TableBody, TableHeader } from '@patternfly/react-table';
+import { classNames, Table, TableBody, TableHeader } from '@patternfly/react-table';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 
@@ -21,10 +18,17 @@ export interface IVirtualizationHistoryItem {
 }
 
 export interface IVirtualizationDetailHistoryTableProps {
+  /**
+   * Accessibility message for the table column for the kebab menu.
+   */
+  a11yActionMenuColumn: string;
   historyItems: IVirtualizationHistoryItem[];
   i18nEmptyVersionsTitle: string;
   i18nEmptyVersionsMsg: string;
   isModified: boolean;
+  /**
+   * i18n column headers in this order: version, published time, published indicator, kebab menu
+   */
   tableHeaders: string[];
 }
 
@@ -40,9 +44,25 @@ const getPublishIcon = (publishState: string) => {
 };
 
 const getColumns = (headers: string[]) => {
-  return headers.map(header => ({
-    title: header,
-  }));
+  const cols = [
+    {
+      columnTransforms: [classNames('pf-m-fit-content')], // column sized to heading and data
+      title: headers[0],
+    },
+    {
+      columnTransforms: [classNames('pf-m-fit-content')],
+      title: headers[1],
+    },
+    {
+      columnTransforms: [classNames('pf-m-width-max')], // column sized to take up remaining space
+      title: headers[2],
+    },
+    {
+      columnTransforms: [classNames('pf-m-fit-content')],
+      title: headers[3],
+    },
+  ];
+  return cols;
 };
 
 const getRows = (
@@ -99,22 +119,17 @@ export const VirtualizationDetailHistoryTable: React.FunctionComponent<
   IVirtualizationDetailHistoryTableProps
 > = props => {
   return (
-    <PageSection>
-      <Stack>
-        <StackItem>
-          <Table
-            cells={getColumns(props.tableHeaders)}
-            rows={getRows(
-              props.historyItems,
-              props.i18nEmptyVersionsTitle,
-              props.i18nEmptyVersionsMsg
-            )}
-          >
-            <TableHeader />
-            <TableBody />
-          </Table>
-        </StackItem>
-      </Stack>
-    </PageSection>
+    <Table
+      aria-label={props.a11yActionMenuColumn}
+      cells={getColumns(props.tableHeaders)}
+      rows={getRows(
+        props.historyItems,
+        props.i18nEmptyVersionsTitle,
+        props.i18nEmptyVersionsMsg
+      )}
+    >
+      <TableHeader />
+      <TableBody />
+    </Table>
   );
 };

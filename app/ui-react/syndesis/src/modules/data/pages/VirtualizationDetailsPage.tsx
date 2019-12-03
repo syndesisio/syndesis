@@ -139,6 +139,7 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
         >
           {() => (
             <VirtualizationDetailHistoryTable
+              a11yActionMenuColumn={t('actionsColumnA11yMessage')}
               isModified={virtualization.modified}
               i18nEmptyVersionsTitle={t('detailsVersionTableEmptyTitle')}
               i18nEmptyVersionsMsg={t('detailsVersionTableEmptyMsg')}
