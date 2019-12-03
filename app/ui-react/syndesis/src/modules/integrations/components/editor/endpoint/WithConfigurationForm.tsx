@@ -16,7 +16,8 @@ import {
 import { PageSection, PageSectionLoader } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError } from '../../../../../shared';
+import resolvers from '../../../../connections/resolvers';
+import { ActionDescriptorFetchError } from './ActionDescriptorFetchError';
 import { ConfigurationForm } from './ConfigurationForm';
 import { NothingToConfigure } from './NothingToConfigure';
 
@@ -159,7 +160,12 @@ export const WithConfigurationForm: React.FunctionComponent<
           loaderChildren={<PageSectionLoader />}
           errorChildren={
             <PageSection>
-              <ApiError error={errorMessage!} />
+              <ActionDescriptorFetchError
+                connectionDetailHref={resolvers.connection.details({
+                  connection: props.connection,
+                })}
+                error={errorMessage!}
+              />
             </PageSection>
           }
         >

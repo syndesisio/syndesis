@@ -18,6 +18,11 @@ stories.add('404', () => (
       )}
       i18nRefreshLabel={text('Refresh Label', 'Refresh')}
       i18nReportIssue={text('Report the issue', 'Report the issue')}
+      i18nShowErrorInfoLabel={text('Show Error Info', 'Show Error Info')}
+      error={{ name: '404', message: 'File not found'} as Error}
+      errorInfo={{
+        componentStack: "Stuff in here\nand more stuff\nand lines\nand stuff"
+      } as React.ErrorInfo}
     />
   </Router>
 ));
