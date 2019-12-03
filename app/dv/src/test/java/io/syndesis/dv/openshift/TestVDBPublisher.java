@@ -15,7 +15,8 @@
  */
 package io.syndesis.dv.openshift;
 
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 import java.io.InputStream;
@@ -35,16 +36,12 @@ import org.teiid.adminapi.impl.VDBMetaData;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.core.util.ObjectConverterUtil;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.datasources.MySQLDefinition;
 import io.syndesis.dv.datasources.PostgreSQLDefinition;
 import io.syndesis.dv.metadata.MetadataInstance;
-import io.syndesis.dv.server.AuthHandlingFilter;
-import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
 import io.syndesis.dv.server.DvConfigurationProperties;
 
 public class TestVDBPublisher {
@@ -58,7 +55,6 @@ public class TestVDBPublisher {
     }
 
     private TeiidOpenShiftClient testDataSetup() {
-        AuthHandlingFilter.threadOAuthCredentials.set(new OAuthCredentials("token", "user"));
         MetadataInstance metadata = Mockito.mock(MetadataInstance.class);
 
         HashSet<DefaultSyndesisDataSource> sources = new HashSet<>();

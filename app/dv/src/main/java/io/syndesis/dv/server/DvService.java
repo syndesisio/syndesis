@@ -20,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import io.syndesis.dv.RepositoryManager;
-import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
 import io.syndesis.dv.utils.KLog;
 /**
  * A Komodo service implementation.
@@ -55,14 +54,7 @@ public abstract class DvService implements V1Constants {
     }
 
     @Autowired
-    protected CredentialsProvider credentialsProvider;
-
-    @Autowired
     protected RepositoryManager repositoryManager;
-
-    protected OAuthCredentials getAuthenticationToken() {
-        return credentialsProvider.getCredentials();
-    }
 
     protected RepositoryManager getWorkspaceManager() {
         return this.repositoryManager;

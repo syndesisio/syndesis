@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import io.syndesis.dv.utils.KLog;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-public class AuthHandlingFilter implements HandlerInterceptor, CredentialsProvider {
+public class AuthHandlingFilter implements HandlerInterceptor {
 
     public static class AuthToken {
         private String token;
@@ -58,7 +58,7 @@ public class AuthHandlingFilter implements HandlerInterceptor, CredentialsProvid
         }
     }
 
-    public static ThreadLocal<OAuthCredentials> threadOAuthCredentials  = new ThreadLocal<OAuthCredentials>();
+    static ThreadLocal<OAuthCredentials> threadOAuthCredentials  = new ThreadLocal<OAuthCredentials>();
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -75,7 +75,6 @@ public class AuthHandlingFilter implements HandlerInterceptor, CredentialsProvid
         return true;
     }
 
-    @Override
     public OAuthCredentials getCredentials() {
         return threadOAuthCredentials.get();
     }

@@ -66,7 +66,6 @@ import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.rest.JsonMarshaller;
 import io.syndesis.dv.server.Application;
 import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
-import io.syndesis.dv.server.CredentialsProvider;
 import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfiguration;
 
 @RunWith(SpringRunner.class)
@@ -78,18 +77,6 @@ public class IntegrationTest {
     //inject simple auth bypass
     @TestConfiguration
     static class IntegrationTestConfiguration {
-        @Primary
-        @Bean
-        public CredentialsProvider credentialsProvider() {
-            return new CredentialsProvider() {
-
-                @Override
-                public OAuthCredentials getCredentials() {
-                    return new OAuthCredentials("token", "user");
-                }
-            };
-        }
-
         /* Stub out the connectivity to syndesis / openshift */
         @MockBean
         private SyndesisConnectionMonitor syndesisConnectionMonitor;
