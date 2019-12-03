@@ -34,7 +34,7 @@
         <atlassian-util-concurrent-version>4.0.1</atlassian-util-concurrent-version>
 
         <!-- TODO Backport 2.23.x: Remove when using camel-jira 2.23 bits in Syndesis -->
-        <atlassian-fugue-version>3.0.0</atlassian-fugue-version>
+        <atlassian-fugue-version>4.7.2</atlassian-fugue-version>
         <google-api-client-version>1.22.0</google-api-client-version>
         <jackson-version>1.9.13.jdk17-redhat-00001</jackson-version>
         <!-- End: Remove when using camel-jira 2.23 bits in Syndesis -->
