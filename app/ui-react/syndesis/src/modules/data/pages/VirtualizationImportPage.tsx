@@ -4,7 +4,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../shared';
-import resolvers from '../resolvers';
+import resolvers from '../../resolvers';
 
 export const VirtualizationImportPage: React.FunctionComponent = () => {
   const { importVirtualization } = useVirtualizationHelpers();
@@ -64,10 +64,16 @@ export const VirtualizationImportPage: React.FunctionComponent = () => {
       <PageTitle title={t('shared:Import')} />
       <Breadcrumb>
         <Link
-          data-testid={'virtualization-import-page-virtualizations-link'}
-          to={resolvers.virtualizations.list()}
+          data-testid={'virtualization-import-page-home-link'}
+          to={resolvers.dashboard.root()}
         >
-          {t('shared:DataVirtualizations')}
+          {t('shared:Home')}
+        </Link>
+        <Link
+          data-testid={'virtualization-import-page-virtualizations-link'}
+          to={resolvers.data.root()}
+        >
+          {t('shared:Data')}
         </Link>
         <span>{t('ImportVirtualization')}</span>
       </Breadcrumb>

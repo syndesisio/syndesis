@@ -120,6 +120,7 @@
     "unsavedChangesMessage": "You have unsaved changes to the view definition which will be lost. Do you still want to stop editing?",
     "unsavedChangesTitle": "Cancel editing?"
   },
+  "viewNameBreadcrumb": "{{name}} View",
   "viewNameDisplay": "View Name",
   "views": "Views",
   "viewSqlFormRowLimit": "Row Limit",
@@ -130,6 +131,7 @@
   "viewSqlFormSqlStatement": "SQL Statement",
   "viewSqlFormSqlStatementDescription": "Enter SQL query and click SUBMIT (i.e. SELECT a, b FROM view1)",
   "virtualizationDescriptionDisplay": "Description",
+  "virtualizationNameBreadcrumb": "{{name}} Virtualization",
   "virtualizationNameDisplay": "Virtualization Name",
   "virtualizationsDisabled": "Virtualizations are not enabled in your installation. Refer to documentation for instructions on how to enable them.",
   "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",

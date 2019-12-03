@@ -116,6 +116,7 @@
     "unsavedChangesMessage": "У вас есть несохраненные изменения настроек Представления, которые будут утеряны. Вы все еще хотите отменить редактирование?",
     "unsavedChangesTitle": "Отменить редактирование?"
   },
+  "viewNameBreadcrumb": "{{name}} вид",
   "viewNameDisplay": "Имя Представления",
   "views": "Представления",
   "viewSqlFormRowLimit": "Лимит строк",
@@ -126,6 +127,7 @@
   "viewSqlFormSqlStatement": "SQL запрос",
   "viewSqlFormSqlStatementDescription": "Введите SQL запрос и нажмите кнопку ОТПРАВИТЬ (i.e. SELECT a, b FROM view1)",
   "virtualizationDescriptionDisplay": "Описание",
+  "virtualizationNameBreadcrumb": "{{name}} виртуализация",
   "virtualizationNameDisplay": "Имя Представления",
   "virtualizationsDisabled": "Опция Виртуализации данных не включена в вашей инсталляции. Инструкции по включению есть в документации.",
   "virtualizationsPageDescription": "Syndesis создает и управляет Виртуализациями данных для публикации Соединений.",

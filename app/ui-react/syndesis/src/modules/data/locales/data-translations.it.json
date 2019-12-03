@@ -120,6 +120,7 @@
     "unsavedChangesMessage": "Sono state apportate modifiche non salvate alla definizione della vista che andranno perse. Vuoi ancora interrompere la modifica?",
     "unsavedChangesTitle": "Annullare la modifica?"
   },
+  "viewNameBreadcrumb": "{{name}} Visualizza",
   "viewNameDisplay": "Visualizza Nome",
   "views": "Visualizzazioni",
   "viewSqlFormRowLimit": "Limite di Riga",
@@ -130,6 +131,7 @@
   "viewSqlFormSqlStatement": "Dichiarazione SQL",
   "viewSqlFormSqlStatementDescription": "Immettere la query SQL e fare clic su INVIA (cioè, SELECT a, b FROM view1)",
   "virtualizationDescriptionDisplay": "Descrizione",
+  "virtualizationNameBreadcrumb": "{{name}} la Virtualizzazione",
   "virtualizationNameDisplay": "Nome di Virtualizzazione",
   "virtualizationsDisabled": "Le virtualizzazioni non sono abilitate nella tua installazione. Fare riferimento alla documentazione per istruzioni su come abilitarli.",
   "virtualizationsPageDescription": "Syndesis crea e gestisce le virtualizzazioni dei dati da esporre come connessioni all'origine dati.",
