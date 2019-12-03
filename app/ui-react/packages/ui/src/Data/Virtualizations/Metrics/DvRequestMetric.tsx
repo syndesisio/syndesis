@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   CardBody,
   CardHeader,
   Split,
@@ -48,7 +47,7 @@ export const DvRequestMetric: React.FunctionComponent<
   IDvRequestMetricProps
 > = props => {
   return (
-    <Card isHoverable={true}>
+    <>
       <CardHeader className={'dv-metrics-container__cardTitle'}>
         {props.i18nTitle}
       </CardHeader>
@@ -96,6 +95,6 @@ export const DvRequestMetric: React.FunctionComponent<
           </TextContent>
         )}
       </CardBody>
-    </Card>
+    </>
   );
 };

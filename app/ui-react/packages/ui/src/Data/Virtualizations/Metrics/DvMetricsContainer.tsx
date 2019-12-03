@@ -1,5 +1,6 @@
 import {
   Bullseye,
+  Card,
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
@@ -46,25 +47,39 @@ export const DvMetricsContainer: React.FunctionComponent<
     props.uptimeProps
   ) {
     return (
-      <Flex>
+      <Flex
+        breakpointMods={[{ modifier: 'space-items-xl', breakpoint: 'xl' }]}
+        className={'dv-metrics-container__flexAlign'}
+      >
         {props.clientSessionProps && (
-          <FlexItem className={'pf-m-flex-1'}>
-            <DvClientSessionMetric {...props.clientSessionProps} />
+          <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
+            <Card isHoverable={true} className="dv-metrics-container__card">
+              <DvClientSessionMetric {...props.clientSessionProps} />
+            </Card>
           </FlexItem>
         )}
+
         {props.requestProps && (
-          <FlexItem className={'pf-m-flex-1'}>
-            <DvRequestMetric {...props.requestProps} />
+          <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
+            <Card isHoverable={true} className="dv-metrics-container__card">
+              <DvRequestMetric {...props.requestProps} />
+            </Card>
           </FlexItem>
         )}
+
         {props.cacheHitProps && (
-          <FlexItem className={'pf-m-flex-1'}>
-            <DvCacheHitMetric {...props.cacheHitProps} />
+          <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
+            <Card isHoverable={true} className="dv-metrics-container__card">
+              <DvCacheHitMetric {...props.cacheHitProps} />
+            </Card>
           </FlexItem>
         )}
+
         {props.uptimeProps && (
-          <FlexItem className={'pf-m-flex-1'}>
-            <DvUptimeMetric {...props.uptimeProps} />
+          <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
+            <Card isHoverable={true} className="dv-metrics-container__card">
+              <DvUptimeMetric {...props.uptimeProps} />
+            </Card>
           </FlexItem>
         )}
       </Flex>
@@ -75,11 +90,13 @@ export const DvMetricsContainer: React.FunctionComponent<
     <Bullseye>
       <EmptyState variant={EmptyStateVariant.small}>
         <Title headingLevel="h2" size="lg">
-         {props.i18nNoDataTitle}
+          {props.i18nNoDataTitle}
         </Title>
         <EmptyStateBody>
           <TextContent>
-            <Text component={TextVariants.small}>{props.i18nNoDataDescription}</Text>
+            <Text component={TextVariants.small}>
+              {props.i18nNoDataDescription}
+            </Text>
           </TextContent>
         </EmptyStateBody>
       </EmptyState>
