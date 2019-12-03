@@ -26,11 +26,9 @@ import org.teiid.adminapi.impl.VDBMetaData;
 
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.syndesis.dv.StringConstants;
-import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
 
 public class PublishConfiguration implements StringConstants {
 
-    private OAuthCredentials oauthCreds;
     private VDBMetaData vdb;
     private boolean enableOdata;
     private String containerMemorySize;
@@ -137,14 +135,6 @@ public class PublishConfiguration implements StringConstants {
 
     private int cpuLimit() {
         return Math.max(cpuUnits/1000, 1);
-    }
-
-    public OAuthCredentials getOAuthCredentials() {
-        return this.oauthCreds;
-    }
-
-    public void setOAuthCredentials(OAuthCredentials creds) {
-        this.oauthCreds = creds;
     }
 
     public HashMap<String, String> getBuildNodeSelector() {

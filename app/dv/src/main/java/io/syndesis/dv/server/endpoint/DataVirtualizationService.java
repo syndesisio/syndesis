@@ -90,7 +90,6 @@ import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
 import io.syndesis.dv.openshift.ProtocolType;
 import io.syndesis.dv.openshift.PublishConfiguration;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
-import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
 import io.syndesis.dv.server.V1Constants;
@@ -850,10 +849,8 @@ public final class DataVirtualizationService extends DvService {
 
     private void updatePublishConfiguration(final PublishRequestPayload payload,
             PublishConfiguration config, VDBMetaData theVdb, Edition edition) {
-        final OAuthCredentials creds = getAuthenticationToken();
         // the properties in this class can be exposed for user input
         config.setVDB(theVdb);
-        config.setOAuthCredentials(creds);
         config.setEnableOData(payload.getEnableOdata());
         config.setContainerDiskSize(payload.getDiskSize());
         config.setContainerMemorySize(payload.getMemory());
