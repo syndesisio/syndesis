@@ -123,7 +123,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       validationResult = {
         message: view.message ? view.message : 'Validation Error',
         type: 'danger',
-    } as IViewEditValidationResult;
+      } as IViewEditValidationResult;
       // Update no results title and message
       setNoResultsTitle(t('preview.resultsTableInvalidEmptyTitle'));
       setNoResultsMessage(t('preview.resultsTableInvalidEmptyInfo'));
@@ -306,17 +306,17 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
             <>
               <Breadcrumb>
                 <Link to={resolvers.dashboard.root()}>{t('shared:Home')}</Link>
-                <Link to={resolvers.data.root()}>
-                  {t('shared:DataVirtualizations')}
-                </Link>
+                <Link to={resolvers.data.root()}>{t('shared:Data')}</Link>
                 <Link
                   to={resolvers.data.virtualizations.views.root({
                     virtualization,
                   })}
                 >
-                  {virtualization.name}
+                  {t('virtualizationNameBreadcrumb', {
+                    name: virtualization.name,
+                  })}
                 </Link>
-                <span>{viewDefn.name}</span>
+                <span>{t('viewNameBreadcrumb', { name: viewDefn.name })}</span>
               </Breadcrumb>
               <DdlEditor
                 viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}

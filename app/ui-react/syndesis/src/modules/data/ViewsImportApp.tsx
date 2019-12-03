@@ -64,7 +64,7 @@ export const ViewsImportApp: React.FunctionComponent = () => {
           data-testid={'views-import-app-virtualizations-link'}
           to={resolvers.data.root()}
         >
-          {t('shared:DataVirtualizations')}
+          {t('shared:Data')}
         </Link>
         <Link
           data-testid={'views-import-app-virtualization-link'}
@@ -72,7 +72,9 @@ export const ViewsImportApp: React.FunctionComponent = () => {
             virtualization: state.virtualization,
           })}
         >
-          {state.virtualization.name}
+          {t('virtualizationNameBreadcrumb', {
+            name: state.virtualization.name,
+          })}
         </Link>
         <span>{t('importDataSource')}</span>
       </Breadcrumb>

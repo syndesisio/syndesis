@@ -280,9 +280,11 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           }
           dataPageHref={resolvers.data.root()}
           homePageHref={resolvers.dashboard.root()}
-          i18nDataPageTitle={t('shared:Virtualizations')}
+          i18nDataPageTitle={t('shared:Data')}
           i18nHomePageTitle={t('shared:Home')}
-          virtualizationName={props.routeParams.virtualizationId}
+          i18nVirtualizationBreadcrumb={t('virtualizationNameBreadcrumb', {
+            name: props.routeParams.virtualizationId,
+          })}
         />
       </PageSection>
       <PageSection

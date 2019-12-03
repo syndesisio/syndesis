@@ -135,7 +135,7 @@ export const VirtualizationCreatePage: React.FunctionComponent = () => {
           data-testid={'virtualization-create-page-virtualizations-link'}
           to={resolvers.data.root()}
         >
-          {t('shared:DataVirtualizations')}
+          {t('shared:Data')}
         </Link>
         <span>{t('createDataVirtualizationTitle')}</span>
       </Breadcrumb>

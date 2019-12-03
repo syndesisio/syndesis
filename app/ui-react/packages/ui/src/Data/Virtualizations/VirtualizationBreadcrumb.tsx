@@ -30,9 +30,9 @@ export interface IVirtualizationBreadcrumbProps {
   i18nHomePageTitle: string;
 
   /**
-   * The name of the virtualization being displayed by the page.
+   * The localized text of the named virtualization
    */
-  virtualizationName: string;
+  i18nVirtualizationBreadcrumb: string;
 }
 
 export const VirtualizationBreadcrumb: React.FunctionComponent<
@@ -52,7 +52,7 @@ export const VirtualizationBreadcrumb: React.FunctionComponent<
       >
         {props.i18nDataPageTitle}
       </Link>
-      <span>{props.virtualizationName}</span>
+      <span>{props.i18nVirtualizationBreadcrumb}</span>
     </Breadcrumb>
   );
 };

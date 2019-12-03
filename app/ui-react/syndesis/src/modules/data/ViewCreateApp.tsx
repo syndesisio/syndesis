@@ -72,7 +72,7 @@ export const ViewCreateApp: React.FunctionComponent = () => {
           data-testid={'view-create-app-virtualizations-link'}
           to={resolvers.data.root()}
         >
-          {t('shared:DataVirtualizations')}
+          {t('shared:Data')}
         </Link>
         <Link
           data-testid={'view-create-app-virtualization-link'}
@@ -80,7 +80,9 @@ export const ViewCreateApp: React.FunctionComponent = () => {
             virtualization: state.virtualization,
           })}
         >
-          {state.virtualization.name}
+          {t('virtualizationNameBreadcrumb', {
+            name: state.virtualization.name,
+          })}
         </Link>
         <span>{t('createView')}</span>
       </Breadcrumb>
