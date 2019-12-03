@@ -54,7 +54,7 @@ github.com/go-logr/zapr
 github.com/go-openapi/jsonpointer
 # github.com/go-openapi/jsonreference v0.19.2
 github.com/go-openapi/jsonreference
-# github.com/go-openapi/spec v0.19.3
+# github.com/go-openapi/spec v0.19.4
 github.com/go-openapi/spec
 # github.com/go-openapi/swag v0.19.5
 github.com/go-openapi/swag
@@ -106,7 +106,7 @@ github.com/grpc-ecosystem/grpc-gateway/utilities
 # github.com/hashicorp/golang-lru v0.5.1
 github.com/hashicorp/golang-lru
 github.com/hashicorp/golang-lru/simplelru
-# github.com/imdario/mergo v0.3.7
+# github.com/imdario/mergo v0.3.8
 github.com/imdario/mergo
 # github.com/inconshreveable/mousetrap v1.0.0
 github.com/inconshreveable/mousetrap
@@ -531,7 +531,7 @@ k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/util/sets
-# sigs.k8s.io/controller-runtime v0.3.0 => sigs.k8s.io/controller-runtime v0.1.12
+# sigs.k8s.io/controller-runtime v0.4.0 => sigs.k8s.io/controller-runtime v0.1.12
 sigs.k8s.io/controller-runtime/pkg/cache
 sigs.k8s.io/controller-runtime/pkg/cache/internal
 sigs.k8s.io/controller-runtime/pkg/client
@@ -563,7 +563,7 @@ sigs.k8s.io/controller-runtime/pkg/webhook/admission
 sigs.k8s.io/controller-runtime/pkg/webhook/admission/types
 sigs.k8s.io/controller-runtime/pkg/webhook/internal/metrics
 sigs.k8s.io/controller-runtime/pkg/webhook/types
-# sigs.k8s.io/controller-tools v0.2.2 => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
+# sigs.k8s.io/controller-tools v0.2.4 => sigs.k8s.io/controller-tools v0.1.11-0.20190411181648-9d55346c2bde
 sigs.k8s.io/controller-tools/pkg/crd/generator
 sigs.k8s.io/controller-tools/pkg/crd/util
 sigs.k8s.io/controller-tools/pkg/internal/codegen
