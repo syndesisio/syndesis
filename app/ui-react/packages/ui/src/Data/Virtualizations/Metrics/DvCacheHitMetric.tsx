@@ -1,5 +1,4 @@
 import {
-  Card,
   CardBody,
   CardHead,
   CardHeader,
@@ -45,7 +44,7 @@ export const DvCacheHitMetric: React.FunctionComponent<
   IDvCacheHitMetricProps
 > = props => {
   return (
-    <Card isHoverable={true}>
+    <>
       <CardHead>
         <CardHeader className={'dv-metrics-container__cardTitle'}>
           {props.i18nTitle}
@@ -80,6 +79,6 @@ export const DvCacheHitMetric: React.FunctionComponent<
           </TextContent>
         )}
       </CardBody>
-    </Card>
+    </>
   );
 };

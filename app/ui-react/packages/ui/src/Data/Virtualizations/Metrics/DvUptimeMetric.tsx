@@ -1,5 +1,4 @@
 import {
-  Card,
   CardBody,
   CardHeader,
   Stack,
@@ -36,7 +35,7 @@ export const DvUptimeMetric: React.FunctionComponent<
   IDvUptimeMetricProps
 > = props => {
   return (
-    <Card isHoverable={true}>
+    <>
       <CardHeader className={'dv-metrics-container__cardTitle'}>
         {props.i18nTitle}
       </CardHeader>
@@ -61,6 +60,6 @@ export const DvUptimeMetric: React.FunctionComponent<
           </TextContent>
         )}
       </CardBody>
-    </Card>
+    </>
   );
 };

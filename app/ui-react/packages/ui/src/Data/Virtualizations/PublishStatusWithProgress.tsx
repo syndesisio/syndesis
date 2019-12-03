@@ -82,27 +82,23 @@ export const PublishStatusWithProgress: React.FunctionComponent<
   // no progress bar needed so just show a label
   return (
     <React.Fragment>
-      {props.i18nPublishState === 'Running' ? (
+      {props.i18nPublishState === 'Running' && (
         <OkIcon
           color={'#49B720'}
           height={'1.25rem'}
           width={'1.25rem'}
           className={'publish-status-with-progress-margin10'}
         />
-      ) : (
-        ''
       )}
       <span className={'publish-status-with-progress_text'}>
         {props.i18nPublishState}
-        {props.publishVersion
-          ? ' (Version' + props.publishVersion + ') '
-          : null}
+        {props.publishVersion && ` (Version ${props.publishVersion})`}
       </span>
-      {props.modified ? (
+      {props.modified && (
         <Badge key={2} className={'publish-status-with-progress-badge'}>
           Modified
         </Badge>
-      ) : null}
+      )}
     </React.Fragment>
   );
 };

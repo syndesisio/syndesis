@@ -1,6 +1,5 @@
 import {
   Button,
-  Card,
   CardActions,
   CardBody,
   CardHead,
@@ -43,7 +42,7 @@ export const DvClientSessionMetric: React.FunctionComponent<
   IDvClientSessionMetricProps
 > = props => {
   return (
-    <Card isHoverable={true}>
+    <>
       <CardHead>
         <CardActions>
           <Button onClick={props.onViewAll} variant={'link'}>
@@ -76,6 +75,6 @@ export const DvClientSessionMetric: React.FunctionComponent<
           </TextContent>
         )}
       </CardBody>
-    </Card>
+    </>
   );
 };
