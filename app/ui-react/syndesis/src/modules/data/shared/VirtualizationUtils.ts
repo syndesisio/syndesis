@@ -581,7 +581,7 @@ export function canPublish(virtualization: Virtualization): boolean {
 }
 
 /**
- * A virtualization can be reverted if a revision is available
+ * A virtualization can be reverted if a revision is available.
  * @param {Virtualization} virtualization the virtualization being checked
  * @param {number} revision the revision for revert
  * @returns `true`
@@ -590,7 +590,7 @@ export function canRevert(
   virtualization: Virtualization,
   revision?: number
 ): boolean {
-  return revision ? true : false;
+  return revision !== undefined;
 }
 
 /**
