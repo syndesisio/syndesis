@@ -17,6 +17,7 @@
 package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -120,6 +121,9 @@ public class IntegrationTestPublish {
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(1, listResponse.getBody().size());
 
+        ResponseEntity<RestDataVirtualization> virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertFalse(virtResponse.getBody().isModified());
+
         Map<?, ?> map = (Map<?, ?>) listResponse.getBody().get(0);
         assertEquals(1, map.get(V1Constants.REVISION));
 
@@ -128,6 +132,9 @@ public class IntegrationTestPublish {
         restTemplate.exchange(
                 "/v1/editors", HttpMethod.PUT,
                 new HttpEntity<ViewDefinition>(vd), String.class);
+
+        virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertTrue(virtResponse.getBody().isModified());
 
         //publish again
         statusResponse = restTemplate.exchange(
@@ -155,6 +162,9 @@ public class IntegrationTestPublish {
                 "/v1/virtualizations/publish/{name}/{edition}/revert", HttpMethod.POST,
                 new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class, dvName, 1);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+
+        virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertFalse(virtResponse.getBody().isModified());
 
         view = restTemplate.getForEntity(
                 "/v1/editors/{id}",
