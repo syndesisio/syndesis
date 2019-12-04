@@ -77,7 +77,7 @@ type ComponentsSpec struct {
 
 type OauthConfiguration struct {
 	// Enable or disable SAR checks all together
-	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
+	DisableSarCheck bool `json:"disableSarCheck,omitempty"`
 
 	// The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
 	SarNamespace string `json:"sarNamespace,omitempty"`
