@@ -213,7 +213,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
           i18nResultsRowCountMsg={t('queryResultsRowCountMsg')}
           i18nEmptyStateInfo={t('viewEmptyStateInfo')}
           i18nEmptyStateTitle={t('viewEmptyStateTitle')}
-          i18nImportViews={t('importDataSource')}
+          i18nImportViews={t('importViews')}
           i18nImportViewsTip={t('importDataSourceTip')}
           i18nLoadingQueryResults={t('preview.loadingQueryResults')}
           i18nCreateView={t('createView')}
