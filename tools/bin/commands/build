@@ -258,8 +258,8 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade"
-MAVEN_MODULES="common extension integration connector meta server s2i ui-react test"
+ALL_MODULES="common extension integration connector meta server s2i ui-react test operator upgrade dv"
+MAVEN_MODULES="common extension integration connector meta server s2i ui-react test dv"
 APP_IMAGES="ui-react server meta s2i"
 INFRA_IMAGES="operator upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
@@ -295,7 +295,7 @@ extract_modules() {
     local modules=""
 
     if [ "$(hasflag --backend -b)" ]; then
-        modules="$modules common extension integration connector server meta"
+        modules="$modules common extension integration connector server meta dv"
     fi
 
     if [ "$(hasflag --all-images)" ]; then
