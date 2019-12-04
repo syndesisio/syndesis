@@ -28,11 +28,8 @@ func TestGenerator(t *testing.T) {
 					Enabled:   false,
 					Resources: v1alpha1.Resources{Memory: "1024Mi"},
 				},
-				CamelK: v1alpha1.CamelKConfiguration{
-					Enabled:       true,
-					CamelVersion:  "2.21.0.fuse-760011",
-					CamelKRuntime: "0.3.4.fuse-740008",
-					Image:         "fabric8/s2i-java:3.0-java8",
+				CamelK: v1alpha1.AddonSpec{
+					Enabled: true,
 				},
 			},
 			Components: v1alpha1.ComponentsSpec{

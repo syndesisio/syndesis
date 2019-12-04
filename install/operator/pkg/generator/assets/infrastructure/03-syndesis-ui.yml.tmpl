@@ -133,16 +133,16 @@
   data:
     config.json: |
       {
-        "apiBase": "https://{{.RouteHostname}}",
+        "apiBase": "https://{{.Syndesis.RouteHostname}}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
         "consoleUrl": "{{.OpenShiftConsoleUrl}}",
         "project": "{{.OpenShiftProject}}",
         "datamapper": {
-          "baseMappingServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/",
-          "baseJavaInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://{{.RouteHostname}}/api/v1/atlas/json/",
+          "baseMappingServiceUrl": "https://{{.Syndesis.RouteHostname}}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://{{.Syndesis.RouteHostname}}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://{{.Syndesis.RouteHostname}}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://{{.Syndesis.RouteHostname}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
         "datavirt": {

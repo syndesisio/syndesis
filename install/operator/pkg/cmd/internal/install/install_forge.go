@@ -91,7 +91,6 @@ const (
 	EnvClientStateAuthenticationKey   SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
 	EnvClientStateEncryptionKey       SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
 	EnvImageStreamNamespace           SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
-	EnvControllersIntegrationEnabled  SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
 	EnvSyndesisRegistry               SyndesisEnvVar = "SYNDESIS_REGISTRY"
 	EnvDemoDataEnabled                SyndesisEnvVar = "DEMO_DATA_ENABLED"
 	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
@@ -139,7 +138,6 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvClientStateAuthenticationKey:   ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
 	EnvClientStateEncryptionKey:       ConfigSpec{Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
 	EnvImageStreamNamespace:           ConfigSpec{Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
-	EnvControllersIntegrationEnabled:  ConfigSpec{Value: "true", Description: "Should deployment of integrations be enabled?"},
 	EnvSyndesisRegistry:               ConfigSpec{Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
 	EnvDemoDataEnabled:                ConfigSpec{Value: "false", Required: true, Description: "Enables starting up with demo data"},
 	EnvMaxIntegrationsPerUser:         ConfigSpec{Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
