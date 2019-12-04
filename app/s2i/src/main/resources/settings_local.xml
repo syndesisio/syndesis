@@ -19,11 +19,11 @@
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
   <profiles>
     <profile>
-      <id>additional-repositories</id>
+      <id>local-repository</id>
       <repositories>
         <repository>
-          <id>_local</id>
-          <url>file:///tmp/artifacts/m2</url>
+          <id>localRepository</id>
+          <url>file://@settings.localRepository@</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -82,8 +82,8 @@
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>_local</id>
-          <url>file:///tmp/artifacts/m2</url>
+          <id>localRepository</id>
+          <url>file://@settings.localRepository@</url>
           <releases>
             <enabled>true</enabled>
           </releases>
@@ -131,16 +131,8 @@
     </profile>
   </profiles>
 
-  <mirrors>
-     <mirror>
-       <id>internal.mirror</id>
-       <url>${mavenMirror}</url>
-       <mirrorOf>${mavenMirrorOf}</mirrorOf>
-     </mirror>
-  </mirrors>
-
   <activeProfiles>
-    <activeProfile>additional-repositories</activeProfile>
+    <activeProfile>local-repository</activeProfile>
   </activeProfiles>
 
 </settings>
