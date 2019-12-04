@@ -15,6 +15,12 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
@@ -22,11 +28,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Implements a dblogging service for the Activity JAXRS service.
@@ -112,14 +113,15 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
             }
 
             if (activity != null) {
-                Collections.reverse(steps);
+                steps.sort(Comparator.comparing(ActivityStep::getAt));
                 activity.setSteps(steps);
                 rc.add(activity);
             }
 
         }
-
-        LOG.debug("rc: {}", rc);
+        // sort by most recent on top
+        rc.sort(Comparator.comparing(Activity::getAt));
+        Collections.reverse(rc);
         return rc;
     }
 
