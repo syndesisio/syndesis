@@ -15,7 +15,7 @@ const emptyStateInfo =
   'There are no views available. Please click one of the buttons below to create views.';
 const createText = 'Create a View';
 const createTip = 'Create a new View for this virtualization';
-const importText = 'Import Data Source';
+const importText = 'Import Views';
 const importTip = 'Import views from a data source';
 const queryResultsTableEmptyStateInfo =
   'Query has not yet been executed.\nSelect view, enter SQL query and click Submit';
