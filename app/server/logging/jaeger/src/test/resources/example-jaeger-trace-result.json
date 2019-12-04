@@ -1,25 +1,84 @@
 {
   "data": [
     {
-      "traceID": "41c21bbc3e4fb7bf",
+      "traceID": "360a89a61239231",
       "spans": [
         {
-          "traceID": "41c21bbc3e4fb7bf",
-          "spanID": "33eadc4fc4eef799",
+          "traceID": "360a89a61239231",
+          "spanID": "360a89a61239231",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575494304196000,
+          "duration": 1678,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "360a89a61239231",
+          "spanID": "97add1e3a16991d3",
+          "flags": 1,
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "41c21bbc3e4fb7bf",
-              "spanID": "41c21bbc3e4fb7bf"
+              "traceID": "360a89a61239231",
+              "spanID": "689c50e5c6dbcca"
             }
           ],
-          "startTime": 1566230446055000,
-          "duration": 138,
+          "startTime": 1575494304196000,
+          "duration": 241,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -34,22 +93,27 @@
           "warnings": null
         },
         {
-          "traceID": "41c21bbc3e4fb7bf",
-          "spanID": "da10ebafdb5f12da",
+          "traceID": "360a89a61239231",
+          "spanID": "1a8b718ac2dd2066",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "41c21bbc3e4fb7bf",
-              "spanID": "41c21bbc3e4fb7bf"
+              "traceID": "360a89a61239231",
+              "spanID": "689c50e5c6dbcca"
             }
           ],
-          "startTime": 1566230446056000,
-          "duration": 2880,
+          "startTime": 1575494304197000,
+          "duration": 297,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -61,12 +125,12 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230446058000,
+              "timestamp": 1575494304197000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmeazzbCw1KS3JR4FVSz, firedTime=Mon Aug 19 16:00:46 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=41c21bbc3e4fb7bf:da10ebafdb5f12da:41c21bbc3e4fb7bf:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHlo63UF8qldA7ZvPCz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@771869f8, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=360a89a61239231:1a8b718ac2dd2066:689c50e5c6dbcca:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
@@ -75,38 +139,34 @@
           "warnings": null
         },
         {
-          "traceID": "41c21bbc3e4fb7bf",
-          "spanID": "41c21bbc3e4fb7bf",
+          "traceID": "360a89a61239231",
+          "spanID": "689c50e5c6dbcca",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230446055000,
-          "duration": 3652,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "360a89a61239231",
+              "spanID": "360a89a61239231"
+            }
+          ],
+          "startTime": 1575494304196000,
+          "duration": 754,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHlo63UF8qldA7ZvPCz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
-            },
-            {
-              "key": "sampler.type",
-              "type": "string",
-              "value": "const"
-            },
-            {
-              "key": "sampler.param",
-              "type": "bool",
-              "value": true
             },
             {
               "key": "internal.span.format",
@@ -121,22 +181,27 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -144,31 +209,152 @@
       "warnings": null
     },
     {
-      "traceID": "3d73f53c9dffbcc1",
+      "traceID": "638abbeba80bb1f9",
       "spans": [
         {
-          "traceID": "3d73f53c9dffbcc1",
-          "spanID": "3d73f53c9dffbcc1",
+          "traceID": "638abbeba80bb1f9",
+          "spanID": "d46ad4eb698c3e91",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230456056000,
-          "duration": 11083,
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "638abbeba80bb1f9",
+              "spanID": "8c79ebb48a72606a"
+            }
+          ],
+          "startTime": 1575494304572000,
+          "duration": 209,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "638abbeba80bb1f9",
+          "spanID": "42374fbf1a9fc5a6",
+          "flags": 1,
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "638abbeba80bb1f9",
+              "spanID": "8c79ebb48a72606a"
+            }
+          ],
+          "startTime": 1575494304573000,
+          "duration": 284,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1575494304573000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LvHloBwUF8qldA7ZvPEz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@191d150a, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=638abbeba80bb1f9:42374fbf1a9fc5a6:8c79ebb48a72606a:1 - -LvGi5XAB7OpkM5ZEVB_}] "
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "638abbeba80bb1f9",
+          "spanID": "8c79ebb48a72606a",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "638abbeba80bb1f9",
+              "spanID": "638abbeba80bb1f9"
+            }
+          ],
+          "startTime": 1575494304572000,
+          "duration": 743,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHloBwUF8qldA7ZvPEz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "638abbeba80bb1f9",
+          "spanID": "638abbeba80bb1f9",
+          "flags": 1,
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575494304572000,
+          "duration": 1698,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -181,34 +367,14 @@
               "value": true
             },
             {
-              "key": "internal.span.format",
+              "key": "http.url",
               "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "3d73f53c9dffbcc1",
-          "spanID": "8c12abc786901cc9",
-          "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
-          "references": [
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
             {
-              "refType": "CHILD_OF",
-              "traceID": "3d73f53c9dffbcc1",
-              "spanID": "3d73f53c9dffbcc1"
-            }
-          ],
-          "startTime": 1566230456056000,
-          "duration": 179,
-          "tags": [
-            {
-              "key": "kind",
+              "key": "http.method",
               "type": "string",
-              "value": "step"
+              "value": "POST"
             },
             {
               "key": "internal.span.format",
@@ -217,69 +383,33 @@
             }
           ],
           "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "3d73f53c9dffbcc1",
-          "spanID": "4e083a5b6f6899b9",
-          "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "3d73f53c9dffbcc1",
-              "spanID": "3d73f53c9dffbcc1"
-            }
-          ],
-          "startTime": 1566230456061000,
-          "duration": 5363,
-          "tags": [
-            {
-              "key": "kind",
-              "type": "string",
-              "value": "step"
-            },
-            {
-              "key": "internal.span.format",
-              "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [
-            {
-              "timestamp": 1566230456065000,
-              "fields": [
-                {
-                  "key": "event",
-                  "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-Lmeb1QrCw1KS3JR4FVUz, firedTime=Mon Aug 19 16:00:56 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=3d73f53c9dffbcc1:4e083a5b6f6899b9:3d73f53c9dffbcc1:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
-                }
-              ]
-            }
-          ],
           "processID": "p1",
           "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -287,31 +417,152 @@
       "warnings": null
     },
     {
-      "traceID": "b93098e321641f85",
+      "traceID": "78481f8153b09ea0",
       "spans": [
         {
-          "traceID": "b93098e321641f85",
-          "spanID": "b93098e321641f85",
+          "traceID": "78481f8153b09ea0",
+          "spanID": "286484ecbb9675cb",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230475143000,
-          "duration": 179377,
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "78481f8153b09ea0",
+              "spanID": "bf6f8856cf70a416"
+            }
+          ],
+          "startTime": 1575494304964000,
+          "duration": 202,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "78481f8153b09ea0",
+          "spanID": "75f12ac254164fad",
+          "flags": 1,
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "78481f8153b09ea0",
+              "spanID": "bf6f8856cf70a416"
+            }
+          ],
+          "startTime": 1575494304964000,
+          "duration": 6421,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1575494304964000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LvHloI3UF8qldA7ZvPGz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@59ccc7c2, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=78481f8153b09ea0:75f12ac254164fad:bf6f8856cf70a416:1 - -LvGi5XAB7OpkM5ZEVB_}] "
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "78481f8153b09ea0",
+          "spanID": "bf6f8856cf70a416",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "78481f8153b09ea0",
+              "spanID": "78481f8153b09ea0"
+            }
+          ],
+          "startTime": 1575494304964000,
+          "duration": 6884,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHloI3UF8qldA7ZvPGz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "78481f8153b09ea0",
+          "spanID": "78481f8153b09ea0",
+          "flags": 1,
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575494304963000,
+          "duration": 8062,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -324,34 +575,14 @@
               "value": true
             },
             {
-              "key": "internal.span.format",
+              "key": "http.url",
               "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b93098e321641f85",
-          "spanID": "ca08184df77d2577",
-          "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
-          "references": [
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
             {
-              "refType": "CHILD_OF",
-              "traceID": "b93098e321641f85",
-              "spanID": "b93098e321641f85"
-            }
-          ],
-          "startTime": 1566230475149000,
-          "duration": 301,
-          "tags": [
-            {
-              "key": "kind",
+              "key": "http.method",
               "type": "string",
-              "value": "step"
+              "value": "POST"
             },
             {
               "key": "internal.span.format",
@@ -360,69 +591,33 @@
             }
           ],
           "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "b93098e321641f85",
-          "spanID": "f0279868307a4354",
-          "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "b93098e321641f85",
-              "spanID": "b93098e321641f85"
-            }
-          ],
-          "startTime": 1566230475210000,
-          "duration": 111770,
-          "tags": [
-            {
-              "key": "kind",
-              "type": "string",
-              "value": "step"
-            },
-            {
-              "key": "internal.span.format",
-              "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [
-            {
-              "timestamp": 1566230475261000,
-              "fields": [
-                {
-                  "key": "event",
-                  "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-Lmeb64XCw1KS3JR4FVWz, firedTime=Mon Aug 19 16:01:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=b93098e321641f85:f0279868307a4354:b93098e321641f85:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
-                }
-              ]
-            }
-          ],
           "processID": "p1",
           "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -430,61 +625,31 @@
       "warnings": null
     },
     {
-      "traceID": "f1813a73717e6f1c",
+      "traceID": "b38c2f752dd0e863",
       "spans": [
         {
-          "traceID": "f1813a73717e6f1c",
-          "spanID": "b556a8bdf4c6752f",
+          "traceID": "b38c2f752dd0e863",
+          "spanID": "b38c2f752dd0e863",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "f1813a73717e6f1c",
-              "spanID": "f1813a73717e6f1c"
-            }
-          ],
-          "startTime": 1566230484891000,
-          "duration": 99,
-          "tags": [
-            {
-              "key": "kind",
-              "type": "string",
-              "value": "step"
-            },
-            {
-              "key": "internal.span.format",
-              "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "f1813a73717e6f1c",
-          "spanID": "f1813a73717e6f1c",
-          "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "operationName": "POST",
           "references": [],
-          "startTime": 1566230484891000,
-          "duration": 3417,
+          "startTime": 1575494305331000,
+          "duration": 9632,
           "tags": [
             {
-              "key": "exchange",
-              "type": "string",
-              "value": "null"
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
             },
             {
-              "key": "failed",
-              "type": "bool",
-              "value": true
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
-              "value": "activity"
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -497,6 +662,16 @@
               "value": true
             },
             {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
               "key": "internal.span.format",
               "type": "string",
               "value": "jaeger"
@@ -507,22 +682,62 @@
           "warnings": null
         },
         {
-          "traceID": "f1813a73717e6f1c",
-          "spanID": "ab8090d181d1886b",
+          "traceID": "b38c2f752dd0e863",
+          "spanID": "b51349eb7bac0738",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "f1813a73717e6f1c",
-              "spanID": "f1813a73717e6f1c"
+              "traceID": "b38c2f752dd0e863",
+              "spanID": "2352bf608ca9c71b"
             }
           ],
-          "startTime": 1566230484892000,
-          "duration": 2939,
+          "startTime": 1575494305333000,
+          "duration": 2293,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b38c2f752dd0e863",
+          "spanID": "c49c7ea38638f9ab",
+          "flags": 1,
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b38c2f752dd0e863",
+              "spanID": "2352bf608ca9c71b"
+            }
+          ],
+          "startTime": 1575494305336000,
+          "duration": 467,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -534,38 +749,83 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230484893000,
+              "timestamp": 1575494305336000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-Lmeb8TQCw1KS3JR4FVYz, firedTime=Mon Aug 19 16:01:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f1813a73717e6f1c:ab8090d181d1886b:f1813a73717e6f1c:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHloNpUF8qldA7ZvPIz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@6b4cf1de, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=b38c2f752dd0e863:c49c7ea38638f9ab:2352bf608ca9c71b:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
           ],
           "processID": "p1",
           "warnings": null
+        },
+        {
+          "traceID": "b38c2f752dd0e863",
+          "spanID": "2352bf608ca9c71b",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b38c2f752dd0e863",
+              "spanID": "b38c2f752dd0e863"
+            }
+          ],
+          "startTime": 1575494305333000,
+          "duration": 3129,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LvHloNpUF8qldA7ZvPIz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -573,25 +833,30 @@
       "warnings": null
     },
     {
-      "traceID": "f509a044c63b76bd",
+      "traceID": "a344bd3708ca7daf",
       "spans": [
         {
-          "traceID": "f509a044c63b76bd",
-          "spanID": "dcc1c499cf77af9d",
+          "traceID": "a344bd3708ca7daf",
+          "spanID": "3aed8f5452d8e676",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "f509a044c63b76bd",
-              "spanID": "f509a044c63b76bd"
+              "traceID": "a344bd3708ca7daf",
+              "spanID": "2e40953526963ba4"
             }
           ],
-          "startTime": 1566230494891000,
-          "duration": 118,
+          "startTime": 1575494305685000,
+          "duration": 508,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -606,22 +871,27 @@
           "warnings": null
         },
         {
-          "traceID": "f509a044c63b76bd",
-          "spanID": "92ea7de702f51949",
+          "traceID": "a344bd3708ca7daf",
+          "spanID": "ac7e8cff92e1d53d",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "f509a044c63b76bd",
-              "spanID": "f509a044c63b76bd"
+              "traceID": "a344bd3708ca7daf",
+              "spanID": "2e40953526963ba4"
             }
           ],
-          "startTime": 1566230494892000,
-          "duration": 5849,
+          "startTime": 1575494305686000,
+          "duration": 438,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -633,12 +903,12 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230494895000,
+              "timestamp": 1575494305686000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebAufCw1KS3JR4FV_z, firedTime=Mon Aug 19 16:01:34 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=f509a044c63b76bd:92ea7de702f51949:f509a044c63b76bd:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHloTKUF8qldA7ZvPKz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@23b51a8b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=a344bd3708ca7daf:ac7e8cff92e1d53d:2e40953526963ba4:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
@@ -647,28 +917,68 @@
           "warnings": null
         },
         {
-          "traceID": "f509a044c63b76bd",
-          "spanID": "f509a044c63b76bd",
+          "traceID": "a344bd3708ca7daf",
+          "spanID": "2e40953526963ba4",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230494891000,
-          "duration": 6929,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a344bd3708ca7daf",
+              "spanID": "a344bd3708ca7daf"
+            }
+          ],
+          "startTime": 1575494305685000,
+          "duration": 6527,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHloTKUF8qldA7ZvPKz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a344bd3708ca7daf",
+          "spanID": "a344bd3708ca7daf",
+          "flags": 1,
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575494305685000,
+          "duration": 7822,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -679,6 +989,16 @@
               "key": "sampler.param",
               "type": "bool",
               "value": true
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
             },
             {
               "key": "internal.span.format",
@@ -693,22 +1013,27 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -716,25 +1041,84 @@
       "warnings": null
     },
     {
-      "traceID": "514f18fc5e8e3055",
+      "traceID": "4199d701a15f556a",
       "spans": [
         {
-          "traceID": "514f18fc5e8e3055",
-          "spanID": "be79aaa1222c893b",
+          "traceID": "4199d701a15f556a",
+          "spanID": "4199d701a15f556a",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575494306091000,
+          "duration": 2670,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "4199d701a15f556a",
+          "spanID": "9b7c6a87293af25a",
+          "flags": 1,
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "514f18fc5e8e3055",
-              "spanID": "514f18fc5e8e3055"
+              "traceID": "4199d701a15f556a",
+              "spanID": "a7885a1622ca35a0"
             }
           ],
-          "startTime": 1566230504895000,
-          "duration": 151,
+          "startTime": 1575494306092000,
+          "duration": 185,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -749,22 +1133,27 @@
           "warnings": null
         },
         {
-          "traceID": "514f18fc5e8e3055",
-          "spanID": "5fd2844c5e30cb45",
+          "traceID": "4199d701a15f556a",
+          "spanID": "8662fac3be16cc01",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "514f18fc5e8e3055",
-              "spanID": "514f18fc5e8e3055"
+              "traceID": "4199d701a15f556a",
+              "spanID": "a7885a1622ca35a0"
             }
           ],
-          "startTime": 1566230504896000,
-          "duration": 10403,
+          "startTime": 1575494306093000,
+          "duration": 433,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -776,12 +1165,12 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230504905000,
+              "timestamp": 1575494306094000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebDLzCw1KS3JR4FVbz, firedTime=Mon Aug 19 16:01:44 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=514f18fc5e8e3055:5fd2844c5e30cb45:514f18fc5e8e3055:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHloZgUF8qldA7ZvPMz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@3a89447b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=4199d701a15f556a:8662fac3be16cc01:a7885a1622ca35a0:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
@@ -790,38 +1179,34 @@
           "warnings": null
         },
         {
-          "traceID": "514f18fc5e8e3055",
-          "spanID": "514f18fc5e8e3055",
+          "traceID": "4199d701a15f556a",
+          "spanID": "a7885a1622ca35a0",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230504895000,
-          "duration": 11042,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "4199d701a15f556a",
+              "spanID": "4199d701a15f556a"
+            }
+          ],
+          "startTime": 1575494306092000,
+          "duration": 1734,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHloZgUF8qldA7ZvPMz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
-            },
-            {
-              "key": "sampler.type",
-              "type": "string",
-              "value": "const"
-            },
-            {
-              "key": "sampler.param",
-              "type": "bool",
-              "value": true
             },
             {
               "key": "internal.span.format",
@@ -836,22 +1221,27 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -859,25 +1249,30 @@
       "warnings": null
     },
     {
-      "traceID": "86ed2cc547f5513a",
+      "traceID": "760994999bd8cb5d",
       "spans": [
         {
-          "traceID": "86ed2cc547f5513a",
-          "spanID": "768374408040a873",
+          "traceID": "760994999bd8cb5d",
+          "spanID": "254a0f1c192b9dfc",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "86ed2cc547f5513a",
-              "spanID": "86ed2cc547f5513a"
+              "traceID": "760994999bd8cb5d",
+              "spanID": "19cf80672669a556"
             }
           ],
-          "startTime": 1566230514895000,
-          "duration": 112,
+          "startTime": 1575495234931000,
+          "duration": 494,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -892,22 +1287,27 @@
           "warnings": null
         },
         {
-          "traceID": "86ed2cc547f5513a",
-          "spanID": "d77cd3c5965d0862",
+          "traceID": "760994999bd8cb5d",
+          "spanID": "db78260b4afa517e",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "86ed2cc547f5513a",
-              "spanID": "86ed2cc547f5513a"
+              "traceID": "760994999bd8cb5d",
+              "spanID": "19cf80672669a556"
             }
           ],
-          "startTime": 1566230514896000,
-          "duration": 4081,
+          "startTime": 1575495234932000,
+          "duration": 2046,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -919,12 +1319,12 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230514897000,
+              "timestamp": 1575495234932000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebFnECw1KS3JR4FVdz, firedTime=Mon Aug 19 16:01:54 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=86ed2cc547f5513a:d77cd3c5965d0862:86ed2cc547f5513a:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHpMKnUF8qldA7ZvPOz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@28374991, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=760994999bd8cb5d:db78260b4afa517e:19cf80672669a556:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
@@ -933,28 +1333,68 @@
           "warnings": null
         },
         {
-          "traceID": "86ed2cc547f5513a",
-          "spanID": "86ed2cc547f5513a",
+          "traceID": "760994999bd8cb5d",
+          "spanID": "19cf80672669a556",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
-          "references": [],
-          "startTime": 1566230514895000,
-          "duration": 4625,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "760994999bd8cb5d",
+              "spanID": "760994999bd8cb5d"
+            }
+          ],
+          "startTime": 1575495234931000,
+          "duration": 3021,
           "tags": [
             {
               "key": "exchange",
               "type": "string",
-              "value": "null"
+              "value": "i-LvHpMKnUF8qldA7ZvPOz"
             },
             {
               "key": "failed",
               "type": "bool",
-              "value": true
+              "value": false
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
               "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "760994999bd8cb5d",
+          "spanID": "760994999bd8cb5d",
+          "flags": 1,
+          "operationName": "POST",
+          "references": [],
+          "startTime": 1575495234930000,
+          "duration": 6627,
+          "tags": [
+            {
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
+            },
+            {
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -965,6 +1405,16 @@
               "key": "sampler.param",
               "type": "bool",
               "value": true
+            },
+            {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
             },
             {
               "key": "internal.span.format",
@@ -979,22 +1429,27 @@
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -1002,31 +1457,31 @@
       "warnings": null
     },
     {
-      "traceID": "11bfc1865d518738",
+      "traceID": "d366f27ed0081b97",
       "spans": [
         {
-          "traceID": "11bfc1865d518738",
-          "spanID": "11bfc1865d518738",
+          "traceID": "d366f27ed0081b97",
+          "spanID": "d366f27ed0081b97",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "operationName": "POST",
           "references": [],
-          "startTime": 1566230524895000,
-          "duration": 6203,
+          "startTime": 1575495258723000,
+          "duration": 2764,
           "tags": [
             {
-              "key": "exchange",
-              "type": "string",
-              "value": "null"
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
             },
             {
-              "key": "failed",
-              "type": "bool",
-              "value": true
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
-              "value": "activity"
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -1039,6 +1494,16 @@
               "value": true
             },
             {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
               "key": "internal.span.format",
               "type": "string",
               "value": "jaeger"
@@ -1049,22 +1514,27 @@
           "warnings": null
         },
         {
-          "traceID": "11bfc1865d518738",
-          "spanID": "cb7283250b5d2a43",
+          "traceID": "d366f27ed0081b97",
+          "spanID": "ade69582cc2dccf7",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "11bfc1865d518738",
-              "spanID": "11bfc1865d518738"
+              "traceID": "d366f27ed0081b97",
+              "spanID": "f087cb07f09f69ab"
             }
           ],
-          "startTime": 1566230524896000,
-          "duration": 103,
+          "startTime": 1575495258724000,
+          "duration": 222,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -1079,22 +1549,27 @@
           "warnings": null
         },
         {
-          "traceID": "11bfc1865d518738",
-          "spanID": "129eb720bdffba8c",
+          "traceID": "d366f27ed0081b97",
+          "spanID": "8861bd5749192f6a",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "11bfc1865d518738",
-              "spanID": "11bfc1865d518738"
+              "traceID": "d366f27ed0081b97",
+              "spanID": "f087cb07f09f69ab"
             }
           ],
-          "startTime": 1566230524896000,
-          "duration": 5718,
+          "startTime": 1575495258724000,
+          "duration": 306,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -1106,38 +1581,83 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230524901000,
+              "timestamp": 1575495258724000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebIEUCw1KS3JR4FVfz, firedTime=Mon Aug 19 16:02:04 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=11bfc1865d518738:129eb720bdffba8c:11bfc1865d518738:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHpS8YUF8qldA7ZvPQz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@68cf4c1b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=d366f27ed0081b97:8861bd5749192f6a:f087cb07f09f69ab:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
           ],
           "processID": "p1",
           "warnings": null
+        },
+        {
+          "traceID": "d366f27ed0081b97",
+          "spanID": "f087cb07f09f69ab",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "d366f27ed0081b97",
+              "spanID": "d366f27ed0081b97"
+            }
+          ],
+          "startTime": 1575495258724000,
+          "duration": 766,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LvHpS8YUF8qldA7ZvPQz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -1145,31 +1665,31 @@
       "warnings": null
     },
     {
-      "traceID": "810ddb52e8012d24",
+      "traceID": "48971706c9b9bbb9",
       "spans": [
         {
-          "traceID": "810ddb52e8012d24",
-          "spanID": "810ddb52e8012d24",
+          "traceID": "48971706c9b9bbb9",
+          "spanID": "48971706c9b9bbb9",
           "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "operationName": "POST",
           "references": [],
-          "startTime": 1566230534895000,
-          "duration": 4960,
+          "startTime": 1575495288844000,
+          "duration": 2984,
           "tags": [
             {
-              "key": "exchange",
-              "type": "string",
-              "value": "null"
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
             },
             {
-              "key": "failed",
-              "type": "bool",
-              "value": true
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
-              "value": "activity"
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -1182,6 +1702,16 @@
               "value": true
             },
             {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
               "key": "internal.span.format",
               "type": "string",
               "value": "jaeger"
@@ -1192,22 +1722,27 @@
           "warnings": null
         },
         {
-          "traceID": "810ddb52e8012d24",
-          "spanID": "547bd3013d08a811",
+          "traceID": "48971706c9b9bbb9",
+          "spanID": "baac3898dcd8465b",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "810ddb52e8012d24",
-              "spanID": "810ddb52e8012d24"
+              "traceID": "48971706c9b9bbb9",
+              "spanID": "9138bfc0e7cafa39"
             }
           ],
-          "startTime": 1566230534895000,
-          "duration": 123,
+          "startTime": 1575495288845000,
+          "duration": 624,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -1222,22 +1757,27 @@
           "warnings": null
         },
         {
-          "traceID": "810ddb52e8012d24",
-          "spanID": "ba99dd61f7ecc3ec",
+          "traceID": "48971706c9b9bbb9",
+          "spanID": "724879abb01fa339",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "810ddb52e8012d24",
-              "spanID": "810ddb52e8012d24"
+              "traceID": "48971706c9b9bbb9",
+              "spanID": "9138bfc0e7cafa39"
             }
           ],
-          "startTime": 1566230534896000,
-          "duration": 4487,
+          "startTime": 1575495288846000,
+          "duration": 428,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -1249,38 +1789,83 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230534897000,
+              "timestamp": 1575495288846000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebKfjCw1KS3JR4FVhz, firedTime=Mon Aug 19 16:02:14 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=810ddb52e8012d24:ba99dd61f7ecc3ec:810ddb52e8012d24:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHpZVCUF8qldA7ZvPSz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@744e6b61, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=48971706c9b9bbb9:724879abb01fa339:9138bfc0e7cafa39:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
           ],
           "processID": "p1",
           "warnings": null
+        },
+        {
+          "traceID": "48971706c9b9bbb9",
+          "spanID": "9138bfc0e7cafa39",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "48971706c9b9bbb9",
+              "spanID": "48971706c9b9bbb9"
+            }
+          ],
+          "startTime": 1575495288845000,
+          "duration": 1372,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LvHpZVCUF8qldA7ZvPSz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
@@ -1288,61 +1873,31 @@
       "warnings": null
     },
     {
-      "traceID": "10a6654d0994ff70",
+      "traceID": "a5274516ae80e4fb",
       "spans": [
         {
-          "traceID": "10a6654d0994ff70",
-          "spanID": "359f31bb9d6d2270",
+          "traceID": "a5274516ae80e4fb",
+          "spanID": "a5274516ae80e4fb",
           "flags": 1,
-          "operationName": "-Lme60t4Yh7X42QGsmPW",
-          "references": [
-            {
-              "refType": "CHILD_OF",
-              "traceID": "10a6654d0994ff70",
-              "spanID": "10a6654d0994ff70"
-            }
-          ],
-          "startTime": 1566230544895000,
-          "duration": 175,
-          "tags": [
-            {
-              "key": "kind",
-              "type": "string",
-              "value": "step"
-            },
-            {
-              "key": "internal.span.format",
-              "type": "string",
-              "value": "jaeger"
-            }
-          ],
-          "logs": [],
-          "processID": "p1",
-          "warnings": null
-        },
-        {
-          "traceID": "10a6654d0994ff70",
-          "spanID": "10a6654d0994ff70",
-          "flags": 1,
-          "operationName": "-Lme5yDIYh7X42QGsmPW",
+          "operationName": "POST",
           "references": [],
-          "startTime": 1566230544895000,
-          "duration": 10494,
+          "startTime": 1575495301271000,
+          "duration": 2853,
           "tags": [
             {
-              "key": "exchange",
-              "type": "string",
-              "value": "null"
+              "key": "http.status_code",
+              "type": "int64",
+              "value": 204
             },
             {
-              "key": "failed",
-              "type": "bool",
-              "value": true
+              "key": "component",
+              "type": "string",
+              "value": "java-web-servlet"
             },
             {
-              "key": "kind",
+              "key": "span.kind",
               "type": "string",
-              "value": "activity"
+              "value": "server"
             },
             {
               "key": "sampler.type",
@@ -1355,6 +1910,16 @@
               "value": true
             },
             {
+              "key": "http.url",
+              "type": "string",
+              "value": "http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test"
+            },
+            {
+              "key": "http.method",
+              "type": "string",
+              "value": "POST"
+            },
+            {
               "key": "internal.span.format",
               "type": "string",
               "value": "jaeger"
@@ -1365,22 +1930,27 @@
           "warnings": null
         },
         {
-          "traceID": "10a6654d0994ff70",
-          "spanID": "c12b89afd8e99872",
+          "traceID": "a5274516ae80e4fb",
+          "spanID": "84c2ef479cc86062",
           "flags": 1,
-          "operationName": "-Lme62dbYh7X42QGsmPW",
+          "operationName": "-LvGi5XAB7OpkM5ZEVB_",
           "references": [
             {
               "refType": "CHILD_OF",
-              "traceID": "10a6654d0994ff70",
-              "spanID": "10a6654d0994ff70"
+              "traceID": "a5274516ae80e4fb",
+              "spanID": "63e957381c03d914"
             }
           ],
-          "startTime": 1566230544902000,
-          "duration": 3246,
+          "startTime": 1575495301273000,
+          "duration": 384,
           "tags": [
             {
-              "key": "kind",
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
               "type": "string",
               "value": "step"
             },
@@ -1392,38 +1962,118 @@
           ],
           "logs": [
             {
-              "timestamp": 1566230544905000,
+              "timestamp": 1575495301273000,
               "fields": [
                 {
                   "key": "event",
                   "type": "string",
-                  "value": "Message Context: [{breadcrumbId=i-LmebN6zCw1KS3JR4FVjz, firedTime=Mon Aug 19 16:02:24 UTC 2019, Syndesis.FLOW_ID=-Lme5yDIYh7X42QGsmPW, Syndesis.STEP_ID=-Lme62dbYh7X42QGsmPW, Syndesis.STEP_SPAN=10a6654d0994ff70:c12b89afd8e99872:10a6654d0994ff70:1 - -Lme62dbYh7X42QGsmPW}] Body: [] hi!!!"
+                  "value": "Message Context: [{breadcrumbId=i-LvHpbXNUF8qldA7ZvPUz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@5cd955f2, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=a5274516ae80e4fb:84c2ef479cc86062:63e957381c03d914:1 - -LvGi5XAB7OpkM5ZEVB_}] "
                 }
               ]
             }
           ],
           "processID": "p1",
           "warnings": null
+        },
+        {
+          "traceID": "a5274516ae80e4fb",
+          "spanID": "63e957381c03d914",
+          "flags": 1,
+          "operationName": "-LvGi2cEB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a5274516ae80e4fb",
+              "spanID": "a5274516ae80e4fb"
+            }
+          ],
+          "startTime": 1575495301272000,
+          "duration": 929,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LvHpbXNUF8qldA7ZvPUz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "a5274516ae80e4fb",
+          "spanID": "8c4db6f121edcf92",
+          "flags": 1,
+          "operationName": "-LvGi4fQB7OpkM5ZEVB_",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "a5274516ae80e4fb",
+              "spanID": "63e957381c03d914"
+            }
+          ],
+          "startTime": 1575495301272000,
+          "duration": 300,
+          "tags": [
+            {
+              "key": "mane",
+              "type": "string",
+              "value": "mane"
+            },
+            {
+              "key": "span.kind",
+              "type": "string",
+              "value": "step"
+            },
+            {
+              "key": "internal.span.format",
+              "type": "string",
+              "value": "jaeger"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
         }
       ],
       "processes": {
         "p1": {
-          "serviceName": "i-Lme64TBoY9YzYEwYsQIz",
+          "serviceName": "i-LvGi6xjuiwgUqHo-NFUz",
           "tags": [
             {
               "key": "hostname",
               "type": "string",
-              "value": "i-test1-11-nsss5"
+              "value": "i-myhook-2-cxt9r"
+            },
+            {
+              "key": "integration.version",
+              "type": "string",
+              "value": "2"
             },
             {
               "key": "ip",
               "type": "string",
-              "value": "172.17.0.19"
+              "value": "172.17.0.20"
             },
             {
               "key": "jaeger.version",
               "type": "string",
-              "value": "Java-0.32.0"
+              "value": "Java-1.0.0"
             }
           ]
         }
