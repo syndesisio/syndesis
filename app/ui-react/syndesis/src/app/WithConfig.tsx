@@ -1,3 +1,4 @@
+import { StringMap } from '@syndesis/models';
 import * as React from 'react';
 
 export interface IConfigFile {
@@ -17,9 +18,7 @@ export interface IConfigFile {
     dvUrl: string;
     enabled: number;
   };
-  features: {
-    logging: boolean;
-  };
+  features: StringMap<any>,
   branding: {
     logoWhiteBg: string;
     logoDarkBg: string;
