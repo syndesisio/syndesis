@@ -25,6 +25,7 @@ const (
 	EnvPostgresqlVolumeCapacity      SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
 	EnvPostgresqlSampledbPassword    SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
 	EnvTestSupport                   SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvOauthDisableSarCheck          SyndesisEnvVar = "OAUTH_DISABLE_SAR_CHECK"
 	EnvOauthCookieSecret             SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
 	EnvSyndesisEncryptKey            SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
 	EnvPrometheusVolumeCapacity      SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
@@ -85,6 +86,7 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvPostgresqlVolumeCapacity:      ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi"},
 	EnvPostgresqlSampledbPassword:    ConfigSpec{Generate: "expression", FromLen: 16, Required: true, Description: "Password for the PostgreSQL sampledb user"},
 	EnvTestSupport:                   ConfigSpec{Value: "false", Required: true, Description: "Enables test-support endpoint on backend API"},
+	EnvOauthDisableSarCheck:          ConfigSpec{Value: "false", Description: "Disables SAR checks made by the syndesis operator"},
 	EnvOauthCookieSecret:             ConfigSpec{Generate: "expression", FromLen: 32, Description: "Secret to use to encrypt oauth cookies"},
 	EnvSyndesisEncryptKey:            ConfigSpec{Generate: "expression", FromLen: 64, Required: true, Description: "The encryption key used to encrypt/decrypt stored secrets"},
 	EnvPrometheusVolumeCapacity:      ConfigSpec{Value: "1Gi", Required: true, Description: "Volume space available for Prometheus data, e.g. 512Mi, 2Gi"},
@@ -162,6 +164,7 @@ var (
 		postgresExporterTagFromEnv,
 
 		komodoTagFromEnv,
+		oauthDisableSarCheckFromEnv,
 		oauthProxyTagFromEnv,
 		prometheusTagFromEnv,
 
@@ -246,6 +249,12 @@ func postgresExporterTagFromEnv(config map[string]string, syndesis *v1alpha1.Syn
 func komodoTagFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvKomodoTag); ok && syndesis.Spec.Components.Komodo.Tag == "" {
 		syndesis.Spec.Components.Komodo.Tag = v
+	}
+}
+
+func oauthDisableSarCheckFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getBool(config, EnvOauthDisableSarCheck); ok && syndesis.Spec.Components.Oauth.DisableSarCheck == nil {
+		syndesis.Spec.Components.Oauth.DisableSarCheck = &v
 	}
 }
 

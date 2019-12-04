@@ -73,7 +73,8 @@ type ComponentsSpec struct {
 }
 
 type OauthConfiguration struct {
-	Tag string `json:"tag,omitempty"`
+	DisableSarCheck *bool  `json:"disableSarCheck,omitempty"`
+	Tag             string `json:"tag,omitempty"`
 }
 
 type PostgresExporterConfiguration struct {
