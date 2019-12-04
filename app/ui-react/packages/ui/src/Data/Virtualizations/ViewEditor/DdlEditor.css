@@ -3,40 +3,18 @@
 }
 
 .ddl-editor__button {
-  margin-bottom: 8px;
-  margin-right: 4px;
-}
-
-.ddl-editor__card {
-  height: 100%;
+  margin-right: 4px; 
 }
 
 .ddl-editor__card-body.pf-c-card__body {
-  padding-left: 0;
-  padding-bottom: 8px;
-}
-
-.ddl-editor__card-body.pf-c-card__body:first-child {
-  padding-top: 4px; 
+  padding: 4px 0 10px 0 !important;
 }
 
 .ddl-editor__card-footer.pf-c-card__footer {
   padding-left: 0;
-  padding-bottom: 8px;
-}
-
-.ddl-editor .text-editor {
-  flex: 1 1 auto;
-  height: 100%;
-  margin-top: 0;
-  position: relative;
+  padding-bottom: 10px;
 }
 
 .ddl-editor .CodeMirror {
-  bottom: 0;
-  height: 100%;
-  left: 0;
-  position: absolute;
-  right: 0;
-  top: 0;
+  height: 250px;
 }
