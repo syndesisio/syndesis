@@ -110,9 +110,6 @@ type GrafanaConfiguration struct {
 type ServerConfiguration struct {
 	Resources Resources      `json:"resources,omitempty"`
 	Features  ServerFeatures `json:"features,omitempty"`
-
-	// Should deployment of integrations be enabled?
-	ControllersIntegrationEnabled bool `json:"controllersIntegrationEnabled,omitempty"`
 }
 
 type MetaConfiguration struct {

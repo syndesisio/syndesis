@@ -338,9 +338,8 @@ func getConfigLiteral() *Config {
 				UI:    UIConfiguration{Image: "docker.io/syndesis/syndesis-ui:latest"},
 				S2I:   S2IConfiguration{Image: "docker.io/syndesis/syndesis-s2i:latest"},
 				Server: ServerConfiguration{
-					Image:                         "docker.io/syndesis/syndesis-server:latest",
-					ControllersIntegrationEnabled: true,
-					Resources:                     Resources{Memory: "800Mi"},
+					Image:     "docker.io/syndesis/syndesis-server:latest",
+					Resources: Resources{Memory: "800Mi"},
 					Features: ServerFeatures{
 						IntegrationLimit:              0,
 						IntegrationStateCheckInterval: 60,

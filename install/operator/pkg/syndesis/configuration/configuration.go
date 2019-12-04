@@ -126,13 +126,12 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Resources                     Resources      // Resources reserved for server pod
-	Features                      ServerFeatures // Server features: integration limits and check interval, support for demo data and more
-	Image                         string         // Docker image for server
-	SyndesisEncryptKey            string         // The encryption key used to encrypt/decrypt stored secrets
-	ClientStateAuthenticationKey  string         // Key used to perform authentication of client side stored state
-	ClientStateEncryptionKey      string         // Key used to perform encryption of client side stored state
-	ControllersIntegrationEnabled bool           // Should deployment of integrations be enabled?
+	Resources                    Resources      // Resources reserved for server pod
+	Features                     ServerFeatures // Server features: integration limits and check interval, support for demo data and more
+	Image                        string         // Docker image for server
+	SyndesisEncryptKey           string         // The encryption key used to encrypt/decrypt stored secrets
+	ClientStateAuthenticationKey string         // Key used to perform authentication of client side stored state
+	ClientStateEncryptionKey     string         // Key used to perform encryption of client side stored state
 }
 
 type MetaConfiguration struct {
