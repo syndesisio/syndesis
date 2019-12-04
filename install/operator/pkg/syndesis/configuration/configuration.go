@@ -352,10 +352,6 @@ func (config *Config) setConfigFromEnv() error {
 				},
 				Server: ServerConfiguration{
 					Image: os.Getenv("SERVER_IMAGE"),
-					Features: ServerFeatures{
-						IntegrationLimit:   setIntFromEnv("INTEGRATION_LIMIT", config.Syndesis.Components.Server.Features.IntegrationLimit),
-						DeployIntegrations: setBoolFromEnv("DEPLOY_INTEGRATIONS", config.Syndesis.Components.Server.Features.DeployIntegrations),
-					},
 				},
 			},
 		},

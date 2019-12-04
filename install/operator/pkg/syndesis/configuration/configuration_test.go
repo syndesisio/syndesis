@@ -98,9 +98,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Server: ServerConfiguration{
 							Image: "SERVER_IMAGE",
 							Features: ServerFeatures{
-								TestSupport:        false,
-								IntegrationLimit:   30,
-								DeployIntegrations: true,
+								TestSupport: false,
 							},
 						},
 					},
