@@ -56,7 +56,7 @@ of the operations that this API provides.
 
 ifdef::getting-started-with-apis-in-red-hat-integration[]
 +
-Each operation has a flow defined for it. In {prodname}, a _flow_ defines the connections and steps to execute for each REST operation in the integration. The imported quickstart provides pre-defined flows for each operation.
+Each operation has a flow defined for it. In {prodname}, a _flow_ defines the connections and other steps to execute for each REST operation in the integration. The imported quickstart provides pre-defined flows for each operation.
 endif::getting-started-with-apis-in-red-hat-integration[]
 
 . To examine the flows for each operation:
