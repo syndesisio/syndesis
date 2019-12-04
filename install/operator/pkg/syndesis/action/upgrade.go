@@ -8,6 +8,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
+
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 
 	"k8s.io/apimachinery/pkg/labels"
@@ -102,6 +104,17 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 				}
 				return nil
 			})
+			if err != nil {
+				return err
+			}
+
+			for _, res := range resources {
+				operation.SetNamespaceAndOwnerReference(res, target)
+				err = createOrReplaceForce(ctx, a.client, res, true)
+				if err != nil {
+					return err
+				}
+			}
 
 			var currentAttemptDescr string
 			if syndesis.Status.UpgradeAttempts > 0 {
