@@ -90,8 +90,8 @@
       },
       "error": {
         "title": "Something is wrong",
-        "info": "An error occurred while talking with the server.",
-        "help": "Please check your internet connection.",
+        "info": "An error occurred while communicating with the server.",
+        "help": "Check your internet connection.",
         "refreshButton": "Click to refresh",
         "reportIssueButton": "Report the issue",
         "showErrorInfoButton": "Show error details"

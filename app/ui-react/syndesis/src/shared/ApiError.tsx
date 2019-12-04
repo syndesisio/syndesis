@@ -7,7 +7,7 @@ export interface IApiErrorProps {
   errorInfo?: React.ErrorInfo;
 }
 
-export const ApiError: React.SFC<IApiErrorProps> = props => (
+export const ApiError: React.FC<IApiErrorProps> = props => (
   <Translation ns={['shared']}>
     {t => (
       <UnrecoverableError
