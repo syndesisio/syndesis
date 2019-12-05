@@ -49,6 +49,7 @@
   "errorVirtualizationNameValidation": "Ошибка проверки имени Виртуализации.",
   "exportVirtualizationFailed": "Экспорт Виртуализации \"{{name}}\" не удался. Детали: {{details}}",
   "importDataSource": "Импорт Источника данных",
+  "importViews": "Импорт просмотров",
   "importDataSourceTip": "Импорт Представления из Источника данных",
   "importDataSourceWizardStep1": "Выберите Соединение",
   "importDataSourceWizardStep2": "Выберите Представление",

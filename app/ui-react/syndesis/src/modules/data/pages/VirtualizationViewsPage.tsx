@@ -184,7 +184,7 @@ export const VirtualizationViewsPage: React.FunctionComponent = () => {
                     {...helpers}
                     i18nEmptyStateInfo={t('viewEmptyStateInfo')}
                     i18nEmptyStateTitle={t('viewEmptyStateTitle')}
-                    i18nImportViews={t('importDataSource')}
+                    i18nImportViews={t('importViews')}
                     i18nImportViewsTip={t('importDataSourceTip')}
                     i18nCreateView={t('createView')}
                     i18nCreateViewTip={t('createViewTip')}

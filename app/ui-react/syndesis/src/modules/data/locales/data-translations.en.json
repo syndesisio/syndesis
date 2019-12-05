@@ -49,6 +49,7 @@
   "errorVirtualizationNameValidation": "Error validating the virtualization name.",
   "exportVirtualizationFailed": "Exporting virtualization \"{{name}}\" failed. Details: {{details}}",
   "importDataSource": "Import Data Source",
+  "importViews": "Import Views",
   "importDataSourceTip": "Import views from a data source",
   "importDataSourceWizardStep1": "Select Connection",
   "importDataSourceWizardStep2": "Select Views",

@@ -76,7 +76,7 @@ export const ViewsImportApp: React.FunctionComponent = () => {
             name: state.virtualization.name,
           })}
         </Link>
-        <span>{t('importDataSource')}</span>
+        <span>{t('importViews')}</span>
       </Breadcrumb>
       <Switch>
         {/* step 1 */}
