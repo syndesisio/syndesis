@@ -15,20 +15,21 @@
  */
 package io.syndesis.integration.runtime.sb.tracing;
 
+import io.opentracing.Tracer;
+import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.BodyLogger;
+import io.syndesis.integration.runtime.tracing.TracingActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.tracing.TracingInterceptStrategy;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.opentracing.Tracer;
-import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.tracing.TracingActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.tracing.TracingInterceptStrategy;
 
 @Configuration
 @AutoConfigureAfter(CamelAutoConfiguration.class)
@@ -36,6 +37,12 @@ import io.syndesis.integration.runtime.tracing.TracingInterceptStrategy;
 @ConditionalOnProperty(prefix = "syndesis.integration.runtime.tracing", name = "enabled", matchIfMissing = false)
 @EnableConfigurationProperties(TracingConfiguration.class)
 public class TracingAutoConfiguration {
+
+    @Bean
+    @ConditionalOnMissingBean(BodyLogger.class)
+    public BodyLogger bodyLogger() {
+        return new BodyLogger.Default();
+    }
 
     @Bean
     public CamelContextConfiguration integrationLoggingContextConfiguration(Tracer tracer) {
