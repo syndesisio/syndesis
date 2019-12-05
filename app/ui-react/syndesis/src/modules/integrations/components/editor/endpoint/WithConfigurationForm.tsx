@@ -103,11 +103,17 @@ function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
     typeof errorResponseCodes.extendedProperties === 'string'
       ? JSON.parse(errorResponseCodes.extendedProperties)
       : {};
-  errorResponseCodes.extendedProperties = JSON.stringify({
+  const newExtendedProperties = JSON.stringify({
     ...extProperties,
     mapsetKeys: errorKeys,
   });
-  return definition.properties as IConfigurationProperties;
+  return {
+    ...definition.properties,
+    errorResponseCodes: {
+      ...errorResponseCodes,
+      extendedProperties: newExtendedProperties,
+    },
+  } as IConfigurationProperties;
 }
 
 /**
