@@ -1,4 +1,5 @@
 import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
+import { StringMap } from '@syndesis/models';
 import {
   AboutModal,
   AboutModalContent,
@@ -38,6 +39,36 @@ export interface IAppUIProps {
 
 export interface IAppUIState {
   showAboutModal: boolean;
+}
+
+/**
+ * Convert a route to a feature name based on it's path, returns
+ * undefined if the route doesn't have a path.
+ * @param route
+ */
+function routeToFeatureName(route: IAppRoute) {
+  if (!route.to) {
+    return undefined;
+  }
+  return route.to.replace(/\//g, '').trim();
+}
+
+/**
+ * Compares the supplied route to the given feature map and
+ * returns whether or not that module should be visible to the
+ * user or not
+ * @param features
+ * @param route
+ */
+function featureEnabled(features: StringMap<any>, route: IAppRoute) {
+  const feature = routeToFeatureName(route);
+  if (typeof feature === 'undefined') {
+    return true;
+  }
+  return (
+    typeof features[feature] === 'undefined' ||
+    (typeof features[feature] === 'boolean' && features[feature])
+  );
 }
 
 export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
@@ -151,6 +182,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                 const isProductBuild = config && config.branding.productBuild;
                 setProductBuild(isProductBuild);
                 const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
+                const features = (config && config.features) || {} as Map<string, any>;
                 return (
                   <>
                     {
@@ -260,6 +292,12 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                     !(route as IAppRouteWithChildrens)
                                       .childrens ? (
                                       <PfVerticalNavItem
+                                        hidden={
+                                          !featureEnabled(
+                                            features,
+                                            route as IAppRoute
+                                          )
+                                        }
                                         exact={(route as IAppRoute).exact}
                                         label={t((route as IAppRoute).label)}
                                         to={(route as IAppRoute).to}
@@ -277,6 +315,12 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         {(route as IAppRouteWithChildrens).childrens.map(
                                           (subRoute, subIndex) => (
                                             <PfVerticalNavItem
+                                              hidden={
+                                                !featureEnabled(
+                                                  features,
+                                                  subRoute as IAppRoute
+                                                )
+                                              }
                                               exact={subRoute.exact}
                                               label={t(subRoute.label)}
                                               to={subRoute.to}

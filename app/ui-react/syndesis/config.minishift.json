@@ -44,6 +44,9 @@
     "enabled": 1
   },
   "features": {
-    "logging": false
+    "extensions": true,
+    "integrations": true,
+    "connections": true,
+    "data": true
   }
 }
