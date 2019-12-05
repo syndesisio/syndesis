@@ -490,15 +490,8 @@ export function isStateOperationInProgress(
  * @param viewDefinition the ViewDefinition
  */
 export function getPreviewSql(viewDefinition: ViewDefinition): string {
-  const match = viewDefinition.name.match(/^[0-9a-zA-Z]+$/);
-  let viewName = viewDefinition.name;
-
-  // if a non-alphanumeric character found wrap in double quotes
-  if (match === null) {
-    viewName = '"' + viewDefinition.name + '"';
-  }
-
-  return 'SELECT * FROM ' + viewName;
+  // replace any double quotes in name with 2 double quotes and wrap in double quotes
+  return 'SELECT * FROM "' + viewDefinition.name.replace(/"/g, '""') + '"';
 }
 
 /**
