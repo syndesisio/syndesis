@@ -3,7 +3,6 @@ import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { DdlEditor } from '../../../src';
-import './DdlEditor-styling.css';
 
 const stories = storiesOf('Data/ViewEditor/DdlEditor', module);
 
