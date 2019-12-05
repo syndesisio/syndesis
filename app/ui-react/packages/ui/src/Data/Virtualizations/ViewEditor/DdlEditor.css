@@ -1,5 +1,7 @@
 .ddl-editor {
   min-height: 300px;
+  display: flex;
+  flex-direction: column;
 }
 
 .ddl-editor__button {
@@ -15,6 +17,13 @@
   padding-bottom: 10px;
 }
 
-.ddl-editor .CodeMirror {
-  height: 250px;
+.ddl-editor__card-body,
+.ddl-editor .text-editor,
+.ddl-editor .react-codemirror2,
+.ddl-editor .CodeMirror{
+  height: 100%;
+}
+
+.ddl-editor .pf-c-card {
+  flex-grow: 1;
 }
