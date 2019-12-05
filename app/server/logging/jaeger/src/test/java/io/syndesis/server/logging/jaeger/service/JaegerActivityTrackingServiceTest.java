@@ -15,22 +15,20 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
-import static java.util.Objects.requireNonNull;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.ws.rs.WebApplicationException;
 
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import org.junit.Test;
 
-import io.syndesis.server.endpoint.v1.handler.activity.Activity;
+import static java.util.Objects.requireNonNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class JaegerActivityTrackingServiceTest {
 
@@ -55,8 +53,9 @@ public class JaegerActivityTrackingServiceTest {
         assertThat(activities).isNotNull();
 
 
-        assertThat(JsonUtils.writer().withDefaultPrettyPrinter().writeValueAsString(activities).trim())
-            .isEqualTo(resource("expected-activities.json").trim());
+        String activitiesJson = JsonUtils.writer().withDefaultPrettyPrinter().writeValueAsString(activities).trim();
+        String expectedActivitiesJson = resource("expected-activities.json").trim();
+        assertThat(activitiesJson).isEqualTo(expectedActivitiesJson);
 
     }
 

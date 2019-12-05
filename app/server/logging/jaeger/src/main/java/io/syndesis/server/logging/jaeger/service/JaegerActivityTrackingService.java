@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import io.opentracing.tag.Tags;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityStep;
 import io.syndesis.server.endpoint.v1.handler.activity.ActivityTrackingService;
@@ -35,6 +36,7 @@ import org.springframework.stereotype.Component;
 @Component
 @ConditionalOnProperty(value = "endpoints.jaeger-activity-tracing.enabled", havingValue = "true", matchIfMissing = true)
 public class JaegerActivityTrackingService implements ActivityTrackingService {
+
     private static final Logger LOG = LoggerFactory.getLogger(JaegerActivityTrackingService.class);
 
     private final JaegerQueryAPI jaegerQueryApi;
@@ -71,7 +73,12 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
 
 
                 for (JaegerQueryAPI.Span span : trace.spans) {
-                    switch (span.findTag("kind", String.class)) {
+                    String kind = span.findTag(Tags.SPAN_KIND.getKey(), String.class);
+                    if (kind == null) {
+                        LOG.debug("Cannot find tag 'span.kind' in span: {}", span);
+                        continue;
+                    }
+                    switch (kind) {
                         case "activity": {
                             activity = new Activity();
                             activity.setId(trace.traceID);
