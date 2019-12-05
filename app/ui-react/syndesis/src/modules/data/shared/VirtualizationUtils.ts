@@ -490,7 +490,8 @@ export function isStateOperationInProgress(
  * @param viewDefinition the ViewDefinition
  */
 export function getPreviewSql(viewDefinition: ViewDefinition): string {
-  return 'SELECT * FROM ' + viewDefinition.name;
+  // replace any double quotes in name with 2 double quotes and wrap in double quotes
+  return 'SELECT * FROM "' + viewDefinition.name.replace(/"/g, '""') + '"';
 }
 
 /**
