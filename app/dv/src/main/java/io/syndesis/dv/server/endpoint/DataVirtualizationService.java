@@ -644,22 +644,26 @@ public final class DataVirtualizationService extends DvService {
                         }
                     }
                 }
+                DataVirtualization existing = null;
                 if (createVirtualization) {
                     createDataVirtualization(new RestDataVirtualization(toImport));
                 } else {
                     //revert
                     repositoryManager.deleteViewDefinitions(dv.getName());
-                    DataVirtualization existing = repositoryManager.findDataVirtualization(dv.getName());
+                    existing = repositoryManager.findDataVirtualization(dv.getName());
                     if (existing == null) {
                         throw notFound(dv.getName());
                     }
                     existing.setDescription(dv.getDescription());
-                    existing.setModified(false);
                 }
 
                 for (ViewDefinitionV1Adapter adapter : dv.getViews()) {
                     ViewDefinition vd = adapter.getEntity();
                     utilService.upsertViewEditorState(vd);
+                }
+
+                if (existing != null) {
+                    existing.setModified(false);
                 }
                 return status;
             });
