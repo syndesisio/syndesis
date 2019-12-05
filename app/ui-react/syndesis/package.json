@@ -20,7 +20,7 @@
     "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "@syndesis/utils": "*",
-    "http-proxy-middleware": "^0.19.1",
+    "http-proxy-middleware": "^0.20.0",
     "i18next": "^15.0.4",
     "i18next-browser-languagedetector": "^4.0.1",
     "immer": "^5.0.0",
