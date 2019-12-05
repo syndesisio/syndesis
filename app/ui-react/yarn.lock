@@ -2638,9 +2638,9 @@
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
 
 "@patternfly/react-styles@^3.6.5", "@patternfly/react-styles@^3.6.6":
-  version "3.6.6"
-  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.6.6.tgz#d4b481fbd34adc28b3129842aea4834c384d4382"
-  integrity sha512-BOn6s9kuwsWRVHeTvA9D55JMYMwoNaQn9eB+MBzX2zIbZxy0TGOTgNifU99lJct+6TFxSUxx81gzpby+xBcDSQ==
+  version "3.6.11"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.6.11.tgz#43fee9c24469a5e7fca824740c077033f7e532a8"
+  integrity sha512-iJsj+DPKUi5KAbSR7uQ76iJEDfw/254Vbt+zXm686NTgTR9cloVBUx3ww8ni+CPjk0A9kyaf64FfOXrgoIicAg==
   dependencies:
     "@babel/helper-plugin-utils" "^7.0.0-beta.48"
     camel-case "^3.0.0"
