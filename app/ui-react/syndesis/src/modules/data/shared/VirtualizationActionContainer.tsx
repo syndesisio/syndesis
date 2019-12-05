@@ -345,12 +345,12 @@ export const VirtualizationActionContainer: React.FunctionComponent<
     const revertAction: IVirtualizationAction = {
       as: 'link',
       disabled: false,
-      i18nLabel: t('shared:Revert'),
+      i18nLabel: t('ReplaceDraft'),
       iconClassName: 'pf pficon-spinner2',
       id: VirtualizationActionId.Revert,
       onClick: async () => {
         setPromptActionOptions({
-          buttonText: t('shared:Revert'),
+          buttonText: t('ReplaceDraft'),
           handleAction: async () => {
             const status = await revertVirtualization(
               props.virtualization.name,
@@ -358,7 +358,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             ).catch((e: any) => {
               // inform user of error
               pushNotification(
-                t('revertVirtualizationFailed', {
+                t('replaceDraftVirtualizationFailed', {
                   details: e.errorMessage || e.message || e,
                   name: props.virtualization.name,
                 }),
@@ -368,7 +368,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             if (status) {
               // inform user that revert succeeded
               pushNotification(
-                t('revertVirtualizationSuccess', {
+                t('replaceDraftVirtualizationSuccess', {
                   name: props.virtualization.name,
                   version: props.revision,
                 }),
@@ -377,11 +377,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             }
           },
           icon: ConfirmationIconType.DANGER,
-          message: t('revertVirtualizationConfirmMsg', {
+          message: t('replaceDraftVirtualizationConfirmMsg', {
             name: props.virtualization.name,
             version: props.revision,
           }),
-          title: t('revertVirtualizationConfirmTitle'),
+          title: t('replaceDraftVirtualizationConfirmTitle'),
         } as IPromptActionOptions);
         setShowDialog(true);
       },
@@ -512,13 +512,13 @@ export const VirtualizationActionContainer: React.FunctionComponent<
 
   /*
     running - modified
-      revert, export, publish | stop, delete
+      publish | stop, delete
     running - not modified
-      export, publish(disabled) | stop, delete
+      publish(disabled) | stop, delete
     stopped - modified
-      export, publish | delete
+      publish | delete
     stopped - not modified
-      export, publish(disabled) | delete
+      publish(disabled) | delete
   */
 
   // export, publish are default action buttons
@@ -527,12 +527,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
 
     // default actions
     if (!props.includeActions) {
-      if (canRevert(props.virtualization, props.revision)) {
-        actions.push(createRevertAction(props.revertActionProps));
-      }
-      if (canExport(props.virtualization)) {
-        actions.push(createExportAction(props.exportActionProps));
-      }
       // The publish is always included, but may be disabled
       if (!canPublish(props.virtualization)) {
         actions.push(createPublishAction({ disabled: true }));

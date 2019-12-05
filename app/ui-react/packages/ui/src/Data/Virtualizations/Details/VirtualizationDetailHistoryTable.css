@@ -1,0 +1,15 @@
+.virtualization-detail-history-table__draft {
+  border-width: 2px;
+  border-style: solid;
+  border-color: darkgrey;
+  margin: 10px;
+}
+
+.virtualization-detail-history-table__draft-body.pf-c-card__body {
+  padding-left: 10px;
+  padding-bottom: 10px;
+}
+
+.virtualization-detail-history-table__draft-body.pf-c-card__body:first-child {
+  padding-top: 10px; 
+}

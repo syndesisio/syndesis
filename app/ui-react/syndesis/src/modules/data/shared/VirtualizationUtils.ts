@@ -597,14 +597,20 @@ export function canRevert(
 /**
  * A virtualization can be started if a revision is available, and not already running.
  * @param {Virtualization} virtualization the virtualization being checked
- * @param {number} revision the revision for revert
+ * @param {number} revision the revision for start
  * @returns `true` if the virtualization can be started
  */
 export function canStart(
   virtualization: Virtualization,
   revision?: number
 ): boolean {
-  return revision ? virtualization.publishedState !== 'RUNNING' : false;
+  // Can start if there is a revision and
+  // 1) No virtualization is running
+  // 2) Virtualization is running, but it's a different version
+  return revision
+    ? virtualization.publishedState !== 'RUNNING' ||
+        revision !== virtualization.publishedRevision
+    : false;
 }
 
 /**
