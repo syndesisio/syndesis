@@ -29,8 +29,6 @@ const confirmStopMessage =
   'This Virtualization has been published.  Please stop the Virtualization first.';
 const cancelText = 'Cancel';
 const deleteText = 'Delete';
-const errorText = 'Error';
-const exportText = 'Export';
 const stopText = 'Stop';
 const publishText = 'Publish';
 const publishInProgressText = 'publish in progress...';
@@ -57,9 +55,6 @@ const publishedVirtualizationNotes =
   '"\n' +
   '- Verify the dropdown menu contains "' +
   deleteText +
-  '"\n' +
-  '- Verify the dropdown menu contains "' +
-  exportText +
   '"\n' +
   '- Verify the dropdown menu contains "' +
   stopText +
@@ -104,7 +99,6 @@ stories
             i18nEdit={editText}
             i18nViewODataUrlText={viewOData}
             i18nEditTip={editTip}
-            i18nExport={'Export'}
             i18nInUseText={'The virtualization is in use by an integration.'}
             i18nStop={stopText}
             i18nPublish={publishText}
@@ -114,7 +108,6 @@ stories
             modified={boolean('modified', false)}
             detailsPageLink={'/details/page/link'}
             onDelete={action(deleteText)}
-            onExport={action(exportText)}
             onStop={action(stopText)}
             onPublish={action(publishText)}
             currentPublishedState={'BUILDING'}
@@ -148,7 +141,6 @@ stories
           i18nEdit={editText}
           i18nViewODataUrlText={viewOData}
           i18nEditTip={editTip}
-          i18nExport={'Export'}
           i18nInUseText={'The virtualization is not in use by an integration.'}
           i18nStop={stopText}
           i18nPublish={publishText}
@@ -158,7 +150,6 @@ stories
           modified={boolean('modified', false)}
           detailsPageLink={'/details/page/link'}
           onDelete={action(deleteText)}
-          onExport={action(exportText)}
           onStop={action(stopText)}
           onPublish={action(publishText)}
           currentPublishedState={'RUNNING'}
