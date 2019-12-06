@@ -150,7 +150,7 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.2.0</micrometer.version>
-    <teiid.version>13.0.1</teiid.version>
+    <teiid.version>13.0.0.fuse-760004</teiid.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
 
     <javac.werror>-Werror</javac.werror>
