@@ -30,7 +30,7 @@
 
   <properties>
     <embedded-mongo.version>2.1.2</embedded-mongo.version>
-    <mongodb.version>3.6.4</mongodb.version>
+    <mongodb.version>3.11.2</mongodb.version>
   </properties>
 
   <!--

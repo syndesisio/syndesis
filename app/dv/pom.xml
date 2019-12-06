@@ -243,7 +243,7 @@
     <!-- this is simply a version no dependencies involved right now -->
     <version.springboot.teiid>1.2.0</version.springboot.teiid>
     <version.mysql>8.0.17</version.mysql>
-    <version.org.mongodb>3.6.3</version.org.mongodb>
+    <version.org.mongodb>3.11.2</version.org.mongodb>
     <version.postgresql>42.1.4</version.postgresql>
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE -->
   </properties>
