@@ -2,11 +2,11 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import {
   VirtualizationCreatePage,
-  VirtualizationDetailsPage,
   VirtualizationImportPage,
   VirtualizationMetricsPage,
   VirtualizationsPage,
   VirtualizationSqlClientPage,
+  VirtualizationVersionsPage,
   VirtualizationViewsPage,
 } from './pages';
 import { ViewEditorSqlPage } from './pages/viewEditor';
@@ -68,9 +68,9 @@ export class DataModule extends React.Component {
             component={VirtualizationSqlClientPage}
           />
           <Route
-            path={routes.virtualizations.virtualization.details}
+            path={routes.virtualizations.virtualization.versions}
             exact={true}
-            component={VirtualizationDetailsPage}
+            component={VirtualizationVersionsPage}
           />
           <Route
             path={routes.virtualizations.virtualization.metrics}

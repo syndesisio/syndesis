@@ -23,22 +23,22 @@ import {
 } from '@patternfly/react-table';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
-import './VirtualizationDetailHistoryTable.css';
+import './VirtualizationVersionsTable.css';
 
-export interface IVirtualizationHistoryItem {
+export interface IVirtualizationVersionItem {
   actions: JSX.Element;
   publishedState: 'RUNNING' | 'NOTFOUND' | 'IN_PROGRESS' | 'FAILED';
   timePublished: string;
   version: number;
 }
 
-export interface IVirtualizationDetailHistoryTableProps {
+export interface IVirtualizationVersionsTableProps {
   /**
    * Accessibility message for the table column for the kebab menu.
    */
   a11yActionMenuColumn: string;
   draftActions: JSX.Element;
-  historyItems: IVirtualizationHistoryItem[];
+  versionItems: IVirtualizationVersionItem[];
   i18nDraft: string;
   i18nEmptyVersionsTitle: string;
   i18nEmptyVersionsMsg: string;
@@ -83,9 +83,7 @@ const getColumns = (headers: string[]) => {
   return cols;
 };
 
-const getRows = (
-  items: IVirtualizationHistoryItem[]
-) => {
+const getRows = (items: IVirtualizationVersionItem[]) => {
   const rows: any[] = [];
   for (const item of items) {
     const row = {
@@ -109,17 +107,15 @@ const getRows = (
   return rows;
 };
 
-export const VirtualizationDetailHistoryTable: React.FunctionComponent<
-  IVirtualizationDetailHistoryTableProps
+export const VirtualizationVersionsTable: React.FunctionComponent<
+  IVirtualizationVersionsTableProps
 > = props => {
   return (
     <Stack>
       {props.isModified && (
         <StackItem>
-          <Card className={'virtualization-detail-history-table__draft'}>
-            <CardBody
-              className={'virtualization-detail-history-table__draft-body'}
-            >
+          <Card className={'virtualization-versions-table__draft'}>
+            <CardBody className={'virtualization-versions-table__draft-body'}>
               <Split>
                 <SplitItem>
                   <Title size="lg">{props.i18nDraft}</Title>
@@ -132,11 +128,11 @@ export const VirtualizationDetailHistoryTable: React.FunctionComponent<
         </StackItem>
       )}
       <StackItem>
-        {props.historyItems.length > 0 ? (
+        {props.versionItems.length > 0 ? (
           <Table
             aria-label={props.a11yActionMenuColumn}
             cells={getColumns(props.tableHeaders)}
-            rows={getRows(props.historyItems)}
+            rows={getRows(props.versionItems)}
           >
             <TableHeader />
             <TableBody />
