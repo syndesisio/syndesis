@@ -13,7 +13,7 @@ const title = 'Create View';
 const info = 'There are no currently available views.  Click to create views';
 const createText = 'Create View';
 const createTip = 'Create a new view';
-const importText = 'Import Data Source';
+const importText = 'Import Views';
 const importTip = 'Import views from a data source';
 
 stories.add('Sample', () => (

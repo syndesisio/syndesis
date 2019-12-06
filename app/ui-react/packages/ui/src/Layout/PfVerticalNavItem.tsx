@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 export interface IPfVerticalNavItem {
   className?: string;
   exact?: boolean;
+  hidden?: boolean;
   isActive?: (match: any, location: any) => boolean;
   location?: any;
   strict?: boolean;
@@ -18,6 +19,7 @@ export interface IPfVerticalNavItem {
 function PfVerticalNavItem({
   className,
   exact,
+  hidden,
   isActive: isActiveProp,
   location,
   strict,
@@ -41,6 +43,10 @@ function PfVerticalNavItem({
     const isActive = !!(isActiveProp
       ? isActiveProp(match, childLocation)
       : match);
+
+    if (hidden) {
+      return null;
+    }
 
     return children ? (
       <NavExpandable title={label} isActive={isActive} isExpanded={isActive}>

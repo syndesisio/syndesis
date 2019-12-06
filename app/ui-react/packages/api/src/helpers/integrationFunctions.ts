@@ -17,7 +17,7 @@ import { key as generateKey } from '@syndesis/utils';
 import produce from 'immer';
 import {
   AGGREGATE,
-  API_PROVIDER,
+  API_PROVIDER, API_PROVIDER_END_ACTION_ID,
   CHOICE,
   DataShapeKinds,
   DataShapeKindType,
@@ -641,12 +641,12 @@ export async function sanitizeFlow(
   if (
     lastStep &&
     lastStep.action &&
-    lastStep.action.id === 'io.syndesis:api-provider-end'
+    lastStep.action.id === API_PROVIDER_END_ACTION_ID
   ) {
     if (
       !lastStep.configuredProperties ||
       (lastStep.configuredProperties &&
-        lastStep.configuredProperties.httpResponseCode === '501')
+        lastStep.configuredProperties.httpResponseCode !== '501')
     ) {
       const returnCode = flow.metadata!['default-return-code'];
       const returnCodeEdited = flow.metadata!['return-code-edited'];
@@ -656,7 +656,6 @@ export async function sanitizeFlow(
       }
     }
   }
-
   return flow;
 }
 

@@ -458,15 +458,18 @@ public final class DataVirtualizationService extends DvService {
      * @return
      * @throws Exception
      */
-    @RequestMapping(value = VIRTUALIZATION_PLACEHOLDER + FS + "export", method = RequestMethod.GET, produces = {
+    @RequestMapping(value = {VIRTUALIZATION_PLACEHOLDER + FS + "export",
+            VIRTUALIZATION_PLACEHOLDER + FS + "export" + FS + REVISION_PLACEHOLDER}, method = RequestMethod.GET, produces = {
             MediaType.MULTIPART_FORM_DATA_VALUE })
-    @ApiOperation(value = "Export virtualization by name", response = RestDataVirtualization.class)
+    @ApiOperation(value = "Export virtualization by name.  Without a revision number, the current working state is exported.", response = RestDataVirtualization.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "No virtualization could be found with name"),
             @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
             @ApiResponse(code = 403, message = "An error has occurred.") })
     public ResponseEntity<StreamingResponseBody> exportDataVirtualization(
             @ApiParam(value = "name of the virtualization",
-            required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
+            required = true) final @PathVariable(VIRTUALIZATION) String virtualization,
+            @ApiParam(value = "revision number",
+            required = false) final @PathVariable(required = false, name = REVISION) Long revision)
             throws Exception {
 
         StreamingResponseBody result = repositoryManager.runInTransaction(true, () -> {
@@ -476,12 +479,27 @@ public final class DataVirtualizationService extends DvService {
                 throw notFound(virtualization);
             }
 
+            if (revision != null) {
+                Edition e = repositoryManager.findEdition(virtualization, revision);
+                if (e == null) {
+                    throw notFound(String.valueOf(revision));
+                }
+
+                byte[] bytes = repositoryManager.findEditionExport(e);
+                Assertion.isNotNull(bytes);
+
+                StreamingResponseBody stream = out -> {
+                    out.write(bytes);
+                };
+                return stream;
+            }
+
             return createExportStream(dv, null);
         });
 
 
         MultiValueMap<String, String> headers = new HttpHeaders();
-        headers.add("Content-Disposition", "attachment; filename=\""+virtualization+"-export.zip\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        headers.add("Content-Disposition", "attachment; filename=\""+virtualization+(revision!=null?"-"+revision:"")+"-export.zip\""); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
         return new ResponseEntity<StreamingResponseBody>(result, headers, HttpStatus.OK);
     }
 
@@ -626,22 +644,26 @@ public final class DataVirtualizationService extends DvService {
                         }
                     }
                 }
+                DataVirtualization existing = null;
                 if (createVirtualization) {
                     createDataVirtualization(new RestDataVirtualization(toImport));
                 } else {
                     //revert
                     repositoryManager.deleteViewDefinitions(dv.getName());
-                    DataVirtualization existing = repositoryManager.findDataVirtualization(dv.getName());
+                    existing = repositoryManager.findDataVirtualization(dv.getName());
                     if (existing == null) {
                         throw notFound(dv.getName());
                     }
                     existing.setDescription(dv.getDescription());
-                    existing.setModified(false);
                 }
 
                 for (ViewDefinitionV1Adapter adapter : dv.getViews()) {
                     ViewDefinition vd = adapter.getEntity();
                     utilService.upsertViewEditorState(vd);
+                }
+
+                if (existing != null) {
+                    existing.setModified(false);
                 }
                 return status;
             });

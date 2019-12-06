@@ -12,7 +12,8 @@ const stories = storiesOf('Data/Views/ViewList', module);
 const viewName1 = 'CustomerInfo';
 const viewDescription1 = 'Description for CustomerInfo';
 const viewName2 = 'AccountsSummary';
-const viewDescription2 = 'Description for AccountsSummary is a long description and keeps on getting longer the more I type';
+const viewDescription2 =
+  'Description for AccountsSummary is a long description and keeps on getting longer the more I type';
 const editText = 'Edit';
 const editTip1 = 'Edit ' + viewName1 + ' view';
 const editTip2 = 'Edit ' + viewName2 + ' view';
@@ -77,7 +78,7 @@ const viewItems = [
 
 const createView = 'Create View';
 const createViewTip = 'Create a new view';
-const importViews = 'Import Data Source';
+const importViews = 'Import Views';
 const importViewsTip = 'Import data source';
 
 const hasViewsTestNotes =

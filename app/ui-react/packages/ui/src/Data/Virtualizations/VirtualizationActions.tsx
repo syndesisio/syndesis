@@ -14,11 +14,13 @@ import './VirtualizationActions.css';
 
 /**
  * Actions whose UI is a button.
+ * @property {string} iconClassName - a Patternfly or FontAwesome icon (ex., 'pf pficon-spinner2')
  * @property {string} id - a unique identifier of the the action
  * @property {string | JSX.Element} i18nLabel - the localized text displayed on the button
  * @property {string} i18nToolTip - the localized text for the button tooltip
  */
 export interface IVirtualizationAction extends IButtonLinkProps {
+  iconClassName?: string;
   id: string;
   i18nLabel: string | JSX.Element;
   i18nToolTip?: string;
@@ -53,7 +55,13 @@ export const VirtualizationActions: React.FunctionComponent<
   const [isOpen, setOpen] = React.useState(false);
 
   const createButton = (action: IVirtualizationAction): JSX.Element => {
-    const { id: dataTestId, i18nLabel, i18nToolTip, ...otherProps } = action;
+    const {
+      id: dataTestId,
+      i18nLabel,
+      i18nToolTip,
+      iconClassName,
+      ...otherProps
+    } = action;
     if (action.i18nToolTip) {
       return (
         <Tooltip content={i18nToolTip} position={'auto'}>
@@ -63,6 +71,7 @@ export const VirtualizationActions: React.FunctionComponent<
               data-testid={`virtualization-actions-${toValidHtmlId(dataTestId)}`}
               {...otherProps}
             >
+              {iconClassName && <span className={'pf pficon-spinner2'}>&nbsp;</span>}
               {i18nLabel}
             </ButtonLink>
             &nbsp;&nbsp;
@@ -78,6 +87,7 @@ export const VirtualizationActions: React.FunctionComponent<
           data-testid={`virtualization-actions-${toValidHtmlId(dataTestId)}`}
           {...otherProps}
         >
+          {iconClassName && <span className={'pf pficon-spinner2'}>&nbsp;</span>}
           {i18nLabel}
         </ButtonLink>
         &nbsp;&nbsp;

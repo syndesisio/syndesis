@@ -13,6 +13,7 @@
 @import url('~@patternfly/patternfly/layouts/Level/level.css');
 @import url('~@patternfly/patternfly/layouts/Split/split.css');
 @import url('~@patternfly/patternfly/utilities/Display/display.css');
+@import url('~@patternfly/patternfly/patternfly-fonts.css');
 
 :root {
   --pf-global--FontSize--md: var(--pf-global--FontSize--sm);

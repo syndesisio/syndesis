@@ -1,3 +1,4 @@
+import { KebabToggle } from '@patternfly/react-core';
 import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -8,9 +9,9 @@ import {
 
 const colHeaders = ['History', 'Published Time', 'Published', ''];
 
-const version1Actions = <div>Version1 Actions</div>;
-const version2Actions = <div>Version2 Actions</div>;
-const version3Actions = <div>Version3 Actions</div>;
+const version1Actions = <KebabToggle />;
+const version2Actions = <KebabToggle />;
+const version3Actions = <KebabToggle />;
 
 const version3Item: IVirtualizationHistoryItem = {
   actions: version3Actions,

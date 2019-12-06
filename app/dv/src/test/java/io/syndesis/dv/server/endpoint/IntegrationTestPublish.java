@@ -16,11 +16,16 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import java.io.ByteArrayInputStream;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import javax.sql.DataSource;
 
@@ -38,10 +43,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
 import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
-import io.syndesis.dv.openshift.TeiidOpenShiftClient;
+import io.syndesis.dv.model.export.v1.DataVirtualizationV1Adapter;
 import io.syndesis.dv.rest.JsonMarshaller;
 import io.syndesis.dv.server.Application;
 import io.syndesis.dv.server.V1Constants;
@@ -55,11 +62,6 @@ public class IntegrationTestPublish {
 
     @Autowired
     private TestRestTemplate restTemplate;
-
-    @Autowired
-    private SyndesisConnectionSynchronizer syndesisConnectionSynchronizer;
-    @Autowired
-    private TeiidOpenShiftClient teiidOpenShiftClient;
 
     @Autowired DataSource datasource;
 
@@ -119,6 +121,9 @@ public class IntegrationTestPublish {
         assertEquals(HttpStatus.OK, listResponse.getStatusCode());
         assertEquals(1, listResponse.getBody().size());
 
+        ResponseEntity<RestDataVirtualization> virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertFalse(virtResponse.getBody().isModified());
+
         Map<?, ?> map = (Map<?, ?>) listResponse.getBody().get(0);
         assertEquals(1, map.get(V1Constants.REVISION));
 
@@ -127,6 +132,9 @@ public class IntegrationTestPublish {
         restTemplate.exchange(
                 "/v1/editors", HttpMethod.PUT,
                 new HttpEntity<ViewDefinition>(vd), String.class);
+
+        virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertTrue(virtResponse.getBody().isModified());
 
         //publish again
         statusResponse = restTemplate.exchange(
@@ -155,6 +163,9 @@ public class IntegrationTestPublish {
                 new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class, dvName, 1);
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
 
+        virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
+        assertFalse(virtResponse.getBody().isModified());
+
         view = restTemplate.getForEntity(
                 "/v1/editors/{id}",
                 ViewDefinition.class, id);
@@ -168,6 +179,19 @@ public class IntegrationTestPublish {
         assertEquals(1, views.getBody().size());
         Map<?, ?> viewMap = (Map<?, ?>) views.getBody().get(0);
         id = (String) viewMap.get("id");
+
+        //export 1
+        ResponseEntity<byte[]> export = restTemplate.getForEntity("/v1/virtualizations/{name}/export/1", byte[].class, dvName);
+        assertEquals(HttpStatus.OK, export.getStatusCode());
+        byte[] result = export.getBody();
+        ZipInputStream zis = new ZipInputStream(new ByteArrayInputStream(result));
+        ZipEntry ze = zis.getNextEntry();
+        assertEquals("dv.json", ze.getName());
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        DataVirtualizationV1Adapter dv = mapper.readValue(zis, DataVirtualizationV1Adapter.class);
+        assertEquals("testPublish", dv.getName());
+        assertEquals("create view myview as select 1 as col", dv.getViews().get(0).getDdl());
 
         //back to the old
         view = restTemplate.getForEntity(

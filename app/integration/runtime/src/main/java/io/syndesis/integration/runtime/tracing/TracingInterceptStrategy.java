@@ -18,6 +18,7 @@ package io.syndesis.integration.runtime.tracing;
 import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.tag.Tags;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
@@ -70,7 +71,7 @@ public class TracingInterceptStrategy implements InterceptStrategy {
             final Message in = exchange.getIn();
             final Span activitySpan = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, Span.class);
             try (Scope activityScope = tracer.scopeManager().activate(activitySpan)) {
-                Span span = tracer.buildSpan(stepId).withTag("kind", "step").start();
+                Span span = tracer.buildSpan(stepId).withTag(Tags.SPAN_KIND.getKey(), "step").start();
                 in.setHeader(IntegrationLoggingConstants.STEP_SPAN, span);
                 return super.process(exchange, doneSync -> {
                     span.finish();

@@ -19,6 +19,7 @@ import java.util.Objects;
 
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.opentracing.tag.Tags;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
@@ -48,7 +49,7 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
 
         Span span = tracer
             .buildSpan(flowId)
-            .withTag("kind", "activity")
+            .withTag(Tags.SPAN_KIND.getKey(), "activity")
             .withTag("exchange", activityId)
             .start();
         exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, span);

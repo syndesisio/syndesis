@@ -343,9 +343,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
      * The default revert action.
      */
     const revertAction: IVirtualizationAction = {
-      as: 'primary',
+      as: 'link',
       disabled: false,
       i18nLabel: t('shared:Revert'),
+      iconClassName: 'pf pficon-spinner2',
       id: VirtualizationActionId.Revert,
       onClick: async () => {
         setPromptActionOptions({
