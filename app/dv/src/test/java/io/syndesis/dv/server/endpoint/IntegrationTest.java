@@ -16,7 +16,9 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -39,8 +41,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
@@ -65,7 +65,6 @@ import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.rest.JsonMarshaller;
 import io.syndesis.dv.server.Application;
-import io.syndesis.dv.server.AuthHandlingFilter.OAuthCredentials;
 import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfiguration;
 
 @RunWith(SpringRunner.class)
@@ -423,5 +422,11 @@ public class IntegrationTest {
         assertEquals(1, views.getBody().size());
         Map view = (Map)views.getBody().get(0);
         assertEquals(Boolean.TRUE, view.get("valid"));
+    }
+
+    @Test
+    public void testSwagger() throws Exception {
+        ResponseEntity<String> response = restTemplate.getForEntity("/v1/swagger.json", String.class);
+        assertTrue(response.getBody().contains("Editor Service"));
     }
 }
