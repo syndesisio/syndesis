@@ -1,5 +1,4 @@
 import { KebabToggle } from '@patternfly/react-core';
-import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
@@ -34,25 +33,60 @@ const version1Item: IVirtualizationHistoryItem = {
 const versionItems = [version3Item, version2Item, version1Item];
 const emptyVersionsTitle = 'No version history';
 const emptyVersionsMsg = 'There is no version history for this virtualization.';
+const publishText = 'Publish';
+const draftActions: JSX.Element = <div>DraftActions</div>;
+const draftText = 'Draft';
 
 storiesOf('Data/Virtualizations/VirtualizationDetailHistoryTable', module)
-  .add('Details', () => (
+  .add('Details - draft, no history items', () => (
     <VirtualizationDetailHistoryTable
       a11yActionMenuColumn={'Version action menu column'}
-      historyItems={versionItems}
+      draftActions={draftActions}
+      historyItems={[]}
+      i18nDraft={draftText}
       i18nEmptyVersionsTitle={emptyVersionsTitle}
       i18nEmptyVersionsMsg={emptyVersionsMsg}
-      isModified={boolean('isModified', true)}
+      i18nPublish={publishText}
+      isModified={true}
       tableHeaders={colHeaders}
     />
   ))
-  .add('Details - no history items', () => (
+  .add('Details - no draft, no history items', () => (
     <VirtualizationDetailHistoryTable
       a11yActionMenuColumn={'Version action menu column'}
+      draftActions={draftActions}
       historyItems={[]}
+      i18nDraft={draftText}
       i18nEmptyVersionsTitle={emptyVersionsTitle}
       i18nEmptyVersionsMsg={emptyVersionsMsg}
-      isModified={boolean('isModified', true)}
+      i18nPublish={publishText}
+      isModified={false}
+      tableHeaders={colHeaders}
+    />
+  ))
+  .add('Details - draft, with history items', () => (
+    <VirtualizationDetailHistoryTable
+      a11yActionMenuColumn={'Version action menu column'}
+      draftActions={draftActions}
+      historyItems={versionItems}
+      i18nDraft={draftText}
+      i18nEmptyVersionsTitle={emptyVersionsTitle}
+      i18nEmptyVersionsMsg={emptyVersionsMsg}
+      i18nPublish={publishText}
+      isModified={true}
+      tableHeaders={colHeaders}
+    />
+  ))
+  .add('Details - no draft, with history items', () => (
+    <VirtualizationDetailHistoryTable
+      a11yActionMenuColumn={'Version action menu column'}
+      draftActions={draftActions}
+      historyItems={versionItems}
+      i18nDraft={draftText}
+      i18nEmptyVersionsTitle={emptyVersionsTitle}
+      i18nEmptyVersionsMsg={emptyVersionsMsg}
+      i18nPublish={publishText}
+      isModified={false}
       tableHeaders={colHeaders}
     />
   ));

@@ -1,14 +1,29 @@
 import {
   Bullseye,
+  Card,
+  CardBody,
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+  Text,
+  TextContent,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
-import { classNames, Table, TableBody, TableHeader } from '@patternfly/react-table';
+import {
+  classNames,
+  Table,
+  TableBody,
+  TableHeader,
+} from '@patternfly/react-table';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
+import './VirtualizationDetailHistoryTable.css';
 
 export interface IVirtualizationHistoryItem {
   actions: JSX.Element;
@@ -22,9 +37,12 @@ export interface IVirtualizationDetailHistoryTableProps {
    * Accessibility message for the table column for the kebab menu.
    */
   a11yActionMenuColumn: string;
+  draftActions: JSX.Element;
   historyItems: IVirtualizationHistoryItem[];
+  i18nDraft: string;
   i18nEmptyVersionsTitle: string;
   i18nEmptyVersionsMsg: string;
+  i18nPublish: string;
   isModified: boolean;
   /**
    * i18n column headers in this order: version, published time, published indicator, kebab menu
@@ -66,51 +84,27 @@ const getColumns = (headers: string[]) => {
 };
 
 const getRows = (
-  items: IVirtualizationHistoryItem[],
-  emptyVersionsTitle: string,
-  emptyVersionsMsg: string
+  items: IVirtualizationHistoryItem[]
 ) => {
   const rows: any[] = [];
-  if (items.length === 0) {
+  for (const item of items) {
     const row = {
       cells: [
         {
-          props: { colSpan: 8 },
-          title: (
-            <Bullseye>
-              <EmptyState variant={EmptyStateVariant.small}>
-                <Title headingLevel="h2" size="lg">
-                  {emptyVersionsTitle}
-                </Title>
-                <EmptyStateBody>{emptyVersionsMsg}</EmptyStateBody>
-              </EmptyState>
-            </Bullseye>
-          ),
+          title: item.version,
+        },
+        {
+          title: item.timePublished,
+        },
+        {
+          title: getPublishIcon(item.publishedState),
+        },
+        {
+          title: item.actions,
         },
       ],
-      heightAuto: true,
     };
     rows.push(row);
-  } else {
-    for (const item of items) {
-      const row = {
-        cells: [
-          {
-            title: item.version,
-          },
-          {
-            title: item.timePublished,
-          },
-          {
-            title: getPublishIcon(item.publishedState),
-          },
-          {
-            title: item.actions,
-          },
-        ],
-      };
-      rows.push(row);
-    }
   }
   return rows;
 };
@@ -119,17 +113,51 @@ export const VirtualizationDetailHistoryTable: React.FunctionComponent<
   IVirtualizationDetailHistoryTableProps
 > = props => {
   return (
-    <Table
-      aria-label={props.a11yActionMenuColumn}
-      cells={getColumns(props.tableHeaders)}
-      rows={getRows(
-        props.historyItems,
-        props.i18nEmptyVersionsTitle,
-        props.i18nEmptyVersionsMsg
+    <Stack>
+      {props.isModified && (
+        <StackItem>
+          <Card className={'virtualization-detail-history-table__draft'}>
+            <CardBody
+              className={'virtualization-detail-history-table__draft-body'}
+            >
+              <Split>
+                <SplitItem>
+                  <Title size="lg">{props.i18nDraft}</Title>
+                </SplitItem>
+                <SplitItem isFilled={true} />
+                <SplitItem>{props.draftActions}</SplitItem>
+              </Split>
+            </CardBody>
+          </Card>
+        </StackItem>
       )}
-    >
-      <TableHeader />
-      <TableBody />
-    </Table>
+      <StackItem>
+        {props.historyItems.length > 0 ? (
+          <Table
+            aria-label={props.a11yActionMenuColumn}
+            cells={getColumns(props.tableHeaders)}
+            rows={getRows(props.historyItems)}
+          >
+            <TableHeader />
+            <TableBody />
+          </Table>
+        ) : (
+          <Bullseye>
+            <EmptyState variant={EmptyStateVariant.small}>
+              <Title headingLevel="h2" size="lg">
+                {props.i18nEmptyVersionsTitle}
+              </Title>
+              <EmptyStateBody>
+                <TextContent>
+                  <Text component={TextVariants.small}>
+                    {props.i18nEmptyVersionsMsg}
+                  </Text>
+                </TextContent>
+              </EmptyStateBody>
+            </EmptyState>
+          </Bullseye>
+        )}
+      </StackItem>
+    </Stack>
   );
 };

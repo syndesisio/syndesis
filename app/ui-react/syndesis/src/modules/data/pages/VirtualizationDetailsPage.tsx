@@ -21,6 +21,19 @@ import {
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
 
+const getDraftActions = (virtualization: Virtualization) => {
+  const buttons: VirtualizationActionId[] = [];
+  const kebabItems = [VirtualizationActionId.Export];
+  const draftActions = (
+    <VirtualizationActionContainer
+      includeActions={buttons}
+      includeItems={kebabItems}
+      virtualization={virtualization}
+    />
+  );
+  return draftActions;
+};
+
 const getVersionActions = (virtualization: Virtualization, edition: number) => {
   const kebabItems =
     virtualization.publishedState === 'RUNNING' &&
@@ -141,8 +154,11 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
             <VirtualizationDetailHistoryTable
               a11yActionMenuColumn={t('actionsColumnA11yMessage')}
               isModified={virtualization.modified}
+              i18nDraft={t('shared:Draft')}
               i18nEmptyVersionsTitle={t('detailsVersionTableEmptyTitle')}
               i18nEmptyVersionsMsg={t('detailsVersionTableEmptyMsg')}
+              i18nPublish={t('shared:Publish')}
+              draftActions={getDraftActions(virtualization)}
               tableHeaders={colHeaders}
               historyItems={getSortedEditions(editions, virtualization)}
             />
