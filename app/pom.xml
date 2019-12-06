@@ -44,7 +44,7 @@
     <image.server>syndesis/syndesis-server:%l</image.server>
     <image.meta>syndesis/syndesis-meta:%l</image.meta>
     <image.ui>syndesis/syndesis-ui:%l</image.ui>
-    <image.dv>teiid/syndesis-dv:%l</image.dv>
+    <image.dv>syndesis/syndesis-dv:%l</image.dv>
 
     <fabric8.maven.plugin.version>4.2.0</fabric8.maven.plugin.version>
     <maven.exec.plugin.version>1.2.1</maven.exec.plugin.version>
