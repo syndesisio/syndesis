@@ -22,110 +22,30 @@
       <id>local-repository</id>
       <repositories>
         <repository>
-          <id>localRepository</id>
+          <id>local-repository</id>
           <url>file://@settings.localRepository@</url>
           <releases>
             <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </repository>
-        <repository>
-          <id>central</id>
-          <name>Maven Central</name>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
           </releases>
-        </repository>
-        <repository>
-          <id>redhat-ga</id>
-          <name>Red Hat General Availability Repository</name>
-          <url>https://maven.repository.redhat.com/ga/</url>
           <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
             <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
-          </releases>
-        </repository>
-        <repository>
-          <id>jboss-ea</id>
-          <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-          <snapshots>
-            <enabled>false</enabled>
           </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
-        </repository>
-        <repository>
-          <id>atlassian-public</id>
-          <name>Atlassian Repository</name>
-          <url>https://packages.atlassian.com/maven-external</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
         </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>localRepository</id>
+          <id>local-repository</id>
           <url>file://@settings.localRepository@</url>
           <releases>
             <enabled>true</enabled>
-          </releases>
-          <snapshots>
-            <enabled>true</enabled>
-          </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-          <id>central</id>
-          <name>Maven Central</name>
-          <url>https://repo.maven.apache.org/maven2/</url>
-          <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
-            <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
           </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>redhat-ga</id>
-          <name>Red Hat General Availability Repository</name>
-          <url>https://maven.repository.redhat.com/ga/</url>
           <snapshots>
-            <enabled>false</enabled>
-          </snapshots>
-          <releases>
             <enabled>true</enabled>
             <updatePolicy>never</updatePolicy>
-          </releases>
-        </pluginRepository>
-        <pluginRepository>
-          <id>jboss-ea</id>
-          <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
-          <snapshots>
-            <enabled>false</enabled>
           </snapshots>
-          <releases>
-            <enabled>true</enabled>
-            <updatePolicy>never</updatePolicy>
-          </releases>
         </pluginRepository>
       </pluginRepositories>
     </profile>

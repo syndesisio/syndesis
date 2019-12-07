@@ -32,11 +32,12 @@
   <name>S2I</name>
 
   <properties>
-    <s2i.sample-generation.skip>false</s2i.sample-generation.skip>
-    <s2i.local-repo-generation.skip>false</s2i.local-repo-generation.skip>
-    <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
-    <license.output.dir>${project.build.directory}/licenses</license.output.dir>
-    <image.build.workdir>${project.basedir}/target/generated-sources/docker</image.build.workdir>
+    <image.build.directory>${project.basedir}/target/image</image.build.directory>
+    <!--
+      Should the ZIP file containing the settings.xml, dependencies and
+      licenses be attached and deployed in install/deploy phase
+    -->
+    <deploy.repository>false</deploy.repository>
   </properties>
 
   <dependencies>
@@ -50,6 +51,8 @@
 
   <build>
     <plugins>
+
+      <!-- START: disable plugins this build doesn't use -->
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
@@ -58,8 +61,13 @@
             <id>basepom.default</id>
             <phase />
           </execution>
+          <execution>
+            <id>basepom.default-it</id>
+            <phase />
+          </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <executions>
@@ -69,6 +77,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
         <executions>
@@ -82,6 +91,7 @@
           </execution>
         </executions>
       </plugin>
+
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
         <executions>
@@ -91,39 +101,370 @@
           </execution>
         </executions>
       </plugin>
-    </plugins>
-  </build>
 
-  <profiles>
-    <profile>
-      <id>addrepository</id>
-      <activation>
-        <property>
-          <name>addrepository</name>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-assembly-plugin</artifactId>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.ning.maven.plugins</groupId>
+        <artifactId>maven-dependency-versions-check-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-management-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.hubspot.maven.plugins</groupId>
+        <artifactId>dependency-scope-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>spotbugs</id>
+            <phase />
+          </execution>
+        </executions>
+      </plugin>
+      <!-- END: all of the above plugins are not needed and disabled -->
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>license-maven-plugin</artifactId>
+        <version>2.0.0</version>
+        <executions>
+          <execution>
+            <!--
+              Collect licenses to place them in the built image, the licenses
+              are placed in target/image/licenses*
+            -->
+            <id>collect-licenses</id>
+            <goals>
+              <goal>aggregate-download-licenses</goal>
+            </goals>
+            <phase>generate-resources</phase>
             <configuration>
+              <licensesOutputDirectory>${image.build.directory}/licenses</licensesOutputDirectory>
+              <licensesOutputFile>${image.build.directory}/licenses.xml</licensesOutputFile>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Copies settings.xml to target/image directory, this settings.xml
+              is used when integration pod is built. We would not need one if
+              all of the dependencies would be present on Maven Central, since
+              we're using dependencies from Red Hat we need to define
+              repositories that contain those.
+            -->
+            <id>copy-settings-xml</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${image.build.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <includes>
+                    <include>settings.xml</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Copies settings_local.xml to target directory, filtering
+              the it to place the local Maven repository path in it.
+              This settings file is used when gethering the dependencies
+              of the generated integration project for the second time
+              and since the first invocation cached all dependencies
+              needed in the local Maven repository it defines only that
+              repository. This way the second run is done offline.
+            -->
+            <id>copy-settings-local-xml</id>
+            <phase>generate-resources</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>src/main/resources</directory>
+                  <includes>
+                    <include>settings_local.xml</include>
+                  </includes>
+                  <filtering>true</filtering>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.0.0</version>
+        <executions>
+          <execution>
+            <!--
+              Merges the settings.xml the Maven was invoked with,
+              with the settings.xml that will be baked into the
+              image (contains additional (Red Hat) repositories)
+              and writes it out as settings_merged.xml this will
+              be used to download the dependencies of the
+              generated project.
+            -->
+            <id>generate-merged-settings</id>
+            <goals>
+              <goal>bsh-property</goal>
+            </goals>
+            <phase>generate-resources</phase>
+            <configuration>
+              <source>
+                import java.io.*;
+                import org.apache.maven.settings.*;
+                import org.apache.maven.settings.io.*;
+
+                // read in the settings.xml, this is the one with any additional repositories that will be in the resulting ZIP and image
+                merged = new DefaultSettingsReader().read(new FileInputStream(new File(project.properties.get("image.build.directory"), "settings.xml")), null);
+                // merge the settings.xml with the settings provided at runtime
+                SettingsUtils.merge(merged, settings, "user-level");
+                // write merged settings as settings_merged.xml
+                new DefaultSettingsWriter().write(new File(project.getBuild().getDirectory(), "settings_merged.xml"), null, merged);
+              </source>
+              <property>
+                <property>settingsToUse</property>
+              </property>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Generates a Maven project containing all connectors.
+              When built by Maven this project will download all
+              dependencies needed for the S2I image will be
+              downloaded. Maven build is performed below.
+            -->
+            <id>generate-project</id>
+            <goals>
+              <goal>java</goal>
+            </goals>
+            <phase>prepare-package</phase>
+            <configuration>
+              <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
+              <systemProperties>
+                <systemProperty>
+                  <key>spring.main.banner-mode</key>
+                  <value>off</value>
+                </systemProperty>
+              </systemProperties>
+              <arguments>
+                <argument>--to=${project.build.directory}/generated/project</argument>
+              </arguments>
+              <skip>false</skip>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-invoker-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Runs the Maven build on the generated project to
+              gather all the dependencies we wish to bake into
+              the S2I image. This is the first run and it takes
+              into account settings this Maven invocation uses
+              and the settings.xml from src/main/resources that
+              contains additional (Red Hat) repositories.
+            -->
+            <id>cache-artifacts</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <goals>
+                <goal>--batch-mode -T3.0C de.qaware.maven:go-offline-maven-plugin:1.2.3:resolve-dependencies</goal>
+              </goals>
+              <mergeUserSettings>true</mergeUserSettings>
+              <projectsDirectory>${project.build.directory}/generated</projectsDirectory>
+              <localRepositoryPath>${settings.localRepository}</localRepositoryPath>
+              <settingsFile>${project.build.directory}/settings_merged.xml</settingsFile>
+              <skipInvocation>false</skipInvocation>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Runs the Maven build on the generated project to
+              gather all the dependencies we wish to bake into
+              the S2I image. This is the second run to gather
+              the dependencies and it uses settings pointing to
+              the local Maven repository that was pre-cached
+              in the first run.
+            -->
+            <id>create-repository</id>
+            <phase>package</phase>
+            <goals>
+              <goal>run</goal>
+            </goals>
+            <configuration>
+              <goals>
+                <goal>--batch-mode -T3.0C de.qaware.maven:go-offline-maven-plugin:1.2.3:resolve-dependencies</goal>
+              </goals>
+              <mergeUserSettings>true</mergeUserSettings>
+              <projectsDirectory>${project.build.directory}/generated</projectsDirectory>
+              <localRepositoryPath>${image.build.directory}/repository</localRepositoryPath>
+              <settingsFile>${project.build.directory}/settings_local.xml</settingsFile>
+              <skipInvocation>false</skipInvocation>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-clean-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              We need to remove some of the tracking files Maven puts
+              in the repository we created above. Otherwise Maven 
+              will try to resolve using the repositories we used to
+              download these (namely the local repository used above
+              in the `settings_local.xml`), that will not resolve
+              to anything meaningful when we do the integration POD
+              S2I build.
+            -->
+            <id>remove-repository-tracking-files</id>
+            <phase>package</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <configuration>
+              <excludeDefaultDirectories>true</excludeDefaultDirectories>
+              <filesets>
+                <fileset>
+                  <directory>${image.build.directory}/repository</directory>
+                  <followSymlinks>false</followSymlinks>
+                  <includes>
+                    <include>**/_remote.repositories</include>
+                    <include>**/resolver-status.properties</include>
+                    <include>**/*.lastUpdated</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <!--
+              Generate a ZIP file containing the repository
+              settings.xml and license files
+            -->
+            <id>create-repository-zip</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <attach>${deploy.repository}</attach>
               <descriptors>
                 <descriptor>src/main/assembly/repository.xml</descriptor>
               </descriptors>
             </configuration>
-            <executions>
-              <execution>
-                <id>make-repository-assembly</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>single</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
     <profile>
       <id>image</id>
       <activation>
@@ -133,123 +474,6 @@
       </activation>
       <build>
         <plugins>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <!--
-                  Copies the settings_local.xml used by
-                  server-builder-image-generator below and the settings.xml
-                  that's baked into the S2I image.
-                -->
-                <id>copy-settings-xml</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
-                <configuration>
-                  <outputDirectory>${image.build.workdir}</outputDirectory>
-                  <resources>
-                    <resource>
-                      <directory>src/main/resources</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>exec-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <!--
-                  Generates a Maven project containing all connectors.
-                  When built by Maven this project will download all
-                  dependencies needed for the S2I image will be
-                  downloaded. Maven build is performed below.
-                -->
-                <id>default-cli</id>
-                <goals>
-                  <goal>java</goal>
-                </goals>
-                <phase>package</phase>
-                <configuration>
-                  <mainClass>org.springframework.boot.loader.JarLauncher</mainClass>
-                  <arguments>
-                    <argument>--to=${image.build.workdir}/m2/project</argument>
-                  </arguments>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <artifactId>maven-invoker-plugin</artifactId>
-            <executions>
-              <execution>
-                <!--
-                  Runs the Maven build on the generated project to
-                  gather all the dependencies we wish to bake into
-                  the S2I image.
-                -->
-                <id>run-generated-project</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>run</goal>
-                </goals>
-                <configuration>
-                  <goals>
-                    <goal>dependency:go-offline</goal>
-                  </goals>
-                  <projectsDirectory>${image.build.workdir}/m2</projectsDirectory>
-                  <localRepositoryPath>${image.build.workdir}/m2/repo</localRepositoryPath>
-                  <!-- invoker plugin requires us to specify a settings.xml file here
-                    we use the one that only has a single local repository, one used
-                    by the Maven that's executing this plugin
-                  -->
-                  <settingsFile>${image.build.workdir}/settings_local.xml</settingsFile>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <artifactId>maven-clean-plugin</artifactId>
-            <executions>
-              <execution>
-                <!--
-                  We need to remove some of the tracking files Maven puts
-                  in the repository we created above. Otherwise Maven 
-                  will try to resolve using the repositories we used to
-                  download these (namely the local repository used above
-                  in the `settings_local.xml`), that will not resolve
-                  to anything meaningful when we do the integration POD
-                  S2I build.
-                -->
-                <id>remove-repository-tracking-files</id>
-                <phase>package</phase>
-                <goals>
-                  <goal>clean</goal>
-                </goals>
-                <configuration>
-                  <excludeDefaultDirectories>true</excludeDefaultDirectories>
-                  <filesets>
-                    <fileset>
-                      <directory>${image.build.workdir}/m2/repo</directory>
-                      <followSymlinks>false</followSymlinks>
-                      <includes>
-                        <include>**/_remote.repositories</include>
-                        <include>**/resolver-status.properties</include>
-                      </includes>
-                    </fileset>
-                  </filesets>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
 
           <plugin>
             <groupId>io.fabric8</groupId>
@@ -259,7 +483,7 @@
                 <!--
                   Builds the S2I image.
                 -->
-                <id>exec</id>
+                <id>create-s2i-image</id>
                 <phase>package</phase>
                 <goals>
                   <goal>build</goal>
@@ -267,14 +491,14 @@
                 <configuration>
                   <!-- Important here, otherwise fmp silently ignores the build config -->
                   <skipBuildPom>false</skipBuildPom>
-                    <!-- Create a plain Docker image -->
+                  <!-- Create a plain Docker image -->
                   <buildStrategy>docker</buildStrategy>
                   <images>
                     <image>
                       <name>${image.s2i}</name>
                       <build>
                         <dockerFile>${project.basedir}/src/main/docker/Dockerfile</dockerFile>
-                        <contextDir>${image.build.workdir}</contextDir>
+                        <contextDir>${image.build.directory}</contextDir>
                       </build>
                     </image>
                   </images>
@@ -287,53 +511,6 @@
       </build>
 
     </profile>
-
-    <profile>
-      <id>generate-licenses-xml</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>license-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <goals>
-                  <goal>aggregate-download-licenses</goal>
-                </goals>
-                <phase>generate-resources</phase>
-                <configuration>
-                  <licensesOutputDirectory>${license.dir}/licenses</licensesOutputDirectory>
-                  <licensesOutputFile>${license.dir}/licenses.xml</licensesOutputFile>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>mavenMirror</id>
-      <activation>
-        <property>
-          <name>mavenMirror</name>
-        </property>
-      </activation>
-      <properties>
-        <mavenMirrorOf>external:*</mavenMirrorOf>
-      </properties>
-    </profile>
-    <!-- Build by PNC -->
-    <profile>
-      <id>with-proxy</id>
-      <activation>
-        <property>
-          <name>proxy-server</name>
-        </property>
-      </activation>
-      <properties>
-        <s2i.sample-generation.skip>true</s2i.sample-generation.skip>
-        <s2i.local-repo-generation.skip>true</s2i.local-repo-generation.skip>
-      </properties>
-    </profile>
   </profiles>
+
 </project>
