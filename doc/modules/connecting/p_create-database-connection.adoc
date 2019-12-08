@@ -37,9 +37,9 @@ are for the same account.
 .. In the *Password* field, enter the password associated with the
 user account you want to use to access the database.
 .. In the *Schema* field, enter the name of the schema for the database.
-If the connection URL specifies the schema, ensure that this field
-indicates the same schema as the connection URL. For example, enter
-`*sampledb*`.
+How you specify the database schema varies for each type of database. 
+Details are in the next section: 
+link:{LinkFuseOnlineConnectorGuide}#how-to-specify-the-schema-in-a-database-connection_db[How to specify the schema in a database connection].
 
 . Click *Validate*. {prodname} tries to validate the
 connection and displays a message that indicates whether
