@@ -1,0 +1,91 @@
+// This module is included in the following assembly:
+// connecting/master.adoc
+
+[id='how-to-specify-the-schema-in-a-database-connection_{context}']
+= How to specify the schema in a database connection
+
+In {prodname}, when you create a database connection, the user interface 
+prompts you to specify the database’s schema. How you specify the 
+schema varies for each database. The table below shows what each database 
+requires. 
+
+[options="header"]
+[cols="1,2,2"]
+|===
+|Database
+|Example connection configuration
+|Notes
+
+|Apache Derby
+|*Connection URL* (JDBC URL): `jdbc:derby:memory:testdb;create=true` +
+*Username*: `sa` +
+*Password*: +
+*Schema*: `sample`
+|For testing purposes only. The default username is `sa` with an empty password. 
+In this example configuration, the connection uses the `sample` schema, which is like 
+a namespace. For example, you can reference the `mytable` table with `sample.mytable`. 
+
+|MySQL
+|*Connection URL* (JDBC URL): `sql-connector.url=jdbc:mysql://mysql-host:3307/test?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC` + 
+*Username*: `kurt` +
+*Password*: `mypw` +
+*Schema*: 
+|MySQL does not support schemas. When you create a connection to 
+a MySQL database,  leave the *Schema* field blank. MySQL expects all 
+configuration in the connection (JDBC) URL. 
+
+|Oracle DB
+|*Connection URL* (JDBC URL): `jdbc:oracle:thin:@10.192.212.255:1521:xe` +
+*Username*: `kurt` +
+*Password*: `mypw` +
+*Schema*: 
+|Use the {prodname} extension mechanism to upload an Oracle database driver. 
+Then create the connection. Connection verification fails if the driver has 
+not been uploaded. +
+The schema is the database name. You must have permission to access this 
+database instance, which is referred to as a schema in Oracle terminology. 
+Leave the *Schema* field blank. In the *Connection* field, 
+you must reference the Oracle system identifier (SID) of this database
+instance (`xe` in this example). 
+
+|PostgreSQL
+|*Connection URL* (JDBC URL): `jdbc:postgresql://syndesis-db:5432/sampledb` +
+*Username*: `kurt` +
+*Password*: `mypw` +
+*Schema*: `sampledb`
+|You must specify the database in the connection (JDBC) URL. The URL must 
+also specify the schema and you must specify the same schema in the 
+connection configuration *Schema* field. A connection can resolve a 
+reference to _database.schema.table_. When a reference specifies only 
+a table name, the connection first searches the schema that you specify 
+when you configure the connection. If the table is not found, 
+then the connection searches public resources for the specified table. 
+For more details, see 
+link:https://www.postgresql.org/docs/9.1/ddl-schemas.html[PostgreSQL schema documentation].
+
+|Teiid
+|*Connection URL* (JDBC URL): `jdbc:teiid:<vdb-name>@mm://localhost:31000` +
+*Username*: any value +
+*Password*: any value +
+*Schema*:
+|The virtual database must have already been created, for example by using 
+the Data Virtualization feature. In the connection URL, replace `<vdb-name>` 
+with the name of the virtual database. No security has been implemented yet 
+for connections to Teiid. 
+Specify any value in the *Username* and *Password* fields. Leave the *Schema* field blank. 
+The driver is already available in {prodname}. 
+
+|===
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Data Virtualization is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
