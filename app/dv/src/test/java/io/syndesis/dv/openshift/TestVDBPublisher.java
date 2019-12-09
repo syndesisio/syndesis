@@ -158,7 +158,7 @@ public class TestVDBPublisher {
         PublishConfiguration config = new PublishConfiguration();
         Collection<EnvVar> variables = generator
                 .getEnvironmentVariablesForVDBDataSources(vdb, config, TeiidOpenShiftClient.getOpenShiftName(vdb.getName()));
-        assertThat(variables).hasSize(9);
+        assertThat(variables).hasSize(10);
 
         String javaOptions=
                   " -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap"
