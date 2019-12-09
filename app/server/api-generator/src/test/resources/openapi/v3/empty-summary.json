@@ -1,0 +1,114 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Greeting REST API",
+        "version": "1.0"
+    },
+    "paths": {
+        "/hi": {
+            "get": {
+                "tags": [
+                    "hello"
+                ],
+                "parameters": [
+                    {
+                        "name": "name",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hello"
+                                }
+                            }
+                        },
+                        "description": "Hi"
+                    }
+                },
+                "operationId": "operation-1"
+            },
+            "put": {
+                "requestBody": {
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Hello"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "hello"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hello"
+                                }
+                            }
+                        },
+                        "description": "Hi"
+                    }
+                },
+                "operationId": "operation-3"
+            },
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "*/*": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Hello"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "tags": [
+                    "hello"
+                ],
+                "responses": {
+                    "200": {
+                        "content": {
+                            "*/*": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hello"
+                                }
+                            }
+                        },
+                        "description": "Hi"
+                    }
+                },
+                "operationId": "operation-2",
+                "summary": "post operation"
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Hello": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "greetings/",
+            "description": "Greeting to {name}"
+        }
+    ]
+}

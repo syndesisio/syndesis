@@ -53,7 +53,7 @@ public class OpenApiConnectorGeneratorTest {
     private final OpenApiConnectorGenerator generator;
 
     public OpenApiConnectorGeneratorTest() {
-        try (InputStream stream = OpenApiConnectorGeneratorExampleTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+        try (InputStream stream = OpenApiConnectorGeneratorTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
 
             generator = new OpenApiConnectorGenerator(restSwagger) {
@@ -101,7 +101,7 @@ public class OpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldCreateSecurityConfigurationFromConcurSwagger() throws IOException {
-        final String specification = resource("/swagger/concur.swagger.json");
+        final String specification = resource("/openapi/v2/concur.json");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
             .name("Concur List API")
@@ -121,7 +121,7 @@ public class OpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldCreateSecurityConfigurationFromReverbSwagger() throws IOException {
-        final String specification = resource("/swagger/reverb.swagger.yaml");
+        final String specification = resource("/openapi/v2/reverb.yaml");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
             .name("Reverb API")
@@ -205,7 +205,7 @@ public class OpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldIncorporateGivenConfiguredProperties() throws IOException {
-        final String specification = resource("/swagger/reverb.swagger.yaml");
+        final String specification = resource("/openapi/v2/reverb.yaml");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .name("Reverb API")//
@@ -316,7 +316,7 @@ public class OpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldProvideInfoFromPetstoreSwagger() throws IOException {
-        final String specification = resource("/swagger/petstore.swagger.json");
+        final String specification = resource("/openapi/v2/petstore.json");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .putConfiguredProperty("specification", specification)//
@@ -342,7 +342,7 @@ public class OpenApiConnectorGeneratorTest {
 
     @Test
     public void shouldReportErrorsFromInvalidPetstoreSwagger() throws IOException {
-        final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
+        final String specification = resource("/openapi/v2/invalid/invalid-scheme.petstore.json");
 
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
             .putConfiguredProperty("specification", specification)//
@@ -359,7 +359,7 @@ public class OpenApiConnectorGeneratorTest {
             .name("Reverb API")
             .description("Invokes Reverb API")
             .icon("fa-music")
-            .putConfiguredProperty("specification", resource("/swagger/reverb.swagger.yaml"))
+            .putConfiguredProperty("specification", resource("/openapi/v2/reverb.yaml"))
             .build();
     }
 

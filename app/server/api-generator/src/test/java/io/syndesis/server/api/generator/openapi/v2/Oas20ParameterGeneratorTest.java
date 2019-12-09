@@ -34,7 +34,7 @@ public class Oas20ParameterGeneratorTest {
 
     @Test
     public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
-        final String specification = resource("/swagger/petstore.swagger.json");
+        final String specification = resource("/openapi/v2/petstore.json");
         final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
         final Oas20Parameter petIdPathParameter = (Oas20Parameter) openApiDoc.paths.getPathItem("/pet/{petId}").get.getParameters().get(0);
 

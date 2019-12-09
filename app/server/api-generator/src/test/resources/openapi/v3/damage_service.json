@@ -1,0 +1,137 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Damage Service",
+        "version": "1.0.0",
+        "description": "A damage service api used to work with damage events."
+    },
+    "paths": {
+        "/ApplyDamage": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/DamageRequest"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Applies the damage event."
+                    }
+                },
+                "summary": "Updates a machines health with the damage event."
+            }
+        },
+        "/SensorToDamage": {
+            "post": {
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SensorEvent"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/DamageEvent"
+                                }
+                            }
+                        },
+                        "description": "Converts a sensor to a damage event."
+                    }
+                },
+                "summary": "Converts a gesture event to a damage event."
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "DamageEvent": {
+                "description": "The representation of a damage event.",
+                "required": [
+                    "damage",
+                    "machineId"
+                ],
+                "type": "object",
+                "properties": {
+                    "damage": {
+                        "type": "integer"
+                    },
+                    "machineId": {
+                        "type": "number"
+                    }
+                }
+            },
+            "DamageRequest": {
+                "description": "Represents a request to apply damage to the state of a machine",
+                "required": [
+                    "confidencePercentage",
+                    "damage",
+                    "downTimePrice",
+                    "machineId",
+                    "machineInitialHealth",
+                    "sensorId",
+                    "vibrationClass"
+                ],
+                "type": "object",
+                "properties": {
+                    "confidencePercentage": {
+                        "type": "number"
+                    },
+                    "damage": {
+                        "type": "integer"
+                    },
+                    "downTimePrice": {
+                        "type": "integer"
+                    },
+                    "machineId": {
+                        "type": "number"
+                    },
+                    "machineInitialHealth": {
+                        "type": "integer"
+                    },
+                    "sensorId": {
+                        "type": "string"
+                    },
+                    "vibrationClass": {
+                        "type": "number"
+                    }
+                }
+            },
+            "SensorEvent": {
+                "description": "The representation of a gesture event.",
+                "required": [
+                    "vibrationClass",
+                    "sensorId",
+                    "machineId",
+                    "confidencePercentage"
+                ],
+                "type": "object",
+                "properties": {
+                    "confidencePercentage": {
+                        "type": "number"
+                    },
+                    "machineId": {
+                        "type": "number"
+                    },
+                    "sensorId": {
+                        "type": "string"
+                    },
+                    "vibrationClass": {
+                        "type": "number"
+                    }
+                }
+            }
+        }
+    }
+}

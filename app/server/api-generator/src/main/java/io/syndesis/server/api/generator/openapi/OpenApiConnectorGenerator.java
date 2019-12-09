@@ -75,7 +75,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
     private final Oas20DescriptorGenerator oas20DescriptorGenerator = new Oas20DescriptorGenerator();
     private final Oas30DescriptorGenerator oas30DescriptorGenerator = new Oas30DescriptorGenerator();
 
-    OpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
+    public OpenApiConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
         super(baseConnector);
 
         this.operationIdGenerator = operationIdGenerator;

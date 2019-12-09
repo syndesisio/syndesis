@@ -71,7 +71,7 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
         }
     }
 
-    private static boolean supports(final String mime, final Set<String> mimes) {
+    static boolean supports(final String mime, final Set<String> mimes) {
         if (mimes != null && !mimes.isEmpty()) {
             return mimes.contains(mime);
         }

@@ -124,8 +124,8 @@ public class OpenApiModelParserTest {
 
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {
-        final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json",
-            "/swagger/todo.swagger.yaml"};
+        final String[] specifications = {"/openapi/v2/concur.json", "/openapi/v2/petstore.json",
+            "/openapi/v2/todo.yaml"};
 
         for (final String specificationFile : specifications) {
             final String specification = resource(specificationFile);
@@ -138,7 +138,7 @@ public class OpenApiModelParserTest {
 
     @Test
     public void testThatInvalidFieldPetstoreSwaggerIsInvalid() throws IOException {
-        final String specification = resource("/swagger/invalid/invalid-field.petstore.swagger.json");
+        final String specification = resource("/openapi/v2/invalid/invalid-field.petstore.json");
         final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
@@ -151,7 +151,7 @@ public class OpenApiModelParserTest {
 
     @Test
     public void testThatInvalidSchemePetstoreSwaggerIsInvalid() throws IOException {
-        final String specification = resource("/swagger/invalid/invalid-scheme.petstore.swagger.json");
+        final String specification = resource("/openapi/v2/invalid/invalid-scheme.petstore.json");
         final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
@@ -166,7 +166,7 @@ public class OpenApiModelParserTest {
 
     @Test
     public void testThatInvalidTypePetstoreSwaggerIsInvalid() throws IOException {
-        final String specification = resource("/swagger/invalid/invalid-type.petstore.swagger.json");
+        final String specification = resource("/openapi/v2/invalid/invalid-type.petstore.json");
         final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).hasSize(1);
@@ -178,7 +178,7 @@ public class OpenApiModelParserTest {
 
     @Test
     public void testThatWarningPetstoreSwaggerContainsWarnings() throws IOException {
-        final String specification = resource("/swagger/invalid/warning-petstore.swagger.json");
+        final String specification = resource("/openapi/v2/invalid/warning-petstore.json");
         final OpenApiModelInfo info = OpenApiModelParser.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
