@@ -83,6 +83,8 @@ public interface Connector extends WithId<Connector>, WithIdVersioned<Connector>
         return Collections.emptyList();
     }
 
+    Optional<String> getExceptionHandler();
+
     /**
      * Provides a summary of the connector's actions
      * <p>

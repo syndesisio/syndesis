@@ -5,6 +5,12 @@
       "description": "Start an integration from a Webhook",
       "descriptor": {
         "componentScheme": "servlet",
+        "standardizedErrors": [
+          {
+            "name": "SERVER_ERROR",
+            "displayName": "ServerError"
+          }
+        ],
         "configuredProperties": {
           "headerFilterStrategy": "syndesisHeaderStrategy",
           "httpMethodRestrict": "GET,POST"
@@ -12,6 +18,7 @@
         "connectorCustomizers": [
           "io.syndesis.connector.webhook.WebhookConnectorCustomizer"
         ],
+        "exceptionHandler": "io.syndesis.connector.webhook.WebhookOnExceptionHandler",
         "inputDataShape": {
           "kind": "none"
         },
@@ -24,6 +31,7 @@
             "name": "configuration",
             "properties": {
               "contextPath": {
+                "order": 0,
                 "componentProperty": false,
                 "deprecated": false,
                 "description": "The Webhook token that will be set as final part of the URL",
@@ -38,7 +46,78 @@
                   "context-path"
                 ],
                 "type": "string"
-              }
+              },
+              "defaultResponse": {
+                "order": 1,
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Default Response",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "type": "legend"
+              },
+              "httpResponseCode": {
+                "order": 2,
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "The return code to set in the HTTP response",
+                "displayName": "Return Code",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "type": "select",
+                "enum": [{
+                            "label": "200 OK",
+                            "value": "200"
+                        }, {
+                            "label": "201 Created",
+                            "value": "201"
+                        }, {
+                            "label": "202 Accepted",
+                            "value": "202"
+                        }, {
+                            "label": "204 No Content",
+                            "value": "204"
+                        }]
+              },
+              "errorHandling": {
+                "order": 3,
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Error Handling",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "type": "legend"
+              },
+              "returnBody": {
+                "order": 4,
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Include error message in the return body",
+                "javaType": "Boolean",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "errorResponseCodes": {
+                "order": 5,
+                "componentProperty": false,
+                "defaultValue": "{}",
+                "deprecated": false,
+                "description": "The return code to set according to different error situations",
+                "displayName": "Error Response Codes",
+                "javaType": "Map",
+                "kind": "parameter",
+                "required": false,
+                "secret": false,
+                "type": "mapset",
+                "extendedProperties": "{ \"mapsetValueDefinition\": {   \"enum\" : [{\"label\":\"400 Bad Request\",\"value\":\"400\"},{\"label\":\"404 Not Found\",\"value\":\"404\"},{\"label\":\"405 Method Not Allowed\",\"value\":\"405\"},{\"label\":\"409 Conflict\",\"value\":\"409\"},{\"label\":\"500 Server Error\",\"value\":\"500\"},{\"label\":\"501 Not Implemented\",\"value\":\"501\"},{\"label\":\"503 Service Unavailable\",\"value\":\"503\"}],    \"type\" : \"select\" },\"mapsetOptions\": {    \"i18nKeyColumnTitle\": \"When the error message is\",    \"i18nValueColumnTitle\": \"Return this HTTP response code\" }}"              }
             }
           }
         ]

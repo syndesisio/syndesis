@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.apiprovider;
+package io.syndesis.connector.webhook;
 
 import java.util.Map;
 
@@ -26,7 +26,7 @@ import io.syndesis.connector.support.processor.ErrorStatusInfo;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
 
-public class ApiProviderOnExceptionHandler implements Processor, Properties {
+public class WebhookOnExceptionHandler implements Processor, Properties {
 
     private static final String HTTP_RESPONSE_CODE_PROPERTY        = "httpResponseCode";
     private static final String HTTP_ERROR_RESPONSE_CODES_PROPERTY = "errorResponseCodes";
@@ -40,11 +40,12 @@ public class ApiProviderOnExceptionHandler implements Processor, Properties {
     public void process(Exchange exchange) {
         ErrorStatusInfo statusInfo =
                 ErrorMapper.mapError(exchange.getException(), errorResponseCodeMappings, httpResponseStatus);
-        exchange.getIn().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
+        exchange.getOut().removeHeaders("*");
+        exchange.getOut().setHeader(Exchange.HTTP_RESPONSE_CODE, statusInfo.getResponseCode());
         if (isReturnBody) {
-            exchange.getIn().setBody(statusInfo.toJson());
+            exchange.getOut().setBody(statusInfo.toJson());
         } else {
-            exchange.getIn().setBody("");
+            exchange.getOut().setBody("");
         }
         exchange.setProperty(Exchange.ERRORHANDLER_HANDLED, Boolean.TRUE);
     }

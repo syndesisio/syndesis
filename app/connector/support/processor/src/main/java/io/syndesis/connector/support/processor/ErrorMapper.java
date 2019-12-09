@@ -13,13 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.apiprovider;
+package io.syndesis.connector.support.processor;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Map;
 
 import io.syndesis.common.util.json.JsonUtils;
+
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,13 +58,47 @@ public final class ErrorMapper {
     public static ErrorStatusInfo mapError(final Exception exception, final Map<String, String> errorResponseCodeMappings,
             final Integer responseCode) {
         Integer errorResponseCode = responseCode;
-        SyndesisConnectorException sce = SyndesisConnectorException.from(exception);
-        for (Map.Entry<String, String> mapping : errorResponseCodeMappings.entrySet()) {
-            if (mapping.getKey().matches(sce.getCategory())) {
-                errorResponseCode = Integer.valueOf(mapping.getValue());
-                break;
+        final ErrorStatusInfo info;
+        if (matchByException(exception, errorResponseCodeMappings)) {
+            info = new ErrorStatusInfo(
+                    Integer.valueOf(errorResponseCodeMappings.get(exception.getClass().getName())),
+                    categoryFromClassName(exception.getClass().getSimpleName()),
+                    getMessage(exception));
+        } else {
+            SyndesisConnectorException sce = SyndesisConnectorException.from(exception);
+            if (matchByCategory(sce, errorResponseCodeMappings)) {
+                info = new ErrorStatusInfo(
+                        Integer.valueOf(errorResponseCodeMappings.get(sce.getCategory())),
+                        sce.getCategory(),
+                        sce.getMessage());
+            } else {
+                info = new ErrorStatusInfo(errorResponseCode, sce.getCategory(), sce.getMessage());
             }
         }
-        return new ErrorStatusInfo(errorResponseCode, sce.getCategory(), sce.getMessage());
+        return info;
+    }
+
+    private static boolean matchByException(final Exception exception, final Map<String, String> errorResponseCodeMappings) {
+        return errorResponseCodeMappings.containsKey(exception.getClass().getName());
+    }
+
+    private static boolean matchByCategory(final SyndesisConnectorException sce, final Map<String, String> errorResponseCodeMappings) {
+        return errorResponseCodeMappings.containsKey(sce.getCategory());
+    }
+
+    private static String getMessage(final Exception exception) {
+        if (exception.getCause()!=null && exception.getCause().getMessage()!=null) {
+            return exception.getCause().getMessage();
+        } else {
+            return exception.getMessage();
+        }
+    }
+
+    private static String categoryFromClassName(final String className) {
+        return camelCaseToUnderscore(className).replace("Exception","Error").toUpperCase(Locale.US);
+    }
+
+    public static String camelCaseToUnderscore(final String text) {
+        return text.replaceAll("([^_A-Z])([A-Z])", "$1_$2");
     }
 }
