@@ -25,6 +25,16 @@ requires.
 In this example configuration, the connection uses the `sample` schema, which is like 
 a namespace. For example, you can reference the `mytable` table with `sample.mytable`. 
 
+|MS SQLServer 
+|*Connection URL* (JDBC URL): `jdbc:sqlserver://localhost:1433/sampledb` +
+*Username*: `kurt` +
+*Password*: `mypw` +
+*Schema*: `sampledb`
+|Upload the driver by using the extension mechanism.
+Then create a connection. Connection verification fails if you have 
+not already uploaded the driver. You must specify the same schema at the end of 
+the connection URL and in the *Schema* field. 
+
 |MySQL
 |*Connection URL* (JDBC URL): `sql-connector.url=jdbc:mysql://mysql-host:3307/test?allowPublicKeyRetrieval=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC` + 
 *Username*: `kurt` +
