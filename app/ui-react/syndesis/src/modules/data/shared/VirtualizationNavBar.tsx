@@ -44,8 +44,8 @@ export const VirtualizationNavBar: React.FunctionComponent<
           })}
         />
         <TabBarItem
-          label={t('details')}
-          to={resolvers.virtualizations.details({
+          label={t('versions')}
+          to={resolvers.virtualizations.versions({
             virtualization,
           })}
         />

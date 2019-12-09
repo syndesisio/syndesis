@@ -6,7 +6,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { DvMetricsContainer } from '../../../src';
 
-const stories = storiesOf('Data/Matrics/MatricsTab', module);
+const stories = storiesOf('Data/Metrics/MetricsTab', module);
 stories.addDecorator(withKnobs);
 
 const title = 'No metrics data available';
@@ -26,7 +26,7 @@ const storyNotes =
 
 stories
 .add(
-'Empty Matrics State',
+'Empty Metrics State',
   () => (
     <DvMetricsContainer
       i18nNoDataTitle={title}
@@ -36,7 +36,7 @@ stories
   { notes: 'Check If the Empty state message is shown.' }
 )
 .add(
-    'Matrics Tab',
+    'Metrics Tab',
       () => (
         <DvMetricsContainer
         cacheHitProps={{

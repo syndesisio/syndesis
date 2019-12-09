@@ -1,10 +1,10 @@
 import { useVirtualization, useVirtualizationEditions } from '@syndesis/api';
 import { Virtualization, VirtualizationEdition } from '@syndesis/models';
 import {
-  IVirtualizationHistoryItem,
+  IVirtualizationVersionItem,
   PageSection,
-  VirtualizationDetailHistoryTable,
   VirtualizationListSkeleton,
+  VirtualizationVersionsTable,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import { WithLoader } from '@syndesis/utils';
@@ -20,6 +20,19 @@ import {
   IVirtualizationEditorPageRouteState,
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
+
+const getDraftActions = (virtualization: Virtualization) => {
+  const buttons: VirtualizationActionId[] = [];
+  const kebabItems = [VirtualizationActionId.Export];
+  const draftActions = (
+    <VirtualizationActionContainer
+      includeActions={buttons}
+      includeItems={kebabItems}
+      virtualization={virtualization}
+    />
+  );
+  return draftActions;
+};
 
 const getVersionActions = (virtualization: Virtualization, edition: number) => {
   const kebabItems =
@@ -50,9 +63,9 @@ const getSortedEditions = (
     return b.revision - a.revision;
   });
 
-  const historyItems: IVirtualizationHistoryItem[] = [];
+  const versionItems: IVirtualizationVersionItem[] = [];
   for (const edition of sorted) {
-    const historyItem: IVirtualizationHistoryItem = {
+    const versionItem: IVirtualizationVersionItem = {
       actions: getVersionActions(virtualization, edition.revision),
       publishedState: getVersionPublishedState(
         edition.revision,
@@ -64,9 +77,9 @@ const getSortedEditions = (
         : '',
       version: edition.revision,
     };
-    historyItems.push(historyItem);
+    versionItems.push(versionItem);
   }
-  return historyItems;
+  return versionItems;
 };
 
 const getVersionPublishedState = (
@@ -89,9 +102,9 @@ const getVersionPublishedState = (
 };
 
 /**
- * A page that displays virtualization publish state and history.
+ * A page that displays virtualization publish state and version history.
  */
-export const VirtualizationDetailsPage: React.FunctionComponent = () => {
+export const VirtualizationVersionsPage: React.FunctionComponent = () => {
   /**
    * Hook to obtain route params and history.
    */
@@ -118,9 +131,9 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
   );
 
   const colHeaders = [
-    t('detailsVersionTableVersion'),
-    t('detailsVersionTablePublishedTime'),
-    t('detailsVersionTablePublished'),
+    t('versionsTableVersion'),
+    t('versionsTablePublishedTime'),
+    t('versionsTablePublished'),
     '',
   ];
 
@@ -138,13 +151,16 @@ export const VirtualizationDetailsPage: React.FunctionComponent = () => {
           errorChildren={<ApiError error={error as Error} />}
         >
           {() => (
-            <VirtualizationDetailHistoryTable
+            <VirtualizationVersionsTable
               a11yActionMenuColumn={t('actionsColumnA11yMessage')}
               isModified={virtualization.modified}
-              i18nEmptyVersionsTitle={t('detailsVersionTableEmptyTitle')}
-              i18nEmptyVersionsMsg={t('detailsVersionTableEmptyMsg')}
+              i18nDraft={t('shared:Draft')}
+              i18nEmptyVersionsTitle={t('versionsTableEmptyTitle')}
+              i18nEmptyVersionsMsg={t('versionsTableEmptyMsg')}
+              i18nPublish={t('shared:Publish')}
+              draftActions={getDraftActions(virtualization)}
               tableHeaders={colHeaders}
-              historyItems={getSortedEditions(editions, virtualization)}
+              versionItems={getSortedEditions(editions, virtualization)}
             />
           )}
         </WithLoader>

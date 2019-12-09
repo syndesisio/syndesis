@@ -41,7 +41,7 @@ public class OpenAPIConfig {
     public Docket api(ServletContext servletContext, @Value("${teiid.syndesis.base-path:/v1}") String basePath) {
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("io.syndesis.dv.rest.service"))
+                .apis(RequestHandlerSelectors.basePackage(OpenAPIConfig.class.getPackage().getName()))
                 .paths(PathSelectors.any())
                 .build()
                 .apiInfo(apiInfo())

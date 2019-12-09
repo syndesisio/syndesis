@@ -105,8 +105,8 @@ export default {
         ),
       },
     },
-    details: makeResolver<{ virtualization: Virtualization }>(
-      routes.virtualizations.virtualization.details,
+    versions: makeResolver<{ virtualization: Virtualization }>(
+      routes.virtualizations.virtualization.versions,
       ({ virtualization }) => ({
         params: {
           virtualizationId: virtualization.name,

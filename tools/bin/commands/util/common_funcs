@@ -210,6 +210,32 @@ go_is_available() {
     echo "OK"
 }
 
+set_gnugrep() {
+    if $(isMacOs); then
+        if [ $(ggrep_is_available_on_osx) == "OK" ]; then
+            gnugrep=`which ggrep`
+        else
+            echo "ERROR: 'Please install ggrep on OSX'"
+            return
+        fi
+    else
+      gnugrep=`which grep`
+    fi
+}
+
+ggrep_is_available_on_osx() {
+    set +e
+    which ggrep &>/dev/null
+    if [ $? -ne 0 ]; then
+        set -e
+        echo "Please install GNU grep using: brew install grep"
+        return
+    fi
+    set -e
+    
+    echo "OK"
+}
+
 compare_version_part() {
     local test=$1
     local min=$2

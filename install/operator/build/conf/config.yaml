@@ -19,7 +19,7 @@ Syndesis:
             Enabled: false
         DV:
             Enabled: false
-            Image: "docker.io/teiid/syndesis-dv:latest"
+            Image: "docker.io/syndesis/syndesis-dv:latest"
             Resources:
                 Memory: "1024Mi"
         CamelK:

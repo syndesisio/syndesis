@@ -110,73 +110,10 @@
   <contributors>
   </contributors>
 
-    <!-- Metadata need to publish to central -->
-  <url>https://teiid.io/</url>
-  <inceptionYear>2013</inceptionYear>
-
-  <licenses>
-    <license>
-      <name>Apache License, Version 2.0</name>
-      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-      <distribution>repo</distribution>
-    </license>
-  </licenses>
-
-  <scm>
-    <connection>scm:git:git://github.com/teiid/teiid-syndesis.git</connection>
-    <developerConnection>scm:git:git@github.com:teiid/teiid-syndesis.git</developerConnection>
-    <url>http://github.com/teiid/teiid-syndesis</url>
-  </scm>
-
-  <distributionManagement>
-    <repository>
-      <id>oss.sonatype.org</id>
-      <name>oss.sonatype.org</name>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-    </repository>
-    <snapshotRepository>
-      <id>oss.sonatype.org</id>
-      <name>oss.sonatype.org</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
-  </distributionManagement>
-
   <issueManagement>
     <system>jira</system>
     <url>http://issues.jboss.org/browse/TEIIDTOOLS</url>
   </issueManagement>
-
-  <repositories>
-    <repository>
-      <id>jboss-fuse</id>
-      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
-    </repository>
-    <repository>
-      <id>mrrc-redhat</id>
-      <url>https://maven.repository.redhat.com/ga</url>
-    </repository>
-    <repository>
-      <id>jboss-public-repository-group</id>
-      <name>JBoss Public Repository Group</name>
-      <url>https://repository.jboss.org/nexus/content/groups/public/</url>
-      <releases>
-        <enabled>true</enabled>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>oss.sonatype.org</id>
-      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
 
   <properties>
     <!-- Image names -->
@@ -205,6 +142,8 @@
     <!--version.io.swagger>1.5.22</version.io.swagger-->
     <version.io.swagger>${swagger.version}</version.io.swagger>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
+
+    <!-- there is a jira ENTESB-12320 Dv doesn't work with 4.x client yet -->
     <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
 
     <!-- <spring-cloud.version>Dalston.SR5</spring-cloud.version> -->
@@ -286,125 +225,6 @@
         </plugins>
       </build>
 
-    </profile>
-
-    <!-- Release profile -->
-    <profile>
-      <id>release</id>
-      <build>
-        <plugins>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <groupId>org.sonatype.plugins</groupId>
-            <artifactId>nexus-staging-maven-plugin</artifactId>
-            <version>1.6.8</version>
-            <executions>
-              <execution>
-                <id>default-deploy</id>
-                <phase>deploy</phase>
-                <goals>
-                  <goal>deploy</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-              <serverId>oss.sonatype.org</serverId>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-gpg-plugin</artifactId>
-            <version>1.6</version>
-            <configuration>
-              <skip>false</skip>
-            </configuration>
-            <executions>
-              <execution>
-                <id>sign-artifacts</id>
-                <phase>verify</phase>
-                <goals>
-                  <goal>sign</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <configuration>
-              <skipSource>false</skipSource>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <skip>false</skip>
-              <additionalparam>-Xdoclint:none</additionalparam>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-javadocs</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>core-release</id>
-      <build>
-        <plugins>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <configuration>
-              <skip>true</skip>
-            </configuration>
-          </plugin>
-
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-source-plugin</artifactId>
-            <configuration>
-              <skipSource>false</skipSource>
-            </configuration>
-            <executions>
-              <execution>
-                <id>attach-sources</id>
-                <goals>
-                  <goal>jar</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-
-        </plugins>
-      </build>
     </profile>
 
   </profiles>
@@ -493,23 +313,6 @@
 
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>2.10.4</version>
-          <executions>
-            <execution>
-              <id>attach-javadocs</id>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-              <configuration>
-                <additionalparam>-Xdoclint:none</additionalparam>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <configuration>
              <!-- Fix "There was a timeout or other error in the fork" errors -->
@@ -542,96 +345,10 @@
           </configuration>
         </plugin>
 
-        <plugin>
-          <groupId>org.springframework.boot</groupId>
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <version>${spring-boot.version}</version>
-        </plugin>
-
-        <plugin>
-          <artifactId>maven-plugin-plugin</artifactId>
-          <version>3.5</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>templating-maven-plugin</artifactId>
-          <version>1.0.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>io.syndesis.connector</groupId>
-          <artifactId>connector-support-maven-plugin</artifactId>
-          <version>${project.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-connector-maven-plugin</artifactId>
-          <version>${camel.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.apache.camel</groupId>
-          <artifactId>camel-package-maven-plugin</artifactId>
-          <version>${camel.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>io.github.swagger2markup</groupId>
-          <artifactId>swagger2markup-maven-plugin</artifactId>
-          <version>1.1.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.kongchen</groupId>
-          <artifactId>swagger-maven-plugin</artifactId>
-          <version>3.1.6</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.asciidoctor</groupId>
-          <artifactId>asciidoctor-maven-plugin</artifactId>
-          <version>1.5.3</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>truezip-maven-plugin</artifactId>
-          <version>1.2</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.codehaus.mojo</groupId>
-          <artifactId>exec-maven-plugin</artifactId>
-          <version>1.5.0</version>
-        </plugin>
-
-        <plugin>
-          <groupId>com.github.eirslett</groupId>
-          <artifactId>frontend-maven-plugin</artifactId>
-          <version>1.6</version>
-        </plugin>
-
       </plugins>
     </pluginManagement>
 
     <plugins>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <rules combine.children="append">
-            <evaluateBeanshell>
-              <message>Your JVM has limited cryptography, please upgrade
-                to 1.8.0_162 or newer or install Unlimited Strength
-                Jurisdiction Policy Files to this
-                JVM.</message>
-              <condition>javax.crypto.Cipher.getMaxAllowedKeyLength("AES")
-                > 128</condition>
-            </evaluateBeanshell>
-          </rules>
-        </configuration>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
