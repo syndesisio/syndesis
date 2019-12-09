@@ -13,7 +13,7 @@ spec:
         name: syndesis-operator
         syndesis.io/app: syndesis
         syndesis.io/component: syndesis-operator
-        syndesis.io/type: operator
+        syndesis.io/type: infrastructure
     spec:
       serviceAccountName: syndesis-operator
       containers:
