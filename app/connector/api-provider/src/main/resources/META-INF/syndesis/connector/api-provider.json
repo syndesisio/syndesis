@@ -59,6 +59,7 @@
         "connectorCustomizers": [
           "io.syndesis.connector.apiprovider.ApiProviderReturnPathCustomizer"
         ],
+        "exceptionHandler": "io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler",
         "inputDataShape": {
           "kind": "any"
         },
