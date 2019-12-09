@@ -22,7 +22,7 @@ import {
 } from './VirtualizationEditorPage';
 
 const getDraftActions = (virtualization: Virtualization) => {
-  const buttons: VirtualizationActionId[] = [];
+  const buttons = [VirtualizationActionId.Publish];
   const kebabItems = [VirtualizationActionId.Export];
   const draftActions = (
     <VirtualizationActionContainer

@@ -56,7 +56,6 @@ export interface IVirtualizationListItemProps {
   i18nDeleteModalTitle: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  i18nExport: string;
   i18nInUseText: string;
   i18nPublish: string;
   i18nPublishLogUrlText: string;
@@ -72,11 +71,6 @@ export interface IVirtualizationListItemProps {
    * @param virtualizationName the name of the virtualization being deleted
    */
   onDelete: (virtualizationName: string) => Promise<void>;
-
-  /**
-   * @param virtualizationName the name of the virtualization being exported
-   */
-  onExport: (virtualizationName: string) => void;
 
   /**
    * @param virtualizationName the name of the virtualization being published
@@ -161,10 +155,6 @@ export const VirtualizationListItem: React.FunctionComponent<
       setLabelType(saveLabelType);
     });
     setWorking(false);
-  };
-
-  const doExport = () => {
-    props.onExport(props.virtualizationName);
   };
 
   const doPublish = async () => {
@@ -307,14 +297,6 @@ export const VirtualizationListItem: React.FunctionComponent<
                 }-delete`}
               >
                 {props.i18nDelete}
-              </MenuItem>
-              <MenuItem
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-export`}
-                onClick={doExport}
-              >
-                {props.i18nExport}
               </MenuItem>
             </DropdownKebab>
           </div>

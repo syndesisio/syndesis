@@ -81,23 +81,9 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
   const { resource: data, hasData, error } = useVirtualizations();
   const {
     deleteVirtualization,
-    exportVirtualization,
     publishVirtualization,
     unpublishVirtualization,
   } = useVirtualizationHelpers();
-
-  const doExport = (virtualizationName: string) => {
-    exportVirtualization(virtualizationName).catch((e: any) => {
-      // notify user of error
-      pushNotification(
-        t('exportVirtualizationFailed', {
-          details: e.errorMessage || e.message || e,
-          name: virtualizationName,
-        }),
-        'error'
-      );
-    });
-  };
 
   /**
    *
@@ -298,7 +284,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nDeleteModalTitle={t('deleteModalTitle')}
                             i18nEdit={t('shared:Edit')}
                             i18nEditTip={t('editDataVirtualizationTip')}
-                            i18nExport={t('shared:Export')}
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
                             )}
@@ -309,7 +294,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             })}
                             i18nStopModalTitle={t('stopModalTitle')}
                             onDelete={doDelete}
-                            onExport={doExport}
                             onStop={doUnpublish}
                             onPublish={doPublish}
                             currentPublishedState={publishingDetails.state}
