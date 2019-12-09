@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg"
+
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
@@ -15,7 +17,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"github.com/syndesisio/syndesis/install/operator/version"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
@@ -43,7 +44,8 @@ func printVersion() {
 	log.Info(fmt.Sprintf("Go Version: %s", runtime.Version()))
 	log.Info(fmt.Sprintf("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH))
 	log.Info(fmt.Sprintf("Version of operator-sdk: %v", sdkVersion.Version))
-	log.Info(fmt.Sprintf("Syndesis Operator Version: %s", version.Version))
+	log.Info(fmt.Sprintf("Syndesis Operator Image: %s", pkg.DefaultOperatorImage))
+	log.Info(fmt.Sprintf("Syndesis Operator Version: %s", pkg.DefaultOperatorTag))
 }
 
 func New(parent *internal.Options) *cobra.Command {

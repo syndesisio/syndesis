@@ -50,6 +50,7 @@ type SyndesisSpec struct {
 // +k8s:openapi-gen=true
 type SyndesisStatus struct {
 	Phase              SyndesisPhase        `json:"phase,omitempty"`
+	PreviousPhase      SyndesisPhase        `json:"previousPhase,omitempty"`
 	UpgradeAttempts    int32                `json:"upgradeAttempts,omitempty"`
 	LastUpgradeFailure *metav1.Time         `json:"lastUpgradeFailure,omitempty"`
 	ForceUpgrade       bool                 `json:"forceUpgrade,omitempty"`
@@ -73,6 +74,11 @@ type ComponentsSpec struct {
 	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
 	Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
 	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
+	Operator   OperatorConfiguration   `json:"operator,omitempty"`
+}
+
+type OperatorConfiguration struct {
+	Resources VolumeOnlyResources `json:"resources,omitempty"`
 }
 
 type OauthConfiguration struct {
@@ -180,6 +186,7 @@ type SyndesisPhase string
 
 const (
 	SyndesisPhaseMissing               SyndesisPhase = ""
+	SyndesisPhaseAttachingVolume       SyndesisPhase = "AttachingVolume"
 	SyndesisPhaseInstalling            SyndesisPhase = "Installing"
 	SyndesisPhaseStarting              SyndesisPhase = "Starting"
 	SyndesisPhaseStartupFailed         SyndesisPhase = "StartupFailed"
@@ -198,6 +205,8 @@ const (
 	SyndesisStatusReasonDeploymentNotReady     SyndesisStatusReason = "DeploymentNotReady"
 	SyndesisStatusReasonUpgradePodFailed       SyndesisStatusReason = "UpgradePodFailed"
 	SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
+	SyndesisStatusReasonVolumeDetected         SyndesisStatusReason = "VolumeDetected"
+	SyndesisStatusReasonCanNotDetectVolume     SyndesisStatusReason = "CanNotDetectVolume"
 )
 
 // =============================================================================

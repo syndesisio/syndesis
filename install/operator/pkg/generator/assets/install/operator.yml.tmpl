@@ -1,4 +1,19 @@
 - apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    name: operator-pvc
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-operator
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: {{.VolumeCapacity}}
+- apiVersion: v1
   kind: ServiceAccount
   metadata:
     name: syndesis-operator
@@ -23,27 +38,6 @@
     kind: Role
     name: syndesis-operator
     apiGroup: rbac.authorization.k8s.io
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: operator
-      syndesis.io/component: syndesis-operator
-    name: syndesis-operator
-  spec:
-    tags:
-    - name: "{{.Tag}}"
-      from:
-        name: {{.Image}}:{{.Tag}}
-      {{if .DevSupport}}
-        kind: ImageStreamTag
-      {{else}}
-        kind: DockerImage
-      importPolicy:
-        scheduled: true
-      {{end}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -71,7 +65,7 @@
         serviceAccountName: syndesis-operator
         containers:
         - name: syndesis-operator
-          image: ' '
+          image: {{.Image}}
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 60000
@@ -89,13 +83,12 @@
             value: "syndesis-operator"
           - name: DEV_SUPPORT
             value: "{{.DevSupport}}"
+          volumeMounts:
+          - mountPath: /var/local/syndesis/backups
+            name: operator-pvc-vol
+        volumes:
+        - name: operator-pvc-vol
+          persistentVolumeClaim:
+            claimName: operator-pvc
     triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-operator
-        from:
-          kind: ImageStreamTag
-          name: syndesis-operator:{{.Tag}}
-      type: ImageChange
     - type: ConfigChange

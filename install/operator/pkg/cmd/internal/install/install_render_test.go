@@ -17,16 +17,23 @@
 package install
 
 import (
+	"path/filepath"
+	"strings"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"strings"
-	"testing"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 
 func TestInstallResourcesRender(t *testing.T) {
 
+	configFile, err := filepath.Abs("../../../../build/conf/config.yaml")
+	require.NoError(t, err)
+
+	configuration.TemplateConfig = configFile
 	f, err := generator.GetAssetsFS().Open("./install")
 	require.NoError(t, err)
 	defer f.Close()
@@ -44,6 +51,7 @@ func TestInstallResourcesRender(t *testing.T) {
 			Options: &internal.Options{
 				Namespace: "syndesis",
 			},
+
 			image:      "syndesis-operator",
 			tag:        "latest",
 			devSupport: true,

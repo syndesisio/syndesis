@@ -81,6 +81,11 @@ type ComponentsSpec struct {
 	Prometheus PrometheusConfiguration // Configuration monitoring
 	Grafana    GrafanaConfiguration    // Configuration grafana
 	Upgrade    UpgradeConfiguration    // Configuration upgrade
+	Operator   OperatorConfiguration   // Configuration Operator
+}
+
+type OperatorConfiguration struct {
+	Resources VolumeOnlyResources
 }
 
 type OauthConfiguration struct {

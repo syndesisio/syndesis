@@ -28,6 +28,9 @@ Syndesis:
             CamelVersion: "2.21.0.fuse-760011"
             CamelKRuntime: "0.3.4.fuse-740008"
     Components:
+        Operator:
+            Resources:
+                VolumeCapacity: "1Gi"
         Oauth:
             Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
             DisableSarCheck: false

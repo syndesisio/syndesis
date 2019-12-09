@@ -47,7 +47,8 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Synde
 		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
 		syndesisVersion := pkg.DefaultOperatorTag
-		target.Status.Phase = v1alpha1.SyndesisPhaseInstalling
+		target.Status.Phase = v1alpha1.SyndesisPhaseAttachingVolume
+		target.Status.PreviousPhase = syndesis.Status.Phase
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		target.Status.Version = syndesisVersion

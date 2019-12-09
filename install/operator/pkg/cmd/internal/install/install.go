@@ -40,12 +40,12 @@ const RoleName = "syndesis-operator"
 type Install struct {
 	// cli parsed config
 	*internal.Options
-	wait           bool
 	eject          string
 	image          string
 	tag            string
 	addons         string
-	customResource string
+	volumeCapacity string
+	wait           bool
 	devSupport     bool
 
 	// processing state
@@ -81,14 +81,16 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	})
 
-	cmd.AddCommand(&cobra.Command{
+	operator := &cobra.Command{
 		Use:   "operator",
 		Short: "install the operator resources (requires namespace admin privileges)",
 		Run: func(cmd *cobra.Command, args []string) {
 			err := o.installOperatorResources()
 			util.ExitOnError(err)
 		},
-	})
+	}
+	operator.PersistentFlags().StringVarP(&o.volumeCapacity, "volume-size", "", "1Gi", "Volume size for the PVC assigned to the operator pod.")
+	cmd.AddCommand(operator)
 
 	app := &cobra.Command{
 		Use:   "app",
@@ -118,7 +120,6 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
-	cmd.PersistentFlags().StringVarP(&o.customResource, "custom-resource", "", "", "path to a custom resource file to use when deploying (only used with install standalone)")
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
@@ -179,13 +180,14 @@ func (o *Install) Println(a ...interface{}) (int, error) {
 }
 
 type RenderScope struct {
-	Image         string
-	Tag           string
-	Namespace     string
-	DevSupport    bool
-	Role          string
-	Kind          string
-	EnabledAddons []string
+	VolumeCapacity string
+	Image          string
+	Tag            string
+	Namespace      string
+	DevSupport     bool
+	Role           string
+	Kind           string
+	EnabledAddons  []string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -235,13 +237,14 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 	}
 
 	resources, err := generator.Render(fromFile, RenderScope{
-		Namespace:     o.Namespace,
-		Image:         o.image,
-		Tag:           o.tag,
-		DevSupport:    o.devSupport,
-		Role:          RoleName,
-		Kind:          "Role",
-		EnabledAddons: addons,
+		VolumeCapacity: o.volumeCapacity,
+		Namespace:      o.Namespace,
+		Image:          strings.Join([]string{o.image, ":", o.tag}, ""),
+		Tag:            o.tag,
+		DevSupport:     o.devSupport,
+		Role:           RoleName,
+		Kind:           "Role",
+		EnabledAddons:  addons,
 	})
 	return resources, err
 }

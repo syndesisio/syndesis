@@ -43,6 +43,7 @@ func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []Syndesi
 	return []SyndesisOperatorAction{
 		newCheckUpdatesAction(mgr, api),
 		newInitializeAction(mgr, api),
+		newAttachVolumeAction(mgr, api),
 		newInstallAction(mgr, api),
 		newStartupAction(mgr, api),
 		newUpgradeAction(mgr, api),

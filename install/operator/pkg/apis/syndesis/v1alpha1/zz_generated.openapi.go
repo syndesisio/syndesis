@@ -22,6 +22,7 @@ func schema_pkg_apis_syndesis_v1alpha1_ComponentsSpec(ref common.ReferenceCallba
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
 				Properties: map[string]spec.Schema{
 					"oauth": {
 						SchemaProps: spec.SchemaProps{
@@ -58,11 +59,16 @@ func schema_pkg_apis_syndesis_v1alpha1_ComponentsSpec(ref common.ReferenceCallba
 							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.UpgradeConfiguration"),
 						},
 					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OperatorConfiguration"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.DatabaseConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.GrafanaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.MetaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OauthConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.PrometheusConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ServerConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.UpgradeConfiguration"},
+			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.DatabaseConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.GrafanaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.MetaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OauthConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OperatorConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.PrometheusConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ServerConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.UpgradeConfiguration"},
 	}
 }
 
@@ -71,6 +77,7 @@ func schema_pkg_apis_syndesis_v1alpha1_Syndesis(ref common.ReferenceCallback) co
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "Syndesis is the Schema for the syndeses API",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"kind": {
 						SchemaProps: spec.SchemaProps{
@@ -114,11 +121,20 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "SyndesisSpec defines the desired state of Syndesis",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"imageStreamNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Namespace where syndesis docker images are located and the operator should look after them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"routeHostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The external hostname to access Syndesis",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"demoData": {
@@ -153,8 +169,15 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisStatus(ref common.ReferenceCallba
 		Schema: spec.Schema{
 			SchemaProps: spec.SchemaProps{
 				Description: "SyndesisStatus defines the observed state of Syndesis",
+				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
 					"phase": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"previousPhase": {
 						SchemaProps: spec.SchemaProps{
 							Type:   []string{"string"},
 							Format: "",
