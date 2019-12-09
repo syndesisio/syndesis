@@ -33,6 +33,13 @@ export interface VirtualizationEdition {
   createdAt: string;
 }
 
+export interface VirtualizationMetrics {
+  startedAt: string;
+  sessions: number;
+  requestCount: number;
+  resultSetCacheHitRatio: number;
+}
+
 export interface SchemaNode {
   name: string;
   teiidName: string;

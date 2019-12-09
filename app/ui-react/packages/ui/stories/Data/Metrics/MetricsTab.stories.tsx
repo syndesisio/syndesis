@@ -1,9 +1,6 @@
-import { action } from '@storybook/addon-actions';
-import { text } from '@storybook/addon-knobs';
 import { withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 import { DvMetricsContainer } from '../../../src';
 
 const stories = storiesOf('Data/Metrics/MetricsTab', module);
@@ -11,6 +8,11 @@ stories.addDecorator(withKnobs);
 
 const title = 'No metrics data available';
 const description = 'There is no Metrics details available for this virtualization.';
+
+const requestCount = 988;
+const cacheHitRatioPct = '35%';
+const sessions = 0;
+const startedAt = 'Since 10 December 3pm';
 
 const storyNotes =
   '- Verify the cards Are shown.' +
@@ -39,42 +41,36 @@ stories
     'Metrics Tab',
       () => (
         <DvMetricsContainer
-        cacheHitProps={{
-          a11yInfoCloseButton: 'Close info popover',
-          a11yInfoPopover: 'Info popover',
-          i18nDatetime: 'Nov 18, 11:40:00 pm',
+        resultSetCacheProps={{
+          a11yInfoCloseButton: 'Close cache hit ratio popover',
+          a11yInfoPopover: 'Cache hit ratio popover',
+          cacheHitRatioPercentage: cacheHitRatioPct,
+          i18nCacheHitRatioText: 'Cache hit ratio',
           i18nInfoMessage: 'Cache hit ratios information message goes here.',
           i18nNoData: 'No data available',
-          i18nTitle: 'Cache hit ratios',
+          i18nTitle: 'Result set cache',
           loading: false,
-          percentage: '35%',
         }}
         clientSessionProps={{
-          connectionCount: 8,
-          i18nConnectionMessage: 'Connections are issuing queries',
           i18nNoData: 'No data available',
+          i18nSessionText: 'Client sessions',
           i18nTitle: 'Client sessions',
-          i18nViewAllAction: 'View all',
           loading: false,
-          onViewAll: () => alert('Implement View all'),
+          sessionCount: sessions,
         }}
         i18nNoDataTitle={'No metrics data available'}
         i18nNoDataDescription={'There is no Metrics details available for this virtualization.'}
         requestProps={{
-          a11yShowFailed: 'Show Failed Requests',
-          a11yShowSucceeded: 'Show Succeeded Requests',
-          failedCount: 129,
           i18nNoData: 'No data available',
-          i18nTitle: 'Total requests',
+          i18nRequestText: 'Total Requests',
+          i18nTitle: 'Requests',
           loading: false,
-          onShowFailed: () => alert('Implement Show Failed'),
-          onShowSucceeded: () => alert('Implement Show Succeeded'),
-          successCount: 17000,
+          requestCount,
         }}
         uptimeProps={{
           i18nNoData: 'No data available',
-          i18nSinceMessage: 'Since Oct 11, 11:47:14 pm',
-          i18nTitle: 'Uptime',
+          i18nSinceMessage: startedAt,
+          i18nTitle: 'DV Pod Uptime',
           i18nUptime: '1 day 3 hours 9 minutes',
           loading: false,
         }}
