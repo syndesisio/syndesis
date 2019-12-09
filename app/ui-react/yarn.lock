@@ -5760,9 +5760,9 @@ babel-plugin-minify-type-constructors@^0.4.3:
     babel-helper-is-void-0 "^0.4.3"
 
 babel-plugin-named-asset-import@^0.3.0, babel-plugin-named-asset-import@^0.3.1, babel-plugin-named-asset-import@^0.3.2:
-  version "0.3.4"
-  resolved "https://registry.yarnpkg.com/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-0.3.4.tgz#4a8fc30e9a3e2b1f5ed36883386ab2d84e1089bd"
-  integrity sha512-S6d+tEzc5Af1tKIMbsf2QirCcPdQ+mKUCY2H1nJj1DyA1ShwpsoxEOAwbWsG5gcXNV/olpvQd9vrUWRx4bnhpw==
+  version "0.3.5"
+  resolved "https://registry.yarnpkg.com/babel-plugin-named-asset-import/-/babel-plugin-named-asset-import-0.3.5.tgz#d3fa1a7f1f4babd4ed0785b75e2f926df0d70d0d"
+  integrity sha512-sGhfINU+AuMw9oFAdIn/nD5sem3pn/WgxAfDZ//Q3CnF+5uaho7C7shh2rKLk6sKE/XkfmyibghocwKdVjLIKg==
 
 babel-plugin-react-docgen@^2.0.2:
   version "2.0.2"
