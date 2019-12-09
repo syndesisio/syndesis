@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Java Maven modules which create Docker images
-JAVA_IMAGE_MODULES="server meta s2i"
+JAVA_IMAGE_MODULES="server meta s2i dv"
 
 # UI Maven modules wich create Docker images
 UI_IMAGE_MODULES="ui-react"
