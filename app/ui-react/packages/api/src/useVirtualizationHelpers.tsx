@@ -100,20 +100,31 @@ export const useVirtualizationHelpers = () => {
   /**
    * Requests a `.zip` file of the virtualization be exported to the filesystem.
    * @param name the name of the virtualization
+   * @param revision the revision being exported or `undefined` if the current working state should be exported
    * @param fileName the name of the output file (must end with `.zip` or won't be used)
    * @throws an `Error` if there was a problem exporting the file
    */
-  const exportVirtualization = async (name: string, fileName?: string) => {
+  const exportVirtualization = async (
+    name: string, 
+    revision?: number, 
+    fileName?: string
+  ) => {
     let zipName = fileName;
 
     if (!zipName || !zipName.endsWith('.zip')) {
-      zipName = `${name}-export.zip`;
+      zipName = `${name}`;
+      if (revision) {
+        zipName += `-v` + revision;
+      }
+      zipName += '-export.zip';
     }
+
+    const url = `${apiContext.dvApiUri}virtualizations/${name}/export`;
 
     const response = await callFetch({
       headers: apiContext.headers,
       method: 'GET',
-      url: `${apiContext.dvApiUri}virtualizations/${name}/export`,
+      url: revision ? `${url}/${revision}` : url,
     });
 
     if (!response.ok) {

@@ -243,7 +243,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Export'),
       id: VirtualizationActionId.Export,
       onClick: async () => {
-        exportVirtualization(props.virtualization.name).catch((e: any) => {
+        exportVirtualization(props.virtualization.name, props.revision).catch((e: any) => {
           // notify user of error
           pushNotification(
             t('exportVirtualizationFailed', {
