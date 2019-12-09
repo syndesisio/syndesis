@@ -1,42 +1,30 @@
 import {
-  Button,
   CardBody,
   CardHeader,
   Split,
   SplitItem,
-  Stack,
-  StackItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvRequestMetric.css';
 
 /**
- * @property {string} a11yShowFailed - the localized accessibility text for the failed request icon
- * @property {string} a11yShowSucceeded - the localized accessibility text for the succeeded request icon
- * @property {number} failedCount - the number of failed requests
  * @property {string} i18nNoData - the localized text displayed when there is no metric data
+ * @property {string} i18nRequestText - the localized text suffix for requests
  * @property {string} i18nTitle - the localize title of this metric
  * @property {boolean} loading - `true` when a backend call to fetch this metric is ongoing
- * @property {number} successCount - the number of successful requests
- * @property {() => void} onShowFailed - a callback for when the failed request icon is clicked
- * @property {() => void} onShowSucceeded - a callback for when the succeeded request icon is clicked
+ * @property {number} requestCount - the number of total requests
  */
 export interface IDvRequestMetricProps {
-  a11yShowFailed: string;
-  a11yShowSucceeded: string;
-  failedCount: number;
   i18nNoData: string;
+  i18nRequestText: string;
   i18nTitle: string;
   loading: boolean;
-  successCount: number;
-  onShowFailed: () => void;
-  onShowSucceeded: () => void;
+  requestCount: number;
 }
 
 /**
@@ -54,41 +42,17 @@ export const DvRequestMetric: React.FunctionComponent<
       <CardBody>
         {props.loading ? (
           <Spinner loading={true} inline={false} />
-        ) : props.failedCount && props.successCount ? (
-          <Stack>
-            <StackItem>
-              <Split className={'dv-request-metric__content'} gutter={'lg'}>
-                <SplitItem className={'dv-request-metric__count'}>
-                  {props.successCount}
-                </SplitItem>
-                <SplitItem className={'dv-request-metric__countIcon'}>
-                  <Button
-                    variant="plain"
-                    aria-label={props.a11yShowSucceeded}
-                    onClick={props.onShowSucceeded}
-                  >
-                    <OkIcon color={'green'} />
-                  </Button>
-                </SplitItem>
-              </Split>
-            </StackItem>
-            <StackItem>
-              <Split className={'dv-request-metric__content'} gutter={'lg'}>
-                <SplitItem className={'dv-request-metric__count'}>
-                  {props.failedCount}
-                </SplitItem>
-                <SplitItem className={'dv-request-metric__countIcon'}>
-                  <Button
-                    variant="plain"
-                    aria-label={props.a11yShowFailed}
-                    onClick={props.onShowFailed}
-                  >
-                    <ErrorCircleOIcon color={'red'} />
-                  </Button>
-                </SplitItem>
-              </Split>
-            </StackItem>
-          </Stack>
+        ) : props.requestCount &&
+          props.i18nRequestText &&
+          props.i18nRequestText.length > 0 ? (
+          <Split className={'dv-request-metric__content'} gutter={'lg'}>
+            <SplitItem className={'dv-request-metric__requestCount'}>
+              {props.requestCount}
+            </SplitItem>
+            <SplitItem className={'dv-request-metric__requestText'}>
+              {props.i18nRequestText}
+            </SplitItem>
+          </Split>
         ) : (
           <TextContent>
             <Text component={TextVariants.small}>{props.i18nNoData}</Text>

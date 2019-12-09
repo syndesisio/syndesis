@@ -1,9 +1,9 @@
-.dv-client-session-metric__connectionCount {
+.dv-client-session-metric__sessionCount {
   font-size: large;
   font-weight: 600;
 }
 
-.dv-client-session-metric__connectionMessage {
+.dv-client-session-metric__sessionText {
   font-size: small;
 }
 
