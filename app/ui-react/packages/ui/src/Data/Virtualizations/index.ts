@@ -1,4 +1,4 @@
-export * from './Details';
+export * from './Versions';
 export * from './Metrics';
 export * from './Views';
 export * from './ViewEditor';
