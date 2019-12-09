@@ -66,7 +66,11 @@
         serviceAccountName: syndesis-operator
         containers:
         - name: syndesis-operator
+          {{if .DevSupport -}}
+          image: ' '
+          {{else -}}
           image: {{.Image}}
+          {{end -}}
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 60000
@@ -93,3 +97,27 @@
             claimName: operator-pvc
     triggers:
     - type: ConfigChange
+{{- if .DevSupport}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-operator
+        from:
+          kind: ImageStreamTag
+          name: syndesis-operator:latest
+      type: ImageChange
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    labels:
+      syndesis.io/app: syndesis
+      syndesis.io/type: operator
+      syndesis.io/component: syndesis-operator
+    name: syndesis-operator
+  spec:
+    tags:
+    - name: "latest"
+      from:
+        name: syndesis-operator:latest
+        kind: ImageStreamTag
+{{end -}}

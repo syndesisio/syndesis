@@ -102,7 +102,7 @@ func (a *attachVolumeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syn
 					case v1alpha1.SyndesisPhaseMissing, v1alpha1.SyndesisPhaseNotInstalled:
 						target.Status.Phase = v1alpha1.SyndesisPhaseInstalling
 						target.Status.Reason = v1alpha1.SyndesisStatusReasonVolumeDetected
-						target.Status.Description = fmt.Sprintf("PVC %s is attached to pod %s", pvc.ClaimName, pod.Name)
+						target.Status.Description = fmt.Sprintf("PVC %s is attached to pod %s, proceed to install", pvc.ClaimName, pod.Name)
 
 						a.log.Info("Operator volume attached", "syndesis", syndesis.Name, "version", pkg.DefaultOperatorTag)
 					case v1alpha1.SyndesisPhaseInstalled:

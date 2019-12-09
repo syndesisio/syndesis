@@ -49,8 +49,8 @@ func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Synde
 		syndesisVersion := pkg.DefaultOperatorTag
 		target.Status.Phase = v1alpha1.SyndesisPhaseAttachingVolume
 		target.Status.PreviousPhase = syndesis.Status.Phase
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = ""
+		target.Status.Reason = v1alpha1.SyndesisStatusReasonCheckingVolume
+		target.Status.Description = "Checking whether operator volume is mounted"
 		target.Status.Version = syndesisVersion
 		a.log.Info("Syndesis resource initialized", "name", syndesis.Name, "version", syndesisVersion)
 	}

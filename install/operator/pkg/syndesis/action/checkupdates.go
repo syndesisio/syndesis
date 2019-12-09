@@ -39,12 +39,13 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		// Everything fine
 		return nil
 	} else {
-		// Let's start the upgrade process
+		// Let's start the upgrade process, but before we check for the presence
+		// of a volume
 		target := syndesis.DeepCopy()
 		syndesis.Status.Phase = v1alpha1.SyndesisPhaseAttachingVolume
 		syndesis.Status.PreviousPhase = target.Status.Phase
-		syndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		syndesis.Status.Description = ""
+		syndesis.Status.Reason = v1alpha1.SyndesisStatusReasonCheckingVolume
+		syndesis.Status.Description = "Checking whether operator volume is mounted"
 
 		return a.client.Update(ctx, syndesis)
 	}

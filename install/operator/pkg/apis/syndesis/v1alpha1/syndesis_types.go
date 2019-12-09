@@ -207,6 +207,7 @@ const (
 	SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
 	SyndesisStatusReasonVolumeDetected         SyndesisStatusReason = "VolumeDetected"
 	SyndesisStatusReasonCanNotDetectVolume     SyndesisStatusReason = "CanNotDetectVolume"
+	SyndesisStatusReasonCheckingVolume         SyndesisStatusReason = "CheckingVolume"
 )
 
 // =============================================================================
