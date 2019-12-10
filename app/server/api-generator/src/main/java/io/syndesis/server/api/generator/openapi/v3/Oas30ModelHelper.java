@@ -25,16 +25,15 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.common.Server;
+import io.apicurio.datamodels.core.models.common.ServerVariable;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
-import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
-import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
@@ -90,19 +89,6 @@ final class Oas30ModelHelper {
         }
 
         return openApiDoc.components.parameters;
-    }
-
-    /**
-     * Iterate through list of generic path items and collect path items of given type.
-     * @param paths given path items.
-     * @return typed list of path items.
-     */
-    static List<Oas30PathItem> getPathItems(OasPaths paths) {
-        return OasModelHelper.getPathItems(paths)
-            .stream()
-            .filter(Oas30PathItem.class::isInstance)
-            .map(Oas30PathItem.class::cast)
-            .collect(Collectors.toList());
     }
 
     static Oas30SchemaDefinition dereference(final OasSchema model, final Oas30Document openApiDoc) {
@@ -232,7 +218,7 @@ final class Oas30ModelHelper {
             return basePath;
         }
 
-        String serverUrl = Optional.ofNullable(openApiDoc.servers.get(0).url).orElse("/");
+        String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
             try {
                 basePath = new URL(serverUrl).getPath();
@@ -285,11 +271,7 @@ final class Oas30ModelHelper {
      * @return server URL scheme or "http" as default
      */
     static String getScheme(Server server) {
-        String serverUrl = server.url;
-        if (serverUrl == null) {
-            return "http";
-        }
-
+        String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
             try {
                 return new URL(serverUrl).getProtocol();
@@ -312,8 +294,8 @@ final class Oas30ModelHelper {
             return null;
         }
 
-        String serverUrl = Optional.ofNullable(openApiDoc.servers.get(0).url).orElse("/");
-        if (serverUrl.startsWith("http") || serverUrl.startsWith("ws")) {
+        String serverUrl = resolveUrl(openApiDoc.servers.get(0));
+        if (serverUrl.startsWith("http")) {
             try {
                 return new URL(serverUrl).getHost();
             } catch (MalformedURLException e) {
@@ -322,5 +304,23 @@ final class Oas30ModelHelper {
         }
 
         return null;
+    }
+
+    /**
+     * Resolve given server url and replace variable placeholders if any with default variable values. Open API 3.x
+     * supports variables with placeholders in form {variable_name} (e.g. "http://{hostname}:{port}/api/v1").
+     * @param server the server holding a URL with maybe variable placeholders.
+     * @return the server URL with all placeholders resolved or "/" by default.
+     */
+    private static String resolveUrl(Server server) {
+        String url = Optional.ofNullable(server.url).orElse("/");
+        if (server.variables != null) {
+            for (Map.Entry<String, ServerVariable> variable: server.variables.entrySet()) {
+                String defaultValue = Optional.ofNullable(variable.getValue().default_).orElse("");
+                url = url.replaceAll(String.format("\\{%s\\}", variable.getKey()), defaultValue);
+            }
+        }
+
+        return url;
     }
 }

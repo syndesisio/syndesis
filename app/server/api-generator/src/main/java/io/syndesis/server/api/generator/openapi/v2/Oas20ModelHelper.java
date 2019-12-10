@@ -23,13 +23,11 @@ import java.util.stream.Collectors;
 import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
-import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
@@ -63,19 +61,6 @@ final class Oas20ModelHelper {
             .stream()
             .filter(Oas20Parameter.class::isInstance)
             .map(Oas20Parameter.class::cast)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Iterate through list of generic path items and collect path items of given type.
-     * @param paths given path items.
-     * @return typed list of path items.
-     */
-    static List<Oas20PathItem> getPathItems(OasPaths paths) {
-        return OasModelHelper.getPathItems(paths)
-            .stream()
-            .filter(Oas20PathItem.class::isInstance)
-            .map(Oas20PathItem.class::cast)
             .collect(Collectors.toList());
     }
 
