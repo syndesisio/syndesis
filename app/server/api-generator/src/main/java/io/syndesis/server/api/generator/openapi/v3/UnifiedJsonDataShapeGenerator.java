@@ -45,7 +45,7 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Document, Oas30Operation> implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
-    private static final Predicate<Oas30Response> RESPONSE_HAS_SCHEMA = response -> Oas30ModelHelper.getSchema(response, APPLICATION_JSON) != null;
+    private static final Predicate<Oas30Response> RESPONSE_HAS_SCHEMA = response -> Oas30ModelHelper.getSchema(response, APPLICATION_JSON).isPresent();
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
@@ -65,7 +65,8 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
         }
 
         final Oas30Response response = maybeResponse.get();
-        final Oas30Schema responseSchema = Oas30ModelHelper.getSchema(response, APPLICATION_JSON);
+        final Oas30Schema responseSchema = Oas30ModelHelper.getSchema(response, APPLICATION_JSON)
+                                                           .orElseThrow(() -> new IllegalStateException("Missing response schema for data shape generation"));
         final String description = response.description;
 
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
@@ -79,10 +80,10 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
             return empty();
         }
 
-        Oas30MediaType body = Oas30ModelHelper.getMediaType(operation.requestBody, APPLICATION_JSON);
-        if (body != null) {
-            String name = ofNullable(body.getName()).orElse(operation.requestBody.description);
-            return Optional.of(new NameAndSchema(name, body.schema));
+        Optional<Oas30MediaType> body = Oas30ModelHelper.getMediaType(operation.requestBody, APPLICATION_JSON);
+        if (body.isPresent()) {
+            String name = ofNullable(body.get().getName()).orElse(operation.requestBody.description);
+            return Optional.of(new NameAndSchema(name, body.get().schema));
         }
 
         return empty();

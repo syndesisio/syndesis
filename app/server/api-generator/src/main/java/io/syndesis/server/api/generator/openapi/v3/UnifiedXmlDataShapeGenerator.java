@@ -65,12 +65,12 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Docum
 
     @Override
     protected Predicate<Oas30Response> hasSchema() {
-        return response -> Oas30ModelHelper.getSchema(response, APPLICATION_XML) != null;
+        return response -> Oas30ModelHelper.getSchema(response, APPLICATION_XML).isPresent();
     }
 
     @Override
     protected OasSchema getSchema(Oas30Response response) {
-        return Oas30ModelHelper.getSchema(response, APPLICATION_XML);
+        return Oas30ModelHelper.getSchema(response, APPLICATION_XML).orElse(null);
     }
 
     @Override
@@ -79,10 +79,10 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Docum
             return empty();
         }
 
-        Oas30MediaType body = Oas30ModelHelper.getMediaType(operation.requestBody, APPLICATION_XML);
-        if (body != null) {
-            String name = ofNullable(body.getName()).orElse(operation.requestBody.description);
-            return Optional.of(new NameAndSchema(name, body.schema));
+        Optional<Oas30MediaType> body = Oas30ModelHelper.getMediaType(operation.requestBody, APPLICATION_XML);
+        if (body.isPresent()) {
+            String name = ofNullable(body.get().getName()).orElse(operation.requestBody.description);
+            return Optional.of(new NameAndSchema(name, body.get().schema));
         }
 
         return empty();

@@ -26,7 +26,6 @@ import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
-import io.apicurio.datamodels.openapi.models.OasOperation;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
@@ -57,12 +56,27 @@ final class Oas30ModelHelper {
      * @param operation given path item.
      * @return typed list of path parameters.
      */
-    static List<Oas30Parameter> getParameters(OasOperation operation) {
-        return OasModelHelper.getParameters(operation)
+    static List<Oas30Parameter> getParameters(Oas30Operation operation) {
+        List<Oas30Parameter> parameters = OasModelHelper.getParameters(operation)
             .stream()
             .filter(Oas30Parameter.class::isInstance)
             .map(Oas30Parameter.class::cast)
             .collect(Collectors.toList());
+
+        if (Oas30FormDataHelper.hasFormDataBody(operation.requestBody)) {
+            //add form urlencoded properties as we handle those as parameters
+            Optional<Oas30MediaType> formDataContent = Oas30FormDataHelper.getFormDataContent(operation.requestBody.content);
+            formDataContent.ifPresent(oas30MediaType -> Optional.ofNullable(oas30MediaType.schema.properties).orElse(Collections.emptyMap()).forEach((name, property) -> {
+                Oas30Parameter formParameter = new Oas30Parameter(name);
+                formParameter.schema = property;
+                formParameter.in = "formData";
+                formParameter.$ref = property.$ref;
+                formParameter.description = property.description;
+                parameters.add(formParameter);
+            }));
+        }
+
+        return parameters;
     }
 
     /**
@@ -144,7 +158,7 @@ final class Oas30ModelHelper {
      * @param response the response maybe holding a media type mapping with a schema.
      * @return the schema associated with the given response.
      */
-    static Oas30Schema getSchema(Oas30Response response) {
+    static Optional<Oas30Schema> getSchema(Oas30Response response) {
         return getSchema(response, null);
     }
 
@@ -156,10 +170,9 @@ final class Oas30ModelHelper {
      * @param mediaType the media type to search for preferably when selecting the schema on the list of response media types.
      * @return the schema associated with the given response.
      */
-    static Oas30Schema getSchema(Oas30Response response, String mediaType) {
-        return Optional.ofNullable(getMediaTypeWithSchema(response.content, mediaType))
-            .map(m -> m.schema)
-            .orElse(null);
+    static Optional<Oas30Schema> getSchema(Oas30Response response, String mediaType) {
+        return getMediaTypeWithSchema(response.content, mediaType)
+            .map(m -> m.schema);
     }
 
     /**
@@ -170,7 +183,7 @@ final class Oas30ModelHelper {
      * @param mediaType the media type to search for preferably when selecting the schema on the list of request media types.
      * @return the schema associated with the given request.
      */
-    static Oas30MediaType getMediaType(Oas30RequestBody requestBody, String mediaType) {
+    static Optional<Oas30MediaType> getMediaType(Oas30RequestBody requestBody, String mediaType) {
         return getMediaTypeWithSchema(requestBody.content, mediaType);
     }
 
@@ -181,20 +194,21 @@ final class Oas30ModelHelper {
      * @param mediaType preferred media type to search first.
      * @return media type with schema defined or null.
      */
-    private static Oas30MediaType getMediaTypeWithSchema(Map<String, Oas30MediaType> content, String mediaType) {
+    private static Optional<Oas30MediaType> getMediaTypeWithSchema(Map<String, Oas30MediaType> content, String mediaType) {
         if (content == null) {
-            return null;
+            return Optional.empty();
         }
 
         if (mediaType != null && content.containsKey(mediaType)) {
-            return content.get(mediaType);
+            return Optional.of(content.get(mediaType));
         }
 
-        return content.values()
+        return content.entrySet()
             .stream()
-            .filter(media -> media.schema != null)
+            .filter(entry -> !Oas30FormDataHelper.isFormDataMediaType(entry.getKey()))
+            .filter(entry -> entry.getValue().schema != null)
             .findFirst()
-            .orElse(null);
+            .map(Map.Entry::getValue);
     }
 
     /**

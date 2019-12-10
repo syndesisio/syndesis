@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
-import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Components;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
+import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
+import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
 import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
@@ -32,9 +34,9 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class Oas20ValidationRulesTest {
+public class Oas30ValidationRulesTest {
 
-    private static final Oas20ValidationRules RULES = new Oas20ValidationRules(APIValidationContext.NONE);
+    private static final Oas30ValidationRules RULES = new Oas30ValidationRules(APIValidationContext.NONE);
 
     @Test
     public void cyclicSchemaReferencesValidationShouldOperateOnParsedModel() {
@@ -46,9 +48,9 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldNotGenerateErrorWhenOperationsArePresent() {
-        final Oas20Document openApiDoc = new Oas20Document();
-        final Oas20PathItem pathItem = new Oas20PathItem("/test");
-        pathItem.get = new Oas20Operation("get");
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/test");
+        pathItem.get = new Oas30Operation("get");
         openApiDoc.paths = openApiDoc.createPaths();
         openApiDoc.paths.addPathItem("/test", pathItem);
 
@@ -61,18 +63,19 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldNotReportIssuesForNonCyclicSchemaReferences() {
-        final Oas20Document openApiDoc = new Oas20Document();
-        final Oas20PathItem pathItem = new Oas20PathItem("/api");
-        final Oas20Operation operation = new Oas20Operation("get");
-        final Oas20Parameter parameter = new Oas20Parameter();
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/api");
+        final Oas30Operation operation = new Oas30Operation("get");
+        final Oas30Parameter parameter = new Oas30Parameter();
         parameter.$ref = "#/definitions/Request";
         operation.parameters = new ArrayList<>();
         operation.parameters.add(parameter);
 
-        Oas20Response response = new Oas20Response("200");
-        Oas20Schema responseSchema = new Oas20Schema();
+        Oas30Response response = new Oas30Response("200");
+        Oas30Schema responseSchema = new Oas30Schema();
         responseSchema.$ref = "#/definitions/Response";
-        response.schema = responseSchema;
+        Oas30MediaType mediaType = response.createMediaType("application/json");
+        mediaType.schema = responseSchema;
         operation.responses = operation.createResponses();
         operation.responses.addResponse("200", response);
 
@@ -88,7 +91,7 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldNotReportIssuesForTrivialSwagger() {
-        final Oas20Document openApiDoc = new Oas20Document();
+        final Oas30Document openApiDoc = new Oas30Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
         final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
@@ -97,10 +100,10 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldReportIssuesForCyclicSchemaReferences() {
-        final Oas20Document openApiDoc = new Oas20Document();
-        final Oas20PathItem pathItem = new Oas20PathItem("/api");
-        final Oas20Operation operation = new Oas20Operation("post");
-        final Oas20Parameter parameter = new Oas20Parameter();
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/api");
+        final Oas30Operation operation = new Oas30Operation("post");
+        final Oas30Parameter parameter = new Oas30Parameter();
         parameter.$ref = "#/definitions/Request";
         operation.parameters = new ArrayList<>();
         operation.parameters.add(parameter);
@@ -109,10 +112,11 @@ public class Oas20ValidationRulesTest {
         openApiDoc.paths = openApiDoc.createPaths();
         openApiDoc.paths.addPathItem("/api", pathItem);
 
-        Oas20SchemaDefinition schemaDefinition = new Oas20SchemaDefinition("Request");
+        Oas30Components components = openApiDoc.createComponents();
+        openApiDoc.components = components;
+        Oas30SchemaDefinition schemaDefinition = components.createSchemaDefinition("Request");
         schemaDefinition.$ref = "#/definitions/Request";
-        openApiDoc.definitions = openApiDoc.createDefinitions();
-        openApiDoc.definitions.addDefinition("Request", schemaDefinition);
+        components.addSchemaDefinition("Request", schemaDefinition);
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
@@ -122,8 +126,8 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldValidateOperationsArePresent() {
-        final Oas20Document openApiDoc = new Oas20Document();
-        final Oas20PathItem pathItem = new Oas20PathItem("/test");
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/test");
         openApiDoc.paths = openApiDoc.createPaths();
         openApiDoc.paths.addPathItem("/test", pathItem);
 
@@ -140,31 +144,31 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldValidateOperationUniqueness() {
-        final Oas20Document openApiDoc = new Oas20Document();
-        final Oas20PathItem pathItem = new Oas20PathItem("/path");
-        Oas20Operation get = new Oas20Operation("get");
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation get = new Oas30Operation("get");
         get.operationId = "o1";
         pathItem.get = get;
-        Oas20Operation post = new Oas20Operation("post");
+        Oas30Operation post = new Oas30Operation("post");
         post.operationId = "o2";
         pathItem.post = post;
         openApiDoc.paths = openApiDoc.createPaths();
         openApiDoc.paths.addPathItem("/path", pathItem);
 
-        final Oas20PathItem otherPathItem = new Oas20PathItem("/other");
-        Oas20Operation patch = new Oas20Operation("patch");
+        final Oas30PathItem otherPathItem = new Oas30PathItem("/other");
+        Oas30Operation patch = new Oas30Operation("patch");
         patch.operationId = "o2";
         otherPathItem.patch = patch;
-        Oas20Operation put = new Oas20Operation("put");
+        Oas30Operation put = new Oas30Operation("put");
         put.operationId = "o3";
         otherPathItem.put = put;
         openApiDoc.paths.addPathItem("/other", otherPathItem);
 
-        final Oas20PathItem morePathItem = new Oas20PathItem("/more");
-        Oas20Operation options = new Oas20Operation("options");
+        final Oas30PathItem morePathItem = new Oas30PathItem("/more");
+        Oas30Operation options = new Oas30Operation("options");
         options.operationId = "o4";
         morePathItem.options = options;
-        Oas20Operation delete = new Oas20Operation("delete");
+        Oas30Operation delete = new Oas30Operation("delete");
         delete.operationId = "o3";
         morePathItem.delete = delete;
         openApiDoc.paths.addPathItem("/more", morePathItem);
@@ -182,7 +186,7 @@ public class Oas20ValidationRulesTest {
 
     @Test
     public void shouldValidatePathsArePresent() {
-        final Oas20Document openApiDoc = new Oas20Document();
+        final Oas30Document openApiDoc = new Oas30Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
         final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);

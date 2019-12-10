@@ -183,7 +183,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet that needs to be updated\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"name\":{\"description\":\"Updated name of the pet\",\"type\":\"string\"},\"status\":{\"description\":\"Updated status of the pet\",\"type\":\"string\"}}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"properties\":{\"name\":{\"description\":\"Updated name of the pet\",\"title\":\"name\",\"type\":\"string\"},\"petId\":{\"description\":\"ID of pet that needs to be updated\",\"title\":\"petId\",\"type\":\"integer\"},\"status\":{\"description\":\"Updated status of the pet\",\"title\":\"status\",\"type\":\"string\"}},\"type\":\"object\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -208,7 +208,7 @@
             "unified": "true"
           },
           "name": "Request",
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to update\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"additionalMetadata\":{\"description\":\"Additional data to pass to server\",\"type\":\"string\"},\"file\":{\"description\":\"file to upload\",\"type\":\"string\"}}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"properties\":{\"additionalMetadata\":{\"description\":\"Additional data to pass to server\",\"title\":\"additionalMetadata\",\"type\":\"string\"},\"file\":{\"description\":\"file to upload\",\"title\":\"file\",\"type\":\"string\"},\"petId\":{\"description\":\"ID of pet to update\",\"title\":\"petId\",\"type\":\"integer\"}},\"type\":\"object\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",

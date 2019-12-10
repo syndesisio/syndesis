@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.api.generator.openapi.v2;
+package io.syndesis.server.api.generator.openapi.v3;
 
 import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
@@ -32,8 +32,8 @@ import java.util.stream.StreamSupport;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.Library;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
-import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
@@ -85,13 +85,13 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
     public ObjectNode json;
 
     @Parameter(2)
-    public Oas20Operation operation;
+    public Oas30Operation operation;
 
     @Parameter(3)
     public String specification;
 
     @Parameter(1)
-    public Oas20Document openApiDoc;
+    public Oas30Document openApiDoc;
 
     private static final UnifiedXmlDataShapeGenerator generator = new UnifiedXmlDataShapeGenerator();
 
@@ -165,7 +165,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         }
 
         final Validator validator = createValidator();
-        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/openapi/v2/atlas-xml-schemaset-model-v2.xsd")) {
+        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/openapi/v3/atlas-xml-schemaset-model-v2.xsd")) {
             validator.setSchemaSource(new StreamSource(in));
             final String outputSpecification = output.getSpecification();
             final ValidationResult result = validator.validateInstance(source(outputSpecification));
@@ -182,7 +182,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
         final Schema schema;
         try {
-            schema = SCHEMA_FACTORY.newSchema(UnifiedXmlDataShapeGenerator.class.getResource("/openapi/v2/atlas-xml-schemaset-model-v2.xsd"));
+            schema = SCHEMA_FACTORY.newSchema(UnifiedXmlDataShapeGenerator.class.getResource("/openapi/v3/atlas-xml-schemaset-model-v2.xsd"));
         } catch (final SAXException e) {
             throw new ExceptionInInitializerError(e);
         }
@@ -196,7 +196,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
     @Parameters
     public static Iterable<Object[]> specifications() {
-        final List<String> specifications = Collections.singletonList("/openapi/v2/petstore.json");
+        final List<String> specifications = Collections.singletonList("/openapi/v3/petstore.json");
 
         final List<Object[]> parameters = new ArrayList<>();
 
@@ -214,11 +214,11 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             } catch (final IOException e) {
                 throw new AssertionError("Unable to parse swagger specification in path as JSON: " + specification, e);
             }
-            final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specificationContent);
+            final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specificationContent);
 
             openApiDoc.paths.getPathItems()
                 .forEach(pathItem -> {
-                    Oas20ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
+                    Oas30ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
                         final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(operation);
                         if (!bodySchema.isPresent()) {
                             // by default we resort to JSON for payloads without
