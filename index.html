@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-13773-g38fffc09d6,</span>
+<span id="revnumber">version 1.1.3-13775-gd092122a4b,</span>
 <span id="revdate">2019-12-10</span>
 </div>
 <div id="toc" class="toc2">
@@ -914,13 +914,13 @@ yourscriptname::run() {
 Usage: syndesis build [... options ...]
 
 Options for build:
-    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
-        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
+    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta, dv)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k, dv
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i, dv)
                                    and create images
         --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module &lt;m1&gt;,&lt;m2&gt;, ..     Build modules
-                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade, dv
                                    Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
@@ -1062,6 +1062,14 @@ modules that combine a set of Maven submodules in a logical unit or individual s
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>dv</strong></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DV image provides the backend services to Syndesis UI to support the Data Virtualization feature</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">✔︎</p></td>
+<td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
 </table>
@@ -2073,7 +2081,7 @@ The staging repository on this Sonatype Nexus is validated and closed.</p>
 Otherwise, it is assumed that the user is already logged in.</p>
 </li>
 <li>
-<p>The Docker images are created with <code>mvn -Prelease,image package</code> in the <code>server</code>, <code>meta</code>, <code>ui</code> and <code>s2i</code> modules.</p>
+<p>The Docker images are created with <code>mvn -Prelease,image package</code> in the <code>server</code>, <code>meta</code>, <code>ui</code> , <code>dv</code> and <code>s2i</code> modules.</p>
 </li>
 </ul>
 </div>
@@ -3599,8 +3607,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-13773-g38fffc09d6<br>
-Last updated 2019-12-10 09:16:36 UTC
+Version 1.1.3-13775-gd092122a4b<br>
+Last updated 2019-12-10 09:53:08 UTC
 </div>
 </div>
 </body>
