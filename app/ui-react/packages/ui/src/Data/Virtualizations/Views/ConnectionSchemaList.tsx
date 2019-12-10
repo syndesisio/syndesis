@@ -2,12 +2,17 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  Flex,
+  FlexItem,
+  Text,
+  TextContent,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, PageSection } from '../../../Layout';
+import { ButtonLink } from '../../../Layout';
 import './ConnectionSchemaList.css';
 
 export interface IConnectionSchemaListProps {
@@ -22,21 +27,41 @@ export const ConnectionSchemaList: React.FunctionComponent<
   IConnectionSchemaListProps
 > = props => {
   return (
-    <PageSection noPadding={true}>
+    <>
       {props.hasListData ? (
-        <>
-          <ButtonLink
-            className={'connection-schema-list-create-connection-button'}
-            data-testid={'dv-connection-schema-list-create-connection-button'}
-            href={props.linkToConnectionCreate}
-            as={'primary'}
-          >
-            {props.i18nLinkCreateConnection}
-          </ButtonLink>
-          <div className={'connection-schema-list'}>
-            <ListView>{props.children}</ListView>
-          </div>
-        </>
+        <Flex
+          breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
+          className={'connection-schema-list_content'}
+        >
+          <FlexItem className={'connection-schema-list_headingSection'}>
+            <Flex>
+              <FlexItem>
+                <TextContent>
+                  <Text className={'connection-schema-list_heading_text'} component={TextVariants.h2}>
+                    patternfly 4 filter |
+                  </Text>
+                </TextContent>
+              </FlexItem>
+              <FlexItem>
+                <ButtonLink
+                  className={'connection-schema-list-create-connection-button'}
+                  data-testid={
+                    'dv-connection-schema-list-create-connection-button'
+                  }
+                  href={props.linkToConnectionCreate}
+                  as={'primary'}
+                >
+                  {props.i18nLinkCreateConnection}
+                </ButtonLink>
+              </FlexItem>
+            </Flex>
+          </FlexItem>
+          <FlexItem className={'connection-schema-list_contentSection'}>
+            <div className={'connection-schema-list'}>
+              <ListView>{props.children}</ListView>
+            </div>
+          </FlexItem>
+        </Flex>
       ) : (
         <EmptyState variant={EmptyStateVariant.full}>
           <Title headingLevel="h5" size="lg">
@@ -55,6 +80,6 @@ export const ConnectionSchemaList: React.FunctionComponent<
           </ButtonLink>
         </EmptyState>
       )}
-    </PageSection>
+    </>
   );
 };

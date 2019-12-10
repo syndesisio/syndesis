@@ -5,6 +5,21 @@
   margin-top: 10px;
 }
 .connection-schema-list {
-    max-height: 40em;
-    overflow-y: auto;
-  }
+  max-height: 40em;
+  overflow-y: auto;
+}
+.connection-schema-list_content {
+  padding: 10px 0 10px 0;
+  height: 100%;
+}
+.connection-schema-list_contentSection{
+  flex-grow: 1;
+  padding: 0 10px;
+}
+.connection-schema-list_headingSection{
+  border-bottom: 2px solid #E1E1E1;
+  margin: 0 !important;
+}
+.connection-schema-list_heading_text{
+  padding-left: 25px;
+}

@@ -1,6 +1,5 @@
 export * from './VirtualizationNavBar';
 export * from './ViewsImportSteps';
-export * from './ViewCreateSteps';
 export * from './ViewInfosContent';
 export * from './DvConnections';
 export * from './VirtualizationUtils';

@@ -1,0 +1,25 @@
+.preview-selected-Connection{
+    padding: 10px;
+    height: 100%;
+}
+
+.preview-selected-Connection_heading_text{
+    padding-left: 25px;
+  }
+  
+.preview-selected-Connection_headingSection{
+    border-bottom: 2px solid #E1E1E1;
+    margin: 0 !important;
+}
+
+.preview-selected-Connection_contentSection{
+    flex-grow: 1;
+  }
+
+.preview-selected-Connection-empty{
+    text-align: center;
+}
+
+.preview-selected-Connection-empty_text{
+    color: #BBBBBB;
+}
