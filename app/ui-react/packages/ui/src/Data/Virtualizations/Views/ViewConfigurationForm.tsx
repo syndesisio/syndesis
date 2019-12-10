@@ -1,5 +1,6 @@
-import { Alert, Card, CardBody, Form } from '@patternfly/react-core';
+import { Alert, Form } from '@patternfly/react-core';
 import * as React from 'react';
+import './ViewConfigurationForm.css'
 
 export interface IViewConfigurationFormValidationResult {
   message: string;
@@ -27,9 +28,8 @@ export const ViewConfigurationForm: React.FunctionComponent<
 IViewConfigurationFormProps
 > = props => {
   return (
-    <Card>
-      <CardBody>
-        <Form
+    <div className={'view-configuration-form'}>
+      <Form
           isHorizontal={true}
           data-testid={'view-configuration-form'}
           onSubmit={props.handleSubmit}
@@ -41,7 +41,6 @@ IViewConfigurationFormProps
           ))}
           {props.children}
         </Form>
-      </CardBody>
-    </Card>
+    </div>
   );
 }

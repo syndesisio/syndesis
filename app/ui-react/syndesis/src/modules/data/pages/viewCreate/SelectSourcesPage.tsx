@@ -1,9 +1,10 @@
 import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
-import { ViewCreateLayout } from '@syndesis/ui';
+import { CreateViewHeader, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import resolvers from '../../../resolvers';
-import { ConnectionSchemaContent, ViewCreateSteps } from '../../shared';
+import { ConnectionSchemaContent } from '../../shared';
+import { ConnectionPreviewSchema } from '../../shared/ConnectionPreviewSchema';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -40,7 +41,19 @@ export const SelectSourcesPage: React.FunctionComponent<
 
   return (
     <ViewCreateLayout
-      header={<ViewCreateSteps step={1} />}
+      header={<CreateViewHeader 
+        step={1}
+        cancelHref={resolvers.data.virtualizations.views.root({
+          virtualization,
+        })}
+        nextHref={resolvers.data.virtualizations.views.createView.selectName({
+          schemaNodeInfo,
+          virtualization,
+        })}
+        isNextDisabled={props.selectedSchemaNodes.length > 1}
+        isNextLoading={false}
+        isLastStep={false}
+        />}
       content={
         <ConnectionSchemaContent
           onNodeSelected={props.handleNodeSelected}
@@ -48,16 +61,9 @@ export const SelectSourcesPage: React.FunctionComponent<
           selectedSchemaNodes={props.selectedSchemaNodes}
         />
       }
-      cancelHref={resolvers.data.virtualizations.views.root({
-        virtualization,
-      })}
-      nextHref={resolvers.data.virtualizations.views.createView.selectName({
-        schemaNodeInfo,
-        virtualization,
-      })}
-      isNextDisabled={props.selectedSchemaNodes.length > 1}
-      isNextLoading={false}
-      isLastStep={false}
+      preview={<ConnectionPreviewSchema
+        selectedSchemaNodes={props.selectedSchemaNodes}
+      />}
     />
   );
 };

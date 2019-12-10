@@ -4,14 +4,13 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
-import { IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
+import { CreateViewHeader, IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
-import { ViewCreateSteps } from '../../shared';
 import { generateViewDefinition } from '../../shared/VirtualizationUtils';
 
 export interface ISaveForm {
@@ -178,15 +177,8 @@ export const SelectNamePage: React.FunctionComponent = () => {
     >
       {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) => (
         <ViewCreateLayout
-          header={<ViewCreateSteps step={2} />}
-          content={
-            <ViewConfigurationForm
-              validationResults={validationResults}
-              handleSubmit={handleSubmit}
-            >
-              {fields}
-            </ViewConfigurationForm>
-          }
+        header={<CreateViewHeader 
+          step={2}
           cancelHref={resolvers.data.virtualizations.views.root({
             virtualization: state.virtualization,
           })}
@@ -197,6 +189,15 @@ export const SelectNamePage: React.FunctionComponent = () => {
           isNextDisabled={!isValid}
           isNextLoading={isSubmitting}
           isLastStep={true}
+          />}
+          content={
+            <ViewConfigurationForm
+              validationResults={validationResults}
+              handleSubmit={handleSubmit}
+            >
+              {fields}
+            </ViewConfigurationForm>
+          }
         />
       )}
     </AutoForm>

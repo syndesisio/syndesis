@@ -11,3 +11,85 @@
   padding-bottom: 10px;
   padding-left: 20px;
 }
+
+.virtualization-view-editor-layout {
+  flex: 1 0;
+  display: flex;
+  flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.virtualization-view-editor-layout__body {
+  display: flex;
+  flex: 1 0;
+  width: 100%;
+}
+
+.virtualization-view-editor-layout__contentOuter {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+}
+
+.virtualization-view-editor-layout__contentInner {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
+}
+
+.virtualization-view-editor-layout__card {
+  height: 100%;
+}
+.virtualization-view-editor-layout__grid {
+  height: 100%;
+  min-height: 350px;
+}
+
+.virtualization-view-editor-layout__header {
+  border-bottom: 1px solid #ededed;
+}
+.virtualization-view-editor-layout_connection{
+  border-right: 2px solid #E1E1E1;
+  padding-top: 10px ;
+  overflow-y: auto;
+}
+
+.virtualization-view-editor-layout_previewSection{
+  padding: 10px;
+  overflow-y: auto;
+}
+
+.class8{
+  height: 100%;
+  border: 2px solid red;
+}
+
+.hidePreview{
+  display: none;
+}
+
+.virtualization-view-editor-layout__contentOuter .toolbar-pf {
+  background-color: var(--pf-global--BackgroundColor--200);
+}
+
+@media (min-width: 768px) {
+  .virtualization-view-editor-layout {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+  .virtualization-view-editor-layout__body {
+    overflow: hidden;
+  }
+
+  .virtualization-view-editor-layout__contentOuter {
+    overflow: auto;
+    padding: 0;
+    width: 100%;
+  }
+  .virtualization-view-editor-layout__contentInner {
+    display: flex;
+    flex-flow: column;
+  }
+}
