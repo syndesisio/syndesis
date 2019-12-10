@@ -36,7 +36,6 @@ public final class RestDataVirtualization {
     private String id;
     private String name;
     private String description;
-    private String serviceViewModel;
     private String publishedState;
     private String podNamespace;
     private String publishPodName;
@@ -45,6 +44,7 @@ public final class RestDataVirtualization {
     private List<String> usedBy;
     private Long publishedRevision;
     private boolean modified;
+    private long editionCount;
 
     /**
      * Constructor for use when deserializing
@@ -83,20 +83,6 @@ public final class RestDataVirtualization {
      */
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    /**
-     * @return the service view model name (can be empty)
-     */
-    public String getServiceViewModel() {
-        return this.serviceViewModel;
-    }
-
-    /**
-     * @param modelName the view model name to set
-     */
-    public void setServiceViewModel(String modelName) {
-        this.serviceViewModel = modelName;
     }
 
     /**
@@ -226,5 +212,13 @@ public final class RestDataVirtualization {
 
     public void setPublishedRevision(Long publishedRevision) {
         this.publishedRevision = publishedRevision;
+    }
+
+    public long getEditionCount() {
+        return editionCount;
+    }
+
+    public void setEditionCount(long editionCount) {
+        this.editionCount = editionCount;
     }
 }

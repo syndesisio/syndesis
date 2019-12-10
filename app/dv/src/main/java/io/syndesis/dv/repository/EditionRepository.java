@@ -44,4 +44,6 @@ public interface EditionRepository extends JpaRepository<Edition, String> {
     @Query(value = "select dv_export from edition where id = :id", nativeQuery = true)
     byte[] findExport(@Param("id") String id);
 
+    long countByDataVirtualizationName(String virtualization);
+
 }
