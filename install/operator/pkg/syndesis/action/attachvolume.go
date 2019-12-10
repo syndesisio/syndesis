@@ -95,7 +95,7 @@ func (a *attachVolumeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syn
 				}
 
 				if pvc != nil {
-					// PVC is attached we move on to the next phase de[ending on where
+					// PVC is attached we move on to the next phase depending on where
 					// we come from
 					target.Status.Version = pkg.DefaultOperatorTag
 					switch target.Status.PreviousPhase {
