@@ -135,6 +135,7 @@ public class IntegrationTestPublish {
 
         virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
         assertTrue(virtResponse.getBody().isModified());
+        assertEquals(1, virtResponse.getBody().getEditionCount());
 
         //publish again
         statusResponse = restTemplate.exchange(
@@ -165,6 +166,7 @@ public class IntegrationTestPublish {
 
         virtResponse = restTemplate.getForEntity("/v1/virtualizations/{name}", RestDataVirtualization.class, dvName);
         assertFalse(virtResponse.getBody().isModified());
+        assertEquals(2, virtResponse.getBody().getEditionCount());
 
         view = restTemplate.getForEntity(
                 "/v1/editors/{id}",

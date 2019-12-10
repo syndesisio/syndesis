@@ -159,7 +159,6 @@ public final class DataVirtualizationService extends DvService {
 
     private RestDataVirtualization createRestDataVirtualization(final DataVirtualization virtualization) throws KException {
         RestDataVirtualization entity = new RestDataVirtualization(virtualization);
-        entity.setServiceViewModel(virtualization.getName());
         // Set published status of virtualization
         BuildStatus status = this.openshiftClient.getVirtualizationStatus(virtualization.getName());
         if (status != null) {
@@ -171,6 +170,8 @@ public final class DataVirtualizationService extends DvService {
             entity.setPublishedRevision(status.getDeploymentVersion());
         }
         entity.setEmpty(this.getWorkspaceManager().findViewDefinitionsNames(virtualization.getName()).isEmpty());
+
+        entity.setEditionCount(this.getWorkspaceManager().getEditionCount(virtualization.getName()));
         return entity;
     }
 

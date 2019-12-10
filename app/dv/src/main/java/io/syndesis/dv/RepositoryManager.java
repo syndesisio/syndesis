@@ -112,4 +112,6 @@ public interface RepositoryManager {
     void saveEditionExport(Edition edition, byte[] byteArray);
 
     byte[] findEditionExport(Edition edition);
+
+    long getEditionCount(String virtualization);
 }
