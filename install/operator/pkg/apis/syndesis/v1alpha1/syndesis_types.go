@@ -94,8 +94,10 @@ type DatabaseConfiguration struct {
 	URL string `url:"url,omitempty"`
 
 	// If specified, use an external database instead of the installed by syndesis
-	ExternalDbURL string              `json:"externalDbURL,omitempty"`
-	Resources     ResourcesWithVolume `json:"resources,omitempty"`
+	ExternalDbURL string `json:"externalDbURL,omitempty"`
+
+	// Resource provision requirements of the database
+	Resources ResourcesWithPersistentVolume `json:"resources,omitempty"`
 }
 
 type PrometheusConfiguration struct {
@@ -122,6 +124,24 @@ type UpgradeConfiguration struct {
 
 type Resources struct {
 	Memory string `json:",inline,omitempty"`
+}
+
+// +kubebuilder:validation:Enum=ReadWriteOnce;ReadOnlyMany;ReadWriteMany
+type VolumeAccessMode string
+
+const (
+	ReadWriteOnce VolumeAccessMode = "ReadWriteOnce"
+	ReadOnlyMany  VolumeAccessMode = "ReadOnlyMany"
+	ReadWriteMany VolumeAccessMode = "ReadWriteMany"
+)
+
+type ResourcesWithPersistentVolume struct {
+	Memory             string            `json:",inline,omitempty"`
+	VolumeCapacity     string            `json:"volumeCapacity,omitempty"`
+	VolumeName         string            `json:"volumeName,omitempty"`
+	VolumeAccessMode   VolumeAccessMode  `json:"volumeAccessMode,omitempty"`
+	VolumeStorageClass string            `json:"volumeStorageClass,omitempty"`
+	VolumeLabels       map[string]string `json:"volumeLabels,omitempty"`
 }
 
 type ResourcesWithVolume struct {

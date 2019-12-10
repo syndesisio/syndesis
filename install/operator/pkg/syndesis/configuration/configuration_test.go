@@ -54,6 +54,7 @@ func Test_loadFromFile(t *testing.T) {
 				t.Errorf("loadFromFile() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
+
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("loadFromFile() got = %v, want %v", got, tt.want)
 			}
@@ -94,6 +95,11 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Database: DatabaseConfiguration{
 							Image: "DATABASE_IMAGE", ImageStreamNamespace: "DATABASE_NAMESPACE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
+							Resources: ResourcesWithPersistentVolume{
+								VolumeAccessMode:   "ReadWriteOnce",
+								VolumeStorageClass: "nfs-storage-class1",
+								VolumeName:         "nfs0002",
+							},
 						},
 						Server: ServerConfiguration{
 							Image: "SERVER_IMAGE",
@@ -126,6 +132,11 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Database: DatabaseConfiguration{
 							Image: "postgresql:9.6", ImageStreamNamespace: "openshift",
 							Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
+							Resources: ResourcesWithPersistentVolume{
+								VolumeAccessMode:   "ReadWriteMany",
+								VolumeStorageClass: "nfs-storage-class",
+								VolumeName:         "nfs0001",
+							},
 						},
 						Server: ServerConfiguration{Image: "docker.io/syndesis/syndesis-server:latest"},
 					},
@@ -138,6 +149,8 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"UPGRADE_IMAGE": "UPGRADE_IMAGE", "DATABASE_NAMESPACE": "DATABASE_NAMESPACE", "DATABASE_IMAGE": "DATABASE_IMAGE",
 				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "CAMELK_IMAGE": "CAMELK_IMAGE",
+				"DATABASE_VOLUME_NAME": "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
+				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce",
 			},
 			wantErr: false,
 		},
@@ -367,9 +380,10 @@ func getConfigLiteral() *Config {
 					Name:                 "syndesis",
 					URL:                  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
 					Exporter:             ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
-					Resources: ResourcesWithVolume{
-						Memory:         "255Mi",
-						VolumeCapacity: "1Gi",
+					Resources: ResourcesWithPersistentVolume{
+						Memory:           "255Mi",
+						VolumeCapacity:   "1Gi",
+						VolumeAccessMode: string(v1alpha1.ReadWriteOnce),
 					},
 				},
 				Prometheus: PrometheusConfiguration{

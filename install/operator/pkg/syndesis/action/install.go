@@ -128,6 +128,17 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if err != nil {
 			return err
 		}
+
+		//
+		// Log the possible combination of values chosen for the db persistent volume claim
+		//
+		if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
+			a.log.Info("Will bind sydnesis-db to persistent volume with criteria ",
+				"volume-access-mode", configuration.Syndesis.Components.Database.Resources.VolumeAccessMode,
+				"volume-name", configuration.Syndesis.Components.Database.Resources.VolumeName,
+				"storage-class", configuration.Syndesis.Components.Database.Resources.VolumeStorageClass)
+		}
+
 		all = append(all, dbResources...)
 	}
 

@@ -61,6 +61,7 @@ Syndesis:
             Resources:
                 Memory: "255Mi"
                 VolumeCapacity: "1Gi"
+                VolumeAccessMode: "ReadWriteOnce"
         Server:
             Image: "docker.io/syndesis/syndesis-server:latest"
             Resources:

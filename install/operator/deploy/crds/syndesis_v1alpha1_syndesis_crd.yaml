@@ -83,8 +83,19 @@ spec:
                       description: Name of the PostgreSQL database accessed
                       type: string
                     resources:
+                      description: Resource provision requirements of the database
                       properties:
+                        volumeAccessMode:
+                          type: string
                         volumeCapacity:
+                          type: string
+                        volumeLabels:
+                          additionalProperties:
+                            type: string
+                          type: object
+                        volumeName:
+                          type: string
+                        volumeStorageClass:
                           type: string
                       type: object
                     user:
