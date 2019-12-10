@@ -7,6 +7,10 @@ const talkback = require('talkback');
 // Disable self-signed certificate check
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
+function cleanTapeReqUrl(url) {
+  return url.replace(/[^a-zA-Z0-9_\/-]/g,'');
+}
+
 const server = async argv => {
   const server = talkback({
     host: argv.host,
@@ -37,8 +41,9 @@ const server = async argv => {
     summary: argv.summary,
     debug: argv.debug,
     tapeNameGenerator: (tapeNumber, tape) => {
+      const newTapeReqUrl = cleanTapeReqUrl(tape.req.url);
       return path.normalize(
-        `${tape.req.headers[argv.sessionHeader]}/${tape.req.url}/${tapeNumber}`
+        `${tape.req.headers[argv.sessionHeader]}/${newTapeReqUrl}/${tapeNumber}`
       );
     },
   });
