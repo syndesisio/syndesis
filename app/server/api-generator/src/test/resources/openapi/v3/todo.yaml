@@ -144,4 +144,5 @@ components:
           type: "integer"
   securitySchemes:
     username_password:
-      type: "basic"
+      type: "http"
+      scheme: "basic"

@@ -18,4 +18,5 @@ paths:
 components:
   securitySchemes:
     username_password:
-      type: "basic"
+      type: "http"
+      scheme: "basic"

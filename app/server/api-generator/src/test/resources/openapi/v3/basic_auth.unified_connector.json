@@ -26,7 +26,7 @@
     "basePath": "/api",
     "componentName": "connector-rest-swagger-http4",
     "host": "http://sample.io",
-    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"http://sample.io/api\"}],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\"}}},\"components\":{\"securitySchemes\":{\"username_password\":{\"type\":\"basic\"}}}}"
+    "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"http://sample.io/api\"}],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\"}}},\"components\":{\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
   },
   "connectorCustomizers": [
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
