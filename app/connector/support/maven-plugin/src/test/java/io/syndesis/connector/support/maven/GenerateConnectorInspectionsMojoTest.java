@@ -23,6 +23,8 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 
 import com.fasterxml.jackson.core.JsonParseException;
@@ -125,12 +127,34 @@ public class GenerateConnectorInspectionsMojoTest {
         DataShape enriched = GenerateConnectorInspectionsMojo.generateInspections(new URL[0], source);
 
         assertThat(enriched.getSpecification()).isNotEmpty();
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).isPresent();
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).get().hasFieldOrPropertyWithValue("name", "element");
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).get().extracting("specification").isNotEmpty();
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).isPresent();
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).get().hasFieldOrPropertyWithValue("name", "collection");
-        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).get().extracting("specification").isNotEmpty();
+        final Optional<DataShape> variantElement = enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
+        assertThat(variantElement).hasValueSatisfying(d -> {
+            assertThat(d).isEqualToIgnoringGivenFields(
+                new DataShape.Builder()
+                    .name("element")
+                    .kind(DataShapeKinds.JAVA)
+                    .type(MyShapeVariant.class.getName())
+                    .putMetadata("variant", "element")
+                    .variants(Collections.emptyList())
+                    .build(),
+                "specification");
+            assertThat(d.getSpecification()).isNotEmpty();
+        });
+        final Optional<DataShape> variantCollection = enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION);
+        assertThat(variantCollection).hasValueSatisfying(d -> {
+            assertThat(d).isEqualToIgnoringGivenFields(
+                new DataShape.Builder()
+                    .name("collection")
+                    .kind(DataShapeKinds.JAVA)
+                    .type(MyShape.class.getName())
+                    .collectionType("List")
+                    .collectionClassName("java.util.ArrayList")
+                    .putMetadata("variant", "collection")
+                    .build(),
+                "specification", "variants");
+            assertThat(d.getSpecification()).isNotEmpty();
+            assertThat(d.getVariants()).containsOnly(variantElement.get());
+        });
     }
 
     private File getFile(String fileName) throws Exception {
