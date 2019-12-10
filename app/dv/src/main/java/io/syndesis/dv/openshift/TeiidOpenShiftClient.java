@@ -1072,6 +1072,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         createODataService(client, namespace, openShiftName, ProtocolType.ODATA.id(), 8080);
         createService(client, namespace, openShiftName, ProtocolType.JDBC.id(), 31000, 31000);
         createService(client, namespace, openShiftName, ProtocolType.PG.id(), 35432, 5432);
+        createService(client, namespace, openShiftName, ProtocolType.JOLOKIA.id(), JOLOKIA_PORT, JOLOKIA_PORT);
         if (!this.config.isExposeVia3scale()) {
             createRoute(client, namespace, openShiftName, ProtocolType.ODATA.id());
         }
