@@ -73,7 +73,7 @@ public class OpenApiGeneratorTest {
     @Test
     public void testEmptyOperationSummary() throws IOException {
         final ProvidedApiTemplate template = new ProvidedApiTemplate(dummyConnection(), "fromAction", "toAction");
-        final String specification = TestHelper.resource("/swagger/empty-summary.json");
+        final String specification = TestHelper.resource("/openapi/v2/empty-summary.json");
         final OpenApiGenerator generator = new OpenApiGenerator();
 
         final APIIntegration apiIntegration = generator.generateIntegration(specification, template);

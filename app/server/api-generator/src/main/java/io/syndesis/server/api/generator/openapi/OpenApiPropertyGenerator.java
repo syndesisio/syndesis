@@ -159,7 +159,7 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
         }
 
         final List<S> supportedSecuritySchemes = securitySchemes.stream()
-            .filter(scheme -> type.getName().equals(scheme.type))
+            .filter(scheme -> type.equalTo(scheme.type))
             .filter(scheme -> SupportedAuthenticationTypes.supports(scheme.type, getFlow(scheme)))
             .collect(Collectors.toList());
 

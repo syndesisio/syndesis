@@ -23,6 +23,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_JSON;
+import static io.syndesis.server.api.generator.openapi.DataShapeGenerator.APPLICATION_XML;
 import static io.syndesis.server.api.generator.openapi.v2.UnifiedDataShapeGenerator.supports;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -31,10 +33,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class UnifiedDataShapeGeneratorTest {
-
-    private static final String APPLICATION_JSON = "application/json";
-
-    private static final String APPLICATION_XML = "application/xml";
 
     @Parameter(1)
     public List<String> defaultMimes;
@@ -62,7 +60,6 @@ public class UnifiedDataShapeGeneratorTest {
             new Object[] {APPLICATION_JSON, emptyList(), null, false}, //
             new Object[] {APPLICATION_XML, null, emptyList(), false}, //
             new Object[] {APPLICATION_JSON, null, emptyList(), false}, //
-            new Object[] {APPLICATION_XML, emptyList(), emptyList(), false}, //
             new Object[] {APPLICATION_XML, emptyList(), emptyList(), false}, //
             new Object[] {APPLICATION_JSON, emptyList(), emptyList(), false}, //
             new Object[] {APPLICATION_XML, emptyList(), singletonList(APPLICATION_JSON), false}, //

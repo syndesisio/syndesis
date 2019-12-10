@@ -1,0 +1,78 @@
+---
+openapi: "3.0.2"
+info:
+  title: "Complex XML"
+  version: "1.0"
+servers:
+- url: "http://example.com/api"
+paths:
+  /complex/{pathParam}:
+    post:
+      requestBody:
+        content:
+          application/xml:
+            schema:
+              $ref: "#/components/schemas/Complex"
+        required: true
+      parameters:
+      - name: "pathParam"
+        schema:
+          type: "string"
+        in: "path"
+        required: true
+      - name: "queryParam"
+        schema:
+          type: "integer"
+        in: "query"
+        required: false
+      responses:
+        default:
+          description: "OK"
+      operationId: "complexOperation"
+components:
+  schemas:
+    Complex:
+      type: "object"
+      properties:
+        id:
+          minimum: 0
+          type: "integer"
+          xml:
+            attribute: true
+        date:
+          format: "date-time"
+          type: "string"
+          xml:
+            name: "date-time"
+        status:
+          default: "value2"
+          enum:
+          - "value1"
+          - "value2"
+          - "value3"
+          type: "string"
+        children:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Child"
+          xml:
+            wrapped: true
+        complete:
+          default: false
+          type: "boolean"
+      xml:
+        name: "complex"
+        namespace: "http://example.com/Complex"
+    Child:
+      type: "object"
+      properties:
+        name:
+          minLength: 1
+          type: "string"
+          xml:
+            attribute: true
+        description:
+          type: "string"
+      xml:
+        name: "child"
+        namespace: "http://example.com/Child"

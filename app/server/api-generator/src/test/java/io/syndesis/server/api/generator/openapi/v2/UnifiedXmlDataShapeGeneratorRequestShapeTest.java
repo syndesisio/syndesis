@@ -58,7 +58,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
 
     public UnifiedXmlDataShapeGeneratorRequestShapeTest() throws IOException {
         final String specification;
-        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/swagger/petstore.swagger.json")) {
+        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/openapi/v2/petstore.json")) {
             specification = IOUtils.toString(in, StandardCharsets.UTF_8);
         }
 
@@ -80,7 +80,7 @@ public class UnifiedXmlDataShapeGeneratorRequestShapeTest {
         softly.assertAll();
 
         final String expectedSpecification;
-        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/swagger/" + schemaset)) {
+        try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/openapi/v2/" + schemaset)) {
             expectedSpecification = IOUtils.toString(in, StandardCharsets.UTF_8);
         }
 

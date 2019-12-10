@@ -30,7 +30,6 @@ import io.syndesis.server.api.generator.openapi.OpenApiSecurityScheme;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.junit.Test;
 
-import static io.syndesis.server.api.generator.openapi.v2.Oas20PropertyGenerators.createHostUri;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class Oas20PropertyGeneratorsTest {
@@ -58,12 +57,6 @@ public class Oas20PropertyGeneratorsTest {
                 .addEnum(PropertyValue.Builder.of("basic:basic-auth", "HTTP Basic Authentication - basic-auth"))
                 .addEnum(PropertyValue.Builder.of("apiKey:api-key", "API Key - api-key"))
                 .build());
-    }
-
-    @Test
-    public void shouldCreateHostUri() {
-        assertThat(createHostUri("scheme", "host", -1)).isEqualTo("scheme://host");
-        assertThat(createHostUri("scheme", "host", 8080)).isEqualTo("scheme://host:8080");
     }
 
     @Test
