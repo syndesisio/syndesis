@@ -40,7 +40,7 @@ public class LRUSoftCacheTest {
 
     @Test
     public void testGuavaSoftCacheEmptiedOnHeapFull() {
-        Cache<String, byte[]> cache = new GuavaSoftCache<>(MAX_ELEMENTS);
+        Cache<String, byte[]> cache = new LRUSoftCache<>(MAX_ELEMENTS);
         doTest(cache);
     }
 

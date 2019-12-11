@@ -41,7 +41,7 @@ public class LRUCacheManager implements CacheManager {
     @Override
     public <K, V> Cache<K, V> getCache(final String name, boolean soft) {
         Cache<K, V> cache = (Cache<K, V>) caches.computeIfAbsent(name, n -> this.newCache(soft));
-        if ((soft && !(cache instanceof GuavaSoftCache)) || (!soft && (cache instanceof GuavaSoftCache))) {
+        if ((soft && !(cache instanceof LRUSoftCache)) || (!soft && (cache instanceof LRUSoftCache))) {
             LOG.warn("Cache {} is being used in mixed 'soft' and 'hard' mode", name);
         }
         return cache;
@@ -49,7 +49,7 @@ public class LRUCacheManager implements CacheManager {
 
     private <K, V> Cache<K, V> newCache(boolean soft) {
         if (soft) {
-            return new GuavaSoftCache<>(maxElements);
+            return new LRUSoftCache<>(maxElements);
         }
         return new LRUDefaultCache<>(maxElements);
     }
