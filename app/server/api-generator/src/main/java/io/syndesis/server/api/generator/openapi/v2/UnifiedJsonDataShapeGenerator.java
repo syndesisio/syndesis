@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.api.generator.openapi.v2;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -24,16 +23,11 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.apicurio.datamodels.openapi.models.OasParameter;
-import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasResponse;
-import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinition;
-import io.apicurio.datamodels.openapi.v2.models.Oas20ParameterDefinitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.syndesis.common.model.DataShape;
@@ -43,7 +37,6 @@ import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.apache.commons.lang3.StringUtils;
 
-import static java.util.Optional.empty;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -79,34 +72,12 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
 
     @Override
     public List<OasResponse> resolveResponses(Oas20Document openApiDoc, List<OasResponse> operationResponses) {
-        if (openApiDoc.responses == null) {
-            return operationResponses;
-        }
-
-        List<OasResponse> responses = new ArrayList<>();
-
-        for (OasResponse response : operationResponses) {
-            if (response.$ref != null) {
-                responses.add(openApiDoc.responses.getResponse(OasModelHelper.getReferenceName(response.$ref)));
-            } else {
-                responses.add(response);
-            }
-        }
-
-        return responses;
+        return Oas20DataShapeGeneratorHelper.resolveResponses(openApiDoc, operationResponses);
     }
 
     @Override
     public Optional<NameAndSchema> findBodySchema(Oas20Operation operation) {
-        Optional<OasParameter> maybeBody = Oas20ModelHelper.findBodyParameter(operation);
-
-        if (maybeBody.isPresent()) {
-            OasParameter body = maybeBody.get();
-            String name = ofNullable(body.getName()).orElse(body.description);
-            return Optional.of(new NameAndSchema(name, (OasSchema) body.schema));
-        }
-
-        return empty();
+        return Oas20DataShapeGeneratorHelper.findBodySchema(operation);
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final Oas20Parameter parameter) {
@@ -135,19 +106,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
     }
 
     private static ObjectNode createJsonSchemaForParametersOf(final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final List<Oas20Parameter> operationParameters = Oas20ModelHelper.getParameters(operation);
-
-        OasPathItem parent = ofNullable(operation.parent())
-            .filter(OasPathItem.class::isInstance)
-            .map(OasPathItem.class::cast)
-            .orElse(null);
-        final List<Oas20Parameter> pathParameters = Oas20ModelHelper.getParameters(parent);
-        operationParameters.addAll(pathParameters);
-
-        final List<Oas20ParameterDefinition> globalParameters = ofNullable(openApiDoc.parameters)
-                .map(Oas20ParameterDefinitions::getItems)
-                .orElse(Collections.emptyList());
-        operationParameters.addAll(globalParameters);
+        final List<Oas20Parameter> operationParameters = Oas20DataShapeGeneratorHelper.getOperationParameters(openApiDoc, operation);
 
         return createSchemaFor(operationParameters.stream()
             .filter(p -> p.type != null)

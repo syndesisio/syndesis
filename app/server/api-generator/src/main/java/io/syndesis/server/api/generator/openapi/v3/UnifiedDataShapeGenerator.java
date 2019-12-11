@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +28,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
-import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
@@ -77,21 +75,7 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
 
     @Override
     public List<OasResponse> resolveResponses(Oas30Document openApiDoc, List<OasResponse> operationResponses) {
-        if (openApiDoc.components == null || openApiDoc.components.responses == null) {
-            return operationResponses;
-        }
-
-        List<OasResponse> responses = new ArrayList<>();
-
-        for (OasResponse response : operationResponses) {
-            if (response.$ref != null) {
-                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
-            } else {
-                responses.add(response);
-            }
-        }
-
-        return responses;
+        return Oas30DataShapeGeneratorHelper.resolveResponses(openApiDoc, operationResponses);
     }
 
     static boolean supports(final String mime, final Set<String> mimes) {
