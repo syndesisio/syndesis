@@ -16,14 +16,13 @@
 package io.syndesis.connector.support.verifier.api;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import io.syndesis.common.model.DataShape;
 import org.apache.camel.util.ObjectHelper;
 
-public final class SyndesisMetadata {
+public final class SyndesisMetadata extends SyndesisMetadataProperties {
     // The empty metadata instance
     public static final SyndesisMetadata EMPTY = new SyndesisMetadata(Collections.emptyMap(), null, null);
 
@@ -37,22 +36,10 @@ public final class SyndesisMetadata {
      */
     public final DataShape outputShape;
 
-    /**
-     * A Map keyed by action property name with a list of {@link PropertyPair}
-     * values that are applicable to for that property.
-     */
-    public final Map<String, List<PropertyPair>> properties;
-
     public SyndesisMetadata(final Map<String, List<PropertyPair>> properties, final DataShape inputShape, final DataShape outputShape) {
-        this.properties = properties;
+        super(properties);
         this.inputShape = inputShape;
         this.outputShape = outputShape;
-
-        if (properties != null) {
-            for (final List<PropertyPair> propertyPairs : properties.values()) {
-                Collections.sort(propertyPairs, Comparator.comparing(PropertyPair::getDisplayValue));
-            }
-        }
     }
 
     // *********************
