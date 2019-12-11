@@ -67,13 +67,13 @@ public class Oas30ValidationRulesTest {
         final Oas30PathItem pathItem = new Oas30PathItem("/api");
         final Oas30Operation operation = new Oas30Operation("get");
         final Oas30Parameter parameter = new Oas30Parameter();
-        parameter.$ref = "#/definitions/Request";
+        parameter.$ref = "#/components/schemas/Request";
         operation.parameters = new ArrayList<>();
         operation.parameters.add(parameter);
 
         Oas30Response response = new Oas30Response("200");
         Oas30Schema responseSchema = new Oas30Schema();
-        responseSchema.$ref = "#/definitions/Response";
+        responseSchema.$ref = "#/components/schemas/Response";
         Oas30MediaType mediaType = response.createMediaType("application/json");
         mediaType.schema = responseSchema;
         operation.responses = operation.createResponses();
@@ -104,7 +104,7 @@ public class Oas30ValidationRulesTest {
         final Oas30PathItem pathItem = new Oas30PathItem("/api");
         final Oas30Operation operation = new Oas30Operation("post");
         final Oas30Parameter parameter = new Oas30Parameter();
-        parameter.$ref = "#/definitions/Request";
+        parameter.$ref = "#/components/schemas/Request";
         operation.parameters = new ArrayList<>();
         operation.parameters.add(parameter);
 
@@ -115,7 +115,7 @@ public class Oas30ValidationRulesTest {
         Oas30Components components = openApiDoc.createComponents();
         openApiDoc.components = components;
         Oas30SchemaDefinition schemaDefinition = components.createSchemaDefinition("Request");
-        schemaDefinition.$ref = "#/definitions/Request";
+        schemaDefinition.$ref = "#/components/schemas/Request";
         components.addSchemaDefinition("Request", schemaDefinition);
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();

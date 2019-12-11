@@ -38,7 +38,7 @@ public class Oas30ParameterGeneratorTest {
         final String specification = resource("/openapi/v3/petstore.json");
         final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
         final Oas30Parameter petIdPathParameter = (Oas30Parameter) openApiDoc.paths.getPathItem("/pet/{petId}").get.getParameters().get(0);
-        final Oas30Schema petIdSchema = Oas30ModelHelper.getSchema(petIdPathParameter);
+        final Oas30Schema petIdSchema = Oas30ModelHelper.getSchema(petIdPathParameter).orElseThrow(IllegalStateException::new);
 
         final ConfigurationProperty configurationProperty =
             Oas30ParameterGenerator.createPropertyFromParameter(petIdPathParameter, petIdSchema.type, Oas30ModelHelper.javaTypeFor(petIdSchema),

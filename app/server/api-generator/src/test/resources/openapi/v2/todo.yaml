@@ -24,11 +24,7 @@ paths:
       - "application/json"
       responses:
         200:
-          description: All is good
-          schema:
-            type: "array"
-            items:
-              $ref: "#/definitions/Task"
+          $ref: "#/responses/TaskList"
     post:
       tags:
         - tasks
@@ -140,3 +136,10 @@ definitions:
         description: "0 - ongoing, 1 - completed"
         minimum: 0
         maximum: 1
+responses:
+  TaskList:
+    description: All is good
+    schema:
+      type: "array"
+      items:
+        $ref: "#/definitions/Task"

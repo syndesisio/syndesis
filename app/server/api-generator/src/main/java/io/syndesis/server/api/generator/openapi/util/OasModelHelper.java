@@ -213,8 +213,9 @@ public final class OasModelHelper {
     }
 
     /**
-     * Get pure name from reference path. Usually reference definitions start with '#/definitions/'
-     * and this method removes the basic reference path part and just returns the reference object name.
+     * Get pure name from reference path. Usually reference definitions start with '#/definitions/' for OpenAPI 2.x and
+     * '#/components/schemas/' for OpenAPI 3.x and this method removes the basic reference path part and just returns the
+     * reference object name.
      * @param reference path expression.
      * @return the name of the reference object.
      */
