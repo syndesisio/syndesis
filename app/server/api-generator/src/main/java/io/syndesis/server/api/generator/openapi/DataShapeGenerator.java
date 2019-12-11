@@ -46,10 +46,11 @@ public interface DataShapeGenerator<T extends OasDocument, O extends OasOperatio
 
     /**
      * Find schema that is specified to define the body if any.
+     * @param openApiDoc the OpenAPI document.
      * @param operation maybe holding a body schema.
      * @return the body schema.
      */
-    default Optional<NameAndSchema> findBodySchema(final O operation) {
+    default Optional<NameAndSchema> findBodySchema(final T openApiDoc, final O operation) {
         return Optional.empty();
     }
 
