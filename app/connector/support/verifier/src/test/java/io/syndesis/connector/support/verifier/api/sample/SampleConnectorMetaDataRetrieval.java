@@ -35,7 +35,7 @@ public class SampleConnectorMetaDataRetrieval extends ComponentMetadataRetrieval
     }
 
     @Override
-    public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
+    public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, Map<String, Object> properties) {
         Map<String, List<PropertyPair>> echoProperties = SampleConnectorMetaDataRetrieval.echoProperties(properties);
         return new SyndesisMetadataProperties(echoProperties);
     }

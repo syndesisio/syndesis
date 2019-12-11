@@ -23,6 +23,7 @@ import java.util.Map;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
@@ -54,6 +55,26 @@ public class ActionDefinitionEndpointTest {
             assertThat(metadata.getProperties()).isSameAs(PROPERTIES);
             assertThat(metadata.inputShape).isSameAs(INPUT);
             assertThat(metadata.outputShape).isSameAs(OUTPUT);
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void shouldDynamicProperties() throws Exception {
+        final CamelContext context = new DefaultCamelContext();
+        context.addComponent("petstore", new PetstoreComponent(PAYLOAD));
+
+        try {
+            context.start();
+
+            final PetstoreMetadataRetrieval adapter = new PetstoreMetadataRetrieval(PAYLOAD, PROPERTIES, INPUT, OUTPUT);
+            final SyndesisMetadataProperties metadataProperties = adapter.fetchProperties(
+                context,
+                "petstore",
+                Collections.emptyMap());
+
+            assertThat(metadataProperties.getProperties()).isSameAs(PROPERTIES);
         } finally {
             context.stop();
         }
