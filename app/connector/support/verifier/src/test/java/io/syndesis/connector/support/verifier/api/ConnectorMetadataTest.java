@@ -32,7 +32,7 @@ public class ConnectorMetadataTest {
         properties.put("brokers", null);
         properties.put("anotherProperty", null);
         SyndesisMetadataProperties dynamicProperties = metaDataRetrieval
-            .fetchProperties(null, "test", "test", properties);
+            .fetchProperties(null, "test", properties);
 
         assertThat(dynamicProperties.getProperties().get("brokers"))
             .containsOnly(new PropertyPair("brokers", "BROKERS"));

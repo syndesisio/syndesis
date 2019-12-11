@@ -43,7 +43,7 @@ public interface MetadataRetrieval {
      * It can use {@link CamelContext} to retrieve {@link MetaData} or use other Syndesis internal components
      * to provide such properties.
      */
-    default SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
+    default SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, Map<String, Object> properties) {
         return SyndesisMetadataProperties.EMPTY;
     }
 

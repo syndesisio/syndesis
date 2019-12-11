@@ -22,6 +22,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 
@@ -56,5 +57,10 @@ public class PetstoreMetadataRetrieval extends ComponentMetadataRetrieval {
         assertThat(payload).isSameAs(expectedPayload);
 
         return new SyndesisMetadata(adaptedProperties, inputShape, outputShape);
+    }
+
+    @Override
+    public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, Map<String, Object> properties) {
+        return new SyndesisMetadataProperties(adaptedProperties);
     }
 }
