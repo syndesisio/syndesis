@@ -134,22 +134,21 @@ final class Oas30ModelHelper {
      * @param parameter the parameter maybe holding the schema.
      * @return the schema associated with the given parameter.
      */
-    static Oas30Schema getSchema(Oas30Parameter parameter) {
+    static Optional<Oas30Schema> getSchema(Oas30Parameter parameter) {
         if (parameter.schema != null) {
-            return (Oas30Schema) parameter.schema;
+            return Optional.of((Oas30Schema) parameter.schema);
         }
 
         Map<String, Oas30MediaType> mediaTypes = parameter.content;
         if (mediaTypes == null) {
-            return null;
+            return Optional.empty();
         }
 
         return mediaTypes.values()
                     .stream()
                     .map(media -> media.schema)
                     .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null);
+                    .findFirst();
     }
 
     /**

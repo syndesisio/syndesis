@@ -58,7 +58,7 @@ public final class Oas30ValidationRules extends OpenApiValidationRules<Oas30Resp
 
     @Override
     protected boolean hasResponseSchema(Oas30Response response) {
-        return Oas30ModelHelper.getSchema(response) != null;
+        return Oas30ModelHelper.getSchema(response).isPresent();
     }
 
     @Override

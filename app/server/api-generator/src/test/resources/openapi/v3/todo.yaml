@@ -24,13 +24,7 @@ paths:
       - "fetching"
       responses:
         200:
-          content:
-            application/json:
-              schema:
-                type: "array"
-                items:
-                  $ref: "#/components/schemas/Task"
-          description: "All is good"
+          $ref: "#/components/responses/TaskList"
       summary: "List all tasks"
       description: "Fetches all tasks from the database"
     post:
@@ -142,6 +136,15 @@ components:
           maximum: 1
           minimum: 0
           type: "integer"
+  responses:
+    TaskList:
+      description: "All is good"
+      content:
+        application/json:
+          schema:
+            type: "array"
+            items:
+              $ref: "#/components/schemas/Task"
   securitySchemes:
     username_password:
       type: "http"

@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.v2;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
@@ -72,6 +74,25 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
     @Override
     protected Oas20Schema getSchema(Oas20Response response) {
         return response.schema;
+    }
+
+    @Override
+    public List<OasResponse> resolveResponses(Oas20Document openApiDoc, List<OasResponse> operationResponses) {
+        if (openApiDoc.responses == null) {
+            return operationResponses;
+        }
+
+        List<OasResponse> responses = new ArrayList<>();
+
+        for (OasResponse response : operationResponses) {
+            if (response.$ref != null) {
+                responses.add(openApiDoc.responses.getResponse(OasModelHelper.getReferenceName(response.$ref)));
+            } else {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     @Override

@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
@@ -71,6 +73,25 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Docum
     @Override
     protected OasSchema getSchema(Oas30Response response) {
         return Oas30ModelHelper.getSchema(response, APPLICATION_XML).orElse(null);
+    }
+
+    @Override
+    public List<OasResponse> resolveResponses(Oas30Document openApiDoc, List<OasResponse> operationResponses) {
+        if (openApiDoc.components == null || openApiDoc.components.responses == null) {
+            return operationResponses;
+        }
+
+        List<OasResponse> responses = new ArrayList<>();
+
+        for (OasResponse response : operationResponses) {
+            if (response.$ref != null) {
+                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
+            } else {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     @Override
@@ -125,12 +146,13 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas30Docum
         final Element sequence = XmlSchemaHelper.addElement(complex, "sequence");
 
         for (final Oas30Parameter parameter : parameterList) {
-            final Oas30Schema parameterSchema = Oas30ModelHelper.getSchema(parameter);
+            final Optional<Oas30Schema> maybeParameterSchema = Oas30ModelHelper.getSchema(parameter);
 
-            if (parameterSchema == null) {
+            if (!maybeParameterSchema.isPresent()) {
                 continue;
             }
 
+            final Oas30Schema parameterSchema = maybeParameterSchema.get();
             final String type = XmlSchemaHelper.toXsdType(parameterSchema.type);
             final String name = trimToNull(parameter.getName());
 

@@ -15,17 +15,21 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Document, Oas30Operation> {
 
@@ -53,7 +57,7 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
-        Optional<Oas30Response> response = findResponse(operation, res -> Oas30ModelHelper.getSchema(res) != null, Oas30Response.class);
+        Optional<Oas30Response> response = findResponse(openApiDoc, operation, res -> Oas30ModelHelper.getSchema(res).isPresent(), Oas30Response.class);
 
         if (!response.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -69,6 +73,25 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
             // use JSON to define those parameters
             return JSON.createShapeFromResponse(json, openApiDoc, operation);
         }
+    }
+
+    @Override
+    public List<OasResponse> resolveResponses(Oas30Document openApiDoc, List<OasResponse> operationResponses) {
+        if (openApiDoc.components == null || openApiDoc.components.responses == null) {
+            return operationResponses;
+        }
+
+        List<OasResponse> responses = new ArrayList<>();
+
+        for (OasResponse response : operationResponses) {
+            if (response.$ref != null) {
+                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
+            } else {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     static boolean supports(final String mime, final Set<String> mimes) {

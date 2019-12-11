@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.v2;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -25,6 +26,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Items;
@@ -60,7 +62,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
+        final Optional<Oas20Response> maybeResponse = findResponse(openApiDoc, operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -73,6 +75,25 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
 
         return unifiedJsonSchema("Response", "API response payload", bodySchema, null);
+    }
+
+    @Override
+    public List<OasResponse> resolveResponses(Oas20Document openApiDoc, List<OasResponse> operationResponses) {
+        if (openApiDoc.responses == null) {
+            return operationResponses;
+        }
+
+        List<OasResponse> responses = new ArrayList<>();
+
+        for (OasResponse response : operationResponses) {
+            if (response.$ref != null) {
+                responses.add(openApiDoc.responses.getResponse(OasModelHelper.getReferenceName(response.$ref)));
+            } else {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     @Override

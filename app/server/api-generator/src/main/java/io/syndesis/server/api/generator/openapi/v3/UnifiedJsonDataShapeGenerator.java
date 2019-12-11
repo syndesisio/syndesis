@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.v3;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
@@ -58,7 +60,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
-        final Optional<Oas30Response> maybeResponse = findResponse(operation, RESPONSE_HAS_SCHEMA, Oas30Response.class);
+        final Optional<Oas30Response> maybeResponse = findResponse(openApiDoc, operation, RESPONSE_HAS_SCHEMA, Oas30Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -72,6 +74,25 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
         final ObjectNode bodySchema = createSchemaFromModel(json, description, responseSchema);
 
         return unifiedJsonSchema("Response", "API response payload", bodySchema, null);
+    }
+
+    @Override
+    public List<OasResponse> resolveResponses(Oas30Document openApiDoc, List<OasResponse> operationResponses) {
+        if (openApiDoc.components == null || openApiDoc.components.responses == null) {
+            return operationResponses;
+        }
+
+        List<OasResponse> responses = new ArrayList<>();
+
+        for (OasResponse response : operationResponses) {
+            if (response.$ref != null) {
+                responses.add(openApiDoc.components.responses.get(OasModelHelper.getReferenceName(response.$ref)));
+            } else {
+                responses.add(response);
+            }
+        }
+
+        return responses;
     }
 
     @Override
@@ -146,12 +167,13 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
         final ObjectNode parametersProperties = parameters.putObject("properties");
 
         for (final Oas30Parameter parameter : parameterList) {
-            final Oas30Schema parameterSchema = Oas30ModelHelper.getSchema(parameter);
+            final Optional<Oas30Schema> maybeParameterSchema = Oas30ModelHelper.getSchema(parameter);
 
-            if (parameterSchema == null) {
+            if (!maybeParameterSchema.isPresent()) {
                 continue;
             }
 
+            final Oas30Schema parameterSchema = maybeParameterSchema.get();
             final String type = parameterSchema.type;
             final String name = trimToNull(parameter.getName());
             final String description = trimToNull(parameter.description);
