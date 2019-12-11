@@ -148,7 +148,7 @@
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.2.0</micrometer.version>
     <teiid.version>12.3.0</teiid.version>
-    <aws-java-sdk-core.version>1.11.269</aws-java-sdk-core.version>
+    <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
 
     <javac.werror>-Werror</javac.werror>
   </properties>
