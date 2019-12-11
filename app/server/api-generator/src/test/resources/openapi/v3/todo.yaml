@@ -29,12 +29,7 @@ paths:
       description: "Fetches all tasks from the database"
     post:
       requestBody:
-        description: "Task to create"
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/Task"
-        required: true
+        $ref: "#/components/requestBodies/NewTask"
       tags:
       - "tasks"
       - "creating"
@@ -136,6 +131,14 @@ components:
           maximum: 1
           minimum: 0
           type: "integer"
+  requestBodies:
+    NewTask:
+      description: "New task to create"
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Task"
+      required: true
   responses:
     TaskList:
       description: "All is good"

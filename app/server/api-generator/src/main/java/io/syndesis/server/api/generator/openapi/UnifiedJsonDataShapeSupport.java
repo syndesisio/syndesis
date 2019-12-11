@@ -39,8 +39,8 @@ public abstract class UnifiedJsonDataShapeSupport<T extends OasDocument, O exten
 
     private static final List<String> PROPERTIES_TO_REMOVE_ON_MERGE = Arrays.asList("$schema", "title");
 
-    protected ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final O operation) {
-        final Optional<NameAndSchema> maybeRequestBody = findBodySchema(operation);
+    protected ObjectNode createJsonSchemaForBodyOf(final ObjectNode json, final T openApiDoc, final O operation) {
+        final Optional<NameAndSchema> maybeRequestBody = findBodySchema(openApiDoc, operation);
 
         if (!maybeRequestBody.isPresent()) {
             return null;

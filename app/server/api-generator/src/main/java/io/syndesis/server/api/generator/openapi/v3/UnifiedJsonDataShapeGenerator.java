@@ -45,7 +45,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
-        final ObjectNode bodySchema = createJsonSchemaForBodyOf(json, operation);
+        final ObjectNode bodySchema = createJsonSchemaForBodyOf(json, openApiDoc, operation);
 
         final ObjectNode parametersSchema = createJsonSchemaForParametersOf(openApiDoc, operation);
 
@@ -76,8 +76,8 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas30Doc
     }
 
     @Override
-    public Optional<NameAndSchema> findBodySchema(Oas30Operation operation) {
-        return Oas30DataShapeGeneratorHelper.findBodySchema(operation);
+    public Optional<NameAndSchema> findBodySchema(Oas30Document openApiDoc, Oas30Operation operation) {
+        return Oas30DataShapeGeneratorHelper.findBodySchema(openApiDoc, operation, APPLICATION_JSON);
     }
 
     private static void addEnumsTo(final ObjectNode parameterParameter, final Oas30Schema schema) {
