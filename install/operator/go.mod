@@ -7,7 +7,7 @@ module github.com/syndesisio/syndesis/install/operator
 // replace github.com/chirino/hawtgo => /Users/chirino/sandbox/hawtgo
 
 require (
-	github.com/aws/aws-sdk-go v1.25.50 // indirect
+	github.com/aws/aws-sdk-go v1.25.50
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.4

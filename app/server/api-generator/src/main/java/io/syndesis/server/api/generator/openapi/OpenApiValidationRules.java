@@ -132,7 +132,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
             return new OpenApiModelInfo.Builder().createFrom(info)
                 .addError(new Violation.Builder()
                     .error("cyclic-schema")
-                    .message("Cyclic references are not suported")
+                    .message("Cyclic references are not supported")
                     .build())
                 .build();
         }

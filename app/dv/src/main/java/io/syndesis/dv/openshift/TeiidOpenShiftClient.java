@@ -74,6 +74,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.builds.Builds;
 import io.fabric8.kubernetes.api.model.ContainerPort;
+import io.fabric8.kubernetes.api.model.ContainerStateRunning;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
@@ -130,6 +131,8 @@ import okhttp3.OkHttpClient;
 
 @SuppressWarnings("nls")
 public class TeiidOpenShiftClient implements StringConstants {
+
+    public static final int JOLOKIA_PORT = 8778;
 
     /**
      * Get the OpenShift name, requires lower case and must start/end with
@@ -901,7 +904,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     private List<ContainerPort> getDeploymentPorts(PublishConfiguration config){
         List<ContainerPort> ports = new ArrayList<>();
         ports.add(createPort(ProtocolType.PROMETHEUS.id(), 9779, "TCP"));
-        ports.add(createPort(ProtocolType.JOLOKIA.id(), 8778, "TCP"));
+        ports.add(createPort(ProtocolType.JOLOKIA.id(), JOLOKIA_PORT, "TCP"));
         ports.add(createPort(ProtocolType.JDBC.id(), 31000, "TCP"));
         ports.add(createPort(ProtocolType.PG.id(), 35432, "TCP"));
         if (config.isEnableOData()) {
@@ -1053,11 +1056,23 @@ public class TeiidOpenShiftClient implements StringConstants {
         }
     }
 
+    public String getPodStartedAt(String namespace, String openShiftName) {
+        List<Pod> pods = openshiftClient().pods().inNamespace(namespace).withLabel("application", openShiftName).list().getItems();
+        if (pods.size() > 0) {
+            ContainerStateRunning running = pods.get(0).getStatus().getContainerStatuses().get(0).getState().getRunning();
+            if (running != null) {
+                return running.getStartedAt();
+            }
+        }
+        return null;
+    }
+
     private void createServices(final OpenShiftClient client, final String namespace,
             final String openShiftName) {
         createODataService(client, namespace, openShiftName, ProtocolType.ODATA.id(), 8080);
         createService(client, namespace, openShiftName, ProtocolType.JDBC.id(), 31000, 31000);
         createService(client, namespace, openShiftName, ProtocolType.PG.id(), 35432, 5432);
+        createService(client, namespace, openShiftName, ProtocolType.JOLOKIA.id(), JOLOKIA_PORT, JOLOKIA_PORT);
         if (!this.config.isExposeVia3scale()) {
             createRoute(client, namespace, openShiftName, ProtocolType.ODATA.id());
         }

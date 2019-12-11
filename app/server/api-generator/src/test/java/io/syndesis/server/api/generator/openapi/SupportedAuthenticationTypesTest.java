@@ -32,6 +32,7 @@ public class SupportedAuthenticationTypesTest {
 
     @Test
     public void shouldDetermineValueFromSecurityDefinitionValue() {
+        assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("http")).isEqualTo(SupportedAuthenticationTypes.basic);
         assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("basic")).isEqualTo(SupportedAuthenticationTypes.basic);
     }
 
@@ -40,6 +41,15 @@ public class SupportedAuthenticationTypesTest {
         final Oas20SecurityScheme securityScheme = new Oas20SecurityScheme("basic_auth");
         securityScheme.type = OpenApiSecurityScheme.BASIC.getName();
         securityScheme.description = "description";
+
+        assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
+            .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()
+                .createFrom(SupportedAuthenticationTypes.basic.propertyValue)
+                .label("HTTP Basic Authentication - basic_auth (description)")
+                .value("basic:basic_auth")
+                .build());
+
+        securityScheme.type = "http";
 
         assertThat(SupportedAuthenticationTypes.asPropertyValue("basic_auth", securityScheme))
             .isEqualTo(new ConfigurationProperty.PropertyValue.Builder()

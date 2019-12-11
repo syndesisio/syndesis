@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2017 Red Hat, Inc.
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+            http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
+<schema xmlns="http://www.w3.org/2001/XMLSchema" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:atlas="http://atlasmap.io/xml/schemaset/v2" targetNamespace="http://atlasmap.io/xml/schemaset/v2"
+  elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+  <import namespace="http://www.w3.org/2001/XMLSchema" schemaLocation="https://www.w3.org/2001/XMLSchema.xsd" />
+
+  <complexType name="additionalSchemasType">
+    <sequence>
+      <element ref="xs:schema" minOccurs="0" maxOccurs="unbounded" />
+    </sequence>
+  </complexType>
+
+  <xs:element name="SchemaSet">
+    <complexType>
+      <sequence>
+        <element ref="xs:schema" minOccurs="1" maxOccurs="1" />
+        <element name="AdditionalSchemas" type="atlas:additionalSchemasType" minOccurs="0"/>
+      </sequence>
+    </complexType>
+  </xs:element>
+
+</schema>
+
+<!-- Atlasmap: ${project.version} -->

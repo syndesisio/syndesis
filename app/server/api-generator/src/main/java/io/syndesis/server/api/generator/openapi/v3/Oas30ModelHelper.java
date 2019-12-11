@@ -25,16 +25,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.common.Server;
-import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.core.models.common.ServerVariable;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
-import io.apicurio.datamodels.openapi.models.OasPaths;
 import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
 import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
-import io.apicurio.datamodels.openapi.v3.models.Oas30PathItem;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
@@ -58,12 +56,27 @@ final class Oas30ModelHelper {
      * @param operation given path item.
      * @return typed list of path parameters.
      */
-    static List<Oas30Parameter> getParameters(OasOperation operation) {
-        return OasModelHelper.getParameters(operation)
+    static List<Oas30Parameter> getParameters(Oas30Operation operation) {
+        List<Oas30Parameter> parameters = OasModelHelper.getParameters(operation)
             .stream()
             .filter(Oas30Parameter.class::isInstance)
             .map(Oas30Parameter.class::cast)
             .collect(Collectors.toList());
+
+        if (Oas30FormDataHelper.hasFormDataBody(operation.requestBody)) {
+            //add form urlencoded properties as we handle those as parameters
+            Optional<Oas30MediaType> formDataContent = Oas30FormDataHelper.getFormDataContent(operation.requestBody.content);
+            formDataContent.ifPresent(oas30MediaType -> Optional.ofNullable(oas30MediaType.schema.properties).orElse(Collections.emptyMap()).forEach((name, property) -> {
+                Oas30Parameter formParameter = new Oas30Parameter(name);
+                formParameter.schema = property;
+                formParameter.in = "formData";
+                formParameter.$ref = property.$ref;
+                formParameter.description = property.description;
+                parameters.add(formParameter);
+            }));
+        }
+
+        return parameters;
     }
 
     /**
@@ -90,19 +103,6 @@ final class Oas30ModelHelper {
         }
 
         return openApiDoc.components.parameters;
-    }
-
-    /**
-     * Iterate through list of generic path items and collect path items of given type.
-     * @param paths given path items.
-     * @return typed list of path items.
-     */
-    static List<Oas30PathItem> getPathItems(OasPaths paths) {
-        return OasModelHelper.getPathItems(paths)
-            .stream()
-            .filter(Oas30PathItem.class::isInstance)
-            .map(Oas30PathItem.class::cast)
-            .collect(Collectors.toList());
     }
 
     static Oas30SchemaDefinition dereference(final OasSchema model, final Oas30Document openApiDoc) {
@@ -134,22 +134,21 @@ final class Oas30ModelHelper {
      * @param parameter the parameter maybe holding the schema.
      * @return the schema associated with the given parameter.
      */
-    static Oas30Schema getSchema(Oas30Parameter parameter) {
+    static Optional<Oas30Schema> getSchema(Oas30Parameter parameter) {
         if (parameter.schema != null) {
-            return (Oas30Schema) parameter.schema;
+            return Optional.of((Oas30Schema) parameter.schema);
         }
 
         Map<String, Oas30MediaType> mediaTypes = parameter.content;
         if (mediaTypes == null) {
-            return null;
+            return Optional.empty();
         }
 
         return mediaTypes.values()
                     .stream()
                     .map(media -> media.schema)
                     .filter(Objects::nonNull)
-                    .findFirst()
-                    .orElse(null);
+                    .findFirst();
     }
 
     /**
@@ -158,7 +157,7 @@ final class Oas30ModelHelper {
      * @param response the response maybe holding a media type mapping with a schema.
      * @return the schema associated with the given response.
      */
-    static Oas30Schema getSchema(Oas30Response response) {
+    static Optional<Oas30Schema> getSchema(Oas30Response response) {
         return getSchema(response, null);
     }
 
@@ -170,10 +169,9 @@ final class Oas30ModelHelper {
      * @param mediaType the media type to search for preferably when selecting the schema on the list of response media types.
      * @return the schema associated with the given response.
      */
-    static Oas30Schema getSchema(Oas30Response response, String mediaType) {
-        return Optional.ofNullable(getMediaTypeWithSchema(response.content, mediaType))
-            .map(m -> m.schema)
-            .orElse(null);
+    static Optional<Oas30Schema> getSchema(Oas30Response response, String mediaType) {
+        return getMediaTypeWithSchema(response.content, mediaType)
+            .map(m -> m.schema);
     }
 
     /**
@@ -184,7 +182,7 @@ final class Oas30ModelHelper {
      * @param mediaType the media type to search for preferably when selecting the schema on the list of request media types.
      * @return the schema associated with the given request.
      */
-    static Oas30MediaType getMediaType(Oas30RequestBody requestBody, String mediaType) {
+    static Optional<Oas30MediaType> getMediaType(Oas30RequestBody requestBody, String mediaType) {
         return getMediaTypeWithSchema(requestBody.content, mediaType);
     }
 
@@ -195,20 +193,21 @@ final class Oas30ModelHelper {
      * @param mediaType preferred media type to search first.
      * @return media type with schema defined or null.
      */
-    private static Oas30MediaType getMediaTypeWithSchema(Map<String, Oas30MediaType> content, String mediaType) {
+    private static Optional<Oas30MediaType> getMediaTypeWithSchema(Map<String, Oas30MediaType> content, String mediaType) {
         if (content == null) {
-            return null;
+            return Optional.empty();
         }
 
         if (mediaType != null && content.containsKey(mediaType)) {
-            return content.get(mediaType);
+            return Optional.of(content.get(mediaType));
         }
 
-        return content.values()
+        return content.entrySet()
             .stream()
-            .filter(media -> media.schema != null)
+            .filter(entry -> !Oas30FormDataHelper.isFormDataMediaType(entry.getKey()))
+            .filter(entry -> entry.getValue().schema != null)
             .findFirst()
-            .orElse(null);
+            .map(Map.Entry::getValue);
     }
 
     /**
@@ -232,7 +231,7 @@ final class Oas30ModelHelper {
             return basePath;
         }
 
-        String serverUrl = Optional.ofNullable(openApiDoc.servers.get(0).url).orElse("/");
+        String serverUrl = resolveUrl(openApiDoc.servers.get(0));
         if (serverUrl.startsWith("http")) {
             try {
                 basePath = new URL(serverUrl).getPath();
@@ -285,11 +284,7 @@ final class Oas30ModelHelper {
      * @return server URL scheme or "http" as default
      */
     static String getScheme(Server server) {
-        String serverUrl = server.url;
-        if (serverUrl == null) {
-            return "http";
-        }
-
+        String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
             try {
                 return new URL(serverUrl).getProtocol();
@@ -312,8 +307,8 @@ final class Oas30ModelHelper {
             return null;
         }
 
-        String serverUrl = Optional.ofNullable(openApiDoc.servers.get(0).url).orElse("/");
-        if (serverUrl.startsWith("http") || serverUrl.startsWith("ws")) {
+        String serverUrl = resolveUrl(openApiDoc.servers.get(0));
+        if (serverUrl.startsWith("http")) {
             try {
                 return new URL(serverUrl).getHost();
             } catch (MalformedURLException e) {
@@ -322,5 +317,23 @@ final class Oas30ModelHelper {
         }
 
         return null;
+    }
+
+    /**
+     * Resolve given server url and replace variable placeholders if any with default variable values. Open API 3.x
+     * supports variables with placeholders in form {variable_name} (e.g. "http://{hostname}:{port}/api/v1").
+     * @param server the server holding a URL with maybe variable placeholders.
+     * @return the server URL with all placeholders resolved or "/" by default.
+     */
+    private static String resolveUrl(Server server) {
+        String url = Optional.ofNullable(server.url).orElse("/");
+        if (server.variables != null) {
+            for (Map.Entry<String, ServerVariable> variable: server.variables.entrySet()) {
+                String defaultValue = Optional.ofNullable(variable.getValue().default_).orElse("");
+                url = url.replaceAll(String.format("\\{%s\\}", variable.getKey()), defaultValue);
+            }
+        }
+
+        return url;
     }
 }

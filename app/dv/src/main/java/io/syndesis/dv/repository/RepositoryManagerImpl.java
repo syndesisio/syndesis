@@ -243,6 +243,11 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
+    public long getEditionCount(String virtualization) {
+        return this.editionRepository.countByDataVirtualizationName(virtualization);
+    }
+
+    @Override
     public Long deleteViewDefinitions(String virtualization) {
         return this.viewDefinitionRepository.deleteByDataVirtualizationName(virtualization);
     }

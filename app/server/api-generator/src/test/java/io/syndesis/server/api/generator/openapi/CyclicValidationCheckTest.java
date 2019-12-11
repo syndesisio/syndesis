@@ -40,7 +40,7 @@ public class CyclicValidationCheckTest {
 
     @Test
     public void shouldFindCyclicReferenceInOpenHabSwagger() throws IOException {
-        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(Resources.getResourceAsText("swagger/openhab.swagger.json"));
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(Resources.getResourceAsText("openapi/v2/openhab.json"));
 
         assertThat(CyclicValidationCheck.hasCyclicReferences(getSchemaDefinitions(openApiDoc))).isTrue();
     }

@@ -26,11 +26,25 @@
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <outputDirectory>./</outputDirectory>
-      <directory>target/generated-sources/docker/</directory>
+      <outputDirectory>m2</outputDirectory>
+      <directory>${image.build.directory}/repository</directory>
       <includes>
-        <include>m2/**</include>
+        <include>**</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <outputDirectory>licenses</outputDirectory>
+      <directory>${image.build.directory}/licenses</directory>
+      <includes>
+        <include>**</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <outputDirectory></outputDirectory>
+      <directory>${image.build.directory}</directory>
+      <includes>
         <include>settings.xml</include>
+        <include>licenses.xml</include>
       </includes>
     </fileSet>
   </fileSets>

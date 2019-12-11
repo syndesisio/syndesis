@@ -18,6 +18,7 @@ package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
@@ -42,10 +43,8 @@ public final class Oas30ParameterGenerator extends OpenApiParameterGenerator<Oas
             .stream()
             .filter(entry -> shouldCreateProperty(entry.getValue()))
             .forEach(entry -> {
-                final Oas30Schema schema = Oas30ModelHelper.getSchema(entry.getValue());
-                if (schema != null) {
-                    properties.put(entry.getKey(), createPropertyFromParameter(entry.getValue(), schema.type, Oas30ModelHelper.javaTypeFor(schema), schema.default_, schema.enum_));
-                }
+                final Optional<Oas30Schema> schema = Oas30ModelHelper.getSchema(entry.getValue());
+                schema.ifPresent(oas30Schema -> properties.put(entry.getKey(), createPropertyFromParameter(entry.getValue(), oas30Schema.type, Oas30ModelHelper.javaTypeFor(oas30Schema), oas30Schema.default_, oas30Schema.enum_)));
         });
 
         return properties;

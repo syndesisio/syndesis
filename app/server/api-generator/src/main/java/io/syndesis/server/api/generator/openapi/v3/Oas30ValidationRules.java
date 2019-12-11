@@ -36,7 +36,7 @@ import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
  */
 public final class Oas30ValidationRules extends OpenApiValidationRules<Oas30Response, Oas30SecurityScheme, Oas30SchemaDefinition> {
 
-    private Oas30ValidationRules(APIValidationContext context) {
+    Oas30ValidationRules(APIValidationContext context) {
         super(context);
     }
 
@@ -58,7 +58,7 @@ public final class Oas30ValidationRules extends OpenApiValidationRules<Oas30Resp
 
     @Override
     protected boolean hasResponseSchema(Oas30Response response) {
-        return Oas30ModelHelper.getSchema(response) != null;
+        return Oas30ModelHelper.getSchema(response).isPresent();
     }
 
     @Override

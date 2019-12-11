@@ -117,7 +117,7 @@ public class Oas20ValidationRulesTest {
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
         final OpenApiModelInfo validated = RULES.validateCyclicReferences(info);
-        assertThat(validated.getErrors()).containsOnly(new Violation.Builder().error("cyclic-schema").message("Cyclic references are not suported").build());
+        assertThat(validated.getErrors()).containsOnly(new Violation.Builder().error("cyclic-schema").message("Cyclic references are not supported").build());
     }
 
     @Test

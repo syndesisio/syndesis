@@ -16,11 +16,13 @@
 package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
@@ -53,7 +55,7 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas30Document openApiDoc, final Oas30Operation operation) {
-        Optional<Oas30Response> response = findResponse(operation, res -> Oas30ModelHelper.getSchema(res) != null, Oas30Response.class);
+        Optional<Oas30Response> response = findResponse(openApiDoc, operation, res -> Oas30ModelHelper.getSchema(res).isPresent(), Oas30Response.class);
 
         if (!response.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -71,7 +73,12 @@ final class UnifiedDataShapeGenerator implements DataShapeGenerator<Oas30Documen
         }
     }
 
-    private static boolean supports(final String mime, final Set<String> mimes) {
+    @Override
+    public List<OasResponse> resolveResponses(Oas30Document openApiDoc, List<OasResponse> operationResponses) {
+        return Oas30DataShapeGeneratorHelper.resolveResponses(openApiDoc, operationResponses);
+    }
+
+    static boolean supports(final String mime, final Set<String> mimes) {
         if (mimes != null && !mimes.isEmpty()) {
             return mimes.contains(mime);
         }

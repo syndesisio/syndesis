@@ -1,0 +1,145 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+        "title": "Machine History",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/machines": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Machine"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The list of machine ID's"
+                    }
+                },
+                "operationId": "getAllMachines",
+                "summary": "Gets a list of all machines"
+            }
+        },
+        "/machines/{id}": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/MachineState"
+                                }
+                            }
+                        },
+                        "description": "The state of the machine"
+                    }
+                },
+                "operationId": "getMachine"
+            },
+            "parameters": [
+                {
+                    "name": "id",
+                    "schema": {
+                        "type": "integer"
+                    },
+                    "in": "path",
+                    "required": true
+                }
+            ]
+        }
+    },
+    "components": {
+        "schemas": {
+            "Machine": {
+                "description": "A Machine",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "format": "int32",
+                        "description": "The Machine ID",
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The machine name",
+                        "type": "string"
+                    }
+                }
+            },
+            "MachineState": {
+                "description": "The representation of the current state of a machine",
+                "required": [
+                    "id",
+                    "name",
+                    "health"
+                ],
+                "type": "object",
+                "properties": {
+                    "health": {
+                        "description": "The machine health",
+                        "type": "integer"
+                    },
+                    "id": {
+                        "description": "The machine ID",
+                        "type": "integer"
+                    },
+                    "lifetimeCost": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "description": "The machine name",
+                        "type": "string"
+                    }
+                }
+            },
+            "MaintenanceData": {
+                "description": "A record of maintenance performed on a machine",
+                "required": [
+                    "time",
+                    "mechanic",
+                    "startingHealth",
+                    "finalHealth",
+                    "repairCost"
+                ],
+                "type": "object",
+                "properties": {
+                    "Notes": {
+                        "description": "The maintenance notes",
+                        "type": "string"
+                    },
+                    "finalHealth": {
+                        "format": "int32",
+                        "description": "The health of the machine after the maintenance",
+                        "type": "integer"
+                    },
+                    "mechanic": {
+                        "description": "The mechanic name",
+                        "type": "string"
+                    },
+                    "repairCost": {
+                        "type": "integer"
+                    },
+                    "startingHealth": {
+                        "format": "int32",
+                        "description": "The starting health of the machine",
+                        "type": "integer"
+                    },
+                    "time": {
+                        "format": "int64",
+                        "description": "The time of the maintenance in unix epoch format",
+                        "type": "integer"
+                    }
+                }
+            }
+        }
+    }
+}

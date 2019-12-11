@@ -21,8 +21,10 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +36,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.xml.stream.XMLStreamException;
 
+import org.apache.http.message.BasicHeader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
@@ -67,6 +70,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.swagger.annotations.Api;
@@ -87,8 +91,10 @@ import io.syndesis.dv.model.export.v1.SourceV1;
 import io.syndesis.dv.model.export.v1.ViewDefinitionV1Adapter;
 import io.syndesis.dv.openshift.BuildStatus;
 import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
+import io.syndesis.dv.openshift.BuildStatus.Status;
 import io.syndesis.dv.openshift.ProtocolType;
 import io.syndesis.dv.openshift.PublishConfiguration;
+import io.syndesis.dv.openshift.SyndesisHttpUtil;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
@@ -153,7 +159,6 @@ public final class DataVirtualizationService extends DvService {
 
     private RestDataVirtualization createRestDataVirtualization(final DataVirtualization virtualization) throws KException {
         RestDataVirtualization entity = new RestDataVirtualization(virtualization);
-        entity.setServiceViewModel(virtualization.getName());
         // Set published status of virtualization
         BuildStatus status = this.openshiftClient.getVirtualizationStatus(virtualization.getName());
         if (status != null) {
@@ -165,6 +170,8 @@ public final class DataVirtualizationService extends DvService {
             entity.setPublishedRevision(status.getDeploymentVersion());
         }
         entity.setEmpty(this.getWorkspaceManager().findViewDefinitionsNames(virtualization.getName()).isEmpty());
+
+        entity.setEditionCount(this.getWorkspaceManager().getEditionCount(virtualization.getName()));
         return entity;
     }
 
@@ -408,7 +415,6 @@ public final class DataVirtualizationService extends DvService {
         }
         return odataHost;
     }
-
 
     /**
      * Update the specified virtualization from the repository
@@ -1001,6 +1007,78 @@ public final class DataVirtualizationService extends DvService {
 
             return importDataVirtualization(virtualization, new ByteArrayResource(bytes), false);
         });
+    }
+
+    /**
+     * Get the published virtualization metrics
+     * @param virtualization
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value = {VIRTUALIZATION_PLACEHOLDER + FS + "metrics"}, method = RequestMethod.GET, produces = {
+            MediaType.APPLICATION_JSON_VALUE })
+    @ApiOperation(value = "Get the current metric values for the given virtualization.  Assumes only a single running pod.", response = PodMetrics.class)
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "No virtualization could be found with name"),
+            @ApiResponse(code = 406, message = "Only JSON is returned by this operation"),
+            @ApiResponse(code = 403, message = "An error has occurred."),
+            @ApiResponse(code = 503, message = "Metrics are not available")})
+    public PodMetrics getPublishedVirtualizationMetrics(
+            @ApiParam(value = "name of the virtualization",
+            required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
+            throws Exception {
+
+        BuildStatus status = this.openshiftClient.getVirtualizationStatus(virtualization);
+
+        if (status == null) {
+            throw notFound(virtualization);
+        }
+
+        if (status.getStatus() != Status.RUNNING) {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+        PodMetrics metrics = new PodMetrics();
+
+        String startedAt = this.openshiftClient.getPodStartedAt(status.getNamespace(), status.getOpenShiftName());
+        metrics.setStartedAt(startedAt);
+
+        String baseUrl = String.format("http://%s-jolokia:%s/jolokia/read/", status.getOpenShiftName(), TeiidOpenShiftClient.JOLOKIA_PORT); //$NON-NLS-1$
+
+        String auth = "jolokia:jolokia"; //$NON-NLS-1$
+        String authValue = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.ISO_8859_1)); //$NON-NLS-1$
+        BasicHeader authHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, authValue);
+
+        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Runtime/Sessions", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.withArray("value");
+            if (value != null) {
+                int sessionCount = value.size();
+                metrics.setSessions(sessionCount);
+            }
+        }
+
+        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Runtime/TotalRequestsProcessed", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.get("value");
+            if (value != null) {
+                long requestCount = value.asLong();
+                metrics.setRequestCount(requestCount);
+            }
+        }
+
+        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Cache,name=ResultSet/HitRatio", authHeader);) {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode root = mapper.readTree(response);
+            JsonNode value = root.get("value");
+            if (value != null) {
+                double hitRatio = value.asDouble();
+                metrics.setResultSetCacheHitRatio(hitRatio);
+            }
+        }
+
+        return metrics;
     }
 
 }

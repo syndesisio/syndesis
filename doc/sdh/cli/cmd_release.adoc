@@ -146,7 +146,7 @@ If no `--release-version` is given, then the script aborts.
 The staging repository on this Sonatype Nexus is validated and closed.
 * If `--docker-user` and `--docker-password` is given, then a `docker login` is performed.
 Otherwise, it is assumed that the user is already logged in.
-* The Docker images are created with `mvn -Prelease,image package` in the `server`, `meta`, `ui` and `s2i` modules.
+* The Docker images are created with `mvn -Prelease,image package` in the `server`, `meta`, `ui` , `dv` and `s2i` modules.
 
 If the option `--dry-run` (short: `-n`) is provided, the script drops the staging repository at Sonatype and stops.
 You should examine the generated files and before starting a real build, reset the repository (`git reset --hard`).

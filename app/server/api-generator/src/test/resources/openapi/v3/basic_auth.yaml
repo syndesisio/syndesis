@@ -1,0 +1,22 @@
+---
+openapi: "3.0.2"
+info:
+  title: "HTTP Basic Authentication Sample"
+  version: "1.0.0"
+  description: "Sample Swagger file with HTTP Basic Authentication"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+servers:
+- url: "http://sample.io/api"
+paths:
+  /operation:
+    get:
+      responses:
+        200:
+          description: "All OK"
+components:
+  securitySchemes:
+    username_password:
+      type: "http"
+      scheme: "basic"

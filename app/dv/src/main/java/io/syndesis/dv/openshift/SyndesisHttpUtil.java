@@ -23,6 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 import javax.net.ssl.SSLContext;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ResponseHandler;
@@ -60,10 +61,15 @@ public class SyndesisHttpUtil {
         request.addHeader("Content-Type", "application/json");
     }
 
-    public static InputStream executeGET(String url) {
+    public static InputStream executeGET(String url, Header... headers) {
         try {
             CloseableHttpClient client = buildHttpClient();
             HttpGet request = new HttpGet(url);
+            if (headers != null) {
+                for (Header header : headers) {
+                    request.addHeader(header);
+                }
+            }
             addDefaultHeaders(request);
 
             HttpResponse response = client.execute(request);

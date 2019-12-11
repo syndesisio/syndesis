@@ -243,7 +243,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Export'),
       id: VirtualizationActionId.Export,
       onClick: async () => {
-        exportVirtualization(props.virtualization.name).catch((e: any) => {
+        exportVirtualization(props.virtualization.name, props.revision).catch((e: any) => {
           // notify user of error
           pushNotification(
             t('exportVirtualizationFailed', {
@@ -512,13 +512,13 @@ export const VirtualizationActionContainer: React.FunctionComponent<
 
   /*
     running - modified
-      publish | stop, delete
+      NoButtons | publish, stop, delete
     running - not modified
-      publish(disabled) | stop, delete
+      NoButtons | publish(disabled), stop, delete
     stopped - modified
-      publish | delete
+      NoButtons | publish, delete
     stopped - not modified
-      publish(disabled) | delete
+      NoButtons | publish(disabled), delete
   */
 
   // export, publish are default action buttons
@@ -527,13 +527,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
 
     // default actions
     if (!props.includeActions) {
-      // The publish is always included, but may be disabled
-      if (!canPublish(props.virtualization)) {
-        actions.push(createPublishAction({ disabled: true }));
-      } else {
-        actions.push(createPublishAction(props.publishActionProps));
-      }
-
       return actions;
     }
 
@@ -589,6 +582,13 @@ export const VirtualizationActionContainer: React.FunctionComponent<
 
     // default items
     if (!props.includeItems) {
+      // The publish is included, but may be disabled
+      if (!canPublish(props.virtualization)) {
+        items.push(createPublishAction({ disabled: true }));
+      } else {
+        items.push(createPublishAction(props.publishActionProps));
+      }
+
       if (canStop(props.virtualization)) {
         items.push(createStopAction(props.stopActionProps));
       }

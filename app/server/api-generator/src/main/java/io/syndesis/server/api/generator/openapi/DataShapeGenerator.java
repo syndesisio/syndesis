@@ -69,19 +69,20 @@ public interface DataShapeGenerator<T extends OasDocument, O extends OasOperatio
     /**
      * Find response for given operation. Favors positive responses with status code 2xx and a body schema.
      * Only in case no positive response is present pick the first response with a schema present.
+     * @param openApiDoc the OpenAPI document.
      * @param operation the operation holding some response definitions.
      * @param hasSchema predicate checks that response has a schema defined.
      * @param responseType the target response type.
      * @param <R> type of the response to return.
      * @return a response on the given operation that has a schema or empty.
      */
-    default <R extends OasResponse> Optional<R> findResponse(final OasOperation operation,
-                                                                   final Predicate<R> hasSchema, Class<R> responseType) {
+    default <R extends OasResponse> Optional<R> findResponse(final T openApiDoc, final O operation,
+                                                             final Predicate<R> hasSchema, Class<R> responseType) {
         if (operation.responses == null) {
             return Optional.empty();
         }
 
-        List<OasResponse> responses = operation.responses.getResponses();
+        List<OasResponse> responses = resolveResponses(openApiDoc, operation.responses.getResponses());
 
         // Return the Response object related to the first 2xx return code found
         Optional<R> responseOk = responses.stream()
@@ -100,5 +101,17 @@ public interface DataShapeGenerator<T extends OasDocument, O extends OasOperatio
             .map(responseType::cast)
             .filter(hasSchema)
             .findFirst();
+    }
+
+    /**
+     * Method resolves response references in given list of operation responses. Each response can reference a reusable
+     * response definition on the OpenAPI document. When such a reference is found in the list of responses resolve the reference to
+     * the definition object. So the resulting list of responses does only container real response objects and no references anymore.
+     * @param openApiDoc the OpenAPI document.
+     * @param operationResponses the responses for an operation.
+     * @return list of real response objects where references to reusable response definitions are resolved.
+     */
+    default List<OasResponse> resolveResponses(T openApiDoc, List<OasResponse> operationResponses) {
+        return operationResponses;
     }
 }

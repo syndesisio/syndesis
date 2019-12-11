@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -41,6 +42,7 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.openapi.v2.OpenApiConnectorGeneratorExampleTest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,18 +52,18 @@ import static io.syndesis.server.api.generator.openapi.TestHelper.reformatJson;
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 
-abstract class BaseOpenApiGeneratorExampleTest {
+public abstract class BaseOpenApiGeneratorExampleTest {
 
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
-    final Connector expected;
+    protected final Connector expected;
 
-    final String specification;
+    protected final String specification;
 
-    public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name) throws IOException {
-        specification = TestHelper.resource("/swagger/" + name + ".swagger.json", "/swagger/" + name + ".swagger.yaml");
+    public BaseOpenApiGeneratorExampleTest(final String connectorQualifier, final String name, final String version) throws IOException {
+        specification = TestHelper.resource("/openapi/" + version + "/" + name + ".json", "/openapi/" + version + "/" + name + ".yaml");
         expected = JsonUtils.reader().forType(Connector.class)
-            .readValue(resource("/swagger/" + name + "." + connectorQualifier + "_connector.json"));
+            .readValue(resource("/openapi/" + version + "/" + name + "." + connectorQualifier + "_connector.json"));
     }
 
     @SuppressWarnings("PMD.JUnitTestContainsTooManyAsserts")
@@ -78,6 +80,7 @@ abstract class BaseOpenApiGeneratorExampleTest {
 
         final Map<String, String> expectedConfiguredProperties = expected.getConfiguredProperties();
         final String expectedSpecification = expectedConfiguredProperties.get("specification");
+
         assertThat(reformatJson(generatedSpecification)).isEqualTo(reformatJson(expectedSpecification));
 
         assertThat(without(generatedConfiguredProperties, "specification"))
@@ -142,7 +145,16 @@ abstract class BaseOpenApiGeneratorExampleTest {
         }
     }
 
-    abstract ConnectorGenerator generator();
+    protected ConnectorGenerator generator() {
+        try (InputStream stream = OpenApiConnectorGeneratorExampleTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+            final Connector restSwagger = JsonUtils.readFromStream(stream, Connector.class);
+
+            final AtomicInteger cnt = new AtomicInteger();
+            return new OpenApiConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
+        } catch (final IOException e) {
+            throw new AssertionError(e);
+        }
+    }
 
     private static String c14Xml(final String xml) {
         if (xml == null) {

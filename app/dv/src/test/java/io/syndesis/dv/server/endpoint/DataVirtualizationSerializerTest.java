@@ -15,7 +15,7 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.net.URLDecoder;
 
@@ -38,7 +38,8 @@ public final class DataVirtualizationSerializerTest {
             "  \"description\" : \"my description\",\n" +
             "  \"publishedState\" : \"NOTFOUND\",\n" +
             "  \"empty\" : true,\n" +
-            "  \"modified\" : false\n" +
+            "  \"modified\" : false,\n" +
+            "  \"editionCount\" : 0\n" +
             "}";
 
     private RestDataVirtualization dataVirtualization;

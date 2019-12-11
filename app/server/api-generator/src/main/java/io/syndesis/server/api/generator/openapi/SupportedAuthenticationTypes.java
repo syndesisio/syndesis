@@ -20,6 +20,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import io.apicurio.datamodels.core.models.common.SecurityScheme;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -29,26 +30,29 @@ import org.apache.commons.lang3.StringUtils;
 @SuppressWarnings("ImmutableEnumChecker")
 public enum SupportedAuthenticationTypes {
     apiKey("API Key"),
-    basic("HTTP Basic Authentication"),
+    basic("HTTP Basic Authentication", "http"),
     oauth2("OAuth 2.0", SupportedAuthenticationTypes::oauthType, SupportedAuthenticationTypes::oauthFlow);
 
-    private static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values())
-        .map(SupportedAuthenticationTypes::name)
+    private static final Set<String> SUPPORTED = Stream.concat(
+        Arrays.stream(SupportedAuthenticationTypes.values()).map(SupportedAuthenticationTypes::name),
+        Arrays.stream(SupportedAuthenticationTypes.values()).flatMap(type -> Stream.of(type.aliases)))
         .collect(Collectors.toSet());
 
     final transient ConfigurationProperty.PropertyValue propertyValue;
 
     private final Predicate<String> authTypeFilter;
     private final Predicate<String> authFlowFilter;
+    private final String aliases;
 
-    SupportedAuthenticationTypes(final String label) {
-        this(label, SupportedAuthenticationTypes::any, SupportedAuthenticationTypes::any);
+    SupportedAuthenticationTypes(final String label, final String... aliases) {
+        this(label, SupportedAuthenticationTypes::any, SupportedAuthenticationTypes::any, aliases);
     }
 
-    SupportedAuthenticationTypes(final String label, final Predicate<String> authTypeFilter, final Predicate<String> authFlowFilter) {
+    SupportedAuthenticationTypes(final String label, final Predicate<String> authTypeFilter, final Predicate<String> authFlowFilter, String... aliases) {
         this.authTypeFilter = authTypeFilter;
         this.authFlowFilter = authFlowFilter;
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
+        this.aliases = String.join(",", aliases);
     }
 
     public static SupportedAuthenticationTypes fromConfiguredPropertyValue(final String value) {
@@ -58,6 +62,12 @@ public enum SupportedAuthenticationTypes {
     }
 
     public static SupportedAuthenticationTypes fromSecurityDefinition(final String value) {
+        for (SupportedAuthenticationTypes type : values()) {
+            if (Arrays.asList(type.aliases.split(",")).contains(value)) {
+                return type;
+            }
+        }
+
         return valueOf(value);
     }
 
