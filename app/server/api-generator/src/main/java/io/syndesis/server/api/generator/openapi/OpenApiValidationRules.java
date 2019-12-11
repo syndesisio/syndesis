@@ -17,10 +17,8 @@ package io.syndesis.server.api.generator.openapi;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,8 +43,6 @@ import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
  *
  */
 public abstract class OpenApiValidationRules<T extends OasResponse, S extends SecurityScheme, D extends OasSchema> implements Function<OpenApiModelInfo, OpenApiModelInfo> {
-
-    private static final Set<String> SUPPORTED_CONSUMED_AUTH_TYPES = new HashSet<>(Arrays.asList("apiKey", "basic", "oauth2"));
 
     private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> rules = new ArrayList<>();
 
@@ -120,7 +116,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
      * APIs.
      */
     private OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
-        return validateAuthTypesIn(modelInfo, SUPPORTED_CONSUMED_AUTH_TYPES);
+        return validateAuthTypesIn(modelInfo, OpenApiSecurityScheme.namesAndAliases());
     }
 
     public OpenApiModelInfo validateCyclicReferences(final OpenApiModelInfo info) {
@@ -194,7 +190,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
      * Check if all operations contains valid authentication types for provided
      * APIs.
      */
-    private OpenApiModelInfo validateProvidedAuthTypes(final OpenApiModelInfo modelInfo) {
+    public OpenApiModelInfo validateProvidedAuthTypes(final OpenApiModelInfo modelInfo) {
         return validateAuthTypesIn(modelInfo, Collections.emptySet());
     }
 

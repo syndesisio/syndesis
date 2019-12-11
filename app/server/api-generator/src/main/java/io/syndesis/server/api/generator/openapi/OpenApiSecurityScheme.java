@@ -17,6 +17,10 @@
 package io.syndesis.server.api.generator.openapi;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Supported security schemes.
@@ -34,8 +38,19 @@ public enum OpenApiSecurityScheme {
         this.aliases = String.join(",", aliases);
     }
 
+    public static Set<String> namesAndAliases() {
+        return Stream.concat(
+            Arrays.stream(values()).map(OpenApiSecurityScheme::getName),
+            Arrays.stream(values()).flatMap(scheme -> scheme.getAliases().stream()))
+            .collect(Collectors.toSet());
+    }
+
     public boolean equalTo(String type) {
-        return name.equals(type) || Arrays.asList(aliases.split(",")).contains(type);
+        return name.equals(type) || getAliases().contains(type);
+    }
+
+    private List<String> getAliases() {
+        return Arrays.asList(aliases.split(","));
     }
 
     public String getName() {
