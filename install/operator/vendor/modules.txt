@@ -530,7 +530,6 @@ k8s.io/kube-openapi/pkg/common
 k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/proto
-sigs.k8s.io/controller-runtime/pkg/runtime/scheme
 k8s.io/kube-openapi/pkg/util/sets
 # sigs.k8s.io/controller-runtime v0.4.0 => sigs.k8s.io/controller-runtime v0.1.12
 sigs.k8s.io/controller-runtime/pkg/cache

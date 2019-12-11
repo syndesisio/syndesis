@@ -118,10 +118,24 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 				Description: "SyndesisSpec defines the desired state of Syndesis",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
+					"backup": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
 					"imageStreamNamespace": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"string"},
-							Format: "",
+							Description: "Namespace where syndesis docker images are located and the operator should look after them",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"routeHostname": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The external hostname to access Syndesis",
+							Type:        []string{"string"},
+							Format:      "",
 						},
 					},
 					"demoData": {

@@ -7,6 +7,7 @@ module github.com/syndesisio/syndesis/install/operator
 // replace github.com/chirino/hawtgo => /Users/chirino/sandbox/hawtgo
 
 require (
+	github.com/aws/aws-sdk-go v1.25.50 // indirect
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.4
@@ -23,6 +24,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297
 	golang.org/x/tools v0.0.0-20190826060629-95c3470cfb70 // indirect
+	gopkg.in/yaml.v2 v2.2.2
 	k8s.io/api v0.0.0-20190612125737-db0771252981
 	k8s.io/apimachinery v0.0.0-20190612125636-6a5db36e93ad
 	k8s.io/client-go v11.0.0+incompatible

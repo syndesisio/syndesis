@@ -26,6 +26,8 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
+	Backup bool `json:"backup,omitempty"`
+
 	// Namespace where syndesis docker images are located and the operator should look after them
 	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
 
