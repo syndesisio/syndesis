@@ -25,9 +25,11 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20PathItem;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
+import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
 import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
+import io.syndesis.server.api.generator.openapi.OpenApiSecurityScheme;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +59,43 @@ public class Oas20ValidationRulesTest {
         final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);
         final List<Violation> errors = validated.getErrors();
         assertThat(errors).isEmpty();
+    }
+
+    @Test
+    public void shouldNotGenerateErrorForSupportedAuthType() {
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        Oas20SecurityScheme basicAuth = openApiDoc.securityDefinitions.createSecurityScheme("basic_auth");
+        basicAuth.type = OpenApiSecurityScheme.BASIC.getName();
+        openApiDoc.securityDefinitions.addSecurityScheme("basic_auth", basicAuth);
+
+        Oas20SecurityScheme apiKey = openApiDoc.securityDefinitions.createSecurityScheme("api_key");
+        apiKey.type = OpenApiSecurityScheme.API_KEY.getName();
+        openApiDoc.securityDefinitions.addSecurityScheme("api_key", apiKey);
+
+        Oas20SecurityScheme oauth2 = openApiDoc.securityDefinitions.createSecurityScheme("oauth2");
+        oauth2.type = OpenApiSecurityScheme.OAUTH2.getName();
+        openApiDoc.securityDefinitions.addSecurityScheme("oauth2", oauth2);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = RULES.validateProvidedAuthTypes(info);
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    public void shouldGenerateErrorForUnsupportedAuthType() {
+        final Oas20Document openApiDoc = new Oas20Document();
+        openApiDoc.securityDefinitions = openApiDoc.createSecurityDefinitions();
+        Oas20SecurityScheme secretAuth = openApiDoc.securityDefinitions.createSecurityScheme("secret_auth");
+        secretAuth.type = "secret";
+        openApiDoc.securityDefinitions.addSecurityScheme("secret_auth", secretAuth);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = RULES.validateProvidedAuthTypes(info);
+        assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("unsupported-auth").message("Authentication type secret is currently not supported").property("").build());
     }
 
     @Test
