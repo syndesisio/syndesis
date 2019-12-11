@@ -59,22 +59,6 @@ export const PublishStatusWithProgress: React.FunctionComponent<
         >
           {props.i18nPublishState}
         </Label>
-        {props.publishVersion ? (
-          <span className={'publish-status-with-progress_text'}>
-            {' (Version' + props.publishVersion + ') '}
-          </span>
-        ) : (
-          // tslint:disable-next-line: jsx-self-close
-          <span className={'publish-status-with-progress_version-container'} />
-        )}
-        {props.modified ? (
-          <Badge key={2} className={'publish-status-with-progress-badge'}>
-            Modified
-          </Badge>
-        ) : (
-          // tslint:disable-next-line: jsx-self-close
-          <span className={'publish-status-with-progress-badge-container'} />
-        )}
       </React.Fragment>
     );
   }
