@@ -58,7 +58,7 @@ import io.syndesis.dv.server.endpoint.IntegrationTest.IntegrationTestConfigurati
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @ContextConfiguration(classes = {IntegrationTestConfiguration.class, Application.class})
 @SuppressWarnings("nls")
-public class IntegrationTestPublish {
+public class IntegrationPublishTest {
 
     @Autowired
     private TestRestTemplate restTemplate;

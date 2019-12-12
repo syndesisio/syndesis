@@ -499,21 +499,23 @@ public class TeiidOpenShiftClient implements StringConstants {
                     "  \"description\": \"Connection to "+virtualizationName+" \"\n" +
                     "}";
 
-            InputStream response = SyndesisHttpUtil.executePOST(url, payload);
-            ObjectMapper mapper = new ObjectMapper();
-            JsonNode root = mapper.readTree(response);
-            String id = root.get("id").asText();
+            try(SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
+            		InputStream response = syndesisClient.executePOST(url, payload)){
+                ObjectMapper mapper = new ObjectMapper();
+                JsonNode root = mapper.readTree(response);
+                String id = root.get("id").asText();
 
-            this.repositoryManager.runInTransaction(false, () -> {
-                // save the ID to the database
-                DataVirtualization dv = this.repositoryManager.findDataVirtualization(virtualizationName);
-                if (dv != null) {
-                    dv.setSourceId(id);
-                }
-                return null;
-            });
-            info(openshiftName, "Database connection to Virtual Database "
-                    + virtualizationName + " created with Id = " + id);
+                this.repositoryManager.runInTransaction(false, () -> {
+                    // save the ID to the database
+                    DataVirtualization dv = this.repositoryManager.findDataVirtualization(virtualizationName);
+                    if (dv != null) {
+                        dv.setSourceId(id);
+                    }
+                    return null;
+                });
+                info(openshiftName, "Database connection to Virtual Database "
+                        + virtualizationName + " created with Id = " + id);
+            }
         } catch (Exception e) {
             throw handleError(e);
         }
@@ -537,9 +539,9 @@ public class TeiidOpenShiftClient implements StringConstants {
 
     private Map<String, List<String>> findIntegrationByConnectionId() throws KException {
         Map<String, List<String>> usedIn = new WeakHashMap<>();
-        try {
-            String url = SYNDESISURL+"/integrations";
-            InputStream response = SyndesisHttpUtil.executeGET(url);
+        String url = SYNDESISURL+"/integrations";
+        try (SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
+        		InputStream response = syndesisClient.executeGET(url)){
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
             JsonNode items = root.get("items");
@@ -587,11 +589,13 @@ public class TeiidOpenShiftClient implements StringConstants {
             });
 
             if (dv != null) {
-                SyndesisHttpUtil.executeDELETE(SYNDESISURL + "/connections/" + dv.getSourceId());
-                info(dv.getName(), "Database connection to Virtual Database " + dv.getName()
-                    + " deleted with Id = "+ dv.getSourceId());
-                // remove the source id from database
-                dv.setSourceId(null);
+                try(SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
+                		InputStream response = syndesisClient.executeDELETE(SYNDESISURL + "/connections/" + dv.getSourceId())){
+                    info(dv.getName(), "Database connection to Virtual Database " + dv.getName()
+                        + " deleted with Id = "+ dv.getSourceId());
+                    // remove the source id from database
+                    dv.setSourceId(null);
+                }
             }
         } catch (Exception e) {
             throw handleError(e);
@@ -600,9 +604,9 @@ public class TeiidOpenShiftClient implements StringConstants {
 
     public Set<DefaultSyndesisDataSource> getSyndesisSources() throws KException {
         Set<DefaultSyndesisDataSource> result = new HashSet<>();
-        try {
-            String url = SYNDESISURL+"/connections";
-            InputStream response = SyndesisHttpUtil.executeGET(url);
+        String url = SYNDESISURL+"/connections";
+        try (SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
+        		InputStream response = syndesisClient.executeGET(url)){
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
             for (JsonNode item: root.get("items")) {
@@ -627,9 +631,9 @@ public class TeiidOpenShiftClient implements StringConstants {
             throws KException {
         DefaultSyndesisDataSource source = syndesisSources.get(dsId);
         if (source == null && checkRemote) {
-            try {
-                String url = SYNDESISURL+"/connections/"+dsId;
-                InputStream response = SyndesisHttpUtil.executeGET(url);
+            String url = SYNDESISURL+"/connections/"+dsId;
+            try (SyndesisHttpClient syndesisClient = new SyndesisHttpClient();
+            		InputStream response = syndesisClient.executeGET(url)){
                 ObjectMapper mapper = new ObjectMapper();
                 JsonNode root = mapper.readTree(response);
                 String connectorType = root.get("connectorId").asText();
