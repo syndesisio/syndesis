@@ -63,7 +63,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	resourcesThatShouldExist := map[types.UID]bool{}
 
 	// Load configuration to to use as context for generate pkg
-	configuration, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
+	config, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
 	if err != nil {
 		return err
 	}
@@ -80,7 +80,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	if secret != nil {
-		configuration.ImagePullSecrets = append(configuration.ImagePullSecrets, secret.Name)
+		config.ImagePullSecrets = append(config.ImagePullSecrets, secret.Name)
 	}
 
 	serviceAccount, err := installServiceAccount(ctx, a.client, syndesis, secret)
@@ -93,14 +93,14 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if err != nil {
 		return err
 	}
-	configuration.OpenShiftOauthClientSecret = token
+	config.OpenShiftOauthClientSecret = token
 
-	if err := configuration.ExternalDatabase(ctx, a.client, syndesis); err != nil {
+	if err := config.ExternalDatabase(ctx, a.client, syndesis); err != nil {
 		return err
 	}
 
 	// Render the route resource...
-	all, err := generator.RenderDir("./route/", configuration)
+	all, err := generator.RenderDir("./route/", config)
 	if err != nil {
 		return err
 	}
@@ -110,21 +110,21 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	if err != nil {
 		return err
 	}
-	if err := configuration.SetRoute(ctx, a.client, syndesis); err != nil {
+	if err := config.SetRoute(ctx, a.client, syndesis); err != nil {
 		return err
 	}
 
 	resourcesThatShouldExist[syndesisRoute.GetUID()] = true
 
 	// Render the remaining syndesis resources...
-	all, err = generator.RenderDir("./infrastructure/", configuration)
+	all, err = generator.RenderDir("./infrastructure/", config)
 	if err != nil {
 		return err
 	}
 
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
-		dbResources, err := generator.RenderDir("./database/", configuration)
+		dbResources, err := generator.RenderDir("./database/", config)
 		if err != nil {
 			return err
 		}
@@ -142,31 +142,21 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		all = append(all, dbResources...)
 	}
 
-	addons := []struct {
-		name    string
-		enabled bool
-	}{
-		{"jaeger", configuration.Syndesis.Addons.Jaeger.Enabled},
-		{"ops", configuration.Syndesis.Addons.Ops.Enabled},
-		{"dv", configuration.Syndesis.Addons.DV.Enabled},
-		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
-		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
-		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
-	}
+	addons := configuration.GetAddons(*config)
 	for _, addon := range addons {
-		if !addon.enabled {
+		if !addon.Enabled {
 			continue
 		}
 
-		addonDir := "./addons/" + addon.name + "/"
+		addonDir := "./addons/" + addon.Name + "/"
 		f, err := generator.GetAssetsFS().Open(addonDir)
 		if err != nil {
-			a.log.Info("unsupported addon configured", "addon", addon, "error", err)
+			a.log.Info("unsupported addon configured", "addon", addon.Name, "error", err)
 			continue
 		}
 		f.Close()
 
-		resources, err := generator.RenderDir(addonDir, configuration)
+		resources, err := generator.RenderDir(addonDir, config)
 		if err != nil {
 			return err
 		}
