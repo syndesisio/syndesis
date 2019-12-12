@@ -26,6 +26,7 @@ export interface IVirtualizationDetailsHeaderProps {
   virtualizationDescription?: string;
   virtualizationName: string;
   isWorking: boolean;
+  usedBy: boolean;
   onChangeDescription: (newDescription: string) => Promise<boolean>;
 }
 
@@ -33,9 +34,7 @@ export interface IVirtualizationDetailsHeaderProps {
  * Line 1: name and status
  * Line 2: description label and value
  */
-export const VirtualizationDetailsHeader: React.FunctionComponent<
-  IVirtualizationDetailsHeaderProps
-> = props => {
+export const VirtualizationDetailsHeader: React.FunctionComponent<IVirtualizationDetailsHeaderProps> = props => {
   return (
     <PageSection className={'virtualization-details-header'} variant={'light'}>
       <Stack>
@@ -62,29 +61,33 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
               ) : (
                 <Loader size={'sm'} inline={true} />
               )}
-              {props.odataUrl && props.publishedState && (
-                <span>
-                  <a
-                    data-testid={'virtualization-details-header-odataUrl'}
-                    target="_blank"
-                    href={props.odataUrl}
-                  >
-                    {props.i18nODataUrlText}
-                    <Icon
-                      className={
-                        'virtualization-details-header-odata-link-icon'
-                      }
-                      name={'external-link'}
-                    />
-                  </a>
-                </span>
+              {props.usedBy && (
+                <span
+                  className={'virtualization-details-header__usedByMessage '}
+                >{`| ${props.i18nInUseText}`}</span>
               )}
-            </SplitItem>
-            <SplitItem
-              className={'virtualization-details-header__usedByMessage'}
-              isFilled={true}
-            >
-              {props.i18nInUseText}
+              {props.odataUrl && props.publishedState && (
+                <>
+                  <span
+                    className={'virtualization-details-header__usedByMessage '}
+                  >{`|`}</span>
+                  <span>
+                    <a
+                      data-testid={'virtualization-details-header-odataUrl'}
+                      target="_blank"
+                      href={props.odataUrl}
+                    >
+                      {props.i18nODataUrlText}
+                      <Icon
+                        className={
+                          'virtualization-details-header-odata-link-icon'
+                        }
+                        name={'external-link'}
+                      />
+                    </a>
+                  </span>
+                </>
+              )}
             </SplitItem>
           </Split>
         </StackItem>
