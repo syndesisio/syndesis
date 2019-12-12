@@ -9,7 +9,7 @@ module github.com/syndesisio/syndesis/install/operator
 require (
 	github.com/chirino/hawtgo v0.0.1
 	github.com/go-logr/logr v0.1.0
-	github.com/go-openapi/spec v0.19.4
+	github.com/go-openapi/spec v0.19.5
 	github.com/imdario/mergo v0.3.8
 	github.com/openshift/api v3.9.0+incompatible
 	github.com/operator-framework/operator-sdk v0.0.0-20190815222052-4ca881a92eb7
