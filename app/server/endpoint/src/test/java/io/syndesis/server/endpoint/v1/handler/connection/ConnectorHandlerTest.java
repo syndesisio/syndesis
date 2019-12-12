@@ -36,6 +36,7 @@ import javax.imageio.stream.ImageInputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
 
@@ -82,8 +83,12 @@ public class ConnectorHandlerTest {
 
     private static final FileDataManager NO_EXTENSION_DATA_MANAGER = null;
 
-    private final io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler handler = new io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
-                                                                                                                                                                      NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER);
+    private static final MetadataConfigurationProperties NO_METADATA_CONFIGURATION_PROPERTIES = null;
+
+    private final io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler handler =
+        new io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {

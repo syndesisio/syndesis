@@ -15,16 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URLConnection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.FormParam;
@@ -36,31 +26,42 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLConnection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
-import io.syndesis.common.model.api.APISummary;
-import io.syndesis.server.credential.Credentials;
-import io.syndesis.server.dao.file.FileDataManager;
-import io.syndesis.server.dao.file.IconDao;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.filter.Op;
 import io.syndesis.common.model.icon.Icon;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.server.credential.Credentials;
+import io.syndesis.server.dao.file.FileDataManager;
+import io.syndesis.server.dao.file.IconDao;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
+import io.syndesis.server.inspector.Inspectors;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.context.ApplicationContext;
@@ -79,10 +80,12 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     private final Inspectors inspectors;
     private final ClientSideState state;
     private final Verifier verifier;
+    private final MetadataConfigurationProperties config;
 
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public ConnectorHandler(final DataManager dataMgr, final Verifier verifier, final Credentials credentials, final Inspectors inspectors,
                             final ClientSideState state, final EncryptionComponent encryptionComponent, final ApplicationContext applicationContext,
-                            final IconDao iconDao, final FileDataManager extensionDataManager) {
+                            final IconDao iconDao, final FileDataManager extensionDataManager, final MetadataConfigurationProperties config) {
         super(dataMgr);
         this.verifier = verifier;
         this.credentials = credentials;
@@ -92,6 +95,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         this.applicationContext = applicationContext;
         this.iconDao = iconDao;
         this.extensionDataManager = extensionDataManager;
+        this.config = config;
     }
 
     @Path("/{id}/credentials")
@@ -134,8 +138,12 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     @Path("/{id}/icon")
     public ConnectorIconHandler getConnectorIcon(@NotNull @PathParam("id") final String connectorId) {
         final Connector connector = get(connectorId);
-
         return new ConnectorIconHandler(getDataManager(), connector, iconDao, extensionDataManager);
+    }
+
+    @Path("/{id}/properties")
+    public ConnectorPropertiesHandler properties(@NotNull @PathParam("id") final String connectorId) {
+        return new ConnectorPropertiesHandler(config);
     }
 
     @GET
