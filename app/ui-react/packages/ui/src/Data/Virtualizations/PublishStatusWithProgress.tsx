@@ -19,9 +19,7 @@ export interface IPublishStatusWithProgressProps {
   publishVersion?: number;
 }
 
-export const PublishStatusWithProgress: React.FunctionComponent<
-  IPublishStatusWithProgressProps
-> = props => {
+export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWithProgressProps> = props => {
   if (props.isProgressWithLink) {
     return (
       <div
@@ -76,12 +74,16 @@ export const PublishStatusWithProgress: React.FunctionComponent<
       )}
       <span className={'publish-status-with-progress_text'}>
         {props.i18nPublishState}
-        {props.publishVersion && ` (Version ${props.publishVersion})`}
+        {props.publishVersion && ` version ${props.publishVersion}`}
       </span>
-      {props.modified && (
-        <Badge key={2} className={'publish-status-with-progress-badge'}>
-          Modified
-        </Badge>
+      {(props.i18nPublishState === 'Stopped' ||
+        (props.i18nPublishState === 'Running' && props.modified)) && (
+        <>
+          <span className={'publish-status-with-progress_text'}>{`|`}</span>
+          <Badge key={2} className={'publish-status-with-progress-badge'}>
+            Draft
+          </Badge>
+        </>
       )}
     </React.Fragment>
   );

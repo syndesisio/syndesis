@@ -314,6 +314,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           virtualizationName={props.routeParams.virtualizationId}
           isWorking={!props.virtualization || !currPublishedState}
           onChangeDescription={doSetDescription}
+          usedBy={props.virtualization.usedBy && props.virtualization.usedBy.length > 0}
         />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
