@@ -134,9 +134,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		//
 		if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
 			a.log.Info("Will bind sydnesis-db to persistent volume with criteria ",
-				"volume-access-mode", configuration.Syndesis.Components.Database.Resources.VolumeAccessMode,
-				"volume-name", configuration.Syndesis.Components.Database.Resources.VolumeName,
-				"storage-class", configuration.Syndesis.Components.Database.Resources.VolumeStorageClass)
+				"volume-access-mode", config.Syndesis.Components.Database.Resources.VolumeAccessMode,
+				"volume-name", config.Syndesis.Components.Database.Resources.VolumeName,
+				"storage-class", config.Syndesis.Components.Database.Resources.VolumeStorageClass)
 		}
 
 		all = append(all, dbResources...)
