@@ -39,7 +39,6 @@ stories
         i18nPublishState={'Running'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
@@ -48,7 +47,6 @@ stories
         virtualizationName={virtualizationName}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -60,7 +58,6 @@ stories
         i18nPublishState={'Draft'}
         labelType={'default'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
@@ -69,7 +66,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -79,7 +75,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -91,7 +86,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -100,7 +94,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -116,7 +109,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -125,7 +117,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -141,7 +132,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -150,7 +140,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -166,7 +155,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ))
@@ -177,7 +165,6 @@ stories
         i18nPublishState={'Published'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
@@ -188,7 +175,6 @@ stories
         virtualizationDescription={virtualizationDescription}
         isWorking={false}
         onChangeDescription={changeDescription}
-        usedBy={true}
       />
     </Bullseye>
   ));
