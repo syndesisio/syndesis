@@ -29,10 +29,10 @@
 :LinkManagingFuse: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/managing_fuse/index
 :NameOfManagingFuse: Managing Fuse
 
-:LinkReleaseNotes: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes/index
+:LinkReleaseNotes: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes_for_red_hat_fuse_{version}/index
 :NameOfReleaseNotes: Release Notes
 
-:LinkReleaseNotesBOM: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes/index#StandaloneDistrib-BOMs
+:LinkReleaseNotesBOM: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/release_notes_for_red_hat_fuse_{version}/index#StandaloneDistrib-BOMs
 
 :LinkSecurityGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/apache_karaf_security_guide/index
 :NameOfSecurityGuide: Apache Karaf Security Guide
@@ -55,6 +55,9 @@
 :LinkFISGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/
 :NameOfFISGuide: Fuse on OpenShift Guide
 
+:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/designing_apis/
+:NameDesigningAPIs: Designing APIs
+
 // Fuse Online titles
 
 :LinkFuseOnlineTutorials: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_online_sample_integration_tutorials/
@@ -74,7 +77,7 @@
 // Developer Studio titles
 :DevStudioProdName: Red Hat CodeReady Studio
 :DevStudioProdNameShort: CodeReady Studio
-:DevStudioVersion: 12.11
+:DevStudioVersion: 12.13
 
 :LinkDevStudioInstallGuide: https://access.redhat.com/documentation/en-us/red_hat_codeready_studio/{DevStudioVersion}/html-single/installation_guide/
 :NameOfDevStudioInstallGuide: Installation Guide
@@ -97,13 +100,13 @@
 // Red Hat 3scale API Management titles
 :3scaleProdName: Red Hat 3scale API Management
 :3scaleProdNameShort: 3scale
-:3scaleVersion: 2.5
+:3scaleVersion: 2.6
 
 :Link3scaleServiceDiscovery: https://access.redhat.com/documentation/en-us/red_hat_3scale_api_management/{3scaleVersion}/html-single/service_discovery/
 :NameOf3scaleServiceDiscovery: Admin Portal Guide
 
 //Red Hat Integration titles
-:IntegrationVersion: 2019-07
+:IntegrationVersion: 2019-12
 
 :LinkIntegrationRelNotes: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/release_notes/
 :NameIntegrationRelNotes: Release Notes
@@ -119,6 +122,3 @@
 
 :LinkIntegrationData: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/data_virtualization/
 :NameIntegrationData: Data Integration
-
-:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/red_hat_integration/{IntegrationVersion}/html-single/designing_apis_with_api_designer/
-:NameDesigningAPIs: Designing APIs with API Designer

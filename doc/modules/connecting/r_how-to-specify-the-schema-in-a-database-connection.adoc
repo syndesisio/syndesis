@@ -19,9 +19,10 @@ requires.
 |Apache Derby
 |*Connection URL* (JDBC URL): `jdbc:derby:memory:testdb;create=true` +
 *Username*: `sa` +
-*Password*: +
+*Password*: any value +
 *Schema*: `sample`
-|For testing purposes only. The default username is `sa` with an empty password. 
+|For testing purposes only. The default username is `sa` and the password can 
+be anything but you must enter a value. 
 In this example configuration, the connection uses the `sample` schema, which is like 
 a namespace. For example, you can reference the `mytable` table with `sample.mytable`. 
 
@@ -30,7 +31,8 @@ a namespace. For example, you can reference the `mytable` table with `sample.myt
 *Username*: `kurt` +
 *Password*: `mypw` +
 *Schema*: `sampledb`
-|Upload the driver by using the extension mechanism.
+|Upload the driver by using the 
+link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
 Then create a connection. Connection verification fails if you have 
 not already uploaded the driver. You must specify the same schema at the end of 
 the connection URL and in the *Schema* field. 
@@ -49,7 +51,9 @@ configuration in the connection (JDBC) URL.
 *Username*: `kurt` +
 *Password*: `mypw` +
 *Schema*: 
-|Use the {prodname} extension mechanism to upload an Oracle database driver. 
+|Use the {prodname} 
+link:{LinkFuseOnlineIntegrationGuide}#creating-jdbc-driver-library-extensions_extensions[extension mechanism].
+to upload an Oracle database driver. 
 Then create the connection. Connection verification fails if the driver has 
 not been uploaded. +
 The schema is the database name. You must have permission to access this 
@@ -63,10 +67,10 @@ instance (`xe` in this example).
 *Username*: `kurt` +
 *Password*: `mypw` +
 *Schema*: `sampledb`
-|You must specify the database in the connection (JDBC) URL. The URL must 
-also specify the schema and you must specify the same schema in the 
-connection configuration *Schema* field. A connection can resolve a 
-reference to _database.schema.table_. When a reference specifies only 
+|You must specify the database in the connection (JDBC) URL. T
+If you want to use a schema you must specify it in the *Schema* field. 
+A query can refer to a table in the form 
+_database.schema.table_. When a reference specifies only 
 a table name, the connection first searches the schema that you specify 
 when you configure the connection. If the table is not found, 
 then the connection searches public resources for the specified table. 
@@ -79,7 +83,9 @@ link:https://www.postgresql.org/docs/9.1/ddl-schemas.html[PostgreSQL schema docu
 *Password*: any value +
 *Schema*:
 |The virtual database must have already been created, for example by using 
-the Data Virtualization feature. In the connection URL, replace `<vdb-name>` 
+the 
+link:{LinkIntegrationData}#creating-vdbs[Data Virtualization] 
+feature. In the connection URL, replace `<vdb-name>` 
 with the name of the virtual database. No security has been implemented yet 
 for connections to Teiid. 
 Specify any value in the *Username* and *Password* fields. Leave the *Schema* field blank. 
