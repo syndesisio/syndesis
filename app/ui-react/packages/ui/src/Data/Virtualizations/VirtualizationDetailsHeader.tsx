@@ -11,7 +11,6 @@ export interface IVirtualizationDetailsHeaderProps {
   isProgressWithLink: boolean;
   i18nPublishState: string;
   i18nDescriptionPlaceholder: string;
-  i18nInUseText: string;
   i18nPublishLogUrlText: string;
   i18nODataUrlText: string;
   labelType: 'danger' | 'primary' | 'default';
@@ -26,7 +25,6 @@ export interface IVirtualizationDetailsHeaderProps {
   virtualizationDescription?: string;
   virtualizationName: string;
   isWorking: boolean;
-  usedBy: boolean;
   onChangeDescription: (newDescription: string) => Promise<boolean>;
 }
 
@@ -60,11 +58,6 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<IVirtualizatio
                 />
               ) : (
                 <Loader size={'sm'} inline={true} />
-              )}
-              {props.usedBy && (
-                <span
-                  className={'virtualization-details-header__usedByMessage '}
-                >{`| ${props.i18nInUseText}`}</span>
               )}
               {props.odataUrl && props.publishedState && (
                 <>
