@@ -511,15 +511,6 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
         }
 
-        for (TeiidDataSource dataSource : getMetadataInstance().getDataSources()) {
-            Schema s = vdb.getSchema(dataSource.getName());
-            if (s == null) {
-                continue;
-            }
-
-            srcSchemas.add(new RestSourceSchema(s));
-        }
-
         for (Schema s : vdb.getLocalSchema()) {
             srcSchemas.add(new RestSourceSchema(s));
         }
