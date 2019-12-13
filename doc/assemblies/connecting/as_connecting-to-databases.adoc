@@ -23,12 +23,15 @@ that database.
 See the following topics for details:
 
 * xref:create-database-connection_{context}[]
+* xref:how-to-specify-the-schema-in-a-database-connection_{context}[]
 * xref:adding-db-connection-start_{context}[]
 * xref:about-parameter-placeholders-and-values_{context}[]
 * xref:adding-db-connection-finish-middle_{context}[]
 * xref:connecting-to-proprietary-databases_{context}[]
 
 include::../../modules/connecting/p_create-database-connection.adoc[leveloffset=+1]
+
+include::../../modules/connecting/r_how-to-specify-the-schema-in-a-database-connection.adoc[leveloffset=+1]
 
 include::../../modules/connecting/p_adding-db-connection-start.adoc[leveloffset=+1]
 
