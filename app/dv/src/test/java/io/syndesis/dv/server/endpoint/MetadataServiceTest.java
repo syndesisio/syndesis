@@ -16,12 +16,24 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.List;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.server.ResponseStatusException;
+import org.teiid.adminapi.impl.VDBMetaData;
+
+import io.syndesis.dv.KException;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.TeiidVdb;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
@@ -29,26 +41,13 @@ import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
 import io.syndesis.dv.repository.RepositoryConfiguration;
 import io.syndesis.dv.repository.RepositoryManagerImpl;
 import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.EditorService;
-import io.syndesis.dv.server.endpoint.MetadataService;
-import io.syndesis.dv.server.endpoint.QueryAttribute;
-import io.syndesis.dv.server.endpoint.RestSchemaNode;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.server.ResponseStatusException;
-import org.teiid.adminapi.impl.VDBMetaData;
-
-import io.syndesis.dv.KException;
+import io.syndesis.dv.server.endpoint.MetadataService.SourceDeploymentMode;
 
 @SuppressWarnings({ "javadoc", "nls" })
 @RunWith(SpringRunner.class)
 @DataJpaTest
 @ContextConfiguration(classes = {RepositoryConfiguration.class, ServiceTestConfiguration.class})
-@DirtiesContext
+@DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
 public class MetadataServiceTest {
     @Autowired
     private RepositoryManagerImpl repositoryManagerImpl;
@@ -118,29 +117,29 @@ public class MetadataServiceTest {
         DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source2");
         metadataInstance.registerDataSource(sds);
 
-        repositoryManagerImpl.createSchema("someid", "source",
+        repositoryManagerImpl.createSchema("someid", "source2",
                 "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar');"
                 + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar1');");
 
-        nodes = metadataService.getSchema("source");
+        nodes = metadataService.getSchema("source2");
         assertEquals("[ {\n" +
                 "  \"children\" : [ {\n" +
                 "    \"children\" : [ ],\n" +
                 "    \"name\" : \"bar\",\n" +
                 "    \"teiidName\" : \"tbl\",\n" +
-                "    \"connectionName\" : \"source\",\n" +
+                "    \"connectionName\" : \"source2\",\n" +
                 "    \"type\" : \"t bl\",\n" +
                 "    \"queryable\" : true\n" +
                 "  }, {\n" +
                 "    \"children\" : [ ],\n" +
                 "    \"name\" : \"bar1\",\n" +
                 "    \"teiidName\" : \"tbl1\",\n" +
-                "    \"connectionName\" : \"source\",\n" +
+                "    \"connectionName\" : \"source2\",\n" +
                 "    \"type\" : \"t bl\",\n" +
                 "    \"queryable\" : true\n" +
                 "  } ],\n" +
                 "  \"name\" : \"s x\",\n" +
-                "  \"connectionName\" : \"source\",\n" +
+                "  \"connectionName\" : \"source2\",\n" +
                 "  \"type\" : \"schema\",\n" +
                 "  \"queryable\" : false\n" +
                 "} ]", JsonMarshaller.marshall(nodes));
@@ -210,5 +209,33 @@ public class MetadataServiceTest {
         assertTrue(!vdb.getValidityErrors().isEmpty());
 
         metadataInstance.query(vdb.getName(), "select * from v", DefaultMetadataInstance.NO_OFFSET, DefaultMetadataInstance.NO_LIMIT);
+    }
+
+    @Test
+    public void testRuntimeMetadata() throws Exception {
+        QueryAttribute kqa = new QueryAttribute();
+        kqa.setQuery("select * from myview");
+        kqa.setTarget("dv1");
+
+        repositoryManagerImpl.createDataVirtualization("dv1");
+
+        //create a source schema
+        repositoryManagerImpl.createSchema("someid", "source",
+                "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar');"
+                + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar1');");
+
+        //create the datasource
+        DefaultSyndesisDataSource sds = DataVirtualizationServiceTest.createH2DataSource("source");
+        metadataInstance.registerDataSource(sds);
+
+        metadataService.deploySourceVdb("source", SourceDeploymentMode.REUSE_DDL);
+        //we need to manually call refresh because there is a mock threadpool
+        metadataService.refreshPreviewVdb();
+
+        RestViewSourceInfo info = metadataService.getRuntimeMetadata("dv1");
+        RestSourceSchema[] schemas = info.getSchemas();
+        assertEquals(2, schemas.length);
+        assertEquals("dv1", schemas[0].getName());
+        assertEquals("source", schemas[1].getName());
     }
 }
