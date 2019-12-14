@@ -27,6 +27,9 @@ Syndesis:
             Image: "fabric8/s2i-java:3.0-java8"
             CamelVersion: "2.23.2.fuse-760016"
             CamelKRuntime: "0.3.4.fuse-740008"
+        PublicApi:
+            Enabled: false
+            DisableSarCheck: false
     Components:
         Oauth:
             Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"
