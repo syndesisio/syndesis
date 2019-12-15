@@ -133,7 +133,7 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
   const colHeaders = [
     t('versionsTableVersion'),
     t('versionsTablePublishedTime'),
-    t('versionsTablePublished'),
+    t('versionsTableRunning'),
     '',
   ];
 

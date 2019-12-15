@@ -1,7 +1,17 @@
-import { useVirtualization } from '@syndesis/api';
-import { DvMetricsContainer, PageSection } from '@syndesis/ui';
+import { useVirtualization, useVirtualizationMetrics } from '@syndesis/api';
+import {
+  DvMetricsContainer,
+  DvMetricsContainerSkeleton,
+  PageSection,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
+import { WithLoader } from '@syndesis/utils';
+import {
+  toShortDateAndTimeString,
+  toUptimeDurationString,
+} from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
@@ -21,9 +31,42 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
   >();
 
   /**
+   * Hook to handle localization.
+   */
+  const { t } = useTranslation(['data', 'shared']);
+
+  /**
    * Hook to obtain the virtualization being edited. Also does polling to get virtualization descriptor updates.
    */
   const { model: virtualization } = useVirtualization(params.virtualizationId);
+
+  /**
+   * Hook to obtain virtualization editions.
+   */
+  const { resource: metrics, hasData, error } = useVirtualizationMetrics(
+    params.virtualizationId
+  );
+
+  /**
+   * Get the uptime string for display
+   * @param utcTimestamp the utc timestamp string
+   * @returns the Uptime display
+   */
+  const getUptimeDisplay = (utcTimestamp: string): string => {
+    const numericTimestamp = Date.parse(utcTimestamp);
+    const duration = Date.now() - numericTimestamp;
+    return toUptimeDurationString(duration);
+  };
+
+  /**
+   * Get the date and time display
+   * @param utcTimestamp the utc timestamp string
+   * @returns the Date and time display
+   */
+  const getDateAndTimeDisplay = (utcTimestamp: string): string => {
+    const numericTimestamp = Date.parse(utcTimestamp);
+    return toShortDateAndTimeString(numericTimestamp);
+  };
 
   return (
     <VirtualizationEditorPage
@@ -32,55 +75,66 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
       virtualization={virtualization}
     >
       <PageSection>
-        {virtualization.publishedState === 'RUNNING' ? 
-        <DvMetricsContainer
-        cacheHitProps={{
-          a11yInfoCloseButton: 'Close info popover',
-          a11yInfoPopover: 'Info popover',
-          i18nDatetime: 'Nov 18, 11:40:00 pm',
-          i18nInfoMessage: 'Cache hit ratios information message goes here.',
-          i18nNoData: 'No data available',
-          i18nTitle: 'Cache hit ratios',
-          loading: false,
-          percentage: '35%',
-        }}
-        clientSessionProps={{
-          connectionCount: 8,
-          i18nConnectionMessage: 'Connections are issuing queries',
-          i18nNoData: 'No data available',
-          i18nTitle: 'Client sessions',
-          i18nViewAllAction: 'View all',
-          loading: false,
-          onViewAll: () => alert('Implement View all'),
-        }}
-        i18nNoDataTitle={'No metrics data available'}
-        i18nNoDataDescription={'There is no Metrics details available for this virtualization.'}
-        requestProps={{
-          a11yShowFailed: 'Show Failed Requests',
-          a11yShowSucceeded: 'Show Succeeded Requests',
-          failedCount: 129,
-          i18nNoData: 'No data available',
-          i18nTitle: 'Total requests',
-          loading: false,
-          onShowFailed: () => alert('Implement Show Failed'),
-          onShowSucceeded: () => alert('Implement Show Succeeded'),
-          successCount: 17000,
-        }}
-        uptimeProps={{
-          i18nNoData: 'No data available',
-          i18nSinceMessage: 'Since Oct 11, 11:47:14 pm',
-          i18nTitle: 'Uptime',
-          i18nUptime: '1 day 3 hours 9 minutes',
-          loading: false,
-        }}
-      />
-      :
-      <DvMetricsContainer
-      i18nNoDataTitle={'No metrics data available'}
-      i18nNoDataDescription={'There is no Metrics details available for this virtualization.'}
-      />
-    }
-        
+        <WithLoader
+          error={error !== false}
+          loading={!hasData}
+          loaderChildren={<DvMetricsContainerSkeleton />}
+          errorChildren={
+            <DvMetricsContainer
+              i18nNoDataTitle={t('metricsNoMetricsTitle')}
+              i18nNoDataDescription={t('metricsNoMetricsDescription')}
+            />
+          }
+        >
+          {() => {
+            return virtualization.publishedState === 'RUNNING' ? (
+              <DvMetricsContainer
+                resultSetCacheProps={{
+                  a11yInfoCloseButton: t('metricsCacheHitRatioA11yInfoClose'),
+                  a11yInfoPopover: t('metricsCacheHitRatioA11yInfo'),
+                  cacheHitRatioPercentage: t('metricsCacheHitRatioPct', {
+                    pctValue: metrics.resultSetCacheHitRatio * 100,
+                  }),
+                  i18nCacheHitRatioText: t('metricsCacheHitRatioText'),
+                  i18nInfoMessage: t('metricsCacheHitRatioDescription'),
+                  i18nNoData: t('metricsNoDataAvailable'),
+                  i18nTitle: t('metricsResultSetCacheTitle'),
+                  loading: !hasData,
+                }}
+                clientSessionProps={{
+                  i18nNoData: t('metricsNoDataAvailable'),
+                  i18nSessionText: t('metricsClientSessionsText'),
+                  i18nTitle: t('metricsClientSessionsTitle'),
+                  loading: !hasData,
+                  sessionCount: metrics.sessions,
+                }}
+                i18nNoDataTitle={t('metricsNoMetricsTitle')}
+                i18nNoDataDescription={t('metricsNoMetricsDescription')}
+                requestProps={{
+                  i18nNoData: t('metricsNoDataAvailable'),
+                  i18nRequestText: t('metricsRequestCountText'),
+                  i18nTitle: t('metricsRequestCountTitle'),
+                  loading: !hasData,
+                  requestCount: metrics.requestCount,
+                }}
+                uptimeProps={{
+                  i18nNoData: t('metricsNoDataAvailable'),
+                  i18nSinceMessage: t('metricsUptimeSince', {
+                    sinceTime: getDateAndTimeDisplay(metrics.startedAt),
+                  }),
+                  i18nTitle: t('metricsUptimeTitle'),
+                  i18nUptime: getUptimeDisplay(metrics.startedAt),
+                  loading: !hasData,
+                }}
+              />
+            ) : (
+              <DvMetricsContainer
+                i18nNoDataTitle={t('metricsNoMetricsTitle')}
+                i18nNoDataDescription={t('metricsNoMetricsDescription')}
+              />
+            );
+          }}
+        </WithLoader>
       </PageSection>
     </VirtualizationEditorPage>
   );
