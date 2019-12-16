@@ -53,7 +53,7 @@
   "dependencies": {
     "@syndesis/models": "*",
     "@syndesis/utils": "*",
-    "deepmerge": "^3.2.0",
+    "deepmerge": "^4.2.2",
     "file-saver": "^2.0.1",
     "immer": "^5.0.0",
     "react-fast-compare": "^2.0.2"
