@@ -99,6 +99,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	app.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
+	app.PersistentFlags().StringVarP(&o.customResource, "custom-resource", "", "", "path to a custom resource file to use when deploying")
 	cmd.AddCommand(app)
 
 	forge := &cobra.Command{
@@ -118,7 +119,6 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
-	cmd.PersistentFlags().StringVarP(&o.customResource, "custom-resource", "", "", "path to a custom resource file to use when deploying (only used with install standalone)")
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
