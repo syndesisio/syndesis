@@ -75,6 +75,7 @@ import io.fabric8.kubernetes.api.KubernetesHelper;
 import io.fabric8.kubernetes.api.builds.Builds;
 import io.fabric8.kubernetes.api.model.ContainerPort;
 import io.fabric8.kubernetes.api.model.ContainerStateRunning;
+import io.fabric8.kubernetes.api.model.DoneableService;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.EnvVarSourceBuilder;
@@ -85,6 +86,7 @@ import io.fabric8.kubernetes.api.model.ReplicationController;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.Service;
+import io.fabric8.kubernetes.api.model.ServiceFluent.SpecNested;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.fabric8.kubernetes.client.Watch;
 import io.fabric8.kubernetes.client.Watcher;
@@ -99,7 +101,6 @@ import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteList;
 import io.fabric8.openshift.api.model.RouteSpec;
-import io.fabric8.openshift.api.model.TLSConfigBuilder;
 import io.fabric8.openshift.client.DefaultOpenShiftClient;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.OpenShiftClient;
@@ -265,9 +266,9 @@ public class TeiidOpenShiftClient implements StringConstants {
                         DeploymentConfig dc = client.deploymentConfigs().inNamespace(work.getNamespace())
                                 .withName(work.getDeploymentName()).get();
                         if (isDeploymentInReadyState(dc)) {
-                            // it done now..
+                            // it is done now..
                             info(work.getOpenShiftName(), "Publishing - Deployment completed");
-                            createServices(client, work.getNamespace(), work.getOpenShiftName());
+                            createService(client, work.getNamespace(), work.getOpenShiftName());
                             createSyndesisConnection(client, work.getNamespace(), work.getOpenShiftName(), work.getDataVirtualizationName());
                             work.setStatus(Status.RUNNING);
                             shouldReQueue = false;
@@ -861,7 +862,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                   .addToLabels("syndesis.io/type", "datavirtualization")
                   .addToLabels(DEPLOYMENT_VERSION_LABEL, String.valueOf(config.getDeploymentVersion()))
                   .addToAnnotations("prometheus.io/scrape", "true")
-                  .addToAnnotations("prometheus.io/port", "9779")
+                  .addToAnnotations("prometheus.io/port", String.valueOf(ProtocolType.PROMETHEUS.getTargetPort()))
                 .endMetadata()
                 .withNewSpec()
                   .addNewContainer()
@@ -907,59 +908,32 @@ public class TeiidOpenShiftClient implements StringConstants {
 
     private List<ContainerPort> getDeploymentPorts(PublishConfiguration config){
         List<ContainerPort> ports = new ArrayList<>();
-        ports.add(createPort(ProtocolType.PROMETHEUS.id(), 9779, "TCP"));
-        ports.add(createPort(ProtocolType.JOLOKIA.id(), JOLOKIA_PORT, "TCP"));
-        ports.add(createPort(ProtocolType.JDBC.id(), 31000, "TCP"));
-        ports.add(createPort(ProtocolType.PG.id(), 35432, "TCP"));
+        ports.add(createPort(ProtocolType.PROMETHEUS));
+        ports.add(createPort(ProtocolType.JOLOKIA));
+        ports.add(createPort(ProtocolType.JDBC));
+        ports.add(createPort(ProtocolType.PG));
         if (config.isEnableOData()) {
-            ports.add(createPort(ProtocolType.ODATA.id(), 8080, "TCP"));
-            ports.add(createPort(ProtocolType.SODATA.id(), 8443, "TCP"));
+            ports.add(createPort(ProtocolType.ODATA));
         }
         return ports;
     }
 
-    private ContainerPort createPort(String name, int port, String protocol) {
+    private ContainerPort createPort(ProtocolType protocol) {
         ContainerPort p = new ContainerPort();
-        p.setName(name);
-        p.setContainerPort(port);
-        p.setProtocol(protocol);
+        p.setName(protocol.id());
+        p.setContainerPort(protocol.getSourcePort());
+        p.setProtocol("TCP");
         return p;
     }
 
-    private Service createService(OpenShiftClient client, String namespace, String openShiftName, String type, int srcPort,
-            int exposedPort) {
-        String serviceName = openShiftName+"-"+type;
-        debug(openShiftName, "Creating the Service of Type " + type + " for VDB "+openShiftName);
+    private Service createService(OpenShiftClient client, String namespace, String openShiftName) {
+        String serviceName = openShiftName;
+        debug(openShiftName, "Creating the Service for VDB "+openShiftName);
         Service service = client.services().inNamespace(namespace).withName(serviceName).get();
         if (service == null) {
-            client.services().inNamespace(namespace).createNew()
-              .withNewMetadata()
-                .withName(serviceName)
-                .addToLabels("application", openShiftName)
-                .addToAnnotations(DESCRIPTION_ANNOTATION_LABEL, SERVICE_DESCRIPTION)
-              .endMetadata()
-              .withNewSpec()
-                .withSessionAffinity("ClientIP")
-                .addToSelector("application", openShiftName)
-                .addNewPort()
-                  .withName(type)
-                  .withPort(exposedPort)
-                  .withNewTargetPort()
-                    .withStrVal(type)
-                  .endTargetPort()
-                .endPort()
-              .endSpec()
-              .done();
-            service = client.services().inNamespace(namespace).withName(serviceName).get();
-        }
-        return service;
-    }
 
-    private Service createODataService(OpenShiftClient client, String namespace, String openShiftName, String type, int port) {
-        String serviceName = openShiftName+"-"+type;
-        debug(openShiftName, "Creating the Service of Type " + type + " for VDB "+openShiftName);
-        Service service = client.services().inNamespace(namespace).withName(serviceName).get();
-        if (service == null) {
+            //TODO: this does not check if odata is enabled
+
             TreeMap<String, String> labels = new TreeMap<String, String>();
             labels.put("application", openShiftName);
 
@@ -968,11 +942,10 @@ public class TeiidOpenShiftClient implements StringConstants {
             if (this.config.isExposeVia3scale()) {
                 labels.put("discovery.3scale.net", "true");
                 annotations.put("discovery.3scale.net/scheme", "http");
-                annotations.put("discovery.3scale.net/port", Integer.toString(port));
+                annotations.put("discovery.3scale.net/port", Integer.toString(ProtocolType.ODATA.getTargetPort()));
                 annotations.put("discovery.3scale.net/description-path", "/openapi.json");
             }
-
-            client.services().inNamespace(namespace).createNew()
+            SpecNested<DoneableService> donable = client.services().inNamespace(namespace).createNew()
               .withNewMetadata()
                 .withName(serviceName)
                 .addToLabels(labels)
@@ -980,17 +953,17 @@ public class TeiidOpenShiftClient implements StringConstants {
               .endMetadata()
               .withNewSpec()
                 .withSessionAffinity("ClientIP")
-                .addToSelector("application", openShiftName)
-                .addNewPort()
-                  .withName(type)
-                  .withPort(port)
+                .addToSelector("application", openShiftName);
+            for (ProtocolType type : ProtocolType.values()) {
+                donable.addNewPort()
+                  .withName(type.id())
+                  .withPort(type.getTargetPort())
                   .withNewTargetPort()
-                    .withStrVal(type)
+                    .withStrVal(type.id())
                   .endTargetPort()
-                .endPort()
-              .endSpec()
-              .done();
-            service = client.services().inNamespace(namespace).withName(serviceName).get();
+                .endPort();
+            }
+            service = donable.endSpec().done();
         }
         return service;
     }
@@ -1009,35 +982,6 @@ public class TeiidOpenShiftClient implements StringConstants {
         Secret secret = client.secrets().inNamespace(namespace).withName(secretName).createOrReplace(item);
 
         return secret;
-    }
-
-    private Route createRoute(OpenShiftClient client, String namespace, String openShiftName, String type) {
-        String routeName = openShiftName+"-"+type;
-        Route route = client.routes().inNamespace(namespace).withName(routeName).get();
-        if (route == null) {
-            //
-            // Create edge termination SSL configuration
-            //
-            TLSConfigBuilder builder = new TLSConfigBuilder();
-            builder.withTermination("edge");
-
-            //
-            // Creates secured route
-            //
-            route = client.routes().inNamespace(namespace).createNew()
-              .withNewMetadata()
-                .withName(routeName)
-                .addToLabels("application", openShiftName)
-                .addToAnnotations(DESCRIPTION_ANNOTATION_LABEL, SERVICE_DESCRIPTION)
-              .endMetadata()
-              .withNewSpec()
-              .withNewPort().withNewTargetPort().withStrVal(type).endTargetPort().endPort()
-              .withNewTo().withName(routeName).endTo()
-              .withTls(builder.build())
-              .endSpec()
-              .done();
-        }
-        return route;
     }
 
     private void waitUntilPodIsReady(String openShiftName, final OpenShiftClient client, String podName, int nAwaitTimeout) {
@@ -1069,18 +1013,6 @@ public class TeiidOpenShiftClient implements StringConstants {
             }
         }
         return null;
-    }
-
-    private void createServices(final OpenShiftClient client, final String namespace,
-            final String openShiftName) {
-        createODataService(client, namespace, openShiftName, ProtocolType.ODATA.id(), 8080);
-        createService(client, namespace, openShiftName, ProtocolType.JDBC.id(), 31000, 31000);
-        createService(client, namespace, openShiftName, ProtocolType.PG.id(), 35432, 5432);
-        createService(client, namespace, openShiftName, ProtocolType.JOLOKIA.id(), JOLOKIA_PORT, JOLOKIA_PORT);
-        if (!this.config.isExposeVia3scale()) {
-            createRoute(client, namespace, openShiftName, ProtocolType.ODATA.id());
-        }
-        // createRoute(client, namespace, vdbName, RouteType.JDBC.id());
     }
 
     private boolean isDeploymentInReadyState(DeploymentConfig dc) {
