@@ -4,7 +4,12 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
-import { CreateViewHeader, IViewConfigurationFormValidationResult, ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
+import {
+  CreateViewHeader,
+  IViewConfigurationFormValidationResult,
+  ViewConfigurationForm,
+  ViewCreateLayout,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useContext } from 'react';
@@ -118,12 +123,15 @@ export const SelectNamePage: React.FunctionComponent = () => {
       );
       try {
         await saveViewDefinition(viewDefinition);
-        const newView = await getView(state.virtualization.name, viewDefinition.name);
+        const newView = await getView(
+          state.virtualization.name,
+          viewDefinition.name
+        );
         history.push(
           resolvers.data.virtualizations.views.edit.sql({
             virtualization: state.virtualization,
             // tslint:disable-next-line: object-literal-sort-keys
-            viewDefinitionId: newView.id!,  // id should be defined
+            viewDefinitionId: newView.id!, // id should be defined
             viewDefinition: undefined,
           })
         );
@@ -177,19 +185,27 @@ export const SelectNamePage: React.FunctionComponent = () => {
     >
       {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) => (
         <ViewCreateLayout
-        header={<CreateViewHeader 
-          step={2}
-          cancelHref={resolvers.data.virtualizations.views.root({
-            virtualization: state.virtualization,
-          })}
-          backHref={resolvers.data.virtualizations.views.createView.selectSources(
-            { virtualization: state.virtualization }
-          )}
-          onNext={submitForm}
-          isNextDisabled={!isValid}
-          isNextLoading={isSubmitting}
-          isLastStep={true}
-          />}
+          header={
+            <CreateViewHeader
+              step={2}
+              cancelHref={resolvers.data.virtualizations.views.root({
+                virtualization: state.virtualization,
+              })}
+              backHref={resolvers.data.virtualizations.views.createView.selectSources(
+                { virtualization: state.virtualization }
+              )}
+              onNext={submitForm}
+              isNextDisabled={!isValid}
+              isNextLoading={isSubmitting}
+              isLastStep={true}
+              i18nChooseTable={t('shared:ChooseTable')}
+              i18nNameYourVeiw={t('shared:NameYourVeiw')}
+              i18nBack={t('shared:Back')}
+              i18nDone={t('shared:Done')}
+              i18nNext={t('shared:Next')}
+              i18nCancel={t('shared:Cancel')}
+            />
+          }
           content={
             <ViewConfigurationForm
               validationResults={validationResults}

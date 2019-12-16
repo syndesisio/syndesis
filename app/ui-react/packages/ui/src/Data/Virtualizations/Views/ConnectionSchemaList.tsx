@@ -4,9 +4,6 @@ import {
   EmptyStateVariant,
   Flex,
   FlexItem,
-  Text,
-  TextContent,
-  TextVariants,
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
@@ -23,9 +20,7 @@ export interface IConnectionSchemaListProps {
   linkToConnectionCreate: H.LocationDescriptor;
 }
 
-export const ConnectionSchemaList: React.FunctionComponent<
-  IConnectionSchemaListProps
-> = props => {
+export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaListProps> = props => {
   return (
     <>
       {props.hasListData ? (
@@ -35,13 +30,13 @@ export const ConnectionSchemaList: React.FunctionComponent<
         >
           <FlexItem className={'connection-schema-list_headingSection'}>
             <Flex>
-              <FlexItem>
+              {/* <FlexItem>
                 <TextContent>
                   <Text className={'connection-schema-list_heading_text'} component={TextVariants.h2}>
                     patternfly 4 filter |
                   </Text>
                 </TextContent>
-              </FlexItem>
+              </FlexItem> */}
               <FlexItem>
                 <ButtonLink
                   className={'connection-schema-list-create-connection-button'}

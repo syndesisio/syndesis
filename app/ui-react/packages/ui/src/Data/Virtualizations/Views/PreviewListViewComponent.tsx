@@ -25,11 +25,13 @@ export interface IPreviewListViewComponentProps {
   index: number;
 }
 
-export const PreviewListViewComponent: React.FunctionComponent<
-  IPreviewListViewComponentProps
-> = props => {
+export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewComponentProps> = props => {
   const columns = ['', ''];
-  const rows = [['one', 'two'], ['three', 'four'], ['one', 'two']];
+  const rows = [
+    ['one', 'two'],
+    ['three', 'four'],
+    ['one', 'two'],
+  ];
 
   const [isOpen, setIsOpen] = React.useState(false);
 
@@ -45,7 +47,7 @@ export const PreviewListViewComponent: React.FunctionComponent<
   return (
     <DataList aria-label="Expandable data list example">
       <DataListItem
-        aria-labelledby="ex-item1"
+        aria-labelledby={`selected-table${props.index}`}
         isExpanded={props.expanded.includes(`ex-toggle${props.index}`)}
       >
         <DataListItemRow>
@@ -54,7 +56,7 @@ export const PreviewListViewComponent: React.FunctionComponent<
             onClick={() => props.toggle(`ex-toggle${props.index}`)}
             isExpanded={false}
             id={`ex-toggle${props.index}`}
-            aria-controls="ex-expand1"
+            aria-controls={`selected-table-expand${props.index}`}
           />
           <DataListItemCells
             dataListCells={[
@@ -66,8 +68,8 @@ export const PreviewListViewComponent: React.FunctionComponent<
             ]}
           />
           <DataListAction
-            aria-labelledby="ex-item1 ex-action1"
-            id="ex-action1"
+            aria-labelledby={`selected-table${props.index} selected-table-action${props.index}`} 
+            id={`selected-table-action${props.index}`}
             aria-label="Actions"
           >
             <Dropdown
@@ -87,12 +89,12 @@ export const PreviewListViewComponent: React.FunctionComponent<
           </DataListAction>
         </DataListItemRow>
         <DataListContent
-          aria-label="Primary Content Details"
-          id="ex-expand1"
+          aria-label="Selected table contect"
+          id={`selected-table-expand${props.index}`}
           isHidden={!props.expanded.includes(`ex-toggle${props.index}`)}
         >
           <Table
-            aria-label="Compact Table with borderless rows"
+            aria-label="Table column and its data type"
             variant={TableVariant.compact}
             borders={false}
             cells={columns}

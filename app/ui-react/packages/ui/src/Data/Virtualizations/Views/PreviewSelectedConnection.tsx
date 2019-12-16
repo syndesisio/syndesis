@@ -18,11 +18,11 @@ import './PreviewSelectedConnection.css';
 
 export interface IPreviewSelectedConnectionProps {
   selectedSchemaNodes: SchemaNodeInfo[];
+  i18nTablesSelected: string;
+  i18nEmptyTablePreview: string;
 }
 
-export const PreviewSelectedConnection: React.FunctionComponent<
-  IPreviewSelectedConnectionProps
-> = props => {
+export const PreviewSelectedConnection: React.FunctionComponent<IPreviewSelectedConnectionProps> = props => {
   return (
     <Flex
       breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
@@ -30,8 +30,11 @@ export const PreviewSelectedConnection: React.FunctionComponent<
     >
       <FlexItem className={'preview-selected-Connection_headingSection'}>
         <TextContent>
-          <Text className={'preview-selected-Connection_heading_text'} component={TextVariants.h2}>
-            {`Tables selected (${props.selectedSchemaNodes.length}):`}
+          <Text
+            className={'preview-selected-Connection_heading_text'}
+            component={TextVariants.h2}
+          >
+            {`${props.i18nTablesSelected} (${props.selectedSchemaNodes.length}):`}
           </Text>
         </TextContent>
       </FlexItem>
@@ -41,11 +44,10 @@ export const PreviewSelectedConnection: React.FunctionComponent<
             <EmptyState variant={EmptyStateVariant.small}>
               <EmptyStateIcon icon={DatabaseIcon} />
               <Title headingLevel="h2" size="lg">
-                Tables selected
+                {props.i18nTablesSelected}
               </Title>
               <EmptyStateBody>
-                please select a one or more tables taht you want to bring to the
-                view
+                {props.i18nEmptyTablePreview}
               </EmptyStateBody>
             </EmptyState>
           </Bullseye>

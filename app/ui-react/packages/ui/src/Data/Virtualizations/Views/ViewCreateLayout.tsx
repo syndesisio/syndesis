@@ -17,9 +17,11 @@ export interface IViewCreateLayoutProps {
   preview?: JSX.Element;
 }
 
-export const ViewCreateLayout: React.FunctionComponent<
-  IViewCreateLayoutProps
-> = ({ header, content, preview }: IViewCreateLayoutProps) => {
+export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> = ({
+  header,
+  content,
+  preview,
+}: IViewCreateLayoutProps) => {
   return (
     <div className={'virtualization-view-editor-layout'}>
       <div className={'virtualization-view-editor-layout__header'}>
@@ -32,10 +34,18 @@ export const ViewCreateLayout: React.FunctionComponent<
               <Card className={'virtualization-view-editor-layout__card'}>
                 {preview ? (
                   <Grid className={'virtualization-view-editor-layout__grid'}>
-                    <GridItem span={9} className={'virtualization-view-editor-layout_connection'}>
+                    <GridItem
+                      span={9}
+                      className={'virtualization-view-editor-layout_connection'}
+                    >
                       {content}
                     </GridItem>
-                    <GridItem span={3} className={'virtualization-view-editor-layout_previewSection'}>
+                    <GridItem
+                      span={3}
+                      className={
+                        'virtualization-view-editor-layout_previewSection'
+                      }
+                    >
                       {preview}
                     </GridItem>
                   </Grid>
@@ -46,19 +56,6 @@ export const ViewCreateLayout: React.FunctionComponent<
                     </GridItem>
                   </Grid>
                 )}
-                {/* <Grid className={'virtualization-view-editor-layout__grid'}>
-                  <GridItem span={9} className={'class1'}>
-                    {content}
-                  </GridItem>
-                  <GridItem span={3} className={'previewSection'}>
-                    {preview}
-                  </GridItem>
-                </Grid> */}
-                {/* <Grid className={'virtualization-view-editor-layout__grid'}>
-                  <GridItem span={12}>
-                  <div className={'class8'}/>
-                  </GridItem>
-                </Grid> */}
               </Card>
             </PageSection>
           </div>
