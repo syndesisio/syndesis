@@ -39,7 +39,6 @@ stories
         i18nPublishState={'Running'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
@@ -59,7 +58,6 @@ stories
         i18nPublishState={'Draft'}
         labelType={'default'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}
@@ -77,7 +75,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={false}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -97,7 +94,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -121,7 +117,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -145,7 +140,6 @@ stories
       <VirtualizationDetailsHeader
         isProgressWithLink={true}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         i18nPublishState={'Publishing...'}
@@ -171,7 +165,6 @@ stories
         i18nPublishState={'Published'}
         labelType={'primary'}
         i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nInUseText={'Used by x integrations'}
         i18nPublishLogUrlText={'View Logs'}
         i18nODataUrlText={'View OData'}
         modified={boolean('modified', false)}

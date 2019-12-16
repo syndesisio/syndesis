@@ -240,26 +240,6 @@ export const VirtualizationEditorPage: React.FunctionComponent<
     return '';
   };
 
-  /**
-   *
-   * @param integrationNames
-   */
-  const getUsedByMessage = (): string => {
-    let count = 0;
-
-    if (props.virtualization) {
-      count = props.virtualization.usedBy.length;
-    } else if (props.routeState.virtualization) {
-      count = props.routeState.virtualization.usedBy.length;
-    }
-
-    if (count === 1) {
-      return t('usedByOne');
-    }
-
-    return t('usedByMulti', { count });
-  };
-
   return (
     <>
       <PageSection variant={'light'} noPadding={true}>
@@ -297,7 +277,6 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nPublishState={publishStateText}
           labelType={labelType}
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
-          i18nInUseText={getUsedByMessage()}
           i18nPublishLogUrlText={t('shared:viewLogs')}
           i18nODataUrlText={t('viewOData')}
           modified={props.virtualization.modified}

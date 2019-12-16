@@ -15,3 +15,7 @@
 .virtualization-list-item__menuItem.disabled {
   pointer-events: none;
 }
+
+.virtualization-list-item__usedby-text{
+  width: 130px;
+}
