@@ -1,3 +1,15 @@
 .preview-results__tableSection {
   overflow-x: auto;
 }
+
+.syn-small-col-content {
+  width: 60px;
+}
+
+.syn-medium-col-content {
+  width: 120px;
+}
+
+.syn-large-col-content {
+  width: 200px;
+}

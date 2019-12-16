@@ -10,10 +10,12 @@ import {
   TableHeader,
   TableVariant,
   wrappable,
+  IRow
 } from '@patternfly/react-table';
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../../src/Layout';
+import './PreviewResults.css';
 
 export interface IPreviewResultsProps {
   /**
@@ -34,7 +36,7 @@ export interface IPreviewResultsProps {
    *   ['Jordan', 'Dristol', 'Ontario']
    * ]
    */
-  queryResultRows: string[][];
+  queryResultRows: Array<IRow | string[]>;
   i18nEmptyResultsTitle: string;
   i18nEmptyResultsMsg: string;
   i18nLoadingQueryResults: string;
@@ -44,11 +46,17 @@ export interface IPreviewResultsProps {
 export interface IColumn {
   id: string;
   label: string;
+  props?: {
+    className?: string;
+  }
 }
 
 const getColumns = (cols: IColumn[]) => {
   return cols.map(col => ({
     title: col.label,
+    props: {
+      className: col.props && col.props.className
+    },
     transforms: [wrappable],
   }));
 };
@@ -69,16 +77,16 @@ export const PreviewResults: React.FunctionComponent<
       ) : (
         <>
           {props.queryResultCols.length > 0 ? (
-            <div style={{ overflowX: 'auto' }}>
-              <Table
-                variant={TableVariant.compact}
-                cells={getColumns(props.queryResultCols)}
-                rows={props.queryResultRows}
-              >
-                <TableHeader />
-                <TableBody />
-              </Table>
-            </div>
+            <Table
+              className="preview-results__tableSection"
+              aria-label="Query Results Table"
+              variant={TableVariant.compact}
+              cells={getColumns(props.queryResultCols)}
+              rows={props.queryResultRows}
+            >
+              <TableHeader />
+              <TableBody />
+            </Table>
           ) : (
             <EmptyState variant={EmptyStateVariant.full}>
               <Title headingLevel="h5" size="lg">
