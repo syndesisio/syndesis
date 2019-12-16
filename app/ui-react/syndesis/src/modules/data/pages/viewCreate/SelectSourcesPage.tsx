@@ -2,8 +2,8 @@ import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
 import { CreateViewHeader, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import resolvers from '../../../resolvers';
 import { useTranslation } from 'react-i18next';
+import resolvers from '../../../resolvers';
 import { ConnectionSchemaContent } from '../../shared';
 import { ConnectionPreviewSchema } from '../../shared/ConnectionPreviewSchema';
 

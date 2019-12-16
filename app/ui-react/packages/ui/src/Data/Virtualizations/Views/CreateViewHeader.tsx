@@ -8,7 +8,7 @@ import {
 import { ArrowRightIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink, Loader } from 'src';
+import { ButtonLink, Loader } from '../../../Layout';
 import './CreateViewHeader.css';
 
 /**
