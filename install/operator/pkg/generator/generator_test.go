@@ -460,7 +460,7 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 	}
 
 	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "matchLabels")
+		labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "selector", "matchLabels")
 		assert.True(t, exists)
 		assert.Equal(t, len(labelsMap), 2)
 
