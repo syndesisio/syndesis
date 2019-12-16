@@ -26,7 +26,7 @@ export const ConnectionPreviewSchema: React.FunctionComponent<IConnectionPreview
 
   return (
     <PreviewSelectedConnection 
-      selectedSchemaNodes={props.selectedSchemaNodes}
+      selectedSchemaNodesLength={props.selectedSchemaNodes.length}
       i18nTablesSelected={t('shared:TablesSelected')}
       i18nEmptyTablePreview={t('shared:EmptyTablePreview')}
       >
