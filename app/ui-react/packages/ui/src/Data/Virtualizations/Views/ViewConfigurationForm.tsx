@@ -1,6 +1,6 @@
 import { Alert, Form } from '@patternfly/react-core';
 import * as React from 'react';
-import './ViewConfigurationForm.css'
+import './ViewConfigurationForm.css';
 
 export interface IViewConfigurationFormValidationResult {
   message: string;
@@ -24,23 +24,21 @@ export interface IViewConfigurationFormProps {
  * This does *not* build the form itself, form's field should be passed
  * as the `children` value.
  */
-export const ViewConfigurationForm: React.FunctionComponent<
-IViewConfigurationFormProps
-> = props => {
+export const ViewConfigurationForm: React.FunctionComponent<IViewConfigurationFormProps> = props => {
   return (
     <div className={'view-configuration-form'}>
       <Form
-          isHorizontal={true}
-          data-testid={'view-configuration-form'}
-          onSubmit={props.handleSubmit}
-        >
-          {props.validationResults.map((e, idx) => (
-            <Alert key={idx} title={''} variant={e.type}>
-              {e.message}
-            </Alert>
-          ))}
-          {props.children}
-        </Form>
+        isHorizontal={true}
+        data-testid={'view-configuration-form'}
+        onSubmit={props.handleSubmit}
+      >
+        {props.validationResults.map((e, idx) => (
+          <Alert key={idx} title={''} variant={e.type}>
+            {e.message}
+          </Alert>
+        ))}
+        {props.children}
+      </Form>
     </div>
   );
-}
+};

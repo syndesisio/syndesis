@@ -36,6 +36,12 @@ export interface ICreateViewHeaderProps {
    * The one-based active step number.
    */
   step: number;
+  i18nChooseTable: string;
+  i18nNameYourVeiw: string;
+  i18nBack: string;
+  i18nDone: string;
+  i18nNext: string;
+  i18nCancel: string;
   onCancel?: (e: React.MouseEvent<any>) => void;
   onBack?: (e: React.MouseEvent<any>) => void;
   onNext?: (e: React.MouseEvent<any>) => void;
@@ -47,10 +53,14 @@ export interface ICreateViewHeaderProps {
   isLastStep?: boolean;
 }
 
-export const CreateViewHeader: React.FunctionComponent<
-  ICreateViewHeaderProps
-> = ({
+export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> = ({
   step,
+  i18nChooseTable,
+  i18nNameYourVeiw,
+  i18nBack,
+  i18nDone,
+  i18nNext,
+  i18nCancel,
   onCancel,
   onBack,
   onNext,
@@ -66,22 +76,28 @@ export const CreateViewHeader: React.FunctionComponent<
       <SplitItem>
         <TextContent>
           <Text component={TextVariants.h2}>
-            <span className={step !==1 ? 'Notselected' : ''}>{`1.Choose one or more tables `}</span>     
+            <span
+              className={step !== 1 ? 'Notselected' : ''}
+            >{`1. ${i18nChooseTable} `}</span>
             <ArrowRightIcon />
-            <span className={step !==2 ? 'Notselected' : ''}>{` 2. Name your view`}</span>
+            <span
+              className={step !== 2 ? 'Notselected' : ''}
+            >{` 2. ${i18nNameYourVeiw}`}</span>
           </Text>
         </TextContent>
       </SplitItem>
       <SplitItem isFilled={true} />
       <SplitItem>
-        <ButtonLink
-          data-testid={'view-create-layout-back-button'}
-          onClick={onBack}
-          href={backHref}
-          className={'wizard-pf-back'}
-        >
-          <i className="fa fa-angle-left" /> Back
-        </ButtonLink>
+        {step === 2 && (
+          <ButtonLink
+            data-testid={'view-create-layout-back-button'}
+            onClick={onBack}
+            href={backHref}
+            className={'wizard-pf-back'}
+          >
+            <i className="fa fa-angle-left" /> {i18nBack}
+          </ButtonLink>
+        )}
         &nbsp;
         <ButtonLink
           data-testid={'view-create-layout-next-button'}
@@ -93,10 +109,10 @@ export const CreateViewHeader: React.FunctionComponent<
         >
           {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
           {isLastStep ? (
-            'Done'
+            ` ${i18nDone}`
           ) : (
             <>
-              Next <i className="fa fa-angle-right" />
+              {i18nNext} <i className="fa fa-angle-right" />
             </>
           )}
         </ButtonLink>
@@ -107,7 +123,7 @@ export const CreateViewHeader: React.FunctionComponent<
           href={cancelHref}
           className={'wizard-pf-cancel'}
         >
-          Cancel
+          {i18nCancel}
         </ButtonLink>
       </SplitItem>
     </Split>

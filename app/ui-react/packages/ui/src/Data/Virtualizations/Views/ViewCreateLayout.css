@@ -41,6 +41,7 @@
 .virtualization-view-editor-layout__card {
   height: 100%;
 }
+
 .virtualization-view-editor-layout__grid {
   height: 100%;
   min-height: 350px;
@@ -49,23 +50,18 @@
 .virtualization-view-editor-layout__header {
   border-bottom: 1px solid #ededed;
 }
-.virtualization-view-editor-layout_connection{
-  border-right: 2px solid #E1E1E1;
-  padding-top: 10px ;
+.virtualization-view-editor-layout_connection {
+  border-right: 2px solid #e1e1e1;
+  padding-top: 10px;
   overflow-y: auto;
 }
 
-.virtualization-view-editor-layout_previewSection{
+.virtualization-view-editor-layout_previewSection {
   padding: 10px;
   overflow-y: auto;
 }
 
-.class8{
-  height: 100%;
-  border: 2px solid red;
-}
-
-.hidePreview{
+.hidePreview {
   display: none;
 }
 

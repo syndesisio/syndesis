@@ -1,11 +1,11 @@
 .connection-schema-list-create-connection-button {
   margin-bottom: 5px;
+  margin-left: 20px;
 }
 .connection-schema-list-empty-create-connection-button {
   margin-top: 10px;
 }
 .connection-schema-list {
-  max-height: 40em;
   overflow-y: auto;
 }
 .connection-schema-list_content {
