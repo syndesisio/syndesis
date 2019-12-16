@@ -90,9 +90,7 @@ export interface IVirtualizationListItemProps {
   virtualizationDescription: string;
 }
 
-export const VirtualizationListItem: React.FunctionComponent<
-  IVirtualizationListItemProps
-> = props => {
+export const VirtualizationListItem: React.FunctionComponent<IVirtualizationListItemProps> = props => {
   const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(
     false
   );
@@ -266,17 +264,13 @@ export const VirtualizationListItem: React.FunctionComponent<
             <DropdownKebab
               id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}
-              data-testid={`virtualization-list-item-${
-                props.virtualizationName
-              }-dropdown-kebab`}
+              data-testid={`virtualization-list-item-${props.virtualizationName}-dropdown-kebab`}
             >
               <MenuItem
                 className={'virtualization-list-item__menuItem'}
                 onClick={doPublish}
                 disabled={shouldDisablePublish}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-publish`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-publish`}
               >
                 {props.i18nPublish}
               </MenuItem>
@@ -284,9 +278,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                 className={'virtualization-list-item__menuItem'}
                 onClick={doStop}
                 disabled={shouldDisableStop}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-stop`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-stop`}
               >
                 {props.i18nStop}
               </MenuItem>
@@ -294,9 +286,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                 className={'virtualization-list-item__menuItem'}
                 onClick={showConfirmDialog}
                 disabled={shouldDisableDelete}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-delete`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-delete`}
               >
                 {props.i18nDelete}
               </MenuItem>
