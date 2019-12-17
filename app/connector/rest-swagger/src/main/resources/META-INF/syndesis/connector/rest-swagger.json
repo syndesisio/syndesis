@@ -1,6 +1,6 @@
 {
   "actions": [],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "componentName": "connector-rest-swagger-http4"
   },
@@ -17,7 +17,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
       "type": "MAVEN"
     },
     {

@@ -50,7 +50,7 @@ public class DescriptorTest {
             .icon("")
             .description("Meta connector to generate swagger client connectors")
             .name("OpenAPI client")
-            .componentScheme("rest-swagger")
+            .componentScheme("rest-openapi")
             .putProperty("accessToken", new ConfigurationProperty.Builder()
                 .displayName("OAuth access token")
                 .description("OAuth Access token")
@@ -219,7 +219,7 @@ public class DescriptorTest {
             .putMetadata("hide-from-connection-pages", "true")
             .addDependencies(
                 mavenDependency("io.syndesis.connector:connector-rest-swagger:" + SYNDESIS_VERSION),
-                mavenDependency("org.apache.camel:camel-rest-swagger:" + CAMEL_VERSION),
+                mavenDependency("org.apache.camel:camel-rest-openapi:" + CAMEL_VERSION),
                 mavenDependency("org.apache.camel:camel-http4:" + CAMEL_VERSION))
             .build();
 

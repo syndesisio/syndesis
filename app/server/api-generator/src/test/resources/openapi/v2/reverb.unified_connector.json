@@ -4681,7 +4681,7 @@
       ]
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "oauth2:oauth2",
     "basePath": "/api",
@@ -4709,7 +4709,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
       "type": "MAVEN"
     },
     {

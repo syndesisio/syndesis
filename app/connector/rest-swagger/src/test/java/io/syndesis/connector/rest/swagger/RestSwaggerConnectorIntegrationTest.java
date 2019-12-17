@@ -420,23 +420,23 @@ public class RestSwaggerConnectorIntegrationTest {
             protected ModelCamelContext createContainer() {
                 final Properties properties = new Properties();
 
-                properties.put("flow-3.rest-swagger-1.password", "supersecret");
+                properties.put("flow-3.rest-openapi-1.password", "supersecret");
 
-                properties.put("flow-4.rest-swagger-1.accessToken", "access-token");
+                properties.put("flow-4.rest-openapi-1.accessToken", "access-token");
 
-                properties.put("flow-6.rest-swagger-1.clientSecret", "client-secret");
-                properties.put("flow-6.rest-swagger-1.accessToken", "access-token");
-                properties.put("flow-6.rest-swagger-1.refreshToken", "refresh-token");
+                properties.put("flow-6.rest-openapi-1.clientSecret", "client-secret");
+                properties.put("flow-6.rest-openapi-1.accessToken", "access-token");
+                properties.put("flow-6.rest-openapi-1.refreshToken", "refresh-token");
 
-                properties.put("flow-7.rest-swagger-1.clientSecret", "client-secret");
-                properties.put("flow-7.rest-swagger-1.accessToken", "access-token");
-                properties.put("flow-7.rest-swagger-1.refreshToken", "refresh-token");
+                properties.put("flow-7.rest-openapi-1.clientSecret", "client-secret");
+                properties.put("flow-7.rest-openapi-1.accessToken", "access-token");
+                properties.put("flow-7.rest-openapi-1.refreshToken", "refresh-token");
 
-                properties.put("flow-8.rest-swagger-1.authenticationParameterValue", "supersecret");
+                properties.put("flow-8.rest-openapi-1.authenticationParameterValue", "supersecret");
 
-                properties.put("flow-9.rest-swagger-1.authenticationParameterValue", "supersecret");
+                properties.put("flow-9.rest-openapi-1.authenticationParameterValue", "supersecret");
 
-                properties.put("flow-10.rest-swagger-1.authenticationParameterValue", "supersecret");
+                properties.put("flow-10.rest-openapi-1.authenticationParameterValue", "supersecret");
 
                 final PropertiesComponent propertiesComponent = new PropertiesComponent();
                 propertiesComponent.setInitialProperties(properties);
