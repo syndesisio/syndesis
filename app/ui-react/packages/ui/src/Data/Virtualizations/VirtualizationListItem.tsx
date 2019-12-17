@@ -161,9 +161,7 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
     const saveLabelType = labelType;
     setLabelType('default');
     setPublishStateText(props.i18nPublishInProgressText);
-    await props
-      .onPublish(props.virtualizationName, props.hasViews)
-      .catch(() => {
+    await props.onPublish(props.virtualizationName, props.hasViews).catch(() => {
         // restore previous values
         setPublishStateText(saveText);
         setLabelType(saveLabelType);
