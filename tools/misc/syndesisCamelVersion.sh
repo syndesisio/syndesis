@@ -6,7 +6,7 @@
 #   - ./syndesisCamelVersion.sh <camel version>
 #
 # Example:
-#   - ./syndesisCamelVersion.sh 2.23.2.fuse-760009
+#   - ./syndesisCamelVersion.sh 2.23.2.fuse-760011
 
 
 new_camel=${1:-xxx}
