@@ -16,21 +16,16 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.repository.RepositoryConfiguration;
-import io.syndesis.dv.repository.RepositoryManagerImpl;
-import io.syndesis.dv.server.endpoint.DataVirtualizationService;
-import io.syndesis.dv.server.endpoint.EditorService;
-import io.syndesis.dv.server.endpoint.ViewListing;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -40,6 +35,11 @@ import org.springframework.web.server.ResponseStatusException;
 import org.teiid.adminapi.Model.Type;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
+
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.repository.RepositoryConfiguration;
+import io.syndesis.dv.repository.RepositoryManagerImpl;
 
 @SuppressWarnings("nls")
 @RunWith(SpringRunner.class)
@@ -88,7 +88,7 @@ public class EditorServiceTest {
         }
 
         //add a dummy preview vdb
-        VDBMetaData vdb = dummyPreviewVdb();
+        VDBMetaData vdb = dummyPreviewVdb(true);
         metadataInstance.deploy(vdb);
 
         entityManager.clear();
@@ -115,6 +115,12 @@ public class EditorServiceTest {
         vd.setDdl("create view y as select * from v");
 
         saved = utilService.upsertViewEditorState(vd);
+        //v is hidden, can't be unqualified
+        ViewListing listing = dvService.getViewListing(vd.getDataVirtualizationName(), vd.getName());
+        assertFalse(listing.isValid());
+
+        vd.setDdl("create view y as select * from dummy.v");
+        saved = utilService.upsertViewEditorState(vd);
 
         //the save does not determine the source paths
         assertEquals(Arrays.asList(), saved.getSourcePaths());
@@ -124,7 +130,7 @@ public class EditorServiceTest {
         }
     }
 
-    static VDBMetaData dummyPreviewVdb() {
+    static VDBMetaData dummyPreviewVdb(boolean hidden) {
         VDBMetaData vdb = new VDBMetaData();
         vdb.setName(EditorService.PREVIEW_VDB);
         ModelMetaData m = new ModelMetaData();
@@ -132,6 +138,9 @@ public class EditorServiceTest {
         vdb.addModel(m);
         m.setModelType(Type.VIRTUAL);
         m.addSourceMetadata("DDL", "create view v as select 1");
+        if (hidden) {
+            m.setVisible(false);
+        }
         return vdb;
     }
 

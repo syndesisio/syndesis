@@ -200,7 +200,7 @@ public class MetadataServiceTest {
             //preveiw vdb does not exist
         }
 
-        metadataInstance.deploy(EditorServiceTest.dummyPreviewVdb());
+        metadataInstance.deploy(EditorServiceTest.dummyPreviewVdb(false));
 
         //even with no views, we should still succeed
         TeiidVdb vdb = metadataService.updatePreviewVdb("dv1");
@@ -238,4 +238,5 @@ public class MetadataServiceTest {
         assertEquals("dv1", schemas[0].getName());
         assertEquals("source", schemas[1].getName());
     }
+
 }
