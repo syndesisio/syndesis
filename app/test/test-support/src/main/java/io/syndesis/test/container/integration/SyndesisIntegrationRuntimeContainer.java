@@ -319,7 +319,7 @@ public class SyndesisIntegrationRuntimeContainer extends GenericContainer<Syndes
                     .add("-f")
                     .add(SyndesisTestEnvironment.getProjectMountPath())
                     .add(SyndesisTestEnvironment.getIntegrationRuntime().getCommand())
-                    .add("-Dsettings.localRepository=/tmp/artifacts/m2");
+                    .add("-Dmaven.repo.local=/tmp/artifacts/m2");
 
             if (enableDebug) {
                 commandLine.add(getDebugJvmArguments());

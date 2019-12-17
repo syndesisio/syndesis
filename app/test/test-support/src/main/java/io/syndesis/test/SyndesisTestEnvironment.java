@@ -37,7 +37,7 @@ public final class SyndesisTestEnvironment {
     private static final String CAMELK_RUNTIME_VERSION = "camelk.runtime.version";
     private static final String CAMELK_RUNTIME_VERSION_ENV = "CAMELK_RUNTIME_VERSION";
 
-    private static final String SYNDESIS_VERSION_DEFAULT = "1.8-SNAPSHOT";
+    private static final String SYNDESIS_VERSION_DEFAULT = "2.0-SNAPSHOT";
     private static final String SYNDESIS_VERSION = SYNDESIS_PREFIX + "version";
     private static final String SYNDESIS_VERSION_ENV = SYNDESIS_ENV_PREFIX + "VERSION";
 

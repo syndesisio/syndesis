@@ -42,9 +42,9 @@ import org.testcontainers.containers.GenericContainer;
 @ContextConfiguration(classes = HttpToHttp_IT.EndpointConfig.class)
 public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
 
-    private static final int TODO_SERVER_POD = SocketUtils.findAvailableTcpPort();
+    private static final int TODO_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(TODO_SERVER_POD);
+        Testcontainers.exposeHostPorts(TODO_SERVER_PORT);
     }
 
     @Autowired
@@ -62,7 +62,7 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
             .fromExport(HttpToHttp_IT.class.getResource("HttpToHttp-export"))
             .customize("$..configuredProperties.schedulerExpression", "5000")
             .customize("$..configuredProperties.baseUrl",
-                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_POD))
+                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
             .withExposedPorts(SyndesisTestEnvironment.getServerPort(),
                               SyndesisTestEnvironment.getManagementPort());
@@ -135,7 +135,7 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
         public HttpServer todoApiServer() {
             return CitrusEndpoints.http()
                     .server()
-                    .port(TODO_SERVER_POD)
+                    .port(TODO_SERVER_PORT)
                     .autoStart(true)
                     .timeout(60000L)
                     .build();
