@@ -26,7 +26,9 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
-	Backup bool `json:"backup,omitempty"`
+	// Schedule backup
+	// +optional
+	Backup BackupConfig `json:"backup,omitempty"`
 
 	// Namespace where syndesis docker images are located and the operator should look after them
 	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
@@ -59,6 +61,7 @@ type SyndesisStatus struct {
 	Description        string               `json:"description,omitempty"`
 	Version            string               `json:"version,omitempty"`
 	TargetVersion      string               `json:"targetVersion,omitempty"`
+	Backup             BackupStatus         `json:"backup,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -77,6 +80,21 @@ type ComponentsSpec struct {
 	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
 }
 
+// +kubebuilder:validation:Enum=hourly;daily;midnight;weekly;monthly;yearly;every 3m
+type BackupSchedule string
+
+type BackupConfig struct {
+	// Set schedule for backup cronjob
+	// +optional
+	Schedule BackupSchedule `json:"schedule,omitempty"`
+}
+
+type BackupStatus struct {
+	// When is the next backup planned
+	Next string `json:"next,omitempty"`
+	// When was the previous backup executed
+	Previous string `json:"previous,omitempty"`
+}
 type OauthConfiguration struct {
 	// Enable or disable SAR checks all together
 	DisableSarCheck bool `json:"disableSarCheck,omitempty"`

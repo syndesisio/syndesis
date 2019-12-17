@@ -50,7 +50,9 @@ func (o *Backup) Run() error {
 		BackupDir: o.backupDir,
 		Context:   o.Context,
 		Client:    o.Client,
+		Delete:    false,
+		LocalOnly: true,
 	}
 
-	return b.Backup()
+	return b.Run()
 }

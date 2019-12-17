@@ -21,9 +21,13 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strconv"
+	"strings"
+	"time"
+
+	"github.com/go-logr/logr"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
-
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
@@ -37,19 +41,32 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
+var backupLog = logf.Log.WithName("backup")
+
 type Backup struct {
-	Namespace string
-	BackupDir string
-	Context   context.Context
-	Client    *client.Client
+	log        logr.Logger
+	backupPath string
+	Namespace  string
+	BackupDir  string
+	Delete     bool
+	LocalOnly  bool
+	Context    context.Context
+	Client     *client.Client
 }
 
 // Uploader interface has methods to upload backup files
 // to a remote datastore
 type Uploader interface {
+	// Upload backup files to a remote location
 	Upload(dir string) (err error)
+
+	// Update syndesis status to reflect an upload
+	Status() (err error)
+
+	// Can this uploader be used with current settings
 	Enabled() (result bool)
 }
 
@@ -60,9 +77,48 @@ type Downloader interface {
 	Enabled() (result bool)
 }
 
+// Create a backup, zip it and upload it to different
+// datastores
+func (b *Backup) Run() (err error) {
+	b.logger("backup").Info("starting backup for syndesis")
+
+	if err = b.backup(); err != nil {
+		b.log.Error(err, "error performing backup")
+		return
+	}
+
+	zipped, err := b.zip()
+	if err != nil {
+		b.log.Error(err, "error creating zip file for backup")
+		return
+	}
+
+	if b.Delete {
+		defer os.RemoveAll(b.backupPath)
+		defer os.RemoveAll(zipped)
+	}
+
+	if !b.LocalOnly {
+		uploader := []Uploader{&S3{Backup: b, file: zipped}}
+
+		for _, u := range uploader {
+			if u.Enabled() {
+				if err = u.Upload(b.BackupDir); err != nil {
+					b.log.Error(err, "error uploading backup file to source", "source", u)
+					return
+				}
+				break
+			}
+		}
+	}
+
+	b.log.Info("backup for syndesis done")
+	return
+}
+
 // Perform a backup of all relevant openshift resources
 // and the database
-func (b *Backup) Backup() (err error) {
+func (b *Backup) backup() (err error) {
 	if err = b.ensureDir(); err != nil {
 		return
 	}
@@ -75,28 +131,26 @@ func (b *Backup) Backup() (err error) {
 		return
 	}
 
-	var u = make([]Uploader, 1)
-
 	return
 }
 
-// Ensure dir structure for backups is in place
 func (b *Backup) ensureDir() (err error) {
 	if len(b.BackupDir) == 0 {
-		dir, err := ioutil.TempDir("", "backup")
+		abs, err := filepath.Abs(".")
 		if err != nil {
-			return
+			return err
 		}
-		dirVersion := dir + pkg.DefaultOperatorTag
-		os.MkdirAll(dirVersion, 0755)
 
-		b.BackupDir = dirVersion
-
-		defer os.RemoveAll(dirVersion)
-	} else {
-		err = os.MkdirAll(b.BackupDir+pkg.DefaultOperatorTag, 0755)
-		return
+		b.BackupDir = abs
 	}
+
+	b.backupPath = filepath.Join(pkg.DefaultOperatorTag, strconv.FormatInt(time.Now().Unix(), 10))
+	err = os.MkdirAll(filepath.Join(b.BackupDir, b.backupPath), 0755)
+
+	if err == nil || os.IsExist(err) {
+		return nil
+	}
+
 	return
 }
 
@@ -111,7 +165,7 @@ func (b *Backup) backupDatabase() error {
 	if err != nil {
 		return err
 	}
-	backupfile, err := os.Create(filepath.Join(b.BackupDir, "syndesis-db.dump"))
+	backupfile, err := os.Create(filepath.Join(b.BackupDir, b.backupPath, "syndesis-db.dump"))
 	if err != nil {
 		return err
 	}
@@ -172,15 +226,14 @@ func (b *Backup) backupResources() error {
 			},
 		}
 		err = util.ListInChunks(b.Context, c, &options, &list, func(resources []unstructured.Unstructured) error {
-
-			os.MkdirAll(filepath.Join(b.BackupDir, "resources"), 0755)
+			os.MkdirAll(filepath.Join(b.BackupDir, b.backupPath, "resources"), 0755)
 			for _, res := range resources {
-				data, err := yaml.Marshal(res)
+				data, err := yaml.Marshal(res.Object)
 				if err != nil {
 					return err
 				}
 
-				err = ioutil.WriteFile(filepath.Join(b.BackupDir, "resources", typeMeta.Kind+"-"+res.GetName()+".yaml"), data, 0755)
+				err = ioutil.WriteFile(filepath.Join(b.BackupDir, b.backupPath, "resources", strings.ToLower(typeMeta.Kind+"-"+res.GetName()+".yaml")), data, 0755)
 				if err != nil {
 					return err
 				}
@@ -214,4 +267,12 @@ func (b *Backup) dynamicClient() (c dynamic.Interface, err error) {
 
 func (b *Backup) apiClient() (*kubernetes.Clientset, error) {
 	return kubernetes.NewForConfig(b.clientConfig())
+}
+
+func (b *Backup) logger(t string) logr.Logger {
+	if b.log == nil {
+		b.log = backupLog.WithValues("action", t)
+	}
+
+	return b.log
 }

@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"path/filepath"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -32,17 +33,20 @@ const (
 	secret          = "syndesis-backup-s3"
 	secretAccessKey = "secret-access-key"
 	secretKeyId     = "secret-key-id"
+	bucketName      = "bucket-name"
+	region          = "region"
 )
 
 type S3 struct {
-	Backup
+	*Backup
 	bucket string
 	region string
+	file   string
 }
 
 func (s *S3) Enabled() (result bool) {
 	api, err := s.apiClient()
-	if err == nil {
+	if err != nil {
 		return false
 	}
 
@@ -58,7 +62,7 @@ func (s *S3) Enabled() (result bool) {
 }
 
 func (s *S3) Upload(dir string) (err error) {
-	if err := s.credentials(true); err == nil {
+	if err = s.credentials(true); err != nil {
 		return
 	}
 
@@ -69,9 +73,13 @@ func (s *S3) Upload(dir string) (err error) {
 	}
 
 	// Upload
-	err = s.addFileToS3(session, "result.csv")
+	err = s.addFileToS3(session, s.file)
 
 	return
+}
+
+func (s *S3) Status() (err error) {
+	return nil
 }
 
 // Setup AWS environment variables to sign requests to AWS
@@ -82,7 +90,7 @@ func (s *S3) credentials(unset bool) (err error) {
 	}
 
 	api, err := s.apiClient()
-	if err == nil {
+	if err != nil {
 		return
 	}
 
@@ -92,10 +100,12 @@ func (s *S3) credentials(unset bool) (err error) {
 			TypeMeta:             metav1.TypeMeta{},
 			IncludeUninitialized: false,
 		})
-	if err == nil {
+	if err != nil {
 		return
 	}
 
+	s.bucket = string(secret.Data[bucketName])
+	s.region = string(secret.Data[region])
 	keyId := string(secret.Data[secretKeyId])
 	accessKey := string(secret.Data[secretAccessKey])
 
@@ -130,7 +140,7 @@ func (s *S3) addFileToS3(session *session.Session, fileDir string) error {
 	// of the file you're uploading.
 	_, err = s3.New(session).PutObject(&s3.PutObjectInput{
 		Bucket:               aws.String(s.bucket),
-		Key:                  aws.String(fileDir),
+		Key:                  aws.String(filepath.Base(fileDir)),
 		ACL:                  aws.String("private"),
 		Body:                 bytes.NewReader(buffer),
 		ContentLength:        aws.Int64(size),

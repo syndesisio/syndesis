@@ -5,8 +5,6 @@ import (
 	"errors"
 	"time"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -63,18 +61,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 	}
 	resourcesThatShouldExist := map[types.UID]bool{}
-
-	if syndesis.Spec.Backup {
-		b := &backup.Backup{
-			Namespace: syndesis.Namespace,
-			Context:   ctx,
-			Client:    &a.client,
-			BackupDir: "/tmp/foo",
-		}
-
-		b.Backup()
-		syndesis.Spec.Backup = false
-	}
 
 	// Load configuration to to use as context for generate pkg
 	configuration, err := configuration.GetProperties(configuration.TemplateConfig, ctx, a.client, syndesis)
