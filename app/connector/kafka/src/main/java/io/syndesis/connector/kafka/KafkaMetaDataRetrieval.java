@@ -99,7 +99,8 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
                 .stream().filter(isKafkaBroker)
                 .forEach(kafka -> processKafkaCRD(brokers, client, kafka));
         } catch (Throwable t) {
-            LOG.warn("Couldn't auto discover any broker.", t);
+            LOG.warn("Couldn't auto discover any broker.");
+            LOG.debug("Couldn't auto discover any broker.", t);
         }
 
         Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
