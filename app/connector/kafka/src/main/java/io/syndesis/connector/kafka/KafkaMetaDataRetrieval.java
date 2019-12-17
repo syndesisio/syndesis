@@ -133,12 +133,12 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * @param brokers
      * @param item
      */
-    @SuppressWarnings("unchecked")
     private void processKafkaResource(List<PropertyPair> brokers, KafkaResource item) {
         //Extract an identifier of this broker
         final ObjectMeta metadata = item.getMetadata();
         String id = metadata.getNamespace() + "::" + metadata.getName();
 
+        @SuppressWarnings("unchecked")
         List<Map<String, List<Map<String, Object>>>> listeners =
             (List<Map<String, List<Map<String, Object>>>>) item.getStatus().get("listeners");
 
