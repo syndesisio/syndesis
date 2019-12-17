@@ -47,9 +47,9 @@ import org.testcontainers.containers.wait.strategy.Wait;
 @ContextConfiguration(classes = AMQToHttp_IT.EndpointConfig.class)
 public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
 
-    private static final int TODO_SERVER_POD = SocketUtils.findAvailableTcpPort();
+    private static final int TODO_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
-        Testcontainers.exposeHostPorts(TODO_SERVER_POD);
+        Testcontainers.exposeHostPorts(TODO_SERVER_PORT);
     }
 
     @Autowired
@@ -71,7 +71,7 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
             .fromExport(AMQToHttp_IT.class.getResource("AMQToHttp-export"))
             .customize("$..configuredProperties.schedulerExpression", "5000")
             .customize("$..configuredProperties.baseUrl",
-                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_POD))
+                        String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
             .withNetwork(amqBrokerContainer.getNetwork())
             .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(SyndesisTestEnvironment.getContainerStartupTimeout()));
@@ -115,7 +115,7 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
         public HttpServer todoApiServer() {
             return CitrusEndpoints.http()
                     .server()
-                    .port(TODO_SERVER_POD)
+                    .port(TODO_SERVER_PORT)
                     .autoStart(true)
                     .timeout(60000L)
                     .build();
