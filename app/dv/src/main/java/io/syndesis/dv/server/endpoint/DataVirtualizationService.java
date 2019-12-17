@@ -816,6 +816,16 @@ public final class DataVirtualizationService extends DvService {
                 throw notFound(payload.getName());
             }
 
+            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
+
+            //check for unparsable - alternatively we could put this on the preview vdb
+            for (ViewDefinition vd : editorStates) {
+                if (vd.isComplete() && !vd.isParsable()) {
+                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
+                    return status;
+                }
+            }
+
             TeiidVdb vdb = metadataService.updatePreviewVdb(dataservice.getName());
 
             if (vdb == null || !vdb.hasLoaded()) {
@@ -829,16 +839,6 @@ public final class DataVirtualizationService extends DvService {
             }
 
             status.addAttribute("Publishing", "Operation initiated");  //$NON-NLS-1$//$NON-NLS-2$
-
-            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
-
-            //check for unparsable - alternatively we could put this on the preview vdb
-            for (ViewDefinition vd : editorStates) {
-                if (vd.isComplete() && !vd.isParsable()) {
-                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
-                    return status;
-                }
-            }
 
             //use the preview vdb to build the needed metadata
             VDBMetaData theVdb = new ServiceVdbGenerator(metadataService).createServiceVdb(dataservice.getName(), vdb, editorStates);

@@ -18,6 +18,7 @@ package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
@@ -91,7 +92,7 @@ public class IntegrationPublishTest {
 
         ViewDefinition vd = new ViewDefinition(dvName, "myview");
         vd.setComplete(true);
-        vd.setDdl("create view myview as select 1 as col");
+        vd.setDdl("create view myview as bad");
         vd.setUserDefined(true);
 
         ResponseEntity<String> stashStatus = restTemplate.exchange(
@@ -109,13 +110,30 @@ public class IntegrationPublishTest {
         PublishRequestPayload publishPayload = new PublishRequestPayload();
         publishPayload.setName(dvName);
 
+        //try to publish
         ResponseEntity<StatusObject> statusResponse = restTemplate.exchange(
                 "/v1/virtualizations/publish", HttpMethod.POST,
                 new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class);
 
-        //check that it published
+        //check that failed to published
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         StatusObject status = statusResponse.getBody();
+        assertNull(status.getAttributes().get(V1Constants.REVISION));
+        assertEquals("myview is not parsable", status.getAttributes().get("error"));
+
+        //correct the view
+        vd.setDdl("create view myview as select 1 as col");
+        restTemplate.exchange(
+                "/v1/editors", HttpMethod.PUT,
+                new HttpEntity<ViewDefinition>(vd), String.class);
+
+        //actually publish
+        statusResponse = restTemplate.exchange(
+                "/v1/virtualizations/publish", HttpMethod.POST,
+                new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class);
+
+        assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+        status = statusResponse.getBody();
         assertEquals("1", status.getAttributes().get(V1Constants.REVISION));
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
