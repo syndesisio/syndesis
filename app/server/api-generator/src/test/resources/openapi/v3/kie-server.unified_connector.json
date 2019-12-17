@@ -6250,7 +6250,7 @@
       "tags": [ "User tasks administration :: BPM" ]
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "none",
     "basePath": "/kie-server/services/rest",
@@ -6274,7 +6274,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
       "type": "MAVEN"
     },
     {

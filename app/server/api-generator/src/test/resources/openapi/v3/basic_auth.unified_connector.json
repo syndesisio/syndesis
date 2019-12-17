@@ -20,7 +20,7 @@
       "pattern": "To"
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "basic:username_password",
     "basePath": "/api",
@@ -45,7 +45,7 @@
       "type": "MAVEN"
     },
     {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
       "type": "MAVEN"
     },
     {

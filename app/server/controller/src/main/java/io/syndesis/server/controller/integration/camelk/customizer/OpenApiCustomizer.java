@@ -20,16 +20,14 @@ import java.io.InputStream;
 import java.util.EnumSet;
 import java.util.Optional;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
-import io.swagger.models.Swagger;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.core.models.Document;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.ProjectGeneratorHelper;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.CamelKPublishHandler;
 import io.syndesis.server.controller.integration.camelk.CamelKSupport;
@@ -40,10 +38,12 @@ import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.ResourceSpec;
 import io.syndesis.server.controller.integration.camelk.crd.SourceSpec;
 import io.syndesis.server.openshift.Exposure;
-import org.apache.camel.generator.swagger.RestDslXmlGenerator;
+import org.apache.camel.generator.openapi.RestDslXmlGenerator;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Component;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Configure OpenApi
@@ -128,8 +128,14 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private SourceSpec generateOpenAPIRestDSL(OpenApi openApi) throws Exception {
         final byte[] openApiBytes = openApi.getDocument();
-        final Swagger swagger = OpenApiHelper.parse(new String(openApiBytes, UTF_8));
-        final String camelRestDsl = RestDslXmlGenerator.toXml(ProjectGeneratorHelper.normalizePaths(swagger)).generate(new DefaultCamelContext());
+        final Document openApiDoc = Library.readDocumentFromJSONString(new String(openApiBytes, UTF_8));
+
+        if (!(openApiDoc instanceof OasDocument)) {
+            throw new IllegalArgumentException(String.format("Unsupported OpenAPI document type: %s - %s",
+                openApiDoc.getClass(), openApiDoc.getDocumentType()));
+        }
+
+        final String camelRestDsl = RestDslXmlGenerator.toXml((OasDocument) openApiDoc).generate(new DefaultCamelContext());
         final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(camelRestDsl) : camelRestDsl;
 
         return new SourceSpec.Builder()

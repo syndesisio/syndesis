@@ -43,7 +43,7 @@ public final class SpecificationResourceCustomizer implements ComponentProxyCust
                     IOUtils.write(specification, out, StandardCharsets.UTF_8);
                 }
 
-                options.put("specificationUri", swaggerSpecificationPath);
+                options.put("specificationUri", "file:" + swaggerSpecificationPath);
             } catch (final IOException e) {
                 throw new IllegalStateException("Unable to persist the specification to filesystem", e);
             }

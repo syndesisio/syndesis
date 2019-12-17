@@ -75,7 +75,7 @@
 
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-rest-swagger</artifactId>
+      <artifactId>camel-rest-openapi</artifactId>
       <scope>runtime</scope>
     </dependency>
 

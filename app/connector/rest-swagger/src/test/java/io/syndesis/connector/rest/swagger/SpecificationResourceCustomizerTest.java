@@ -18,9 +18,10 @@ package io.syndesis.connector.rest.swagger;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
+
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-
+import org.apache.camel.util.StringHelper;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,6 +41,6 @@ public class SpecificationResourceCustomizerTest {
 
         assertThat(options).containsKey("specificationUri");
         assertThat(options).doesNotContainKey("specification");
-        assertThat(new File(ConnectorOptions.extractOption(options, "specificationUri"))).hasContent("the specification is here");
+        assertThat(new File(StringHelper.after(ConnectorOptions.extractOption(options, "specificationUri"), "file:"))).hasContent("the specification is here");
     }
 }
