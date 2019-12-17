@@ -12,28 +12,29 @@ import {
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
-import { DvCacheHitMetric, IDvCacheHitMetricProps } from './DvCacheHitMetric';
 import {
   DvClientSessionMetric,
   IDvClientSessionMetricProps,
 } from './DvClientSessionMetric';
 import { DvRequestMetric, IDvRequestMetricProps } from './DvRequestMetric';
+import { DvResultSetCacheMetric, IDvResultSetCacheMetricProps } from './DvResultSetCacheMetric';
 import { DvUptimeMetric, IDvUptimeMetricProps } from './DvUptimeMetric';
 
 /**
  * A component container for DV metrics.
- * @property {IDvCacheHitMetricProps} cacheHitProps - if set, the cache hit ratio metric is shown
  * @property {IDvClientSessionMetricProps} clientSessionProps - if set, the clien session metric component is shown
- * @property {string} i18nNoData - the localized text used when no metric components are used
+ * @property {string} i18nNoDataTitle - the localized title used when no metric components are used
+ * @property {string} i18nNoDataDescription - the localized description used when no metric components are used
  * @property {IDvRequestMetricProps} requestProps - if set, the request metric component is shown
+ * @property {IDvResultSetCacheMetricProps} resultSetCacheProps - if set, the result set cache metric is shown
  * @property {IDvUptimeMetricProps} uptimeProps - if set, the uptime metric component is shown
  */
 export interface IDvMetricsContainer {
-  cacheHitProps?: IDvCacheHitMetricProps;
   clientSessionProps?: IDvClientSessionMetricProps;
   i18nNoDataTitle: string;
   i18nNoDataDescription: string;
   requestProps?: IDvRequestMetricProps;
+  resultSetCacheProps?: IDvResultSetCacheMetricProps;
   uptimeProps?: IDvUptimeMetricProps;
 }
 
@@ -41,9 +42,9 @@ export const DvMetricsContainer: React.FunctionComponent<
   IDvMetricsContainer
 > = props => {
   if (
-    props.cacheHitProps ||
     props.clientSessionProps ||
     props.requestProps ||
+    props.resultSetCacheProps ||
     props.uptimeProps
   ) {
     return (
@@ -67,10 +68,10 @@ export const DvMetricsContainer: React.FunctionComponent<
           </FlexItem>
         )}
 
-        {props.cacheHitProps && (
+        {props.resultSetCacheProps && (
           <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
             <Card isHoverable={true} className="dv-metrics-container__card">
-              <DvCacheHitMetric {...props.cacheHitProps} />
+              <DvResultSetCacheMetric {...props.resultSetCacheProps} />
             </Card>
           </FlexItem>
         )}
