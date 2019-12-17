@@ -130,7 +130,10 @@ public class TestVDBPublisher {
         TeiidOpenShiftClient generator = testDataSetup();
 
         String pom = generator.generatePomXml(vdb, false);
-        assertEquals(ObjectConverterUtil.convertFileToString(new File("src/test/resources/generated-pom.xml")), pom);
+
+        try (InputStream expected = TestVDBPublisher.class.getResourceAsStream("/generated-pom.xml")) {
+            assertThat(pom).isXmlEqualTo(ObjectConverterUtil.convertToString(expected));
+        }
     }
 
     @Test

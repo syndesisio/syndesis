@@ -180,6 +180,12 @@
         </includes>
       </resource>
     </resources>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+      </testResource>
+    </testResources>
 
     <pluginManagement>
       <plugins>
@@ -199,6 +205,15 @@
     </pluginManagement>
 
     <plugins>
+      <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <delimiter>@</delimiter>
+          </delimiters>
+          <escapeString>\</escapeString>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -400,6 +415,20 @@
     <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid-runtime</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xerces</groupId>
+            <artifactId>xercesImpl</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xalan</groupId>
+            <artifactId>xalan</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
     <dependency>
       <groupId>org.teiid.connectors</groupId>
@@ -519,6 +548,12 @@
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>spring-data-salesforce</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.teiid</groupId>
