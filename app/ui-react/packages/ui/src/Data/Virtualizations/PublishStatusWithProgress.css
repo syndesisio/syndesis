@@ -21,8 +21,9 @@
 
 .publish-status-with-progress-badge{
     margin-right: 10px;
-    background-color: #6CA100 !important;
+    background-color: #D1D1D1 !important;
     padding: 2px;
+    color: #000 !important;
 }
 
 .publish-status-with-progress_version-container {
