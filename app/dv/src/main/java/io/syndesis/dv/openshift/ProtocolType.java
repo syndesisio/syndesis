@@ -18,15 +18,30 @@ package io.syndesis.dv.openshift;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public enum ProtocolType {
-    @JsonProperty("odata") ODATA,
-    @JsonProperty("sodata") SODATA,
-    @JsonProperty("jdbc") JDBC,
-    @JsonProperty("pg") PG,
-    @JsonProperty("jolokia") JOLOKIA,
-    @JsonProperty("prometheus") PROMETHEUS;
+    @JsonProperty("odata") ODATA(8080,8080),
+    @JsonProperty("jdbc") JDBC(31000,31000),
+    @JsonProperty("pg") PG(35432,5432),
+    @JsonProperty("jolokia") JOLOKIA(8778,8778),
+    @JsonProperty("prometheus") PROMETHEUS(9779,9779);
+
+    private int sourcePort;
+    private int targetPort;
+
+    private ProtocolType(int sourcePort, int targetPort) {
+        this.sourcePort = sourcePort;
+        this.targetPort = targetPort;
+    }
 
     public String id() {
         return this.name().toLowerCase();
+    }
+
+    public int getSourcePort() {
+        return sourcePort;
+    }
+
+    public int getTargetPort() {
+        return targetPort;
     }
 
 }

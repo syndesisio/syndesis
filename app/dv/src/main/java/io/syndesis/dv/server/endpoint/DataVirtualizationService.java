@@ -1042,7 +1042,7 @@ public final class DataVirtualizationService extends DvService {
         String startedAt = this.openshiftClient.getPodStartedAt(status.getNamespace(), status.getOpenShiftName());
         metrics.setStartedAt(startedAt);
 
-        String baseUrl = String.format("http://%s-jolokia:%s/jolokia/read/", status.getOpenShiftName(), TeiidOpenShiftClient.JOLOKIA_PORT); //$NON-NLS-1$
+        String baseUrl = String.format("http://%s:%s/jolokia/read/", status.getOpenShiftName(), ProtocolType.JOLOKIA.getTargetPort()); //$NON-NLS-1$
 
         String auth = "jolokia:jolokia"; //$NON-NLS-1$
         String authValue = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.ISO_8859_1)); //$NON-NLS-1$
