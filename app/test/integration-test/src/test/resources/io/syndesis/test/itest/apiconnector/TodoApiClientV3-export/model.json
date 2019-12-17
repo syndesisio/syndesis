@@ -197,10 +197,6 @@
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
-            "type": "MAVEN"
-          },
-          {
             "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
             "type": "MAVEN"
           }
@@ -625,10 +621,6 @@
       "dependencies": [
         {
           "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
-          "type": "MAVEN"
-        },
-        {
-          "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
           "type": "MAVEN"
         },
         {
@@ -1292,10 +1284,6 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
-                      "type": "MAVEN"
-                    },
-                    {
                       "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
                       "type": "MAVEN"
                     }
@@ -1696,10 +1684,6 @@
                   "dependencies": [
                     {
                       "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
-                      "type": "MAVEN"
-                    },
-                    {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
                       "type": "MAVEN"
                     },
                     {
@@ -2106,10 +2090,6 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
-                      "type": "MAVEN"
-                    },
-                    {
                       "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
                       "type": "MAVEN"
                     }
@@ -2475,10 +2455,6 @@
                   "dependencies": [
                     {
                       "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
-                      "type": "MAVEN"
-                    },
-                    {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
                       "type": "MAVEN"
                     },
                     {
@@ -2876,10 +2852,6 @@
                   "dependencies": [
                     {
                       "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
-                      "type": "MAVEN"
-                    },
-                    {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
                       "type": "MAVEN"
                     },
                     {

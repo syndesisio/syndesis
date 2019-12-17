@@ -76,7 +76,9 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest-openapi</artifactId>
-      <scope>runtime</scope>
+      <!-- TODO: Need to use explicit version and compile time dependency until ENTESB-12545 has been fixed -->
+      <version>${camel.version}</version>
+      <!--scope>runtime</scope-->
     </dependency>
 
     <dependency>
