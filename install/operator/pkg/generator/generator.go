@@ -171,13 +171,3 @@ func Must(data []byte, err error) []byte {
 	}
 	return data
 }
-
-func annotatedForDebugging(u unstructured.Unstructured, location string, rawYaml string) {
-	annotations := u.GetAnnotations()
-	if annotations == nil {
-		annotations = map[string]string{}
-	}
-	annotations["template-location"] = location
-	annotations["template-rendered"] = rawYaml
-	u.SetAnnotations(annotations)
-}

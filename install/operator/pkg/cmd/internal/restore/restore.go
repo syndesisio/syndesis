@@ -20,10 +20,8 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"k8s.io/client-go/tools/remotecommand"
-	"os"
-	"path/filepath"
 )
 
 type Backup struct {
@@ -47,44 +45,12 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Backup) Run() error {
-	api, err := o.NewApiClient()
-	if err != nil {
-		return err
-	}
-
-	pod, err := util.GetPodWithLabelSelector(api, o.Namespace, "syndesis.io/component=syndesis-db")
-	if err != nil {
-		return err
-	}
-
-	backupfile, err := os.Open(filepath.Join(o.backupDir, "syndesis-db.dump"))
-	if err != nil {
-		return err
-	}
-	defer backupfile.Close()
-
-	return util.Exec(util.ExecOptions{
-		Config:    o.GetClientConfig(),
-		Api:       api,
+	b := backup.Backup{
 		Namespace: o.Namespace,
-		Pod:       pod.Name,
-		Container: "postgresql",
-		Command: []string{`bash`, `-c`, `
-set -e;
-base64 -d -i > /var/lib/pgsql/data/syndesis.dmp;
-psql -c 'DROP database if exists syndesis_restore'
-psql -c 'CREATE database syndesis_restore'
-pg_restore -v -d syndesis_restore /var/lib/pgsql/data/syndesis.dmp;
-psql -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = 'syndesis'"
-psql -c 'DROP database if exists syndesis'
-psql -c 'ALTER database syndesis_restore rename to syndesis'
-rm /var/lib/pgsql/data/syndesis.dmp;
-`},
-		StreamOptions: remotecommand.StreamOptions{
-			Stdin:  backupfile,
-			Stdout: os.Stdout,
-			Stderr: os.Stderr,
-		},
-	})
+		BackupDir: o.backupDir,
+		Context:   o.Context,
+		Client:    o.Client,
+	}
 
+	return b.Restore()
 }

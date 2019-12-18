@@ -3,6 +3,9 @@ package util
 import (
 	"context"
 	"fmt"
+	"strconv"
+	"time"
+
 	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -14,22 +17,8 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	"k8s.io/client-go/tools/remotecommand"
-	"os"
-	"os/user"
-	"path/filepath"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"strconv"
-	"time"
 )
-
-func KubeConfigPath() string {
-	if len(os.Getenv("KUBECONFIG")) > 0 {
-		return os.Getenv("KUBECONFIG")
-	} else if usr, err := user.Current(); err == nil {
-		return filepath.Join(usr.HomeDir, ".kube", "config")
-	}
-	return ""
-}
 
 func GetClientNamespace(configPath string) (string, error) {
 	var clientConfig clientcmd.ClientConfig
