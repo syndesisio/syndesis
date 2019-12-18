@@ -21,6 +21,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +46,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
@@ -191,9 +194,24 @@ public class IntegrationPublishTest {
         assertEquals("dv.json", ze.getName());
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        DataVirtualizationV1Adapter dv = mapper.readValue(zis, DataVirtualizationV1Adapter.class);
+        //prevent the autoclose
+        DataVirtualizationV1Adapter dv = mapper.readValue(new InputStream() {
+
+            @Override
+            public int read() throws IOException {
+                return zis.read();
+            }
+
+        }, DataVirtualizationV1Adapter.class);
         assertEquals("testPublish", dv.getName());
         assertEquals("create view myview as select 1 as col", dv.getViews().get(0).getDdl());
+
+        ze = zis.getNextEntry();
+        assertEquals("dv-info.json", ze.getName());
+        JsonNode info = mapper.readTree(zis);
+        assertEquals(1, info.get("exportVersion").asInt());
+        assertEquals(3, info.get("entityVersion").asInt());
+        assertEquals(1, info.get("revision").asInt());
 
         //back to the old
         view = restTemplate.getForEntity(
