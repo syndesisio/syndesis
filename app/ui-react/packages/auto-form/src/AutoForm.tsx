@@ -1,4 +1,4 @@
-import { Formik, FormikActions, FormikErrors, FormikProps } from 'formik';
+import { Formik, FormikErrors, FormikHelpers, FormikProps } from 'formik';
 import * as React from 'react';
 import {
   AutoFormContext,
@@ -87,7 +87,7 @@ export const AutoForm = <T extends any>(
       ? Object.keys(props.validateInitial(initialValues) || {}).length === 0
       : props.isInitialValid || false;
 
-  const handleSave = (value: T, formikBag: FormikActions<T>) => {
+  const handleSave = (value: T, formikBag: FormikHelpers<T>) => {
     if (typeof props.onSave === 'function') {
       props.onSave(value, formikBag as IAutoFormActions<T>);
     }

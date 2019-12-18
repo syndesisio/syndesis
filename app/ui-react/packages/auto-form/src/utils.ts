@@ -89,7 +89,6 @@ export function massageType(property: IFormDefinitionProperty) {
   if (typeof property.secret === 'boolean' && property.secret) {
     type = 'password';
   }
-  console.log('type: ' + type);
   return type;
 }
 
