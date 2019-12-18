@@ -100,7 +100,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         id={id}
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
-        isCreatable={props.property.isRequired}
+        isCreatable={true} // hard-coding for now
         title={props.property.controlHint}
         value={updatedValue}
       >
