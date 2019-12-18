@@ -5,7 +5,7 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { ArrowRightIcon } from '@patternfly/react-icons';
+import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../../Layout';
@@ -37,7 +37,7 @@ export interface ICreateViewHeaderProps {
    */
   step: number;
   i18nChooseTable: string;
-  i18nNameYourVeiw: string;
+  i18nNameYourView: string;
   i18nBack: string;
   i18nDone: string;
   i18nNext: string;
@@ -56,7 +56,7 @@ export interface ICreateViewHeaderProps {
 export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> = ({
   step,
   i18nChooseTable,
-  i18nNameYourVeiw,
+  i18nNameYourView,
   i18nBack,
   i18nDone,
   i18nNext,
@@ -72,17 +72,17 @@ export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> =
   isLastStep = false,
 }: ICreateViewHeaderProps) => {
   return (
-    <Split gutter="md" className={'header-space'}>
+    <Split gutter="md" className={'create_view_header__header-space'}>
       <SplitItem>
         <TextContent>
           <Text component={TextVariants.h2}>
             <span
-              className={step !== 1 ? 'Notselected' : ''}
-            >{`1. ${i18nChooseTable} `}</span>
-            <ArrowRightIcon />
+              className={step !== 1 ? 'create_view_header__Notselected' : ''}
+            >{`1. ${i18nChooseTable}`}</span>
+            <LongArrowAltRightIcon color={'#6A6A6A'} className={'create_view_header__Wizard-step'}/>
             <span
-              className={step !== 2 ? 'Notselected' : ''}
-            >{` 2. ${i18nNameYourVeiw}`}</span>
+              className={step !== 2 ? 'create_view_header__Notselected' : ''}
+            >{`2. ${i18nNameYourView}`}</span>
           </Text>
         </TextContent>
       </SplitItem>

@@ -4,8 +4,7 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import resolvers from '../../../resolvers';
-import { ConnectionSchemaContent } from '../../shared';
-import { ConnectionPreviewSchema } from '../../shared/ConnectionPreviewSchema';
+import { ConnectionSchemaContent, ConnectionTables } from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -50,11 +49,11 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
             schemaNodeInfo,
             virtualization,
           })}
-          isNextDisabled={props.selectedSchemaNodes.length > 1}
+          isNextDisabled={false}
           isNextLoading={false}
           isLastStep={false}
           i18nChooseTable={t('shared:ChooseTable')}
-          i18nNameYourVeiw={t('shared:NameYourVeiw')}
+          i18nNameYourView={t('shared:NameYourView')}
           i18nBack={t('shared:Back')}
           i18nDone={t('shared:Done')}
           i18nNext={t('shared:Next')}
@@ -68,9 +67,10 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           selectedSchemaNodes={props.selectedSchemaNodes}
         />
       }
-      preview={
-        <ConnectionPreviewSchema
+      selectedTables={
+        <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
+          onNodeDeselected={props.handleNodeDeselected}
         />
       }
     />

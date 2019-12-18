@@ -199,7 +199,7 @@ export const SelectNamePage: React.FunctionComponent = () => {
               isNextLoading={isSubmitting}
               isLastStep={true}
               i18nChooseTable={t('shared:ChooseTable')}
-              i18nNameYourVeiw={t('shared:NameYourVeiw')}
+              i18nNameYourView={t('shared:NameYourView')}
               i18nBack={t('shared:Back')}
               i18nDone={t('shared:Done')}
               i18nNext={t('shared:Next')}

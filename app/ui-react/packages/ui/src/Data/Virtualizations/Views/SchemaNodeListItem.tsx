@@ -26,6 +26,9 @@ export const SchemaNodeListItem: React.FunctionComponent<
 > = props => {
 
   const [itemSelected, setItemSelected] = React.useState(props.selected);
+  React.useEffect(() => {
+    setItemSelected(props.selected);
+  }, [props.selected]);
 
   const doToggleCheckbox = (connectionName: string, name: string, teiidName: string, nodePath: string[]) => (
     event: any
@@ -60,6 +63,7 @@ export const SchemaNodeListItem: React.FunctionComponent<
           data-testid={'schema-node-list-item-selected-input'}
           type="checkbox"
           value=""
+          checked={props.selected}
           defaultChecked={props.selected}
           onChange={doToggleCheckbox(
             props.connectionName,

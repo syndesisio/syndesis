@@ -1,16 +1,17 @@
 import { SchemaNodeInfo } from '@syndesis/models';
 import {
-  PreviewListViewComponent,
-  PreviewSelectedConnection,
+  SelectedConnectionListView,
+  SelectedConnectionTabels,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-export interface IConnectionPreviewSchemaProps {
+export interface IConnectionTablesProps {
   selectedSchemaNodes: SchemaNodeInfo[];
+  onNodeDeselected: (connectionName: string, teiidName: string) => void;
 }
 
-export const ConnectionPreviewSchema: React.FunctionComponent<IConnectionPreviewSchemaProps> = props => {
+export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> = props => {
   const [expanded, setExpanded] = React.useState(['']);
   const { t } = useTranslation(['data', 'shared']);
   const toggle = (id: string) => {
@@ -25,20 +26,22 @@ export const ConnectionPreviewSchema: React.FunctionComponent<IConnectionPreview
   };
 
   return (
-    <PreviewSelectedConnection 
+    <SelectedConnectionTabels 
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
       i18nTablesSelected={t('shared:TablesSelected')}
       i18nEmptyTablePreview={t('shared:EmptyTablePreview')}
       >
         {props.selectedSchemaNodes.map((info, index) => (
-          <PreviewListViewComponent
+          <SelectedConnectionListView
             key={index}
-            name={info.name}
+            name={info.teiidName}
+            connectionName={info.connectionName}
             index={index}
             toggle={toggle}
             expanded={expanded}
+            onTabelRemoved={props.onNodeDeselected}
           />
         ))}
-    </PreviewSelectedConnection>
+    </SelectedConnectionTabels>
   );
 };
