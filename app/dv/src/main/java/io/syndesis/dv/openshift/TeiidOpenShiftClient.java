@@ -1007,7 +1007,7 @@ public class TeiidOpenShiftClient implements StringConstants {
               .endMetadata()
               .withNewSpec()
               .withNewPort().withNewTargetPort().withStrVal(type).endTargetPort().endPort()
-              .withNewTo().withName(routeName).endTo()
+              .withNewTo().withName(openShiftName).endTo()
               .withTls(builder.build())
               .endSpec()
               .done();
