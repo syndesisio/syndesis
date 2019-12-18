@@ -65,7 +65,7 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
         if (Objects.nonNull(activityId)) {
             final Span span = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, Span.class);
             if (span != null) {
-                span.setTag("failed", exchange.isFailed());
+                span.setTag(Tags.ERROR.getKey(), exchange.isFailed());
                 span.finish();
             }
         }

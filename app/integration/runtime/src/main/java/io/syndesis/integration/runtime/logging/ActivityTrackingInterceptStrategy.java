@@ -15,9 +15,7 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import io.syndesis.common.util.Exceptions;
 import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
@@ -176,17 +174,10 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
     private static String failure(Exchange exchange) {
         if (exchange.isFailed()) {
             if (exchange.getException() != null) {
-                return getStackTrace(exchange.getException());
+                return Exceptions.toString(exchange.getException());
             }
             return FORMATTER.format(exchange);
         }
         return null;
-    }
-
-    private static String getStackTrace(Throwable throwable) {
-        final StringWriter sw = new StringWriter();
-        final PrintWriter pw = new PrintWriter(sw, true);
-        throwable.printStackTrace(pw);
-        return sw.getBuffer().toString();
     }
 }
