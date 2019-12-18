@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,6 +53,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
@@ -387,9 +389,23 @@ public class IntegrationTest {
         assertEquals("dv.json", ze.getName());
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        DataVirtualizationV1Adapter dv = mapper.readValue(zis, DataVirtualizationV1Adapter.class);
+        //prevent the autoclose
+        DataVirtualizationV1Adapter dv = mapper.readValue(new InputStream() {
 
+            @Override
+            public int read() throws IOException {
+                return zis.read();
+            }
+
+        }, DataVirtualizationV1Adapter.class);
         assertEquals("testExport", dv.getName());
+
+        ze = zis.getNextEntry();
+        assertEquals("dv-info.json", ze.getName());
+        JsonNode info = mapper.readTree(zis);
+        assertEquals(1, info.get("exportVersion").asInt());
+        assertEquals(2, info.get("entityVersion").asInt());
+        assertEquals("draft", info.get("revision").asText());
 
         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
         body.add("file", new ByteArrayResource(result) {
