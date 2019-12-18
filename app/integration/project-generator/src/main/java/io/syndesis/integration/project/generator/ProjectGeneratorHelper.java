@@ -22,17 +22,11 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import io.swagger.models.Path;
-import io.swagger.models.Swagger;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
-import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
@@ -136,27 +130,5 @@ public final class ProjectGeneratorHelper {
         }
 
         return answer;
-    }
-
-    /**
-     * The Swager to REST DSL generator in Camel doesn't properly handle
-     * basePaths, so here we set the basePath to null and prefix all
-     * paths with the basePath. See CAMEL-12893.
-     */
-    public static Swagger normalizePaths(final Swagger swagger) {
-        final String basePath = swagger.getBasePath();
-        if (ObjectHelper.isEmpty(basePath)) {
-            return swagger;
-        }
-
-        swagger.basePath(null);
-
-        final Map<String, Path> normalized = new LinkedHashMap<>();
-        for (Entry<String, Path> given : swagger.getPaths().entrySet()) {
-            normalized.put(basePath + given.getKey(), given.getValue());
-        }
-        swagger.paths(normalized);
-
-        return swagger;
     }
 }

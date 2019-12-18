@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Fetches all tasks from the database",
       "descriptor": {
-        "componentScheme": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "operation-0"
         },
@@ -33,7 +33,7 @@
       "actionType": "connector",
       "description": "Stores new task in the database",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "operation-1"
         },
@@ -68,7 +68,7 @@
       "actionType": "connector",
       "description": "Fetches task by given identifier",
       "descriptor": {
-        "componentScheme": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "operation-2"
         },
@@ -103,7 +103,7 @@
       "actionType": "connector",
       "description": "Updates task by given identifier",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "operation-3"
         },
@@ -138,7 +138,7 @@
       "actionType": "connector",
       "description": "Deletes task by given identifier",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "operation-4"
         },
@@ -164,7 +164,7 @@
       ]
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "basic:username_password",
     "host": "https://hostname",
@@ -184,10 +184,6 @@
   "dependencies": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-      "type": "MAVEN"
-    },
-    {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
       "type": "MAVEN"
     },
     {

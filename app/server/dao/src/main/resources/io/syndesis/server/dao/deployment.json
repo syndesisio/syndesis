@@ -103,7 +103,7 @@
   },
   {
     "data": {
-      "componentScheme": "rest-swagger",
+      "componentScheme": "rest-openapi",
       "connectorGroup": {
         "id": "swagger-connector-template"
       },

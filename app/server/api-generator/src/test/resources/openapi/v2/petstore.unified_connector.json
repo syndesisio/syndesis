@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Send PUT request to /pet",
       "descriptor": {
-        "componentScheme": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "updatePet"
         },
@@ -32,7 +32,7 @@
       "actionType": "connector",
       "description": "Send POST request to /pet",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "addPet"
         },
@@ -60,7 +60,7 @@
       "actionType": "connector",
       "description": "Multiple status values can be provided with comma separated strings",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "findPetsByStatus"
         },
@@ -94,7 +94,7 @@
       "actionType": "connector",
       "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "findPetsByTags"
         },
@@ -128,7 +128,7 @@
       "actionType": "connector",
       "description": "Returns a single pet",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "getPetById"
         },
@@ -162,7 +162,7 @@
       "actionType": "connector",
       "description": "Send POST request to /pet/{petId}",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "updatePetWithForm"
         },
@@ -190,7 +190,7 @@
       "actionType": "connector",
       "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "deletePet"
         },
@@ -218,7 +218,7 @@
       "actionType": "connector",
       "description": "Send POST request to /pet/{petId}/uploadImage",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "uploadFile"
         },
@@ -252,7 +252,7 @@
       "actionType": "connector",
       "description": "Returns a map of status codes to quantities",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "getInventory"
         },
@@ -280,7 +280,7 @@
       "actionType": "connector",
       "description": "Send POST request to /store/order",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "placeOrder"
         },
@@ -314,7 +314,7 @@
       "actionType": "connector",
       "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "getOrderById"
         },
@@ -348,7 +348,7 @@
       "actionType": "connector",
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "deleteOrder"
         },
@@ -376,7 +376,7 @@
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "createUser"
         },
@@ -404,7 +404,7 @@
       "actionType": "connector",
       "description": "Send POST request to /user/createWithArray",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "createUsersWithArrayInput"
         },
@@ -432,7 +432,7 @@
       "actionType": "connector",
       "description": "Send POST request to /user/createWithList",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "createUsersWithListInput"
         },
@@ -460,7 +460,7 @@
       "actionType": "connector",
       "description": "Send GET request to /user/login",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "loginUser"
         },
@@ -494,7 +494,7 @@
       "actionType": "connector",
       "description": "Send GET request to /user/logout",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "logoutUser"
         },
@@ -516,7 +516,7 @@
       "actionType": "connector",
       "description": "Send GET request to /user/{username}",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "getUserByName"
         },
@@ -550,7 +550,7 @@
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "updateUser"
         },
@@ -578,7 +578,7 @@
       "actionType": "connector",
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "componentSchema": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "deleteUser"
         },
@@ -603,7 +603,7 @@
       ]
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "basePath": "/v2",
     "host": "http://petstore.swagger.io",
@@ -623,10 +623,6 @@
   "dependencies": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-      "type": "MAVEN"
-    },
-    {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
       "type": "MAVEN"
     },
     {

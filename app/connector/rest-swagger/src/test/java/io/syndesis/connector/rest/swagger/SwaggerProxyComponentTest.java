@@ -20,7 +20,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 import org.apache.camel.CamelContext;
 import org.apache.camel.DelegateEndpoint;
 import org.apache.camel.Endpoint;
-import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
+import org.apache.camel.component.rest.openapi.RestOpenApiEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class SwaggerProxyComponentTest {
     public void testSwaggerProxyComponent() throws Exception {
         CamelContext context = new DefaultCamelContext();
         ComponentProxyFactory factory = new ConnectorFactory();
-        ComponentProxyComponent proxy = factory.newInstance("swagger-1", "rest-swagger");
+        ComponentProxyComponent proxy = factory.newInstance("swagger-1", "rest-openapi");
 
         try {
             proxy.setCamelContext(context);
@@ -40,7 +40,7 @@ public class SwaggerProxyComponentTest {
             Endpoint endpoint = proxy.createEndpoint("swagger-1:http://foo.bar");
 
             assertThat(endpoint).isInstanceOfSatisfying(DelegateEndpoint.class, e -> {
-                assertThat(e.getEndpoint()).isInstanceOf(RestSwaggerEndpoint.class);
+                assertThat(e.getEndpoint()).isInstanceOf(RestOpenApiEndpoint.class);
                 assertThat(e.getEndpoint()).hasFieldOrPropertyWithValue("componentName", SyndesisRestSwaggerComponent.COMPONENT_NAME);
             });
         } finally {
