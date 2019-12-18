@@ -1,13 +1,13 @@
 /**
- * This is essentially FormSelectComponent.tsx except for the typeahead feature
+ * This is essentially SelectComponent.tsx except for the typeahead feature
  * of PF.
  * TODO: Allow customization of options, such as isCreatable.
  */
 
 import {
   FormGroup,
-  FormSelect,
-  FormSelectOption,
+  Select,
+  SelectOption,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
@@ -48,8 +48,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<
 
   const updatedValue = adjustValue();
   const handleChange = (
-    eventValue: string,
-    event: React.FormEvent<HTMLSelectElement>
+    event: any
   ) => {
     if (isMultiple) {
       const newValue = getSelectedValues(event.currentTarget);
@@ -58,13 +57,16 @@ export const FormTypeaheadComponent: React.FunctionComponent<
       onChange(event);
     }
   };
-  const handleBlur = (event: React.FormEvent<HTMLSelectElement>) =>
-    handleChange('', event);
+  const handleBlur = (event: any) =>
+    handleChange(event);
   const { helperText, helperTextInvalid } = getHelperText(
     props.field.name,
     props.property.description,
     props.form.errors
   );
+
+  const onToggle = () => {};
+
   return (
     <FormGroup
       label={
@@ -86,29 +88,30 @@ export const FormTypeaheadComponent: React.FunctionComponent<
       helperText={helperText}
       helperTextInvalid={helperTextInvalid}
     >
-      <FormSelect
+      <Select
         size={isMultiple ? 12 : undefined}
         {...props.property.fieldAttributes}
         {...field}
         className={'autoform-select'}
-        onChange={handleChange}
+        onSelect={handleChange}
         onBlur={handleBlur}
+        onToggle={onToggle}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
-        isRequired={props.property.required}
+        isCreatable={props.property.isRequired}
         title={props.property.controlHint}
         value={updatedValue}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
-          <FormSelectOption
+          <SelectOption
             key={`${index}-${opt.label}`}
             value={opt.value}
             label={opt.label}
           />
         ))}
-      </FormSelect>
+      </Select>
     </FormGroup>
   );
 };
