@@ -19,11 +19,10 @@
   <parent>
     <groupId>io.syndesis</groupId>
     <artifactId>syndesis-parent</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>2.0-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
-  <groupId>io.syndesis</groupId>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>dv-server</artifactId>
   <name>DV Server</name>
@@ -38,7 +37,6 @@
       <email>blafond@redhat.com</email>
       <organization>Red Hat</organization>
       <roles>
-        <role>Project Lead</role>
         <role>Developer</role>
       </roles>
       <timezone>-6</timezone>
@@ -49,7 +47,6 @@
       <email>shawkins@redhat.com</email>
       <organization>Red Hat</organization>
       <roles>
-        <role>Project Lead</role>
         <role>Developer</role>
       </roles>
       <timezone>-6</timezone>
@@ -59,31 +56,10 @@
       <id>rareddy</id>
       <email>rareddy@redhat.com</email>
       <organization>Red Hat</organization>
-      <roles>
-        <role>Project Lead</role>
+      <roles>        
         <role>Developer</role>
       </roles>
       <timezone>-6</timezone>
-    </developer>
-    <developer>
-      <name>Dan Florian</name>
-      <id>danflo</id>
-      <email>dflorian@redhat.com</email>
-      <organization>Red Hat</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>-6</timezone>
-    </developer>
-    <developer>
-      <name>Paul Richardson</name>
-      <id>phantomjinx</id>
-      <email>p.g.richardson@redhat.com</email>
-      <organization>Red Hat</organization>
-      <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>0</timezone>
     </developer>
     <developer>
       <name>Mark Drilling</name>
@@ -91,16 +67,7 @@
       <email>mdrillin@redhat.com</email>
       <organization>Red Hat</organization>
       <roles>
-        <role>Developer</role>
-      </roles>
-      <timezone>-6</timezone>
-    </developer>
-    <developer>
-      <name>Ted Jones</name>
-      <id>tejones</id>
-      <email>tejones@redhat.com</email>
-      <organization>Red Hat</organization>
-      <roles>
+        <role>Project Lead</role>
         <role>Developer</role>
       </roles>
       <timezone>-6</timezone>
@@ -116,13 +83,6 @@
   </issueManagement>
 
   <properties>
-    <!-- Image names -->
-    <java.base.image>fabric8/s2i-java</java.base.image>
-
-    <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
-    <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
-    <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
-
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.check.skip-pmd>true</basepom.check.skip-pmd>
     <basepom.check.skip-spotbugs>true</basepom.check.skip-spotbugs>
@@ -133,20 +93,8 @@
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
     <basepom.check.skip-dependency-management>true</basepom.check.skip-dependency-management>
     <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
-
-    <javac.werror></javac.werror>
-
-    <rootDir>${project.basedir}</rootDir>
-    <version.h2>1.4.196</version.h2>
-
-    <!--version.io.swagger>1.5.22</version.io.swagger-->
-    <version.io.swagger>${swagger.version}</version.io.swagger>
+	<javac.werror></javac.werror>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
-
-    <!-- there is a jira ENTESB-12320 Dv doesn't work with 4.x client yet -->
-    <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
-
-    <!-- <spring-cloud.version>Dalston.SR5</spring-cloud.version> -->
 
     <version.org.teiid>${teiid.version}</version.org.teiid>
 
@@ -164,19 +112,12 @@
 
     <!-- PLUGIN BUG: Test dependencies not correctly checked -->
     <managed-deps.checkProfiles>false</managed-deps.checkProfiles>
-    <!--junit.version>4.12</junit.version-->
-    <spotbugs.version>3.1.5</spotbugs.version>
-    <!-- The version of jgit -->
-    <version.jgit>4.4.1.201607150455-r</version.jgit>
 
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
 
-    <version.org.mockito>${mockito.version}</version.org.mockito>
-    <version.com.fasterxml.jackson>${jackson.version}</version.com.fasterxml.jackson>
     <version.com.fasterxml.jackson.databind>2.9.9.3</version.com.fasterxml.jackson.databind>
-    <version.io.fabric8.openshift-client>3.0.3</version.io.fabric8.openshift-client>
-    <version.io.fabric8.kubernetes-api>3.0.8</version.io.fabric8.kubernetes-api>
+    <version.io.fabric8.kubernetes-api>3.0.12</version.io.fabric8.kubernetes-api>
 
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE At s2i -->
     <!-- this is simply a version no dependencies involved right now -->
@@ -244,56 +185,6 @@
     <pluginManagement>
       <plugins>
         <plugin>
-          <groupId>com.github.spotbugs</groupId>
-          <artifactId>spotbugs-maven-plugin</artifactId>
-          <version>${spotbugs.version}</version>
-        </plugin>
-
-        <plugin>
-          <groupId>org.basepom.maven</groupId>
-          <artifactId>duplicate-finder-maven-plugin</artifactId>
-          <version>1.3.0</version>
-          <configuration>
-            <ignoredResourcePatterns combine.children="append">
-              <ignoredResourcePattern>resources/catalog.cat</ignoredResourcePattern>
-              <ignoredResourcePattern>mozilla/public-suffix-list.txt</ignoredResourcePattern>
-              <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
-              <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
-              <ignoredResourcePattern>git.properties</ignoredResourcePattern>
-            </ignoredResourcePatterns>
-            <exceptions>
-              <!-- TODO
-              <exception>
-                <conflictingDependencies>
-                  <dependency>
-                    <groupId>org.apache.camel</groupId>
-                    <artifactId>camel-core</artifactId>
-                  </dependency>
-                  <dependency>
-                    <groupId>org.apache.camel</groupId>
-                    <artifactId>camel-catalog</artifactId>
-                  </dependency>
-                </conflictingDependencies>
-                <packages>
-                  <package>org.apache.camel.json.simple</package>
-                </packages>
-              </exception>
-              -->
-            </exceptions>
-            <ignoredDependencies>
-              <!-- spring-cloud-starter BOM excludes all wiremock dependencies, so we bring in
-                   wiremock-standalone, which packages duplicate classes/resources already
-                   present in other dependencies. It's used only in tests so let's ignore it
-                   completely -->
-              <dependency>
-                <groupId>com.github.tomakehurst</groupId>
-                <artifactId>wiremock-standalone</artifactId>
-              </dependency>
-            </ignoredDependencies>
-          </configuration>
-        </plugin>
-
-        <plugin>
           <groupId>io.fabric8</groupId>
           <artifactId>fabric8-maven-plugin</artifactId>
           <version>${fabric8.maven.plugin.version}</version>
@@ -302,49 +193,9 @@
                 <includes>
                     <include>spring-boot</include>
                 </includes>
-                <config>
-                    <thorntail-v2>
-                        <from>${java.base.image}</from>
-                    </thorntail-v2>
-                </config>
             </generator>
           </configuration>
         </plugin>
-
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-surefire-plugin</artifactId>
-          <configuration>
-             <!-- Fix "There was a timeout or other error in the fork" errors -->
-            <forkedProcessTimeoutInSeconds>${basepom.test.timeout}</forkedProcessTimeoutInSeconds>
-            <systemProperties combine.children="append">
-              <property>
-                <name>java.io.tmpdir</name>
-                <value>${basedir}/target</value>
-              </property>
-              <property>
-                <name>skipLongRunningTests</name>
-                <value>${skipLongRunningTests}</value>
-              </property>
-            </systemProperties>
-            <includes>
-              <include>**/*TestCase.java</include>
-              <include>**/*Test.java</include>
-              <include>**/Test*.java</include>
-            </includes>
-            <excludes>
-              <exclude>**/Abstract*TestCase.java</exclude>
-              <exclude>**/Abstract*Test.java</exclude>
-              <exclude>**/IT_*.java</exclude>
-              <!-- hack to prevent anonymous inner classes in Tests from being run as tests -->
-              <include>**/Test*$*.java</include>
-            </excludes>
-            <argLine>-Xmx1524M ${debug.argline} -Djava.awt.headless=true</argLine>
-            <useFile>false</useFile>
-            <enableAssertions>true</enableAssertions>
-          </configuration>
-        </plugin>
-
       </plugins>
     </pluginManagement>
 
@@ -376,15 +227,6 @@
   <dependencyManagement>
     <dependencies>
 
-      <!-- BOMs -->
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-spring-boot-dependencies</artifactId>
-        <version>${camel.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -392,14 +234,6 @@
         <scope>import</scope>
         <type>pom</type>
       </dependency>
-
-<!--       <dependency>
-        <groupId>org.springframework.cloud</groupId>
-        <artifactId>spring-cloud-dependencies</artifactId>
-        <version>${spring-cloud.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency> -->
 
       <dependency>
           <groupId>io.springfox</groupId>
@@ -423,7 +257,7 @@
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>kubernetes-model</artifactId>
-        <version>2.0.10</version>
+        <version>${kubernetes.client.version}</version>
       </dependency>
 
       <dependency>
@@ -433,31 +267,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-
+      
       <dependency>
-        <groupId>org.jboss.arquillian</groupId>
-        <artifactId>arquillian-bom</artifactId>
-        <version>${arquillian.version}</version>
-        <type>pom</type>
-        <scope>import</scope>
+        <groupId>io.opentracing.contrib</groupId>
+        <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
+        <version>${version.io.opentracing.contrib}</version>
       </dependency>
-
-    <dependency>
-      <groupId>io.opentracing.contrib</groupId>
-      <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
-      <version>${version.io.opentracing.contrib}</version>
-    </dependency>
-      <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>${junit.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.mockito</groupId>
-        <artifactId>mockito-core</artifactId>
-        <version>${version.org.mockito}</version>
-      </dependency>
+      
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>dv-server</artifactId>
@@ -507,7 +323,7 @@
       <dependency>
         <groupId>io.fabric8</groupId>
         <artifactId>openshift-client</artifactId>
-        <version>${version.io.fabric8.openshift-client}</version>
+        <version>${kubernetes.client.version}</version>
       </dependency>
       <dependency>
         <groupId>io.fabric8</groupId>
@@ -520,32 +336,6 @@
         <artifactId>postgresql</artifactId>
         <version>${version.postgresql}</version>
       </dependency>
-
-      <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-annotations</artifactId>
-        <version>${version.io.swagger}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-core</artifactId>
-        <version>${version.io.swagger}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-models</artifactId>
-        <version>${version.io.swagger}</version>
-      </dependency>
-      <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-jaxrs</artifactId>
-        <version>${version.io.swagger}</version>
-      </dependency>
-      <dependency>
-        <groupId>com.fasterxml.jackson.core</groupId>
-        <artifactId>jackson-core</artifactId>
-        <version>${version.com.fasterxml.jackson}</version>
-      </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
@@ -554,12 +344,12 @@
       <dependency>
         <groupId>com.fasterxml.jackson.dataformat</groupId>
         <artifactId>jackson-dataformat-yaml</artifactId>
-        <version>${version.com.fasterxml.jackson}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-annotations</artifactId>
-        <version>${version.com.fasterxml.jackson}</version>
+        <version>${jackson.version}</version>
       </dependency>
       <dependency>
         <groupId>mysql</groupId>
@@ -602,6 +392,10 @@
       <groupId>org.teiid</groupId>
       <artifactId>teiid-common-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.teiid</groupId>
+      <artifactId>teiid-client</artifactId>
+    </dependency>    
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>teiid-api</artifactId>
@@ -737,13 +531,13 @@
       <groupId>org.teiid</groupId>
       <artifactId>spring-data-mongodb</artifactId>
     </dependency>
+
+    <!-- Required for unit testing the rest resources rather than integration testing -->
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
-    </dependency>
-
-    <!-- Required for unit testing the rest resources rather than integration testing -->
+    </dependency>    
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>
@@ -760,16 +554,11 @@
     <dependency>
       <groupId>org.springframework.security</groupId>
       <artifactId>spring-security-core</artifactId>
-      <version>${spring-security.version}</version>
-      <!--version>5.1.6.RELEASE</version-->
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-core</artifactId>
-      <version>${spring.version}</version>
-      <!--version>5.1.9.RELEASE</version-->
     </dependency>
-
   </dependencies>
 
   <reporting>

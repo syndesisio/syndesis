@@ -76,7 +76,7 @@ class UnifiedXmlDataShapeGenerator extends UnifiedXmlDataShapeSupport<Oas20Docum
     }
 
     @Override
-    public Optional<NameAndSchema> findBodySchema(Oas20Operation operation) {
+    public Optional<NameAndSchema> findBodySchema(Oas20Document openApiDoc, Oas20Operation operation) {
         return Oas20DataShapeGeneratorHelper.findBodySchema(operation);
     }
 

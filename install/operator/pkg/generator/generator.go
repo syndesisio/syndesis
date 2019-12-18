@@ -30,6 +30,21 @@ func AssetAsBytes(path string) ([]byte, error) {
 	return prometheusRules, nil
 }
 
+func IsDirectory(path string) bool {
+	f, err := GetAssetsFS().Open(path)
+	if err != nil {
+		return false
+	}
+	defer f.Close()
+
+	info, err := f.Stat()
+	if err != nil {
+		return false
+	}
+
+	return info.IsDir()
+}
+
 func RenderDir(directory string, context interface{}) ([]unstructured.Unstructured, error) {
 	return RenderFSDir(GetAssetsFS(), directory, context)
 }
@@ -65,7 +80,7 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 
 	response := []unstructured.Unstructured{}
 	for _, f := range files {
-		filePath := directory + f.Name()
+		filePath := directory + "/" + f.Name()
 		r, err := Render(filePath, context)
 		if err != nil {
 			return nil, err
@@ -75,7 +90,15 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 	return response, nil
 }
 
+/*
+ * Can render a file or directory of files, the latter being
+ * done by delegating to renderDir if file is a directory.
+ */
 func Render(filePath string, context interface{}) ([]unstructured.Unstructured, error) {
+	if IsDirectory(filePath) {
+		return RenderDir(filePath, context)
+	}
+
 	var obj interface{} = nil
 	response := []unstructured.Unstructured{}
 

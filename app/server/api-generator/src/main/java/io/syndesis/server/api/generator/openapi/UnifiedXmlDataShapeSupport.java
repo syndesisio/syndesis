@@ -168,7 +168,7 @@ public abstract class UnifiedXmlDataShapeSupport<T extends OasDocument, O extend
 
     private Element createRequestBodySchema(final T openApiDoc, final O operation,
                                               final Map<String, SchemaPrefixAndElement> moreSchemas) {
-        final Optional<NameAndSchema> maybeBodySchema = findBodySchema(operation);
+        final Optional<NameAndSchema> maybeBodySchema = findBodySchema(openApiDoc, operation);
 
         if (!maybeBodySchema.isPresent()) {
             return null;

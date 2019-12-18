@@ -139,7 +139,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -180,7 +180,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -225,7 +225,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -265,7 +265,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -306,7 +306,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -346,7 +346,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -393,7 +393,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -434,7 +434,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //
@@ -476,7 +476,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
 
-        Map<String, List<PropertyPair>> properties = metadata.properties;
+        Map<String, List<PropertyPair>> properties = metadata.getProperties();
         assertFalse(properties.isEmpty());
 
         //

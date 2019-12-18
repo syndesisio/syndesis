@@ -1,8 +1,5 @@
 import {
-  Button,
-  CardActions,
   CardBody,
-  CardHead,
   CardHeader,
   Split,
   SplitItem,
@@ -16,22 +13,18 @@ import './DvClientSessionMetric.css';
 import './DvMetricsContainer.css';
 
 /**
- * @property {number} connectionCount - a count of the current number of connections
- * @property {string} i18nConnectionMessage - the localized text identifying the connections performing queries
+ * @property {number} sessionCount - a count of the current number of sessions
+ * @property {string} i18nSessionText - the localized text suffix for sessions
  * @property {string} i18nNoData - the localized text displayed when there is no metric data
  * @property {string} i18nTitle - the localize title of this metric
- * @property {string} i18nViewAllAction - the localized text for the view all connections action
  * @property {boolean} loading - `true` when a backend call to fetch this metric is ongoing
- * @property {() => void} onViewAll - a callback for when the view all action is clicked
  */
 export interface IDvClientSessionMetricProps {
-  connectionCount: number;
-  i18nConnectionMessage: string;
+  sessionCount: number;
+  i18nSessionText: string;
   i18nNoData: string;
   i18nTitle: string;
-  i18nViewAllAction: string;
   loading: boolean;
-  onViewAll: () => void;
 }
 
 /**
@@ -43,30 +36,28 @@ export const DvClientSessionMetric: React.FunctionComponent<
 > = props => {
   return (
     <>
-      <CardHead>
-        <CardActions>
-          <Button onClick={props.onViewAll} variant={'link'}>
-            {props.i18nViewAllAction}
-          </Button>
-        </CardActions>
-        <CardHeader className={'dv-metrics-container__cardTitle'}>
-          {props.i18nTitle}
-        </CardHeader>
-      </CardHead>
+      <CardHeader className={'dv-metrics-container__cardTitle'}>
+        {props.i18nTitle}
+      </CardHeader>
       <CardBody>
         {props.loading ? (
           <Spinner loading={true} inline={false} />
-        ) : props.connectionCount &&
-          props.i18nConnectionMessage &&
-          props.i18nConnectionMessage.length > 0 ? (
-          <Split className={'dv-client-session-metric__content'} gutter={'lg'}>
-            <SplitItem className={'dv-client-session-metric__connectionCount'}>
-              {props.connectionCount}
+        ) : props.sessionCount >= 0 &&
+          props.i18nSessionText &&
+          props.i18nSessionText.length > 0 ? (
+          <Split
+            className={'dv-client-session-metric__content'}
+            gutter={'lg'}
+          >
+            <SplitItem
+              className={'dv-client-session-metric__sessionCount'}
+            >
+              {props.sessionCount}
             </SplitItem>
             <SplitItem
-              className={'dv-client-session-metric__connectionMessage'}
+              className={'dv-client-session-metric__sessionText'}
             >
-              {props.i18nConnectionMessage}
+              {props.i18nSessionText}
             </SplitItem>
           </Split>
         ) : (

@@ -307,7 +307,7 @@ export const VirtualizationListItem: React.FunctionComponent<
         }
         additionalInfo={[
           <ListViewInfoItem key={1} stacked={true}>
-            {props.i18nInUseText}
+            {props.usedBy.length > 0 ? props.i18nInUseText :  <span className={'virtualization-list-item__usedby-text'}/>}
           </ListViewInfoItem>,
           <ListViewInfoItem key={2} stacked={true}>
             {props.odataUrl && (

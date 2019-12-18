@@ -19,9 +19,7 @@ export interface IPublishStatusWithProgressProps {
   publishVersion?: number;
 }
 
-export const PublishStatusWithProgress: React.FunctionComponent<
-  IPublishStatusWithProgressProps
-> = props => {
+export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWithProgressProps> = props => {
   if (props.isProgressWithLink) {
     return (
       <div
@@ -40,12 +38,15 @@ export const PublishStatusWithProgress: React.FunctionComponent<
           i18nLogUrlText={props.i18nPublishLogUrlText}
         />
         <span className={'publish-status-with-progress_text'}>
-          {props.publishVersion && ` (Version ${props.publishVersion}) `}
+          {props.publishVersion && ` version ${props.publishVersion}`}
         </span>
         {props.modified && (
-          <Badge key={1} className={'publish-status-with-progress-badge'}>
-            Modified
-          </Badge>
+          <>
+            <span className={'publish-status-with-progress_text'}>{`|`}</span>
+            <Badge key={2} className={'publish-status-with-progress-badge'}>
+              Draft
+            </Badge>
+          </>
         )}
       </div>
     );
@@ -59,22 +60,6 @@ export const PublishStatusWithProgress: React.FunctionComponent<
         >
           {props.i18nPublishState}
         </Label>
-        {props.publishVersion ? (
-          <span className={'publish-status-with-progress_text'}>
-            {' (Version' + props.publishVersion + ') '}
-          </span>
-        ) : (
-          // tslint:disable-next-line: jsx-self-close
-          <span className={'publish-status-with-progress_version-container'} />
-        )}
-        {props.modified ? (
-          <Badge key={2} className={'publish-status-with-progress-badge'}>
-            Modified
-          </Badge>
-        ) : (
-          // tslint:disable-next-line: jsx-self-close
-          <span className={'publish-status-with-progress-badge-container'} />
-        )}
       </React.Fragment>
     );
   }
@@ -92,12 +77,16 @@ export const PublishStatusWithProgress: React.FunctionComponent<
       )}
       <span className={'publish-status-with-progress_text'}>
         {props.i18nPublishState}
-        {props.publishVersion && ` (Version ${props.publishVersion})`}
+        {props.publishVersion && ` version ${props.publishVersion}`}
       </span>
-      {props.modified && (
-        <Badge key={2} className={'publish-status-with-progress-badge'}>
-          Modified
-        </Badge>
+      {(props.i18nPublishState === 'Stopped' ||
+        (props.i18nPublishState === 'Running' && props.modified)) && (
+        <>
+          <span className={'publish-status-with-progress_text'}>{`|`}</span>
+          <Badge key={2} className={'publish-status-with-progress-badge'}>
+            Draft
+          </Badge>
+        </>
       )}
     </React.Fragment>
   );

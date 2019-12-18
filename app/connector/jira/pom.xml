@@ -19,7 +19,7 @@
     <parent>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-parent</artifactId>
-        <version>1.9-SNAPSHOT</version>
+        <version>2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -32,18 +32,11 @@
         <!-- The 5.1.0 version uses an old guava 20 version incompatible with the default guava set on syndesis -->
         <atlassian-jira-rest-java-client-version>5.1.6</atlassian-jira-rest-java-client-version>
         <atlassian-util-concurrent-version>4.0.1</atlassian-util-concurrent-version>
-
-        <!-- TODO Backport 2.23.x: Remove when using camel-jira 2.23 bits in Syndesis -->
-        <atlassian-fugue-version>3.0.0</atlassian-fugue-version>
-        <google-api-client-version>1.22.0</google-api-client-version>
-        <jackson-version>1.9.13.jdk17-redhat-00001</jackson-version>
-        <!-- End: Remove when using camel-jira 2.23 bits in Syndesis -->
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!-- TODO Backport 2.23.x: Enable when using camel-jira 2.23 bits in Syndesis -->
-            <!--dependency>
+            <dependency>
                 <groupId>org.apache.camel</groupId>
                 <artifactId>camel-jira</artifactId>
                 <version>${camel.version}</version>
@@ -53,7 +46,7 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency-->
+            </dependency>
             <dependency>
                 <groupId>com.atlassian.jira</groupId>
                 <artifactId>jira-rest-java-client-api</artifactId>
@@ -106,60 +99,10 @@
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
         </dependency>
-        <!-- TODO Backport 2.23.x: Enable when using camel-jira 2.23 bits in Syndesis -->
-        <!--dependency>
+        <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-jira</artifactId>
-        </dependency-->
-        <!-- TODO Backport 2.23.x: Remove when using camel-jira 2.23 bits in Syndesis -->
-        <dependency>
-            <groupId>com.google.oauth-client</groupId>
-            <artifactId>google-oauth-client</artifactId>
-            <version>${google-api-client-version}</version>
         </dependency>
-        <dependency>
-            <groupId>com.google.http-client</groupId>
-            <artifactId>google-http-client</artifactId>
-            <version>${google-api-client-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.event</groupId>
-            <artifactId>atlassian-event</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.httpclient</groupId>
-            <artifactId>atlassian-httpclient-api</artifactId>
-            <version>2.0.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.httpclient</groupId>
-            <artifactId>atlassian-httpclient-library</artifactId>
-            <version>2.0.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.atlassian.sal</groupId>
-            <artifactId>sal-api</artifactId>
-            <version>3.0.7</version>
-        </dependency>
-        <!-- Camel annotations in provided scope to avoid compile errors in IDEs -->
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>spi-annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <!-- End: Remove when using camel-jira 2.23 bits in Syndesis -->
-
         <dependency>
             <groupId>io.syndesis.integration</groupId>
             <artifactId>integration-component-proxy</artifactId>
@@ -183,15 +126,6 @@
             <artifactId>jira-rest-java-client-core</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- TODO Backport 2.23.x: Remove when using camel-jira 2.23 bits in Syndesis -->
-        <dependency>
-            <groupId>io.atlassian.fugue</groupId>
-            <artifactId>fugue</artifactId>
-            <version>${atlassian-fugue-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <!-- End: Remove when using camel-jira 2.23 bits in Syndesis -->
-
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>

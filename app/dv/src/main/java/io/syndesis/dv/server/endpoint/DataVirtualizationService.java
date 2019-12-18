@@ -94,7 +94,7 @@ import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
 import io.syndesis.dv.openshift.BuildStatus.Status;
 import io.syndesis.dv.openshift.ProtocolType;
 import io.syndesis.dv.openshift.PublishConfiguration;
-import io.syndesis.dv.openshift.SyndesisHttpUtil;
+import io.syndesis.dv.openshift.SyndesisHttpClient;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
@@ -812,6 +812,16 @@ public final class DataVirtualizationService extends DvService {
                 throw notFound(payload.getName());
             }
 
+            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
+
+            //check for unparsable - alternatively we could put this on the preview vdb
+            for (ViewDefinition vd : editorStates) {
+                if (vd.isComplete() && !vd.isParsable()) {
+                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
+                    return status;
+                }
+            }
+
             TeiidVdb vdb = metadataService.updatePreviewVdb(dataservice.getName());
 
             if (vdb == null || !vdb.hasLoaded()) {
@@ -825,16 +835,6 @@ public final class DataVirtualizationService extends DvService {
             }
 
             status.addAttribute("Publishing", "Operation initiated");  //$NON-NLS-1$//$NON-NLS-2$
-
-            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
-
-            //check for unparsable - alternatively we could put this on the preview vdb
-            for (ViewDefinition vd : editorStates) {
-                if (vd.isComplete() && !vd.isParsable()) {
-                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
-                    return status;
-                }
-            }
 
             //use the preview vdb to build the needed metadata
             VDBMetaData theVdb = new ServiceVdbGenerator(metadataService).createServiceVdb(dataservice.getName(), vdb, editorStates);
@@ -1042,13 +1042,14 @@ public final class DataVirtualizationService extends DvService {
         String startedAt = this.openshiftClient.getPodStartedAt(status.getNamespace(), status.getOpenShiftName());
         metrics.setStartedAt(startedAt);
 
-        String baseUrl = String.format("http://%s-jolokia:%s/jolokia/read/", status.getOpenShiftName(), TeiidOpenShiftClient.JOLOKIA_PORT); //$NON-NLS-1$
+        String baseUrl = String.format("http://%s:%s/jolokia/read/", status.getOpenShiftName(), ProtocolType.JOLOKIA.getTargetPort()); //$NON-NLS-1$
 
         String auth = "jolokia:jolokia"; //$NON-NLS-1$
         String authValue = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.ISO_8859_1)); //$NON-NLS-1$
         BasicHeader authHeader = new BasicHeader(HttpHeaders.AUTHORIZATION, authValue);
 
-        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Runtime/Sessions", authHeader);) {
+        try (SyndesisHttpClient client = new SyndesisHttpClient()){
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/Sessions", authHeader);) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
             JsonNode value = root.withArray("value");
@@ -1058,7 +1059,7 @@ public final class DataVirtualizationService extends DvService {
             }
         }
 
-        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Runtime/TotalRequestsProcessed", authHeader);) {
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Runtime/TotalRequestsProcessed", authHeader);) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
             JsonNode value = root.get("value");
@@ -1068,7 +1069,7 @@ public final class DataVirtualizationService extends DvService {
             }
         }
 
-        try (InputStream response = SyndesisHttpUtil.executeGET(baseUrl + "org.teiid:type=Cache,name=ResultSet/HitRatio", authHeader);) {
+        try (InputStream response = client.executeGET(baseUrl + "org.teiid:type=Cache,name=ResultSet/HitRatio", authHeader);) {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode root = mapper.readTree(response);
             JsonNode value = root.get("value");
@@ -1076,6 +1077,7 @@ public final class DataVirtualizationService extends DvService {
                 double hitRatio = value.asDouble();
                 metrics.setResultSetCacheHitRatio(hitRatio);
             }
+        }
         }
 
         return metrics;

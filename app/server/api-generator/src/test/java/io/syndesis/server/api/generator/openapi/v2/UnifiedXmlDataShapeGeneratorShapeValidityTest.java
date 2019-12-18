@@ -219,7 +219,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             openApiDoc.paths.getPathItems()
                 .forEach(pathItem -> {
                     Oas20ModelHelper.getOperationMap(pathItem).forEach((path, operation) -> {
-                        final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(operation);
+                        final Optional<DataShapeGenerator.NameAndSchema> bodySchema = generator.findBodySchema(openApiDoc, operation);
                         if (!bodySchema.isPresent()) {
                             // by default we resort to JSON for payloads without
                             // body, i.e.

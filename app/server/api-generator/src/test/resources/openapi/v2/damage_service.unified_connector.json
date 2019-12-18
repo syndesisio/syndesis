@@ -57,7 +57,7 @@
       "pattern": "To"
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "none",
     "specification": "{\"swagger\":\"2.0\",\"paths\":{\"/ApplyDamage\":{\"post\":{\"operationId\":\"operation-0\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"]}},\"/SensorToDamage\":{\"post\":{\"operationId\":\"operation-1\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"]}}}}"
@@ -76,10 +76,6 @@
   "dependencies": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-      "type": "MAVEN"
-    },
-    {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
       "type": "MAVEN"
     },
     {

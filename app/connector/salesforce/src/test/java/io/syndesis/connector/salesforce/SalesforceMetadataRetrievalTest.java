@@ -81,9 +81,9 @@ public class SalesforceMetadataRetrievalTest {
         final SyndesisMetadata metadata = adapter.adapt(null, null, null, properties,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object").withPayload(payload).build());
 
-        assertThat(metadata.properties).containsKey("sObjectIdName");
+        assertThat(metadata.getProperties()).containsKey("sObjectIdName");
 
-        final List<PropertyPair> values = metadata.properties.get("sObjectIdName");
+        final List<PropertyPair> values = metadata.getProperties().get("sObjectIdName");
 
         assertThat(values).containsOnly(new PropertyPair("uniqueProperty1", "Unique property 1"),
             new PropertyPair("uniqueProperty2", "Unique property 2"));
@@ -116,9 +116,9 @@ public class SalesforceMetadataRetrievalTest {
         final SyndesisMetadata metadata = adapter.adapt(null, null, null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withPayload(globalObjectsPayload).build());
 
-        assertThat(metadata.properties).containsKey("sObjectName");
+        assertThat(metadata.getProperties()).containsKey("sObjectName");
 
-        final List<PropertyPair> values = metadata.properties.get("sObjectName");
+        final List<PropertyPair> values = metadata.getProperties().get("sObjectName");
 
         assertThat(values).containsOnly(new PropertyPair("Object1", "Object1 Label"),
             new PropertyPair("Object2", "Object2 Label"));
@@ -132,9 +132,9 @@ public class SalesforceMetadataRetrievalTest {
         final SyndesisMetadata metadata = adapter.adapt(null, null, null, NOT_USED,
             MetaDataBuilder.on(CONTEXT).withAttribute("scope", "object_types").withPayload(payload).build());
 
-        assertThat(metadata.properties).containsKey("sObjectName");
+        assertThat(metadata.getProperties()).containsKey("sObjectName");
 
-        final List<PropertyPair> values = metadata.properties.get("sObjectName");
+        final List<PropertyPair> values = metadata.getProperties().get("sObjectName");
 
         assertThat(values).containsOnly(new PropertyPair("Object1", "Object1 Label"),
             new PropertyPair("Object2", "Object2 Label"));
