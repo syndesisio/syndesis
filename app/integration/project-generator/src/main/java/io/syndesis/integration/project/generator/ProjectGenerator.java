@@ -39,7 +39,9 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheFactory;
-import io.swagger.models.Swagger;
+import io.apicurio.datamodels.Library;
+import io.apicurio.datamodels.core.models.Document;
+import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -61,13 +63,12 @@ import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Strings;
 import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.integration.api.IntegrationErrorHandler;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.integration.project.generator.mvn.PomContext;
-import org.apache.camel.generator.swagger.RestDslGenerator;
+import org.apache.camel.generator.openapi.RestDslGenerator;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -378,11 +379,16 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             return;
         }
 
-        final StringBuilder code = new StringBuilder();
         final byte[] openApiBytes = res.get().getDocument();
-        final Swagger swagger = OpenApiHelper.parse(new String(openApiBytes, StandardCharsets.UTF_8));
+        final Document openApiDoc = Library.readDocumentFromJSONString(new String(openApiBytes, StandardCharsets.UTF_8));
 
-        RestDslGenerator.toAppendable(ProjectGeneratorHelper.normalizePaths(swagger))
+        if (!(openApiDoc instanceof OasDocument)) {
+            throw new IllegalArgumentException(String.format("Unsupported OpenAPI document type: %s - %s",
+                openApiDoc.getClass(), openApiDoc.getDocumentType()));
+        }
+
+        final StringBuilder code = new StringBuilder();
+        RestDslGenerator.toAppendable((OasDocument) openApiDoc)
             .withClassName("RestRoute")
             .withPackageName("io.syndesis.example")
             .withoutSourceCodeTimestamps()

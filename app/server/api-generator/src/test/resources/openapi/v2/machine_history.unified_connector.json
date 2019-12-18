@@ -57,7 +57,7 @@
       "pattern": "To"
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "authenticationType": "none",
     "specification": "{\"swagger\":\"2.0\",\"paths\":{\"/machines\":{\"get\":{\"operationId\":\"getAllMachines\",\"produces\":[\"application/json\"]}},\"/machines/{id}\":{\"get\":{\"operationId\":\"getMachine\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]}}}}"
@@ -76,10 +76,6 @@
   "dependencies": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-      "type": "MAVEN"
-    },
-    {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
       "type": "MAVEN"
     },
     {

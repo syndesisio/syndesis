@@ -76,12 +76,12 @@
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-swagger-rest-dsl-generator</artifactId>
+      <artifactId>camel-openapi-rest-dsl-generator</artifactId>
       <version>${camel.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.swagger</groupId>
-      <artifactId>swagger-models</artifactId>
+      <groupId>io.apicurio</groupId>
+      <artifactId>apicurio-data-models</artifactId>
     </dependency>
 
     <!-- ====================================================================== -->

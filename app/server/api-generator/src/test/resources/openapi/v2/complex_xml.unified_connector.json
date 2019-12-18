@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Send POST request to /complex/{pathParam}",
       "descriptor": {
-        "componentScheme": "rest-swagger",
+        "componentScheme": "rest-openapi",
         "configuredProperties": {
           "operationId": "complexOperation"
         },
@@ -27,7 +27,7 @@
       "pattern": "To"
     }
   ],
-  "componentScheme": "rest-swagger",
+  "componentScheme": "rest-openapi",
   "configuredProperties": {
     "basePath": "/api",
     "host": "http://example.com",
@@ -47,10 +47,6 @@
   "dependencies": [
     {
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-      "type": "MAVEN"
-    },
-    {
-      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
       "type": "MAVEN"
     },
     {
