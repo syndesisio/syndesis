@@ -7,7 +7,11 @@
 If {prodname} does not provide a connector for the application or 
 service that you want to connect to in an integration, 
 an experienced developer can code an extension that contributes a 
-new connector to {prodname}.
+new connector to {prodname}. This documentation provides an introduction
+to developing a connector extension. For details about developing a 
+connector, see 
+link:https://syndesis.io/docs/connectors/[Developing Syndesis connectors]
+on the Syndesis community site. 
 
 [IMPORTANT]
 ====
