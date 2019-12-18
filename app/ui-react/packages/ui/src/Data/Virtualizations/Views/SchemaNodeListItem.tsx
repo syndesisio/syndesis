@@ -64,7 +64,6 @@ export const SchemaNodeListItem: React.FunctionComponent<
           type="checkbox"
           value=""
           checked={props.selected}
-          defaultChecked={props.selected}
           onChange={doToggleCheckbox(
             props.connectionName,
             props.name,
