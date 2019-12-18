@@ -19,6 +19,7 @@ import io.opentracing.Scope;
 import io.opentracing.Span;
 import io.opentracing.Tracer;
 import io.opentracing.tag.Tags;
+import io.syndesis.common.util.Exceptions;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
@@ -27,12 +28,15 @@ import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.processor.DefaultExchangeFormatter;
 import org.apache.camel.processor.DelegateAsyncProcessor;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 
 public class TracingInterceptStrategy implements InterceptStrategy {
+
+    private static final DefaultExchangeFormatter FORMATTER = new DefaultExchangeFormatter();
     private final Tracer tracer;
 
     public TracingInterceptStrategy(Tracer tracer) {
@@ -74,10 +78,25 @@ public class TracingInterceptStrategy implements InterceptStrategy {
                 Span span = tracer.buildSpan(stepId).withTag(Tags.SPAN_KIND.getKey(), "step").start();
                 in.setHeader(IntegrationLoggingConstants.STEP_SPAN, span);
                 return super.process(exchange, doneSync -> {
+                    String failure = failure(exchange);
+                    if (failure != null) {
+                        span.setTag(Tags.ERROR.getKey(), true);
+                        span.log(failure);
+                    }
                     span.finish();
                     callback.done(doneSync);
                 });
             }
         }
+    }
+
+    private static String failure(Exchange exchange) {
+        if (exchange.isFailed()) {
+            if (exchange.getException() != null) {
+                return Exceptions.toString(exchange.getException());
+            }
+            return FORMATTER.format(exchange);
+        }
+        return null;
     }
 }
