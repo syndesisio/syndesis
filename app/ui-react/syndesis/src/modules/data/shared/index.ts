@@ -7,3 +7,4 @@ export * from './DvConnectionsWithToolbar';
 export * from './VirtualizationActionContainer';
 export * from './WithVirtualizationSqlClientForm';
 export * from './ConnectionSchemaContent';
+export * from './ConnectionTables';

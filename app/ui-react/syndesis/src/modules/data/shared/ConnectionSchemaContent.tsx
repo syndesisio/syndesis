@@ -39,9 +39,7 @@ export interface IConnectionSchemaContentProps {
   selectedSchemaNodes: SchemaNodeInfo[];
 }
 
-export const ConnectionSchemaContent: React.FunctionComponent<
-  IConnectionSchemaContentProps
-> = props => {
+export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaContentProps> = props => {
   const { t } = useTranslation(['data']);
 
   const handleSourceSelectionChange = async (
@@ -56,6 +54,17 @@ export const ConnectionSchemaContent: React.FunctionComponent<
     } else {
       props.onNodeDeselected(connectionName, teiidName);
     }
+  };
+
+  const isTableSelected = (teiidName: string): boolean => {
+    let returnVal = false;
+    for (const tables of props.selectedSchemaNodes) {
+      if(tables.teiidName === teiidName){
+        returnVal = true;
+        break;
+      }
+    }
+    return returnVal;
   };
 
   const {
@@ -104,9 +113,10 @@ export const ConnectionSchemaContent: React.FunctionComponent<
                     connectionName={info.connectionName}
                     nodePath={info.nodePath}
                     selected={
-                      props.selectedSchemaNodes[0]
-                        ? props.selectedSchemaNodes[0].teiidName ===
-                          info.teiidName
+                      props.selectedSchemaNodes[0] &&
+                      props.selectedSchemaNodes[0].connectionName ===
+                        info.connectionName
+                        ? isTableSelected(info.name)
                         : false
                     }
                     onSelectionChanged={handleSourceSelectionChange}

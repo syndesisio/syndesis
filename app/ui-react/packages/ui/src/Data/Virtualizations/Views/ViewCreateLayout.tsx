@@ -14,44 +14,44 @@ import './ViewCreateLayout.css';
 export interface IViewCreateLayoutProps {
   header: JSX.Element;
   content: JSX.Element;
-  preview?: JSX.Element;
+  selectedTables?: JSX.Element;
 }
 
 export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> = ({
   header,
   content,
-  preview,
+  selectedTables,
 }: IViewCreateLayoutProps) => {
   return (
-    <div className={'virtualization-view-editor-layout'}>
-      <div className={'virtualization-view-editor-layout__header'}>
+    <div className={'view-create-layout'}>
+      <div className={'view-create-layout__header'}>
         {header}
       </div>
-      <div className={'virtualization-view-editor-layout__body'}>
-        <div className={'virtualization-view-editor-layout__contentOuter'}>
-          <div className={'virtualization-view-editor-layout__contentInner'}>
+      <div className={'view-create-layout__body'}>
+        <div className={'view-create-layout__contentOuter'}>
+          <div className={'view-create-layout__contentInner'}>
             <PageSection>
-              <Card className={'virtualization-view-editor-layout__card'}>
-                {preview ? (
-                  <Grid className={'virtualization-view-editor-layout__grid'}>
+              <Card className={'view-create-layout__card'}>
+                {selectedTables ? (
+                  <Grid className={'view-create-layout__grid'}>
                     <GridItem
                       span={9}
-                      className={'virtualization-view-editor-layout_connection'}
+                      className={'view-create-layout_connection'}
                     >
                       {content}
                     </GridItem>
                     <GridItem
                       span={3}
                       className={
-                        'virtualization-view-editor-layout_previewSection'
+                        'view-create-layout_previewSection'
                       }
                     >
-                      {preview}
+                      {selectedTables}
                     </GridItem>
                   </Grid>
                 ) : (
-                  <Grid className={'virtualization-view-editor-layout__grid'}>
-                    <GridItem span={12} className={'class1'}>
+                  <Grid className={'view-create-layout__grid'}>
+                    <GridItem span={12}>
                       {content}
                     </GridItem>
                   </Grid>

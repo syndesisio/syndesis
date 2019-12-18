@@ -13,31 +13,31 @@ import {
 } from '@patternfly/react-core';
 import { DatabaseIcon } from '@patternfly/react-icons';
 import * as React from 'react';
-import './PreviewSelectedConnection.css';
+import './SelectedConnectionTabels.css';
 
-export interface IPreviewSelectedConnectionProps {
+export interface ISelectedConnectionTabelsProps {
   selectedSchemaNodesLength: number;
   i18nTablesSelected: string;
   i18nEmptyTablePreview: string;
 }
 
-export const PreviewSelectedConnection: React.FunctionComponent<IPreviewSelectedConnectionProps> = props => {
+export const SelectedConnectionTabels: React.FunctionComponent<ISelectedConnectionTabelsProps> = props => {
   return (
     <Flex
       breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
-      className={'preview-selected-Connection'}
+      className={'selected-connection-tabels'}
     >
-      <FlexItem className={'preview-selected-Connection_headingSection'}>
+      <FlexItem className={'selected-connection-tabels_headingSection'}>
         <TextContent>
           <Text
-            className={'preview-selected-Connection_heading_text'}
+            className={'selected-connection-tabels_heading_text'}
             component={TextVariants.h2}
           >
             {`${props.i18nTablesSelected} (${props.selectedSchemaNodesLength}):`}
           </Text>
         </TextContent>
       </FlexItem>
-      <FlexItem className={'preview-selected-Connection_contentSection'}>
+      <FlexItem className={'selected-connection-tabels_contentSection'}>
         {props.selectedSchemaNodesLength === 0 ? (
           <Bullseye>
             <EmptyState variant={EmptyStateVariant.small}>

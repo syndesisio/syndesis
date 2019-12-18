@@ -7,25 +7,26 @@ import {
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
-  Dropdown,
-  DropdownItem,
-  DropdownPosition,
-  KebabToggle,
   Text,
   TextContent,
   TextVariants,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
+import { OutlinedTrashAltIcon } from '@patternfly/react-icons';
 import { Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
 
-export interface IPreviewListViewComponentProps {
+export interface ISelectedConnectionListViewProps {
   toggle: (id: string) => void;
   expanded: string[];
   name: string;
+  connectionName: string;
   index: number;
+  onTabelRemoved: (connectionName: string, teiidName: string) => void;
 }
 
-export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewComponentProps> = props => {
+export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnectionListViewProps> = props => {
   const columns = ['', ''];
   const rows = [
     ['one', 'two'],
@@ -33,6 +34,12 @@ export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewC
     ['one', 'two'],
   ];
 
+  const onTrashClickHandler = () => {
+    props.onTabelRemoved(props.connectionName, props.name);
+  }
+  /*   
+  May use when implement the table preview
+  
   const [isOpen, setIsOpen] = React.useState(false);
 
   const onSelect = (event?: Event) => {
@@ -43,6 +50,7 @@ export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewC
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
   };
+  */
 
   return (
     <DataList aria-label="Expandable data list example">
@@ -68,10 +76,13 @@ export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewC
             ]}
           />
           <DataListAction
-            aria-labelledby={`selected-table${props.index} selected-table-action${props.index}`} 
+            aria-labelledby={`selected-table${props.index} selected-table-action${props.index}`}
             id={`selected-table-action${props.index}`}
             aria-label="Actions"
           >
+            {/* 
+            May use when implement the table preview
+            
             <Dropdown
               isPlain={true}
               position={DropdownPosition.right}
@@ -85,7 +96,10 @@ export const PreviewListViewComponent: React.FunctionComponent<IPreviewListViewC
                   Remove Selection
                 </DropdownItem>,
               ]}
-            />
+            /> */}
+            <Tooltip position={TooltipPosition.top} content={<div>Remove</div>}>
+              <OutlinedTrashAltIcon onClick={onTrashClickHandler}/>
+            </Tooltip>
           </DataListAction>
         </DataListItemRow>
         <DataListContent
