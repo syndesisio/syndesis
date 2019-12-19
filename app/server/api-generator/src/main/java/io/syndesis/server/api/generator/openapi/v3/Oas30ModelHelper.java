@@ -17,12 +17,9 @@ package io.syndesis.server.api.generator.openapi.v3;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.core.models.common.Server;
 import io.apicurio.datamodels.core.models.common.ServerVariable;
@@ -32,7 +29,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
-import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
@@ -47,60 +43,6 @@ final class Oas30ModelHelper {
 
     private Oas30ModelHelper() {
         // utility class
-    }
-
-    /**
-     * Iterate through list of generic path parameters on the given operation and collect those of given type.
-     * @param operation given path item.
-     * @return typed list of path parameters.
-     */
-    static List<Oas30Parameter> getParameters(Oas30Operation operation) {
-        List<Oas30Parameter> parameters = OasModelHelper.getParameters(operation)
-            .stream()
-            .filter(Oas30Parameter.class::isInstance)
-            .map(Oas30Parameter.class::cast)
-            .collect(Collectors.toList());
-
-        if (Oas30FormDataHelper.hasFormDataBody(operation.requestBody)) {
-            //add form urlencoded properties as we handle those as parameters
-            Optional<Oas30MediaType> formDataContent = Oas30FormDataHelper.getFormDataContent(operation.requestBody.content);
-            formDataContent.ifPresent(oas30MediaType -> Optional.ofNullable(oas30MediaType.schema.properties).orElse(Collections.emptyMap()).forEach((name, property) -> {
-                Oas30Parameter formParameter = new Oas30Parameter(name);
-                formParameter.schema = property;
-                formParameter.in = "formData";
-                formParameter.$ref = property.$ref;
-                formParameter.description = property.description;
-                parameters.add(formParameter);
-            }));
-        }
-
-        return parameters;
-    }
-
-    /**
-     * Iterate through list of generic path parameters on the given path item and collect those of given type.
-     * @param pathItem given path item.
-     * @return typed list of path parameters.
-     */
-    static List<Oas30Parameter> getParameters(OasPathItem pathItem) {
-        return OasModelHelper.getParameters(pathItem)
-            .stream()
-            .filter(Oas30Parameter.class::isInstance)
-            .map(Oas30Parameter.class::cast)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Get parameter definitions on OpenAPI document if any.
-     * @param openApiDoc given specification.
-     * @return typed list of path parameter definitions.
-     */
-    static Map<String, Oas30ParameterDefinition> getParameters(Oas30Document openApiDoc) {
-        if (openApiDoc.components == null || openApiDoc.components.parameters == null) {
-            return Collections.emptyMap();
-        }
-
-        return openApiDoc.components.parameters;
     }
 
     static Oas30SchemaDefinition dereference(final OasSchema model, final Oas30Document openApiDoc) {

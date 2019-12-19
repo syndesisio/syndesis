@@ -17,9 +17,10 @@
 package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasResponse;
@@ -27,7 +28,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30MediaType;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Operation;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Parameter;
-import io.apicurio.datamodels.openapi.v3.models.Oas30ParameterDefinition;
 import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
@@ -108,18 +108,81 @@ final class Oas30DataShapeGeneratorHelper {
     }
 
     static List<Oas30Parameter> getOperationParameters(Oas30Document openApiDoc, Oas30Operation operation) {
-        final List<Oas30Parameter> operationParameters = Oas30ModelHelper.getParameters(operation);
+        final List<Oas30Parameter> operationParameters = getParameters(openApiDoc, operation);
 
         OasPathItem parent = ofNullable(operation.parent())
             .filter(OasPathItem.class::isInstance)
             .map(OasPathItem.class::cast)
             .orElse(null);
-        final List<Oas30Parameter> pathParameters = Oas30ModelHelper.getParameters(parent);
+        final List<Oas30Parameter> pathParameters = getParameters(openApiDoc, parent);
         operationParameters.addAll(pathParameters);
 
-        final Map<String, Oas30ParameterDefinition> globalParameters = Oas30ModelHelper.getParameters(openApiDoc);
-        operationParameters.addAll(globalParameters.values());
+        return operationParameters
+                    .stream()
+                    .distinct()
+                    .collect(Collectors.toList());
+    }
 
-        return operationParameters;
+    /**
+     * Iterate through list of generic path parameters on the given operation and collect those of given type.
+     * @param openApiDoc the OpenAPI document.
+     * @param operation given path item.
+     * @return typed list of path parameters.
+     */
+    private static List<Oas30Parameter> getParameters(Oas30Document openApiDoc, Oas30Operation operation) {
+        List<Oas30Parameter> parameters = OasModelHelper.getParameters(operation)
+            .stream()
+            .filter(Oas30Parameter.class::isInstance)
+            .map(Oas30Parameter.class::cast)
+            .map(p -> resolveParameter(openApiDoc, p))
+            .collect(Collectors.toList());
+
+        if (Oas30FormDataHelper.hasFormDataBody(operation.requestBody)) {
+            //add form urlencoded properties as we handle those as parameters
+            Optional<Oas30MediaType> formDataContent = Oas30FormDataHelper.getFormDataContent(operation.requestBody.content);
+            formDataContent.ifPresent(oas30MediaType -> ofNullable(oas30MediaType.schema.properties).orElse(Collections.emptyMap()).forEach((name, property) -> {
+                Oas30Parameter formParameter = new Oas30Parameter(name);
+                formParameter.schema = property;
+                formParameter.in = "formData";
+                formParameter.$ref = property.$ref;
+                formParameter.description = property.description;
+                parameters.add(formParameter);
+            }));
+        }
+
+        return parameters;
+    }
+
+    /**
+     * Iterate through list of generic path parameters on the given path item and collect those of given type.
+     * @param openApiDoc the OpenAPI document.
+     * @param pathItem given path item.
+     * @return typed list of path parameters.
+     */
+    private static List<Oas30Parameter> getParameters(Oas30Document openApiDoc, OasPathItem pathItem) {
+        return OasModelHelper.getParameters(pathItem)
+            .stream()
+            .filter(Oas30Parameter.class::isInstance)
+            .map(Oas30Parameter.class::cast)
+            .map(p -> resolveParameter(openApiDoc, p))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * Resolve parameter with potential reference to global parameter definition.
+     * @param openApiDoc the OpenAPI document with global parameter definitions.
+     * @param parameter the parameter maybe referencing a global parameter definition.
+     * @return the parameter itself or a resolved global parameter definition.
+     */
+    private static Oas30Parameter resolveParameter(Oas30Document openApiDoc, Oas30Parameter parameter) {
+        if (openApiDoc.components == null || openApiDoc.components.parameters == null) {
+            return parameter;
+        }
+
+        if (parameter.$ref != null) {
+            return openApiDoc.components.parameters.get(OasModelHelper.getReferenceName(parameter.$ref));
+        }
+
+        return parameter;
     }
 }
