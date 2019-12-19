@@ -501,6 +501,7 @@ jobs:
       - image: circleci/golang:1.12.5
     environment:
       DOCKER_IMAGES: syndesis-operator
+      GOPROXY: https://proxy.golang.org
       <<: *common_env
     steps:
       - setup_remote_docker
