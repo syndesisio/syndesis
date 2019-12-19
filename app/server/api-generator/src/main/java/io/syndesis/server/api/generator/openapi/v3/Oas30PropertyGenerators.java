@@ -81,7 +81,7 @@ public class Oas30PropertyGenerators extends OpenApiPropertyGenerator<Oas30Docum
 
     @Override
     protected String getFlow(Oas30SecurityScheme scheme) {
-        return Oas30ModelHelper.getAuthFlow(scheme);
+        return getAuthFlow(scheme);
     }
 
     @Override
@@ -96,5 +96,38 @@ public class Oas30PropertyGenerators extends OpenApiPropertyGenerator<Oas30Docum
         }
 
         return info.getV3Model().servers.stream().map(Oas30ModelHelper::getScheme).collect(Collectors.toList());
+    }
+
+    /**
+     * Extracts authorization flow name from security scheme. In OpenAPI 3.x the security scheme "oauth2" can define multiple authorization flow types.
+     * This method searches for authorizationCode flow type first in favor of any other flow type as this is the one Syndesis is supporting at the moment.
+     *
+     * Only if that specific flow type is not specified go and visit other flow types defined. Returns null when no authorization flow type is defined
+     * which is usually the case for non oauth2 security schemes.
+     * @param scheme the security scheme maybe holding authorization flows.
+     * @return the name of the authorization flow if any or null otherwise.
+     */
+    private static String getAuthFlow(Oas30SecurityScheme scheme) {
+        if (scheme.flows == null) {
+            return null;
+        }
+
+        if (scheme.flows.authorizationCode != null) {
+            return "authorizationCode";
+        }
+
+        if (scheme.flows.clientCredentials != null) {
+            return "clientCredentials";
+        }
+
+        if (scheme.flows.password != null) {
+            return "password";
+        }
+
+        if (scheme.flows.implicit != null) {
+            return "implicit";
+        }
+
+        return null;
     }
 }

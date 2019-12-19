@@ -24,6 +24,8 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.server.api.generator.openapi.OpenApiParameterGenerator;
+import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 /**
  * @author Christoph Deppisch
@@ -44,10 +46,22 @@ public final class Oas30ParameterGenerator extends OpenApiParameterGenerator<Oas
             .filter(entry -> shouldCreateProperty(entry.getValue()))
             .forEach(entry -> {
                 final Optional<Oas30Schema> schema = Oas30ModelHelper.getSchema(entry.getValue());
-                schema.ifPresent(oas30Schema -> properties.put(entry.getKey(), createPropertyFromParameter(entry.getValue(), oas30Schema.type, Oas30ModelHelper.javaTypeFor(oas30Schema), oas30Schema.default_, oas30Schema.enum_)));
+                schema.ifPresent(oas30Schema -> properties.put(entry.getKey(), createPropertyFromParameter(entry.getValue(), oas30Schema.type, javaTypeFor(oas30Schema), oas30Schema.default_, oas30Schema.enum_)));
         });
 
         return properties;
     }
 
+    static String javaTypeFor(final Oas30Schema schema) {
+        if (OasModelHelper.isArrayType(schema)) {
+            final Oas30Schema items = (Oas30Schema) schema.items;
+            final String elementType = items.type;
+            final String elementFormat = items.format;
+
+            return JsonSchemaHelper.javaTypeFor(elementType, elementFormat) + "[]";
+        }
+
+        final String format = schema.format;
+        return JsonSchemaHelper.javaTypeFor(schema.type, format);
+    }
 }
