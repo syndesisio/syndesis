@@ -1,7 +1,7 @@
 import { SchemaNodeInfo } from '@syndesis/models';
 import {
   SelectedConnectionListView,
-  SelectedConnectionTabels,
+  SelectedConnectionTables,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,7 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
   };
 
   return (
-    <SelectedConnectionTabels 
+    <SelectedConnectionTables 
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
       i18nTablesSelected={t('shared:TablesSelected')}
       i18nEmptyTablePreview={t('shared:EmptyTablePreview')}
@@ -42,6 +42,6 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
             onTabelRemoved={props.onNodeDeselected}
           />
         ))}
-    </SelectedConnectionTabels>
+    </SelectedConnectionTables>
   );
 };
