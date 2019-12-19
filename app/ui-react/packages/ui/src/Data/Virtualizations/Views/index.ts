@@ -5,7 +5,7 @@ export * from './EmptyViewsState';
 export * from './SchemaNodeListItem';
 export * from './ViewConfigurationForm';
 export * from './ViewCreateLayout';
-export * from './SelectedConnectionTabels';
+export * from './SelectedConnectionTables';
 export * from './SelectedConnectionListView';
 export * from './CreateViewHeader';
 export * from './ViewHeaderBreadcrumb';

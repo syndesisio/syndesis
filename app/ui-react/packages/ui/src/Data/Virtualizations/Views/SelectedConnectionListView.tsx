@@ -13,9 +13,10 @@ import {
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
-import { OutlinedTrashAltIcon } from '@patternfly/react-icons';
+import { DatabaseIcon, OutlinedTrashAltIcon } from '@patternfly/react-icons';
 import { Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
+import './SelectedConnectionListView.css'
 
 export interface ISelectedConnectionListViewProps {
   toggle: (id: string) => void;
@@ -68,9 +69,12 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
           />
           <DataListItemCells
             dataListCells={[
+              <DataListCell isIcon={true} key="icon">
+                  <DatabaseIcon />
+              </DataListCell>,
               <DataListCell key="primary content">
                 <TextContent>
-                  <Text component={TextVariants.h4}>{props.name}</Text>
+                  <Text component={TextVariants.h4}><span className={'selected_connection_list_view__tableName'}>{props.name}</span> <span>{props.connectionName}</span> </Text>
                 </TextContent>
               </DataListCell>,
             ]}
