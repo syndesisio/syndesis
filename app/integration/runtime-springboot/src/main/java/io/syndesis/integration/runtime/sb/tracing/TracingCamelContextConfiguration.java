@@ -15,14 +15,18 @@
  */
 package io.syndesis.integration.runtime.sb.tracing;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.spring.boot.CamelContextConfiguration;
-
 import io.opentracing.Tracer;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.tracing.TracingLogListener;
+import org.apache.camel.CamelContext;
+import org.apache.camel.spring.boot.CamelContextConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 class TracingCamelContextConfiguration implements CamelContextConfiguration {
+
+    private static final Logger LOG = LoggerFactory.getLogger(TracingCamelContextConfiguration.class);
+
     private final Tracer tracer;
 
     public TracingCamelContextConfiguration(Tracer tracer) {
@@ -31,6 +35,7 @@ class TracingCamelContextConfiguration implements CamelContextConfiguration {
 
     @Override
     public void beforeApplicationStart(CamelContext camelContext) {
+        LOG.info("ActivityTracking: Opentracing Activity Logging strategy");
         // Lets generates always incrementing lexically sortable unique
         // uuids. These uuids are also more compact than the camel default
         // and contain an embedded timestamp.

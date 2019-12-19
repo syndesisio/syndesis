@@ -71,7 +71,6 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
 
             if (trace.spans != null && trace.spans.size() >= 1) {
 
-
                 for (JaegerQueryAPI.Span span : trace.spans) {
                     String kind = span.findTag(Tags.SPAN_KIND.getKey(), String.class);
                     if (kind == null) {
@@ -90,7 +89,7 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                             activity.setPod(hostname);
                             activity.setStatus("done");
                             activity.setAt(span.startTime/1000);
-                            Boolean failed = span.findTag("failed", Boolean.class);
+                            Boolean failed = span.findTag(Tags.ERROR.getKey(), Boolean.class);
                             if (failed != null) {
                                 activity.setFailed(failed);
                             }
@@ -103,10 +102,14 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                             step.setDuration(span.duration*1000);
 
                             List<String> messages = span.findLogs("event");
-                            step.setMessages(messages);
 
-                            // TODO:
-                            // step.setFailure();
+                            Boolean failed = span.findTag(Tags.ERROR.getKey(), Boolean.class);
+                            if (failed != null && failed) {
+                                String msg = messages != null && !messages.isEmpty() ? messages.get(0) : "";
+                                step.setFailure(msg);
+                            } else {
+                                step.setMessages(messages);
+                            }
 
                             steps.add(step);
                         }
