@@ -12,9 +12,12 @@ import {
 import * as React from 'react';
 import { IFormControlProps } from '../models';
 import { FormLabelHintComponent } from './FormLabelHintComponent';
-import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
+import {
+  getHelperText,
+  getValidationState,
+  toValidHtmlId } from './helpers';
 
-import './FormTypeaheadComponent.css';
+import { useState } from 'react';
 
 function getSelectedValues(select: HTMLSelectElement) {
   return Array.from(select.selectedOptions).map(option => option.value);
@@ -23,6 +26,20 @@ function getSelectedValues(select: HTMLSelectElement) {
 export const FormTypeaheadComponent: React.FunctionComponent<
   IFormControlProps
 > = props => {
+  // @ts-ignore
+  const useOpenTypeahead = initialState => {
+    const [isTypeaheadOpen, setTypeaheadOpen] = useState(initialState);
+
+    const toggleTypeaheadOpen = () => {
+      const typeaheadOpenState = !isTypeaheadOpen;
+      setTypeaheadOpen(typeaheadOpenState);
+    };
+
+    return [isTypeaheadOpen, toggleTypeaheadOpen];
+  };
+
+  const [isSelectOpen, toggleSelectOpen] = useOpenTypeahead(false);
+
   const isMultiple =
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
   const { onChange, onBlur, value, ...field } = props.field;
@@ -59,13 +76,23 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   };
   const handleBlur = (event: any) =>
     handleChange(event);
+
   const { helperText, helperTextInvalid } = getHelperText(
     props.field.name,
     props.property.description,
     props.form.errors
   );
 
-  const onToggle = () => {};
+  props.property.enum = [
+    {
+      "label": "zregvart::my-cluster",
+      "value": "my-cluster-kafka-bootstrap.zregvart.svc:909"
+    },
+    {
+      "label": "zregvart::zorans-cluster",
+      "value": "zorans-cluster-kafka-bootstrap.zregvart.svc:9092"
+    }
+  ];
 
   return (
     <FormGroup
@@ -95,12 +122,13 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         className={'autoform-select'}
         onSelect={handleChange}
         onBlur={handleBlur}
-        onToggle={onToggle}
+        onToggle={toggleSelectOpen}
+        isCreatable={true}
+        isExpanded={isSelectOpen}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
-        isCreatable={true} // hard-coding for now
         title={props.property.controlHint}
         value={updatedValue}
       >
