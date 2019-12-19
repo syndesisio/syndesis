@@ -1,6 +1,5 @@
 export * from './VirtualizationNavBar';
 export * from './ViewsImportSteps';
-export * from './ViewCreateSteps';
 export * from './ViewInfosContent';
 export * from './DvConnections';
 export * from './VirtualizationUtils';
@@ -8,3 +7,4 @@ export * from './DvConnectionsWithToolbar';
 export * from './VirtualizationActionContainer';
 export * from './WithVirtualizationSqlClientForm';
 export * from './ConnectionSchemaContent';
+export * from './ConnectionTables';
