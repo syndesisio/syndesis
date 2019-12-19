@@ -303,6 +303,18 @@
                 merged = new DefaultSettingsReader().read(new FileInputStream(new File(project.properties.get("image.build.directory"), "settings.xml")), null);
                 // merge the settings.xml with the settings provided at runtime
                 SettingsUtils.merge(merged, settings, "user-level");
+                // if the settings.xml used by the Maven running the build contains mirror configuration make sure that it's not used for the `local-repository`
+                // which contains the cached artefacts built by this build and so unavailable through any mirror
+                mirrors = merged.getMirrors();
+                if (mirrors != null) {
+                  for (int i = 0; i &lt; mirrors.size(); i++) {
+                    mirror = mirrors.get(i);
+                    mirrorOf = mirror.getMirrorOf();
+                    if (mirrorOf != null &amp;&amp; mirrorOf.contains("*") &amp;&amp; !mirrorOf.contains("!local-repository")) {
+                      mirror.setMirrorOf(mirrorOf + ",!local-repository");
+                    }
+                  }
+                }
                 // write merged settings as settings_merged.xml
                 new DefaultSettingsWriter().write(new File(project.getBuild().getDirectory(), "settings_merged.xml"), null, merged);
               </source>
