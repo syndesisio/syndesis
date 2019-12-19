@@ -22,17 +22,11 @@ import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TestName;
-import org.slf4j.bridge.SLF4JBridgeHandler;
-
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
+import io.fabric8.kubernetes.api.model.ReplicationControllerListBuilder;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.Service;
@@ -44,13 +38,22 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftMockServer;
-import com.fasterxml.jackson.core.JsonProcessingException;
 
-import okhttp3.mockwebserver.RecordedRequest;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TestName;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import static io.fabric8.kubernetes.client.utils.Serialization.asJson;
 import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
+
 import static org.assertj.core.api.Assertions.assertThat;
+
+import okhttp3.mockwebserver.RecordedRequest;
 
 public class OpenShiftServiceImplTest {
     @Rule
@@ -380,6 +383,84 @@ public class OpenShiftServiceImplTest {
         assertThat(issuedRequests).contains(Request.with("PATCH", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-via-service-and-route", Collections.EMPTY_LIST));
         assertThat(issuedRequests).contains(Request.with("POST", "/api/v1/namespaces/test/services", expectedService));
         assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/route.openshift.io/v1/namespaces/test/routes/i-via-service-and-route"));
+    }
+
+    @Test
+    public void shouldDeleteBasedOnIntegrationName() {
+        server.expect()
+            .delete()
+            .withPath("/apis/route.openshift.io/v1/namespaces/test/routes/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        server.expect()
+            .delete()
+            .withPath("/api/v1/namespaces/test/services/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        server.expect()
+            .delete()
+            .withPath("/apis/image.openshift.io/v1/namespaces/test/imagestreams/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        final DeploymentConfig deploymentConfig = new DeploymentConfigBuilder()
+            .withNewMetadata()
+            .endMetadata()
+            .withNewSpec()
+            .endSpec()
+            .build();
+
+        server.expect()
+            .patch()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, deploymentConfig)
+            .once();
+
+        server.expect()
+            .get()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(200, deploymentConfig)
+            .times(2);
+
+        server.expect()
+            .delete()
+            .withPath("/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        server.expect()
+            .get()
+            .withPath("/api/v1/namespaces/test/replicationcontrollers?labelSelector=openshift.io%2Fdeployment-config.name")
+            .andReturn(200, new ReplicationControllerListBuilder()
+                .addNewItem()
+                .endItem()
+                .build());
+
+        server.expect()
+            .delete()
+            .withPath("/api/v1/namespaces/test/secrets/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        server.expect()
+            .delete()
+            .withPath("/apis/build.openshift.io/v1/namespaces/test/buildconfigs/i-integration")
+            .andReturn(202, null)
+            .once();
+
+        boolean delete = service.delete("integration");
+
+        assertThat(delete).isTrue();
+
+        final List<Request> issuedRequests = gatherRequests();
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/route.openshift.io/v1/namespaces/test/routes/i-integration"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/api/v1/namespaces/test/services/i-integration"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/image.openshift.io/v1/namespaces/test/imagestreams/i-integration"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/apps.openshift.io/v1/namespaces/test/deploymentconfigs/i-integration"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/api/v1/namespaces/test/secrets/i-integration"));
+        assertThat(issuedRequests).contains(Request.with("DELETE", "/apis/build.openshift.io/v1/namespaces/test/buildconfigs/i-integration"));
     }
 
     DeploymentConfigBuilder baseDeploymentFor(final String name, final DeploymentData deploymentData) {
