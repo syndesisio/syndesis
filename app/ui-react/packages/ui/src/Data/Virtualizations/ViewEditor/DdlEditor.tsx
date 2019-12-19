@@ -4,6 +4,8 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Text,
+  TextContent,
   Title,
 } from '@patternfly/react-core';
 import { Button } from 'patternfly-react';
@@ -11,6 +13,7 @@ import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
 import './DdlEditor.css';
+import { dvLanguageMode, loadDvMime } from './DvAutocomplete';
 
 export interface IViewEditValidationResult {
   message: string;
@@ -24,6 +27,21 @@ export interface ITableInfo {
 
 export interface IDdlEditorProps {
   viewDdl: string;
+
+  /**
+   * The localized text for the cursor Column.
+   */
+  i18nCursorColumn: string;
+
+  /**
+   * The localized text for the cursor Line.
+   */
+  i18nCursorLine: string;
+
+  /**
+   * The localized text for the DDL text placeholder when no content exists.
+   */
+  i18nDdlTextPlaceholder: string;
 
   /**
    * The localized text for the done button.
@@ -93,9 +111,26 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   const [initialDdlValue] = React.useState(props.viewDdl);
   const [hasChanges, setHasChanges] = React.useState(false);
   const [savedValue, setSavedValue] = React.useState(props.viewDdl);
+  const [keywordsRegistered, setKeywordsRegistered] = React.useState(false);
+  const [cursorPosition, setCursorPosition] = React.useState(
+    `( ${props.i18nCursorLine} ?, ${props.i18nCursorColumn} ? )`
+  );
 
   const handleCloseValidationMessage = () => {
     props.onCloseValidationMessage();
+  };
+
+  const handleEditorDidMount = (editor: ITextEditor) => {
+    editor.on('cursorActivity', cm => {
+      const pos = editor.getCursor();
+      setCursorPosition(getCursorText(pos));
+    });
+  };
+
+  const getCursorText = (pos: any) => {
+    return `( ${props.i18nCursorLine} ${pos.line + 1}, ${
+      props.i18nCursorColumn
+    } ${pos.ch + 1} )`;
   };
 
   const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
@@ -133,6 +168,11 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
    * @param tableInfos the table infos
    */
   const getHintOptions = (tableInfos: ITableInfo[]) => {
+    if (!keywordsRegistered) {
+      loadDvMime();
+      setKeywordsRegistered(true);
+    }
+
     const result = { tables: {} };
 
     for (const tableInfo of tableInfos) {
@@ -142,14 +182,17 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   };
 
   const editorOptions = {
+    autoCloseBrackets: true,
     autofocus: true,
     extraKeys: { 'Ctrl-Space': 'autocomplete' },
     gutters: ['CodeMirror-lint-markers'],
     hintOptions: getHintOptions(props.sourceTableInfos),
+    indentWithTabs: true,
     lineNumbers: true,
     lineWrapping: true,
     matchBrackets: true,
-    mode: 'text/x-mysql',
+    mode: dvLanguageMode,
+    placeholder: props.i18nDdlTextPlaceholder,
     readOnly: false,
     showCursorWhenSelecting: true,
     styleActiveLine: true,
@@ -162,27 +205,33 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
         {props.i18nTitle}
       </Title>
       {props.showValidationMessage
-            ? props.validationResults.map((e, idx) => (
-                <Alert
-                  key={idx}
-                  variant={e.type}
-                  title={props.i18nValidationResultsTitle}
-                  action={
-                    <AlertActionCloseButton
-                      onClose={handleCloseValidationMessage}
-                    />
-                  }
-                >
-                  {e.message}
-                </Alert>
-              ))
-            : null}
+        ? props.validationResults.map((e, idx) => (
+            <Alert
+              key={idx}
+              variant={e.type}
+              title={props.i18nValidationResultsTitle}
+              action={
+                <AlertActionCloseButton
+                  onClose={handleCloseValidationMessage}
+                />
+              }
+            >
+              {e.message}
+            </Alert>
+          ))
+        : null}
+      <TextContent>
+        <Text className={'ddl-editor-cursor-position-text'}>
+          {cursorPosition}
+        </Text>
+      </TextContent>
       <Card>
         <CardBody className={'ddl-editor__card-body'}>
           <TextEditor
             value={initialDdlValue}
             options={editorOptions}
             onChange={handleDdlChange}
+            editorDidMount={handleEditorDidMount}
           />
         </CardBody>
         <CardFooter className={'ddl-editor__card-footer'}>
