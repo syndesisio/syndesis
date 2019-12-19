@@ -498,21 +498,11 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
  * Get rows from the query results
  * @param qResults the query results
  */
-export function getQueryRows(qResults: QueryResults): Array<{}> {
+export function getQueryRows(qResults: QueryResults): string[][] {
   const allRows = qResults.rows ? qResults.rows : [];
   return allRows
-    .map(row => row.row)
-    .map(row =>
-      row.reduce(
-        // tslint:disable-next-line: no-shadowed-variable
-        (row, r, idx) => ({
-          ...row,
-          [qResults.columns[idx].name]: r,
-        }),
-        {}
-      )
-    );
-}
+    .map(row => row.row);
+} 
 
 /**
  * Get columns from the query results

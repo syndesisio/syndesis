@@ -16,14 +16,14 @@ const resultCols = [
 ];
 
 const resultRows = [
-  { FirstName: 'Jean', LastName: 'Frissilla', Country: 'Italy' },
-  { FirstName: 'John', LastName: 'Johnson', Country: 'US' },
-  { FirstName: 'Juan', LastName: 'Bautista', Country: 'Brazil' },
-  { FirstName: 'Jordan', LastName: 'Dristol', Country: 'Ontario' },
-  { FirstName: 'Jenny', LastName: 'Clayton', Country: 'US' },
-  { FirstName: 'Jorge', LastName: 'Rivera', Country: 'Mexico' },
-  { FirstName: 'Jake', LastName: 'Klein', Country: 'US' },
-  { FirstName: 'Julia', LastName: 'Zhang', Country: 'China' },
+  ['Jean', 'Frissilla', 'Italy'],
+  ['John', 'Johnson', 'US'],
+  ['Juan', 'Bautista', 'Brazil'],
+  ['Jordan', 'Dristol', 'Ontario'],
+  ['Jenny', 'Clayton', 'US'],
+  ['Jorge', 'Rivera', 'Mexico'],
+  ['Jake', 'Klein', 'US'],
+  ['Julia', 'Zhang', 'China'],
 ];
 
 stories
