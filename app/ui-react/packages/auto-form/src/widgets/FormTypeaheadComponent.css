@@ -1,6 +1,0 @@
-.autoform-select[multiple] {
-  height: 10em;
-  background: inherit;
-  --pf-c-form-control--PaddingRight: inherit;
-  overflow: auto;
-}

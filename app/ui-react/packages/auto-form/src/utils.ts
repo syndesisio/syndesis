@@ -81,6 +81,7 @@ export function massageType(property: IFormDefinitionProperty) {
       type = 'checkbox';
   }
   if (typeof property.enum !== 'undefined' && property.enum.length && type !== 'typeahead') {
+  //if (typeof property.enum !== 'undefined' && property.enum.length) {
     /**
      * Default to `select` unless property.type === 'typeahead'
      */
