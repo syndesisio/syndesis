@@ -112,6 +112,7 @@
     }
   },
   "tags": [
-    "verifier"
+    "verifier",
+    "dynamic"
   ]
 }
