@@ -37,8 +37,6 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30RequestBody;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Schema;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
-import io.apicurio.datamodels.openapi.v3.models.Oas30SecurityScheme;
-import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -112,19 +110,6 @@ final class Oas30ModelHelper {
 
         String reference = OasModelHelper.getReferenceName(model.$ref);
         return openApiDoc.components.schemas.get(reference);
-    }
-
-    static String javaTypeFor(final Oas30Schema schema) {
-        if (OasModelHelper.isArrayType(schema)) {
-            final Oas30Schema items = (Oas30Schema) schema.items;
-            final String elementType = items.type;
-            final String elementFormat = items.format;
-
-            return JsonSchemaHelper.javaTypeFor(elementType, elementFormat) + "[]";
-        }
-
-        final String format = schema.format;
-        return JsonSchemaHelper.javaTypeFor(schema.type, format);
     }
 
     /**
@@ -226,12 +211,23 @@ final class Oas30ModelHelper {
      * @return base path of this API specification.
      */
     static String getBasePath(Oas30Document openApiDoc) {
-        String basePath = "/";
         if (openApiDoc.servers == null || openApiDoc.servers.isEmpty()) {
-            return basePath;
+            return "/";
         }
 
-        String serverUrl = resolveUrl(openApiDoc.servers.get(0));
+        return getBasePath(openApiDoc.servers.get(0));
+    }
+
+    /**
+     * Determine base path from server specification. Reads URL from server definition and extracts base path from
+     * that URL. The base path returned defaults to "/".
+     * @param server the server holding the host URL.
+     * @return base path of this API specification.
+     */
+    static String getBasePath(Server server) {
+        String basePath = "/";
+
+        String serverUrl = resolveUrl(server);
         if (serverUrl.startsWith("http")) {
             try {
                 basePath = new URL(serverUrl).getPath();
@@ -243,39 +239,6 @@ final class Oas30ModelHelper {
         }
 
         return basePath.length() > 0 ? basePath : "/";
-    }
-
-    /**
-     * Extracts authorization flow name from security scheme. In OpenAPI 3.x the security scheme "oauth2" can define multiple authorization flow types.
-     * This method searches for authorizationCode flow type first in favor of any other flow type as this is the one Syndesis is supporting at the moment.
-     *
-     * Only if that specific flow type is not specified go and visit other flow types defined. Returns null when no authorization flow type is defined
-     * which is usually the case for non oauth2 security schemes.
-     * @param scheme the security scheme maybe holding authorization flows.
-     * @return the name of the authorization flow if any or null otherwise.
-     */
-    static String getAuthFlow(Oas30SecurityScheme scheme) {
-        if (scheme.flows == null) {
-            return null;
-        }
-
-        if (scheme.flows.authorizationCode != null) {
-            return "authorizationCode";
-        }
-
-        if (scheme.flows.clientCredentials != null) {
-            return "clientCredentials";
-        }
-
-        if (scheme.flows.password != null) {
-            return "password";
-        }
-
-        if (scheme.flows.implicit != null) {
-            return "implicit";
-        }
-
-        return null;
     }
 
     /**
