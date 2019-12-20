@@ -58,10 +58,12 @@ export const FormTypeaheadComponent: React.FunctionComponent<
 
   const handleOnClear = (): void => {
     setSelectedOption('');
+    props.form.setFieldValue(props.field.name, '');
   };
 
   const handleOnCreate = (newOption: string): void => {
     setSelectedOption(newOption);
+    props.form.setFieldValue(props.field.name, newOption);
   };
 
   const { helperText, helperTextInvalid } = getHelperText(
@@ -113,7 +115,8 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
             key={`${index}-${opt.label}`}
-            value={opt.label}
+            label={opt.label}
+            value={opt.label || props.field.name[props.field.value]}
           />
         ))}
       </Select>

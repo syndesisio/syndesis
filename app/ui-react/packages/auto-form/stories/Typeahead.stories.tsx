@@ -46,8 +46,7 @@ stories.add('Creatable Option', () => {
           'This property is required'
         )}
         initialValue={object('Initial Value', {
-          MultiField: ['one', 'four'],
-          SomeField: 'three',
+          Creatable: ['four']
         })}
         validate={action('validate')}
         onSave={(val, bag) => {
