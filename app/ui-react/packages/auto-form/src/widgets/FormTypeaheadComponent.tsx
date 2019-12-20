@@ -47,12 +47,14 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   ): void => {
     onChange(event);
     setSelectedOption(event);
-
+    props.form.setFieldValue(props.field.name, event);
     toggleSelectOpen(false);
   };
 
-  const handleBlur = (event: any, value?: any): void =>
+  const handleBlur = (event: any, value?: any): void => {
     handleChange('', value);
+    props.form.setFieldTouched(field.name);
+  };
 
   const handleOnClear = (): void => {
     setSelectedOption('');
