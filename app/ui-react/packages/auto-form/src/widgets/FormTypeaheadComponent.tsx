@@ -8,6 +8,7 @@ import {
   FormGroup,
   Select,
   SelectOption,
+  SelectVariant,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { useState } from 'react';
@@ -53,6 +54,10 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   const handleBlur = (event: any, value?: any) =>
     handleChange('', value);
 
+  const handleOnCreate = (newOption: string): void => {
+    console.log(newOption);
+  };
+
   const { helperText, helperTextInvalid } = getHelperText(
     props.field.name,
     props.property.description,
@@ -84,26 +89,24 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         {...props.property.fieldAttributes}
         {...field}
         className={'autoform-select'}
-        onSelect={handleChange}
         onBlur={handleBlur}
+        onCreateOption={handleOnCreate}
+        onSelect={handleChange}
         onToggle={toggleSelectOpen}
         isCreatable={true}
+        isDisabled={props.form.isSubmitting || props.property.disabled}
         isExpanded={isSelectOpen}
+        selections={selectedOption}
+        variant={SelectVariant.typeahead}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || props.field.name}
-        isDisabled={props.form.isSubmitting || props.property.disabled}
         title={props.property.controlHint}
-        selections={selectedOption}
-        //value={selectedOption}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
             key={`${index}-${opt.label}`}
             value={opt.value}
-            //value={opt}
-            //value={selectedOption}
-            //label={opt.label}
           />
         ))}
       </Select>

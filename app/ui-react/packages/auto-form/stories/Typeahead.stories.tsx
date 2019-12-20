@@ -35,57 +35,7 @@ stories.add('Creatable Option', () => {
       labelHint: 'This is shown for the label hint text',
       order: 0,
       type: 'typeahead',
-    },
-    SomeField: {
-      displayName: 'Pick a thing',
-      enum: [
-        {
-          label: 'One Fish',
-          value: 'one',
-        },
-        {
-          label: 'Two Fish',
-          value: 'two',
-        },
-        {
-          label: 'Red Fish',
-          value: 'three',
-        },
-        {
-          label: 'Blue Fish',
-          value: 'four',
-        },
-      ],
-      labelHint: 'This is shown for the label hint text',
-      order: 10,
-      type: 'string',
-    },
-    MultiField: {
-      displayName: 'Pick things',
-      enum: [
-        {
-          label: 'One Fish',
-          value: 'one',
-        },
-        {
-          label: 'Two Fish',
-          value: 'two',
-        },
-        {
-          label: 'Red Fish',
-          value: 'three',
-        },
-        {
-          label: 'Blue Fish',
-          value: 'four',
-        },
-      ],
-      fieldAttributes: {
-        multiple: true,
-      },
-      order: 50,
-      type: 'string',
-    },
+    }
   };
   return (
     <StoryWrapper definition={definition}>
