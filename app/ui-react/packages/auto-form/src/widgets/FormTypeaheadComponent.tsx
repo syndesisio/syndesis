@@ -10,18 +10,13 @@ import {
   SelectOption,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { useState } from 'react';
 import { IFormControlProps } from '../models';
 import { FormLabelHintComponent } from './FormLabelHintComponent';
 import {
   getHelperText,
   getValidationState,
   toValidHtmlId } from './helpers';
-
-import { useState } from 'react';
-
-function getSelectedValues(select: HTMLSelectElement) {
-  return Array.from(select.selectedOptions).map(option => option.value);
-}
 
 export const FormTypeaheadComponent: React.FunctionComponent<
   IFormControlProps
@@ -45,34 +40,10 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   const { onChange, onBlur, value, ...field } = props.field;
   const id = toValidHtmlId(field.name);
 
-  const adjustValue = () => {
-    if (isMultiple) {
-      let arrayValue = value;
-      if (!value) {
-        arrayValue = [];
-      } else if (typeof value === 'string') {
-        if (value.startsWith('[')) {
-          arrayValue = JSON.parse(value);
-        } else {
-          arrayValue = [value];
-        }
-      }
-      return arrayValue;
-    } else {
-      return value;
-    }
-  };
-
-  const updatedValue = adjustValue();
   const handleChange = (
     event: any
   ) => {
-    if (isMultiple) {
-      const newValue = getSelectedValues(event.currentTarget);
-      props.form.setFieldValue(props.field.name, newValue);
-    } else {
-      onChange(event);
-    }
+    onChange(event);
   };
   const handleBlur = (event: any) =>
     handleChange(event);
@@ -82,17 +53,6 @@ export const FormTypeaheadComponent: React.FunctionComponent<
     props.property.description,
     props.form.errors
   );
-
-  props.property.enum = [
-    {
-      "label": "zregvart::my-cluster",
-      "value": "my-cluster-kafka-bootstrap.zregvart.svc:909"
-    },
-    {
-      "label": "zregvart::zorans-cluster",
-      "value": "zorans-cluster-kafka-bootstrap.zregvart.svc:9092"
-    }
-  ];
 
   return (
     <FormGroup
@@ -130,7 +90,6 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
         title={props.property.controlHint}
-        value={updatedValue}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
