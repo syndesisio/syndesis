@@ -34,23 +34,24 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   };
 
   const [isSelectOpen, toggleSelectOpen] = useOpenTypeahead(false);
-  const [selectedOption, setSelectedOption] = useState({});
+  const [selectedOption, setSelectedOption] = useState('');
 
   const { onChange, onBlur, value, ...field } = props.field;
 
   const id = toValidHtmlId(field.name);
 
   const handleChange = (
-    event: any,
-    selection?: any
+    eventValue: any,
+    event: any
   ) => {
     onChange(event);
-    setSelectedOption({value: selection.value});
+    setSelectedOption(event);
+
     toggleSelectOpen(false);
   };
 
   const handleBlur = (event: any, value?: any) =>
-    handleChange(event, value);
+    handleChange('', value);
 
   const { helperText, helperTextInvalid } = getHelperText(
     props.field.name,
@@ -93,14 +94,15 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
         title={props.property.controlHint}
-        //selections={selectedOption}
+        selections={selectedOption}
         //value={selectedOption}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
             key={`${index}-${opt.label}`}
-            //value={opt.value}
-            value={selectedOption}
+            value={opt.value}
+            //value={opt}
+            //value={selectedOption}
             //label={opt.label}
           />
         ))}
