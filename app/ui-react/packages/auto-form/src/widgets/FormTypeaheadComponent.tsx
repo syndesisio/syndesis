@@ -111,7 +111,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
             key={`${index}-${opt.label}`}
-            value={opt.value}
+            value={opt.label}
           />
         ))}
       </Select>
