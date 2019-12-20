@@ -115,7 +115,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
      * Check if all operations contains valid authentication types for consumed
      * APIs.
      */
-    private OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
+    public OpenApiModelInfo validateConsumedAuthTypes(final OpenApiModelInfo modelInfo) {
         return validateAuthTypesIn(modelInfo, OpenApiSecurityScheme.namesAndAliases());
     }
 

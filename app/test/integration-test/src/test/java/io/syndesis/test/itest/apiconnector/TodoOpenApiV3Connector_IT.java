@@ -39,8 +39,8 @@ import org.testcontainers.containers.GenericContainer;
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = TodoApiClientV2_IT.EndpointConfig.class)
-public class TodoApiClientV2_IT extends SyndesisIntegrationTestSupport {
+@ContextConfiguration(classes = TodoOpenApiV3Connector_IT.EndpointConfig.class)
+public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
 
     private static final int TODO_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
@@ -51,7 +51,8 @@ public class TodoApiClientV2_IT extends SyndesisIntegrationTestSupport {
     private HttpServer todoApiServer;
 
     /**
-     * Integration uses api connector to send OpenAPI client requests to a REST endpoint.
+     * Integration uses api connector to send OpenAPI client requests to a REST endpoint. The client API connector was generated
+     * from OpenAPI 3.x specification.
      *
      * The integration invokes following sequence of client requests on the test server
      *  POST /api adds a new task
@@ -63,7 +64,7 @@ public class TodoApiClientV2_IT extends SyndesisIntegrationTestSupport {
     @ClassRule
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-api-client")
-                            .fromExport(TodoApiClientV2_IT.class.getResource("TodoApiClientV2-export"))
+                            .fromExport(TodoOpenApiV3Connector_IT.class.getResource("TodoOpenApiV3Connector-export"))
                             .customize("$..configuredProperties.period", "5000")
                             .customize("$..configuredProperties.host",
                                 String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
