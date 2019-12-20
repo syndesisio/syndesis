@@ -34,19 +34,23 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   };
 
   const [isSelectOpen, toggleSelectOpen] = useOpenTypeahead(false);
+  const [selectedOption, setSelectedOption] = useState({});
 
-  const isMultiple =
-    props.property.fieldAttributes && props.property.fieldAttributes.multiple;
   const { onChange, onBlur, value, ...field } = props.field;
+
   const id = toValidHtmlId(field.name);
 
   const handleChange = (
-    event: any
+    event: any,
+    selection?: any
   ) => {
     onChange(event);
+    setSelectedOption({value: selection.value});
+    toggleSelectOpen(false);
   };
-  const handleBlur = (event: any) =>
-    handleChange(event);
+
+  const handleBlur = (event: any, value?: any) =>
+    handleChange(event, value);
 
   const { helperText, helperTextInvalid } = getHelperText(
     props.field.name,
@@ -76,7 +80,6 @@ export const FormTypeaheadComponent: React.FunctionComponent<
       helperTextInvalid={helperTextInvalid}
     >
       <Select
-        size={isMultiple ? 12 : undefined}
         {...props.property.fieldAttributes}
         {...field}
         className={'autoform-select'}
@@ -90,12 +93,15 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         aria-label={props.property.displayName || props.field.name}
         isDisabled={props.form.isSubmitting || props.property.disabled}
         title={props.property.controlHint}
+        //selections={selectedOption}
+        //value={selectedOption}
       >
         {(props.property.enum || []).map((opt: any, index: number) => (
           <SelectOption
             key={`${index}-${opt.label}`}
-            value={opt.value}
-            label={opt.label}
+            //value={opt.value}
+            value={selectedOption}
+            //label={opt.label}
           />
         ))}
       </Select>
