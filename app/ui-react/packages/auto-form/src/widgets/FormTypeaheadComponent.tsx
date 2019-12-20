@@ -44,18 +44,22 @@ export const FormTypeaheadComponent: React.FunctionComponent<
   const handleChange = (
     eventValue: any,
     event: any
-  ) => {
+  ): void => {
     onChange(event);
     setSelectedOption(event);
 
     toggleSelectOpen(false);
   };
 
-  const handleBlur = (event: any, value?: any) =>
+  const handleBlur = (event: any, value?: any): void =>
     handleChange('', value);
 
+  const handleOnClear = (): void => {
+    setSelectedOption('');
+  };
+
   const handleOnCreate = (newOption: string): void => {
-    console.log(newOption);
+    setSelectedOption(newOption);
   };
 
   const { helperText, helperTextInvalid } = getHelperText(
@@ -90,6 +94,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         {...field}
         className={'autoform-select'}
         onBlur={handleBlur}
+        onClear={handleOnClear}
         onCreateOption={handleOnCreate}
         onSelect={handleChange}
         onToggle={toggleSelectOpen}
