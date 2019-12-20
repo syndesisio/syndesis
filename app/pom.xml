@@ -127,7 +127,7 @@
     <assertj-core.version>3.14.0</assertj-core.version>
     <shrinkwrap.version>2.2.6</shrinkwrap.version>
 
-    <mailapi.version>1.4.3</mailapi.version>
+    <mailapi.version>1.6.4</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
     <junit.version>4.12</junit.version>
@@ -149,6 +149,7 @@
     <micrometer.version>1.2.0</micrometer.version>
     <teiid.version>13.0.1</teiid.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
+    <version.javax.activation>1.2.1</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
   </properties>
@@ -762,6 +763,12 @@
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
+              <!--
+                Jakarta project shipped activation com.sun.activation:jakarta.activation-api:1.2.1
+                and jakarta.activation:jakarta.activation:1.2.1 containing the
+                com.sun.activation:jakarta.activation-api:1.2.1 within it 
+              -->
+              <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>
@@ -1636,6 +1643,14 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -1643,6 +1658,16 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs</artifactId>
         <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -1657,6 +1682,10 @@
           <exclusion>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -2129,8 +2158,20 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.mail</groupId>
-        <artifactId>mailapi</artifactId>
+        <groupId>com.sun.activation</groupId>
+        <artifactId>jakarta.activation</artifactId>
+        <version>${version.javax.activation}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.mail</groupId>
+        <artifactId>jakarta.mail-api</artifactId>
+        <version>${mailapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>jakarta.mail</artifactId>
         <version>${mailapi.version}</version>
       </dependency>
 
@@ -2141,9 +2182,9 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
       </dependency>
 
       <dependency>
@@ -2671,6 +2712,14 @@
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

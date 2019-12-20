@@ -43,6 +43,10 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava-jdk5</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
       <dependency>
@@ -87,7 +91,7 @@
     </dependency>
     <dependency>
       <groupId>com.sun.mail</groupId>
-      <artifactId>javax.mail</artifactId>
+      <artifactId>jakarta.mail</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jsoup</groupId>
@@ -197,6 +201,12 @@
       <artifactId>greenmail</artifactId>
       <version>1.5.10</version>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>com.sun.mail</groupId>
+          <artifactId>javax.mail</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>

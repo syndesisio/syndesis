@@ -138,6 +138,12 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>
@@ -207,13 +213,6 @@
     <dependency>
       <groupId>com.vaadin.external.google</groupId>
       <artifactId>android-json</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <!-- Need mail api for validation (com.sun.mail:javax.mail is provided at runtime) -->
-    <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mailapi</artifactId>
       <scope>test</scope>
     </dependency>
 
