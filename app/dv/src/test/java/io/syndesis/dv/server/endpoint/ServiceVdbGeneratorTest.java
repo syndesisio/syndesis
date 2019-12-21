@@ -15,8 +15,11 @@
  */
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,14 +31,6 @@ import java.util.Properties;
 
 import org.junit.Before;
 import org.junit.Test;
-import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
-import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
-import io.syndesis.dv.metadata.TeiidDataSource;
-import io.syndesis.dv.metadata.TeiidVdb;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.server.endpoint.ServiceVdbGenerator.SchemaFinder;
-
 import org.mockito.Mockito;
 import org.teiid.adminapi.impl.ModelMetaData;
 import org.teiid.adminapi.impl.VDBMetaData;
@@ -45,9 +40,14 @@ import org.teiid.metadata.Table;
 import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.parser.QueryParser;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import io.syndesis.dv.KException;
+import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
+import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
+import io.syndesis.dv.metadata.TeiidDataSource;
+import io.syndesis.dv.metadata.TeiidVdb;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.server.endpoint.ServiceVdbGenerator.SchemaFinder;
 
 @SuppressWarnings({ "javadoc", "nls" })
 public class ServiceVdbGeneratorTest {
@@ -403,11 +403,12 @@ public class ServiceVdbGeneratorTest {
 
         VDBMetaData serviceVdb = vdbGenerator.createServiceVdb("servicevdb", mock, Arrays.asList(state));
 
-        assertEquals("<?xml version=\"1.0\" ?><vdb name=\"servicevdb\" version=\"1\"><connection-type>BY_VERSION</connection-type><model name=\"servicevdb\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[CREATE VIEW orderInfoView (ID, orderDate, name) OPTIONS (ANNOTATION 'test view description text') AS \n" +
+        assertEquals("<?xml version=\"1.0\" ?><vdb name=\"servicevdb\" version=\"1\"><connection-type>BY_VERSION</connection-type>" +
+                "<property name=\"hidden-qualified\" value=\"true\"></property>" +
+                "<model name=\"servicevdb\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[CREATE VIEW orderInfoView (ID, orderDate, name) OPTIONS (ANNOTATION 'test view description text') AS \n" +
                 "SELECT t1.ID, t1.orderDate, t2.name\n" +
                 "FROM pgconnection1schemamodel.orders AS t1;\n" +
-                "]]></metadata></model><model name=\"pgconnection1schemamodel\" type=\"PHYSICAL\" visible=\"false\"><metadata type=\"DDL\"><![CDATA[SET NAMESPACE 'http://www.teiid.org/ext/relational/2012' AS teiid_rel;\n" +
-                "\n" +
+                "]]></metadata></model><model name=\"pgconnection1schemamodel\" type=\"PHYSICAL\" visible=\"false\"><metadata type=\"DDL\"><![CDATA[" +
                 "CREATE FOREIGN TABLE orders (\n" +
                 "\tID long,\n" +
                 "\torderDate timestamp,\n" +
@@ -467,7 +468,7 @@ public class ServiceVdbGeneratorTest {
 
         VDBMetaData serviceVdb = vdbGenerator.createPreviewVdb("dv", "preview", Collections.emptyList());
 
-        assertEquals("<?xml version=\"1.0\" ?><vdb name=\"preview\" version=\"1\"><connection-type>BY_VERSION</connection-type><property name=\"preview\" value=\"true\"></property><import-vdb name=\"Preview\" version=\"1\" import-data-policies=\"true\"></import-vdb><model name=\"dv\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[]]></metadata></model></vdb>", new String(DefaultMetadataInstance.toBytes(serviceVdb).toByteArray(), "UTF-8"));
+        assertEquals("<?xml version=\"1.0\" ?><vdb name=\"preview\" version=\"1\"><connection-type>BY_VERSION</connection-type><property name=\"hidden-qualified\" value=\"true\"></property><property name=\"preview\" value=\"true\"></property><import-vdb name=\"Preview\" version=\"1\" import-data-policies=\"true\"></import-vdb><model name=\"dv\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[]]></metadata></model></vdb>", new String(DefaultMetadataInstance.toBytes(serviceVdb).toByteArray(), "UTF-8"));
     }
 
     @Test

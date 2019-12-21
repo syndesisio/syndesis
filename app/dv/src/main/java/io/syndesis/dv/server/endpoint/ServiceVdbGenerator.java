@@ -102,6 +102,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      */
     public VDBMetaData createServiceVdb(String virtualizationName, TeiidVdb previewVDB, List<? extends ViewDefinition> editorStates) throws KException {
         VDBMetaData vdb = new VDBMetaData();
+        vdb.addProperty("hidden-qualified", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         vdb.setName(virtualizationName);
         // Keep track of unique list of sources needed
         Map< Schema, LinkedHashSet<Table> > schemaTableMap = new LinkedHashMap<Schema, LinkedHashSet<Table>>();
@@ -187,6 +188,7 @@ public final class ServiceVdbGenerator implements StringConstants {
      */
     public VDBMetaData createPreviewVdb(String virtualizationName, String vdbName, List<? extends ViewDefinition> editorStates) {
         VDBMetaData vdb = new VDBMetaData();
+        vdb.addProperty("hidden-qualified", "true"); //$NON-NLS-1$ //$NON-NLS-2$
         vdb.setName(vdbName);
 
         // Generate new model DDL by appending all view DDLs
