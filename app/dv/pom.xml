@@ -56,7 +56,7 @@
       <id>rareddy</id>
       <email>rareddy@redhat.com</email>
       <organization>Red Hat</organization>
-      <roles>        
+      <roles>
         <role>Developer</role>
       </roles>
       <timezone>-6</timezone>
@@ -116,12 +116,12 @@
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
 
-    <version.com.fasterxml.jackson.databind>2.9.9.3</version.com.fasterxml.jackson.databind>
+    <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.io.fabric8.kubernetes-api>3.0.12</version.io.fabric8.kubernetes-api>
 
     <!-- DO NOT CHANGE VERSION PROPETY NAMES, THESE ARE USED IN CODE At s2i -->
     <!-- this is simply a version no dependencies involved right now -->
-    <version.springboot.teiid>1.2.0</version.springboot.teiid>
+    <version.springboot.teiid>1.3.0</version.springboot.teiid>
     <version.mysql>8.0.17</version.mysql>
     <version.org.mongodb>3.6.3</version.org.mongodb>
     <version.postgresql>42.1.4</version.postgresql>
@@ -267,13 +267,13 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-      
+
       <dependency>
         <groupId>io.opentracing.contrib</groupId>
         <artifactId>opentracing-spring-jaeger-web-starter</artifactId>
         <version>${version.io.opentracing.contrib}</version>
       </dependency>
-      
+
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>dv-server</artifactId>
@@ -303,11 +303,6 @@
       <dependency>
         <groupId>org.teiid</groupId>
         <artifactId>teiid-runtime</artifactId>
-        <version>${version.org.teiid}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.teiid</groupId>
-        <artifactId>teiid-admin</artifactId>
         <version>${version.org.teiid}</version>
       </dependency>
       <dependency>
@@ -395,7 +390,7 @@
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>teiid-client</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>org.teiid</groupId>
       <artifactId>teiid-api</artifactId>
@@ -537,7 +532,7 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>test</scope>
-    </dependency>    
+    </dependency>
     <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-test</artifactId>

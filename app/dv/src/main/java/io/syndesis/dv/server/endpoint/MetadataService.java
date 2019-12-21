@@ -91,7 +91,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     /**
      * fqn table option key
      */
-    public static final String TABLE_OPTION_FQN = AbstractMetadataRecord.RELATIONAL_URI+"fqn"; //$NON-NLS-1$
+    public static final String TABLE_OPTION_FQN = AbstractMetadataRecord.RELATIONAL_PREFIX+"fqn"; //$NON-NLS-1$
 
     @Autowired
     private MetadataInstance metadataInstance;
@@ -688,7 +688,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
 
         for(final org.teiid.metadata.Table table : tables) {
             // Use the fqn table option do determine native structure
-            String option = table.getProperty(TABLE_OPTION_FQN, false );
+            String option = table.getProperty(TABLE_OPTION_FQN);
             if( option != null ) {
                 // Break fqn into segments (segment starts at root, eg "schema=public/table=customer")
                 List<Pair<String, String>> segments = PathUtils.getOptions(option);
