@@ -215,6 +215,11 @@
       <artifactId>connector-mongodb</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-debezium</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
