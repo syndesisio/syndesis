@@ -45,7 +45,7 @@ public final class ReflectionUtils {
 
     static Method extractMethod(Class<?> clazz, String fieldName, Class<?>... types) {
         try {
-            Method method = clazz.getDeclaredMethod("get" + fieldName.substring(0, 1).toUpperCase(Locale.US) + fieldName.substring(1));
+            Method method = clazz.getMethod("get" + fieldName.substring(0, 1).toUpperCase(Locale.US) + fieldName.substring(1));
             Class<?> returnType = method.getReturnType();
             for (Class<?> type : types) {
                 if (returnType.isAssignableFrom(type)) {
