@@ -21,15 +21,14 @@ import java.util.List;
 import java.util.function.Function;
 
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.integration.Integration;
+
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 
-/**
- * @author roland
- * @since 13/12/16
- */
 public class ReflectiveSorterTest {
 
     @Test
@@ -108,6 +107,21 @@ public class ReflectiveSorterTest {
         }
         assertEquals(getTestData().size(), sorted.getTotalCount());
 
+    }
+
+    /**
+     * @see https://github.com/syndesisio/syndesis/issues/7471
+     */
+    @Test
+    public void shouldSortIntegrationsByVersion() {
+        final Integration v1 = new Integration.Builder().version(1).build();
+        final Integration v2 = new Integration.Builder().version(2).build();
+        final Integration v3 = new Integration.Builder().version(3).build();
+        final ListResult<Integration> integrations = ListResult.of(v3, v1, v2);
+
+        final ReflectiveSorter<Integration> sorter = new ReflectiveSorter<>(Integration.class, getOptions("version", null));
+
+        assertThat(sorter.apply(integrations)).containsExactly(v1, v2, v3);
     }
 
     private static SortOptions getOptions(String type, String direction) {
