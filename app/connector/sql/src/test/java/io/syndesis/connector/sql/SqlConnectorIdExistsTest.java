@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.sql;
 
+import org.apache.camel.CamelExecutionException;
 import org.assertj.core.api.Assertions;
 
 import java.sql.SQLException;
@@ -104,19 +105,21 @@ public class SqlConnectorIdExistsTest extends SqlConnectorTestSupport {
     // **************************
 
     @Test
-    public void sqlConnectorTest() throws Exception {
+    public void sqlConnectorTest() {
         String body;
         if (parameters.isEmpty()) {
             body = null;
-        } else {
-            body = JSONBeanUtil.toJSONBean(parameters);
-        }
-        Assertions.assertThatThrownBy(() -> {
             @SuppressWarnings("unchecked")
             List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
             Assertions.assertThat(jsonBeans).isNull();
-        }).isInstanceOf(IndexOutOfBoundsException.class)
-            //Should throw an exception on the second insert
-            .hasCauseInstanceOf(DuplicateKeyException.class);
+        } else {
+            body = JSONBeanUtil.toJSONBean(parameters);
+            Assertions.assertThatThrownBy(() -> {
+               @SuppressWarnings({ "unchecked", "unused" })
+               List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
+            }).isInstanceOf(CamelExecutionException.class)
+                //Should throw an exception on the second insert
+                .hasCauseInstanceOf(DuplicateKeyException.class);
+        }
     }
 }
