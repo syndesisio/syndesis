@@ -35,6 +35,9 @@
                   ],
                   "additionalProperties": false
                 },
+                "errorHandler": {
+                  "type": "string"
+                },
                 "inputDataShape": {
                   "type": "object",
                   "properties": {
