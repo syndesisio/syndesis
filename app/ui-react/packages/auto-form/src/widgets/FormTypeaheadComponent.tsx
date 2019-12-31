@@ -51,8 +51,8 @@ export const FormTypeaheadComponent: React.FunctionComponent<
     toggleSelectOpen(false);
   };
 
-  const handleBlur = (event: any, value?: any): void => {
-    handleChange('', value);
+  const handleBlur = (event: any, newValue?: any): void => {
+    handleChange('', newValue);
     props.form.setFieldTouched(field.name);
   };
 
