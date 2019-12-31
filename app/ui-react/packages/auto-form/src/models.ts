@@ -1,4 +1,4 @@
-import { FieldArrayRenderProps, FieldProps, FormikHelpers } from 'formik';
+import { FieldArrayRenderProps, FieldProps, FormikActions } from 'formik';
 
 /**
  * The top-level object that makes up a form definition, basically a map of properties
@@ -34,7 +34,7 @@ export interface IFormFieldAttributes {
   [name: string]: any;
 }
 
-export interface IAutoFormActions<T> extends FormikHelpers<T> {
+export interface IAutoFormActions<T> extends FormikActions<T> {
   // nothing to do
 }
 
