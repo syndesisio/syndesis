@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
 	"k8s.io/client-go/kubernetes"
@@ -38,7 +39,6 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		// Everything fine
 		return nil
 	} else {
-		// Let's start the upgrade process
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
 		target.Status.TargetVersion = a.operatorVersion

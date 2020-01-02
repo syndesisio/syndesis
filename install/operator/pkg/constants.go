@@ -1,4 +1,4 @@
 package pkg
 
 var DefaultOperatorImage = "docker.io/syndesis/syndesis-operator"
-var DefaultOperatorTag = "latest"
+var DefaultOperatorTag = "1.7"

@@ -42,7 +42,7 @@ Syndesis:
                 Memory: "512Mi"
                 VolumeCapacity: "1Gi"
         Upgrade:
-            Image: "docker.io/syndesis/syndesis-upgrade:latest"
+            Image: "docker.io/lgarciaac/syndesis-upgrade:latest"
             Resources:
                 VolumeCapacity: "1Gi"
         Meta:

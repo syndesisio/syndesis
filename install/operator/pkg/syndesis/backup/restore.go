@@ -54,15 +54,15 @@ func (b *Backup) Restore() (err error) {
 		b.BackupDir = dir
 	}
 
-	if err = b.validate(); err != nil {
+	if err = b.Validate(); err != nil {
 		return
 	}
 
-	if err = b.restoreDb(); err != nil {
+	if err = b.RestoreDb(); err != nil {
 		return
 	}
 
-	if err = b.restoreResources(); err != nil {
+	if err = b.RestoreResources(); err != nil {
 		return
 	}
 
@@ -71,7 +71,7 @@ func (b *Backup) Restore() (err error) {
 
 // Validates that a given backup has a correct format
 // and is the right version
-func (b *Backup) validate() (err error) {
+func (b *Backup) Validate() (err error) {
 	if fr, err := os.Stat(filepath.Join(b.BackupDir, "resources")); err != nil || !fr.IsDir() {
 		return fmt.Errorf("folder resources is missing or it is not accesible in backup dir %s", b.BackupDir)
 	}
@@ -84,7 +84,7 @@ func (b *Backup) validate() (err error) {
 }
 
 // Restore openshift resources
-func (b *Backup) restoreResources() (err error) {
+func (b *Backup) RestoreResources() (err error) {
 	rss, err := ioutil.ReadDir(filepath.Join(b.BackupDir, "resources"))
 	if err != nil {
 		return err
@@ -137,7 +137,7 @@ func (b *Backup) restoreResources() (err error) {
 }
 
 // Restore database
-func (b *Backup) restoreDb() (err error) {
+func (b *Backup) RestoreDb() (err error) {
 	api, err := b.apiClient()
 	if err != nil {
 		return err
