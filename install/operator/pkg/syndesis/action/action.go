@@ -42,12 +42,12 @@ type SyndesisOperatorAction interface {
 func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []SyndesisOperatorAction {
 	return []SyndesisOperatorAction{
 		newCheckUpdatesAction(mgr, api),
+		newUpgradeAction(mgr, api),
+		newUpgradeBackoffAction(mgr, api),
 		newInitializeAction(mgr, api),
 		newInstallAction(mgr, api),
 		newBackupAction(mgr, api),
 		newStartupAction(mgr, api),
-		newUpgradeAction(mgr, api),
-		newUpgradeBackoffAction(mgr, api),
 	}
 }
 

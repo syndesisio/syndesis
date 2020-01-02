@@ -120,8 +120,8 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 				Properties: map[string]spec.Schema{
 					"backup": {
 						SchemaProps: spec.SchemaProps{
-							Type:   []string{"boolean"},
-							Format: "",
+							Description: "Schedule backup",
+							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupConfig"),
 						},
 					},
 					"imageStreamNamespace": {
@@ -161,7 +161,7 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 			},
 		},
 		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.AddonsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec"},
+			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.AddonsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupConfig", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec"},
 	}
 }
 
@@ -219,10 +219,15 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisStatus(ref common.ReferenceCallba
 							Format: "",
 						},
 					},
+					"backup": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupStatus"),
+						},
+					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }

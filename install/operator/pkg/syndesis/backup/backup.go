@@ -18,6 +18,7 @@ package backup
 
 import (
 	"context"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -55,6 +56,15 @@ type Backup struct {
 	LocalOnly  bool
 	Context    context.Context
 	Client     *client.Client
+}
+
+type Runner interface {
+	Run() error
+	Restore() error
+	Validate() error
+	RestoreResources() error
+	RestoreDb() error
+	BuildBackupDir(path string) (b *Backup, err error)
 }
 
 // Uploader interface has methods to upload backup files
@@ -114,6 +124,35 @@ func (b *Backup) Run() (err error) {
 
 	b.log.Info("backup for syndesis done")
 	return
+}
+
+/*
+ * Because there is some incoherency with the path for backup and for restore,
+ * it is needed to transform it from backup to restore so that the restore
+ * can be performed
+ */
+func (b *Backup) BuildBackupDir(path string) (r *Backup, err error) {
+	r = b
+	if err = b.Validate(); err != nil {
+		// Fix path to point to where backup files are stored
+		b.BackupDir = filepath.Join(b.BackupDir, path)
+		files, err := ioutil.ReadDir(b.BackupDir)
+		if err != nil {
+			return nil, err
+		}
+
+		if len(files) != 1 {
+			// We are expecting to have only one dir inside the tag folder
+			return nil, fmt.Errorf("found more than one file or folder in %s", b.BackupDir)
+		} else {
+			b.BackupDir = filepath.Join(b.BackupDir, files[0].Name())
+			if fr, err := os.Stat(b.BackupDir); err != nil || !fr.IsDir() {
+				return nil, fmt.Errorf("%s is not a folder", b.BackupDir)
+			}
+		}
+	}
+
+	return r, nil
 }
 
 // Perform a backup of all relevant openshift resources
