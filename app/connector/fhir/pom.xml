@@ -179,24 +179,28 @@
       <artifactId>hapi-fhir-client</artifactId>
       <version>${hapi-fhir-version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.fhir</groupId>
+      <artifactId>ucum</artifactId>
+      <version>1.0.2</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <!--
+          https://issues.apache.org/jira/browse/CAMEL-14366
+          https://github.com/FHIR/Ucum-java/pull/12
+        -->
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
 
     <!-- test -->
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <!--   Scope compile was expected by artifact: org.fhir:ucum:1.0.2 -->
-      <!--   $ mvn dependency:tree
-        [...]
-        [INFO] +- org.apache.camel:camel-fhir:jar:3.0.0:compile
-        [INFO] |  +- org.apache.camel:camel-fhir-api:jar:3.0.0:compile
-        [INFO] |  +- ca.uhn.hapi.fhir:hapi-fhir-structures-r5:jar:4.1.0:compile
-        [INFO] |  |  +- ca.uhn.hapi.fhir:org.hl7.fhir.utilities:jar:4.1.0:compile
-        [INFO] |  |  +- ca.uhn.hapi.fhir:org.hl7.fhir.r5:jar:4.1.0:compile
-        [INFO] |  |  \- org.fhir:ucum:jar:1.0.2:compile
-        [...]
-      -->
-      <!-- <scope>test</scope>-->
-      <scope>compile</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.assertj</groupId>

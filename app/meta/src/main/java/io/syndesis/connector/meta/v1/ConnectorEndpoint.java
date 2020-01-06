@@ -26,6 +26,7 @@ import java.util.Map;
 import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
+import org.apache.camel.CamelContext;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.NoSuchBeanException;
 import org.apache.camel.spi.FactoryFinder;
@@ -90,8 +91,8 @@ public class ConnectorEndpoint {
 
             try {
                 // Then fallback to camel's factory finder
-                final FactoryFinder finder = camelContext.getFactoryFinder(RESOURCE_PATH);
-                final Class<?> type = finder.findClass(connectorId);
+                final FactoryFinder finder = camelContext.adapt(ExtendedCamelContext.class).getFactoryFinder(RESOURCE_PATH);
+                final Class<?> type = finder.findClass(connectorId).get();
 
                 adapter = (MetadataRetrieval) camelContext.getInjector().newInstance(type);
             } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") final Exception e) {

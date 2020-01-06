@@ -82,11 +82,8 @@ import org.skyscreamer.jsonassert.JSONCompareMode;
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 public class ProjectGeneratorTest {
 
-    private final Map<String, List<ProjectGeneratorConfiguration.Templates.Resource>> parameters =
-        new HashMap<String, List<ProjectGeneratorConfiguration.Templates.Resource>>();
+    private final Map<String, List<ProjectGeneratorConfiguration.Templates.Resource>> parameters = new HashMap<>();
     private final List<Throwable> errors = new ArrayList<>();
-    private final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
-    private final String basePath;
 
     public ProjectGeneratorTest() {
         parameters.put("", Collections.emptyList());
@@ -192,14 +189,15 @@ public class ProjectGeneratorTest {
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getTemplates().setOverridePath(this.basePath);
-        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().setOverridePath(basePath);
+        final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources = parameters.get(basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
         Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
 
         assertFileContents(testInfo, configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
-        assertFileContentsJson(configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
+        assertFileContentsJson(testInfo, configuration, runtimeDir.resolve("src/main/resources/syndesis/integration/integration.json"), "integration.json");
         assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application.properties");
         assertFileContents(testInfo, configuration, runtimeDir.resolve("src/main/resources/loader.properties"), "loader.properties");
         assertFileContents(testInfo, configuration, runtimeDir.resolve(".s2i/bin/assemble"), "assemble");
@@ -223,8 +221,10 @@ public class ProjectGeneratorTest {
         assertThat(errors).isEmpty();
     }
 
-    @Test
-    public void testGenerateProjectErrorHandling(@TempDir Path testFolder) throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateProjectErrorHandling(@TempDir Path testFolder, String basePath) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
@@ -243,8 +243,9 @@ public class ProjectGeneratorTest {
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getTemplates().setOverridePath(this.basePath);
-        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().setOverridePath(basePath);
+        final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources = parameters.get(basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(additionalResources);
         configuration.getTemplates().getAdditionalResources().add(
                 new ProjectGeneratorConfiguration.Templates.Resource("file-that-does-not-exist.yml", "deployment.yml"));
         configuration.setSecretMaskingEnabled(true);
@@ -322,7 +323,7 @@ public class ProjectGeneratorTest {
     }
 
     @Test
-    public void testGenerateApplicationPropertiesOldStyle() throws IOException {
+    public void testGenerateApplicationPropertiesOldStyle(TestInfo testInfo) throws IOException {
 
         // ******************
         // OLD STYLE
@@ -383,8 +384,10 @@ public class ProjectGeneratorTest {
     }
 
 
-    @Test
-    public void testGenerateApplicationWithOpenApiV2RestDSL() throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateApplicationWithOpenApiV2RestDSL(TestInfo testInfo, @TempDir Path testFolder, String basePath) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         // ******************
@@ -447,8 +450,9 @@ public class ProjectGeneratorTest {
             .build();
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getTemplates().setOverridePath(this.basePath);
-        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().setOverridePath(basePath);
+        final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources = parameters.get(basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
         Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
@@ -463,7 +467,10 @@ public class ProjectGeneratorTest {
     }
 
     @Test
-    public void testGenerateApplicationWithOpenApiV3RestDSL(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateApplicationWithOpenApiV3RestDSL(TestInfo testInfo, @TempDir Path testFolder, String basePath) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         // ******************
@@ -526,8 +533,9 @@ public class ProjectGeneratorTest {
             .build();
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getTemplates().setOverridePath(this.basePath);
-        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().setOverridePath(basePath);
+        final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources = parameters.get(basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
         Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
@@ -597,8 +605,10 @@ public class ProjectGeneratorTest {
         assertEquals(3, dependencies.size());
     }
 
-    @Test
-    public void testGenerateTemplateStepProjectDependencies(TestInfo testInfo, @TempDir Path testFolder) throws Exception {
+    @ParameterizedTest
+    @ValueSource(strings = {"redhat"})
+    @EmptySource
+    public void testGenerateTemplateStepProjectDependencies(TestInfo testInfo, @TempDir Path testFolder, String basePath) throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         Integration integration = resourceManager.newIntegration(
@@ -638,8 +648,9 @@ public class ProjectGeneratorTest {
         );
 
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
-        configuration.getTemplates().setOverridePath(this.basePath);
-        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().setOverridePath(basePath);
+        final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources = parameters.get(basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(additionalResources);
         configuration.setSecretMaskingEnabled(true);
 
         Path runtimeDir = generate(integration, configuration, resourceManager, testFolder);
