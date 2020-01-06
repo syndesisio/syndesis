@@ -93,7 +93,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>3.0.0</camel.version>
+    <camel.version>3.1.0-SNAPSHOT</camel.version>
     <camel-k-runtime.version>1.0.7</camel-k-runtime.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
@@ -125,7 +125,6 @@
     <!-- Common dependencies -->
     <assertj-core.version>3.15.0</assertj-core.version>
 
-    <mailapi.version>1.6.4</mailapi.version>
     <jakarta-mail.version>1.6.4</jakarta-mail.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
@@ -2084,17 +2083,17 @@
         <version>${camel.version}</version>
       </dependency>
 
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-base</artifactId>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-base</artifactId>
         <version>${camel.version}</version>
-    </dependency>
+      </dependency>
 
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-http</artifactId>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-http</artifactId>
         <version>${camel.version}</version>
-    </dependency>
+      </dependency>
 
       <dependency>
         <groupId>org.apache.camel</groupId>
