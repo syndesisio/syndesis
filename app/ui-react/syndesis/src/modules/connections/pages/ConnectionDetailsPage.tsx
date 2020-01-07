@@ -54,7 +54,7 @@ const ConnectionDetailsOAuth: React.FunctionComponent<
         pushNotification(message, type)
       );
     } catch (e) {
-      pushNotification(`Connection couln't be verified: ${e.message}`, 'error');
+      pushNotification(`Connection couldn't be verified: ${e.message}`, 'error');
     }
   };
 
