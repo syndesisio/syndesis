@@ -256,7 +256,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       const loadSourceTableInfo = async () => {
         try {
           const results: ViewSourceInfo = await getSourceInfoForView(
-            virtualization
+            virtualization.name
           );
           setSourceTableColumns(
             generateTableColumns(results as ViewSourceInfo)

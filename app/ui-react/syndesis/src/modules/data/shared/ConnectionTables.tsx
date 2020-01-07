@@ -1,4 +1,4 @@
-import { SchemaNodeInfo } from '@syndesis/models';
+import { ConnectionTable, SchemaNodeInfo, SourceColumn } from '@syndesis/models';
 import {
   SelectedConnectionListView,
   SelectedConnectionTables,
@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface IConnectionTablesProps {
   selectedSchemaNodes: SchemaNodeInfo[];
+  columnDetails: ConnectionTable[];
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
 }
 
@@ -25,6 +26,20 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
     setExpanded(newArray);
   };
 
+  const getSeletedTableColumns = (connectionName: string, tabelName: string) => {
+    let columnList: SourceColumn[] = [];
+    for(const connection of props.columnDetails){
+      if(connection.name === connectionName){
+        for(const table of connection.tables){
+          if(table.name === tabelName){
+            columnList = table.columns;
+          }
+        }
+      }
+    }
+    return columnList.map( (column: SourceColumn) =>[ column.name, column.datatype])
+  }
+
   return (
     <SelectedConnectionTables 
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
@@ -40,6 +55,7 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
             toggle={toggle}
             expanded={expanded}
             onTabelRemoved={props.onNodeDeselected}
+            rows={getSeletedTableColumns(info.connectionName, info.teiidName)}
           />
         ))}
     </SelectedConnectionTables>
