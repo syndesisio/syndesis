@@ -22,6 +22,7 @@ import java.util.function.Function;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
+import org.apache.camel.support.AsyncProcessorConverterHelper;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -68,7 +69,8 @@ public class ProcessorsTest {
         final Processor got = getter.apply(component);
         assertThat(got).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) got;
-        assertThat(pipeline.getProcessors()).containsExactly(processor1, processor2, processor3);
+        assertThat(pipeline.getProcessors()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
+            AsyncProcessorConverterHelper.convert(processor2), processor3);
     }
 
     @Test
@@ -81,7 +83,8 @@ public class ProcessorsTest {
         final Processor got = getter.apply(component);
         assertThat(got).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) got;
-        assertThat(pipeline.getProcessors()).containsExactly(processor1, processor2);
+        assertThat(pipeline.getProcessors()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
+            AsyncProcessorConverterHelper.convert(processor2));
     }
 
     @Parameters
@@ -100,7 +103,9 @@ public class ProcessorsTest {
     }
 
     private static ComponentProxyComponent createComponent() {
-        final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
+        // this uses a component from camel-catalog, sql component is
+        // likely to be present there
+        final ComponentProxyComponent component = new ComponentProxyComponent("sql", "sql");
         component.setCamelContext(mock(CamelContext.class));
 
         return component;

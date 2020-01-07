@@ -95,7 +95,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         this.componentSchemeAlias = Optional.empty();
         this.configuredOptions = new HashMap<>();
         this.remainingOptions = new HashMap<>();
-        this.catalog = new DefaultCamelCatalog(false);
+        this.catalog = ObjectHelper.notNull(catalog, "catalog");
 
         if (ObjectHelper.isNotEmpty(componentClass)) {
             this.catalog.addComponent(componentScheme, componentClass);
