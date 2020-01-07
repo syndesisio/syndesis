@@ -35,6 +35,23 @@ stories.add('Creatable Option', () => {
       labelHint: 'This is shown for the label hint text',
       order: 0,
       type: 'typeahead',
+    },
+    Disabled: {
+      displayName: 'Disabled',
+      enum: [
+        {
+          label: 'Blue',
+          value: 'blue'
+        },
+        {
+          label: 'Red',
+          value: 'red'
+        }
+      ],
+      labelHint: 'Testing disabled select',
+      order: 1,
+      type: 'typeahead',
+      disabled: true
     }
   };
   return (
