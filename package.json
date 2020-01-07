@@ -3,7 +3,7 @@
   "devDependencies": {
     "@commitlint/cli": "^8.3.4",
     "@commitlint/config-conventional": "^8.3.4",
-    "husky": "~3",
+    "husky": "~4",
     "lint-staged": "~9",
     "npm-run-all": "~4"
   },
