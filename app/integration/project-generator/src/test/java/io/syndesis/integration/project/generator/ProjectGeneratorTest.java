@@ -15,12 +15,6 @@
  */
 package io.syndesis.integration.project.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -41,20 +35,6 @@ import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
-
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -77,6 +57,25 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
@@ -399,18 +398,96 @@ public class ProjectGeneratorTest {
 
 
     @Test
-    public void testGenerateApplicationWithRestDSL() throws Exception {
+    public void testGenerateApplicationWithOpenApiV2RestDSL() throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
         // ******************
         // OpenApi
         // ******************
 
-        URL location = ProjectGeneratorTest.class.getResource("/petstore.json");
+        URL location = ProjectGeneratorTest.class.getResource("/petstore-v2.json");
         byte[] content = Files.readAllBytes(Paths.get(location.toURI()));
 
         resourceManager.put("petstore", new OpenApi.Builder().document(content).id("petstore").build());
 
+        // ******************
+        // Integration
+        // ******************
+
+        Step s1 = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                .id(KeyGenerator.createKey())
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("new")
+                    .componentScheme("direct")
+                    .putConfiguredProperty("name", "start")
+                    .build())
+                .build())
+            .connection(new Connection.Builder()
+                .connector(
+                    new Connector.Builder()
+                        .id("api-provider")
+                        .addDependency(new Dependency.Builder()
+                            .type(Dependency.Type.MAVEN)
+                            .id("io.syndesis.connector:connector-api-provider:1.x.x")
+                            .build())
+                        .build())
+                .build())
+            .build();
+        Step s2 = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                .id(KeyGenerator.createKey())
+                .descriptor(new ConnectorDescriptor.Builder()
+                    .connectorId("new")
+                    .componentScheme("log")
+                    .putConfiguredProperty("loggerName", "end")
+                    .build())
+                .build())
+            .build();
+
+        Integration integration = new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .addResource(new ResourceIdentifier.Builder()
+                .kind(Kind.OpenApi)
+                .id("petstore")
+                .build())
+            .addFlow(new Flow.Builder()
+                .steps(Arrays.asList(s1, s2))
+                .build())
+            .build();
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(this.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.setSecretMaskingEnabled(true);
+
+        Path runtimeDir = generate(integration, configuration, resourceManager);
+
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/Application.java")).exists();
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java")).exists();
+        assertThat(runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java")).exists();
+
+        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
+        assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    public void testGenerateApplicationWithOpenApiV3RestDSL() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        // ******************
+        // OpenApi
+        // ******************
+
+        URL location = ProjectGeneratorTest.class.getResource("/petstore-v3.json");
+        byte[] content = Files.readAllBytes(Paths.get(location.toURI()));
+
+        resourceManager.put("petstore", new OpenApi.Builder().document(content).id("petstore").build());
 
         // ******************
         // Integration
