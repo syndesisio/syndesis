@@ -24,16 +24,14 @@ export interface ISelectedConnectionListViewProps {
   name: string;
   connectionName: string;
   index: number;
+  rows: string[][];
   onTabelRemoved: (connectionName: string, teiidName: string) => void;
 }
 
 export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnectionListViewProps> = props => {
   const columns = ['', ''];
-  const rows = [
-    ['one', 'two'],
-    ['three', 'four'],
-    ['one', 'two'],
-  ];
+
+  const rows = props.rows;
 
   const onTrashClickHandler = () => {
     props.onTabelRemoved(props.connectionName, props.name);
