@@ -11,7 +11,7 @@
 
 new_camel=${1:-xxx}
 if [ $new_camel = "xxx" ]; then
-  echo "Usage $0 <camel version>"
+  echo "Usage $0 <camel version> (eg. 2.23.2.fuse-760011)"
   exit 1
 fi
 
