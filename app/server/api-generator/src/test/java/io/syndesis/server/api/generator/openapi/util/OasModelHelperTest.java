@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.api.generator.openapi.util;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -23,21 +24,45 @@ import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Operation;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
+import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 import org.junit.Test;
 
+import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class OasModelHelperTest {
 
     @Test
+    public void minimizingShouldProduceReadableV2Specification() throws IOException {
+        final String specification = resource("/openapi/v2/todo.json");
+
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(specification);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+
+        final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
+        assertThat(minimized.paths.getItems()).hasSize(2);
+    }
+
+    @Test
+    public void minimizingShouldProduceReadableV3Specification() throws IOException {
+        final String specification = resource("/openapi/v3/todo.json");
+
+        final Oas30Document openApiDoc = (Oas30Document) Library.readDocumentFromJSONString(specification);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
+
+        final Oas30Document minimized = (Oas30Document) Library.readDocumentFromJSONString(minimizedString);
+        assertThat(minimized.paths.getItems()).hasSize(2);
+    }
+
+    @Test
     public void minimizingShouldNotLooseMultipleKeySecurityRequirements() {
         final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured1\":[]},{\"secured2\":[]}]}}}}";
 
-        final Oas20Document swagger = (Oas20Document) Library.readDocumentFromJSONString(definition);
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(definition);
 
-        final String minimizedString = SpecificationOptimizer.minimizeForComponent(swagger);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
 
         final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
 
@@ -64,9 +89,9 @@ public class OasModelHelperTest {
             "        }\n" +
             "    }}";
 
-        final Oas20Document swagger = (Oas20Document) Library.readDocumentFromJSONString(definition);
+        final Oas20Document openApiDoc = (Oas20Document) Library.readDocumentFromJSONString(definition);
 
-        final String minimizedString = SpecificationOptimizer.minimizeForComponent(swagger);
+        final String minimizedString = SpecificationOptimizer.minimizeForComponent(openApiDoc);
 
         final Oas20Document minimized = (Oas20Document) Library.readDocumentFromJSONString(minimizedString);
 

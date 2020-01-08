@@ -47,7 +47,12 @@ public final class SpecificationOptimizer {
      */
     public static String minimizeForComponent(final OasDocument openApiDoc) {
         final ObjectNode json = (ObjectNode) Library.writeNode(openApiDoc);
-        json.remove(Arrays.asList("info", "tags", "definitions", "externalDocs"));
+        json.remove(Arrays.asList("info", "tags", "definitions", "responses", "externalDocs"));
+
+        final JsonNode components = json.get("components");
+        if (components != null) {
+            ((ObjectNode)components).remove(Arrays.asList("schemas", "responses", "requestBodies", "examples", "headers", "links", "callbacks"));
+        }
 
         final JsonNode paths = json.get("paths");
 
@@ -66,7 +71,7 @@ public final class SpecificationOptimizer {
                     .filter(JsonNode::isObject)
                     .forEach(operation -> {
                         final ObjectNode operationNode = (ObjectNode) operation;
-                        operationNode.remove(Arrays.asList("tags", "summary", "description"));
+                        operationNode.remove(Arrays.asList("tags", "summary", "description", "externalDocs", "callbacks", "servers"));
                         final ArrayNode parameters = (ArrayNode) operation.get("parameters");
 
                         if (parameters != null && parameters.size() > 0) {
@@ -91,7 +96,7 @@ public final class SpecificationOptimizer {
                             operationNode.set("parameters", globalParameters);
                         }
 
-                        operationNode.remove("responses");
+                        operationNode.remove(Arrays.asList("requestBody", "responses"));
                     });
             });
         }

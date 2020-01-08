@@ -48,6 +48,10 @@ final class Oas30FormDataHelper {
         public static boolean isFormDataMediaType(String type) {
             return Arrays.stream(values()).anyMatch(m -> m.mediaType.equals(type));
         }
+
+        public String mediaType() {
+            return mediaType;
+        }
     }
 
     /**

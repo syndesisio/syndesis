@@ -59,8 +59,8 @@ public class Oas30ValidationRulesTest {
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
         final OpenApiModelInfo validated = RULES.validateOperationsGiven(info);
-        final List<Violation> errors = validated.getErrors();
-        assertThat(errors).isEmpty();
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
     }
 
     @Test
@@ -81,13 +81,13 @@ public class Oas30ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = RULES.validateProvidedAuthTypes(info);
-        final List<Violation> errors = validated.getErrors();
-        assertThat(errors).isEmpty();
+        final OpenApiModelInfo validated = RULES.validateConsumedAuthTypes(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
     }
 
     @Test
-    public void shouldGenerateErrorForUnsupportedAuthType() {
+    public void shouldGenerateWarningForUnsupportedAuthType() {
         final Oas30Document openApiDoc = new Oas30Document();
         openApiDoc.components = openApiDoc.createComponents();
         Oas30SecurityScheme secretAuth = openApiDoc.components.createSecurityScheme("secret_auth");
@@ -96,7 +96,12 @@ public class Oas30ValidationRulesTest {
 
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
-        final OpenApiModelInfo validated = RULES.validateProvidedAuthTypes(info);
+        OpenApiModelInfo validated = RULES.validateProvidedAuthTypes(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("unsupported-auth").message("Authentication type secret is currently not supported").property("").build());
+
+        validated = RULES.validateConsumedAuthTypes(info);
+        assertThat(validated.getErrors()).isEmpty();
         assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("unsupported-auth").message("Authentication type secret is currently not supported").property("").build());
     }
 
@@ -235,5 +240,34 @@ public class Oas30ValidationRulesTest {
             .error("missing-paths")
             .message("No paths defined")
             .build());
+    }
+
+    @Test
+    public void shouldNotGenerateWarningForSameServerBasePath() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.addServer("https://development.syndesis.io/v1", "Development server");
+        openApiDoc.addServer("https://staging.syndesis.io/v1", "Staging server");
+        openApiDoc.addServer("https://api.syndesis.io/v1", "Production server");
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateServerBasePaths(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
+    }
+
+    @Test
+    public void shouldGenerateWarningForDifferingServerBasePaths() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.addServer("https://syndesis.io/development", "Development server");
+        openApiDoc.addServer("https://syndesis.io/staging", "Staging server");
+        openApiDoc.addServer("https://syndesis.io/api", "Production server");
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateServerBasePaths(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("differing-base-paths")
+            .message("Specified servers do not share the same base path. REST endpoint will use '/development' as base path.").build());
     }
 }
