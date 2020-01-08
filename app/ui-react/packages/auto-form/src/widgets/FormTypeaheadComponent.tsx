@@ -34,12 +34,11 @@ export const FormTypeaheadComponent: React.FunctionComponent<
     return [isTypeaheadOpen, toggleTypeaheadOpen];
   };
 
-  const [isSelectOpen, toggleSelectOpen] = useOpenTypeahead(false);
-  const [selectedOption, setSelectedOption] = useState('');
-
   const { onChange, onBlur, value, ...field } = props.field;
-
   const id = toValidHtmlId(field.name);
+
+  const [isSelectOpen, toggleSelectOpen] = useOpenTypeahead(false);
+  const [selectedOption, setSelectedOption] = useState(props.field.value);
 
   const handleChange = (
     eventValue: any,
@@ -106,19 +105,22 @@ export const FormTypeaheadComponent: React.FunctionComponent<
         isDisabled={props.form.isSubmitting || props.property.disabled}
         isExpanded={isSelectOpen}
         selections={selectedOption}
+        placeholderText={selectedOption}
         variant={SelectVariant.typeahead}
         data-testid={id}
         id={id}
         aria-label={props.property.displayName || props.field.name}
         title={props.property.controlHint}
       >
-        {(props.property.enum || []).map((opt: any, index: number) => (
+        {(props.property.enum || []).map((opt: any, index: number) => {
+          return (
           <SelectOption
             key={`${index}-${opt.label}`}
             label={opt.label}
             value={opt.label || props.field.name[props.field.value]}
           />
-        ))}
+        )
+        })}
       </Select>
     </FormGroup>
   );
