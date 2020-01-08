@@ -4,6 +4,7 @@ export * from './FormInputComponent';
 export * from './FormMapsetComponent';
 export * from './FormSelectComponent';
 export * from './FormTextAreaComponent';
+export * from './FormTypeaheadComponent';
 export * from './FormCheckboxComponent';
 export * from './FormHiddenComponent';
 export * from './FormDurationComponent';
