@@ -63,6 +63,7 @@
     <module>salesforce</module>
     <module>sftp</module>
     <module>slack</module>
+    <module>soap</module>
     <module>sql</module>
     <module>telegram</module>
     <module>timer</module>

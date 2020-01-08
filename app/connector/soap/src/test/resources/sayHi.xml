@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<soap:Envelope xmlns:ns0="http://camel.apache.org/cxf/wsrm" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Body>
+    <ns0:sayHi>
+      <arg0>Neil Armstrong</arg0>
+    </ns0:sayHi>
+    <ns0:sayHi>
+      <arg0>Buzz Aldrin</arg0>
+    </ns0:sayHi>
+  </soap:Body>
+</soap:Envelope>

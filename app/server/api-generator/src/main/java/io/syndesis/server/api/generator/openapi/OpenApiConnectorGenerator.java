@@ -134,8 +134,7 @@ public class OpenApiConnectorGenerator extends ConnectorGenerator {
             .actionCountByTags(tagCounts)
             .build();
 
-        return new APISummary.Builder()
-            .createFrom(connector)
+        return APISummary.Builder.createFrom(connector)
             .actionsSummary(actionsSummary)
             .errors(modelInfo.getErrors())
             .warnings(modelInfo.getWarnings())

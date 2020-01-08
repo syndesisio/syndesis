@@ -129,7 +129,7 @@
     <dependency>
       <groupId>com.google.errorprone</groupId>
       <artifactId>error_prone_annotations</artifactId>
-      <scope>runtime</scope>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -142,6 +142,47 @@
       <groupId>com.sun.mail</groupId>
       <artifactId>jakarta.mail</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-wsdl</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-rt-bindings-soap</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>jcl-over-slf4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.cxf</groupId>
+      <artifactId>cxf-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>wsdl4j</groupId>
+      <artifactId>wsdl4j</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.ws.xmlschema</groupId>
+      <artifactId>xmlschema-core</artifactId>
+      <version>2.2.3</version>
     </dependency>
 
     <!-- === Testing Dependencies ======================================================== -->
@@ -162,6 +203,12 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-rest-swagger</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-soap</artifactId>
       <scope>test</scope>
     </dependency>
 
@@ -227,6 +274,33 @@
           <delimiters>
             <delimiter>@</delimiter>
           </delimiters>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <!-- commons-logging is replaced with jcl-over-slf4j, or code fails with NCDF -->
+            <ignoredUnusedDeclaredDependency>org.slf4j:jcl-over-slf4j</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
+      </plugin>
+      <!-- some SOAP API connector tests can take a long time to parse WSDLs, validate XML schema, and compare XML -->
+      <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <forkedProcessTimeoutInSeconds>180</forkedProcessTimeoutInSeconds>
+        </configuration>
+      </plugin>
+      <!-- CXF has a couple of duplicate resources across both it's own and wss4j dependencies -->
+      <plugin>
+        <groupId>org.basepom.maven</groupId>
+        <artifactId>duplicate-finder-maven-plugin</artifactId>
+        <configuration>
+          <ignoredResourcePatterns>
+            <ignoredResourcePattern>org/apache/cxf/endpoint/dynamic/simple-binding.xjb</ignoredResourcePattern>
+            <ignoredResourcePattern>saml2-xacml2-profile.xml</ignoredResourcePattern>
+          </ignoredResourcePatterns>
         </configuration>
       </plugin>
     </plugins>

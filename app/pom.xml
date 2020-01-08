@@ -96,6 +96,10 @@
     <camel.version>2.23.2.fuse-760024</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
+    <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
+    <cxf.version>3.2.7.fuse-sb2-760012</cxf.version>
+    <wss4j.version>2.2.2</wss4j.version>
+
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
     <basepom.failsafe.fork-count>1</basepom.failsafe.fork-count>
@@ -1231,6 +1235,46 @@
         <scope>runtime</scope>
       </dependency>
 
+      <!-- ::::::::::: CXF :::::::::::: -->
+
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-core</artifactId>
+        <version>${cxf.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.cxf</groupId>
+        <artifactId>cxf-rt-ws-security</artifactId>
+        <version>${cxf.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>woodstox-core-asl</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.wss4j</groupId>
+            <artifactId>wss4j-ws-security-stax</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.wss4j</groupId>
+            <artifactId>wss4j-ws-security-policy-stax</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.wss4j</groupId>
+        <artifactId>wss4j-ws-security-common</artifactId>
+        <version>${wss4j.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.geronimo.javamail</groupId>
+            <artifactId>geronimo-javamail_1.4_mail</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
       <!-- ::::::::::: rest :::::::::::: -->
 
       <dependency>
@@ -1638,6 +1682,18 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-soap</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-email</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -1977,6 +2033,10 @@
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-core</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -2236,6 +2296,18 @@
         <groupId>commons-dbcp</groupId>
         <artifactId>commons-dbcp</artifactId>
         <version>1.4</version>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.9.4</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -2773,6 +2845,13 @@
       <dependency>
         <groupId>org.xmlunit</groupId>
         <artifactId>xmlunit-core</artifactId>
+        <version>2.6.3</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.xmlunit</groupId>
+        <artifactId>xmlunit-matchers</artifactId>
         <version>2.6.3</version>
         <scope>test</scope>
       </dependency>

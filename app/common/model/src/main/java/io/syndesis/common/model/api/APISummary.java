@@ -15,20 +15,21 @@
  */
 package io.syndesis.common.model.api;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.immutables.value.Value;
+
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.WithConfigurationProperties;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.connection.Connector;
-import org.immutables.value.Value;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = APISummary.Builder.class)
@@ -38,7 +39,7 @@ public interface APISummary extends WithName, WithConfigurationProperties, WithC
     final class Builder extends ImmutableAPISummary.Builder {
         // make ImmutableAPISummary.Builder accessible
 
-        public Builder createFrom(final Connector connector) {
+        public static Builder createFrom(final Connector connector) {
             final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
                 .totalActions(connector.getActions().size())//
                 .actionCountByTags(
