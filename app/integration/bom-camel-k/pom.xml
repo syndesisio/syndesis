@@ -32,7 +32,7 @@
     <jackson.version>2.10.1</jackson.version>
     <jackson.databind.version>2.9.9</jackson.databind.version>
     <jackson-module-jaxb-annotations.version>2.9.9</jackson-module-jaxb-annotations.version>
-    <validation-api.version>2.0.1.Final</validation-api.version>
+    <validation-api.version>2.0.2</validation-api.version>
   </properties>
 
     <!-- Metadata need to publish to central -->
@@ -147,10 +147,16 @@
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
         <version>${validation-api.version}</version>
       </dependency>
 
