@@ -199,7 +199,7 @@
 {{- if .Syndesis.Addons.CamelK.Enabled }}
 # START:CAMEL-K
 - kind: Role
-  apiVersion: rbac.authorization.k8s.io/v1beta1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: camel-k
     labels:
@@ -214,7 +214,7 @@
     - "*"
     verbs: [ get, list, create, update, delete, deletecollection, watch]
 - kind: RoleBinding
-  apiVersion: rbac.authorization.k8s.io/v1beta1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: camel-k
     labels:
@@ -230,7 +230,7 @@
     name: camel-k
     apiGroup: rbac.authorization.k8s.io
 - kind: Role
-  apiVersion: rbac.authorization.k8s.io/v1beta1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: syndesis-knative-reader
     labels:
@@ -250,7 +250,7 @@
       - channels
     verbs: [ get, list, watch]
 - kind: RoleBinding
-  apiVersion: rbac.authorization.k8s.io/v1beta1
+  apiVersion: rbac.authorization.k8s.io/v1
   metadata:
     name: syndesis-knative-reader
     labels:

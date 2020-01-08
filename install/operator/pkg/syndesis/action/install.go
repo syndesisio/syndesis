@@ -151,6 +151,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		{"dv", configuration.Syndesis.Addons.DV.Enabled},
 		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
 		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
+		{"publicApi", configuration.Syndesis.Addons.PublicApi.Enabled},
 		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
 	}
 	for _, addon := range addons {

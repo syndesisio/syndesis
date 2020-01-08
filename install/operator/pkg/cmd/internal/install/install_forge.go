@@ -214,12 +214,13 @@ func (o *Install) installForge() error {
 	}
 
 	addons := map[string]*bool{
-		"jaeger":  &configuration.Syndesis.Addons.Jaeger.Enabled,
-		"ops":     &configuration.Syndesis.Addons.Ops.Enabled,
-		"dv":      &configuration.Syndesis.Addons.DV.Enabled,
-		"camelk":  &configuration.Syndesis.Addons.CamelK.Enabled,
-		"knative": &configuration.Syndesis.Addons.Knative.Enabled,
-		"todo":    &configuration.Syndesis.Addons.Todo.Enabled,
+		"jaeger":    &configuration.Syndesis.Addons.Jaeger.Enabled,
+		"ops":       &configuration.Syndesis.Addons.Ops.Enabled,
+		"dv":        &configuration.Syndesis.Addons.DV.Enabled,
+		"camelk":    &configuration.Syndesis.Addons.CamelK.Enabled,
+		"knative":   &configuration.Syndesis.Addons.Knative.Enabled,
+		"publicApi": &configuration.Syndesis.Addons.PublicApi.Enabled,
+		"todo":      &configuration.Syndesis.Addons.Todo.Enabled,
 	}
 
 	for _, addon := range addonArr {
