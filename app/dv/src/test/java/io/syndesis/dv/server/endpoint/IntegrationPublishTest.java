@@ -18,9 +18,12 @@ package io.syndesis.dv.server.endpoint;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
@@ -88,7 +92,7 @@ public class IntegrationPublishTest {
 
         ViewDefinition vd = new ViewDefinition(dvName, "myview");
         vd.setComplete(true);
-        vd.setDdl("create view myview as select 1 as col");
+        vd.setDdl("create view myview as bad");
         vd.setUserDefined(true);
 
         ResponseEntity<String> stashStatus = restTemplate.exchange(
@@ -106,13 +110,30 @@ public class IntegrationPublishTest {
         PublishRequestPayload publishPayload = new PublishRequestPayload();
         publishPayload.setName(dvName);
 
+        //try to publish
         ResponseEntity<StatusObject> statusResponse = restTemplate.exchange(
                 "/v1/virtualizations/publish", HttpMethod.POST,
                 new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class);
 
-        //check that it published
+        //check that failed to published
         assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
         StatusObject status = statusResponse.getBody();
+        assertNull(status.getAttributes().get(V1Constants.REVISION));
+        assertEquals("myview is not parsable", status.getAttributes().get("error"));
+
+        //correct the view
+        vd.setDdl("create view myview as select 1 as col");
+        restTemplate.exchange(
+                "/v1/editors", HttpMethod.PUT,
+                new HttpEntity<ViewDefinition>(vd), String.class);
+
+        //actually publish
+        statusResponse = restTemplate.exchange(
+                "/v1/virtualizations/publish", HttpMethod.POST,
+                new HttpEntity<PublishRequestPayload>(publishPayload), StatusObject.class);
+
+        assertEquals(HttpStatus.OK, statusResponse.getStatusCode());
+        status = statusResponse.getBody();
         assertEquals("1", status.getAttributes().get(V1Constants.REVISION));
         assertEquals("dv-testpublish", status.getAttributes().get("OpenShift Name"));
 
@@ -191,9 +212,24 @@ public class IntegrationPublishTest {
         assertEquals("dv.json", ze.getName());
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        DataVirtualizationV1Adapter dv = mapper.readValue(zis, DataVirtualizationV1Adapter.class);
+        //prevent the autoclose
+        DataVirtualizationV1Adapter dv = mapper.readValue(new InputStream() {
+
+            @Override
+            public int read() throws IOException {
+                return zis.read();
+            }
+
+        }, DataVirtualizationV1Adapter.class);
         assertEquals("testPublish", dv.getName());
         assertEquals("create view myview as select 1 as col", dv.getViews().get(0).getDdl());
+
+        ze = zis.getNextEntry();
+        assertEquals("dv-info.json", ze.getName());
+        JsonNode info = mapper.readTree(zis);
+        assertEquals(1, info.get("exportVersion").asInt());
+        assertEquals(3, info.get("entityVersion").asInt());
+        assertEquals(1, info.get("revision").asInt());
 
         //back to the old
         view = restTemplate.getForEntity(

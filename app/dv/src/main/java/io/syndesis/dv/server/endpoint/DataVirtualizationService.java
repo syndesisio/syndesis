@@ -500,7 +500,7 @@ public final class DataVirtualizationService extends DvService {
                 return stream;
             }
 
-            return createExportStream(dv, null);
+            return createExportStream(dv, null, null);
         });
 
 
@@ -516,7 +516,7 @@ public final class DataVirtualizationService extends DvService {
      * @return
      * @throws KException
      */
-    private StreamingResponseBody createExportStream(DataVirtualization dv, VDBMetaData theVdb)
+    private StreamingResponseBody createExportStream(DataVirtualization dv, VDBMetaData theVdb, Long revision)
             throws KException {
         DataVirtualizationV1Adapter adapter = new DataVirtualizationV1Adapter(dv);
 
@@ -555,7 +555,11 @@ public final class DataVirtualizationService extends DvService {
             zos.closeEntry();
 
             zos.putNextEntry(new ZipEntry("dv-info.json")); //$NON-NLS-1$
-            zos.write("{\"version\":1}".getBytes("UTF-8")); //$NON-NLS-1$ //$NON-NLS-2$
+            String json = String.format("{\"exportVersion\":%s,\n" //$NON-NLS-1$
+                    + "\"revision\":%s,\n" //$NON-NLS-1$
+                    + "\"entityVersion\":%s}", 1, //$NON-NLS-1$
+                    revision == null ? "\"draft\"" : revision, dv.getVersion()); //$NON-NLS-1$
+            zos.write(json.getBytes("UTF-8")); //$NON-NLS-1$
             zos.closeEntry();
 
             if (theVdb != null) {
@@ -812,6 +816,16 @@ public final class DataVirtualizationService extends DvService {
                 throw notFound(payload.getName());
             }
 
+            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
+
+            //check for unparsable - alternatively we could put this on the preview vdb
+            for (ViewDefinition vd : editorStates) {
+                if (vd.isComplete() && !vd.isParsable()) {
+                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
+                    return status;
+                }
+            }
+
             TeiidVdb vdb = metadataService.updatePreviewVdb(dataservice.getName());
 
             if (vdb == null || !vdb.hasLoaded()) {
@@ -826,23 +840,13 @@ public final class DataVirtualizationService extends DvService {
 
             status.addAttribute("Publishing", "Operation initiated");  //$NON-NLS-1$//$NON-NLS-2$
 
-            List<? extends ViewDefinition> editorStates = getWorkspaceManager().findViewDefinitions(dataservice.getName());
-
-            //check for unparsable - alternatively we could put this on the preview vdb
-            for (ViewDefinition vd : editorStates) {
-                if (vd.isComplete() && !vd.isParsable()) {
-                    status.addAttribute("error", vd.getName() + " is not parsable");  //$NON-NLS-1$ //$NON-NLS-2$
-                    return status;
-                }
-            }
-
             //use the preview vdb to build the needed metadata
             VDBMetaData theVdb = new ServiceVdbGenerator(metadataService).createServiceVdb(dataservice.getName(), vdb, editorStates);
 
             //create a new published edition with the saved workspace state
             Edition edition = repositoryManager.createEdition(dataservice.getName());
 
-            StreamingResponseBody stream = createExportStream(dataservice, theVdb);
+            StreamingResponseBody stream = createExportStream(dataservice, theVdb, edition.getRevision());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
             stream.writeTo(baos);
             repositoryManager.saveEditionExport(edition, baos.toByteArray());
