@@ -61,7 +61,7 @@ public class UniquePropertyValidator implements ConstraintValidator<UniqueProper
 
         if (!isUnique) {
             context.disableDefaultConstraintViolation();
-            context.unwrap(HibernateConstraintValidatorContext.class).addExpressionVariable("nonUnique", propertyValue)
+            context.unwrap(HibernateConstraintValidatorContext.class).addMessageParameter("nonUnique", propertyValue)
                 .buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                 .addPropertyNode(property).addConstraintViolation();
         }

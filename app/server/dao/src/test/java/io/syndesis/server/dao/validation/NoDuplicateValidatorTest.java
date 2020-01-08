@@ -35,6 +35,9 @@ import javax.validation.ValidatorFactory;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
 import org.hibernate.validator.internal.constraintvalidators.bv.NotNullValidator;
+import org.hibernate.validator.internal.engine.DefaultPropertyNodeNameProvider;
+import org.hibernate.validator.internal.properties.DefaultGetterPropertySelectionStrategy;
+import org.hibernate.validator.internal.properties.javabean.JavaBeanHelper;
 import org.junit.Test;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.Action.Pattern;
@@ -116,8 +119,8 @@ public class NoDuplicateValidatorTest implements StringConstants {
     private final InjectionConstraintValidatorFactory constraintValidatorFactory = new InjectionConstraintValidatorFactory(dataManager);
 
     public NoDuplicateValidatorTest() {
-
-        final DefaultConstraintMapping mapping = new DefaultConstraintMapping();
+        final JavaBeanHelper javaBeanHelper = new JavaBeanHelper(new DefaultGetterPropertySelectionStrategy(), new DefaultPropertyNodeNameProvider());
+        final DefaultConstraintMapping mapping = new DefaultConstraintMapping(javaBeanHelper);
         mapping.constraintDefinition(NoDuplicateExtension.class).validatedBy(NoDuplicateExtensionValidator.class);
         mapping.constraintDefinition(NoDuplicateIntegration.class).validatedBy(NoDuplicateIntegrationValidator.class);
 

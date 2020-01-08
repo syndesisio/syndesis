@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 
-import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder.NodeBuilderCustomizableContext;
 
 import io.syndesis.common.model.WithId;
@@ -29,6 +28,7 @@ import io.syndesis.common.model.validation.UniqueProperty;
 import io.syndesis.server.dao.manager.DataManager;
 
 import org.hibernate.validator.constraintvalidation.HibernateConstraintValidatorContext;
+import org.hibernate.validator.constraintvalidation.HibernateConstraintViolationBuilder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +73,7 @@ public class UniquePropertyValidatorTest {
         when(context.unwrap(HibernateConstraintValidatorContext.class)).thenReturn(context);
         when(context.addExpressionVariable(eq("nonUnique"), anyString())).thenReturn(context);
         when(context.getDefaultConstraintMessageTemplate()).thenReturn("template");
-        final ConstraintViolationBuilder builder = mock(ConstraintViolationBuilder.class);
+        final HibernateConstraintViolationBuilder builder = mock(HibernateConstraintViolationBuilder.class);
         when(context.buildConstraintViolationWithTemplate("template")).thenReturn(builder);
         when(builder.addPropertyNode(anyString())).thenReturn(mock(NodeBuilderCustomizableContext.class));
 
