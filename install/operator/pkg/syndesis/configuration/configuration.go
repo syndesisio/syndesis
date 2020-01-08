@@ -178,12 +178,13 @@ type ServerFeatures struct {
 
 // Addons
 type AddonsSpec struct {
-	Jaeger  JaegerConfiguration
-	Ops     AddonConfiguration
-	Todo    AddonConfiguration
-	Knative AddonConfiguration
-	DV      DvConfiguration
-	CamelK  CamelKConfiguration
+	Jaeger    JaegerConfiguration
+	Ops       AddonConfiguration
+	Todo      AddonConfiguration
+	Knative   AddonConfiguration
+	DV        DvConfiguration
+	CamelK    CamelKConfiguration
+	PublicApi PublicApiConfiguration
 }
 
 type JaegerConfiguration struct {
@@ -196,6 +197,12 @@ type DvConfiguration struct {
 	Enabled   bool
 	Resources Resources
 	Image     string
+}
+
+type PublicApiConfiguration struct {
+	Enabled         bool
+	RouteHostname   string
+	DisableSarCheck bool
 }
 
 type AddonConfiguration struct {
@@ -225,6 +232,7 @@ func GetAddons(configuration Config) []AddonInstance {
 		{"dv", configuration.Syndesis.Addons.DV.Enabled},
 		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
 		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
+		{"publicApi", configuration.Syndesis.Addons.PublicApi.Enabled},
 		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
 	}
 }

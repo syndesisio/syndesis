@@ -63,6 +63,18 @@ spec:
                     enabled:
                       type: boolean
                   type: object
+                publicApi:
+                  properties:
+                    enabled:
+                      type: boolean
+                    disableSarCheck:
+                      description: Enable or disable SAR checks all together
+                      type: boolean
+                    routeHostname:
+                      description: Set RouteHostname to the hostname of the exposed syndesis Public API
+                        service.
+                      type: string
+                  type: object
                 todo:
                   properties:
                     enabled:
