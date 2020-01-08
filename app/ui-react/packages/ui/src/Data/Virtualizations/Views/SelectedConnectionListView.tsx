@@ -69,14 +69,13 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
           />
           <DataListItemCells
             dataListCells={[
-              <DataListCell isIcon={true} key="icon">
-                  <DatabaseIcon />
-              </DataListCell>,
               <DataListCell key="primary content">
                 <TextContent>
-                  <Text component={TextVariants.h4}><span className={'selected_connection_list_view__tableName'}>{props.name}</span> <span>{props.connectionName}</span> </Text>
+                  <Text component={TextVariants.h4}>
+                    <span className={'selected_connection_list_view__tableName'}>{props.name}</span>(<DatabaseIcon />&nbsp;<span>{props.connectionName})</span>
+                  </Text>
                 </TextContent>
-              </DataListCell>,
+              </DataListCell>
             ]}
           />
           <DataListAction
