@@ -137,7 +137,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             return connector;
         }
 
-        final APISummary summary = new APISummary.Builder().createFrom(connector).build();
+        final APISummary summary = APISummary.Builder.createFrom(connector).build();
 
         return connector.builder().actionsSummary(summary.getActionsSummary()).build();
     }
@@ -235,7 +235,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
     public ListResult<Connector> list(final UriInfo uriInfo) {
         final List<Connector> connectors = Lister.super.list(uriInfo).getItems().stream()
             .map(c -> {
-                final APISummary summary = new APISummary.Builder().createFrom(c).build();
+                final APISummary summary = APISummary.Builder.createFrom(c).build();
 
                 return c.builder().actionsSummary(summary.getActionsSummary()).build();
             })
