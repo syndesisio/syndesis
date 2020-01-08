@@ -156,6 +156,8 @@ export interface ImportSources {
 }
 
 export interface VirtualizationPublishingDetails {
+  logUrl?: string;
+  modified: boolean;
   state:
     | 'BUILDING'
     | 'CANCELLED'
@@ -168,10 +170,10 @@ export interface VirtualizationPublishingDetails {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
-  logUrl?: string;
   stepNumber: number;
   stepText: string;
   stepTotal: number;
+  version?: number;
 }
 
 export interface TeiidStatus {
