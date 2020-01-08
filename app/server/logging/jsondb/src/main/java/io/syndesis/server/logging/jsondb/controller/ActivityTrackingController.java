@@ -31,12 +31,20 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
+import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.KubernetesClient;
+import io.syndesis.common.util.DurationConverter;
+import io.syndesis.common.util.backend.BackendController;
 import io.syndesis.common.util.json.JsonUtils;
-
+import io.syndesis.server.jsondb.GetOptions;
+import io.syndesis.server.jsondb.JsonDB;
+import io.syndesis.server.jsondb.impl.JsonRecordSupport;
+import io.syndesis.server.jsondb.impl.SqlJsonDB;
+import io.syndesis.server.openshift.OpenShiftService;
 import org.skife.jdbi.v2.DBI;
 import org.skife.jdbi.v2.PreparedBatch;
 import org.slf4j.Logger;
@@ -47,17 +55,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import static io.syndesis.common.util.thread.Threads.newThreadFactory;
-
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.api.model.PodList;
-import io.fabric8.kubernetes.client.KubernetesClient;
-import io.syndesis.common.util.DurationConverter;
-import io.syndesis.common.util.backend.BackendController;
-import io.syndesis.server.jsondb.GetOptions;
-import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.server.jsondb.impl.JsonRecordSupport;
-import io.syndesis.server.jsondb.impl.SqlJsonDB;
-import io.syndesis.server.openshift.OpenShiftService;
 
 /**
  * This class tracks pod controller and ingests them into our DB.
@@ -156,7 +153,6 @@ public class ActivityTrackingController implements BackendController, Closeable 
      * TODO: push this into the jsondb API.
      *
      * @param path
-     * @param field
      */
     int deleteKeepingRetention(String path) {
         return dbi.inTransaction((conn, status) -> {
