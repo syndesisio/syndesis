@@ -15,39 +15,42 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
+import java.util.Map;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-import java.util.Map;
 
 import io.swagger.annotations.Api;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
+
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
 @Api(value = "properties")
 public class ConnectorPropertiesHandler {
-    private final MetadataConfigurationProperties config;
+    private final String metaPropertiesUrl;
 
     public ConnectorPropertiesHandler(final MetadataConfigurationProperties config) {
-        this.config = config;
+        metaPropertiesUrl = String.format("http://%s/api/v1/connectors/%%s/properties/meta", config.getService());
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     public Response enrichWithDynamicProperties(@PathParam("id") final String connectorId, final Map<String, Object> props) {
         // TODO replace properly with circuit breaker
-        String metadataUrl = String.format("http://%s/api/v1/connectors/%s/properties/meta", config.getService(), connectorId);
-        ResteasyClient client = new ResteasyClientBuilder().build();
-        ResteasyWebTarget target = client.target(metadataUrl);
-        try (Response response = target.request().post(Entity.entity(props, "application/json"));) {
-            final Status status = Status.OK;
-            return Response.status(status).entity(response.readEntity(String.class)).build();
-        }
+        String metadataUrl = String.format(metaPropertiesUrl, connectorId);
+        Client client = createClient();
+        WebTarget target = client.target(metadataUrl);
+
+        return target.request().post(Entity.entity(props, MediaType.APPLICATION_JSON_TYPE));
+    }
+
+    Client createClient() {
+        return new ResteasyClientBuilder().build();
     }
 }

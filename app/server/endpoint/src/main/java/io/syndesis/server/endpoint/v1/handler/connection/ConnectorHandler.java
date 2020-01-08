@@ -25,6 +25,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.UriInfo;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -41,7 +43,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
@@ -70,8 +71,6 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -79,9 +78,6 @@ import org.springframework.stereotype.Component;
 @Api(value = "connectors")
 @Component
 public class ConnectorHandler extends BaseHandler implements Lister<Connector>, Getter<Connector>, Updater<Connector>, Deleter<Connector> {
-
-    private static final Logger LOG = LoggerFactory.getLogger(ConnectorHandler.class);
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private final ApplicationContext applicationContext;
     private final IconDao iconDao;
@@ -133,12 +129,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         // Retrieve dynamic properties, if connector is dynamic
         if (connector.getTags().contains("dynamic")) {
-            try {
-                connector = enrichWithDynamicProperties(connector);
-            } catch (IOException e) {
-                LOG.error("Issue while enriching with metadata", e);
-                // We can go ahead, just ignoring the dynamic metadata
-            }
+            connector = enrichWithDynamicProperties(connector);
         }
 
         final Optional<String> connectorGroupId = connector.getConnectorGroupId();
@@ -158,13 +149,23 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
      * @param connector
      * @return an enriched {@link Connector}
      */
-    private Connector enrichWithDynamicProperties(Connector connector) throws IOException {
-        Map<String, ConfigurationProperty> dynamicProperties = new HashMap<>();
-        String dynamicPropertiesFromMeta = (String) this.properties(connector.getId().get())
-            .enrichWithDynamicProperties(connector.getId().get(), null)
-            .getEntity();
-        Iterator<Map.Entry<String, JsonNode>> iterator = mapper.readTree(dynamicPropertiesFromMeta).get("properties").fields();
-        while(iterator.hasNext()){
+    Connector enrichWithDynamicProperties(Connector connector) {
+        final String connectorId = connector.getId().get();
+        final ConnectorPropertiesHandler propertiesHandler = properties(connectorId);
+
+        final JsonNode jsonResponse;
+        try (Response response = propertiesHandler.enrichWithDynamicProperties(connectorId, null)) {
+            if (response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
+                return connector;
+            }
+
+            jsonResponse = response.readEntity(JsonNode.class);
+        }
+
+        final Iterator<Map.Entry<String, JsonNode>> iterator = jsonResponse.path("properties").fields();
+        final Map<String, ConfigurationProperty> dynamicProperties = new HashMap<>();
+
+        while (iterator.hasNext()) {
             Map.Entry<String, JsonNode> next = iterator.next();
             String propertyName = next.getKey();
             JsonNode property = next.getValue();
