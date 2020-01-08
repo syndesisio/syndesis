@@ -245,21 +245,3 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 	})
 	return resources, err
 }
-
-func (o *Install) renderDir(fromDir string) ([]unstructured.Unstructured, error) {
-	addons := make([]string, 0)
-	if o.addons != "" {
-		addons = strings.Split(o.addons, ",")
-	}
-
-	resources, err := generator.RenderDir(fromDir, RenderScope{
-		Namespace:     o.Namespace,
-		Image:         o.image,
-		Tag:           o.tag,
-		DevSupport:    o.devSupport,
-		Role:          RoleName,
-		Kind:          "Role",
-		EnabledAddons: addons,
-	})
-	return resources, err
-}
