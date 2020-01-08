@@ -835,6 +835,12 @@ workflows:
           requires:
             - connector-support
       - connector:
+          name: connector-soap
+          module: soap
+          <<: *ignore_cherry_pick_branches
+          requires:
+            - connector-support
+      - connector:
           name: connector-sql
           module: sql
           <<: *ignore_cherry_pick_branches
@@ -934,6 +940,7 @@ workflows:
             - connector-salesforce
             - connector-sftp
             - connector-slack
+            - connector-soap
             - connector-sql
             - connector-telegram
             - connector-timer

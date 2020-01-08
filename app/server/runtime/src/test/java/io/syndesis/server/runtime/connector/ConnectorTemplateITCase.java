@@ -17,6 +17,13 @@ package io.syndesis.server.runtime.connector;
 
 import java.util.List;
 
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.ContextConfiguration;
+
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -25,13 +32,6 @@ import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.runtime.BaseITCase;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ContextConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -67,7 +67,7 @@ public class ConnectorTemplateITCase extends BaseITCase {
                 public APISummary info(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     final Connector base = generateTestConnector(connectorTemplate, connectorSettings);
 
-                    return new APISummary.Builder().createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
+                    return APISummary.Builder.createFrom(base).actionsSummary(ACTIONS_SUMMARY).build();
                 }
 
                 Connector generateTestConnector(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {

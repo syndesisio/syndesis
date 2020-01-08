@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<soap:Envelope xmlns:ns0="http://example.com/stockquote.wsdl" xmlns:soap="http://www.w3.org/2003/05/soap-envelope">
+  <soap:Header>
+    <ns0:StockService>
+      <exchange>NYSE</exchange>
+    </ns0:StockService>
+    <ns0:ServiceTier>
+      <name>HedgeFund</name>
+    </ns0:ServiceTier>
+  </soap:Header>
+  <soap:Body>
+    <ns0:GetTradePrice>
+      <time>20200101101010</time>
+      <tickerSymbol>IBM</tickerSymbol>
+    </ns0:GetTradePrice>
+  </soap:Body>
+</soap:Envelope>
