@@ -4,10 +4,10 @@ import {
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
-import { OverlayTrigger, Spinner, Table, Tooltip } from 'patternfly-react';
+import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../../src/Layout';
-import { GenericTable } from '../../../Shared/GenericTable';
+import { SqlResultsTable } from '../SqlResultsTable';
 import './PreviewResults.css';
 
 export interface IPreviewResultsProps {
@@ -21,15 +21,15 @@ export interface IPreviewResultsProps {
    */
   queryResultCols: IColumn[];
   /**
-   * Array of query result rows - must match up with column ids
+   * Array of query result rows - must match order of columns
    * Example:
-   * [ { fName: 'Jean', lName: 'Frissilla', country: 'Italy' },
-   *   { fName: 'John', lName: 'Johnson', country: 'US' },
-   *   { fName: 'Juan', lName: 'Bautista', country: 'Brazil' },
-   *   { fName: 'Jordan', lName: 'Dristol', country: 'Ontario' }
+   * [ ['Jean', 'Frissilla', 'Italy'],
+   *   ['John', 'Johnson', 'US'],
+   *   ['Juan', 'Bautista', 'Brazil'],
+   *   ['Jordan', 'Dristol', 'Ontario']
    * ]
    */
-  queryResultRows: Array<{}>;
+  queryResultRows: string[][];
   i18nEmptyResultsTitle: string;
   i18nEmptyResultsMsg: string;
   i18nLoadingQueryResults: string;
@@ -39,33 +39,15 @@ export interface IPreviewResultsProps {
 export interface IColumn {
   id: string;
   label: string;
+  props?: {
+    className?: string;
+  };
 }
-
-const defaultCellFormat = (value: any) => {
-  // strings over 20 chars - shorten and use tooltip
-  if (typeof value === 'string' && value.length > 20) {
-    const displayedString = `${value.substring(0, 15)}...${value.substring(
-      value.length - 5
-    )}`;
-    return (
-      <OverlayTrigger
-        overlay={<Tooltip id="queryResultsCellTip">{value}</Tooltip>}
-        placement="top"
-      >
-        <Table.Heading>{displayedString}</Table.Heading>
-      </OverlayTrigger>
-    );
-  }
-  return <Table.Heading>{value}</Table.Heading>;
-};
-const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
 
 /**
  * The PreviewResults component.  Displays table of supplied results.
  */
-export const PreviewResults: React.FunctionComponent<
-  IPreviewResultsProps
-> = props => {
+export const PreviewResults: React.FunctionComponent<IPreviewResultsProps> = props => {
   return (
     <PageSection>
       {props.isLoadingPreview ? (
@@ -77,24 +59,9 @@ export const PreviewResults: React.FunctionComponent<
         <>
           {props.queryResultCols.length > 0 ? (
             <div className={'preview-results__tableSection'}>
-              <GenericTable
-                columns={props.queryResultCols.map((col, index) => ({
-                  cell: {
-                    formatters: [defaultCellFormat],
-                  },
-                  header: {
-                    formatters: [defaultHeaderFormat],
-                    label: col.label,
-                  },
-                  property: col.id,
-                }))}
-                rows={props.queryResultRows}
-                rowKey={
-                  props.queryResultCols.length > 0
-                    ? props.queryResultCols[0].id
-                    : ''
-                }
-                {...props}
+              <SqlResultsTable
+                queryResultCols={props.queryResultCols}
+                queryResultRows={props.queryResultRows}
               />
             </div>
           ) : (

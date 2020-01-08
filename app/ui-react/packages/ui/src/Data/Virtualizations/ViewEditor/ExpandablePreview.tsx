@@ -53,15 +53,15 @@ export interface IExpandablePreviewProps {
    */
   queryResultCols: IColumn[];
   /**
-   * Array of query result rows - must match up with column ids
+   * Array of query result rows - must match order of columns
    * Example:
-   * [ { fName: 'Jean', lName: 'Frissilla', country: 'Italy' },
-   *   { fName: 'John', lName: 'Johnson', country: 'US' },
-   *   { fName: 'Juan', lName: 'Bautista', country: 'Brazil' },
-   *   { fName: 'Jordan', lName: 'Dristol', country: 'Ontario' }
+   * [ ['Jean', 'Frissilla', 'Italy'],
+   *   ['John', 'Johnson', 'US'],
+   *   ['Juan', 'Bautista', 'Brazil'],
+   *   ['Jordan', 'Dristol', 'Ontario']
    * ]
    */
-  queryResultRows: Array<{}>;
+  queryResultRows: string[][];
 }
 
 /**

@@ -5,7 +5,6 @@ export * from './ConfirmationDialog';
 export * from './CopyToClipboard';
 export * from './Dialog';
 export * from './DndFileChooser';
-export * from './GenericTable';
 export * from './HelpDropdown';
 export * from './HttpMethodColors';
 export * from './InlineTextEdit';
