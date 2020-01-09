@@ -99,7 +99,8 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
                 .stream().filter(isKafkaBroker)
                 .forEach(kafka -> processKafkaCRD(brokers, client, kafka));
         } catch (Throwable t) {
-            LOG.warn("Couldn't auto discover any broker.", t);
+            LOG.warn("Couldn't auto discover any broker.");
+            LOG.debug("Couldn't auto discover any broker.", t);
         }
 
         Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
@@ -132,12 +133,12 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * @param brokers
      * @param item
      */
-    @SuppressWarnings("unchecked")
     private void processKafkaResource(List<PropertyPair> brokers, KafkaResource item) {
         //Extract an identifier of this broker
         final ObjectMeta metadata = item.getMetadata();
         String id = metadata.getNamespace() + "::" + metadata.getName();
 
+        @SuppressWarnings("unchecked")
         List<Map<String, List<Map<String, Object>>>> listeners =
             (List<Map<String, List<Map<String, Object>>>>) item.getStatus().get("listeners");
 
