@@ -185,10 +185,11 @@
     volumeName: {{.Syndesis.Components.Database.Resources.VolumeName}}
 {{end}}
 {{- if .Syndesis.Components.Database.Resources.VolumeLabels}}
-    matchLabels:
-    {{- range $key, $value := .Syndesis.Components.Database.Resources.VolumeLabels}}
-      {{ $key }}: {{ $value }}
-    {{- end }}
+    selector:
+      matchLabels:
+      {{- range $key, $value := .Syndesis.Components.Database.Resources.VolumeLabels}}
+        {{ $key }}: {{ $value }}
+      {{- end }}
 {{- end}}
 
 - apiVersion: apps.openshift.io/v1
