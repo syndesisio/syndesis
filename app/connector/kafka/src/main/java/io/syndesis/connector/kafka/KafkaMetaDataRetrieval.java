@@ -98,7 +98,7 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
             client.customResourceDefinitions().list().getItems()
                 .stream().filter(isKafkaBroker)
                 .forEach(kafka -> processKafkaCRD(brokers, client, kafka));
-        } catch (Throwable t) {
+        } catch (Exception t) {
             LOG.warn("Couldn't auto discover any broker.");
             LOG.debug("Couldn't auto discover any broker.", t);
         }
