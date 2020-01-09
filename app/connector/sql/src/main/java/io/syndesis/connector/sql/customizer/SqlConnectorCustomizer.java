@@ -109,7 +109,6 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
                     SqlErrorCategory.SQL_CONNECTOR_ERROR, exchange.getException());
         }
         final Message in = exchange.getIn();
-
         //converting SQL Map or List results to JSON Beans
         List<String> list = null;
         if (isRetrieveGeneratedKeys) {

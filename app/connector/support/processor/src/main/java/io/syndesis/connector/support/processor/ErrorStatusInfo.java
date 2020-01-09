@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.apiprovider;
+package io.syndesis.connector.support.processor;
 
 import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;

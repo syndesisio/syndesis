@@ -135,6 +135,8 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
         return Collections.emptyList();
     }
 
+    Optional<String> getExceptionHandler();
+
     @Value.Default
     default List<StandardizedError> getStandardizedErrors() {
         return Collections.emptyList();

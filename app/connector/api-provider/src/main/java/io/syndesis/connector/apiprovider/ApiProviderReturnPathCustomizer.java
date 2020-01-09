@@ -27,6 +27,8 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.support.processor.ErrorMapper;
+import io.syndesis.connector.support.processor.ErrorStatusInfo;
 import io.syndesis.connector.support.processor.HttpRequestUnwrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.connector.support.util.ConnectorOptions;
