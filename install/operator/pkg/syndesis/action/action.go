@@ -44,6 +44,7 @@ func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []Syndesi
 		newCheckUpdatesAction(mgr, api),
 		newInitializeAction(mgr, api),
 		newInstallAction(mgr, api),
+		newBackupAction(mgr, api),
 		newStartupAction(mgr, api),
 		newUpgradeAction(mgr, api),
 		newUpgradeBackoffAction(mgr, api),

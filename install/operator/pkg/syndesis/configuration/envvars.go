@@ -38,14 +38,14 @@ func getSyndesisEnvVarsFromOpenShiftNamespace(ctx context.Context, client client
 	}
 
 	if envBlob, present := secret.Data[SyndesisGlobalConfigParamsProperty]; present {
-		return parseConfigurationBlob(envBlob), nil
+		return ParseConfigurationBlob(envBlob), nil
 	} else {
 		return nil, errors.New("no configuration found")
 	}
 
 }
 
-func parseConfigurationBlob(blob []byte) map[string]string {
+func ParseConfigurationBlob(blob []byte) map[string]string {
 	strs := strings.Split(string(blob), "\n")
 	configs := make(map[string]string, 0)
 	for _, conf := range strs {

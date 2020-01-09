@@ -4,18 +4,19 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"reflect"
+
 	"github.com/spf13/pflag"
 	"k8s.io/apimachinery/pkg/api/resource"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
-	"reflect"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 )
 
 var FlagSet *pflag.FlagSet = nil
 var showResourceDiffs = false
-var KnownDockerImages map[string]bool = map[string]bool{}
+var KnownDockerImages = map[string]bool{}
 
 func init() {
 	FlagSet = pflag.NewFlagSet("util", pflag.ExitOnError)
