@@ -222,6 +222,8 @@ github.com/prometheus/common/internal/bitbucket.org/ww/goautoneg
 github.com/prometheus/common/model
 # github.com/prometheus/procfs v0.0.0-20190403104016-ea9eea638872
 github.com/prometheus/procfs
+# github.com/robfig/cron/v3 v3.0.0
+github.com/robfig/cron/v3
 # github.com/rogpeppe/go-internal v1.3.0
 github.com/rogpeppe/go-internal/modfile
 github.com/rogpeppe/go-internal/module
