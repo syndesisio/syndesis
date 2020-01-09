@@ -535,13 +535,13 @@ export const useVirtualizationHelpers = () => {
    * @param virtualalization the virtualization
    */
   const getSourceInfoForView = async (
-    virtualization: Virtualization
+    virtualizationName: string
   ): Promise<ViewSourceInfo> => {
     const response = await callFetch({
       headers: {},
       method: 'GET',
       url: `${apiContext.dvApiUri}metadata/runtimeMetadata/${
-        virtualization.name
+        virtualizationName
       }`,
     });
     if (!response.ok) {

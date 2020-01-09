@@ -137,6 +137,11 @@ export interface TableColumns {
   columnNames: string[];
 }
 
+export interface ConnectionTable {
+  name: string;
+  tables: SourceTable[];
+}
+
 export interface ViewDefinitionStatus {
   status: string;
   message: string;

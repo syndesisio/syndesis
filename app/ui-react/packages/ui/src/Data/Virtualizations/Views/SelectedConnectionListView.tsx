@@ -24,16 +24,14 @@ export interface ISelectedConnectionListViewProps {
   name: string;
   connectionName: string;
   index: number;
+  rows: string[][];
   onTabelRemoved: (connectionName: string, teiidName: string) => void;
 }
 
 export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnectionListViewProps> = props => {
   const columns = ['', ''];
-  const rows = [
-    ['one', 'two'],
-    ['three', 'four'],
-    ['one', 'two'],
-  ];
+
+  const rows = props.rows;
 
   const onTrashClickHandler = () => {
     props.onTabelRemoved(props.connectionName, props.name);
@@ -69,14 +67,13 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
           />
           <DataListItemCells
             dataListCells={[
-              <DataListCell isIcon={true} key="icon">
-                  <DatabaseIcon />
-              </DataListCell>,
               <DataListCell key="primary content">
                 <TextContent>
-                  <Text component={TextVariants.h4}><span className={'selected_connection_list_view__tableName'}>{props.name}</span> <span>{props.connectionName}</span> </Text>
+                  <Text component={TextVariants.h4}>
+                    <span className={'selected_connection_list_view__tableName'}>{props.name}</span>(<DatabaseIcon />&nbsp;<span>{props.connectionName})</span>
+                  </Text>
                 </TextContent>
-              </DataListCell>,
+              </DataListCell>
             ]}
           />
           <DataListAction
