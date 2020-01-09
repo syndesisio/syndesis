@@ -2114,7 +2114,7 @@
       <dependency>
         <groupId>net.iharder</groupId>
         <artifactId>base64</artifactId>
-        <version>2.3.8</version>
+        <version>2.3.9</version>
       </dependency>
 
       <dependency>
