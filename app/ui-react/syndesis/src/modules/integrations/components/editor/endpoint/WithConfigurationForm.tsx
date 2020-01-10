@@ -3,6 +3,7 @@ import {
   getActionById,
   getConnectionConnector,
   getConnectorActions,
+  WEBHOOK_INCOMING_ACTION_ID,
   WithActionDescriptor,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -138,7 +139,7 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
       props.actionId
     );
   // The API provider end action gets some special treatment
-  if (props.actionId === API_PROVIDER_END_ACTION_ID) {
+  if (props.actionId === API_PROVIDER_END_ACTION_ID || props.actionId === WEBHOOK_INCOMING_ACTION_ID) {
     const definitionOverride = applyErrorKeysToForm(action, props.errorKeys!);
     return (
       <ConfigurationForm
