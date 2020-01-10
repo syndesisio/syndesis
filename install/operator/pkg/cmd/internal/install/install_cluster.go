@@ -2,18 +2,19 @@ package install
 
 import (
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-	"strconv"
-	"time"
 )
 
 func (o *Install) installClusterResources() error {
 
-	resources, err := o.render("./install/cluster.yml")
+	resources, err := o.render("./install/cluster")
 	if err != nil {
 		return err
 	}

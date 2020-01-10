@@ -1,0 +1,13 @@
+apiVersion: syndesis.io/v1alpha1
+kind: Syndesis
+metadata:
+  name: app
+spec:
+  components:
+    database:
+      resources:
+        volumeCapacity: 5Gi
+    server:
+      features:
+        integrationLimit: 5
+        testSupport: true

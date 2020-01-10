@@ -11,7 +11,7 @@ minishift::description() {
 
 minishift::usage() {
     cat <<EOT
-    --install                 Install templates to a running Minishift.
+    --install                 Install to a running Minishift.
 -p  --project                 Install into this project. Delete this project if it already exists.
                               By default, install into the current project (without deleting)
     --profile <profile>       Use the given minishift profile
@@ -35,17 +35,14 @@ minishift::usage() {
 -o  --open                    Open Syndesis in the browser
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
-    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
-    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
-    --test-support            Allow test support endpoint for syndesis-server
     --camel-k <version>       Install the Camel-K operator with version <version>
                               (version is optional)
     --camel-k-options "opts"  Options used when installing the camel-k operator.
                               Use quotes and start with a space before appending the options.
-    --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --deploy-latest           Deploy latest tags from dockerhub.
     --nodev                   Do not set the devSupport flag in CR (deploys all images)
+    --custom-resource         Provide a custom resource to be installed by the operator
 EOT
 }
 
@@ -103,6 +100,14 @@ minishift::run() {
           # Switch to context
           echo "Using context/profile $context"
           oc config use-context $context
+        fi
+
+        #Check the custom resource if one has been specified
+        local customcr=$(readopt --custom-resource)
+        if [ -n "${customcr}" ]; then
+            if [ ! -f "${customcr}" ]; then
+                check_error "ERROR: No custom resource exists at '${customcr}'"
+            fi
         fi
 
         # Pick the proper project
@@ -175,8 +180,17 @@ minishift::run() {
             echo "Deployed operator."
             exit 0
         else
-            echo "Deploying syndesis app."
-            result=$($OPERATOR_BINARY install app)
+            # Deploying syndesis app
+            local customcr=$(readopt --custom-resource)
+
+            if [ -n "${customcr}" ]; then
+                echo "Deploying syndesis app with custom resource ${customcr}"
+                APP_OPTIONS=" --custom-resource ${customcr}"
+            else
+                echo "Deploying syndesis app."
+            fi
+
+            result=$($OPERATOR_BINARY install app $APP_OPTIONS)
             check_error "$result"
         fi
 

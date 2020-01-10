@@ -2,8 +2,10 @@ package install
 
 import (
 	"context"
+	"encoding/json"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -11,9 +13,37 @@ import (
 )
 
 func (o *Install) installApplication() error {
-	resources, err := o.render("./install/app.yml.tmpl")
-	if err != nil {
-		return err
+
+	resources := make([]unstructured.Unstructured, 0)
+	if o.customResource == "" {
+		appResources, err := o.render("./install/app.yml.tmpl")
+		if err != nil {
+			return err
+		}
+
+		resources = append(resources, appResources...)
+
+	} else {
+		customResData, err := util.LoadJsonFromFile(o.customResource)
+		if err != nil {
+			return err
+		}
+
+		//
+		// check the customResource can parse to syndesis type
+		//
+		syndesis := &v1alpha1.Syndesis{}
+		err = json.Unmarshal(customResData, syndesis)
+		if err != nil {
+			return err
+		}
+
+		resource, err := util.LoadUnstructuredObject(customResData)
+		if err != nil {
+			return err
+		}
+
+		resources = append(resources, *resource)
 	}
 
 	if o.ejectedResources != nil {
@@ -34,7 +64,7 @@ func (o *Install) installApplication() error {
 
 		if o.wait {
 			for {
-				o.Println("waiting for syndesis application deploymentto be ready...")
+				o.Println("waiting for syndesis application deployment to be ready...")
 				ready, err := WaitForSyndesisReady(o.Context, client, o.Namespace, "app", 5*time.Second)
 
 				if err != nil {
