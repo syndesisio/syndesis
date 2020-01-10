@@ -117,7 +117,7 @@ export const FormTypeaheadComponent: React.FunctionComponent<
           <SelectOption
             key={`${index}-${opt.label}`}
             label={opt.label}
-            value={opt.label || props.field.name[props.field.value]}
+            value={opt.value || props.field.name[props.field.value]}
           />
         )
         })}
