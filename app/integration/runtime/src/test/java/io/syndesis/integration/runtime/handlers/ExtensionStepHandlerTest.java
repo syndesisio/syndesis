@@ -110,10 +110,10 @@ public class ExtensionStepHandlerTest {
             assertThat(route.getOutputs().get(3).getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(3).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "Property-1");
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("name", "Property-1");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
             assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "Property-2");
+            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("name", "Property-2");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).isInstanceOf(ToDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).hasFieldOrPropertyWithValue(
@@ -277,10 +277,10 @@ public class ExtensionStepHandlerTest {
             assertThat(route.getOutputs().get(3).getOutputs()).hasSize(4);
             assertThat(route.getOutputs().get(3).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "param1");
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("name", "param1");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
             assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "param2");
+            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("name", "param2");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
