@@ -67,12 +67,9 @@ spec:
                   properties:
                     enabled:
                       type: boolean
-                    disableSarCheck:
-                      description: Enable or disable SAR checks all together
-                      type: boolean
                     routeHostname:
-                      description: Set RouteHostname to the hostname of the exposed syndesis Public API
-                        service.
+                      description: Set RouteHostname to the hostname of the exposed
+                        syndesis Public API.
                       type: string
                   type: object
                 todo:
@@ -80,6 +77,13 @@ spec:
                     enabled:
                       type: boolean
                   type: object
+              type: object
+            backup:
+              description: Schedule backup
+              properties:
+                schedule:
+                  description: Set schedule for backup cronjob
+                  type: string
               type: object
             components:
               description: Components is used to configure all the core components
@@ -199,6 +203,15 @@ spec:
           type: object
         status:
           properties:
+            backup:
+              properties:
+                next:
+                  description: When is the next backup planned
+                  type: string
+                previous:
+                  description: When was the previous backup executed
+                  type: string
+              type: object
             description:
               type: string
             forceUpgrade:
