@@ -6,12 +6,12 @@
 #   - ./syndesisCamelVersion.sh <camel version>
 #
 # Example:
-#   - ./syndesisCamelVersion.sh 2.23.2.fuse-760011
+#   - ./syndesisCamelVersion.sh 2.23.2.fuse-760017
 
 
 new_camel=${1:-xxx}
 if [ $new_camel = "xxx" ]; then
-  echo "Usage $0 <camel version> (eg. 2.23.2.fuse-760011)"
+  echo "Usage $0 <camel version> (eg. 2.23.2.fuse-760017)"
   exit 1
 fi
 

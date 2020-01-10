@@ -89,7 +89,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-760016</camel.version>
+    <camel.version>2.23.2.fuse-760017</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
@@ -766,7 +766,7 @@
               <!--
                 Jakarta project shipped activation com.sun.activation:jakarta.activation-api:1.2.1
                 and jakarta.activation:jakarta.activation:1.2.1 containing the
-                com.sun.activation:jakarta.activation-api:1.2.1 within it 
+                com.sun.activation:jakarta.activation-api:1.2.1 within it
               -->
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
             </ignoredClassPatterns>
