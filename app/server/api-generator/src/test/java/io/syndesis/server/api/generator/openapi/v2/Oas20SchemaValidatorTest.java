@@ -16,7 +16,8 @@
 
 package io.syndesis.server.api.generator.openapi.v2;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import java.io.IOException;
+
 import io.apicurio.datamodels.Library;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.syndesis.common.model.Violation;
@@ -32,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class Oas20SchemaValidatorTest {
 
     @Test
-    public void shouldNotGenerateErrorForValidSpec() throws JsonProcessingException {
+    public void shouldNotGenerateErrorForValidSpec() throws IOException {
         final Oas20Document openApiDoc = new Oas20Document();
         openApiDoc.info = openApiDoc.createInfo();
         openApiDoc.info.version = "1.0.0";
@@ -47,7 +48,7 @@ public class Oas20SchemaValidatorTest {
     }
 
     @Test
-    public void shouldGenerateErrorForIncompleteSpec() throws JsonProcessingException {
+    public void shouldGenerateErrorForIncompleteSpec() throws IOException {
         final Oas20Document openApiDoc = new Oas20Document();
         final OpenApiModelInfo.Builder infoBuilder = new OpenApiModelInfo.Builder().model(openApiDoc);
 
