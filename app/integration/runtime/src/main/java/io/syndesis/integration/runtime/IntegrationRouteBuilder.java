@@ -47,12 +47,12 @@ import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
-import org.apache.camel.builder.DefaultErrorHandlerBuilder;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.LogDefinition;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.OnExceptionDefinition;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
@@ -60,7 +60,7 @@ import org.apache.camel.model.RoutesDefinition;
 import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
 import org.apache.camel.spi.RoutePolicy;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.ResourceHelper;
+import org.apache.camel.support.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,16 +136,12 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     @Override
     public ModelCamelContext getContext() {
-        CamelContext ctx = super.getContext();
-        ModelCamelContext context;
-        if(ctx instanceof ModelCamelContext) {
-            context = (ModelCamelContext) ctx;
-        } else {
+        CamelContext context = super.getContext();
+        if (context == null) {
             context = new DefaultCamelContext();
-            this.setContext(context);
         }
 
-        return context;
+        return context.adapt(ModelCamelContext.class);
     }
 
     @Override
@@ -184,7 +180,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, String.valueOf(stepIndex));
                 if (definition.isPresent()) {
                     parent = definition.get();
-                    parent = configureRouteDefinition(parent, flow, flowId, stepId);
+                    parent = configureRouteDefinition(parent, flow, flowId);
                     parent = createPipeline(parent, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.end();
@@ -202,7 +198,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
                 }
             } else {
-                parent = configureRouteDefinition(parent, flow, flowId, stepId);
+                parent = configureRouteDefinition(parent, flow, flowId);
 
                 if (StepKind.aggregate.equals(step.getStepKind())) {
                     if (!splitStack.isEmpty()) {
@@ -299,7 +295,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return definition;
     }
 
-    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId, String stepId) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId) {
         if (definition instanceof RouteDefinition) {
             final RouteDefinition rd = (RouteDefinition)definition;
 
@@ -312,13 +308,15 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 rd.routeDescription(flow.getName());
             }
 
-            rd.routeId(flowId);
+            if (!rd.hasCustomIdAssigned()) {
+                rd.routeId(flowId);
+            }
+
             for (ActivityTrackingPolicyFactory factory : activityTrackingPolicyFactories) {
                 if (factory.appliesTo(flow)) {
                     rd.routePolicy(factory.createRoutePolicy(flowId));
                 }
             }
-            rd.getInputs().get(0).id(stepId);
 
             Optional<String> onException = Optional.empty();
             Step onExceptionStep = null;
@@ -332,21 +330,15 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
                 }
             }
-            if (onException.isPresent() && onExceptionStep!=null) {
-                //
-                final OnExceptionDefinition onExceptionDef = new OnExceptionDefinition(Throwable.class)
-                        .handled(true)
-                        .maximumRedeliveries(0);
-
+            if (onException.isPresent() && onExceptionStep != null) {
                 final Processor errorHandler = (Processor) mandatoryLoadResource(
                         this.getContext(), "class:" + onException.get());
                 ((Properties) errorHandler).setProperties(onExceptionStep.getConfiguredProperties());
 
-                final DefaultErrorHandlerBuilder builder = new DefaultErrorHandlerBuilder();
-                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onExceptionDef);
-                builder.setOnExceptionOccurred(errorHandler);
-
-                rd.setErrorHandlerBuilder(builder);
+                definition.onException(Throwable.class)
+                    .handled(true)
+                    .maximumRedeliveries(0)
+                    .process(errorHandler);
             }
         }
 
