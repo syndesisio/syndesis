@@ -25,6 +25,8 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.component.aws.sqs.SqsConstants;
+import org.apache.camel.component.aws.sqs.SqsOperations;
 
 public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
 
@@ -46,7 +48,6 @@ public class AWSSQSBatchMessagesCustomizer implements ComponentProxyCustomizer {
             }
         }
         in.setBody(messageList);
-        // TODO Backport 2.23.x: disabled due to issue https://issues.jboss.org/browse/ENTESB-12348 once that is backported enable header again
-        // in.setHeader(SqsConstants.SQS_OPERATION, SqsOperations.sendBatchMessage);
+        in.setHeader(SqsConstants.SQS_OPERATION, SqsOperations.sendBatchMessage);
     }
 }
