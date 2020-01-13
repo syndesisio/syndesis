@@ -36,6 +36,7 @@
     <yarn-verbose />
     <npm-verbose />
     <docker-base-image>centos/nginx-114-centos7</docker-base-image>
+    <deploy.ui.distribution>${deploy.archives}</deploy.ui.distribution>
   </properties>
 
   <build>
@@ -51,7 +52,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <attach>false</attach>
+              <attach>${deploy.ui.distribution}</attach>
               <tarLongFileMode>posix</tarLongFileMode>
               <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
               <descriptors>

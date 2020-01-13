@@ -37,7 +37,7 @@
       Should the ZIP file containing the settings.xml, dependencies and
       licenses be attached and deployed in install/deploy phase
     -->
-    <deploy.repository>false</deploy.repository>
+    <deploy.s2i.repository>${deploy.archives}</deploy.s2i.repository>
   </properties>
 
   <dependencies>
@@ -465,7 +465,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
-              <attach>${deploy.repository}</attach>
+              <attach>${deploy.s2i.repository}</attach>
               <descriptors>
                 <descriptor>src/main/assembly/repository.xml</descriptor>
               </descriptors>
