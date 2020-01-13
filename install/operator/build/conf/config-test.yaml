@@ -24,8 +24,11 @@ Syndesis:
         CamelK:
             Enabled: false
             Image: "fabric8/s2i-java:3.0-java8"
-            CamelVersion: "2.23.2.fuse-760011"
+            CamelVersion: "2.23.2.fuse-760017"
             CamelKRuntime: "0.3.4.fuse-740008"
+        PublicApi:
+            Enabled: true
+            RouteHostname: "mypublichost.com"
     Components:
         Oauth:
             Image: "quay.io/openshift/origin-oauth-proxy:v4.0.0"

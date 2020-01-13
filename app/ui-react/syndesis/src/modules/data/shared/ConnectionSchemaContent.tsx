@@ -56,12 +56,25 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     }
   };
 
-  const isTableSelected = (teiidName: string): boolean => {
+  const isConnctionSelected = (cName: string): boolean => {
     let returnVal = false;
     for (const tables of props.selectedSchemaNodes) {
-      if(tables.teiidName === teiidName){
+      if (tables.connectionName === cName) {
         returnVal = true;
         break;
+      }
+    }
+    return returnVal;
+  };
+
+  const isTableSelected = (cName: string, teiidName?: string): boolean => {
+    let returnVal = false;
+    for (const tables of props.selectedSchemaNodes) {
+      if (tables.connectionName === cName) {
+        if (tables.teiidName === teiidName) {
+          returnVal = true;
+          break;
+        }
       }
     }
     return returnVal;
@@ -101,7 +114,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                 connectionDescription={''}
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
-                    ? props.selectedSchemaNodes[0].connectionName === cName
+                    ? isConnctionSelected(cName)
                     : false
                 }
                 // tslint:disable-next-line: no-shadowed-variable
@@ -112,13 +125,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                     teiidName={info.teiidName}
                     connectionName={info.connectionName}
                     nodePath={info.nodePath}
-                    selected={
-                      props.selectedSchemaNodes[0] &&
-                      props.selectedSchemaNodes[0].connectionName ===
-                        info.connectionName
-                        ? isTableSelected(info.name)
-                        : false
-                    }
+                    selected={isTableSelected(info.connectionName, info.name)}
                     onSelectionChanged={handleSourceSelectionChange}
                   />
                 ))}

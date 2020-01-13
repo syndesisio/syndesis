@@ -54,14 +54,12 @@
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:{{.OpenShiftProject}}:syndesis-oauth-client
-            - --client-secret={{.OpenShiftOauthClientSecret}}
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
             - --upstream=http://syndesis-dv/dv/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
-            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
             - --skip-auth-regex=/logout
@@ -80,12 +78,12 @@
             # Disabled for now: --pass-user-bearer-token as this requires extra permission which only
             # can be given by a cluster-admin
           env:
-          - name: OAUTH_COOKIE_SECRET
+          - name: OAUTH2_PROXY_COOKIE_SECRET
             valueFrom:
               secretKeyRef:
                 name: syndesis-global-config
                 key: OAUTH_COOKIE_SECRET
-          - name: OPENSHIFT_OAUTH_CLIENT_SECRET
+          - name: OAUTH2_PROXY_CLIENT_SECRET
             valueFrom:
               secretKeyRef:
                 name: syndesis-global-config

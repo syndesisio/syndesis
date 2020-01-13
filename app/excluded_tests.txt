@@ -1,1 +1,1 @@
-**/ServiceVdbGeneratorTest.class
+

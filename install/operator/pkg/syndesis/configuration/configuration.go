@@ -19,7 +19,6 @@ package configuration
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
@@ -40,6 +39,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/yaml"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
@@ -178,12 +178,13 @@ type ServerFeatures struct {
 
 // Addons
 type AddonsSpec struct {
-	Jaeger  JaegerConfiguration
-	Ops     AddonConfiguration
-	Todo    AddonConfiguration
-	Knative AddonConfiguration
-	DV      DvConfiguration
-	CamelK  CamelKConfiguration
+	Jaeger    JaegerConfiguration
+	Ops       AddonConfiguration
+	Todo      AddonConfiguration
+	Knative   AddonConfiguration
+	DV        DvConfiguration
+	CamelK    CamelKConfiguration
+	PublicApi PublicApiConfiguration
 }
 
 type JaegerConfiguration struct {
@@ -196,6 +197,12 @@ type DvConfiguration struct {
 	Enabled   bool
 	Resources Resources
 	Image     string
+}
+
+type PublicApiConfiguration struct {
+	Enabled         bool
+	RouteHostname   string
+	DisableSarCheck bool
 }
 
 type AddonConfiguration struct {
@@ -214,6 +221,10 @@ type AddonInstance struct {
 	Enabled bool
 }
 
+const (
+	SyndesisGlobalConfigSecret = "syndesis-global-config"
+)
+
 /*
 / Returns an array of the addons names and if configuration has been defined
 / whether they've been enabled in that configuration instance
@@ -225,6 +236,7 @@ func GetAddons(configuration Config) []AddonInstance {
 		{"dv", configuration.Syndesis.Addons.DV.Enabled},
 		{"camelk", configuration.Syndesis.Addons.CamelK.Enabled},
 		{"knative", configuration.Syndesis.Addons.Knative.Enabled},
+		{"publicApi", configuration.Syndesis.Addons.PublicApi.Enabled},
 		{"todo", configuration.Syndesis.Addons.Todo.Enabled},
 	}
 }
@@ -311,16 +323,6 @@ func (config *Config) SetRoute(ctx context.Context, client client.Client, syndes
 func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
 	// Handle an external database being defined
 	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
-		// check to see if password is already provided, check to see if merge is done
-		globalCfgSec := &corev1.Secret{}
-		if err := client.Get(ctx, types.NamespacedName{Name: "syndesis-global-config", Namespace: syndesis.Namespace}, globalCfgSec); err != nil {
-			// the secret doesn't already exist, but it must for external databases
-			return err
-		}
-		postgresPass := string(globalCfgSec.Data["POSTGRESQL_PASSWORD"])
-		if postgresPass == "" {
-			return errors.New("failed to find postgresql password in global config")
-		}
 
 		// setup connection string from provided url
 		externalDbURL, err := url.Parse(syndesis.Spec.Components.Database.ExternalDbURL)
@@ -332,14 +334,21 @@ func (config *Config) ExternalDatabase(ctx context.Context, client client.Client
 		}
 
 		config.Syndesis.Components.Database.URL = externalDbURL.String()
-		config.Syndesis.Components.Database.Password = postgresPass
 	}
 
 	return nil
 }
 
+func getSyndesisConfigurationSecret(ctx context.Context, client client.Client, namespace string) (*corev1.Secret, error) {
+	secret := corev1.Secret{}
+	if err := client.Get(ctx, util.NewObjectKey(SyndesisGlobalConfigSecret, namespace), &secret); err != nil {
+		return nil, err
+	}
+	return &secret, nil
+}
+
 func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
-	secrets, err := getSyndesisEnvVarsFromOpenShiftNamespace(ctx, client, syndesis.Namespace)
+	secret, err := getSyndesisConfigurationSecret(ctx, client, syndesis.Namespace)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
 			return nil
@@ -348,13 +357,18 @@ func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.
 		}
 	}
 
-	config.OpenShiftOauthClientSecret = secrets["OPENSHIFT_OAUTH_CLIENT_SECRET"]
-	config.Syndesis.Components.Database.Password = secrets["POSTGRESQL_PASSWORD"]
-	config.Syndesis.Components.Database.SampledbPassword = secrets["POSTGRESQL_SAMPLEDB_PASSWORD"]
-	config.Syndesis.Components.Oauth.CookieSecret = secrets["OAUTH_COOKIE_SECRET"]
-	config.Syndesis.Components.Server.SyndesisEncryptKey = secrets["SYNDESIS_ENCRYPT_KEY"]
-	config.Syndesis.Components.Server.ClientStateAuthenticationKey = secrets["CLIENT_STATE_AUTHENTICATION_KEY"]
-	config.Syndesis.Components.Server.ClientStateEncryptionKey = secrets["CLIENT_STATE_ENCRYPTION_KEY"]
+	/*
+	 * If none exist in the secret then config property is set to ""
+	 * If this is the case then passwords are generated as a result of
+	 * the call to generatePasswords() following execution of this function
+	 */
+	config.OpenShiftOauthClientSecret = string(secret.Data["OPENSHIFT_OAUTH_CLIENT_SECRET"])
+	config.Syndesis.Components.Database.Password = string(secret.Data["POSTGRESQL_PASSWORD"])
+	config.Syndesis.Components.Database.SampledbPassword = string(secret.Data["POSTGRESQL_SAMPLEDB_PASSWORD"])
+	config.Syndesis.Components.Oauth.CookieSecret = string(secret.Data["OAUTH_COOKIE_SECRET"])
+	config.Syndesis.Components.Server.SyndesisEncryptKey = string(secret.Data["SYNDESIS_ENCRYPT_KEY"])
+	config.Syndesis.Components.Server.ClientStateAuthenticationKey = string(secret.Data["CLIENT_STATE_AUTHENTICATION_KEY"])
+	config.Syndesis.Components.Server.ClientStateEncryptionKey = string(secret.Data["CLIENT_STATE_ENCRYPTION_KEY"])
 
 	return nil
 }

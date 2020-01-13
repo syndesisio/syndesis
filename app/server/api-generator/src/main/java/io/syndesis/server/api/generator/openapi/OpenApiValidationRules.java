@@ -46,9 +46,19 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
 
     private final List<Function<OpenApiModelInfo, OpenApiModelInfo>> rules = new ArrayList<>();
 
-    protected OpenApiValidationRules(final APIValidationContext context) {
+    /**
+     * Constructor initializes rules based on given validation context and specific rules for consumer and producer APIs.
+     * Subclasses may provide special rules in addition to generic rules added in this base class.
+     * @param context the validation context specifying the consumer or provider API
+     * @param consumerRules specific rules to add for consumed APIs
+     * @param providerRules specific rules to add for provided APIs
+     */
+    protected OpenApiValidationRules(final APIValidationContext context,
+                                     final List<Function<OpenApiModelInfo, OpenApiModelInfo>> consumerRules,
+                                     final List<Function<OpenApiModelInfo, OpenApiModelInfo>> providerRules) {
         switch (context) {
         case CONSUMED_API:
+            rules.addAll(consumerRules);
             rules.add(this::validateResponses);
             rules.add(this::validateConsumedAuthTypes);
             rules.add(this::validateScheme);
@@ -57,6 +67,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
             rules.add(this::validateOperationsGiven);
             return;
         case PROVIDED_API:
+            rules.addAll(providerRules);
             rules.add(this::validateResponses);
             rules.add(this::validateProvidedAuthTypes);
             rules.add(this::validateUniqueOperationIds);

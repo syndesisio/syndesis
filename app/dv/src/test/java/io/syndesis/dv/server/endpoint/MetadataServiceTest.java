@@ -74,7 +74,7 @@ public class MetadataServiceTest {
 
         String s = new String(DefaultMetadataInstance.toBytes(vdb).toByteArray(), "UTF-8");
         assertEquals(
-                "<?xml version=\"1.0\" ?><vdb name=\"vdb\" version=\"1\"><description>Vdb for source Data Source:	source\n"
+                "<?xml version=\"1.0\" ?><vdb name=\"vdb\" version=\"1\"><description>Vdb for source Data Source:\tsource\n"
                         + "Type: \t\th2</description><connection-type>BY_VERSION</connection-type>"
                         + "<property name=\"id\" value=\"someid\"></property><property name=\"async-load\" value=\"true\"></property>"
                         + "<model name=\"source\" type=\"PHYSICAL\" visible=\"true\">"
@@ -90,7 +90,7 @@ public class MetadataServiceTest {
 
         s = new String(DefaultMetadataInstance.toBytes(vdb).toByteArray(), "UTF-8");
         assertEquals(
-                "<?xml version=\"1.0\" ?><vdb name=\"vdb\" version=\"1\"><description>Vdb for source Data Source:	source\n"
+                "<?xml version=\"1.0\" ?><vdb name=\"vdb\" version=\"1\"><description>Vdb for source Data Source:\tsource\n"
                         + "Type: \t\th2</description><connection-type>BY_VERSION</connection-type>"
                         + "<property name=\"id\" value=\"someid\"></property>"
                         + "<model name=\"source\" type=\"PHYSICAL\" visible=\"false\">"
@@ -200,7 +200,7 @@ public class MetadataServiceTest {
             //preveiw vdb does not exist
         }
 
-        metadataInstance.deploy(EditorServiceTest.dummyPreviewVdb());
+        metadataInstance.deploy(EditorServiceTest.dummyPreviewVdb(false));
 
         //even with no views, we should still succeed
         TeiidVdb vdb = metadataService.updatePreviewVdb("dv1");
@@ -238,4 +238,5 @@ public class MetadataServiceTest {
         assertEquals("dv1", schemas[0].getName());
         assertEquals("source", schemas[1].getName());
     }
+
 }

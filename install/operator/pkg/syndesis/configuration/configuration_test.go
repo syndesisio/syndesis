@@ -216,6 +216,10 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							Enabled: true,
 						},
 						CamelK: v1alpha1.AddonSpec{Enabled: true},
+						PublicApi: v1alpha1.PublicApiConfiguration{
+							Enabled:       true,
+							RouteHostname: "mypublichost.com",
+						},
 					},
 				},
 			}},
@@ -238,8 +242,12 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						CamelK: CamelKConfiguration{
 							Enabled:       true,
 							Image:         "fabric8/s2i-java:3.0-java8",
-							CamelVersion:  "2.23.2.fuse-760011",
+							CamelVersion:  "2.23.2.fuse-760017",
 							CamelKRuntime: "0.3.4.fuse-740008",
+						},
+						PublicApi: PublicApiConfiguration{
+							Enabled:       true,
+							RouteHostname: "mypublichost.com",
 						},
 					},
 				},
@@ -341,9 +349,13 @@ func getConfigLiteral() *Config {
 				},
 				CamelK: CamelKConfiguration{
 					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760011",
+					CamelVersion:  "2.23.2.fuse-760017",
 					CamelKRuntime: "0.3.4.fuse-740008",
 					Image:         "fabric8/s2i-java:3.0-java8",
+				},
+				PublicApi: PublicApiConfiguration{
+					Enabled:       true,
+					RouteHostname: "mypublichost.com",
 				},
 			},
 			Components: ComponentsSpec{

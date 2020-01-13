@@ -34,6 +34,8 @@ install::usage() {
                               Use quotes and start with a space before appending the options.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
     --custom-resource         Provide a custom resource to be installed by the operator
+    --app-options             Operator parameters when installing the app.
+                              Use quotes and start with a space before appending the options (example: " --addons jaeger").
 EOT
 }
 
@@ -130,6 +132,7 @@ install::run() {
 
     wait_for_deployments 1 syndesis-operator
 
+    local app_options=$(readopt --app-options)
     if [ $(hasflag --operator-only) ]; then
         echo "Deployed operator."
         exit 0
@@ -139,12 +142,12 @@ install::run() {
 
         if [ -n "${customcr}" ]; then
             echo "Deploying syndesis app with custom resource ${customcr}"
-            APP_OPTIONS=" --custom-resource ${customcr}"
+            app_options=$app_options" --custom-resource ${customcr}"
         else
             echo "Deploying syndesis app."
         fi
 
-        result=$($OPERATOR_BINARY install app $APP_OPTIONS)
+        result=$($OPERATOR_BINARY install app $app_options)
         check_error "$result"
     fi
 

@@ -80,7 +80,10 @@ export function massageType(property: IFormDefinitionProperty) {
     case 'boolean':
       type = 'checkbox';
   }
-  if (typeof property.enum !== 'undefined' && property.enum.length) {
+  if (typeof property.enum !== 'undefined' && property.enum.length && type !== 'typeahead') {
+    /**
+     * Default to `select` unless property.type === 'typeahead'
+     */
     type = 'select';
   }
   if (typeof property.secret === 'boolean' && property.secret) {

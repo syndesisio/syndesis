@@ -1,8 +1,16 @@
-import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
+import { useVirtualizationHelpers } from '@syndesis/api';
+import { ConnectionTable } from '@syndesis/models';
+import {
+  SchemaNodeInfo,
+  ViewSourceInfo,
+  Virtualization,
+} from '@syndesis/models';
 import { CreateViewHeader, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
 import { ConnectionSchemaContent, ConnectionTables } from '../../shared';
 
@@ -36,6 +44,25 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   const { t } = useTranslation(['data', 'shared']);
   const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
   const virtualization = state.virtualization;
+  const { pushNotification } = useContext(UIContext);
+  const [connectionTableColumns, setConnectionTableColumns] = React.useState<
+    ConnectionTable[]
+  >([]);
+  const { getSourceInfoForView } = useVirtualizationHelpers();
+
+  React.useEffect(() => {
+    const loadSourceTableInfo = async () => {
+      try {
+        const results: ViewSourceInfo = await getSourceInfoForView(
+          virtualization.name
+        );
+        setConnectionTableColumns(results.schemas);
+      } catch (error) {
+        pushNotification(error.message, 'error');
+      }
+    };
+    loadSourceTableInfo();
+  }, [virtualization.name, getSourceInfoForView, pushNotification]);
 
   return (
     <ViewCreateLayout
@@ -71,6 +98,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
           onNodeDeselected={props.handleNodeDeselected}
+          columnDetails={connectionTableColumns}
         />
       }
     />

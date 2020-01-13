@@ -241,4 +241,33 @@ public class Oas30ValidationRulesTest {
             .message("No paths defined")
             .build());
     }
+
+    @Test
+    public void shouldNotGenerateWarningForSameServerBasePath() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.addServer("https://development.syndesis.io/v1", "Development server");
+        openApiDoc.addServer("https://staging.syndesis.io/v1", "Staging server");
+        openApiDoc.addServer("https://api.syndesis.io/v1", "Production server");
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateServerBasePaths(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
+    }
+
+    @Test
+    public void shouldGenerateWarningForDifferingServerBasePaths() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.addServer("https://syndesis.io/development", "Development server");
+        openApiDoc.addServer("https://syndesis.io/staging", "Staging server");
+        openApiDoc.addServer("https://syndesis.io/api", "Production server");
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateServerBasePaths(info);
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("differing-base-paths")
+            .message("Specified servers do not share the same base path. REST endpoint will use '/development' as base path.").build());
+    }
 }

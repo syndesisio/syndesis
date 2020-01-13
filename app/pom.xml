@@ -35,9 +35,11 @@
   <properties>
     <!-- Global Syndesis version -->
     <syndesis.version>${project.version}</syndesis.version>
+    <!-- should archives of S2I and UI modules be deployed to a Maven repository -->
+    <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.42.10</atlasmap.version>
+    <atlasmap.version>1.43.0</atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
@@ -54,9 +56,9 @@
     <node.version>v10.15.1</node.version>
     <yarn.version>v1.13.0</yarn.version>
 
-    <hibernate.validator.version>6.0.16.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
 
-    <jackson.version>2.9.9</jackson.version>
+    <jackson.version>2.10.2</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.6.1</kubernetes.client.version>
 
@@ -68,7 +70,7 @@
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
-    <swagger.version>1.5.24</swagger.version>
+    <swagger.version>1.6.0</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
@@ -89,7 +91,7 @@
     <opentracing.spring.web.starter.version>3.0.0</opentracing.spring.web.starter.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.23.2.fuse-760011</camel.version>
+    <camel.version>2.23.2.fuse-760017</camel.version>
     <camel-k-runtime.version>0.3.4.fuse-740009-redhat-00002</camel-k-runtime.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
@@ -127,7 +129,7 @@
     <assertj-core.version>3.14.0</assertj-core.version>
     <shrinkwrap.version>2.2.6</shrinkwrap.version>
 
-    <mailapi.version>1.4.3</mailapi.version>
+    <mailapi.version>1.6.4</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.10</json-schema-validator.version>
     <junit.version>4.12</junit.version>
@@ -147,8 +149,9 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.2.0</micrometer.version>
-    <teiid.version>12.3.0</teiid.version>
+    <teiid.version>13.0.1</teiid.version>
     <aws-java-sdk-core.version>1.11.415</aws-java-sdk-core.version>
+    <version.javax.activation>1.2.1</version.javax.activation>
 
     <javac.werror>-Werror</javac.werror>
   </properties>
@@ -762,6 +765,12 @@
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
+              <!--
+                Jakarta project shipped activation com.sun.activation:jakarta.activation-api:1.2.1
+                and jakarta.activation:jakarta.activation:1.2.1 containing the
+                com.sun.activation:jakarta.activation-api:1.2.1 within it
+              -->
+              <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
               <exception>
@@ -1599,6 +1608,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-debezium</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ::::::::::: test :::::::::::: -->
 
       <dependency>
@@ -1630,6 +1645,14 @@
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -1637,6 +1660,20 @@
         <groupId>org.jboss.resteasy</groupId>
         <artifactId>resteasy-jaxrs</artifactId>
         <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.jboss.spec.javax.xml.bind</groupId>
+            <artifactId>jboss-jaxb-api_2.3_spec</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -1651,6 +1688,14 @@
           <exclusion>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -1709,6 +1754,12 @@
             <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-openapi-rest-dsl-generator</artifactId>
+        <version>${camel.version}</version>
       </dependency>
 
       <dependency>
@@ -1873,9 +1924,27 @@
       </dependency>
 
       <dependency>
+        <groupId>com.fasterxml.jackson.datatype</groupId>
+        <artifactId>jackson-dataformat-yaml</artifactId>
+        <version>${jackson.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -1904,9 +1973,9 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.validation</groupId>
-        <artifactId>validation-api</artifactId>
-        <version>2.0.1.Final</version>
+        <groupId>jakarta.validation</groupId>
+        <artifactId>jakarta.validation-api</artifactId>
+        <version>2.0.2</version>
       </dependency>
 
       <dependency>
@@ -1930,7 +1999,7 @@
       <dependency>
         <groupId>org.reflections</groupId>
         <artifactId>reflections</artifactId>
-        <version>0.9.11</version>
+        <version>0.9.12</version>
       </dependency>
 
       <dependency>
@@ -2047,7 +2116,7 @@
       <dependency>
         <groupId>net.iharder</groupId>
         <artifactId>base64</artifactId>
-        <version>2.3.8</version>
+        <version>2.3.9</version>
       </dependency>
 
       <dependency>
@@ -2090,6 +2159,12 @@
         <groupId>io.swagger</groupId>
         <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>
@@ -2119,12 +2194,28 @@
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
       <dependency>
-        <groupId>javax.mail</groupId>
-        <artifactId>mailapi</artifactId>
+        <groupId>com.sun.activation</groupId>
+        <artifactId>jakarta.activation</artifactId>
+        <version>${version.javax.activation}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>jakarta.mail</groupId>
+        <artifactId>jakarta.mail-api</artifactId>
+        <version>${mailapi.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>jakarta.mail</artifactId>
         <version>${mailapi.version}</version>
       </dependency>
 
@@ -2135,9 +2226,9 @@
       </dependency>
 
       <dependency>
-        <groupId>javax.xml.bind</groupId>
-        <artifactId>jaxb-api</artifactId>
-        <version>2.3.1</version>
+        <groupId>jakarta.xml.bind</groupId>
+        <artifactId>jakarta.xml.bind-api</artifactId>
+        <version>2.3.2</version>
       </dependency>
 
       <dependency>
@@ -2665,6 +2756,14 @@
           <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
           </exclusion>
         </exclusions>
       </dependency>

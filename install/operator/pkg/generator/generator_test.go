@@ -31,6 +31,10 @@ func TestGenerator(t *testing.T) {
 				CamelK: v1alpha1.AddonSpec{
 					Enabled: true,
 				},
+				PublicApi: v1alpha1.PublicApiConfiguration{
+					Enabled:       true,
+					RouteHostname: "mypublichost.com",
+				},
 			},
 			Components: v1alpha1.ComponentsSpec{
 				Oauth: v1alpha1.OauthConfiguration{},
@@ -99,7 +103,7 @@ func TestGenerator(t *testing.T) {
 	}
 	assert.True(t, checks >= 6)
 
-	for _, addon := range []string{"todo", "camelk", "jaeger", "dv", "ops"} {
+	for _, addon := range []string{"todo", "camelk", "jaeger", "dv", "ops", "publicApi"} {
 		resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./addons/"+addon+"/", configuration)
 		require.NoError(t, err)
 		assert.True(t, len(resources) > 0)
@@ -456,7 +460,7 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 	}
 
 	checkPesistentVolumeProps(t, syndesis, func(t *testing.T, resource unstructured.Unstructured) {
-		labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "matchLabels")
+		labelsMap, exists, _ := unstructured.NestedMap(resource.UnstructuredContent(), "spec", "selector", "matchLabels")
 		assert.True(t, exists)
 		assert.Equal(t, len(labelsMap), 2)
 

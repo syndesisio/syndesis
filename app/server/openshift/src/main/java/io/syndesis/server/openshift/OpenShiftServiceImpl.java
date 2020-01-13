@@ -492,7 +492,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     }
 
     private boolean removeBuildConfig(String projectName) {
-        return openShiftClient.buildConfigs().withName(projectName).delete();
+        return openShiftClient.buildConfigs().withName(projectName).withPropagationPolicy("Foreground").delete();
     }
 
     private void ensureSecret(String name, DeploymentData deploymentData) {

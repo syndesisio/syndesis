@@ -39,7 +39,7 @@ import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
 public class Oas20ValidationRules extends OpenApiValidationRules<Oas20Response, Oas20SecurityScheme, Oas20SchemaDefinition> {
 
     Oas20ValidationRules(APIValidationContext context) {
-        super(context);
+        super(context, Collections.emptyList(), Collections.emptyList());
     }
 
     public static Oas20ValidationRules get(final APIValidationContext context) {

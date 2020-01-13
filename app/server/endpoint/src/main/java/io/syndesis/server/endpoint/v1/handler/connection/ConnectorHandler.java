@@ -25,24 +25,31 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.UriInfo;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.api.APISummary;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.filter.FilterOptions;
@@ -118,7 +125,12 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
     @Override
     public Connector get(final String id) {
-        final Connector connector = augmentedWithUsage(Getter.super.get(id));
+        Connector connector = augmentedWithUsage(Getter.super.get(id));
+
+        // Retrieve dynamic properties, if connector is dynamic
+        if (connector.getTags().contains("dynamic")) {
+            connector = enrichWithDynamicProperties(connector);
+        }
 
         final Optional<String> connectorGroupId = connector.getConnectorGroupId();
         if (!connectorGroupId.map(applicationContext::containsBean).orElse(false)) {
@@ -128,6 +140,57 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         final APISummary summary = new APISummary.Builder().createFrom(connector).build();
 
         return connector.builder().actionsSummary(summary.getActionsSummary()).build();
+    }
+
+    /**
+     * Query metadata to retrieve any dynamic property provided by the connector
+     * and merge the result into the {@link Connector} returned value
+     *
+     * @param connector
+     * @return an enriched {@link Connector}
+     */
+    Connector enrichWithDynamicProperties(Connector connector) {
+        final String connectorId = connector.getId().get();
+        final ConnectorPropertiesHandler propertiesHandler = properties(connectorId);
+
+        final JsonNode jsonResponse;
+        try (Response response = propertiesHandler.enrichWithDynamicProperties(connectorId, null)) {
+            if (response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
+                return connector;
+            }
+
+            jsonResponse = response.readEntity(JsonNode.class);
+        }
+
+        final Iterator<Map.Entry<String, JsonNode>> iterator = jsonResponse.path("properties").fields();
+        final Map<String, ConfigurationProperty> dynamicProperties = new HashMap<>();
+
+        while (iterator.hasNext()) {
+            Map.Entry<String, JsonNode> next = iterator.next();
+            String propertyName = next.getKey();
+            JsonNode property = next.getValue();
+            List<ConfigurationProperty.PropertyValue> values = new ArrayList<>();
+            if (property.isArray()) {
+                for (final JsonNode value : property) {
+                    ConfigurationProperty.PropertyValue val = new ConfigurationProperty.PropertyValue.Builder()
+                        .label(value.get("displayValue").asText())
+                        .value(value.get("value").asText())
+                        .build();
+                    values.add(val);
+                }
+            }
+            if (!values.isEmpty()) {
+                ConfigurationProperty configurationProperty = new ConfigurationProperty.Builder()
+                    .createFrom(connector.getProperties().get(propertyName))
+                    .addEnum(values.toArray(new ConfigurationProperty.PropertyValue[0]))
+                    .build();
+                dynamicProperties.put(propertyName, configurationProperty);
+            }
+        }
+        if (!dynamicProperties.isEmpty()) {
+            return connector.builder().properties(dynamicProperties).build();
+        }
+        return connector;
     }
 
     @Path("/{id}/actions")
@@ -226,7 +289,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
         Connector connectorToUpdate = connectorFormData.getConnector();
 
         if (connectorFormData.getIconInputStream() != null) {
-            try(BufferedInputStream iconStream = new BufferedInputStream(connectorFormData.getIconInputStream())) {
+            try (BufferedInputStream iconStream = new BufferedInputStream(connectorFormData.getIconInputStream())) {
                 // URLConnection.guessContentTypeFromStream resets the stream after inspecting the media type so
                 // can continue to be used, rather than being consumed.
                 String guessedMediaType = URLConnection.guessContentTypeFromStream(iconStream);

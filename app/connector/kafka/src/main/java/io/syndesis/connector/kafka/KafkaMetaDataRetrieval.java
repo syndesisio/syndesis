@@ -22,23 +22,39 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import io.fabric8.kubernetes.api.model.ObjectMeta;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.fabric8.kubernetes.client.dsl.base.CustomResourceDefinitionContext;
+import io.syndesis.connector.kafka.model.crd.KafkaResource;
+import io.syndesis.connector.kafka.model.crd.KafkaResourceDoneable;
+import io.syndesis.connector.kafka.model.crd.KafkaResourceList;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadataProperties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
+    private static final Logger LOG = LoggerFactory.getLogger(KafkaMetaDataRetrieval.class);
+    public static final String GROUP = "kafka.strimzi.io";
+    public static final String PLURAL = "kafkas";
 
     /**
      * Used to filter which types of connections are we interested in. Right now, only plain connections.
      */
     private final Predicate<? super Map<?, ?>>
         typesAllowed = listener -> listener.get("type").toString().equalsIgnoreCase("plain");
+
+    /**
+     * Used to filter brokers. Right now, based on GROUP and PLURAL.
+     */
+    private final Predicate<? super CustomResourceDefinition> isKafkaBroker =
+        crd -> crd.getSpec().getGroup().equalsIgnoreCase(GROUP)
+                   && crd.getSpec().getNames().getPlural().equalsIgnoreCase(PLURAL);
 
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
@@ -71,44 +87,63 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     }
 
     /**
-     * Query the strimzi brokers available on this kubernetes environment to suggest auto discovered urls.
+     * Query the strimzi brokers available on this kubernetes environment
+     * to suggest auto discovered urls.
      */
     @Override
-    @SuppressWarnings("unchecked")
     public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId,
                                                       Map<String, Object> properties) {
         List<PropertyPair> brokers = new ArrayList<>();
         try (KubernetesClient client = new DefaultKubernetesClient()) {
-
-            //Filter by strimzi resources
-            final CustomResourceDefinitionContext build = new CustomResourceDefinitionContext.Builder()
-                                                              .withGroup("kafka.strimzi.io")
-                                                              .withName("kafkas.kafka.strimzi.io")
-                                                              .withPlural("kafkas")
-                                                              .withScope("Namespaced")
-                                                              .withVersion("v1beta1")
-                                                              .build();
-
-            final List<Map<String, ?>> items = (List<Map<String, ?>>) client.customResource(build).list().get("items");
-
-            for (Map<String, ?> item : items) {
-                //Extract an identifier of this broker
-                final Map<?, ?> metadata = (Map<?, ?>) item.get("metadata");
-                String id = metadata.get("namespace") + "::" + metadata.get("name");
-
-                //Add the list of addresses for this item
-                Map<?, ?> status = (Map<?, ?>) item.get("status");
-                List<Map<String,
-                            List<Map<String, Object>>>> listeners =
-                    (List<Map<String, List<Map<String, Object>>>>) status.get("listeners");
-                listeners.stream().filter(typesAllowed).forEach(
-                    listener -> getAddress(listener, brokers, id));
-            }
+            client.customResourceDefinitions().list().getItems()
+                .stream().filter(isKafkaBroker)
+                .forEach(kafka -> processKafkaCRD(brokers, client, kafka));
+        } catch (Exception t) {
+            LOG.warn("Couldn't auto discover any broker.");
+            LOG.debug("Couldn't auto discover any broker.", t);
         }
 
         Map<String, List<PropertyPair>> dynamicProperties = new HashMap<>();
         dynamicProperties.put("brokers", brokers);
         return new SyndesisMetadataProperties(dynamicProperties);
+    }
+
+    /**
+     * For each Kafka container definition found, process it.
+     *
+     * @param brokers
+     * @param client
+     * @param crd
+     */
+    private void processKafkaCRD(List<PropertyPair> brokers, KubernetesClient client, CustomResourceDefinition crd) {
+        KafkaResourceList list = client.customResources(crd,
+            KafkaResource.class,
+            KafkaResourceList.class,
+            KafkaResourceDoneable.class).inAnyNamespace().list();
+
+        for (KafkaResource item : list.getItems()) {
+            processKafkaResource(brokers, item);
+        }
+    }
+
+    /**
+     * For each Kafka resource found on Kubernetes, extract the listeners and
+     * add them to the brokers list.
+     *
+     * @param brokers
+     * @param item
+     */
+    private void processKafkaResource(List<PropertyPair> brokers, KafkaResource item) {
+        //Extract an identifier of this broker
+        final ObjectMeta metadata = item.getMetadata();
+        String id = metadata.getNamespace() + "::" + metadata.getName();
+
+        @SuppressWarnings("unchecked")
+        List<Map<String, List<Map<String, Object>>>> listeners =
+            (List<Map<String, List<Map<String, Object>>>>) item.getStatus().get("listeners");
+
+        listeners.stream().filter(typesAllowed).forEach(
+            listener -> getAddress(listener, brokers, id));
     }
 
     /**

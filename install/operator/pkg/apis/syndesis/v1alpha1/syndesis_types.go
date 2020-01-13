@@ -191,12 +191,13 @@ type ServerFeatures struct {
 }
 
 type AddonsSpec struct {
-	Jaeger  JaegerConfiguration `json:"jaeger,omitempty"`
-	Ops     AddonSpec           `json:"ops,omitempty"`
-	Todo    AddonSpec           `json:"todo,omitempty"`
-	Knative AddonSpec           `json:"knative,omitempty"`
-	DV      DvConfiguration     `json:"dv,omitempty"`
-	CamelK  AddonSpec           `json:"camelk,omitempty"`
+	Jaeger    JaegerConfiguration    `json:"jaeger,omitempty"`
+	Ops       AddonSpec              `json:"ops,omitempty"`
+	Todo      AddonSpec              `json:"todo,omitempty"`
+	Knative   AddonSpec              `json:"knative,omitempty"`
+	DV        DvConfiguration        `json:"dv,omitempty"`
+	CamelK    AddonSpec              `json:"camelk,omitempty"`
+	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
 }
 
 type JaegerConfiguration struct {
@@ -212,6 +213,15 @@ type AddonSpec struct {
 type DvConfiguration struct {
 	Enabled   bool      `json:"enabled,omitempty"`
 	Resources Resources `json:"resources,omitempty"`
+}
+
+type PublicApiConfiguration struct {
+	Enabled bool `json:"enabled,omitempty"`
+	// Set RouteHostname to the hostname of the exposed syndesis Public API.
+	RouteHostname string `json:"routeHostname,omitempty"`
+	// if set to true, then any authenticated user can access the API. otherwise the user
+	// needs access to get pods against the SarNamespace
+	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
 }
 
 // =============================================================================

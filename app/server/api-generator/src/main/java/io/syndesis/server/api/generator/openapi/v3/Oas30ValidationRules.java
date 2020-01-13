@@ -18,6 +18,7 @@ package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -27,6 +28,7 @@ import io.apicurio.datamodels.openapi.v3.models.Oas30Document;
 import io.apicurio.datamodels.openapi.v3.models.Oas30Response;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SchemaDefinition;
 import io.apicurio.datamodels.openapi.v3.models.Oas30SecurityScheme;
+import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
@@ -37,11 +39,37 @@ import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
 public final class Oas30ValidationRules extends OpenApiValidationRules<Oas30Response, Oas30SecurityScheme, Oas30SchemaDefinition> {
 
     Oas30ValidationRules(APIValidationContext context) {
-        super(context);
+        super(context, Collections.emptyList(), Collections.singletonList(Oas30ValidationRules::validateServerBasePaths));
     }
 
     public static Oas30ValidationRules get(final APIValidationContext context) {
         return new Oas30ValidationRules(context);
+    }
+
+    /**
+     * OpenAPI 3.x is able to specify multiple servers with host URLs. Validates that the specified server URLs
+     * share the same base path. Generated REST endpoint can only use one single base path and in case
+     * there are differing base paths defined in server URLs we raise a warning.
+     * @param info the info holding the OpenAPI document.
+     * @return info with maybe a warning added due to differing base paths in servers.
+     */
+    static OpenApiModelInfo validateServerBasePaths(OpenApiModelInfo info) {
+        if (info.getModel() == null || info.getV3Model().servers == null || info.getV3Model().servers.isEmpty()) {
+            return info;
+        }
+
+        List<String> basePaths = info.getV3Model().servers.stream().map(Oas30ModelHelper::getBasePath).collect(Collectors.toList());
+        if (basePaths.size() > 1 && new HashSet<>(basePaths).size() == basePaths.size()) {
+            return new OpenApiModelInfo.Builder().createFrom(info)
+                .addWarning(new Violation.Builder()
+                    .error("differing-base-paths")
+                    .message(String.format("Specified servers do not share the same base path. " +
+                        "REST endpoint will use '%s' as base path.", Oas30ModelHelper.getBasePath(info.getV3Model())))
+                    .build())
+                .build();
+        }
+
+        return info;
     }
 
     @Override

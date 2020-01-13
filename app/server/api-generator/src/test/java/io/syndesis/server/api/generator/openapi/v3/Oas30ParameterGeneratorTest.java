@@ -41,7 +41,7 @@ public class Oas30ParameterGeneratorTest {
         final Oas30Schema petIdSchema = Oas30ModelHelper.getSchema(petIdPathParameter).orElseThrow(IllegalStateException::new);
 
         final ConfigurationProperty configurationProperty =
-            Oas30ParameterGenerator.createPropertyFromParameter(petIdPathParameter, petIdSchema.type, Oas30ModelHelper.javaTypeFor(petIdSchema),
+            Oas30ParameterGenerator.createPropertyFromParameter(petIdPathParameter, petIdSchema.type, Oas30ParameterGenerator.javaTypeFor(petIdSchema),
                 petIdSchema.default_, petIdSchema.enum_);
 
         final ConfigurationProperty expected = new ConfigurationProperty.Builder()//

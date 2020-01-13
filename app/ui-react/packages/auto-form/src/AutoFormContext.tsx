@@ -7,6 +7,7 @@ import {
   FormMapsetComponent,
   FormSelectComponent,
   FormTextAreaComponent,
+  FormTypeaheadComponent,
 } from './widgets';
 
 export interface IComponentTypemap {
@@ -26,6 +27,7 @@ export const AutoFormContextDefaultValue = {
     mapset: FormMapsetComponent,
     select: FormSelectComponent,
     textarea: FormTextAreaComponent,
+    typeahead: FormTypeaheadComponent,
   },
 } as IAutoFormContext;
 

@@ -21,6 +21,8 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 
 import io.syndesis.common.util.Properties;
+import io.syndesis.connector.support.processor.ErrorMapper;
+import io.syndesis.connector.support.processor.ErrorStatusInfo;
 import io.syndesis.connector.support.util.ConnectorOptions;
 
 

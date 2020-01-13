@@ -27,6 +27,9 @@ import javax.validation.ValidatorFactory;
 import io.syndesis.common.model.validation.AllValidations;
 import org.hibernate.validator.HibernateValidator;
 import org.hibernate.validator.internal.cfg.context.DefaultConstraintMapping;
+import org.hibernate.validator.internal.engine.DefaultPropertyNodeNameProvider;
+import org.hibernate.validator.internal.properties.DefaultGetterPropertySelectionStrategy;
+import org.hibernate.validator.internal.properties.javabean.JavaBeanHelper;
 import org.junit.Test;
 
 import io.syndesis.common.model.validation.UniquenessRequired;
@@ -54,7 +57,9 @@ public class IntegrationTest {
     }
 
     public IntegrationTest() {
-        final DefaultConstraintMapping mapping = new DefaultConstraintMapping();
+        final JavaBeanHelper javaBeanHelper = new JavaBeanHelper(new DefaultGetterPropertySelectionStrategy(), new DefaultPropertyNodeNameProvider());
+        final DefaultConstraintMapping mapping = new DefaultConstraintMapping(javaBeanHelper);
+
         mapping.constraintDefinition(NoDuplicateIntegration.class).validatedBy(UniqnenessValidator.class);
         final ValidatorFactory validatorFactory = Validation.byProvider(HibernateValidator.class).configure()
             .addMapping(mapping).buildValidatorFactory();

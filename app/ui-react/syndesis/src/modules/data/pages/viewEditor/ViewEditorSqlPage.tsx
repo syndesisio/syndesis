@@ -256,7 +256,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       const loadSourceTableInfo = async () => {
         try {
           const results: ViewSourceInfo = await getSourceInfoForView(
-            virtualization
+            virtualization.name
           );
           setSourceTableColumns(
             generateTableColumns(results as ViewSourceInfo)
@@ -320,6 +320,9 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
               </Breadcrumb>
               <DdlEditor
                 viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+                i18nCursorColumn={t('cursorColumn')}
+                i18nCursorLine={t('cursorLine')}
+                i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
                 i18nDoneLabel={t('shared:Done')}
                 i18nSaveLabel={t('shared:Save')}
                 i18nTitle={t('viewEditor.title')}

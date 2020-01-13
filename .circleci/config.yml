@@ -907,6 +907,13 @@ workflows:
           <<: *ignore_cherry_pick_branches
           requires:
             - connector-support
+      - connector:
+          name: connector-debezium
+          module: debezium
+          <<: *ignore_cherry_pick_branches
+          requires:
+            - connector-support
+            - connector-kafka
       - connector-catalog:
           <<: *ignore_cherry_pick_branches
           requires:
@@ -947,6 +954,7 @@ workflows:
             - connector-knative
             - connector-flow
             - connector-mongodb
+            - connector-debezium
       - meta:
           <<: *ignore_cherry_pick_branches
           requires:

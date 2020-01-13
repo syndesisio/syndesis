@@ -31,9 +31,10 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiFunction;
 
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Flow.FlowType;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
@@ -305,19 +306,30 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
             rd.getInputs().get(0).id(stepId);
 
-            //Adding an errorHandler on API-Provider integrations
-            if (FlowType.API_PROVIDER.equals(flow.getType())) {
-                final OnExceptionDefinition onException = new OnExceptionDefinition(Throwable.class)
+            Optional<String> onException = Optional.empty();
+            Step onExceptionStep = null;
+            for (Step step : flow.getSteps()) {
+                if (step.getActionAs(ConnectorAction.class).isPresent()) {
+                    final ConnectorDescriptor descriptor =
+                            step.getActionAs(ConnectorAction.class).get().getDescriptor();
+                    if (descriptor.getExceptionHandler().isPresent()) {
+                        onException = descriptor.getExceptionHandler();
+                        onExceptionStep = step;
+                    }
+                }
+            }
+            if (onException.isPresent() && onExceptionStep!=null) {
+                //
+                final OnExceptionDefinition onExceptionDef = new OnExceptionDefinition(Throwable.class)
                         .handled(true)
                         .maximumRedeliveries(0);
 
                 final Processor errorHandler = (Processor) mandatoryLoadResource(
-                        this.getContext(), "class:io.syndesis.connector.apiprovider.ApiProviderOnExceptionHandler");
-                final Step endStep = flow.getSteps().get(flow.getSteps().size()-1);
-                ((Properties) errorHandler).setProperties(endStep.getConfiguredProperties());
+                        this.getContext(), "class:" + onException.get());
+                ((Properties) errorHandler).setProperties(onExceptionStep.getConfiguredProperties());
 
                 final DefaultErrorHandlerBuilder builder = new DefaultErrorHandlerBuilder();
-                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onException);
+                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onExceptionDef);
                 builder.setOnExceptionOccurred(errorHandler);
 
                 rd.setErrorHandlerBuilder(builder);

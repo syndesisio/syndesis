@@ -27,3 +27,10 @@
 .ddl-editor .pf-c-card {
   flex-grow: 1;
 }
+
+.ddl-editor-cursor-position-text {
+  width: 160px;
+  padding: 3px;
+  color: rgb(0, 50, 160) !important;
+  font-size: 10px !important;
+}
