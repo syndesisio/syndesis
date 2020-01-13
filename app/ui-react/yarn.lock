@@ -3124,7 +3124,7 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@patternfly/patternfly@1.0.250", "@patternfly/patternfly@2.40.13", "@patternfly/patternfly@2.40.6", "@patternfly/patternfly@^2.40.6":
+"@patternfly/patternfly@2.40.13", "@patternfly/patternfly@2.40.6", "@patternfly/patternfly@2.48.1", "@patternfly/patternfly@^2.40.6":
   version "2.40.6"
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.40.6.tgz#f1e13069c6c948e194de53bbd00a031bb0ddd051"
   integrity sha512-YIusipnIPipCJNKN/Lw72MmV1dnsFQvc8Exwo5+IfROF2TnWMpVYaFPC3TvqnuMrysxrxpuGC2HzKJVX5bqbgA==
