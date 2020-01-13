@@ -47,6 +47,7 @@ import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ExpressionNode;
@@ -127,7 +128,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             try {
                 return sourceProvider.getSource(getContext());
             } catch (Exception e) {
-                throw ObjectHelper.wrapRuntimeCamelException(e);
+                throw RuntimeCamelException.wrapRuntimeCamelException(e);
             }
         }
         LOGGER.info("Loading integration from: {}", configurationUri);
@@ -296,13 +297,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     }
 
     private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId) {
-        if (definition instanceof RouteDefinition) {
+        if (isRouteDefinitionAndNoContainsConfiguredActivityTrackingPolicies(definition)) {
             final RouteDefinition rd = (RouteDefinition)definition;
-
-            if (containsConfiguredActivityTrackingPolicies(rd)) {
-                // Route has already been configured so no need to go ahead
-                return definition;
-            }
 
             if (ObjectHelper.isNotEmpty(flow.getName())) {
                 rd.routeDescription(flow.getName());
@@ -347,16 +343,22 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     /**
      * Checks if given route definition has already been configured with activity tracking policies.
-     * @param routeDefinition the route definition to evaluate.
+     * @param definition the route definition to evaluate.
      * @return true if activity tracking policies have already been configured on given route definition.
      */
-    private boolean containsConfiguredActivityTrackingPolicies(RouteDefinition routeDefinition) {
-        List<RoutePolicy> routePolicies = routeDefinition.getRoutePolicies();
-        if (ObjectHelper.isEmpty(routePolicies)) {
-            return false;
+    private boolean isRouteDefinitionAndNoContainsConfiguredActivityTrackingPolicies(ProcessorDefinition<?> definition) {
+
+        if (definition instanceof RouteDefinition) {
+            RouteDefinition routeDefinition = (RouteDefinition) definition;
+            List<RoutePolicy> routePolicies = routeDefinition.getRoutePolicies();
+            if (ObjectHelper.isEmpty(routePolicies)) {
+                return true;
+            }
+
+            return !activityTrackingPolicyFactories.stream().anyMatch(policyFactory -> routePolicies.stream().anyMatch(policyFactory::isInstance));
         }
 
-        return activityTrackingPolicyFactories.stream().anyMatch(policyFactory -> routePolicies.stream().anyMatch(policyFactory::isInstance));
+        return false;
     }
 
     private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition<?> parent, String stepId) {
@@ -479,7 +481,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             } catch (Exception e) {
                 LOGGER.warn("Unable to configure resource: " + resource, e);
 
-                throw ObjectHelper.wrapRuntimeCamelException(e);
+                throw RuntimeCamelException.wrapRuntimeCamelException(e);
             }
         } else {
             throw new IllegalArgumentException("Unable to convert instance: " + instance);
