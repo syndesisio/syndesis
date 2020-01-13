@@ -33,11 +33,6 @@
 
   <properties>
     <image.build.directory>${project.basedir}/target/image</image.build.directory>
-    <!--
-      Should the ZIP file containing the settings.xml, dependencies and
-      licenses be attached and deployed in install/deploy phase
-    -->
-    <deploy.s2i.repository>${deploy.archives}</deploy.s2i.repository>
   </properties>
 
   <dependencies>
@@ -452,27 +447,19 @@
       </plugin>
 
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
+        <artifactId>maven-deploy-plugin</artifactId>
         <executions>
           <execution>
-            <!--
-              Generate a ZIP file containing the repository
-              settings.xml and license files
-            -->
-            <id>create-repository-zip</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <attach>${deploy.s2i.repository}</attach>
-              <descriptors>
-                <descriptor>src/main/assembly/repository.xml</descriptor>
-              </descriptors>
-            </configuration>
+            <id>basepom.default</id>
+            <phase />
+          </execution>
+          <execution>
+            <id>default-deploy</id>
+            <phase />
           </execution>
         </executions>
       </plugin>
+
     </plugins>
   </build>
 
@@ -522,6 +509,54 @@
         </plugins>
       </build>
 
+    </profile>
+
+    <profile>
+      <id>deploy-archives</id>
+      <activation>
+        <property>
+          <name>deploy.archives</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <!--
+                  Generate a ZIP file containing the repository
+                  settings.xml and license files
+                -->
+                <id>create-repository-zip</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <descriptors>
+                    <descriptor>src/main/assembly/repository.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase>deploy</phase>
+              </execution>
+              <execution>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
     </profile>
   </profiles>
 
