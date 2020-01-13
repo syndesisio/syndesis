@@ -38,7 +38,9 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
           i18nLogUrlText={props.i18nPublishLogUrlText}
         />
         <span className={'publish-status-with-progress_text'}>
-          {props.publishVersion && ` version ${props.publishVersion}`}
+          {props.publishVersion &&
+            !props.inListView &&
+            ` version ${props.publishVersion}`}
         </span>
         {props.modified && (
           <>
