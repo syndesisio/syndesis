@@ -35,6 +35,8 @@
   <properties>
     <!-- Global Syndesis version -->
     <syndesis.version>${project.version}</syndesis.version>
+    <!-- should archives of S2I and UI modules be deployed to a Maven repository -->
+    <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
     <atlasmap.version>1.42.10</atlasmap.version>
