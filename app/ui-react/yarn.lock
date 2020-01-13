@@ -11456,9 +11456,9 @@ immer@^1.12.0:
   resolved "https://registry.yarnpkg.com/immer/-/immer-1.12.1.tgz#40c6e5b292c00560836c2993bda3a24379d466f5"
 
 immer@^5.0.0:
-  version "5.0.0"
-  resolved "https://registry.yarnpkg.com/immer/-/immer-5.0.0.tgz#07f462b7d95f7e86c214a861ecacd766d42b8c0a"
-  integrity sha512-G7gRqKbi9NE025XVyqyTV98dxUOtdKvu/P1QRaVZfA55aEcXgjbxPdm+TlWdcSMNPKijlaHNz61DGPyelouRlA==
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/immer/-/immer-5.2.1.tgz#7d4f74c242178e87151d595f48db1b5c51580485"
+  integrity sha512-9U1GEbJuH6nVoyuFRgTQDGMzcBuNBPfXM3M7Pp/sdmYKTKYOBUZGgeUb9H57GfLK/xC1DMLarWX2FrhMBfUJ8g==
 
 import-cwd@^2.0.0, import-cwd@^2.1.0:
   version "2.1.0"
