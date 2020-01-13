@@ -35,8 +35,8 @@ that elapses between polls for messages. Or, to specify a different polling inte
 enter a number and select its time unit. 
 .. In the *Maximum Emails* field, enter the largest number 
 of messages that one poll operation can return. The default is 5.
-If the number of messages that can be returned is greater than the 
-setting of *Maximum Emails*, the connection returns the oldest 
+If the inbox or folder contains more than the maximum number of messages 
+that can be returned, the connection returns the oldest 
 messages up to the number set for *Maximum Emails*.
 +
 Set *Maximum Emails* to *`-1`* if you want each poll to obtain: 

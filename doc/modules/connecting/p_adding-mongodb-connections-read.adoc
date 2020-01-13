@@ -48,7 +48,7 @@ tracking is enabled for the database that you want the connection
 to read. 
 .. In the *Field used to store the tracking progress* field, optionally
 specify the name of a field that is in the specified collection.
-A MongoDB administrator must have configured this field to track ... ?
+A MongoDB administrator must have configured this field.
 .. In the *DB used to store tail tracking* field, optionally enter 
 the name of the MongoDB database that contains tail tracking information. 
 .. In the *Collection used to store tail tracking* field, optionally enter

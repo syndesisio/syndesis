@@ -13,7 +13,7 @@ In an integration, to connect to Twitter, the first thing you must do is
 register your {prodname} environment as a client application
 that can access Twitter.
 This lets you create any number of integrations that connect
-to Twitter. In other words, you need to regCopyCallbackister a particular
+to Twitter. In other words, you need to register a particular
 {prodname} environment with Twitter only once.
 
 In each {prodname} environment, there can be only one registration
