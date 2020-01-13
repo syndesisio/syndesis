@@ -228,6 +228,19 @@
             on CI and since we download the whole Internet via Spring Boot and Camel BOMs would take too long -->
           <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
         </configuration>
+        <dependencies>
+          <!-- The integration tests use this dependencies, we need to declare it so that Maven is aware of it -->
+          <dependency>
+            <groupId>io.syndesis.extension</groupId>
+            <artifactId>extension-annotation-processor</artifactId>
+            <version>${syndesis.version}</version>
+          </dependency>
+          <dependency>
+            <groupId>io.syndesis.extension</groupId>
+            <artifactId>extension-api</artifactId>
+            <version>${syndesis.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
     </plugins>
