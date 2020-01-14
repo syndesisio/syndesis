@@ -23,13 +23,10 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 
 	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
 )

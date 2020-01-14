@@ -18,14 +18,14 @@ package uninstall
 
 import (
 	"context"
+	"testing"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes/scheme"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/fake"
-	"testing"
 )
 
 const (
@@ -37,7 +37,7 @@ const (
 
 func TestUninstall(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skipping operator install tests in short mode")
+		t.Skip("skipping operator uninstall tests in short mode")
 	}
 
 	ctx := context.TODO()
@@ -61,7 +61,7 @@ func TestUninstall(t *testing.T) {
 	// Create a fake client to mock API calls and pass it to the cmd
 	objs := []runtime.Object{&s}
 	cl := fake.NewFakeClient(objs...)
-	cl.List(ctx, client.InNamespace(ns), &sl)
+	cl.List(ctx, &sl)
 	u.Client = &cl
 	{
 		t.Logf("\tTest: When running `operator uninstall`, it should remove the exiting syndesis CRs")
@@ -75,7 +75,7 @@ func TestUninstall(t *testing.T) {
 		}
 		t.Logf("\t%s\t syndesis CRs deleted correctly", succeed)
 
-		cl.List(ctx, client.InNamespace(ns), &sl)
+		cl.List(ctx, &sl)
 		if l := len(sl.Items); l != 0 {
 			t.Fatalf("\t%s\t after deleting, there should be a total of 0 syndesis CRs, but got [%d] instead", failed, l)
 		}
