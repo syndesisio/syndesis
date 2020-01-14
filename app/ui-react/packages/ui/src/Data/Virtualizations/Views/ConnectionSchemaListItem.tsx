@@ -1,17 +1,19 @@
-import { ListView, ListViewIcon, ListViewItem } from 'patternfly-react';
+import { Label, ListView, ListViewItem, Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
+import { ConnectionStatus } from '../../DvConnection/DvConnectionCard';
+import './ConnectionSchemaListItem.css';
 
 export interface IConnectionSchemaListItemProps {
-  icon?: string;
   connectionName: string;
   connectionDescription: string;
+  dvStatus: string;
   haveSelectedSource: boolean;
+  icon: React.ReactNode;
+  loading: boolean;
 }
 
-export const ConnectionSchemaListItem: React.FunctionComponent<
-  IConnectionSchemaListItemProps
-> = props => {
+export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchemaListItemProps> = props => {
   return (
     <>
       <ListViewItem
@@ -24,13 +26,24 @@ export const ConnectionSchemaListItem: React.FunctionComponent<
         }
         hideCloseIcon={true}
         leftContent={
-          props.icon ? (
-            <div className="blank-slate-pf-icon">
-              <img src={props.icon} alt={props.connectionName} width={46} />
-            </div>
-          ) : (
-            <ListViewIcon name={'database'} />
-          )
+          <span>
+            {props.icon}
+            {props.loading && props.dvStatus !== ConnectionStatus.ACTIVE ? (
+              <Spinner loading={true} inline={true} />
+            ) : (
+              <></>
+            )}
+            <Label
+              className="connection-schema-list-item__status"
+              type={
+                props.dvStatus === ConnectionStatus.ACTIVE
+                  ? 'success'
+                  : 'danger'
+              }
+            >
+              {props.dvStatus}
+            </Label>
+          </span>
         }
         initExpanded={props.haveSelectedSource}
         stacked={false}
