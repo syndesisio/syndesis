@@ -11,6 +11,7 @@ import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import './ConnectionSchemaList.css';
+import { ConnectionSchemaListSkeleton } from './ConnectionSchemaListSkeleton';
 
 export interface IConnectionSchemaListProps {
   hasListData: boolean;
@@ -18,12 +19,17 @@ export interface IConnectionSchemaListProps {
   i18nEmptyStateTitle: string;
   i18nLinkCreateConnection: string;
   linkToConnectionCreate: H.LocationDescriptor;
+  loading: boolean;
 }
 
 export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaListProps> = props => {
   return (
     <>
-      {props.hasListData ? (
+      {props.loading ? (
+        <ListView>
+          <ConnectionSchemaListSkeleton width={800} />
+        </ListView>
+      ) : props.hasListData ? (
         <Flex
           breakpointMods={[{ modifier: 'column', breakpoint: 'md' }]}
           className={'connection-schema-list_content'}
