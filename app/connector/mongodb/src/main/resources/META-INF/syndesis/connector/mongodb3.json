@@ -560,9 +560,6 @@
   "description": "Read and writes JSON-like documents.",
   "icon": "assets:mongodb.png",
   "id": "mongodb3",
-  "metadata": {
-    "tech-preview": true
-  },
   "name": "MongoDB",
   "properties": {
     "host": {
