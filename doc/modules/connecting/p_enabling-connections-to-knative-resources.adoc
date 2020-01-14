@@ -23,25 +23,43 @@ that you want an integration to connect to is also installed.
 
 .Procedure
 
-. Scale the {prodname} server to 0 by invoking the following command: 
+. Log in to OpenShift with an account that has permission to install {prodname}. 
+For example:
 +
 ----
-oc scale dc/syndesis-operator --replicas 0
+$ oc login -u developer -p developer
 ----
 
-. Edit the `syndesis-server` *ConfigMap* file to set 
-`features.knative.enabled` to `true`. To use the `oc` CLI, 
-invoke `oc edit cm syndesis-server`.  
-
-. Edit the Camel K *IntegrationPlatform* resource to set `spec.profile` to `Knative`. 
-To use the `oc` CLI, invoke `oc edit integrationplatform`. 
-
-. Restart the {prodname} server (`syndesis-server`) resource, by 
-invoking the following command: 
+. Ensure that the current project is the project in which {prodname} is running. 
+To view the current project, invoke the following command:
 +
 ----
-oc delete pod -l syndesis.io/component=syndesis-server
+$ oc project
 ----
+
+. Edit the `syndesis` custom resource:
++
+.. Invoke the following command, which typically opens the resource in an editor:
++
+----
+oc edit syndesis
+----
+.. Update the resource to specify the following:
++
+----
+spec:
+  addons:
+     camelk:
+       enabled: true
+     knative:
+       enabled: true
+----
+.. Save the resource.
++
+Saving this change to the `syndesis` custom resource triggers the 
+`syndesis-operator`, which is responsible for installing {prodname}, 
+to redeploy `syndesis-server`. 
+
 
 .Result
 
