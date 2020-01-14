@@ -27,7 +27,7 @@ In this example: `\https://app.box.com/folder/89490291417`, the folder
 ID is `89490291417`. In this release, you can upload only a single file. 
 . Optional. In the *File name* field, enter the name for a new file or 
 an existing file. If you specify the name of a file that is already
-in the specified Box folder, the connection appends content to that file.
+in the specified Box folder, the connection overwrites the file that is in the folder.
 +
 The input to the connection must be a file that you want to upload 
 to Box. If you do not specify a file name, the connection uploads a file 
