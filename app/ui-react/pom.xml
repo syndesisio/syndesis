@@ -36,32 +36,10 @@
     <yarn-verbose />
     <npm-verbose />
     <docker-base-image>centos/nginx-114-centos7</docker-base-image>
-    <deploy.ui.distribution>${deploy.archives}</deploy.ui.distribution>
   </properties>
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>dist</id>
-            <phase>package</phase>
-            <goals>
-              <goal>single</goal>
-            </goals>
-            <configuration>
-              <attach>${deploy.ui.distribution}</attach>
-              <tarLongFileMode>posix</tarLongFileMode>
-              <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
-              <descriptors>
-                <descriptor>maven/assembly/unix-dist.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-clean-plugin</artifactId>
@@ -608,6 +586,52 @@
               <execution>
                 <id>default-install</id>
                 <phase />
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>deploy-archives</id>
+      <activation>
+        <property>
+          <name>deploy.archives</name>
+          <value>true</value>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-assembly-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>distribution-archive</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>single</goal>
+                </goals>
+                <configuration>
+                  <tarLongFileMode>posix</tarLongFileMode>
+                  <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+                  <descriptors>
+                    <descriptor>maven/assembly/unix-dist.xml</descriptor>
+                  </descriptors>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase>deploy</phase>
+              </execution>
+              <execution>
+                <id>default-deploy</id>
+                <phase>deploy</phase>
               </execution>
             </executions>
           </plugin>
