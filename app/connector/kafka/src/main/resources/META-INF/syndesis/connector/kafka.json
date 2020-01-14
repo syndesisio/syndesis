@@ -108,10 +108,11 @@
       "order": "1",
       "required": true,
       "secret": false,
-      "type": "string"
+      "type": "typeahead"
     }
   },
   "tags": [
-    "verifier"
+    "verifier",
+    "dynamic"
   ]
 }

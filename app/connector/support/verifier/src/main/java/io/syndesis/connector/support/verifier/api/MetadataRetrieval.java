@@ -38,6 +38,15 @@ public interface MetadataRetrieval {
      */
     SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties);
 
+    /**
+     * Provide all dynamic properties configured for the specific connector.
+     * It can use {@link CamelContext} to retrieve {@link MetaData} or use other Syndesis internal components
+     * to provide such properties.
+     */
+    default SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId, Map<String, Object> properties) {
+        return SyndesisMetadataProperties.EMPTY;
+    }
+
     default RuntimeException handle(final Exception e) {
         return new SyndesisServerException(e.getMessage() + ". Unable to fetch and process metadata", e);
     }

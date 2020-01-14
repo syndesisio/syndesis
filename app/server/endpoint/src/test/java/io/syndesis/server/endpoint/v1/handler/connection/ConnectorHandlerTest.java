@@ -19,11 +19,15 @@ import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
 import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,11 +37,20 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
+
+import org.jboss.resteasy.client.jaxrs.internal.ClientConfiguration;
+import org.jboss.resteasy.client.jaxrs.internal.ClientResponse;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
+
+import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
 
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.file.FileDataManager;
@@ -48,8 +61,10 @@ import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
@@ -82,8 +97,12 @@ public class ConnectorHandlerTest {
 
     private static final FileDataManager NO_EXTENSION_DATA_MANAGER = null;
 
-    private final io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler handler = new io.syndesis.server.endpoint.v1.handler.connection.ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
-                                                                                                                                                                      NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER);
+    private static final MetadataConfigurationProperties NO_METADATA_CONFIGURATION_PROPERTIES = null;
+
+    private final ConnectorHandler handler =
+        new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES);
 
     @Test
     public void connectorIconShouldHaveCorrectContentType() throws IOException {
@@ -157,6 +176,130 @@ public class ConnectorHandlerTest {
         verify(dataManager).delete(Connector.class, "connector-id");
         verify(dataManager).delete(Connection.class, "connection1");
         verify(dataManager).delete(Connection.class, "connection2");
+    }
+
+    @Test
+    public void shouldNotFailToEnrichDynamicPropertiesWithNoResponse() {
+        final ConnectorPropertiesHandler connectorPropertiesHandler = mock(ConnectorPropertiesHandler.class);
+
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            @Override
+            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
+                return connectorPropertiesHandler;
+            }
+        };
+
+        @SuppressWarnings("resource")
+        final Response metaResponse = responseWithEntity("{}");
+
+        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .build();
+        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+
+        final Connector expected = new Connector.Builder()
+            .id("connectorId")
+            .build();
+
+        assertThat(withDynamicProperties).isEqualTo(expected);
+    }
+
+    @Test
+    public void shouldEnrichDynamicPropertiesWithResponseFromMeta() {
+        final ConnectorPropertiesHandler connectorPropertiesHandler = mock(ConnectorPropertiesHandler.class);
+
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            @Override
+            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
+                return connectorPropertiesHandler;
+            }
+        };
+
+        @SuppressWarnings("resource")
+        final Response metaResponse = responseWithEntity("{\"properties\":{\"property\":[{\"displayValue\":\"Value 1\",\"value\":\"value1\"},{\"displayValue\":\"Value 2\",\"value\":\"value2\"}]}}");
+
+        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .putProperty("property", new ConfigurationProperty.Builder().build())
+            .build();
+        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+
+        final Connector expected = new Connector.Builder()
+            .id("connectorId")
+            .putProperty("property", new ConfigurationProperty.Builder()
+                .addEnum(PropertyValue.Builder.of("value1", "Value 1"), PropertyValue.Builder.of("value2", "Value 2"))
+                .build())
+            .build();
+
+        assertThat(withDynamicProperties).isEqualTo(expected);
+    }
+
+    private static Response responseWithEntity(final String data) {
+        final ClientConfiguration configuration = new ClientConfiguration(new ResteasyProviderFactory().register(JacksonJsonProvider.class));
+        final Response metaResponse = spy(new ClientResponse(configuration) {
+            @Override
+            protected InputStream getInputStream() {
+                return new ByteArrayInputStream(data.getBytes(StandardCharsets.US_ASCII));
+            }
+
+            @Override
+            protected void setInputStream(InputStream is) {
+                // nop
+            }
+
+            @Override
+            public void releaseConnection() throws IOException {
+                // nop
+            }
+
+            @Override
+            public void releaseConnection(boolean consumeInputStream) throws IOException {
+                // nop
+            }
+
+            @Override
+            public MediaType getMediaType() {
+                return MediaType.APPLICATION_JSON_TYPE;
+            }
+        });
+        return metaResponse;
+    }
+
+    @Test
+    public void shouldNotFailToEnrichDynamicPropertiesWithErrorResponse() {
+        final ConnectorPropertiesHandler connectorPropertiesHandler = mock(ConnectorPropertiesHandler.class);
+
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            @Override
+            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
+                return connectorPropertiesHandler;
+            }
+        };
+
+        @SuppressWarnings("resource")
+        final Response metaResponse = Response.serverError().build();
+        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .build();
+        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+
+        final Connector expected = new Connector.Builder()
+            .id("connectorId")
+            .build();
+
+        assertThat(withDynamicProperties).isEqualTo(expected);
     }
 
     private static ConnectorAction newActionBy(final Connector connector) {
