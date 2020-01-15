@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.meta.v1;
 
+import java.util.Collections;
+import java.util.Set;
+
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
 
@@ -31,11 +34,15 @@ import org.springframework.stereotype.Component;
 public class V1 extends Application {
 
     public V1() {
-        BeanConfig beanConfig = new BeanConfig();
+        BeanConfig beanConfig = new BeanConfig() {
+            @Override
+            public Set<Class<?>> classes() {
+                return Collections.singleton(V1.class);
+            }
+        };
         beanConfig.setVersion("v1");
         beanConfig.setSchemes(new String[]{"http", "https"});
         beanConfig.setBasePath("/api/v1");
-        beanConfig.setResourcePackage(getClass().getPackage().getName());
         beanConfig.setScan(true);
     }
 }
