@@ -156,9 +156,6 @@
   "icon": "assets:aws-ddb.svg",
   "id": "aws-ddb",
   "name": "Amazon DynamoDB",
-  "metadata": {
-    "tech-preview": true
-  },
   "properties": {
     "region": {
       "defaultValue": "EU CENTRAL 1",
