@@ -43,9 +43,9 @@ import org.springframework.security.web.authentication.preauth.RequestHeaderAuth
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final String[] COMMON_NON_SECURED_PATHS = {
-        "/api/v1/swagger.*",
+        "/api/v1/openapi.*",
         "/api/v1/index.html",
-        "/api/v1/internal/swagger.*",
+        "/api/v1/internal/openapi.*",
         "/api/v1/internal/index.html",
         "/api/v1/version",
         "/actuator/health"

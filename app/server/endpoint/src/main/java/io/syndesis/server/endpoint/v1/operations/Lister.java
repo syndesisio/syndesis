@@ -27,28 +27,19 @@ import io.syndesis.common.model.WithId;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveFilterer;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 public interface Lister<T extends WithId<T>> extends Resource, WithDataManager {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiImplicitParams({
-        @ApiImplicitParam(
-            name = "sort", value = "Sort the result list according to the given field value",
-            paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
-            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
-        @ApiImplicitParam(
-            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
-        @ApiImplicitParam(
-            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
-
-    })
+    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
+    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
+    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
+    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
+    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
     default ListResult<T> list(@Context UriInfo uriInfo) {
         Class<T> clazz = resourceKind().getModelClass();
         return getDataManager().fetchAll(

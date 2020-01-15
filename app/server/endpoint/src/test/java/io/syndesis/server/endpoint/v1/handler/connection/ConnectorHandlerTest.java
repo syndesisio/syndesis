@@ -18,7 +18,6 @@ package io.syndesis.server.endpoint.v1.handler.connection;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
-import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayOutputStream;
@@ -173,12 +172,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
-            @Override
-            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
-                return connectorPropertiesHandler;
-            }
-        };
+            connectorPropertiesHandler);
 
         final DynamicConnectionPropertiesMetadata metaResponse = DynamicConnectionPropertiesMetadata.NOTHING;
 
@@ -202,12 +196,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
-            @Override
-            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
-                return connectorPropertiesHandler;
-            }
-        };
+            connectorPropertiesHandler);
 
         final DynamicConnectionPropertiesMetadata metaResponse = new DynamicConnectionPropertiesMetadata.Builder()
             .putProperty("property", Arrays.asList(
@@ -239,12 +228,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
-            @Override
-            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
-                return connectorPropertiesHandler;
-            }
-        };
+            connectorPropertiesHandler);
 
         final DynamicConnectionPropertiesMetadata metaResponse = new DynamicConnectionPropertiesMetadata.Builder()
             .putProperty("dynamicProperty", Arrays.asList(
@@ -278,12 +262,7 @@ public class ConnectorHandlerTest {
 
         final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
             NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
-            NO_METADATA_CONFIGURATION_PROPERTIES) {
-            @Override
-            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
-                return connectorPropertiesHandler;
-            }
-        };
+            connectorPropertiesHandler);
 
         //It would never provide an error, as in such case circuit breaker provide the fallback implementation
         final DynamicConnectionPropertiesMetadata metaResponse = DynamicConnectionPropertiesMetadata.NOTHING;

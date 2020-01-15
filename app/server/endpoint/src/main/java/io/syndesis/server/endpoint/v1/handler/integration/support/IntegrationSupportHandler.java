@@ -56,8 +56,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -98,7 +98,7 @@ import io.syndesis.server.jsondb.impl.SqlJsonDB;
 import static org.springframework.util.StreamUtils.nonClosing;
 
 @Path("/integration-support")
-@Api(value = "integration-support")
+@Tag(name = "integration-support")
 @Component
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.GodClass", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity", "PMD.CyclomaticComplexity" })
 public class IntegrationSupportHandler {
@@ -168,7 +168,7 @@ public class IntegrationSupportHandler {
     @GET
     @Path("/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public StreamingOutput export(@NotNull @QueryParam("id") @ApiParam(required = true) List<String> requestedIds) throws IOException {
+    public StreamingOutput export(@NotNull @QueryParam("id") @Parameter(required = true) List<String> requestedIds) throws IOException {
 
         List<String> ids = requestedIds;
         if ( ids ==null || ids.isEmpty() ) {

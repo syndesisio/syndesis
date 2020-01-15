@@ -70,7 +70,7 @@
 
     <okhttp3.version>3.12.1</okhttp3.version>
 
-    <swagger.version>1.6.0</swagger.version>
+    <swagger.version>2.1.1</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
 
     <activemq.version>5.15.9</activemq.version>
@@ -991,6 +991,12 @@
                 </conflictingDependencies>
                 <packages>
                   <package>org.sonatype.inject</package>
+                </packages>
+              </exception>
+              <exception>
+                <!-- https://github.com/swagger-api/swagger-core/issues/3412 -->
+                <packages>
+                    <package>io.swagger.v3.jaxrs2.integration</package>
                 </packages>
               </exception>
               <exception>
@@ -2601,7 +2607,7 @@
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-core</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
@@ -2609,30 +2615,28 @@
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-parser</artifactId>
-        <version>1.0.34</version>
-      </dependency>
-
-      <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-models</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
+        <groupId>io.swagger.core.v3</groupId>
         <artifactId>swagger-annotations</artifactId>
         <version>${swagger.version}</version>
       </dependency>
 
       <dependency>
-        <groupId>io.swagger</groupId>
-        <artifactId>swagger-jaxrs</artifactId>
+        <groupId>io.swagger.core.v3</groupId>
+        <artifactId>swagger-jaxrs2</artifactId>
         <version>${swagger.version}</version>
         <exclusions>
           <exclusion>

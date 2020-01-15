@@ -22,11 +22,11 @@ import javax.ws.rs.core.MediaType;
 import java.util.Collections;
 
 import com.netflix.hystrix.HystrixExecutable;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
-@Api(value = "properties")
+@Tag(name = "properties")
 public class ConnectorPropertiesHandler {
     private final MetadataConfigurationProperties config;
 

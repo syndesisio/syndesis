@@ -33,8 +33,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -56,7 +56,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Path("/integrations/{id}/deployments")
-@Api(value = "integration-deployments")
+@Tag(name = "integration-deployments")
 @Component
 public final class IntegrationDeploymentHandler extends BaseHandler {
 
@@ -101,15 +101,15 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{version}")
-    public IntegrationDeployment get(@NotNull @PathParam("id") @ApiParam(required = true) final String id,
-        @NotNull @PathParam("version") @ApiParam(required = true) final int version) {
+    public IntegrationDeployment get(@NotNull @PathParam("id") @Parameter(required = true) final String id,
+        @NotNull @PathParam("version") @Parameter(required = true) final int version) {
         final String compositeId = IntegrationDeployment.compositeId(id, version);
         return getDataManager().fetch(IntegrationDeployment.class, compositeId);
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public ListResult<IntegrationDeployment> list(@NotNull @PathParam("id") @ApiParam(required = true) final String id,
+    public ListResult<IntegrationDeployment> list(@NotNull @PathParam("id") @Parameter(required = true) final String id,
         @Context final UriInfo uriInfo) {
         return getDataManager().fetchAll(IntegrationDeployment.class, new IntegrationIdFilter(id),
             new ReflectiveSorter<>(IntegrationDeployment.class, new SortOptionsFromQueryParams(uriInfo)),
@@ -119,7 +119,7 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     @PUT
     @Produces(MediaType.APPLICATION_JSON)
     public IntegrationDeployment update(@Context final SecurityContext sec,
-        @NotNull @PathParam("id") @ApiParam(required = true) final String id) {
+        @NotNull @PathParam("id") @Parameter(required = true) final String id) {
         final DataManager dataManager = getDataManager();
         final Integration integration = dataManager.fetch(Integration.class, id);
 
@@ -152,9 +152,9 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Path("/{version}/targetState")
-    public void updateTargetState(@NotNull @PathParam("id") @ApiParam(required = true) final String id,
-        @NotNull @PathParam("version") @ApiParam(required = true) final int version,
-        @ApiParam(required = true) final TargetStateRequest request) {
+    public void updateTargetState(@NotNull @PathParam("id") @Parameter(required = true) final String id,
+        @NotNull @PathParam("version") @Parameter(required = true) final int version,
+        @Parameter(required = true) final TargetStateRequest request) {
 
         final String compositeId = IntegrationDeployment.compositeId(id, version);
         final DataManager dataManager = getDataManager();

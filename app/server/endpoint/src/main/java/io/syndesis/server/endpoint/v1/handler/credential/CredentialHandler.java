@@ -34,7 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
@@ -49,7 +49,7 @@ import static io.syndesis.server.endpoint.v1.handler.credential.CallbackStatus.s
 import static io.syndesis.server.endpoint.v1.util.Urls.appHome;
 
 @Path("/credentials")
-@Api(value = "credentials")
+@Tag(name = "credentials")
 @Component
 public class CredentialHandler {
 

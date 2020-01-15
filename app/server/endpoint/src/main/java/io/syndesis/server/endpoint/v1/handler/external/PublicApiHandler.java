@@ -51,8 +51,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithId;
@@ -78,7 +78,7 @@ import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentH
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
-@Api("public-api")
+@Tag(name = "public-api")
 @Path("/public")
 @Component
 @ConditionalOnProperty(value = "features.public-api.enabled", havingValue = "true")
@@ -120,7 +120,7 @@ public class PublicApiHandler {
     @GET
     @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getReleaseEnvironments(@QueryParam("withUses") @ApiParam boolean withUses) {
+    public Response getReleaseEnvironments(@QueryParam("withUses") @Parameter boolean withUses) {
         return environmentHandler.getReleaseEnvironments(withUses);
     }
 
@@ -129,7 +129,7 @@ public class PublicApiHandler {
      */
     @POST
     @Path("environments/{env}")
-    public void addNewEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+    public void addNewEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment) {
         environmentHandler.addNewEnvironment(environment);
     }
 
@@ -138,7 +138,7 @@ public class PublicApiHandler {
      */
     @DELETE
     @Path("environments/{env}")
-    public void deleteEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+    public void deleteEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment) {
         environmentHandler.deleteEnvironment(environment);
     }
 
@@ -148,8 +148,8 @@ public class PublicApiHandler {
     @PUT
     @Path("environments/{env}")
     @Consumes(MediaType.APPLICATION_JSON)
-    public void renameEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-        @NotNull @ApiParam(required = true) String newEnvironment) {
+    public void renameEnvironment(@NotNull @PathParam("env") @Parameter(required = true) String environment,
+        @NotNull @Parameter(required = true) String newEnvironment) {
         environmentHandler.renameEnvironment(environment, newEnvironment);
     }
 
@@ -159,7 +159,7 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
-    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
+    public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @Parameter(required = true) String integrationId) {
         return environmentHandler.getReleaseTags(integrationId);
     }
 
@@ -168,8 +168,8 @@ public class PublicApiHandler {
      */
     @DELETE
     @Path("integrations/{id}/tags/{env}")
-    public void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-        @NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+    public void deleteReleaseTag(@NotNull @PathParam("id") @Parameter(required = true) String integrationId,
+        @NotNull @PathParam("env") @Parameter(required = true) String environment) {
         environmentHandler.deleteReleaseTag(integrationId, environment);
     }
 
@@ -181,8 +181,8 @@ public class PublicApiHandler {
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Map<String, ContinuousDeliveryEnvironment> putTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-        @NotNull @ApiParam(required = true) List<String> environments) {
+    public Map<String, ContinuousDeliveryEnvironment> putTagsForRelease(@NotNull @PathParam("id") @Parameter(required = true) String integrationId,
+        @NotNull @Parameter(required = true) List<String> environments) {
         return environmentHandler.putTagsForRelease(integrationId, environments);
     }
 
@@ -193,8 +193,8 @@ public class PublicApiHandler {
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public Map<String, ContinuousDeliveryEnvironment> patchTagsForRelease(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId,
-        @NotNull @ApiParam(required = true) List<String> environments) {
+    public Map<String, ContinuousDeliveryEnvironment> patchTagsForRelease(@NotNull @PathParam("id") @Parameter(required = true) String integrationId,
+        @NotNull @Parameter(required = true) List<String> environments) {
         return environmentHandler.patchTagsForRelease(integrationId, environments);
     }
 
@@ -204,9 +204,9 @@ public class PublicApiHandler {
     @GET
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
-    public Response exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-                                    @QueryParam("all") @ApiParam boolean exportAll,
-                                    @QueryParam("ignoreTimestamp") @ApiParam boolean ignoreTimestamp) throws IOException {
+    public Response exportResources(@NotNull @PathParam("env") @Parameter(required = true) String environment,
+                                    @QueryParam("all") @Parameter boolean exportAll,
+                                    @QueryParam("ignoreTimestamp") @Parameter boolean ignoreTimestamp) throws IOException {
 
         // validate environment
         EnvironmentHandler.validateEnvironment("environment", environment);
@@ -282,7 +282,7 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public ContinuousDeliveryImportResults importResources(@Context SecurityContext sec,
-        @NotNull @MultipartForm @ApiParam(required = true) ImportFormDataInput formInput) {
+        @NotNull @MultipartForm @Parameter(required = true) ImportFormDataInput formInput) {
 
         if (formInput == null) {
             throw new ClientErrorException("Multipart request is empty", Response.Status.BAD_REQUEST);
@@ -352,9 +352,9 @@ public class PublicApiHandler {
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     public ConnectionOverview configureConnection(@Context SecurityContext sec,
-                                                  @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
-                                                  @NotNull @QueryParam("refreshIntegrations") @ApiParam() Boolean refeshIntegrations,
-                                                  @NotNull @ApiParam(required = true) Map<String, String> properties) {
+                                                  @NotNull @PathParam("id") @Parameter(required = true) String connectionId,
+                                                  @NotNull @QueryParam("refreshIntegrations") @Parameter Boolean refeshIntegrations,
+                                                  @NotNull @Parameter(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
         final Connection connection = getResource(Connection.class, connectionId, WithResourceId::hasId);
@@ -370,7 +370,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/state")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public IntegrationState getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
+    public IntegrationState getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @Parameter(required = true) String integrationId) {
         final Integration integration = getIntegration(integrationId);
         final IntegrationOverview integrationOverview = this.integrationHandler.get(integration.getId().get());
         return new IntegrationState(integrationOverview.getCurrentState(), monitoringProvider.getIntegrationStateDetails(integration.getId().get()));
@@ -383,7 +383,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/deployments")
     @Produces(MediaType.APPLICATION_JSON)
     public IntegrationDeployment publishIntegration(@Context final SecurityContext sec,
-        @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
+        @NotNull @PathParam("id") @Parameter(required = true) final String integrationId) {
         return publishIntegration(sec, getIntegration(integrationId));
     }
 
@@ -393,7 +393,7 @@ public class PublicApiHandler {
     @PUT
     @Path("integrations/{id}/deployments/stop")
     @Produces(MediaType.APPLICATION_JSON)
-    public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
+    public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @Parameter(required = true) final String integrationId) {
 
         final Integration integration = getIntegration(integrationId);
         IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler.TargetStateRequest(IntegrationDeploymentState.Unpublished);
