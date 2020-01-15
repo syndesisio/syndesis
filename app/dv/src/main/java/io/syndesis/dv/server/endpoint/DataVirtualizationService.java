@@ -872,7 +872,8 @@ public final class DataVirtualizationService extends DvService {
 
             dataservice.setModified(false); //once we've published, we're not modified
 
-            updatePublishConfiguration(payload, config, theVdb, edition);
+            config.setVDB(theVdb);
+            config.setPublishedRevision(edition.getRevision());
 
             status.addAttribute(REVISION, String.valueOf(edition.getRevision()));
             //
@@ -896,17 +897,6 @@ public final class DataVirtualizationService extends DvService {
         status.addAttribute("OpenShift Name", buildStatus.getOpenShiftName()); //$NON-NLS-1$
         status.addAttribute("Build Status", buildStatus.getStatus().name()); //$NON-NLS-1$
         status.addAttribute("Build Status Message", buildStatus.getStatusMessage()); //$NON-NLS-1$
-    }
-
-    private void updatePublishConfiguration(final PublishRequestPayload payload,
-            PublishConfiguration config, VDBMetaData theVdb, Edition edition) {
-        // the properties in this class can be exposed for user input
-        config.setVDB(theVdb);
-        config.setEnableOData(payload.getEnableOdata());
-        config.setContainerDiskSize(payload.getDiskSize());
-        config.setContainerMemorySize(payload.getMemory());
-        config.setCpuUnits(payload.getCpuUnits());
-        config.setPublishedRevision(edition.getRevision());
     }
 
     /**
@@ -1000,7 +990,8 @@ public final class DataVirtualizationService extends DvService {
             PublishConfiguration config = new PublishConfiguration();
             payload.setName(virtualization);
 
-            updatePublishConfiguration(payload, config, theVdb, e);
+            config.setVDB(theVdb);
+            config.setPublishedRevision(e.getRevision());
             return config;
         });
         StatusObject status = new StatusObject();
