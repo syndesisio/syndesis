@@ -103,22 +103,31 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 		}
 		// Error reading the object - requeue the request.
 		log.Error(err, "Cannot read object", request.NamespacedName)
-		return reconcile.Result{}, err
-	}
-
-	// Don't want to do anything if the syndesis resource has been updated in the meantime
-	// This happens when a processing takes more tha the resync period
-	if latest, err := r.isLatestVersion(ctx, syndesis); err != nil || !latest {
-		log.Error(err, "Cannot get latest version")
-		return reconcile.Result{}, err
+		return reconcile.Result{
+			Requeue:      true,
+			RequeueAfter: 10 * time.Second,
+		}, err
 	}
 
 	for _, a := range actions {
+		// Don't want to do anything if the syndesis resource has been updated in the meantime
+		// This happens when a processing takes more tha the resync period
+		if latest, err := r.isLatestVersion(ctx, syndesis); err != nil || !latest {
+			log.Info("syndesis resource changed in the meantime, requeue and rerun in 5 seconds", "name", syndesis.Name)
+			return reconcile.Result{
+				Requeue:      true,
+				RequeueAfter: 5 * time.Second,
+			}, nil
+		}
+
 		if a.CanExecute(syndesis) {
 			log.V(2).Info("Running action", "action", reflect.TypeOf(a))
 			if err := a.Execute(ctx, syndesis); err != nil {
 				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
-				return reconcile.Result{}, err
+				return reconcile.Result{
+					Requeue:      true,
+					RequeueAfter: 10 * time.Second,
+				}, nil
 			}
 		}
 	}
