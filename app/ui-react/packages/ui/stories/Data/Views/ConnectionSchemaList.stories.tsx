@@ -7,6 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {
   ConnectionSchemaList,
   ConnectionSchemaListItem,
+  ConnectionStatus,
   SchemaNodeListItem,
 } from '../../../src';
 
@@ -67,6 +68,9 @@ const connectionItems = [
     connectionName={connectionName1}
     connectionDescription={connectionDescription1}
     haveSelectedSource={false}
+    dvStatus={ConnectionStatus.ACTIVE}
+    icon={<div />}
+    loading={false}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem2"
@@ -74,6 +78,9 @@ const connectionItems = [
     connectionDescription={connectionDescription2}
     children={conn2NodeItems}
     haveSelectedSource={false}
+    dvStatus={ConnectionStatus.ACTIVE}
+    icon={<div />}
+    loading={false}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem3"
@@ -81,6 +88,9 @@ const connectionItems = [
     connectionDescription={connectionDescription3}
     children={conn3NodeItems}
     haveSelectedSource={false}
+    dvStatus={ConnectionStatus.ACTIVE}
+    icon={<div />}
+    loading={false}
   />,
 ];
 
