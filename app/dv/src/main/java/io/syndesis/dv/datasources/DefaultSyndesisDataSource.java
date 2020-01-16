@@ -76,7 +76,9 @@ public class DefaultSyndesisDataSource {
     }
 
     public TeiidDataSourceImpl createDataSource() {
-        return this.definition.createDatasource(this.teiidName, this);
+        TeiidDataSourceImpl result = this.definition.createDatasource(this.teiidName, this);
+        result.setSyndesisDataSource(this);
+        return result;
     }
 
     /**

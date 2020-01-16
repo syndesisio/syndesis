@@ -121,18 +121,34 @@ public class SyndesisConnectionSynchronizer {
             return;
         }
 
+        boolean create = true;
         if (update) {
             try {
-                this.openshiftClient.deleteDataSource(sds);
+                //ensure that the properties have changed
+                if (sds.getTeiidName() != null) {
+                    TeiidDataSource tds = this.metadataService.findTeiidDatasource(sds.getTeiidName());
+                    if (tds != null) {
+                        DefaultSyndesisDataSource existing = tds.getSyndesisDataSource();
+                        if (existing.getProperties().equals(sds.getProperties())) {
+                            create = false;
+                        }
+                    }
+                }
+                if (create) {
+                    this.openshiftClient.deleteDataSource(sds);
+                }
             } catch (KException e) {
                 LOGGER.warn("Error deleting data source for " + sds.getSyndesisName(), e);
             }
         }
-        try {
-            this.openshiftClient.createDataSource(sds);
-        } catch (Exception e) {
-            LOGGER.warn("Error creating data source for " + sds.getSyndesisName(), e);
-            return;
+
+        if (create) {
+            try {
+                this.openshiftClient.createDataSource(sds);
+            } catch (Exception e) {
+                LOGGER.warn("Error creating data source for " + sds.getSyndesisName(), e);
+                return;
+            }
         }
 
         try {
