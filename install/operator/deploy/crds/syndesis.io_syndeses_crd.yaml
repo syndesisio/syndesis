@@ -14,17 +14,17 @@ spec:
     status: {}
   version: v1alpha1
   versions:
-  -   name: v1alpha1
-      schema:
-          openAPIV3Schema:
-              description: Syndesis is the Schema for the syndeses API
-              properties:
-                  apiVersion:
-                      description: 'APIVersion defines the versioned schema of this representation
+  - name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: Syndesis is the Schema for the syndeses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-                      type: string
-                  kind:
+            type: string
+          kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
@@ -314,27 +314,27 @@ spec:
               reason:
                 type: string
               targetVersion:
-                  type: string
+                type: string
               upgradeAttempts:
-                  format: int32
-                  type: integer
+                format: int32
+                type: integer
               version:
-                  type: string
+                type: string
             type: object
-              type: object
-      served: true
-      storage: false
-  -   name: v1beta1
-      schema:
-          openAPIV3Schema:
-              description: Syndesis is the Schema for the syndeses API
-              properties:
-                  apiVersion:
-                      description: 'APIVersion defines the versioned schema of this representation
+        type: object
+    served: true
+    storage: false
+  - name: v1beta1
+    schema:
+      openAPIV3Schema:
+        description: Syndesis is the Schema for the syndeses API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
               of an object. Servers should convert recognized schemas to the latest
               internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
-                      type: string
-                  kind:
+            type: string
+          kind:
             description: 'Kind is a string value representing the REST resource this
               object represents. Servers may infer this from the endpoint the client
               submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
@@ -357,15 +357,23 @@ spec:
                       enabled:
                         type: boolean
                       resources:
-                          properties:
-                              memory:
-                                  type: string
-                          type: object
+                        properties:
+                          memory:
+                            type: string
+                        type: object
                     type: object
                   jaeger:
                     properties:
+                      clientOnly:
+                        type: boolean
+                      collectorUri:
+                        type: string
                       enabled:
                         type: boolean
+                      operatorOnly:
+                        type: boolean
+                      queryUri:
+                        type: string
                       samplerParam:
                         type: string
                       samplerType:
@@ -432,50 +440,50 @@ spec:
                       resources:
                         description: Resource provision requirements of the database
                         properties:
-                            memory:
-                                type: string
-                            volumeAccessMode:
-                                enum:
-                                    - ReadWriteOnce
-                                    - ReadOnlyMany
-                                    - ReadWriteMany
-                                type: string
-                            volumeCapacity:
-                                type: string
-                            volumeLabels:
-                                additionalProperties:
-                                    type: string
-                                type: object
-                            volumeName:
-                                type: string
-                            volumeStorageClass:
-                                type: string
+                          memory:
+                            type: string
+                          volumeAccessMode:
+                            enum:
+                            - ReadWriteOnce
+                            - ReadOnlyMany
+                            - ReadWriteMany
+                            type: string
+                          volumeCapacity:
+                            type: string
+                          volumeLabels:
+                            additionalProperties:
+                              type: string
+                            type: object
+                          volumeName:
+                            type: string
+                          volumeStorageClass:
+                            type: string
                         type: object
                       url:
-                          description: Host and port of the PostgreSQL database to access
-                          type: string
+                        description: Host and port of the PostgreSQL database to access
+                        type: string
                       user:
-                          description: Username for PostgreSQL user that will be used
-                              for accessing the database
-                          type: string
+                        description: Username for PostgreSQL user that will be used
+                          for accessing the database
+                        type: string
                     type: object
                   grafana:
-                      properties:
-                          resources:
-                              properties:
-                                  memory:
-                                      type: string
-                              type: object
+                    properties:
+                      resources:
+                        properties:
+                          memory:
+                            type: string
+                        type: object
                     type: object
                   meta:
                     properties:
-                        resources:
-                            properties:
-                                memory:
-                                    type: string
-                                volumeCapacity:
-                                    type: string
-                            type: object
+                      resources:
+                        properties:
+                          memory:
+                            type: string
+                          volumeCapacity:
+                            type: string
+                        type: object
                     type: object
                   oauth:
                     properties:
@@ -490,13 +498,13 @@ spec:
                     type: object
                   prometheus:
                     properties:
-                        resources:
-                            properties:
-                                memory:
-                                    type: string
-                                volumeCapacity:
-                                    type: string
-                            type: object
+                      resources:
+                        properties:
+                          memory:
+                            type: string
+                          volumeCapacity:
+                            type: string
+                        type: object
                       rules:
                         type: string
                     type: object
@@ -524,10 +532,10 @@ spec:
                             type: object
                         type: object
                       resources:
-                          properties:
-                              memory:
-                                  type: string
-                          type: object
+                        properties:
+                          memory:
+                            type: string
+                        type: object
                     type: object
                   upgrade:
                     properties:
@@ -582,4 +590,4 @@ spec:
             type: object
         type: object
     served: true
-      storage: true
+    storage: true
