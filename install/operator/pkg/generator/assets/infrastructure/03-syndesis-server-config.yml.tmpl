@@ -65,7 +65,11 @@
         jaeger-activity-tracing:
           enabled: true
       jaeger:
+      {{- if .Syndesis.Addons.Jaeger.QueryUri}}
+        query.api.uri: {{.Syndesis.Addons.Jaeger.QueryUri}}
+      {{- else}}
         query.api.url: http://noauth-syndesis-jaeger-query:443/api
+      {{- end}}
         service.name: syndesis-server
 {{- end}}
 {{- if .Syndesis.Components.Server.Features.MavenRepositories}}

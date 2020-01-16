@@ -1,3 +1,4 @@
+{{- if not .Syndesis.Addons.Jaeger.ClientOnly}}
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -54,3 +55,4 @@
           - containerPort: 6831
             name: jg-compact-trft
             protocol: UDP
+{{- end}}
