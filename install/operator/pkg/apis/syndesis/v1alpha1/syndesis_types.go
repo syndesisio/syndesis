@@ -54,7 +54,7 @@ type SyndesisSpec struct {
 // +k8s:openapi-gen=true
 type SyndesisStatus struct {
 	Phase              SyndesisPhase        `json:"phase,omitempty"`
-	UpgradeAttempts    int32                `json:"upgradeAttempts,omitempty"`
+	UpgradeAttempts    int                  `json:"upgradeAttempts,omitempty"`
 	LastUpgradeFailure *metav1.Time         `json:"lastUpgradeFailure,omitempty"`
 	ForceUpgrade       bool                 `json:"forceUpgrade,omitempty"`
 	Reason             SyndesisStatusReason `json:"reason,omitempty"`
@@ -236,6 +236,8 @@ const (
 	SyndesisPhaseInstalled             SyndesisPhase = "Installed"
 	SyndesisPhaseNotInstalled          SyndesisPhase = "NotInstalled"
 	SyndesisPhaseUpgrading             SyndesisPhase = "Upgrading"
+	SyndesisPhasePostUpgradeRun        SyndesisPhase = "PostUpgradeRun"
+	SyndesisPhasePostUpgradeRunSucceed SyndesisPhase = "PostUpgradeRunSucceed"
 	SyndesisPhaseUpgradeFailureBackoff SyndesisPhase = "UpgradeFailureBackoff"
 	SyndesisPhaseUpgradeFailed         SyndesisPhase = "UpgradeFailed"
 )
@@ -246,8 +248,9 @@ const (
 	SyndesisStatusReasonMissing                SyndesisStatusReason = ""
 	SyndesisStatusReasonDuplicate              SyndesisStatusReason = "Duplicate"
 	SyndesisStatusReasonDeploymentNotReady     SyndesisStatusReason = "DeploymentNotReady"
-	SyndesisStatusReasonUpgradePodFailed       SyndesisStatusReason = "UpgradePodFailed"
+	SyndesisStatusReasonUpgradeFailed          SyndesisStatusReason = "UpgradeFailed"
 	SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
+	SyndesisStatusReasonPostUpgradeRun         SyndesisStatusReason = "PostUpgradeRun"
 )
 
 // =============================================================================
