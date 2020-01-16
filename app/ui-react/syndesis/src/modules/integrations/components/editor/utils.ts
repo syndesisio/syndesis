@@ -98,6 +98,7 @@ export function toUIStep(step: Step | StepKind): IUIStep {
     case ENDPOINT:
     case CONNECTOR:
       // this step is a Connection step
+      const connectionName = step.name || step.connection!.name || step.connection!.connector!.name;
       return {
         ...step,
         description:
@@ -112,7 +113,7 @@ export function toUIStep(step: Step | StepKind): IUIStep {
           ...(step.connection!.metadata || {}),
           ...(step.metadata || {}),
         },
-        name: step.name || step.connection!.connector!.name!,
+        name: connectionName,
         outputDataShape,
         properties:
           step.action &&
@@ -121,7 +122,7 @@ export function toUIStep(step: Step | StepKind): IUIStep {
           step.action.descriptor.propertyDefinitionSteps.length &&
           step.action.descriptor.propertyDefinitionSteps[0].properties,
         title:
-          `${(step.connection && step.connection.name) || '<unknown>'}` +
+          `${connectionName} ` +
           step.action
             ? ` - ${(step.action && step.action.name) || '<unknown>'}`
             : '',
