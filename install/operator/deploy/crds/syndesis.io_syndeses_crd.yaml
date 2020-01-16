@@ -364,8 +364,16 @@ spec:
                     type: object
                   jaeger:
                     properties:
+                      clientOnly:
+                        type: boolean
+                      collectorUri:
+                        type: string
                       enabled:
                         type: boolean
+                      operatorOnly:
+                        type: boolean
+                      queryUri:
+                        type: string
                       samplerParam:
                         type: string
                       samplerType:
