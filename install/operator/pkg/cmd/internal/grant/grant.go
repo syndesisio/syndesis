@@ -62,10 +62,10 @@ func New(parent *internal.Options) *cobra.Command {
 func (o *Grant) grant() error {
 	o.Role = RoleName
 
-	grp := "./install/grant_cluster_role.yml.tmpl"
+	grp := "./install/grant/grant_cluster_role.yml.tmpl"
 	o.Kind = "ClusterRole"
 	if o.cluster == false {
-		grp = "./install/grant_role.yml.tmpl"
+		grp = "./install/grant/grant_role.yml.tmpl"
 		o.Kind = "Role"
 	}
 
@@ -80,8 +80,14 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, gr...)
 
+	jaegerRole, err := generator.Render("./install/grant/grant_jaeger_cluster_role.yml.tmpl", o)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, jaegerRole...)
+
 	if o.publicApi {
-		pubRole, err := generator.Render("./install/grant_public_api_cluster_role.yml.tmpl", o)
+		pubRole, err := generator.Render("./install/grant/grant_public_api_cluster_role.yml.tmpl", o)
 		if err != nil {
 			return err
 		}
