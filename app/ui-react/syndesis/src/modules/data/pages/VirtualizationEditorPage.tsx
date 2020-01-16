@@ -77,9 +77,7 @@ export interface IVirtualizationEditorPageProps {
   virtualization: Virtualization;
 }
 
-export const VirtualizationEditorPage: React.FunctionComponent<
-  IVirtualizationEditorPageProps
-> = props => {
+export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEditorPageProps> = props => {
   /**
    * Context that provides app-wide variables and functions.
    */
@@ -138,10 +136,9 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   /**
    * State identifying the type that should be used by labels.
    */
-  const [labelType, setLabelType] = React.useState('default' as
-    | 'danger'
-    | 'primary'
-    | 'default');
+  const [labelType, setLabelType] = React.useState(
+    'default' as 'danger' | 'primary' | 'default'
+  );
 
   /**
    * State for the user-friendly text of the current published state.
@@ -164,12 +161,18 @@ export const VirtualizationEditorPage: React.FunctionComponent<
   React.useEffect(() => {
     const publishedDetails: VirtualizationPublishingDetails = getPublishingDetails(
       appContext.config.consoleUrl,
-      props.virtualization
+      props.routeState.virtualization
+        ? props.routeState.virtualization
+        : props.virtualization
     ) as VirtualizationPublishingDetails;
 
     setCurrPublishedState(publishedDetails);
     setDescription(props.virtualization.description);
-  }, [props.virtualization, appContext.config.consoleUrl]);
+  }, [
+    props.routeState.virtualization,
+    props.virtualization,
+    appContext.config.consoleUrl,
+  ]);
 
   /**
    * Update UI whenever publishing details change.
@@ -279,19 +282,22 @@ export const VirtualizationEditorPage: React.FunctionComponent<
           i18nDescriptionPlaceholder={t('descriptionPlaceholder')}
           i18nPublishLogUrlText={t('shared:viewLogs')}
           i18nODataUrlText={t('viewOData')}
-          modified={props.virtualization.modified}
+          modified={currPublishedState.modified}
           odataUrl={getOdataUrl(
             props.virtualization || props.routeState.virtualization
           )}
           publishedState={currPublishedState.state}
-          publishedVersion={props.virtualization.publishedRevision}
+          publishedVersion={currPublishedState.version}
           publishingCurrentStep={currPublishedState.stepNumber}
           publishingLogUrl={currPublishedState.logUrl}
           publishingTotalSteps={currPublishedState.stepTotal}
           publishingStepText={currPublishedState.stepText}
           virtualizationDescription={getDescription()}
           virtualizationName={props.routeParams.virtualizationId}
-          isWorking={!props.virtualization || !currPublishedState}
+          isWorking={
+            (!props.virtualization && !props.routeState.virtualization) ||
+            !currPublishedState
+          }
           onChangeDescription={doSetDescription}
         />
       </PageSection>

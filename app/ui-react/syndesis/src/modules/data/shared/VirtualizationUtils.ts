@@ -354,10 +354,12 @@ export function getPublishingDetails(
 ): VirtualizationPublishingDetails {
   // Determine published state
   const publishStepDetails: VirtualizationPublishingDetails = {
+    modified: virtualization.modified,
     state: virtualization.publishedState,
     stepNumber: 0,
     stepText: i18n.t('data:buildStatus.' + virtualization.publishedState),
     stepTotal: 3,
+    version: virtualization.publishedRevision,
   };
   switch (virtualization.publishedState) {
     case 'CONFIGURING':

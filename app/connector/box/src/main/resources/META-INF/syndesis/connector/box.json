@@ -131,9 +131,6 @@
   "description": "Download and upload files.",
   "icon": "assets:box.png",
   "id": "box",
-  "metadata": {
-    "tech-preview": true
-  },
   "name": "Box",
   "properties": {
     "authenticationType": {
