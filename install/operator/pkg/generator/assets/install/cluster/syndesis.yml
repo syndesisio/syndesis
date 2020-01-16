@@ -10,10 +10,16 @@ spec:
     kind: Syndesis
     listKind: SyndesisList
     plural: syndesises
-# TODO:  Use "syndeses" when upgrading the CRD version
     singular: syndesis
   scope: Namespaced
-  version: v1alpha1
+  version: v1beta1
+  versions:
+    - name: v1beta1
+      served: true
+      storage: true
+    - name: v1alpha1
+      served: true
+      storage: false
   additionalPrinterColumns:
     - JSONPath: .status.phase
       description: The syndesis phase
@@ -23,6 +29,3 @@ spec:
       description: The syndesis version
       name: Version
       type: string
-# TODO: Enable when upgrading the CRD version
-#    subresources:
-#      status: {}

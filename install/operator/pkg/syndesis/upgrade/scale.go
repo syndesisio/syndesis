@@ -42,7 +42,7 @@ func newScale(base step) (s *scale) {
 	s = &scale{
 		step:     base,
 		dir:      up,
-		timeout:  time.Second * 240,
+		timeout:  time.Second * 360,
 		interval: time.Second * 10,
 	}
 	s.name = "Scale " + dirToS(s.dir)

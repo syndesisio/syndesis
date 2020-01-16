@@ -18,10 +18,11 @@ package uninstall
 
 import (
 	"fmt"
+
 	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/api/errors"
@@ -48,7 +49,7 @@ func New(parent *internal.Options) *cobra.Command {
 }
 
 func (o *Uninstall) uninstall() error {
-	sl := &v1alpha1.SyndesisList{}
+	sl := &v1beta1.SyndesisList{}
 	cfg, err := config.GetConfig()
 	if err != nil {
 		return err

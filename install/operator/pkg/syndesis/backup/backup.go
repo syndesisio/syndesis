@@ -234,6 +234,7 @@ func (b *Backup) backupResources() error {
 		{APIVersion: "v1", Kind: "ServiceAccount"},
 		{APIVersion: "rbac.authorization.k8s.io/v1", Kind: "RoleBinding"},
 		{APIVersion: "template.openshift.io/v1", Kind: "Template"},
+		{APIVersion: "image.openshift.io/v1", Kind: "ImageStream"},
 		{APIVersion: "build.openshift.io/v1", Kind: "BuildConfig"},
 		{APIVersion: "apps.openshift.io/v1", Kind: "DeploymentConfig"},
 		{APIVersion: "route.openshift.io/v1", Kind: "Route"},
