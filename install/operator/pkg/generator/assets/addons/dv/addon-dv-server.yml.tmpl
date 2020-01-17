@@ -9,9 +9,14 @@
     name: syndesis-dv
   spec:
     ports:
-    - port: 80
+    - name: http
+      port: 80
       protocol: TCP
       targetPort: 8080
+    - name: lsp
+      port: 8025
+      protocol: TCP
+      targetPort: 8025
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -107,6 +112,8 @@
             name: prometheus
           - containerPort: 8778
             name: jolokia
+          - containerPort: 8025
+            name: lsp
           workingDir: /deployments
           volumeMounts:
           - name: config-volume

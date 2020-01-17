@@ -18,15 +18,10 @@ package io.syndesis.dv.server;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 import javax.transaction.TransactionManager;
+import javax.websocket.DeploymentException;
 
-import io.syndesis.dv.metadata.MetadataInstance;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.metadata.internal.TeiidServer;
-import io.syndesis.dv.openshift.EncryptionComponent;
-import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
-import io.syndesis.dv.openshift.TeiidOpenShiftClient;
-import io.syndesis.dv.repository.RepositoryManagerImpl;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -47,12 +42,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.teiid.runtime.EmbeddedConfiguration;
 
 import io.syndesis.dv.RepositoryManager;
+import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketRunner;
+import io.syndesis.dv.metadata.MetadataInstance;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.metadata.internal.TeiidServer;
+import io.syndesis.dv.openshift.EncryptionComponent;
+import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
+import io.syndesis.dv.openshift.TeiidOpenShiftClient;
+import io.syndesis.dv.repository.RepositoryManagerImpl;
 
 @Configuration
 @EnableConfigurationProperties({DvConfigurationProperties.class, SpringMavenProperties.class})
 @ComponentScan(basePackageClasses = {RepositoryManagerImpl.class, DefaultMetadataInstance.class, SyndesisConnectionSynchronizer.class})
 @EnableAsync
 public class DvAutoConfiguration implements ApplicationListener<ContextRefreshedEvent>, AsyncConfigurer {
+    private static final Log LOGGER = LogFactory.getLog(DvAutoConfiguration.class);
 
     @Value("${encrypt.key}")
     private String encryptKey;
@@ -97,6 +101,7 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     @ConditionalOnMissingBean
     public TeiidServer teiidServer() {
 
+        LOGGER.info("   ---->>>>>>>  DvAutoConfiguration.teiidServer() initialize");
         // turning off PostgreSQL support
         System.setProperty("org.teiid.addPGMetadata", "false");
         System.setProperty("org.teiid.hiddenMetadataResolvable", "true");
@@ -127,6 +132,11 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
                 configurer.setTaskExecutor(getAsyncExecutor());
             }
         };
+    }
+
+    @Bean(destroyMethod = "close")
+    public TeiidDdlWebSocketRunner teiidDdlWebSocketRunner() throws DeploymentException {
+        return new TeiidDdlWebSocketRunner();
     }
 
     @Override
