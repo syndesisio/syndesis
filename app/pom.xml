@@ -135,7 +135,7 @@
     <junit.version>4.12</junit.version>
     <junit5.version>5.5.2</junit5.version>
     <powermock.version>2.0.4</powermock.version>
-    <testcontainers.version>1.12.3</testcontainers.version>
+    <testcontainers.version>1.12.4</testcontainers.version>
     <citrus.version>2.8.0</citrus.version>
     <mockito.version>2.19.0</mockito.version>
 
