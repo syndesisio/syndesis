@@ -1,16 +1,16 @@
-import { useVirtualizationHelpers } from '@syndesis/api';
-import { ConnectionTable } from '@syndesis/models';
+import {
+  useConnections,
+  useVirtualizationConnectionStatuses,
+  useVirtualizationRuntimeMetadata,
+} from '@syndesis/api';
 import {
   SchemaNodeInfo,
-  ViewSourceInfo,
   Virtualization,
 } from '@syndesis/models';
 import { CreateViewHeader, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
 import { ConnectionSchemaContent, ConnectionTables } from '../../shared';
 
@@ -44,25 +44,38 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   const { t } = useTranslation(['data', 'shared']);
   const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
   const virtualization = state.virtualization;
-  const { pushNotification } = useContext(UIContext);
-  const [connectionTableColumns, setConnectionTableColumns] = React.useState<
-    ConnectionTable[]
-  >([]);
-  const { getSourceInfoForView } = useVirtualizationHelpers();
 
-  React.useEffect(() => {
-    const loadSourceTableInfo = async () => {
-      try {
-        const results: ViewSourceInfo = await getSourceInfoForView(
-          virtualization.name
-        );
-        setConnectionTableColumns(results.schemas);
-      } catch (error) {
-        pushNotification(error.message, 'error');
-      }
-    };
-    loadSourceTableInfo();
-  }, [virtualization.name, getSourceInfoForView, pushNotification]);
+  const {
+    resource: connectionStatuses,
+    hasData: hasConnectionStatuses,
+    error: connectionStatusesError,
+  } = useVirtualizationConnectionStatuses();
+
+  const {
+    resource: connectionsData,
+    hasData: hasConnectionsData,
+    error: connectionsError,
+  } = useConnections();
+
+  const {
+    resource: viewSourceInfo,
+    hasData: hasViewSourceInfo,
+    error: viewSourceInfoError,
+  } = useVirtualizationRuntimeMetadata(virtualization.name);
+
+  /**
+   * Get error message based on the required fetches
+   */
+  const getErrorMessage = () => {
+    if (connectionsError !== false) {
+      return (connectionsError as Error).message;
+    } else if (connectionStatusesError !== false) {
+      return (connectionStatusesError as Error).message;
+    } else if (viewSourceInfoError !== false) {
+      return (viewSourceInfoError as Error).message;
+    }
+    return undefined;
+  };
 
   return (
     <ViewCreateLayout
@@ -89,6 +102,11 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
       }
       content={
         <ConnectionSchemaContent
+          error={connectionsError !== false || connectionStatusesError !== false || viewSourceInfoError !== false}
+          errorMessage={getErrorMessage()}
+          loading={!hasConnectionsData || !hasConnectionStatuses || !hasViewSourceInfo}
+          dvSourceStatuses={connectionStatuses}
+          connections={connectionsData.connectionsForDisplay}
           onNodeSelected={props.handleNodeSelected}
           onNodeDeselected={props.handleNodeDeselected}
           selectedSchemaNodes={props.selectedSchemaNodes}
@@ -98,7 +116,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
           onNodeDeselected={props.handleNodeDeselected}
-          columnDetails={connectionTableColumns}
+          columnDetails={viewSourceInfo.schemas}
         />
       }
     />

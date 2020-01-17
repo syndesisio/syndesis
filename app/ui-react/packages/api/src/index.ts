@@ -29,6 +29,7 @@ export * from './useVirtualizationMetrics';
 export * from './useVirtualizationHelpers';
 export * from './useVirtualizationConnectionSchema';
 export * from './useVirtualizationConnectionStatuses';
+export * from './useVirtualizationRuntimeMetadata';
 export * from './useVirtualization';
 export * from './useVirtualizations';
 export * from './WithActionDescriptor';

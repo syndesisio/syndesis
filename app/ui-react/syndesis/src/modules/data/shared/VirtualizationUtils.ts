@@ -235,12 +235,12 @@ function getViewDefinition(
  * based on the Virtualization connection status and selection state
  * @param conns the connections
  * @param virtualizationsSourceStatuses the available virtualization sources
- * @param selectedConn name of a selected connection
+ * @param selectedConn name of a selected connection (optional)
  */
 export function generateDvConnections(
   conns: Connection[],
   virtualizationsSourceStatuses: VirtualizationSourceStatus[],
-  selectedConn: string
+  selectedConn?: string
 ): Connection[] {
   const dvConns: Connection[] = [];
   for (const conn of conns) {
@@ -269,7 +269,7 @@ export function generateDvConnections(
       // loading (true/false)
       schemaLoading = String(virtSrcStatus.loading);
       // selection
-      if (conn.name === selectedConn) {
+      if (selectedConn && conn.name === selectedConn) {
         selectionState = String(true);
       }
       conn.options = {
@@ -354,10 +354,12 @@ export function getPublishingDetails(
 ): VirtualizationPublishingDetails {
   // Determine published state
   const publishStepDetails: VirtualizationPublishingDetails = {
+    modified: virtualization.modified,
     state: virtualization.publishedState,
     stepNumber: 0,
     stepText: i18n.t('data:buildStatus.' + virtualization.publishedState),
     stepTotal: 3,
+    version: virtualization.publishedRevision,
   };
   switch (virtualization.publishedState) {
     case 'CONFIGURING':
@@ -500,9 +502,8 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
  */
 export function getQueryRows(qResults: QueryResults): string[][] {
   const allRows = qResults.rows ? qResults.rows : [];
-  return allRows
-    .map(row => row.row);
-} 
+  return allRows.map(row => row.row);
+}
 
 /**
  * Get columns from the query results
