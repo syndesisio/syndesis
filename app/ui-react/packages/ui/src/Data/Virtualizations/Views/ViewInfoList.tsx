@@ -1,4 +1,4 @@
-import { EmptyState, ListView } from 'patternfly-react';
+import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 import './ViewInfoList.css';
@@ -13,6 +13,7 @@ export interface IViewInfoListProps extends IListViewToolbarProps {
 export const ViewInfoList: React.FunctionComponent<
   IViewInfoListProps
 > = props => {
+  
   return (
     <>
       <ListViewToolbar {...props}>
@@ -20,7 +21,7 @@ export const ViewInfoList: React.FunctionComponent<
       </ListViewToolbar>
       {props.children ? (
         <div className={'view-info-list'}>
-          <ListView>{props.children}</ListView>
+          {props.children}
         </div>
       ) : (
         <EmptyState>

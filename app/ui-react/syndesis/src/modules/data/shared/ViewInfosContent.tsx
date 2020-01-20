@@ -5,7 +5,7 @@ import {
   IFilterType,
   ISortType,
   ViewInfoList,
-  ViewInfoListItem,
+  ViewInfoListItems,
   ViewInfoListSkeleton,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
@@ -23,7 +23,7 @@ function getFilteredAndSortedViewInfos(
   selectedViewNames: string[],
   existingViewNames: string[]
 ) {
-  const viewInfos: ViewInfo[] = [];
+  const viewInfos: any[] = [];
   if (schemaNodes && schemaNodes.length > 0) {
     generateAllViewInfos(
       viewInfos,
@@ -34,7 +34,7 @@ function getFilteredAndSortedViewInfos(
     );
   }
 
-  let filteredAndSorted = viewInfos;
+  let filteredAndSorted = viewInfos.slice();
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSorted = filteredAndSorted.filter((viewInfo: ViewInfo) =>
@@ -64,6 +64,7 @@ export interface IViewInfosContentProps {
   onViewSelected: (view: ViewInfo) => void;
   onViewDeselected: (viewName: string) => void;
   selectedViews: ViewInfo[];
+  handleSelectAll: (isSelected: boolean, AllViewInfo: any[]) => void;
 }
 
 const filterByName = {
@@ -123,7 +124,7 @@ export const ViewInfosContent: React.FunctionComponent<
           selectedViewNames,
           props.existingViewNames
         );
-        displayedViews = filteredAndSorted;
+        displayedViews = filteredAndSorted.slice();
 
         return (
           <ViewInfoList
@@ -146,18 +147,12 @@ export const ViewInfosContent: React.FunctionComponent<
               errorChildren={<ApiError error={error as Error} />}
             >
               {() =>
-                filteredAndSorted.map((viewInfo: ViewInfo, index: number) => (
-                  <ViewInfoListItem
-                    key={index}
-                    connectionName={viewInfo.connectionName}
-                    name={viewInfo.viewName}
-                    nodePath={viewInfo.nodePath}
-                    selected={viewInfo.selected}
-                    i18nUpdate={t('shared:Update')}
-                    isUpdateView={viewInfo.isUpdate}
-                    onSelectionChanged={handleViewSelectionChange}
-                  />
-                ))
+                <ViewInfoListItems
+                  filteredAndSorted={filteredAndSorted}
+                  onSelectionChanged={handleViewSelectionChange}
+                  selectedViewNames={selectedViewNames}
+                  handleSelectAll={props.handleSelectAll}
+                />
               }
             </WithLoader>
           </ViewInfoList>
