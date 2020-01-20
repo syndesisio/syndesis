@@ -44,7 +44,7 @@ public class SqlStoredConnectorMetaDataExtensionTest {
         when(databaseMetaData.getDatabaseProductName()).thenReturn("POSTGRESQL");
 
         final ResultSet result = mock(ResultSet.class);
-        when(databaseMetaData.getFunctionColumns("catalog", "schema", "procedureName", null)).thenReturn(result);
+        when(databaseMetaData.getProcedureColumns("catalog", "schema", "procedureName", null)).thenReturn(result);
 
         when(result.next()).thenReturn(true, true, true, false);
         when(result.getString("COLUMN_NAME")).thenReturn("A", "B", "C");
@@ -93,7 +93,7 @@ public class SqlStoredConnectorMetaDataExtensionTest {
         when(databaseMetaData.getDatabaseProductName()).thenReturn("POSTGRESQL");
 
         final ResultSet result = mock(ResultSet.class);
-        when(databaseMetaData.getFunctionColumns("catalog", "schema", "procedureName", null)).thenReturn(result);
+        when(databaseMetaData.getProcedureColumns("catalog", "schema", "procedureName", null)).thenReturn(result);
 
         when(result.next()).thenReturn(true, false);
         when(result.getString("COLUMN_NAME")).thenReturn("A");
