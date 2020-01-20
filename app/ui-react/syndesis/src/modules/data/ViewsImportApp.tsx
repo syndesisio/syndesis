@@ -47,6 +47,14 @@ export const ViewsImportApp: React.FunctionComponent = () => {
     setSelectedViews(currentViews);
   };
 
+  const handleSelectAll = (isSelected: boolean, AllViewInfo?:ViewInfo[] ) =>{
+    if(isSelected && AllViewInfo){
+     setSelectedViews(AllViewInfo)
+    }else{
+      clearViewSelection();
+    }
+  }
+
   const clearViewSelection = () => {
     setSelectedViews([]);
   };
@@ -107,6 +115,7 @@ export const ViewsImportApp: React.FunctionComponent = () => {
               selectedViews={selectedViews}
               handleAddView={handleAddView}
               handleRemoveView={handleRemoveView}
+              handleSelectAll={handleSelectAll}
             />
           )}
         />
