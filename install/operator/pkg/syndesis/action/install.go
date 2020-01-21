@@ -49,6 +49,7 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
 		v1alpha1.SyndesisPhaseInstalling,
 		v1alpha1.SyndesisPhaseInstalled,
+		v1alpha1.SyndesisPhasePostUpgradeRun,
 		v1alpha1.SyndesisPhaseStarting,
 		v1alpha1.SyndesisPhaseStartupFailed,
 	)
@@ -58,8 +59,11 @@ var kindsReportedNotAvailable = map[schema.GroupVersionKind]time.Time{}
 
 func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseInstalling) {
-		a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
+		a.log.Info("installing Syndesis resource", "name", syndesis.Name)
+	} else if syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhasePostUpgradeRun) {
+		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
 	}
+
 	resourcesThatShouldExist := map[types.UID]bool{}
 
 	// Load configuration to to use as context for generate pkg
@@ -185,7 +189,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 					a.log.Info("optional custom resource definition is not installed.", "group", gvk.Group, "version", gvk.Version, "kind", gvk.Kind)
 				}
 			} else {
-				a.log.Info("Failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
+				a.log.Info("failed to create or replace resource", "kind", res.GetKind(), "name", res.GetName(), "namespace", res.GetNamespace())
 				return err
 			}
 		} else {
@@ -235,16 +239,29 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	addRouteAnnotation(syndesis, syndesisRoute)
+	target := syndesis.DeepCopy()
 	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseInstalling {
 		// Installation completed, set the next state
-		syndesis.Status.Phase = v1alpha1.SyndesisPhaseStarting
-		syndesis.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		syndesis.Status.Description = ""
-		_, _, err := util.CreateOrUpdate(ctx, a.client, syndesis, "kind", "apiVersion")
+		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
+		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		target.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
 		if err != nil {
 			return err
 		}
-		a.log.Info("Syndesis resource installed", "name", syndesis.Name)
+
+		a.log.Info("Syndesis resource installed", "name", target.Name)
+	} else if syndesis.Status.Phase == v1alpha1.SyndesisPhasePostUpgradeRun {
+		// Installation completed, set the next state
+		target.Status.Phase = v1alpha1.SyndesisPhasePostUpgradeRunSucceed
+		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		target.Status.Description = ""
+		_, _, err := util.CreateOrUpdate(ctx, a.client, target, "kind", "apiVersion")
+		if err != nil {
+			return err
+		}
+
+		a.log.Info("Syndesis resource installed after upgrading", "name", target.Name)
 	}
 
 	return nil
@@ -282,6 +299,25 @@ nextType:
 		}
 	}
 	return nil
+}
+
+func getTypes(api kubernetes.Interface) ([]metav1.TypeMeta, error) {
+	resources, err := api.Discovery().ServerPreferredNamespacedResources()
+	if err != nil {
+		return nil, err
+	}
+
+	types := make([]metav1.TypeMeta, 0)
+	for _, resource := range resources {
+		for _, r := range resource.APIResources {
+			types = append(types, metav1.TypeMeta{
+				Kind:       r.Kind,
+				APIVersion: resource.GroupVersion,
+			})
+		}
+	}
+
+	return types, nil
 }
 
 func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (*corev1.ServiceAccount, error) {
