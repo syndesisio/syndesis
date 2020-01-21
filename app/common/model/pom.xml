@@ -77,6 +77,16 @@
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-core</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>io.swagger.core.v3</groupId>
+      <artifactId>swagger-models</artifactId>
+    </dependency>
+
     <!-- === Test ============================================================================ -->
 
     <dependency>
