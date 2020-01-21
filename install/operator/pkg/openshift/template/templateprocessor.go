@@ -2,6 +2,7 @@ package template
 
 import (
 	"errors"
+
 	v1template "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -9,7 +10,7 @@ import (
 	"k8s.io/apimachinery/pkg/util/json"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var log = logf.Log.WithName("template")

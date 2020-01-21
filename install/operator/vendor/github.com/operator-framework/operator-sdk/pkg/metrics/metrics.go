@@ -27,12 +27,10 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/rest"
 	crclient "sigs.k8s.io/controller-runtime/pkg/client"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var log = logf.Log.WithName("metrics")
-
-var trueVar = true
 
 const (
 	// OperatorPortName defines the default operator metrics port name used in the metrics Service.
@@ -79,6 +77,9 @@ func createOrUpdateService(ctx context.Context, client crclient.Client, s *v1.Se
 			Name:      s.Name,
 			Namespace: s.Namespace,
 		}, existingService)
+		if err != nil {
+			return nil, err
+		}
 
 		s.ResourceVersion = existingService.ResourceVersion
 		if existingService.Spec.Type == v1.ServiceTypeClusterIP {
@@ -88,8 +89,8 @@ func createOrUpdateService(ctx context.Context, client crclient.Client, s *v1.Se
 		if err != nil {
 			return nil, err
 		}
-		log.V(1).Info("Metrics Service object updated", "Service.Name", s.Name, "Service.Namespace", s.Namespace)
-		return existingService, nil
+		log.Info("Metrics Service object updated", "Service.Name", s.Name, "Service.Namespace", s.Namespace)
+		return s, nil
 	}
 
 	log.Info("Metrics Service object created", "Service.Name", s.Name, "Service.Namespace", s.Namespace)

@@ -14,8 +14,14 @@
 
 package version
 
+import (
+	"fmt"
+	"runtime"
+)
+
 var (
-	Version    = "v0.10.0+git"
+	Version    = "v0.14.0"
 	GitVersion = "unknown"
 	GitCommit  = "unknown"
+	GoVersion  = fmt.Sprintf("%s %s/%s", runtime.Version(), runtime.GOOS, runtime.GOARCH)
 )
