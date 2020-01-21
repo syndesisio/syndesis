@@ -95,7 +95,7 @@ public final class SqlSupport {
                     final String name = procedureSet.getString("PROCEDURE_NAME");
                     final StoredProcedureMetadata storedProcedureMetadata = getStoredProcedureMetadata(connection,
                         catalog, schemaPattern, name);
-                    storedProcedureMetadata.setName(procedureSet.getString("PROCEDURE_NAME"));
+                    storedProcedureMetadata.setName(name);
                     storedProcedureMetadata.setType(procedureSet.getString("PROCEDURE_TYPE"));
                     storedProcedureMetadata.setRemark(procedureSet.getString("REMARKS"));
                     storedProcedures.put(storedProcedureMetadata.getName(), storedProcedureMetadata);

@@ -15,26 +15,11 @@
  */
 package io.syndesis.connector.sql.db;
 
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class DbPostgresql extends DbStandard {
 
     @Override
     public String getDefaultSchema(String dbUser) {
         return "public";
-    }
-
-    @Override
-    public ResultSet fetchProcedureColumns(final DatabaseMetaData meta, final String catalog, final String schema, final String procedureName) throws SQLException {
-        return meta.getFunctionColumns(catalog, schema, procedureName, null);
-    }
-
-    @Override
-    public ResultSet fetchProcedures(final DatabaseMetaData meta, final String catalog, final String schemaPattern,
-            final String procedurePattern) throws SQLException {
-        return meta.getFunctions(catalog, schemaPattern, procedurePattern);
     }
 
     @Override
