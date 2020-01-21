@@ -16,6 +16,15 @@ import (
 // 4. all allow RoleBinding PolicyRules in the namespace - short circuit on match
 // 5. deny by default
 
+const (
+	// GroupKind is string representation of kind used in role binding subjects that represents the "group".
+	GroupKind = "Group"
+	// UserKind is string representation of kind used in role binding subjects that represents the "user".
+	UserKind = "User"
+
+	ScopesKey = "scopes.authorization.openshift.io"
+)
+
 // PolicyRule holds information that describes a policy rule, but does not contain information
 // about who the rule applies to or which namespace the rule applies to.
 type PolicyRule struct {
@@ -98,46 +107,6 @@ type RoleBinding struct {
 	// If the RoleRef cannot be resolved, the Authorizer must return an error.
 	// Since Policy is a singleton, this is sufficient knowledge to locate a role.
 	RoleRef corev1.ObjectReference `json:"roleRef" protobuf:"bytes,5,opt,name=roleRef"`
-}
-
-type NamedRoles []NamedRole
-
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// Policy is a object that holds all the Roles for a particular namespace.  There is at most
-// one Policy document per namespace.
-type Policy struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// LastModified is the last time that any part of the Policy was created, updated, or deleted
-	LastModified metav1.Time `json:"lastModified" protobuf:"bytes,2,opt,name=lastModified"`
-
-	// Roles holds all the Roles held by this Policy, mapped by Role.Name
-	Roles NamedRoles `json:"roles" protobuf:"bytes,3,rep,name=roles"`
-}
-
-type NamedRoleBindings []NamedRoleBinding
-
-// +genclient
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// PolicyBinding is a object that holds all the RoleBindings for a particular namespace.  There is
-// one PolicyBinding document per referenced Policy namespace
-type PolicyBinding struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// LastModified is the last time that any part of the PolicyBinding was created, updated, or deleted
-	LastModified metav1.Time `json:"lastModified" protobuf:"bytes,2,opt,name=lastModified"`
-
-	// PolicyRef is a reference to the Policy that contains all the Roles that this PolicyBinding's RoleBindings may reference
-	PolicyRef corev1.ObjectReference `json:"policyRef" protobuf:"bytes,3,opt,name=policyRef"`
-	// RoleBindings holds all the RoleBindings held by this PolicyBinding, mapped by RoleBinding.Name
-	RoleBindings NamedRoleBindings `json:"roleBindings" protobuf:"bytes,4,rep,name=roleBindings"`
 }
 
 // NamedRole relates a Role with a name
@@ -362,30 +331,6 @@ type Action struct {
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// PolicyList is a collection of Policies
-type PolicyList struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// Items is a list of Policies
-	Items []Policy `json:"items" protobuf:"bytes,2,rep,name=items"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// PolicyBindingList is a collection of PolicyBindings
-type PolicyBindingList struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// Items is a list of PolicyBindings
-	Items []PolicyBinding `json:"items" protobuf:"bytes,2,rep,name=items"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
 // RoleBindingList is a collection of RoleBindings
 type RoleBindingList struct {
 	metav1.TypeMeta `json:",inline"`
@@ -462,48 +407,6 @@ type ClusterRoleBinding struct {
 	RoleRef corev1.ObjectReference `json:"roleRef" protobuf:"bytes,5,opt,name=roleRef"`
 }
 
-type NamedClusterRoles []NamedClusterRole
-
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ClusterPolicy is a object that holds all the ClusterRoles for a particular namespace.  There is at most
-// one ClusterPolicy document per namespace.
-type ClusterPolicy struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// LastModified is the last time that any part of the ClusterPolicy was created, updated, or deleted
-	LastModified metav1.Time `json:"lastModified" protobuf:"bytes,2,opt,name=lastModified"`
-
-	// Roles holds all the ClusterRoles held by this ClusterPolicy, mapped by ClusterRole.Name
-	Roles NamedClusterRoles `json:"roles" protobuf:"bytes,3,rep,name=roles"`
-}
-
-type NamedClusterRoleBindings []NamedClusterRoleBinding
-
-// +genclient
-// +genclient:nonNamespaced
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ClusterPolicyBinding is a object that holds all the ClusterRoleBindings for a particular namespace.  There is
-// one ClusterPolicyBinding document per referenced ClusterPolicy namespace
-type ClusterPolicyBinding struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// LastModified is the last time that any part of the ClusterPolicyBinding was created, updated, or deleted
-	LastModified metav1.Time `json:"lastModified" protobuf:"bytes,2,opt,name=lastModified"`
-
-	// PolicyRef is a reference to the ClusterPolicy that contains all the ClusterRoles that this ClusterPolicyBinding's RoleBindings may reference
-	PolicyRef corev1.ObjectReference `json:"policyRef" protobuf:"bytes,3,opt,name=policyRef"`
-	// RoleBindings holds all the ClusterRoleBindings held by this ClusterPolicyBinding, mapped by ClusterRoleBinding.Name
-	RoleBindings NamedClusterRoleBindings `json:"roleBindings" protobuf:"bytes,4,rep,name=roleBindings"`
-}
-
 // NamedClusterRole relates a name with a cluster role
 type NamedClusterRole struct {
 	// Name is the name of the cluster role
@@ -518,30 +421,6 @@ type NamedClusterRoleBinding struct {
 	Name string `json:"name" protobuf:"bytes,1,opt,name=name"`
 	// RoleBinding is the cluster role binding being named
 	RoleBinding ClusterRoleBinding `json:"roleBinding" protobuf:"bytes,2,opt,name=roleBinding"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ClusterPolicyList is a collection of ClusterPolicies
-type ClusterPolicyList struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// Items is a list of ClusterPolicies
-	Items []ClusterPolicy `json:"items" protobuf:"bytes,2,rep,name=items"`
-}
-
-// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
-// ClusterPolicyBindingList is a collection of ClusterPolicyBindings
-type ClusterPolicyBindingList struct {
-	metav1.TypeMeta `json:",inline"`
-	// Standard object's metadata.
-	metav1.ListMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
-
-	// Items is a list of ClusterPolicyBindings
-	Items []ClusterPolicyBinding `json:"items" protobuf:"bytes,2,rep,name=items"`
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
@@ -590,12 +469,15 @@ type RoleBindingRestriction struct {
 // field must be non-nil.
 type RoleBindingRestrictionSpec struct {
 	// UserRestriction matches against user subjects.
+	// +nullable
 	UserRestriction *UserRestriction `json:"userrestriction" protobuf:"bytes,1,opt,name=userrestriction"`
 
 	// GroupRestriction matches against group subjects.
+	// +nullable
 	GroupRestriction *GroupRestriction `json:"grouprestriction" protobuf:"bytes,2,opt,name=grouprestriction"`
 
 	// ServiceAccountRestriction matches against service-account subjects.
+	// +nullable
 	ServiceAccountRestriction *ServiceAccountRestriction `json:"serviceaccountrestriction" protobuf:"bytes,3,opt,name=serviceaccountrestriction"`
 }
 
@@ -620,9 +502,11 @@ type UserRestriction struct {
 	Users []string `json:"users" protobuf:"bytes,1,rep,name=users"`
 
 	// Groups specifies a list of literal group names.
+	// +nullable
 	Groups []string `json:"groups" protobuf:"bytes,2,rep,name=groups"`
 
 	// Selectors specifies a list of label selectors over user labels.
+	// +nullable
 	Selectors []metav1.LabelSelector `json:"labels" protobuf:"bytes,3,rep,name=labels"`
 }
 
@@ -632,9 +516,11 @@ type GroupRestriction struct {
 	// Groups is a list of groups used to match against an individual user's
 	// groups. If the user is a member of one of the whitelisted groups, the user
 	// is allowed to be bound to a role.
+	// +nullable
 	Groups []string `json:"groups" protobuf:"bytes,1,rep,name=groups"`
 
 	// Selectors specifies a list of label selectors over group labels.
+	// +nullable
 	Selectors []metav1.LabelSelector `json:"labels" protobuf:"bytes,2,rep,name=labels"`
 }
 
