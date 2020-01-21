@@ -2,13 +2,13 @@
 // as_connecting-to-odata.adoc
 
 [id='adding-mongodb-connections-write_{context}']
-= Operating on documents in a MongoDB database
+= Operating on documents in a MongoDB collection
 
-In an integration, you can retrieve, count, update, remove, and add
-documents to a MongoDB 
-database. To do this, add a MongoDB connection to the middle of 
-a flow or as a simple integration's finish connection. 
-
+In an integration, you can search for, update, delete, count, or 
+add a document to a MongoDB collection. To do this, add a 
+MongoDB connection to the middle of a flow or as a simple 
+integration’s finish connection.
+ 
 .Prerequisites
 * You created a MongoDB connection. 
 * You know the name of the MongoDB collection
@@ -23,80 +23,95 @@ prompting you to choose a finish connection.
 want to add a MongoDB connection. Skip this step if you are adding 
 a simple integration's finish connection. 
 . Click the MongoDB connection that you want to use.  
-. On the *Choose an action* page, select the *MongoDB producer* action. 
-. Configure the action: 
-.. In the *Collection name* field, enter the name of the collection that 
-you want the connection to operate on. 
-.. In the *Operation to perform* field, accept the *Insert* operation or 
-click in the field to display the available actions. Click the action 
-that you want the connection to perform. 
-See the table below for a description of each operation. 
+. On the *Choose an action* page, select the action that you want the
+connection to perform.
+. To configure the action, in the *Collection name* field, enter 
+the name of the collection that you want the connection to 
+operate on. 
 +
-Each operation returns a response. If this is a finish connection, then 
-the response is lost. Consequently, if this is a finish connection, 
-the recommendation is to add a *Log* step to finish the integration instead. 
-Configure the *Log* step to capture the response.
+If you selected the *Insert* action:
++
+* You are done configuring the connection.
+* Ensure that the data that the integration passes to this 
+MongoDB connection contains JSON notation that specifies the
+document to add to the collection.
+* Click *Next* to add this connection to the integration. 
 
-. Click *Next*. 
-
-.Result
-The connection appears in the integration visualization where
-you added it. 
-
-.Next step
-Add all connections to the flow. Add any other steps that process data. 
-In this Technology Preview release, it is not possible to map source fields to 
-MongoDB connection fields. Consequently, you must ensure that the data 
-coming into the connection provides the required input for the selected 
-operation. It is expected that a future release will support data mapping.
-
-.Operation descriptions
-
+. For all other actions, the following table provides information 
+about what to specify in the second field for configuring the action. 
++
+The second field is a JSON notation expression that identifies 
+the document(s) to operate on and possibly, details for the 
+operation. If you plan to map an incoming source field to an 
+identifier in the expression, specify `:#_variable-name_` in 
+the expression. 
++
+For completeness, the *Insert* action is described in this 
+table as well.  
++
 [options="header"]
 [cols="1,1,1,1"]
 |===
-|Operation
+|Action
 |What it does
-|Input
+|Parameter field
 |Returns
 
 |*Count*
-|Counts the number of documents that satisfy the input filter expression.
-|A JSON filter expression in the form of `{"test":"unit"}`. The operation counts the number of documents that have a test attribute value of unit.
+|Counts the number of documents that satisfy the count expression that you specify.
+|In the *Count expression* field, specify a JSON filter expression in the form of `{"test":"unit"}`. The action counts the number of documents that have a `test` attribute value of `unit`.
 |JSON expression that specifies the number of documents that were found, for example, `{"count":2}`.
 
-|*Find by id*
-|Looks for a document that has the specified ID.
-|A string that contains the ID of interest. 
-|JSON notation that specifies the document that has the ID. 
+|*Delete*
+|Removes one or more documents from the collection. 
+|In the *Delete expression* field, specify a JSON expression in the form of `{"test":"unit"}`. The operation removes each  document whose `test` attribute has a value of `unit`.
+|JSON expression that specifies the number of documents that were removed, for example, `{"count":2}`.
 
-|*Find all* 
-|Looks for all documents in  the collection.
-|None
-|JSON notation that specifies all documents that are in the collection.
+|*Find*
+|Looks for all documents that match the filter expression that you specify.
+|In the *Filter expression* field, specify a JSON notation string that identifies one or more documents. 
+|JSON notation that specifies the document(s) that match the filter expression.
 
 |*Insert*
 |Adds a document to the collection. 
-|JSON notation that specifies the document to add to the collection.
+|There is no action configuration parameter for inserting a document. The data coming in to the MongoDB connection must contain JSON notation that specifies the document to add to the collection.
 |JSON notation that specifies the inserted document.
 
-|*Remove*
-|Removes a document from the collection. 
-|A JSON expression in the form of `{"test":"unit"}`. The operation removes each  document whose test attribute has a value of unit.
-|JSON expression that specifies the number of documents that were removed, for example, `{"count":2}`.
-
-|*Save*
-|Adds a document to the collection or updates a document in the collection. 
-|JSON notation that specifies the document to add or update.
-|JSON notation that specifies the saved document.
-
 |*Update*
-|Updates a document in the collection. 
-|An array of 2 arguments. The first argument is a filter expression that identifies the documents to update. 
+|Updates one or more documents in the collection. 
+|In the *Filter criteria* field, specify an array of 2 arguments. The first argument is a filter expression that identifies the documents to update. 
 The second argument is a MongoDB update statement that specifies how to update the documents. Update statement 
 format is described in link:https://docs.mongodb.com/manual/reference/method/db.collection.update/[]. For example: 
 `[{"_id":11},{$set: {"test":"updated!"}}]`.
 |JSON notation that specifies the number of documents that were updated, for example: `{"count":2}`.
 
+|*Upsert*
+|Updates a document in the collection or creates a document if the identified document does not exist.
+|In the *Upsert expression* field, specify a JSON notation array of 2 arguments. 
+The first argument is a filter expression that identifies the document to update or 
+create. The second argument is a MongoDB update statement that specifies how to 
+update the document or what the new document should contain. 
+Update statement format is described in https://docs.mongodb.com/manual/reference/method/db.collection.update/. 
+For example: ``[{"_id":11},{$set: {"test":"updated!"}}]`
+|JSON notation that specifies the updated or new document.
+
 |===
- 
++
+Each action returns a response. If this is a finish connection, then 
+the response is lost, but you can add a *Log* step to capture the response. 
+
+. Click *Next*. 
+
+. Optional. If this is a finish connection, add a *Log* step to finish the 
+integration instead. Configure the *Log* step to capture the response.
+
+.Result
+The connection appears in the integration visualization where
+you added it. 
+
+.Next steps
+Add any other needed connections to the flow. Add any other steps that 
+process data. Complete the integration by adding any needed data mapping steps. 
+When you configured the MongoDB connection action, if you specified any 
+`:#_variable-name_` identifiers in an action expression, be sure to map a 
+source field to the MongoDB connection variable field. 

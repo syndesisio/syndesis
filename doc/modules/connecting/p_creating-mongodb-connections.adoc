@@ -37,7 +37,6 @@ enter the name of the MongoDB
 administration database that is used to grant access permission. 
 A MongoDB administrator should let you know whether the database 
 that you want to access has an administration database. 
-
 .. Optional. In the *Replica set name* field, 
 specify the name of the MongoDB replica set (cluster) that the 
 connection can access. 
