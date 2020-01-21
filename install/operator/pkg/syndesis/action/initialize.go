@@ -5,11 +5,10 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	"k8s.io/client-go/kubernetes"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -32,7 +31,7 @@ func (a *initializeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	list := v1alpha1.SyndesisList{}
-	err := a.client.List(ctx, &client.ListOptions{Namespace: syndesis.Namespace}, &list)
+	err := a.client.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})
 	if err != nil {
 		return err
 	}

@@ -3,7 +3,10 @@ package action
 import (
 	"context"
 	"errors"
-	"github.com/openshift/api/apps/v1"
+
+	"k8s.io/apimachinery/pkg/labels"
+
+	v1 "github.com/openshift/api/apps/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -37,12 +40,16 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			APIVersion: "apps.openshift.io/v1",
 		},
 	}
-	listOptions := client.ListOptions{Namespace: syndesis.Namespace}
-	if err := listOptions.SetLabelSelector("syndesis.io/app=syndesis,syndesis.io/type=infrastructure"); err != nil {
+	selector, err := labels.Parse("syndesis.io/app=syndesis,syndesis.io/type=infrastructure")
+	if err != nil {
 		return err
 	}
+	options := client.ListOptions{
+		Namespace:     syndesis.Namespace,
+		LabelSelector: selector,
+	}
 
-	if err := a.client.List(ctx, &listOptions, &list); err != nil {
+	if err := a.client.List(ctx, &list, &options); err != nil {
 		return err
 	}
 
