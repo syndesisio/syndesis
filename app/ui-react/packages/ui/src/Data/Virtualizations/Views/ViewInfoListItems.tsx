@@ -25,31 +25,32 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
   ]);
 
   const getTableRows = () => {
-    const sizedRows: IRow[] = [];
+    const tableRows: IRow[] = [];
     for (const row of props.filteredAndSorted) {
       const rowValues: IRow = [];
-        const theValue = {
-          title: row.viewName,
-        } as IRow;
-        rowValues.push(theValue);
-        const nodePath = row.nodePath.join('/');
-        rowValues.push(nodePath)
-        if(row.isUpdate){
-          rowValues.push(<Label type="warning">Update</Label>)
-        }else{
-          rowValues.push(<span/>);
-        }
-        if(props.selectedViewNames.includes(row.viewName)){
-          rowValues.selected = true;
-        }
-      sizedRows.push(rowValues);
+      const theValue = {
+        title: row.viewName,
+      } as IRow;
+      rowValues.push(theValue);
+      const nodePath = `/${row.nodePath.join('/')}`;
+      rowValues.push(nodePath);
+      const updateLabel = row.isUpdate ? (
+        <Label type="warning">Update</Label>
+      ) : (
+        <span />
+      );
+      rowValues.push(updateLabel);
+      if (props.selectedViewNames.includes(row.viewName)) {
+        rowValues.selected = true;
+      }
+      tableRows.push(rowValues);
     }
-    return sizedRows.length > 0 ? sizedRows : [];
+    return tableRows.length > 0 ? tableRows : [];
   };
 
-  let rowsList = getTableRows(); 
-  
-  const [rowUpdate,setRowUpdate] = React.useState(false);
+  let rowsList = getTableRows();
+
+  const [rowUpdate, setRowUpdate] = React.useState(false);
 
   React.useEffect(()=>{
     rowsList = getTableRows();
@@ -61,7 +62,6 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
     setColumns(updatedColumn);
   },[rowUpdate]);
   
-
   const onSelect = (event: any, isSelected: any, rowId: any) => {
     let rows;
     if (rowId === -1) {
@@ -74,7 +74,7 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
       rows = [...rowsList];
       rows[rowId].selected = isSelected;
       props.onSelectionChanged(rows[rowId][0].title, isSelected);
-    } 
+    }
     setRowUpdate(!rowUpdate);
   };    
 
