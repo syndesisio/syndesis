@@ -20,6 +20,7 @@ import java.util.Map;
 import org.teiid.core.util.ArgCheck;
 import org.teiid.runtime.EmbeddedServer.ConnectionFactoryProvider;
 
+import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.TeiidDataSource;
 
 public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, TeiidDataSource, ConnectionFactoryProvider<Object> {
@@ -29,6 +30,7 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
     private String id;
     private Map<String, String> importProperties;
     private Map<String, String> translatorProperties;
+    private DefaultSyndesisDataSource syndesisDataSource;
 
     public TeiidDataSourceImpl(String id, String name, String translatorName, Object dataSource) {
         ArgCheck.isNotEmpty(name, "name"); //$NON-NLS-1$
@@ -114,5 +116,14 @@ public class TeiidDataSourceImpl implements Comparable<TeiidDataSourceImpl>, Tei
 
     public void setTranslatorProperties(Map<String, String> translatorProperties) {
         this.translatorProperties = translatorProperties;
+    }
+
+    public void setSyndesisDataSource(
+            DefaultSyndesisDataSource defaultSyndesisDataSource) {
+        this.syndesisDataSource = defaultSyndesisDataSource;
+    }
+
+    public DefaultSyndesisDataSource getSyndesisDataSource() {
+        return syndesisDataSource;
     }
 }

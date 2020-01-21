@@ -17,6 +17,8 @@ package io.syndesis.dv.metadata;
 
 import java.util.Map;
 
+import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
+
 public interface TeiidDataSource {
 
     String getName();
@@ -30,4 +32,6 @@ public interface TeiidDataSource {
     Map<String, String> getImportProperties();
 
     Map<String, String> getTranslatorProperties();
+
+    DefaultSyndesisDataSource getSyndesisDataSource();
 }

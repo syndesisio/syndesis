@@ -59,6 +59,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
 import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
+import io.syndesis.dv.metadata.internal.TeiidServer;
 import io.syndesis.dv.metadata.query.QSResult;
 import io.syndesis.dv.model.ViewDefinition;
 import io.syndesis.dv.model.export.v1.DataVirtualizationV1Adapter;
@@ -90,6 +91,8 @@ public class IntegrationTest {
     private SyndesisConnectionSynchronizer syndesisConnectionSynchronizer;
     @Autowired
     private TeiidOpenShiftClient teiidOpenShiftClient;
+    @Autowired
+    private TeiidServer teiidServer;
 
     @Autowired DataSource datasource;
 
@@ -359,6 +362,12 @@ public class IntegrationTest {
         assertEquals(1, virts.getBody().size());
         Map virt = (Map)virts.getBody().get(0);
         assertEquals("testSourceRefresh", virt.get("name"));
+
+        //should stay the same instance if nothing has changed
+        TeiidDataSourceImpl impl = this.teiidServer.getDatasources().get(dsd.getTeiidName());
+        syndesisConnectionSynchronizer.addConnection(dsd, true);
+        TeiidDataSourceImpl impl1 = this.teiidServer.getDatasources().get(dsd.getTeiidName());
+        assertTrue(impl == impl1);
     }
 
     @Test
