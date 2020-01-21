@@ -232,15 +232,7 @@ func schema_pkg_apis_syndesis_v1beta1_SyndesisStatus(ref common.ReferenceCallbac
 							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.BackupStatus"),
 						},
 					},
-					"apiVersion": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Indicate the Api version",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 				},
-				Required: []string{"apiVersion"},
 			},
 		},
 		Dependencies: []string{

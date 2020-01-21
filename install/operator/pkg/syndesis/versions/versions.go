@@ -150,7 +150,6 @@ func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiM
 
 		api.v1beta1 = &v1beta1.Syndesis{
 			Spec:     v1beta1.SyndesisSpec{ForceMigration: true},
-			Status:   v1beta1.SyndesisStatus{ApiVersion: "v1beta1"},
 			TypeMeta: metav1.TypeMeta{Kind: "Syndesis", APIVersion: "syndesis.io/v1beta1"},
 			ObjectMeta: metav1.ObjectMeta{
 				Name:      name,
@@ -269,7 +268,6 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 
 		// We dont want to migrate again more than once
 		api.v1beta1.Spec.ForceMigration = false
-		api.v1beta1.Status.ApiVersion = v1beta1.SchemeGroupVersion.Version
 
 		// We need the same status and version in the target as in the origin
 		api.v1beta1.Status.Version = api.v1alpha1.Status.Version
@@ -299,18 +297,14 @@ func (api syndesisApi) unstructuredToV1Beta1(obj unstructured.Unstructured) (s *
 
 	objM, err := json.Marshal(obj.Object)
 	if err != nil {
-		return
+		return nil, err
 	}
 
 	if err := json.Unmarshal(objM, s); err != nil {
-		return s, err
+		return nil, err
 	}
 
-	if s.Status.ApiVersion == "v1beta1" {
-		return s, nil
-	} else {
-		return nil, fmt.Errorf("unable to convert to syndesis.io.v1beta1")
-	}
+	return
 }
 
 // Attempt to convert from unstructured to v1alpha1.Syndesis
