@@ -26,7 +26,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/api/errors"
-	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
@@ -72,7 +71,7 @@ func (o *Uninstall) uninstall() error {
 		return err
 	}
 
-	err = c.List(o.Context, &client.ListOptions{}, sl)
+	err = c.List(o.Context, sl)
 	for _, res := range sl.Items {
 		err = c.Delete(o.Context, &res)
 		if err != nil {

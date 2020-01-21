@@ -1,5 +1,10 @@
 import { useVirtualizationConnectionSchema } from '@syndesis/api';
-import { SchemaNode, SchemaNodeInfo } from '@syndesis/models';
+import {
+  Connection,
+  SchemaNode,
+  SchemaNodeInfo,
+  VirtualizationSourceStatus,
+} from '@syndesis/models';
 import {
   ConnectionSchemaList,
   ConnectionSchemaListItem,
@@ -9,14 +14,30 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 import resolvers from '../../resolvers';
-import { generateSchemaNodeInfos } from './VirtualizationUtils';
+import {
+  generateDvConnections,
+  generateSchemaNodeInfos,
+  getDvConnectionStatus,
+  isDvConnectionLoading,
+} from './VirtualizationUtils';
 
-function getConnectionNames(schemaNodes: SchemaNode[]) {
-  return schemaNodes
-    .map(schemaNode => schemaNode.name)
-    .sort((a, b) => a.localeCompare(b));
+function getSortedConnections(
+  connections: Connection[],
+  dvSourceStatuses: VirtualizationSourceStatus[],
+  isSortAscending: boolean
+) {
+  // Connections are adjusted to supply dvStatus and selection
+  let sortedConnections = generateDvConnections(connections, dvSourceStatuses);
+
+  sortedConnections = sortedConnections.sort((miA, miB) => {
+    const left = isSortAscending ? miA : miB;
+    const right = isSortAscending ? miB : miA;
+    return left.name.localeCompare(right.name);
+  });
+
+  return sortedConnections;
 }
 
 function getSchemaNodeInfos(schemaNodes: SchemaNode[], connName: string) {
@@ -29,6 +50,11 @@ function getSchemaNodeInfos(schemaNodes: SchemaNode[], connName: string) {
 }
 
 export interface IConnectionSchemaContentProps {
+  error: boolean;
+  errorMessage?: string;
+  loading: boolean;
+  dvSourceStatuses: VirtualizationSourceStatus[];
+  connections: Connection[];
   onNodeSelected: (
     connectionName: string,
     name: string,
@@ -56,7 +82,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     }
   };
 
-  const isConnctionSelected = (cName: string): boolean => {
+  const isConnectionSelected = (cName: string): boolean => {
     let returnVal = false;
     for (const tables of props.selectedSchemaNodes) {
       if (tables.connectionName === cName) {
@@ -87,36 +113,46 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
   } = useVirtualizationConnectionSchema();
 
   // Root nodes of the response contain the connection names
-  const connNames = getConnectionNames(schema);
+  const sortedConns = getSortedConnections(
+    props.connections,
+    props.dvSourceStatuses,
+    true
+  );
 
   return (
     <ConnectionSchemaList
       i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
       i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
       i18nLinkCreateConnection={t('shared:linkCreateConnection')}
-      hasListData={connNames.length > 0}
+      hasListData={sortedConns.length > 0}
       linkToConnectionCreate={resolvers.connections.create.selectConnector()}
+      loading={props.loading}
     >
       <WithLoader
-        error={error !== false}
-        loading={!hasSchema}
+        error={props.error || error !== false}
+        loading={props.error || !hasSchema}
         loaderChildren={<ConnectionSchemaListSkeleton width={800} />}
-        errorChildren={<ApiError error={error as Error} />}
+        errorChildren={
+          <ApiError error={props.errorMessage || (error as Error)} />
+        }
       >
         {() =>
-          connNames.map((cName: string, index: number) => {
+          sortedConns.map((c, index) => {
             // get schema nodes for the connection
-            const srcInfos = getSchemaNodeInfos(schema, cName);
+            const srcInfos = getSchemaNodeInfos(schema, c.name);
             return (
               <ConnectionSchemaListItem
                 key={index}
-                connectionName={cName}
+                connectionName={c.name}
                 connectionDescription={''}
+                dvStatus={getDvConnectionStatus(c)}
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
-                    ? isConnctionSelected(cName)
+                    ? isConnectionSelected(c.name)
                     : false
                 }
+                icon={<EntityIcon entity={c} alt={c.name} width={23} />}
+                loading={isDvConnectionLoading(c)}
                 // tslint:disable-next-line: no-shadowed-variable
                 children={srcInfos.map((info, index) => (
                   <SchemaNodeListItem

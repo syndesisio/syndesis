@@ -34,9 +34,9 @@ func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, ski
 	updatedYaml := ""
 
 	createdCopy := desired.DeepCopy()
-	modType, err := controllerutil.CreateOrUpdate(ctx, cl, createdCopy, func(o runtime.Object) error {
+	modType, err := controllerutil.CreateOrUpdate(ctx, cl, createdCopy, func() error {
 
-		existing := o.(*unstructured.Unstructured)
+		existing := createdCopy
 		originalYaml = Dump(existing)
 
 		mergePath := desired.GetAPIVersion() + "/" + desired.GetKind()

@@ -71,7 +71,7 @@ func ApiMigrator(c client.Client, ctx context.Context, n string) (r SyndesisApiM
 			},
 		},
 	}
-	if err := c.List(ctx, options, list); err != nil {
+	if err := c.List(ctx, list, options); err != nil {
 		return nil, err
 	}
 

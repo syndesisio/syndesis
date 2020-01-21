@@ -19,7 +19,7 @@ package upgrade
 import (
 	"testing"
 
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	sbackup "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 )
