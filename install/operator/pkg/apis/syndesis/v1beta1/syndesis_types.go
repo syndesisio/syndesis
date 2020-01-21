@@ -65,9 +65,6 @@ type SyndesisStatus struct {
 	Version            string               `json:"version,omitempty"`
 	TargetVersion      string               `json:"targetVersion,omitempty"`
 	Backup             BackupStatus         `json:"backup,omitempty"`
-	// Indicate the Api version
-	// +kubebuilder:validation:Enum=v1alpha1,v1beta1
-	ApiVersion string `json:"apiVersion"`
 
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file

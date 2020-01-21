@@ -26,20 +26,18 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	sdkVersion "github.com/operator-framework/operator-sdk/version"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
-
-	_ "k8s.io/client-go/plugin/pkg/client/auth"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis"
 	"github.com/syndesisio/syndesis/install/operator/pkg/controller"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
-	"sigs.k8s.io/controller-runtime/pkg/runtime/signals"
+	"sigs.k8s.io/controller-runtime/pkg/manager/signals"
 )
 
 var (
-	metricsHost       = "0.0.0.0"
-	metricsPort int32 = 8383
+	metricsHost               = "0.0.0.0"
+	metricsPort         int32 = 8383
+	operatorMetricsPort int32 = 8686
 )
 var log = logf.Log.WithName("cmd")
 
@@ -152,7 +150,9 @@ func (o *options) run() error {
 	// Create Service object to expose the metrics port.
 	servicePorts := []v1.ServicePort{
 		{Port: metricsPort, Name: metrics.OperatorPortName, Protocol: v1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: metricsPort}},
+		{Port: operatorMetricsPort, Name: metrics.CRPortName, Protocol: v1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: operatorMetricsPort}},
 	}
+
 	_, err = metrics.CreateMetricsService(ctx, cfg, servicePorts)
 	if err != nil {
 		log.Info(err.Error())

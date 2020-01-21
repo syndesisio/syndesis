@@ -78,14 +78,24 @@ func Test_syndesisApi_unstructuredToV1Beta1(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			"Not conversion should be done when s.Status.ApiVersion is not defined",
+			"An empty instance v1beta1 should be fine",
 			args{obj: getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{})},
+			&v1beta1.Syndesis{}, false,
+		},
+		{
+			"An empty instance of v1alpha1 should be fine",
+			args{obj: getRuntimeObjectAsUnstructured(&v1alpha1.Syndesis{})},
+			&v1beta1.Syndesis{}, false,
+		},
+		{
+			"An instance v1alpha1 with mismatching data should return error",
+			args{obj: getRuntimeObjectAsUnstructured(&v1alpha1.Syndesis{Spec: v1alpha1.SyndesisSpec{Addons: v1alpha1.AddonsSpec{"ops": {"enabled": "true"}}}})},
 			nil, true,
 		},
 		{
-			"Conversion should be done when s.Status.ApiVersion is defined",
-			args{obj: getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{Status: v1beta1.SyndesisStatus{ApiVersion: "v1beta1"}})},
-			&v1beta1.Syndesis{Status: v1beta1.SyndesisStatus{ApiVersion: "v1beta1"}}, false,
+			"An instance v1alpha1 with mismatching data should return error",
+			args{obj: getRuntimeObjectAsUnstructured(&v1beta1.Syndesis{Spec: v1beta1.SyndesisSpec{Addons: v1beta1.AddonsSpec{Todo: v1beta1.AddonSpec{Enabled: true}}}})},
+			&v1beta1.Syndesis{Spec: v1beta1.SyndesisSpec{Addons: v1beta1.AddonsSpec{Todo: v1beta1.AddonSpec{Enabled: true}}}}, false,
 		},
 	}
 	for _, tt := range tests {
@@ -145,7 +155,6 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 			&v1beta1.Syndesis{
 				Spec: v1beta1.SyndesisSpec{ForceMigration: false},
 				Status: v1beta1.SyndesisStatus{
-					ApiVersion:  v1beta1.SchemeGroupVersion.Version,
 					Phase:       v1beta1.SyndesisPhaseInstalled,
 					Reason:      v1beta1.SyndesisStatusReasonMigrated,
 					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta1.SchemeGroupVersion.String()),
@@ -197,7 +206,6 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 			false,
 			&v1beta1.Syndesis{
 				Status: v1beta1.SyndesisStatus{
-					ApiVersion:  v1beta1.SchemeGroupVersion.Version,
 					Phase:       v1beta1.SyndesisPhaseInstalled,
 					Reason:      v1beta1.SyndesisStatusReasonMigrated,
 					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta1.SchemeGroupVersion.String()),
