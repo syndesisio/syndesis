@@ -22,10 +22,6 @@ import java.util.Map;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.connector.support.util.ConnectorOptions;
-import org.apache.camel.CamelContext;
-import org.apache.camel.TypeConverter;
-import org.apache.camel.util.EndpointHelper;
-import org.apache.camel.util.IntrospectionSupport;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +49,8 @@ public final class Util {
 
 
         String element = ConnectorOptions.extractOption(options, parameterName, "");
+
+        LOG.trace("Element to process [" + parameterName + "]: " + element);
 
         if (!element.isEmpty()) {
             try {
@@ -101,36 +99,5 @@ public final class Util {
             return value.getSS();
         }
         return null;
-    }
-
-
-
-    public static <T> T setProperties(T instance, Map<String, Object> properties,
-                                  CamelContext camelContext) {
-        if (camelContext == null) {
-            throw new IllegalStateException("Camel context is null");
-        }
-
-        try {
-            if (!properties.isEmpty()) {
-                final TypeConverter converter = camelContext.getTypeConverter();
-
-                IntrospectionSupport.setProperties(converter, instance, properties);
-
-                for (Map.Entry<String, Object> entry : properties.entrySet()) {
-                    if (entry.getValue() instanceof String) {
-                        String value = (String) entry.getValue();
-                        if (EndpointHelper.isReferenceParameter(value)) {
-                            IntrospectionSupport.setProperty(camelContext, converter, instance, entry.getKey(), null, value, true);
-                        }
-                    }
-                }
-            }
-        } catch (Exception e) {
-            throw new IllegalStateException(
-            "Get information about tables failed.", e);
-        }
-
-        return instance;
     }
 }
