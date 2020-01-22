@@ -152,6 +152,11 @@ export const ViewInfosContent: React.FunctionComponent<
                   onSelectionChanged={handleViewSelectionChange}
                   selectedViewNames={selectedViewNames}
                   handleSelectAll={props.handleSelectAll}
+                  i18nUpdate={t('shared:Update')}
+                  i18nSelectAll={t('importViewSelectAll', {
+                    x: selectedViewNames ? selectedViewNames.length : 0,
+                    y: filteredAndSorted ? filteredAndSorted.length : 0,
+                  })}
                 />
               }
             </WithLoader>
