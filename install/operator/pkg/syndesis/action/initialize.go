@@ -5,11 +5,10 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
-	"sigs.k8s.io/controller-runtime/pkg/client"
-
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -24,31 +23,31 @@ func newInitializeAction(mgr manager.Manager, api kubernetes.Interface) Syndesis
 	}
 }
 
-func (a *initializeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *initializeAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1alpha1.SyndesisPhaseMissing,
-		v1alpha1.SyndesisPhaseNotInstalled)
+		v1beta1.SyndesisPhaseMissing,
+		v1beta1.SyndesisPhaseNotInstalled)
 }
 
-func (a *initializeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
-	list := v1alpha1.SyndesisList{}
-	err := a.client.List(ctx, &client.ListOptions{Namespace: syndesis.Namespace}, &list)
+func (a *initializeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
+	list := v1beta1.SyndesisList{}
+	err := a.client.List(ctx, &list, &client.ListOptions{Namespace: syndesis.Namespace})
 	if err != nil {
 		return err
 	}
 
 	target := syndesis.DeepCopy()
 
-	if len(list.Items) > 1 {
+	if len(list.Items) > 1 && syndesis.Status.Phase != v1beta1.SyndesisPhaseInstalled {
 		// We want one instance per namespace at most
-		target.Status.Phase = v1alpha1.SyndesisPhaseNotInstalled
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonDuplicate
+		target.Status.Phase = v1beta1.SyndesisPhaseNotInstalled
+		target.Status.Reason = v1beta1.SyndesisStatusReasonDuplicate
 		target.Status.Description = "Cannot install two Syndesis resources in the same namespace"
 		a.log.Error(nil, "Cannot initialize Syndesis resource because its a duplicate", "name", syndesis.Name)
 	} else {
 		syndesisVersion := pkg.DefaultOperatorTag
-		target.Status.Phase = v1alpha1.SyndesisPhaseInstalling
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		target.Status.Phase = v1beta1.SyndesisPhaseInstalling
+		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
 		target.Status.Version = syndesisVersion
 		a.log.Info("Syndesis resource initialized", "name", syndesis.Name, "version", syndesisVersion)

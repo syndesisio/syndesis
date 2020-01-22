@@ -7,40 +7,40 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 
 func TestGenerator(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Addons: v1alpha1.AddonsSpec{
-				Jaeger: v1alpha1.JaegerConfiguration{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Addons: v1beta1.AddonsSpec{
+				Jaeger: v1beta1.JaegerConfiguration{
 					Enabled:      true,
 					SamplerType:  "const",
 					SamplerParam: "0",
 				},
-				Ops:  v1alpha1.AddonSpec{Enabled: true},
-				Todo: v1alpha1.AddonSpec{Enabled: true},
-				DV: v1alpha1.DvConfiguration{
+				Ops:  v1beta1.AddonSpec{Enabled: true},
+				Todo: v1beta1.AddonSpec{Enabled: true},
+				DV: v1beta1.DvConfiguration{
 					Enabled:   false,
-					Resources: v1alpha1.Resources{Memory: "1024Mi"},
+					Resources: v1beta1.Resources{Memory: "1024Mi"},
 				},
-				CamelK: v1alpha1.AddonSpec{
+				CamelK: v1beta1.AddonSpec{
 					Enabled: true,
 				},
-				PublicApi: v1alpha1.PublicApiConfiguration{
+				PublicApi: v1beta1.PublicApiConfiguration{
 					Enabled:       true,
 					RouteHostname: "mypublichost.com",
 				},
 			},
-			Components: v1alpha1.ComponentsSpec{
-				Oauth: v1alpha1.OauthConfiguration{},
-				Server: v1alpha1.ServerConfiguration{
-					Resources: v1alpha1.Resources{Memory: "800Mi"},
-					Features: v1alpha1.ServerFeatures{
+			Components: v1beta1.ComponentsSpec{
+				Oauth: v1beta1.OauthConfiguration{},
+				Server: v1beta1.ServerConfiguration{
+					Resources: v1beta1.Resources{Memory: "800Mi"},
+					Features: v1beta1.ServerFeatures{
 						MavenRepositories: map[string]string{
 							"central":           "https://repo.maven.apache.org/maven2/",
 							"repo-02-redhat-ga": "https://maven.repository.redhat.com/ga/",
@@ -48,29 +48,29 @@ func TestGenerator(t *testing.T) {
 						},
 					},
 				},
-				Meta: v1alpha1.MetaConfiguration{
-					Resources: v1alpha1.ResourcesWithVolume{
+				Meta: v1beta1.MetaConfiguration{
+					Resources: v1beta1.ResourcesWithVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Database: v1alpha1.DatabaseConfiguration{
+				Database: v1beta1.DatabaseConfiguration{
 					User: "syndesis",
 					Name: "syndesis",
 					URL:  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Prometheus: v1alpha1.PrometheusConfiguration{
-					Resources: v1alpha1.ResourcesWithVolume{
+				Prometheus: v1beta1.PrometheusConfiguration{
+					Resources: v1beta1.ResourcesWithVolume{
 						Memory:         "512Mi",
 						VolumeCapacity: "1Gi",
 					},
 				},
-				Upgrade: v1alpha1.UpgradeConfiguration{
-					Resources: v1alpha1.VolumeOnlyResources{VolumeCapacity: "1Gi"},
+				Upgrade: v1beta1.UpgradeConfiguration{
+					Resources: v1beta1.VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
 			},
 		},
@@ -121,7 +121,7 @@ func TestGenerator(t *testing.T) {
 // Checks syndesis-meta resources have had syndesis
 // object values correctly applied
 //
-func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-meta" {
 		return 0
 	}
@@ -143,7 +143,7 @@ func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1
 // Checks syndesis-server resources have had syndesis
 // object values correctly applied
 //
-func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-server" {
 		return 0
 	}
@@ -172,7 +172,7 @@ func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *
 	return 1
 }
 
-func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-global-config" {
 		return 0
 	}
@@ -192,7 +192,7 @@ func checkSynGlobalConfig(t *testing.T, resource unstructured.Unstructured, synd
 	return 1
 }
 
-func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-ui-config" {
 		return 0
 	}
@@ -211,7 +211,7 @@ func checkSynUIConfig(t *testing.T, resource unstructured.Unstructured, syndesis
 	return 1
 }
 
-func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "syndesis-dv" {
 		return 0
 	}
@@ -228,7 +228,7 @@ func checkSynAddonDv(t *testing.T, resource unstructured.Unstructured, syndesis 
 	return 1
 }
 
-func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *v1alpha1.Syndesis) int {
+func checkSynOAuthProxy(t *testing.T, resource unstructured.Unstructured, syndesis *v1beta1.Syndesis) int {
 	if resource.GetName() != "oauth-proxy" {
 		return 0
 	}
@@ -292,7 +292,7 @@ func assertPropStr(t *testing.T, resource map[string]interface{}, expected strin
 	}
 }
 
-func loadDBResource(t *testing.T, syndesis *v1alpha1.Syndesis) []unstructured.Unstructured {
+func loadDBResource(t *testing.T, syndesis *v1beta1.Syndesis) []unstructured.Unstructured {
 	configuration, err := configuration.GetProperties("../../build/conf/config-test.yaml", context.TODO(), nil, syndesis)
 	require.NoError(t, err)
 
@@ -302,7 +302,7 @@ func loadDBResource(t *testing.T, syndesis *v1alpha1.Syndesis) []unstructured.Un
 	return resources
 }
 
-func checkPesistentVolumeProps(t *testing.T, syndesis *v1alpha1.Syndesis, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
+func checkPesistentVolumeProps(t *testing.T, syndesis *v1beta1.Syndesis, pvTest func(t *testing.T, resource unstructured.Unstructured)) {
 	resources := loadDBResource(t, syndesis)
 
 	for _, resource := range resources {
@@ -315,11 +315,11 @@ func checkPesistentVolumeProps(t *testing.T, syndesis *v1alpha1.Syndesis, pvTest
 }
 
 func TestGeneratorDBDefaultAccessMode(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 					},
@@ -335,19 +335,19 @@ func TestGeneratorDBDefaultAccessMode(t *testing.T) {
 		aModes, exists, _ := unstructured.NestedStringSlice(resource.UnstructuredContent(), "spec", "accessModes")
 		assert.True(t, exists)
 		assert.True(t, len(aModes) == 1)
-		assert.Equal(t, aModes[0], string(v1alpha1.ReadWriteOnce))
+		assert.Equal(t, aModes[0], string(v1beta1.ReadWriteOnce))
 	})
 }
 
 func TestGeneratorDBAccessMode(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:           "255Mi",
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: v1alpha1.ReadOnlyMany,
+						VolumeAccessMode: v1beta1.ReadOnlyMany,
 					},
 				},
 			},
@@ -357,16 +357,16 @@ func TestGeneratorDBAccessMode(t *testing.T) {
 		aModes, exists, _ := unstructured.NestedStringSlice(resource.UnstructuredContent(), "spec", "accessModes")
 		assert.True(t, exists)
 		assert.True(t, len(aModes) == 1)
-		assert.Equal(t, aModes[0], string(v1alpha1.ReadOnlyMany))
+		assert.Equal(t, aModes[0], string(v1beta1.ReadOnlyMany))
 	})
 }
 
 func TestGeneratorDBVolumeName(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 						VolumeName:     "pv0001",
@@ -382,11 +382,11 @@ func TestGeneratorDBVolumeName(t *testing.T) {
 }
 
 func TestGeneratorDBNoVolumeName(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 					},
@@ -402,11 +402,11 @@ func TestGeneratorDBNoVolumeName(t *testing.T) {
 }
 
 func TestGeneratorDBVolumeStorageClass(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:             "255Mi",
 						VolumeCapacity:     "1Gi",
 						VolumeStorageClass: "gluster-fs",
@@ -422,11 +422,11 @@ func TestGeneratorDBVolumeStorageClass(t *testing.T) {
 }
 
 func TestGeneratorDBNoVolumeStorageClass(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 					},
@@ -442,11 +442,11 @@ func TestGeneratorDBNoVolumeStorageClass(t *testing.T) {
 }
 
 func TestGeneratorDBVolumeLabels(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 						VolumeLabels: map[string]string{
@@ -471,11 +471,11 @@ func TestGeneratorDBVolumeLabels(t *testing.T) {
 }
 
 func TestGeneratorDBNoVolumeLabels(t *testing.T) {
-	syndesis := &v1alpha1.Syndesis{
-		Spec: v1alpha1.SyndesisSpec{
-			Components: v1alpha1.ComponentsSpec{
-				Database: v1alpha1.DatabaseConfiguration{
-					Resources: v1alpha1.ResourcesWithPersistentVolume{
+	syndesis := &v1beta1.Syndesis{
+		Spec: v1beta1.SyndesisSpec{
+			Components: v1beta1.ComponentsSpec{
+				Database: v1beta1.DatabaseConfiguration{
+					Resources: v1beta1.ResourcesWithPersistentVolume{
 						Memory:         "255Mi",
 						VolumeCapacity: "1Gi",
 					},

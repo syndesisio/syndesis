@@ -42,7 +42,7 @@ import (
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var backupLog = logf.Log.WithName("backup")
@@ -234,6 +234,7 @@ func (b *Backup) backupResources() error {
 		{APIVersion: "v1", Kind: "ServiceAccount"},
 		{APIVersion: "rbac.authorization.k8s.io/v1", Kind: "RoleBinding"},
 		{APIVersion: "template.openshift.io/v1", Kind: "Template"},
+		{APIVersion: "image.openshift.io/v1", Kind: "ImageStream"},
 		{APIVersion: "build.openshift.io/v1", Kind: "BuildConfig"},
 		{APIVersion: "apps.openshift.io/v1", Kind: "DeploymentConfig"},
 		{APIVersion: "route.openshift.io/v1", Kind: "Route"},

@@ -1,4 +1,4 @@
-apiVersion: syndesis.io/v1alpha1
+apiVersion: syndesis.io/v1beta1
 kind: Syndesis
 metadata:
   name: app
@@ -8,3 +8,5 @@ spec:
     {{.}}:
       enabled: true
   {{- end }}
+status:
+  apiVersion: v1beta1

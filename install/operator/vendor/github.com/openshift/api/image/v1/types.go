@@ -22,7 +22,7 @@ type ImageList struct {
 // +genclient:nonNamespaced
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Image is an immutable representation of a Docker image and metadata at a point in time.
+// Image is an immutable representation of a container image and metadata at a point in time.
 type Image struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
@@ -158,11 +158,12 @@ type ImageStreamList struct {
 }
 
 // +genclient
-// +genclient:method=Secrets,verb=list,subresource=secrets,result=k8s.io/api/core/v1.Secret
+// +genclient:method=Secrets,verb=get,subresource=secrets,result=k8s.io/api/core/v1.SecretList
+// +genclient:method=Layers,verb=get,subresource=layers,result=github.com/openshift/api/image/v1.ImageStreamLayers
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStream stores a mapping of tags to images, metadata overrides that are applied
-// when images are tagged in a stream, and an optional reference to a Docker image
+// when images are tagged in a stream, and an optional reference to a container image
 // repository on a registry.
 type ImageStream struct {
 	metav1.TypeMeta `json:",inline"`
@@ -179,7 +180,7 @@ type ImageStream struct {
 type ImageStreamSpec struct {
 	// lookupPolicy controls how other resources reference images within this namespace.
 	LookupPolicy ImageLookupPolicy `json:"lookupPolicy,omitempty" protobuf:"bytes,3,opt,name=lookupPolicy"`
-	// dockerImageRepository is optional, if specified this stream is backed by a Docker repository on this server
+	// dockerImageRepository is optional, if specified this stream is backed by a container repository on this server
 	// Deprecated: This field is deprecated as of v3.7 and will be removed in a future release.
 	// Specify the source for the tags to be imported in each tag via the spec.tags.from reference instead.
 	DockerImageRepository string `json:"dockerImageRepository,omitempty" protobuf:"bytes,1,opt,name=dockerImageRepository"`
@@ -258,7 +259,7 @@ type TagReferencePolicy struct {
 	// Type determines how the image pull spec should be transformed when the image stream tag is used in
 	// deployment config triggers or new builds. The default value is `Source`, indicating the original
 	// location of the image should be used (if imported). The user may also specify `Local`, indicating
-	// that the pull spec should point to the integrated Docker registry and leverage the registry's
+	// that the pull spec should point to the integrated container image registry and leverage the registry's
 	// ability to proxy the pull to an upstream registry. `Local` allows the credentials used to pull this
 	// image to be managed from the image stream's namespace, so others on the platform can access a remote
 	// image but have no access to the remote secret. It also allows the image layers to be mirrored into
@@ -333,21 +334,21 @@ type TagEventCondition struct {
 // +genclient:method=Create,verb=create,result=k8s.io/apimachinery/pkg/apis/meta/v1.Status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// ImageStreamMapping represents a mapping from a single tag to a Docker image as
-// well as the reference to the Docker image stream the image came from.
+// ImageStreamMapping represents a mapping from a single tag to a container image as
+// well as the reference to the container image stream the image came from.
 type ImageStreamMapping struct {
 	metav1.TypeMeta `json:",inline"`
 	// Standard object's metadata.
 	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
 
-	// Image is a Docker image.
+	// Image is a container image.
 	Image Image `json:"image" protobuf:"bytes,2,opt,name=image"`
 	// Tag is a string value this image can be located with inside the stream.
 	Tag string `json:"tag" protobuf:"bytes,3,opt,name=tag"`
 }
 
 // +genclient
-// +genclient:onlyVerbs=get,create,update,delete
+// +genclient:onlyVerbs=get,list,create,update,delete
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
 // ImageStreamTag represents an Image that is retrieved by tag name from an ImageStream.
@@ -403,26 +404,69 @@ type ImageStreamImage struct {
 	Image Image `json:"image" protobuf:"bytes,2,opt,name=image"`
 }
 
-// DockerImageReference points to a Docker image.
+// DockerImageReference points to a container image.
 type DockerImageReference struct {
-	// Registry is the registry that contains the Docker image
+	// Registry is the registry that contains the container image
 	Registry string `protobuf:"bytes,1,opt,name=registry"`
-	// Namespace is the namespace that contains the Docker image
+	// Namespace is the namespace that contains the container image
 	Namespace string `protobuf:"bytes,2,opt,name=namespace"`
-	// Name is the name of the Docker image
+	// Name is the name of the container image
 	Name string `protobuf:"bytes,3,opt,name=name"`
-	// Tag is which tag of the Docker image is being referenced
+	// Tag is which tag of the container image is being referenced
 	Tag string `protobuf:"bytes,4,opt,name=tag"`
-	// ID is the identifier for the Docker image
+	// ID is the identifier for the container image
 	ID string `protobuf:"bytes,5,opt,name=iD"`
+}
+
+// +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
+
+// ImageStreamLayers describes information about the layers referenced by images in this
+// image stream.
+type ImageStreamLayers struct {
+	metav1.TypeMeta `json:",inline"`
+	// Standard object's metadata.
+	metav1.ObjectMeta `json:"metadata,omitempty" protobuf:"bytes,1,opt,name=metadata"`
+	// blobs is a map of blob name to metadata about the blob.
+	Blobs map[string]ImageLayerData `json:"blobs" protobuf:"bytes,2,rep,name=blobs"`
+	// images is a map between an image name and the names of the blobs and config that
+	// comprise the image.
+	Images map[string]ImageBlobReferences `json:"images" protobuf:"bytes,3,rep,name=images"`
+}
+
+// ImageBlobReferences describes the blob references within an image.
+type ImageBlobReferences struct {
+	// imageMissing is true if the image is referenced by the image stream but the image
+	// object has been deleted from the API by an administrator. When this field is set,
+	// layers and config fields may be empty and callers that depend on the image metadata
+	// should consider the image to be unavailable for download or viewing.
+	// +optional
+	ImageMissing bool `json:"imageMissing" protobuf:"varint,3,opt,name=imageMissing"`
+	// layers is the list of blobs that compose this image, from base layer to top layer.
+	// All layers referenced by this array will be defined in the blobs map. Some images
+	// may have zero layers.
+	// +optional
+	Layers []string `json:"layers" protobuf:"bytes,1,rep,name=layers"`
+	// config, if set, is the blob that contains the image config. Some images do
+	// not have separate config blobs and this field will be set to nil if so.
+	// +optional
+	Config *string `json:"config" protobuf:"bytes,2,opt,name=config"`
+}
+
+// ImageLayerData contains metadata about an image layer.
+type ImageLayerData struct {
+	// Size of the layer in bytes as defined by the underlying store. This field is
+	// optional if the necessary information about size is not available.
+	LayerSize *int64 `json:"size" protobuf:"varint,1,opt,name=size"`
+	// MediaType of the referenced object.
+	MediaType string `json:"mediaType" protobuf:"bytes,2,opt,name=mediaType"`
 }
 
 // +genclient
 // +genclient:onlyVerbs=create
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// The image stream import resource provides an easy way for a user to find and import Docker images
-// from other Docker registries into the server. Individual images or an entire image repository may
+// The image stream import resource provides an easy way for a user to find and import container images
+// from other container image registries into the server. Individual images or an entire image repository may
 // be imported, and users may choose to see the results of the import prior to tagging the resulting
 // images into the specified image stream.
 //
@@ -445,7 +489,7 @@ type ImageStreamImportSpec struct {
 	// Import indicates whether to perform an import - if so, the specified tags are set on the spec
 	// and status of the image stream defined by the type meta.
 	Import bool `json:"import" protobuf:"varint,1,opt,name=import"`
-	// Repository is an optional import of an entire Docker image repository. A maximum limit on the
+	// Repository is an optional import of an entire container image repository. A maximum limit on the
 	// number of tags imported this way is imposed by the server.
 	Repository *RepositoryImportSpec `json:"repository,omitempty" protobuf:"bytes,2,opt,name=repository"`
 	// Images are a list of individual images to import.
@@ -462,9 +506,9 @@ type ImageStreamImportStatus struct {
 	Images []ImageImportStatus `json:"images,omitempty" protobuf:"bytes,3,rep,name=images"`
 }
 
-// RepositoryImportSpec describes a request to import images from a Docker image repository.
+// RepositoryImportSpec describes a request to import images from a container image repository.
 type RepositoryImportSpec struct {
-	// From is the source for the image repository to import; only kind DockerImage and a name of a Docker image repository is allowed
+	// From is the source for the image repository to import; only kind DockerImage and a name of a container image repository is allowed
 	From corev1.ObjectReference `json:"from" protobuf:"bytes,1,opt,name=from"`
 
 	// ImportPolicy is the policy controlling how the image is imported

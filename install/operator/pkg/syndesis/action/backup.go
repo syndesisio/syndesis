@@ -25,7 +25,7 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 
 	cron "github.com/robfig/cron/v3"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 )
 
@@ -42,14 +42,14 @@ func newBackupAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOper
 	}
 }
 
-func (a *backupAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *backupAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1alpha1.SyndesisPhaseInstalled,
+		v1beta1.SyndesisPhaseInstalled,
 	)
 }
 
 // Schedule a cronjob for systematic backups
-func (a *backupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *backupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 	entries := c.Entries()
 
 	if s := syndesis.Spec.Backup.Schedule; s != "" {

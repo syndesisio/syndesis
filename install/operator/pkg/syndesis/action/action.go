@@ -4,14 +4,14 @@ import (
 	"context"
 
 	"github.com/go-logr/logr"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/client-go/kubernetes"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
-	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
 const (
@@ -35,8 +35,8 @@ type baseAction struct {
 var actionLog = logf.Log.WithName("action")
 
 type SyndesisOperatorAction interface {
-	CanExecute(syndesis *v1alpha1.Syndesis) bool
-	Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error
+	CanExecute(syndesis *v1beta1.Syndesis) bool
+	Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error
 }
 
 func NewOperatorActions(mgr manager.Manager, api kubernetes.Interface) []SyndesisOperatorAction {
@@ -61,7 +61,7 @@ func newBaseAction(mgr manager.Manager, api kubernetes.Interface, typeS string) 
 	}
 }
 
-func syndesisPhaseIs(syndesis *v1alpha1.Syndesis, statuses ...v1alpha1.SyndesisPhase) bool {
+func syndesisPhaseIs(syndesis *v1beta1.Syndesis, statuses ...v1beta1.SyndesisPhase) bool {
 	if syndesis == nil {
 		return false
 	}

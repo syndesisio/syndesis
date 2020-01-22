@@ -126,7 +126,7 @@ func GetPodWithLabelSelector(api kubernetes.Interface, namespace string, LabelSe
 
 func ListInChunks(ctx context.Context, c client.Client, options *client.ListOptions, list *unstructured.UnstructuredList, handler func([]unstructured.Unstructured) error) (err error) {
 	for {
-		if err := c.List(ctx, options, list); err != nil {
+		if err := c.List(ctx, list, options); err != nil {
 			return err
 		}
 		err = handler(list.Items)
