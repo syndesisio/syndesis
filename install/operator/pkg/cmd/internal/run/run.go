@@ -4,6 +4,10 @@ import (
 	"fmt"
 	"runtime"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/versions"
+
+	v1 "k8s.io/api/core/v1"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
@@ -13,11 +17,10 @@ import (
 	"github.com/operator-framework/operator-sdk/pkg/restmapper"
 	"github.com/pkg/errors"
 	"github.com/spf13/cobra"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/util/intstr"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
@@ -32,8 +35,9 @@ import (
 )
 
 var (
-	metricsHost       = "0.0.0.0"
-	metricsPort int32 = 8383
+	metricsHost               = "0.0.0.0"
+	metricsPort         int32 = 8383
+	operatorMetricsPort int32 = 8686
 )
 var log = logf.Log.WithName("cmd")
 
@@ -82,7 +86,7 @@ func (o *options) run() error {
 		return err
 	}
 
-	configuration, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1alpha1.Syndesis{})
+	configuration, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
 	if err != nil {
 		return err
 	}
@@ -124,6 +128,20 @@ func (o *options) run() error {
 
 	openshift.AddToScheme(mgr.GetScheme())
 
+	cli, err := o.GetClient()
+	if err != nil {
+		return err
+	}
+
+	am, err := versions.ApiMigrator(cli, o.Context, namespace)
+	if err != nil {
+		return err
+	}
+
+	if err = am.Migrate(); err != nil {
+		return err
+	}
+
 	// Setup all Controllers
 	if err := controller.AddToManager(mgr); err != nil {
 		return err
@@ -132,7 +150,7 @@ func (o *options) run() error {
 	// Create Service object to expose the metrics port.
 	servicePorts := []v1.ServicePort{
 		{Port: metricsPort, Name: metrics.OperatorPortName, Protocol: v1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: metricsPort}},
-		{Port: metricsPort, Name: metrics.CRPortName, Protocol: v1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: metricsPort}},
+		{Port: operatorMetricsPort, Name: metrics.CRPortName, Protocol: v1.ProtocolTCP, TargetPort: intstr.IntOrString{Type: intstr.Int, IntVal: operatorMetricsPort}},
 	}
 
 	_, err = metrics.CreateMetricsService(ctx, cfg, servicePorts)

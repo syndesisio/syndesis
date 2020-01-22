@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
-	"k8s.io/apimachinery/pkg/apis/meta/v1"
+	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 )
 

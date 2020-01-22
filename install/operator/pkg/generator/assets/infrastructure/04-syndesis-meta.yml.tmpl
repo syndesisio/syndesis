@@ -140,7 +140,8 @@
     triggers:
     - type: ConfigChange
 {{if .DevSupport}}
-    - imageChangeParams:
+    - type: ImageChange
+      imageChangeParams:
         automatic: true
         containerNames:
         - syndesis-meta
@@ -148,7 +149,7 @@
           kind: ImageStreamTag
           name: syndesis-meta:latest
           namespace: {{.OpenShiftProject}}
-      type: ImageChange
+
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
