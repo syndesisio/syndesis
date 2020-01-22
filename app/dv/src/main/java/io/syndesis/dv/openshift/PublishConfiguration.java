@@ -30,9 +30,9 @@ import io.syndesis.dv.StringConstants;
 public class PublishConfiguration implements StringConstants {
 
     private VDBMetaData vdb;
-    private boolean enableOdata;
-    private String containerMemorySize;
-    private String containerDiskSize;
+    private boolean enableOdata = true;
+    private String containerMemorySize = "1024Mi";
+    private String containerDiskSize = "20Gi";
     private List<EnvVar> allEnvironmentVariables = new ArrayList<>();
     private HashMap<String, String> buildNodeSelector = new HashMap<>();
     private String buildImageStream = "syndesis-s2i:latest";

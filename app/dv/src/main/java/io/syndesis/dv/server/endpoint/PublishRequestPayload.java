@@ -26,14 +26,6 @@ public class PublishRequestPayload {
 
     private String name;
 
-    private Integer cpuUnits = 500;
-
-    private Integer memory = 1024;
-
-    private Integer diskSize = 20;
-
-    private Boolean enableOdata = true;
-
     public String getName() {
         return name;
     }
@@ -42,35 +34,4 @@ public class PublishRequestPayload {
         this.name = name;
     }
 
-    public Integer getCpuUnits() {
-        return cpuUnits;
-    }
-
-    public void setCpuUnits(Integer cpuUnits) {
-        this.cpuUnits = cpuUnits;
-    }
-
-    public Integer getMemory() {
-        return memory;
-    }
-
-    public void setMemory(Integer memory) {
-        this.memory = memory;
-    }
-
-    public Integer getDiskSize() {
-        return diskSize;
-    }
-
-    public void setDiskSize(Integer diskSize) {
-        this.diskSize = diskSize;
-    }
-
-    public Boolean getEnableOdata() {
-        return enableOdata;
-    }
-
-    public void setEnableOdata(Boolean enableOdata) {
-        this.enableOdata = enableOdata;
-    }
 }
