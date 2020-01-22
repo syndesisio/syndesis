@@ -5,7 +5,10 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { ViewInfoList, ViewInfoListItem } from '../../../src';
+import {
+  ViewInfoList,
+  ViewInfoListItems,
+} from '../../../src';
 
 const stories = storiesOf('Data/Views/ViewInfoList', module);
 
@@ -16,39 +19,46 @@ const viewDesc2 = 'Description for Accounts';
 const emptyStateTitle = 'Empty State Title';
 const selectionChangedText = 'Selection Changed';
 
-const tableItems = [
-  <ViewInfoListItem
-    key="viewListItem1"
-    name={text('name', viewName1)}
-    description={text('description', viewDesc1)}
-    connectionName={'connection1'}
-    nodePath={[]}
-    selected={true}
-    i18nUpdate={'Update'}
-    isUpdateView={true}
-    onSelectionChanged={action(selectionChangedText)}
-  />,
-  <ViewInfoListItem
-    key="viewListItem2"
-    name={text('name', viewName2)}
-    description={text('description', viewDesc2)}
-    connectionName={'connection1'}
-    nodePath={[]}
-    selected={false}
-    i18nUpdate={'Update'}
-    isUpdateView={false}
-    onSelectionChanged={action(selectionChangedText)}
-  />,
+const filteredAndSorted = [
+  {
+    connectionName: 'pgSample',
+    isUpdate: true,
+    nodePath: ['sampledb', 'contact'],
+    viewName: 'contact',
+  },
+  {
+    connectionName: 'pgSample',
+    isUpdate: true,
+    nodePath: ['sampledb', 'todo'],
+    viewName: 'todo',
+  },
+  {
+    connectionName: 'pgSample',
+    isUpdate: true,
+    nodePath: ['sampledb', 'winilist'],
+    viewName: 'winilist',
+  },
 ];
+
+const tableItems = (
+  <ViewInfoListItems
+    filteredAndSorted={filteredAndSorted}
+    onSelectionChanged={action(selectionChangedText)}
+    selectedViewNames={['todo']}
+    handleSelectAll={action(selectionChangedText)}
+    i18nUpdate={text('i18nUpdate', 'Update')}
+    i18nSelectAll={text('i18nUpdate', 'Select all (1 of 3 items selected)')}
+  />
+);
 
 const hasSourceTablesTestNotes =
   '- Verify toolbar is displayed\n' +
   '- Verify empty state component does not show\n' +
   '- Verify results message shows ' +
-  tableItems.length +
+  filteredAndSorted.length +
   ' results\n' +
   '- Verify ' +
-  tableItems.length +
+  filteredAndSorted.length +
   ' View list items are displayed';
 
 const noSourceTablesTestNotes =
@@ -149,7 +159,7 @@ stories
           )}
           i18nResultsCount={text(
             'i18nResultsCount',
-            tableItems.length + ' Results'
+            filteredAndSorted.length + ' Results'
           )}
           children={tableItems}
         />

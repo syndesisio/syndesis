@@ -47,6 +47,7 @@
   "exportVirtualizationFailed": "Could not export the virtualization \"{{name}}\". Details: {{details}}",
   "importDataSource": "Import data source",
   "importViews": "Import views",
+  "importViewSelectAll": "Select all ({{x}} of {{y}} items selected)",  
   "importDataSourceTip": "Import views from a data source",
   "importDataSourceWizardStep1": "Select connection",
   "importDataSourceWizardStep2": "Select views",

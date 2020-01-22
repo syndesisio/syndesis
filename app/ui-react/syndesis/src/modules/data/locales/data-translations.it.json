@@ -46,6 +46,7 @@
   "errorVirtualizationNameValidation": "Errore durante la convalida del nome della virtualizzazione.",
   "exportVirtualizationFailed": "Impossibile esportare la virtualizzazione \"{{name}}\". Dettagli: {{details}}",
   "importDataSource": "Importa origine dati",
+  "importViewSelectAll": "Seleziona tutto ({{x}} di {{y}} elementi selezionati)", 
   "importViews": "Importa visualizzazioni",
   "importDataSourceTip": "Importa visualizzazioni da un'origine dati",
   "importDataSourceWizardStep1": "Seleziona la connessione",

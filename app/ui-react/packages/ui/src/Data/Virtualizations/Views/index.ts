@@ -10,7 +10,7 @@ export * from './SelectedConnectionListView';
 export * from './CreateViewHeader';
 export * from './ViewHeaderBreadcrumb';
 export * from './ViewInfoList';
-export * from './ViewInfoListItem';
+export * from './ViewInfoListItems';
 export * from './ViewInfoListSkeleton';
 export * from './ViewList';
 export * from './ViewListItem';
