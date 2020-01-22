@@ -11,59 +11,9 @@ import (
 
 func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenAPIDefinition {
 	return map[string]common.OpenAPIDefinition{
-		"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec": schema_pkg_apis_syndesis_v1alpha1_ComponentsSpec(ref),
 		"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.Syndesis":       schema_pkg_apis_syndesis_v1alpha1_Syndesis(ref),
 		"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.SyndesisSpec":   schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref),
 		"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.SyndesisStatus": schema_pkg_apis_syndesis_v1alpha1_SyndesisStatus(ref),
-	}
-}
-
-func schema_pkg_apis_syndesis_v1alpha1_ComponentsSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Type: []string{"object"},
-				Properties: map[string]spec.Schema{
-					"oauth": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OauthConfiguration"),
-						},
-					},
-					"server": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ServerConfiguration"),
-						},
-					},
-					"meta": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.MetaConfiguration"),
-						},
-					},
-					"database": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.DatabaseConfiguration"),
-						},
-					},
-					"prometheus": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.PrometheusConfiguration"),
-						},
-					},
-					"grafana": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.GrafanaConfiguration"),
-						},
-					},
-					"upgrade": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.UpgradeConfiguration"),
-						},
-					},
-				},
-			},
-		},
-		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.DatabaseConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.GrafanaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.MetaConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.OauthConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.PrometheusConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ServerConfiguration", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.UpgradeConfiguration"},
 	}
 }
 
@@ -118,50 +68,119 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 				Description: "SyndesisSpec defines the desired state of Syndesis",
 				Type:        []string{"object"},
 				Properties: map[string]spec.Schema{
-					"backup": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Schedule backup",
-							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupConfig"),
-						},
-					},
-					"imageStreamNamespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace where syndesis docker images are located and the operator should look after them",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"routeHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "The external hostname to access Syndesis",
-							Type:        []string{"string"},
-							Format:      "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"demoData": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Enable SampleDB and demo data for Syndesis",
-							Type:        []string{"boolean"},
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"deployIntegrations": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"testSupport": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"boolean"},
+							Format: "",
+						},
+					},
+					"imageStreamNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"integration": {
+						SchemaProps: spec.SchemaProps{
+							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.IntegrationSpec"),
+						},
+					},
+					"registry": {
+						SchemaProps: spec.SchemaProps{
+							Description: "The container registry to pull syndesis images from",
+							Type:        []string{"string"},
 							Format:      "",
 						},
 					},
 					"components": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Components is used to configure all the core components of Syndesis",
-							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec"),
+							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec"),
+						},
+					},
+					"openshiftMaster": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"openshiftConsoleUrl": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
+						},
+					},
+					"sarNamespace": {
+						SchemaProps: spec.SchemaProps{
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"addons": {
 						SchemaProps: spec.SchemaProps{
-							Description: "Optional add on features that can be enabled.",
-							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.AddonsSpec"),
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type: []string{"object"},
+										AdditionalProperties: &spec.SchemaOrBool{
+											Allows: true,
+											Schema: &spec.Schema{
+												SchemaProps: spec.SchemaProps{
+													Type:   []string{"string"},
+													Format: "",
+												},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
+					"devSupport": {
+						SchemaProps: spec.SchemaProps{
+							Description: "if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled",
+							Type:        []string{"boolean"},
+							Format:      "",
+						},
+					},
+					"mavenRepositories": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Allows: true,
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type:   []string{"string"},
+										Format: "",
+									},
+								},
+							},
 						},
 					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.AddonsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupConfig", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec"},
+			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.ComponentsSpec", "github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.IntegrationSpec"},
 	}
 }
 
@@ -219,15 +238,10 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisStatus(ref common.ReferenceCallba
 							Format: "",
 						},
 					},
-					"backup": {
-						SchemaProps: spec.SchemaProps{
-							Ref: ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupStatus"),
-						},
-					},
 				},
 			},
 		},
 		Dependencies: []string{
-			"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1.BackupStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
 	}
 }

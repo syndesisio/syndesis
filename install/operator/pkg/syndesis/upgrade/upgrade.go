@@ -31,9 +31,23 @@ import (
 
 	"github.com/go-logr/logr"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
+
+// Interface to be used top perform upgrades
+type Upgrader interface {
+	// Upgrade run all the steps performing a syndesis upgrade
+	Upgrade() (err error)
+
+	// In case the Upgrade failed, it is possible to perform a rollback
+	// Bringing syndesis to the state it was before the upgrade started
+	Rollback() (err error)
+
+	// Because we consider the first install run after upgrade part of the upgrade
+	// We need a way to signal this pkg when that step went wrong
+	InstallFailed() (count int)
+}
 
 type step struct {
 	name      string
@@ -53,13 +67,13 @@ type stepRunner interface {
 	rollback() (err error)
 }
 
-type Failure struct {
+type failure struct {
 	T   time.Time
 	S   interface{}
 	Err error
 }
 
-type Succeed struct {
+type succeed struct {
 	T time.Time
 }
 
@@ -68,37 +82,37 @@ type result interface {
 	step() interface{}
 }
 
-type Upgrade struct {
+type upgrade struct {
 	log      logr.Logger
 	steps    []stepRunner
 	backup   sbackup.Runner
 	attempts []result
-	Ctx      context.Context
-	Syndesis *v1alpha1.Syndesis
-	Client   client.Client
+	ctx      context.Context
+	syndesis *v1beta1.Syndesis
+	client   client.Client
 }
 
 // Run the upgrade
-func (u *Upgrade) Upgrade() (err error) {
+func (u *upgrade) Upgrade() (err error) {
 	for _, step := range u.steps {
 		if step.canRun() {
 			step.infoRun()
 			if err = step.run(); err != nil {
-				u.attempts = append(u.attempts, Failure{S: step, T: time.Now(), Err: err})
+				u.attempts = append(u.attempts, failure{S: step, T: time.Now(), Err: err})
 				return
 			}
 		}
 	}
 
-	u.attempts = append(u.attempts, Succeed{T: time.Now()})
+	u.attempts = append(u.attempts, succeed{T: time.Now()})
 	return
 }
 
 // Rollback a previous upgrade action. Rollback can only be executed
 // if the upgrade failed
-func (u *Upgrade) Rollback() (err error) {
+func (u *upgrade) Rollback() (err error) {
 	switch v := u.attempts[len(u.attempts)-1].(type) {
-	case Failure:
+	case failure:
 		for _, step := range u.steps {
 			if step.canRollback() {
 				step.infoRollback()
@@ -117,9 +131,9 @@ func (u *Upgrade) Rollback() (err error) {
 }
 
 // Add a failure for install step and return the total failures of this kind
-func (u *Upgrade) InstallFailed() (count int) {
+func (u *upgrade) InstallFailed() (count int) {
 	count = 0
-	u.attempts = append(u.attempts, Failure{T: time.Now(), S: install{}, Err: nil})
+	u.attempts = append(u.attempts, failure{T: time.Now(), S: install{}, Err: nil})
 	for _, at := range u.attempts {
 		switch at.step().(type) {
 		case install:
@@ -131,7 +145,7 @@ func (u *Upgrade) InstallFailed() (count int) {
 }
 
 // build the upgrade struct
-func Build(log logr.Logger, syndesis *v1alpha1.Syndesis, client client.Client, ctx context.Context) (r *Upgrade) {
+func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ctx context.Context) (r Upgrader) {
 	base := step{
 		log:       log,
 		executed:  false,
@@ -140,7 +154,7 @@ func Build(log logr.Logger, syndesis *v1alpha1.Syndesis, client client.Client, c
 		namespace: syndesis.Namespace,
 	}
 
-	r = &Upgrade{
+	u := &upgrade{
 		log:   log,
 		steps: nil,
 		backup: &sbackup.Backup{
@@ -152,20 +166,20 @@ func Build(log logr.Logger, syndesis *v1alpha1.Syndesis, client client.Client, c
 			Client:    &client,
 		},
 		attempts: []result{},
-		Ctx:      ctx,
-		Syndesis: syndesis,
-		Client:   client,
+		ctx:      ctx,
+		syndesis: syndesis,
+		client:   client,
 	}
 
-	r.steps = []stepRunner{
+	u.steps = []stepRunner{
 		newScale(base).down(),
 		newBackup(base),
-		newMigration(base, r.Syndesis, r.backup),
-		newInstall(base, r.backup),
+		newMigration(base, u.syndesis, u.backup),
+		newInstall(base, u.backup),
 		newScale(base).up(),
 	}
 
-	return
+	return u
 }
 
 func (s step) canRun() (r bool) {
@@ -184,19 +198,19 @@ func (s step) infoRollback() {
 	s.log.Info("rolling back step", "step", s.name)
 }
 
-func (s Succeed) failure() bool {
+func (s succeed) failure() bool {
 	return false
 }
 
-func (s Succeed) step() interface{} {
+func (s succeed) step() interface{} {
 	return nil
 }
 
-func (s Failure) step() interface{} {
+func (s failure) step() interface{} {
 	return s.S
 }
 
-func (s Failure) failure() bool {
+func (s failure) failure() bool {
 	return true
 }
 

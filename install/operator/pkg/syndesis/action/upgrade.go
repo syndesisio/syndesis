@@ -10,11 +10,11 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
-var u *upgrade.Upgrade
+var u upgrade.Upgrader
 
 const (
 	UpgradePodPrefix = "syndesis-upgrade-"
@@ -33,18 +33,18 @@ func newUpgradeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOpe
 	}
 }
 
-func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a *upgradeAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1alpha1.SyndesisPhaseUpgrading,
-		v1alpha1.SyndesisPhasePostUpgradeRunSucceed,
-		v1alpha1.SyndesisPhasePostUpgradeRun,
+		v1beta1.SyndesisPhaseUpgrading,
+		v1beta1.SyndesisPhasePostUpgradeRunSucceed,
+		v1beta1.SyndesisPhasePostUpgradeRun,
 	)
 }
 
-func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 	targetVersion := pkg.DefaultOperatorTag
 
-	if syndesis.Status.Phase == v1alpha1.SyndesisPhaseUpgrading {
+	if syndesis.Status.Phase == v1beta1.SyndesisPhaseUpgrading {
 		// Normal upgrade workflow, we land here if action checkupdate detected that and
 		// upgrade is needed
 
@@ -69,11 +69,11 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 			return a.setPhaseToFailureBackoff(ctx, syndesis, targetVersion)
 		}
-	} else if syndesis.Status.Phase == v1alpha1.SyndesisPhasePostUpgradeRunSucceed {
+	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRunSucceed {
 		// We land here only if the install phase after upgrading finished correctly
 		a.log.Info("syndesis resource post upgrade ran successfully", "name", syndesis.Name, "previous version", syndesis.Status.Version, "target version", targetVersion)
 		return a.completeUpgrade(ctx, syndesis, targetVersion)
-	} else if syndesis.Status.Phase == v1alpha1.SyndesisPhasePostUpgradeRun {
+	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRun {
 		// If the first run of the install action failed, we land here. We need to retry
 		// this few times to consider the cases where install action return error due to
 		// race conditions or when the syndesis custom resource was changed in the meantime. 3 times seems
@@ -100,11 +100,11 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
  * needed to avoid race conditions where k8s wasn't yet able to update or
  * kubernetes didn't change the object yet
  */
-func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.Syndesis, newVersion string) (err error) {
+func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1beta1.Syndesis, newVersion string) (err error) {
 	target := syndesis.DeepCopy()
-	target.Status.Phase = v1alpha1.SyndesisPhaseInstalled
+	target.Status.Phase = v1beta1.SyndesisPhaseInstalled
 	target.Status.TargetVersion = ""
-	target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+	target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 	target.Status.Description = ""
 	target.Status.Version = newVersion
 	target.Status.LastUpgradeFailure = nil
@@ -116,10 +116,10 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 	return
 }
 
-func (a *upgradeAction) setPhaseToRun(ctx context.Context, syndesis *v1alpha1.Syndesis) (err error) {
+func (a *upgradeAction) setPhaseToRun(ctx context.Context, syndesis *v1beta1.Syndesis) (err error) {
 	target := syndesis.DeepCopy()
-	target.Status.Phase = v1alpha1.SyndesisPhasePostUpgradeRun
-	target.Status.Reason = v1alpha1.SyndesisStatusReasonPostUpgradeRun
+	target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRun
+	target.Status.Reason = v1beta1.SyndesisStatusReasonPostUpgradeRun
 	target.Status.Description = "Perform the first install run after syndesis resource was upgraded"
 
 	err = a.client.Update(ctx, target)
@@ -127,10 +127,10 @@ func (a *upgradeAction) setPhaseToRun(ctx context.Context, syndesis *v1alpha1.Sy
 	return
 }
 
-func (a *upgradeAction) setPhaseToFailureBackoff(ctx context.Context, syndesis *v1alpha1.Syndesis, targetVersion string) (err error) {
+func (a *upgradeAction) setPhaseToFailureBackoff(ctx context.Context, syndesis *v1beta1.Syndesis, targetVersion string) (err error) {
 	target := syndesis.DeepCopy()
-	target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailureBackoff
-	target.Status.Reason = v1alpha1.SyndesisStatusReasonUpgradeFailed
+	target.Status.Phase = v1beta1.SyndesisPhaseUpgradeFailureBackoff
+	target.Status.Reason = v1beta1.SyndesisStatusReasonUpgradeFailed
 	target.Status.Description = "Syndesis upgrade from " + syndesis.Status.Version + " to " + targetVersion + " failed (it will be retried again)"
 	target.Status.LastUpgradeFailure = &metav1.Time{
 		Time: time.Now(),
