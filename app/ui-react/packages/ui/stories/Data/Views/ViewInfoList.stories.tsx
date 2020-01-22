@@ -46,6 +46,8 @@ const tableItems = (
     onSelectionChanged={action(selectionChangedText)}
     selectedViewNames={['todo']}
     handleSelectAll={action(selectionChangedText)}
+    i18nUpdate={text('i18nUpdate', 'Update')}
+    i18nSelectAll={text('i18nUpdate', 'Select all (1 of 3 items selected)')}
   />
 );
 

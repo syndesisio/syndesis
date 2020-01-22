@@ -45,6 +45,7 @@
   "errorVirtualizationNameExists": "Виртуализация с именем \"{{name}}\" уже существует.",
   "errorVirtualizationNameValidation": "Ошибка проверки имени Виртуализации.",
   "exportVirtualizationFailed": "Экспорт Виртуализации \"{{name}}\" не удался. Детали: {{details}}",
+  "importViewSelectAll": "Выбрать все ({{x}} из {{y}} выбранных элементов)", 
   "importDataSource": "Импорт Источника данных",
   "importViews": "Импорт просмотров",
   "importDataSourceTip": "Импорт Представления из Источника данных",

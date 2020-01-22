@@ -45,6 +45,7 @@
   "errorVirtualizationNameExists": "Esiste già una virtualizzazione con nome \"{{name}}\".",
   "errorVirtualizationNameValidation": "Errore durante la convalida del nome della virtualizzazione.",
   "exportVirtualizationFailed": "Esportazione della virtualizzazione \"{{name}}\" non riuscita. Dettagli: {{details}}",
+  "importViewSelectAll": "Seleziona tutto ({{x}} di {{y}} elementi selezionati)", 
   "importDataSource": "Importa Origine Dati",
   "importViews": "Importa visualizzazioni",
   "importDataSourceTip": "Importa visualizzazioni da un'origine dati",
