@@ -1,0 +1,133 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: "2020-01-30T20:28:08Z"
+  generation: 1
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-prometheus
+    syndesis.io/type: infrastructure
+  name: syndesis-prometheus
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "130033"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-prometheus
+  uid: 06dd048c-439f-11ea-851f-0a580a80010d
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-prometheus
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 20Mi
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-prometheus
+        syndesis.io/type: infrastructure
+    spec:
+      containers:
+      - args:
+        - --config.file=/etc/prometheus/prometheus.yml
+        - --storage.tsdb.retention=30d
+        image: docker.io/prom/prometheus:v2.1.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: prometheus
+        ports:
+        - containerPort: 9090
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 9090
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 512Mi
+          requests:
+            memory: 512Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /prometheus
+          name: syndesis-prometheus-data
+        - mountPath: /etc/prometheus
+          name: syndesis-prometheus-config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: syndesis-prometheus
+      serviceAccountName: syndesis-prometheus
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: syndesis-prometheus-data
+        persistentVolumeClaim:
+          claimName: syndesis-prometheus
+      - configMap:
+          defaultMode: 420
+          name: syndesis-prometheus-config
+        name: syndesis-prometheus-config
+  test: false
+  triggers:
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-01-30T20:29:00Z"
+    lastUpdateTime: "2020-01-30T20:29:00Z"
+    message: replication controller "syndesis-prometheus-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2020-01-31T11:55:32Z"
+    lastUpdateTime: "2020-01-31T11:55:32Z"
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

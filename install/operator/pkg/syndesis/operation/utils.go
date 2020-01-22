@@ -1,9 +1,11 @@
 package operation
 
 import (
+	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 )
 
@@ -17,7 +19,18 @@ func SetNamespaceAndOwnerReference(resource interface{}, syndesis *v1beta1.Synde
 			Kind:    syndesis.Kind,
 		}),
 	})
-	setLabel(resource, "owner", string(syndesis.GetUID()))
+
+	//
+	// Jobs do not like being labelled with an owner but have to have
+	// controller-uid instead. If "owner" is used then the job is not
+	// held around but garbage-collected within a few seconds of creation.
+	// Adding owner in addition to controller-uid yields the same "bug"
+	//
+	if r, ok := resource.(unstructured.Unstructured); ok && r.GetKind() == "Job" {
+		setLabel(resource, pkg.ControllerUidLabel, string(syndesis.GetUID()))
+	} else {
+		setLabel(resource, "owner", string(syndesis.GetUID()))
+	}
 }
 
 func setLabel(resource interface{}, key string, value string) {

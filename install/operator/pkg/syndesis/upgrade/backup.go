@@ -21,6 +21,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	sbackup "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
 )
 
@@ -30,22 +31,23 @@ type backup struct {
 	sb   sbackup.Runner
 }
 
-func newBackup(base step) (b *backup) {
-	b = &backup{
+func newBackup(base step, s *v1beta1.Syndesis) (*backup, error) {
+
+	bkp, err := sbackup.NewBackup(base.context, nil, s,
+		strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""))
+	if err != nil {
+		return nil, err
+	}
+	bkp.SetLocalOnly(true)
+
+	b := &backup{
 		step: base,
 		done: false,
-		sb: &sbackup.Backup{
-			Namespace: base.namespace,
-			BackupDir: strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""),
-			Delete:    false,
-			LocalOnly: true,
-			Context:   base.context,
-			Client:    nil,
-		},
+		sb:   bkp,
 	}
 	b.name = "Backup"
 
-	return
+	return b, nil
 }
 
 /*

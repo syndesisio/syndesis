@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: "2020-01-30T20:28:08Z"
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-db
+    syndesis.io/type: infrastructure
+  name: syndesis-db
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "110018"
+  selfLink: /api/v1/namespaces/syndesis/services/syndesis-db
+  uid: 071a4b69-439f-11ea-ab61-52fdfc072182
+spec:
+  clusterIP: 172.30.31.135
+  ports:
+  - name: postgresql
+    port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-db
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

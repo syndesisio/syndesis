@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    service.alpha.openshift.io/serving-cert-secret-name: syndesis-oauthproxy-tls
+    service.alpha.openshift.io/serving-cert-signed-by: openshift-service-serving-signer@1578116819
+    service.beta.openshift.io/serving-cert-signed-by: openshift-service-serving-signer@1578116819
+  creationTimestamp: "2020-01-30T20:28:07Z"
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-oauthproxy
+    syndesis.io/type: infrastructure
+  name: syndesis-oauthproxy
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "109993"
+  selfLink: /api/v1/namespaces/syndesis/services/syndesis-oauthproxy
+  uid: 064413f1-439f-11ea-ab61-52fdfc072182
+spec:
+  clusterIP: 172.30.248.105
+  ports:
+  - port: 8443
+    protocol: TCP
+    targetPort: 8443
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-oauthproxy
+  sessionAffinity: None
+  type: ClusterIP
+status:
+  loadBalancer: {}

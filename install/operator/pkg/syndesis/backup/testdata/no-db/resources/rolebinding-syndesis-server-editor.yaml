@@ -1,0 +1,29 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  creationTimestamp: "2020-01-30T20:28:07Z"
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-server
+    syndesis.io/type: infrastructure
+  name: syndesis-server-editor
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "109998"
+  selfLink: /apis/rbac.authorization.k8s.io/v1/namespaces/syndesis/rolebindings/syndesis-server-editor
+  uid: 068a82fa-439f-11ea-ab61-52fdfc072182
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: syndesis-editor
+subjects:
+- kind: ServiceAccount
+  name: syndesis-server
