@@ -21,7 +21,6 @@ import java.util.Set;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.connector.aws.ddb.util.Util;
-import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -44,11 +43,7 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-
         this.options = options;
-
-        options.put("element", ConnectorOptions.popOption(options, "element"));
-        options.put("attributes", ConnectorOptions.popOption(options, "attributes"));
 
         component.setBeforeProducer(this::doBeforeProducer);
         component.setAfterProducer(this::doAfterProducer);
@@ -65,15 +60,15 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
         Map<String, AttributeValue> attributes = (Map<String, AttributeValue>) in.getHeader(DdbConstants.ATTRIBUTES);
         String op = in.getHeader(DdbConstants.OPERATION).toString();
 
-        if (attributes != null) {
-            in.setBody(mapToJSON(attributes));
-        } else if (op.equals(DdbOperations.PutItem.name())) {
+        if (op.equals(DdbOperations.PutItem.name())) {
             //Use input. If we are here, we know it went well (or so DDB says)
             //But attributes may be empty due to caching issues (DDB side)
             Map<String, AttributeValue> items =
                 (Map<String, AttributeValue>) exchange.getIn().getHeader(DdbConstants.ITEM);
             in.setBody(mapToJSON(items));
-        } else {
+        } else if (attributes != null) {
+            in.setBody(mapToJSON(attributes));
+        } else  {
             //Something went wrong, we always return something
             throw new IllegalArgumentException("DynamoDB operation failed: " + in.getHeaders());
         }
@@ -112,6 +107,13 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
         exchange.getIn().setHeader(DdbConstants.CONSISTENT_READ, "true");
         exchange.getIn().setHeader(DdbConstants.RETURN_VALUES, "ALL_OLD");
 
+        if(this.options == null) {
+            this.options = new HashMap<String, Object>();
+        }
+
+        String element = (String) this.options.get("element");
+        String attributes = (String) this.options.get("attributes");
+
         LOG.trace("pre this.options: " + this.options);
 
         //Do we have variables from atlas?
@@ -134,25 +136,21 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
                     if (entry.getKey().startsWith("#") && entry.getValue() != null) {
                         final String searchKey = ":" + entry.getKey();
                         final String replacement = entry.getValue().toString();
-                        for (Map.Entry<String, Object> option : options.entrySet()) {
-                            if (option.getValue() != null &&
-                                option.getValue() instanceof String) {
-                                final String oldValue = option.getValue().toString();
-                                final String key = option.getKey();
-                                final String newValue = oldValue.replace(searchKey, replacement);
 
-                                LOG.trace("this.option: " + key + ":" + oldValue + "->" + newValue);
-                                this.options.put(key, newValue);
-                            }
-                        }
+                        element = element.replace(searchKey, replacement);
+                        attributes = attributes.replace(searchKey, replacement);
                     }
                 }
             }
         }
 
-        LOG.trace("post this.options: " + this.options);
+        Map<String, Object> options = new HashMap<String, Object>();
+        options.put("element", element);
+        options.put("attributes", attributes);
 
-        customize(exchange, this.options);
+        LOG.trace("post this.options: " + options);
+
+        customize(exchange, options);
     }
 
 

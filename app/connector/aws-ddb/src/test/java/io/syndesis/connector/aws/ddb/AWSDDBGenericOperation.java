@@ -27,6 +27,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.apache.camel.ProducerTemplate;
+import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
@@ -207,7 +208,7 @@ public abstract class AWSDDBGenericOperation extends ConnectorTestSupport {
      * To run this test you need to change the values of the parameters for real values of an
      * actual account
      */
-    public void runIt() {
+    public void runIt() throws JSONException {
 
         assertNotNull(context());
 
