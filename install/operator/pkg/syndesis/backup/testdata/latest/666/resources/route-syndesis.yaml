@@ -1,0 +1,47 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    console.alpha.openshift.io/overview-app-route: "true"
+    openshift.io/host.generated: "true"
+  creationTimestamp: "2020-01-30T20:28:06Z"
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+  name: syndesis
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "109901"
+  selfLink: /apis/route.openshift.io/v1/namespaces/syndesis/routes/syndesis
+  uid: 05f8648a-439f-11ea-851f-0a580a80010d
+spec:
+  host: syndesis-syndesis.apps-crc.testing
+  port:
+    targetPort: 8443
+  subdomain: ""
+  tls:
+    insecureEdgeTerminationPolicy: Redirect
+    termination: reencrypt
+  to:
+    kind: Service
+    name: syndesis-oauthproxy
+    weight: 100
+  wildcardPolicy: None
+status:
+  ingress:
+  - conditions:
+    - lastTransitionTime: "2020-01-30T20:28:07Z"
+      status: "True"
+      type: Admitted
+    host: syndesis-syndesis.apps-crc.testing
+    routerCanonicalHostname: apps-crc.testing
+    routerName: default
+    wildcardPolicy: None

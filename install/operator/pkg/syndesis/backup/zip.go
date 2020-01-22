@@ -29,7 +29,7 @@ import (
 // location
 func (b *Backup) zip() (out string, err error) {
 	// Get a Buffer to Write To
-	out = filepath.Join(b.BackupDir, strings.ReplaceAll(b.backupPath, "/", "-")+".zip")
+	out = filepath.Join(b.backupDir, strings.ReplaceAll(b.backupPath, "/", "-")+".zip")
 	outFile, err := os.Create(out)
 	if err != nil {
 		return
@@ -40,7 +40,7 @@ func (b *Backup) zip() (out string, err error) {
 	w := zip.NewWriter(outFile)
 
 	// Add some files to the archive.
-	err = addFiles(w, filepath.Join(b.BackupDir, b.backupPath), "")
+	err = addFiles(w, filepath.Join(b.backupDir, b.backupPath), "")
 	if err != nil {
 		return
 	}

@@ -13,14 +13,15 @@ require (
 	github.com/elazarl/goproxy/ext v0.0.0-20190421051319-9d40249d3c2f // indirect
 	github.com/go-logr/logr v0.1.0
 	github.com/go-openapi/spec v0.19.4
+	github.com/google/go-cmp v0.3.2-0.20191028172631-481baca67f93 // indirect
 	github.com/imdario/mergo v0.3.8
-	github.com/openshift/api v3.9.1-0.20190924102528-32369d4db2ad+incompatible
+	github.com/openshift/api v3.9.1-0.20190927182313-d4a64ec2cbd8+incompatible
 	github.com/operator-framework/operator-sdk v0.15.0
 	github.com/pkg/errors v0.8.1
 	github.com/pmezard/go-difflib v1.0.0
 	github.com/prometheus/client_golang v1.2.1
 	github.com/robfig/cron/v3 v3.0.1
-	github.com/shurcooL/httpfs v0.0.0-20190527155220-6a4d4a70508b
+	github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749
 	github.com/shurcooL/vfsgen v0.0.0-20181202132449-6a9ea43bcacd
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v0.0.5

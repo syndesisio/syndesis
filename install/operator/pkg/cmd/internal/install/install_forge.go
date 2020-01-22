@@ -32,8 +32,6 @@ import (
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"sigs.k8s.io/yaml"
-
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var exceptionalItems = []string{
@@ -164,19 +162,7 @@ func (o *Install) installForge() error {
 	// Create an empty syndesis CR which will
 	// be filled with parameters placeholder values
 	//
-	syndesis := &v1beta1.Syndesis{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: convertToParam(string(EnvOpenShiftProject)),
-		},
-		Spec: v1beta1.SyndesisSpec{
-			Components: v1beta1.ComponentsSpec{},
-			Addons:     v1beta1.AddonsSpec{},
-		},
-		Status: v1beta1.SyndesisStatus{
-			TargetVersion: "latest",
-		},
-	}
-
+	syndesis, _ := v1beta1.NewSyndesis(convertToParam(string(EnvOpenShiftProject)))
 	configuration, err := conf.GetProperties(conf.TemplateConfig, o.Context, nil, syndesis)
 	if err != nil {
 		return err

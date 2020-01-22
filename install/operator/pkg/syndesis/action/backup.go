@@ -56,15 +56,13 @@ func (a *backupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) 
 		if len(entries) == 0 {
 			a.log.Info("scheduling backup job", "frequency", string(s))
 			c.AddFunc(strings.Join([]string{"@", string(s)}, ""), func() {
-				b := &backup.Backup{
-					Namespace: syndesis.Namespace,
-					Context:   ctx,
-					Client:    &a.client,
-					Delete:    true,
-					LocalOnly: false,
-					BackupDir: "/tmp/foo",
+				b, err := backup.NewBackup(ctx, a.client, syndesis, "/tmp/foo")
+				if err != nil {
+					a.log.Error(err, "backup initialisation failed with error")
+					return
 				}
 
+				b.SetDelete(true)
 				b.Run()
 			})
 

@@ -51,7 +51,11 @@ func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		// Initialize the upgrade object, this happens only once, this object lives throughout
 		// the whole upgrade / rollback process
 		if u == nil {
-			u = upgrade.Build(a.log, syndesis, a.client, ctx)
+			var err error
+			u, err = upgrade.Build(a.log, syndesis, a.client, ctx)
+			if err != nil {
+				return err
+			}
 		}
 
 		a.log.Info("Upgrading syndesis resource ", "name", syndesis.Name, "current version", syndesis.Status.Version, "target version", targetVersion)
