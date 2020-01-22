@@ -35,6 +35,8 @@
   "deleteViewSuccess": "Представление \"{{name}}\" было удалено.",
   "deleteVirtualizationFailed": "Не удалось удалить виртуализацию \"{{name}}\". Детали: {{details}}",
   "descriptionPlaceholder": "Введите описание ...",
+  "dvConnectionActive": "Соединение активно",
+  "dvConnectionInactive": "Соединение неактивно",
   "editVirtualization": "Редактировать Виртуализацию данных",
   "editDataVirtualizationTip": "Редактировать Виртуализацию данных",
   "emptyStateInfoMessage": "Нет доступных виртуализаций. Нажмите Создать, чтобы создать.",

@@ -20,6 +20,7 @@ import {
   generateDvConnections,
   generateSchemaNodeInfos,
   getDvConnectionStatus,
+  getDvConnectionStatusMessage,
   isDvConnectionLoading,
 } from './VirtualizationUtils';
 
@@ -146,6 +147,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                 connectionName={c.name}
                 connectionDescription={''}
                 dvStatus={getDvConnectionStatus(c)}
+                dvStatusTooltip={getDvConnectionStatusMessage(c)}
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
                     ? isConnectionSelected(c.name)

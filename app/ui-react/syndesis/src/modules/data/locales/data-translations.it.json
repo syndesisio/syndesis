@@ -35,6 +35,8 @@
   "deleteViewSuccess": "Visualizza \"{{name}}\" è stato eliminato.",
   "deleteVirtualizationFailed": "Impossibile eliminare la virtualizzazione \"{{name}}\". Dettagli: {{details}}",
   "descriptionPlaceholder": "Digita una descrizione ...",
+  "dvConnectionActive": "La connessione è attiva",
+  "dvConnectionInactive": "La connessione non è attiva",
   "editVirtualization": "Modifica la virtualizzazione dei dati",
   "editDataVirtualizationTip": "Modifica la virtualizzazione dei dati",
   "emptyStateInfoMessage": "Non ci sono virtualizzazioni disponibili. Fai clic su Crea per crearne uno.",

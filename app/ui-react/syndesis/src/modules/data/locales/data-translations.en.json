@@ -35,6 +35,8 @@
   "deleteViewSuccess": "View \"{{name}}\" was deleted.",
   "deleteVirtualizationFailed": "Could not delete the virtualization \"{{name}}\". Details: {{details}}",
   "descriptionPlaceholder": "Type a description...",
+  "dvConnectionActive": "The connection is active",
+  "dvConnectionInactive": "The connection is inactive",
   "editVirtualization": "Edit data virtualization",
   "editDataVirtualizationTip": "Edit the data virtualization",
   "emptyStateInfoMessage": "There are no virtualizations available. Click Create to create one.",
