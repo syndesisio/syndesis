@@ -32,7 +32,8 @@ structures:
 +
 Defines the Camel component that the connector uses. 
 You can set `componentScheme` for the connector or for actions. 
-Actions have precedence. 
+If you set `componentScheme` for both the connector and an action,
+the setting for the action has precedence. 
 
 * `connectorCustomizers`
 +
@@ -228,8 +229,8 @@ create a dedicated instance of the component with the scheme defined by the
 `componentScheme` option.
 +
 The default behavior of this method is to determine if any of the 
-connector/action options applies at the component level. If the same 
-option cannot be applied at the endpoint, and only in this case, 
+connector/action options applies at the component level. Only in the 
+case that the same option cannot be applied at the endpoint, 
 the method creates a custom component instance and configures it 
 according to the applicable options.
 

@@ -116,4 +116,4 @@ You then continue the process for creating a new API client connector.
 
 .Next step
 For details about using your new API connector, see
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs]. 
+link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[{NameOfFuseOnlineConnectorGuide}, Connecting to REST APIs]. 
