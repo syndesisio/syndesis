@@ -256,6 +256,7 @@ export class ConfigureActionPage extends React.Component<
                         configurationPage={pageAsNumber}
                         errorKeys={errorKeys}
                         initialValue={configuredProperties}
+                        isBackAllowed={false}
                         oldAction={
                           useOldStepConfig && oldStepConfig!.action
                             ? oldStepConfig!.action!

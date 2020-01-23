@@ -78,6 +78,7 @@ export class ConfigureStepPage extends React.Component<
 
               return (
                 <WithConfigurationForm
+                  isBackAllowed={false}
                   step={state.step}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
