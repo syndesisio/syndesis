@@ -45,6 +45,12 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
   const virtualization = state.virtualization;
 
+  const [showPreviewData, setShowPreviewData] = React.useState(false);
+
+  const toggelShowPreviewData = () =>{
+    setShowPreviewData(!showPreviewData);
+  }
+
   const {
     resource: connectionStatuses,
     hasData: hasConnectionStatuses,
@@ -117,8 +123,10 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           selectedSchemaNodes={props.selectedSchemaNodes}
           onNodeDeselected={props.handleNodeDeselected}
           columnDetails={viewSourceInfo.schemas}
+          setShowPreviewData = {toggelShowPreviewData}
         />
       }
+      showPreviewData={showPreviewData}
     />
   );
 };

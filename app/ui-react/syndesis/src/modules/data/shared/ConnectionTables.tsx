@@ -10,6 +10,7 @@ export interface IConnectionTablesProps {
   selectedSchemaNodes: SchemaNodeInfo[];
   columnDetails: ConnectionTable[];
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
+  setShowPreviewData: () => void;
 }
 
 export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> = props => {
@@ -56,6 +57,7 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
             toggle={toggle}
             expanded={expanded}
             onTabelRemoved={props.onNodeDeselected}
+            setShowPreviewData= {props.setShowPreviewData}
             rows={getSeletedTableColumns(info.connectionName, info.teiidName)}
           />
         ))}
