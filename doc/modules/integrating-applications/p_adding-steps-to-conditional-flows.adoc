@@ -57,10 +57,19 @@ defined in the *Conditional Flows* step. If you selected the
 *Execute default flow* option, the primary flow also has a default 
 conditional flow. 
 
-During execution, the *Conditional Flows* step 
-executes the conditional flow that is associated with the first 
-condition that evaluates to true or it executes the default 
-conditional flow, if there is one, and if no condition evaluates 
-to true. After executing a conditional flow, or after no condition 
-evaluates to true, the integration continues execution with the 
+During execution, the *Conditional Flows* step executes the conditional 
+flow that is associated with the first condition that evaluates to true.
+The integration then executes the step that follows the *Conditional Flows*
+step. 
+
+If no condition evaluates to true then the *Conditional Flows* step 
+executes the default conditional flow. The integration then executes the 
 step that follows the *Conditional Flows* step. 
+
+If both of the following are true: 
+
+* No condition evaluates to true.
+* There is no default conditional flow. 
+
+Then the integration executes the step that follows 
+the *Conditional Flows* step. 

@@ -54,7 +54,7 @@ that {prodname} opens:
 
 +
 For information about using the API editor, see
-link:{LinkDesigningAPIs}#create-api-definition[Designing and developing an API definition with API Designer].
+link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
 
 .Result
 {prodname} displays a list of the operations that the OpenAPI

@@ -19,4 +19,4 @@ displays *Running* next to the integration name when the integration
 is ready to be executed.
 
 .Additional resource
-link:{LinkFuseOnlineIntegrationGuide}#configure-publish-api-provider-quickstart_api-provider[Configuring and publishing an API provider quickstart integration].
+link:{LinkFuseOnlineIntegrationGuide}#configure-publish-api-provider-quickstart_api-provider[Importing and publishing the example API provider quickstart integration].

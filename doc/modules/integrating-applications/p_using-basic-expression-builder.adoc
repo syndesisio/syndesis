@@ -41,11 +41,15 @@ true for the value that you enter in the next field.
 the defined conditions by clicking the up or down arrow to the right of a 
 condition. 
  
-.. Optional. Click *Execute default flow*.
+.. Optional. Click *Execute default flow* if you want there to be a 
+default conditional flow. 
 +
-If none of the specified conditions evaluate to true, the integration 
-executes the conditional flow that you create as the default conditional 
-flow. 
+If you select *Execute default flow*, during execution, 
+if none of the conditions that you specified evaluates
+to true, the integration executes the default conditional flow. If you do
+not select *Execute default flow*, during execution, if none of the 
+conditions that you specified evaluates to true, the integration continues 
+execution with the step that follows this *Conditional Flows* step. 
 
 . Click *Next*. 
 . Optional. Specify the output data type if {prodname} prompts for it.
