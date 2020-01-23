@@ -37,6 +37,7 @@ export interface ISelectViewsPageProps {
   selectedViews: ViewInfo[];
   handleAddView: (view: ViewInfo) => void;
   handleRemoveView: (viewName: string) => void;
+  handleSelectAll: (isSelected: boolean, AllViewInfo: any[]) => void;
 }
 
 export const SelectViewsPage: React.FunctionComponent<
@@ -116,6 +117,7 @@ export const SelectViewsPage: React.FunctionComponent<
           onViewSelected={props.handleAddView}
           onViewDeselected={props.handleRemoveView}
           selectedViews={props.selectedViews}
+          handleSelectAll={props.handleSelectAll}
         />
       }
       cancelHref={resolvers.data.virtualizations.views.root({

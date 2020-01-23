@@ -8,6 +8,7 @@ import * as React from 'react';
 import { EntityIcon } from '../../../shared';
 import {
   getDvConnectionStatus,
+  getDvConnectionStatusMessage,
   isDvConnectionLoading,
 } from './VirtualizationUtils';
 
@@ -35,6 +36,7 @@ export const DvConnections: React.FunctionComponent<
             name={c.name}
             description={c.description || ''}
             dvStatus={getDvConnectionStatus(c)}
+            dvStatusTooltip={getDvConnectionStatusMessage(c)}
             icon={<EntityIcon entity={c} alt={c.name} width={46} />}
             loading={isDvConnectionLoading(c)}
             selected={props.initialSelection === c.name}

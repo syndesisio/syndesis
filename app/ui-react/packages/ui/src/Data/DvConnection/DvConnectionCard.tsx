@@ -6,6 +6,7 @@ import {
   CardHeader,
   Text,
   Title,
+  Tooltip
 } from '@patternfly/react-core';
 import { Label, Spinner } from 'patternfly-react';
 import * as React from 'react';
@@ -21,6 +22,7 @@ export enum ConnectionStatus {
 export interface IDvConnectionCardProps {
   name: string;
   description: string;
+  dvStatusTooltip: string;
   dvStatus: string;
   icon: React.ReactNode;
   loading: boolean;
@@ -52,14 +54,16 @@ export const DvConnectionCard: React.FunctionComponent<
         ) : (
           <></>
         )}
-        <Label
-          className="dv-connection-card__status"
-          type={
-            props.dvStatus === ConnectionStatus.ACTIVE ? 'success' : 'danger'
-          }
-        >
-          {props.dvStatus}
-        </Label>
+        <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
+          <Label
+            className="dv-connection-card__status"
+            type={
+              props.dvStatus === ConnectionStatus.ACTIVE ? 'success' : 'danger'
+            }
+          >
+            {props.dvStatus}
+          </Label>
+        </Tooltip>
       </CardHeader>
       <CardBody>
         <div className={'dv-connection-card__body'}>
