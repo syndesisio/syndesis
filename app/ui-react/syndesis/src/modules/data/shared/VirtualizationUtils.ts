@@ -275,12 +275,29 @@ export function generateDvConnections(
       conn.options = {
         dvLoading: schemaLoading,
         dvSelected: selectionState,
+        dvSourceError: virtSrcStatus.errors[0],
         dvStatus: connStatus,
       };
       dvConns.push(conn);
     }
   }
   return dvConns;
+}
+
+/**
+ * Get the Connection DV status message (used for tooltip display of error messages).  If options not found or no error message,
+ * the empty string is returned
+ * @param connection the connection
+ */
+export function getDvConnectionStatusMessage(conn: Connection): string {
+  if (conn.options && conn.options.dvStatus === DvConnectionStatus.ACTIVE) {
+    return i18n.t('data:dvConnectionActive');
+  } else if(conn.options && conn.options.dvStatus === DvConnectionStatus.INACTIVE) {
+    return i18n.t('data:dvConnectionInactive');
+  } else if(conn.options && conn.options.dvStatus === DvConnectionStatus.FAILED && conn.options.dvSourceError) {
+    return conn.options.dvSourceError;
+  }
+  return '';
 }
 
 /**
