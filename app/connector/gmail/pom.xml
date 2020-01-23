@@ -79,7 +79,7 @@
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-gmail</artifactId>
-      <version>v1-rev81-1.22.0</version>
+      <version>v1-rev20191113-1.30.3</version>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
