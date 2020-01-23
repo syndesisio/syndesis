@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 Red Hat, Inc.
+ * Copyright (C) 2020 Red Hat, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ type DatabaseConfiguration struct {
 	Name string `json:"name,omitempty"`
 
 	// Host and port of the PostgreSQL database to access
-	URL string `url:"url,omitempty"`
+	URL string `json:"url,omitempty"`
 
 	// If specified, use an external database instead of the installed by syndesis
 	ExternalDbURL string `json:"externalDbURL,omitempty"`
@@ -148,20 +148,21 @@ type UpgradeConfiguration struct {
 }
 
 type Resources struct {
-	Memory string `json:",inline,omitempty"`
+	Memory string `json:"memory,omitempty"`
 }
 
 // +kubebuilder:validation:Enum=ReadWriteOnce;ReadOnlyMany;ReadWriteMany
 type VolumeAccessMode string
 
+// Possible VAM can be found here  https://docs.openshift.com/container-platform/4.2/storage/understanding-persistent-storage.html
 const (
 	ReadWriteOnce VolumeAccessMode = "ReadWriteOnce"
 	ReadOnlyMany  VolumeAccessMode = "ReadOnlyMany"
-	ReadWriteMany VolumeAccessMode = "ReadWriteMany"
+	// ReadWriteMany VolumeAccessMode = "ReadWriteMany"
 )
 
 type ResourcesWithPersistentVolume struct {
-	Memory             string            `json:",inline,omitempty"`
+	Memory             string            `json:"memory,omitempty"`
 	VolumeCapacity     string            `json:"volumeCapacity,omitempty"`
 	VolumeName         string            `json:"volumeName,omitempty"`
 	VolumeAccessMode   VolumeAccessMode  `json:"volumeAccessMode,omitempty"`
@@ -223,7 +224,7 @@ type PublicApiConfiguration struct {
 type SyndesisPhase string
 
 type ResourcesWithVolume struct {
-	Memory         string `json:",inline,omitempty"`
+	Memory         string `json:"memory,omitempty"`
 	VolumeCapacity string `json:"volumeCapacity,omitempty"`
 }
 

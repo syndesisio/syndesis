@@ -4,4 +4,5 @@ deploy/operatorsource.yaml
 dist
 .*
 build.sh
+before_launch.sh
 /operator-builder.tmp
