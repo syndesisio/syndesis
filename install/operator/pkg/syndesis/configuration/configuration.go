@@ -19,6 +19,7 @@ package configuration
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
@@ -38,7 +39,7 @@ import (
 
 	"k8s.io/apimachinery/pkg/util/yaml"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
@@ -250,7 +251,7 @@ func GetAddons(configuration Config) []AddonInstance {
  - For QE, some fields are loaded from environment variables
  - Users might define fields using the syndesis custom resource
 */
-func GetProperties(file string, ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) (*Config, error) {
+func GetProperties(file string, ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) (*Config, error) {
 	configuration := &Config{}
 	if err := configuration.loadFromFile(file); err != nil {
 		return nil, err
@@ -301,7 +302,7 @@ func (config *Config) loadFromFile(file string) error {
 
 // Set Config.RouteHostname based on the Spec.Host property of the syndesis route
 // If an environment variable is set to overwrite the route, take that instead
-func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+func (config *Config) SetRoute(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
 	if os.Getenv("ROUTE_HOSTNAME") == "" {
 		syndesisRoute := &routev1.Route{}
 
@@ -320,7 +321,7 @@ func (config *Config) SetRoute(ctx context.Context, client client.Client, syndes
 }
 
 // When an external database is defined, reset connection parameters
-func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+func (config *Config) ExternalDatabase(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
 	// Handle an external database being defined
 	if syndesis.Spec.Components.Database.ExternalDbURL != "" {
 
@@ -347,7 +348,7 @@ func getSyndesisConfigurationSecret(ctx context.Context, client client.Client, n
 	return &secret, nil
 }
 
-func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1alpha1.Syndesis) error {
+func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.Client, syndesis *v1beta1.Syndesis) error {
 	secret, err := getSyndesisConfigurationSecret(ctx, client, syndesis.Namespace)
 	if err != nil {
 		if k8serrors.IsNotFound(err) {
@@ -362,13 +363,32 @@ func (config *Config) setPasswordsFromSecret(ctx context.Context, client client.
 	 * If this is the case then passwords are generated as a result of
 	 * the call to generatePasswords() following execution of this function
 	 */
-	config.OpenShiftOauthClientSecret = string(secret.Data["OPENSHIFT_OAUTH_CLIENT_SECRET"])
-	config.Syndesis.Components.Database.Password = string(secret.Data["POSTGRESQL_PASSWORD"])
-	config.Syndesis.Components.Database.SampledbPassword = string(secret.Data["POSTGRESQL_SAMPLEDB_PASSWORD"])
-	config.Syndesis.Components.Oauth.CookieSecret = string(secret.Data["OAUTH_COOKIE_SECRET"])
-	config.Syndesis.Components.Server.SyndesisEncryptKey = string(secret.Data["SYNDESIS_ENCRYPT_KEY"])
-	config.Syndesis.Components.Server.ClientStateAuthenticationKey = string(secret.Data["CLIENT_STATE_AUTHENTICATION_KEY"])
-	config.Syndesis.Components.Server.ClientStateEncryptionKey = string(secret.Data["CLIENT_STATE_ENCRYPTION_KEY"])
+	if _, ok := secret.Data["POSTGRESQL_PASSWORD"]; !ok {
+		// This is an indicator that the secret has the old format. We need to extract the
+		// secrets from the `params` section instead
+		// TODO: Delete for 1.10
+		envFromSecret, err := getSyndesisEnvVarsFromOpenShiftNamespace(secret)
+		if err != nil {
+			return err
+		}
+
+		config.OpenShiftOauthClientSecret = envFromSecret["OPENSHIFT_OAUTH_CLIENT_SECRET"]
+		config.Syndesis.Components.Database.Password = envFromSecret["POSTGRESQL_PASSWORD"]
+		config.Syndesis.Components.Database.SampledbPassword = envFromSecret["POSTGRESQL_SAMPLEDB_PASSWORD"]
+		config.Syndesis.Components.Oauth.CookieSecret = envFromSecret["OAUTH_COOKIE_SECRET"]
+		config.Syndesis.Components.Server.SyndesisEncryptKey = envFromSecret["SYNDESIS_ENCRYPT_KEY"]
+		config.Syndesis.Components.Server.ClientStateAuthenticationKey = envFromSecret["CLIENT_STATE_AUTHENTICATION_KEY"]
+		config.Syndesis.Components.Server.ClientStateEncryptionKey = envFromSecret["CLIENT_STATE_ENCRYPTION_KEY"]
+	} else {
+		// This is the behaviour we want
+		config.OpenShiftOauthClientSecret = string(secret.Data["OPENSHIFT_OAUTH_CLIENT_SECRET"])
+		config.Syndesis.Components.Database.Password = string(secret.Data["POSTGRESQL_PASSWORD"])
+		config.Syndesis.Components.Database.SampledbPassword = string(secret.Data["POSTGRESQL_SAMPLEDB_PASSWORD"])
+		config.Syndesis.Components.Oauth.CookieSecret = string(secret.Data["OAUTH_COOKIE_SECRET"])
+		config.Syndesis.Components.Server.SyndesisEncryptKey = string(secret.Data["SYNDESIS_ENCRYPT_KEY"])
+		config.Syndesis.Components.Server.ClientStateAuthenticationKey = string(secret.Data["CLIENT_STATE_AUTHENTICATION_KEY"])
+		config.Syndesis.Components.Server.ClientStateEncryptionKey = string(secret.Data["CLIENT_STATE_ENCRYPTION_KEY"])
+	}
 
 	return nil
 }
@@ -440,7 +460,7 @@ func setIntFromEnv(env string, current int) int {
 }
 
 // Replace default values with those from custom resource
-func (config *Config) setSyndesisFromCustomResource(syndesis *v1alpha1.Syndesis) error {
+func (config *Config) setSyndesisFromCustomResource(syndesis *v1beta1.Syndesis) error {
 	c := SyndesisConfig{}
 	jsonProperties, err := json.Marshal(syndesis.Spec)
 	if err != nil {
@@ -511,4 +531,34 @@ func generatePassword(size int) string {
 	}
 	s := string(result)
 	return s
+}
+
+// Needed for the first run after upgrade, due to compatibilities with old
+// secret format
+// TODO: Delete for 1.10
+func parseConfigurationBlob(blob []byte) map[string]string {
+	strs := strings.Split(string(blob), "\n")
+	configs := make(map[string]string, 0)
+	for _, conf := range strs {
+		conf := strings.Trim(conf, " \r\t")
+		if conf == "" {
+			continue
+		}
+		kv := strings.SplitAfterN(conf, "=", 2)
+		if len(kv) == 2 {
+			key := strings.TrimRight(kv[0], "=")
+			value := kv[1]
+			configs[key] = value
+		}
+	}
+	return configs
+}
+
+// TODO: Delete for 1.10
+func getSyndesisEnvVarsFromOpenShiftNamespace(secret *corev1.Secret) (map[string]string, error) {
+	if envBlob, present := secret.Data["params"]; present {
+		return parseConfigurationBlob(envBlob), nil
+	} else {
+		return nil, errors.New("no configuration found")
+	}
 }

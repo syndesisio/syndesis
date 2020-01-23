@@ -2,12 +2,13 @@ package action
 
 import (
 	"context"
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"k8s.io/client-go/kubernetes"
 	"math"
-	"sigs.k8s.io/controller-runtime/pkg/manager"
 	"strconv"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"k8s.io/client-go/kubernetes"
+	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
 const (
@@ -28,19 +29,19 @@ func newUpgradeBackoffAction(mgr manager.Manager, api kubernetes.Interface) Synd
 	}
 }
 
-func (a *upgradeBackoffAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
-	return syndesisPhaseIs(syndesis, v1alpha1.SyndesisPhaseUpgradeFailureBackoff)
+func (a *upgradeBackoffAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
+	return syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseUpgradeFailureBackoff)
 }
 
-func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 
 	// Check number of attempts to fail fast
 	if syndesis.Status.UpgradeAttempts >= UpgradeMaxAttempts {
 		a.log.Error(nil, "Upgrade of Syndesis resource failed too many times and will not be retried", "name", syndesis.Name)
 
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1alpha1.SyndesisPhaseUpgradeFailed
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonTooManyUpgradeAttempts
+		target.Status.Phase = v1beta1.SyndesisPhaseUpgradeFailed
+		target.Status.Reason = v1beta1.SyndesisStatusReasonTooManyUpgradeAttempts
 		target.Status.Description = "Upgrade failed too many times and will not be retried"
 		target.Status.ForceUpgrade = false
 
@@ -78,8 +79,8 @@ func (a *upgradeBackoffAction) Execute(ctx context.Context, syndesis *v1alpha1.S
 		currentAttemptStr := strconv.Itoa(int(syndesis.Status.UpgradeAttempts + 1))
 
 		target := syndesis.DeepCopy()
-		target.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
+		target.Status.Phase = v1beta1.SyndesisPhaseUpgrading
+		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
 		target.Status.Description = "Upgrading from " + currentVersion + " to " + targetVersion + " (attempt " + currentAttemptStr + ")"
 		target.Status.ForceUpgrade = true
 

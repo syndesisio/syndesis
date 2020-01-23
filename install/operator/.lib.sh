@@ -52,7 +52,6 @@ build_operator()
 
     if [ "$strategy" == "auto" ] ; then
         if [ "$hasgo" == "OK" ]; then
-            # Prefer go over docker - TODO: do we prefer this?
             strategy="go"
         elif [ "$hasdocker" == "OK" ]; then
             # go not available so try docker
@@ -93,7 +92,7 @@ build_operator()
 
             if [ "$source_gen" == "verify-none" ]; then
         	    echo "verifying no sources have been generated"
-        	    for file in pkg/apis/syndesis/v1alpha1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
+        	    for file in pkg/apis/syndesis/v1beta1/zz_generated.deepcopy.go pkg/generator/assets_vfsdata.go; do
                     if [ "$(git diff $file)" != "" ] ; then
                         echo ===========================================
                         echo   Looks like some generated source code

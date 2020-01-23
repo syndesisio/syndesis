@@ -17,6 +17,7 @@
 package v1alpha1
 
 import (
+	v1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
@@ -26,25 +27,23 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
-	// Schedule backup
-	// +optional
-	Backup BackupConfig `json:"backup,omitempty"`
+	RouteHostname        string          `json:"routeHostname,omitempty"`
+	DemoData             *bool           `json:"demoData,omitempty"`
+	DeployIntegrations   *bool           `json:"deployIntegrations,omitempty"`
+	TestSupport          *bool           `json:"testSupport,omitempty"`
+	ImageStreamNamespace string          `json:"imageStreamNamespace,omitempty"`
+	Integration          IntegrationSpec `json:"integration,omitempty"`
+	// The container registry to pull syndesis images from
+	Registry            string         `json:"registry,omitempty"`
+	Components          ComponentsSpec `json:"components,omitempty"`
+	OpenShiftMaster     string         `json:"openshiftMaster,omitempty"`
+	OpenShiftConsoleUrl string         `json:"openshiftConsoleUrl,omitempty"`
+	SarNamespace        string         `json:"sarNamespace,omitempty"`
+	Addons              AddonsSpec     `json:"addons,omitempty"`
+	// if true, then the image streams are changed to used local development builds & JAVA_DEBUG is enabled
+	DevSupport bool `json:"devSupport,omitempty"`
 
-	// Namespace where syndesis docker images are located and the operator should look after them
-	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
-
-	// The external hostname to access Syndesis
-	RouteHostname string `json:"routeHostname,omitempty"`
-
-	// Enable SampleDB and demo data for Syndesis
-	DemoData bool `json:"demoData,omitempty"`
-
-	// Components is used to configure all the core components of Syndesis
-	Components ComponentsSpec `json:"components,omitempty"`
-
-	// Optional add on features that can be enabled.
-	Addons AddonsSpec `json:"addons,omitempty"`
-
+	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -54,14 +53,13 @@ type SyndesisSpec struct {
 // +k8s:openapi-gen=true
 type SyndesisStatus struct {
 	Phase              SyndesisPhase        `json:"phase,omitempty"`
-	UpgradeAttempts    int                  `json:"upgradeAttempts,omitempty"`
+	UpgradeAttempts    int32                `json:"upgradeAttempts,omitempty"`
 	LastUpgradeFailure *metav1.Time         `json:"lastUpgradeFailure,omitempty"`
 	ForceUpgrade       bool                 `json:"forceUpgrade,omitempty"`
 	Reason             SyndesisStatusReason `json:"reason,omitempty"`
 	Description        string               `json:"description,omitempty"`
 	Version            string               `json:"version,omitempty"`
 	TargetVersion      string               `json:"targetVersion,omitempty"`
-	Backup             BackupStatus         `json:"backup,omitempty"`
 	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
 	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
 	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
@@ -69,59 +67,69 @@ type SyndesisStatus struct {
 
 // =============================================================================
 
-// +k8s:openapi-gen=true
+type IntegrationSpec struct {
+	Limit              *int `json:"limit,omitempty"`
+	StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
+}
+
 type ComponentsSpec struct {
-	Oauth      OauthConfiguration      `json:"oauth,omitempty"`
-	Server     ServerConfiguration     `json:"server,omitempty"`
-	Meta       MetaConfiguration       `json:"meta,omitempty"`
-	Database   DatabaseConfiguration   `json:"database,omitempty"`
-	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
-	Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
-	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
+	ImagePrefix      string                        `json:"imagePrefix,omitempty"`
+	Scheduled        bool                          `json:"scheduled,omitempty"`
+	Server           ServerConfiguration           `json:"server,omitempty"`
+	Meta             MetaConfiguration             `json:"meta,omitempty"`
+	UI               UIConfiguration               `json:"ui,omitempty"`
+	S2I              S2IConfiguration              `json:"s2i,omitempty"`
+	Db               DbConfiguration               `json:"db,omitempty"`
+	Oauth            OauthConfiguration            `json:"oauth,omitempty"`
+	PostgresExporter PostgresExporterConfiguration `json:"psql,omitempty"`
+	Prometheus       PrometheusConfiguration       `json:"prometheus,omitempty"`
+	Grafana          GrafanaConfiguration          `json:"grafana,omitempty"`
+	Komodo           KomodoConfiguration           `json:"komodo,omitempty"`
+	Upgrade          UpgradeConfiguration          `json:"upgrade,omitempty"`
 }
 
-// +kubebuilder:validation:Enum=hourly;daily;midnight;weekly;monthly;yearly;every 3m
-type BackupSchedule string
-
-type BackupConfig struct {
-	// Set schedule for backup cronjob
-	// +optional
-	Schedule BackupSchedule `json:"schedule,omitempty"`
-}
-
-type BackupStatus struct {
-	// When is the next backup planned
-	Next string `json:"next,omitempty"`
-	// When was the previous backup executed
-	Previous string `json:"previous,omitempty"`
-}
 type OauthConfiguration struct {
-	// Enable or disable SAR checks all together
-	DisableSarCheck bool `json:"disableSarCheck,omitempty"`
-
-	// The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
-	SarNamespace string `json:"sarNamespace,omitempty"`
+	DisableSarCheck *bool  `json:"disableSarCheck,omitempty"`
+	Tag             string `json:"tag,omitempty"`
 }
 
-type DatabaseConfiguration struct {
-	// Username for PostgreSQL user that will be used for accessing the database
-	User string `json:"user,omitempty"`
+type PostgresExporterConfiguration struct {
+	Tag         string `json:"tag,omitempty"`
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
+}
 
-	// Name of the PostgreSQL database accessed
-	Name string `json:"name,omitempty"`
+type KomodoConfiguration struct {
+	Registry    string    `json:"registry,omitempty"`
+	ImagePrefix string    `json:"imagePrefix,omitempty"`
+	Resources   Resources `json:"resources,omitempty"`
+	Tag         string    `json:"tag,omitempty"`
+}
 
-	// Host and port of the PostgreSQL database to access
-	URL string `url:"url,omitempty"`
+type S2IConfiguration struct {
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
+	Tag         string `json:"tag,omitempty"`
+}
 
-	// If specified, use an external database instead of the installed by syndesis
-	ExternalDbURL string `json:"externalDbURL,omitempty"`
+type UIConfiguration struct {
+	Registry    string `json:"registry,omitempty"`
+	ImagePrefix string `json:"imagePrefix,omitempty"`
+	Tag         string `json:"tag,omitempty"`
+}
 
-	// Resource provision requirements of the database
-	Resources ResourcesWithPersistentVolume `json:"resources,omitempty"`
+type DbConfiguration struct {
+	Image       string              `json:"image,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Resources   ResourcesWithVolume `json:"resources,omitempty"`
+	User        string              `json:"user,omitempty"`
+	Database    string              `json:"database,omitempty"`
 }
 
 type PrometheusConfiguration struct {
-	Rules     string              `json:"rules,omitempty"`
+	Tag       string              `json:"tag,omitempty"`
 	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
@@ -130,42 +138,33 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
-	Resources Resources      `json:"resources,omitempty"`
-	Features  ServerFeatures `json:"features,omitempty"`
+	Registry    string         `json:"registry,omitempty"`
+	ImagePrefix string         `json:"imagePrefix,omitempty"`
+	Tag         string         `json:"tag,omitempty"`
+	Resources   Resources      `json:"resources,omitempty"`
+	Features    ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
-	Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Resources   ResourcesWithVolume `json:"resources,omitempty"`
 }
 
 type UpgradeConfiguration struct {
-	Resources VolumeOnlyResources `json:"resources,omitempty"`
+	Tag         string              `json:"tag,omitempty"`
+	Registry    string              `json:"registry,omitempty"`
+	ImagePrefix string              `json:"imagePrefix,omitempty"`
+	Resources   VolumeOnlyResources `json:"resources,omitempty"`
 }
 
 type Resources struct {
-	Memory string `json:",inline,omitempty"`
-}
-
-// +kubebuilder:validation:Enum=ReadWriteOnce;ReadOnlyMany;ReadWriteMany
-type VolumeAccessMode string
-
-const (
-	ReadWriteOnce VolumeAccessMode = "ReadWriteOnce"
-	ReadOnlyMany  VolumeAccessMode = "ReadOnlyMany"
-	ReadWriteMany VolumeAccessMode = "ReadWriteMany"
-)
-
-type ResourcesWithPersistentVolume struct {
-	Memory             string            `json:",inline,omitempty"`
-	VolumeCapacity     string            `json:"volumeCapacity,omitempty"`
-	VolumeName         string            `json:"volumeName,omitempty"`
-	VolumeAccessMode   VolumeAccessMode  `json:"volumeAccessMode,omitempty"`
-	VolumeStorageClass string            `json:"volumeStorageClass,omitempty"`
-	VolumeLabels       map[string]string `json:"volumeLabels,omitempty"`
+	v1.ResourceRequirements `json:",inline,omitempty"`
 }
 
 type ResourcesWithVolume struct {
-	Memory         string `json:",inline,omitempty"`
+	Resources      `json:",inline,omitempty"`
 	VolumeCapacity string `json:"volumeCapacity,omitempty"`
 }
 
@@ -174,57 +173,12 @@ type VolumeOnlyResources struct {
 }
 
 type ServerFeatures struct {
-	// Maximum number of integrations single user can create
-	IntegrationLimit int `json:"integrationLimit,omitempty"`
-
-	// Interval for checking the state of the integrations
-	IntegrationStateCheckInterval int `json:"integrationStateCheckInterval,omitempty"`
-
-	// Whether we deploy integrations
-	DeployIntegrations bool `json:"deployIntegrations,omitempty"`
-
-	// Set repositories for maven
-	MavenRepositories map[string]string `json:"mavenRepositories,omitempty"`
-
-	// 3scale management URL
 	ManagementUrlFor3scale string `json:"managementUrlFor3scale,omitempty"`
 }
 
-type AddonsSpec struct {
-	Jaeger    JaegerConfiguration    `json:"jaeger,omitempty"`
-	Ops       AddonSpec              `json:"ops,omitempty"`
-	Todo      AddonSpec              `json:"todo,omitempty"`
-	Knative   AddonSpec              `json:"knative,omitempty"`
-	DV        DvConfiguration        `json:"dv,omitempty"`
-	CamelK    AddonSpec              `json:"camelk,omitempty"`
-	PublicApi PublicApiConfiguration `json:"publicApi,omitempty"`
-}
+type AddonsSpec map[string]Parameters
 
-type JaegerConfiguration struct {
-	Enabled      bool   `json:"enabled,omitempty"`
-	SamplerType  string `json:"samplerType,omitempty"`
-	SamplerParam string `json:"samplerParam,omitempty"`
-}
-
-type AddonSpec struct {
-	Enabled bool `json:"enabled,omitempty"`
-}
-
-type DvConfiguration struct {
-	Enabled   bool      `json:"enabled,omitempty"`
-	Resources Resources `json:"resources,omitempty"`
-}
-
-type PublicApiConfiguration struct {
-	Enabled bool `json:"enabled,omitempty"`
-	// Set RouteHostname to the hostname of the exposed syndesis Public API.
-	RouteHostname string `json:"routeHostname,omitempty"`
-	// if set to true, then any authenticated user can access the API. otherwise the user
-	// needs access to get pods against the SarNamespace
-	DisableSarCheck bool `json:"disable-sar-check,omitempty"`
-}
-
-// =============================================================================
+type Parameters map[string]string
 
 type SyndesisPhase string
 
@@ -234,6 +188,7 @@ const (
 	SyndesisPhaseStarting              SyndesisPhase = "Starting"
 	SyndesisPhaseStartupFailed         SyndesisPhase = "StartupFailed"
 	SyndesisPhaseInstalled             SyndesisPhase = "Installed"
+	SyndesisPhaseMigrated              SyndesisPhase = "Migrated"
 	SyndesisPhaseNotInstalled          SyndesisPhase = "NotInstalled"
 	SyndesisPhaseUpgrading             SyndesisPhase = "Upgrading"
 	SyndesisPhasePostUpgradeRun        SyndesisPhase = "PostUpgradeRun"
@@ -246,14 +201,13 @@ type SyndesisStatusReason string
 
 const (
 	SyndesisStatusReasonMissing                SyndesisStatusReason = ""
+	SyndesisStatusReasonMigrated               SyndesisStatusReason = "MigratedToV1beta1"
 	SyndesisStatusReasonDuplicate              SyndesisStatusReason = "Duplicate"
 	SyndesisStatusReasonDeploymentNotReady     SyndesisStatusReason = "DeploymentNotReady"
 	SyndesisStatusReasonUpgradeFailed          SyndesisStatusReason = "UpgradeFailed"
 	SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
 	SyndesisStatusReasonPostUpgradeRun         SyndesisStatusReason = "PostUpgradeRun"
 )
-
-// =============================================================================
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

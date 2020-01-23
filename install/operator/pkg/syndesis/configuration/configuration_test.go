@@ -26,7 +26,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 )
 
 func Test_loadFromFile(t *testing.T) {
@@ -186,7 +186,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 
 func Test_setSyndesisFromCustomResource(t *testing.T) {
 	type args struct {
-		syndesis *v1alpha1.Syndesis
+		syndesis *v1beta1.Syndesis
 	}
 	tests := []struct {
 		name       string
@@ -196,27 +196,27 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 	}{
 		{
 			name:       "When using an empty syndesis custom resource, the config values from template should remain",
-			args:       args{syndesis: &v1alpha1.Syndesis{}},
+			args:       args{syndesis: &v1beta1.Syndesis{}},
 			wantConfig: getConfigLiteral(),
 			wantErr:    false,
 		},
 		{
 			name: "When using a syndesis custom resource with values, those values should replace the template values",
-			args: args{syndesis: &v1alpha1.Syndesis{
-				Spec: v1alpha1.SyndesisSpec{
+			args: args{syndesis: &v1beta1.Syndesis{
+				Spec: v1beta1.SyndesisSpec{
 					ImageStreamNamespace: "ImageStreamNamespace",
-					Addons: v1alpha1.AddonsSpec{
-						Jaeger: v1alpha1.JaegerConfiguration{
+					Addons: v1beta1.AddonsSpec{
+						Jaeger: v1beta1.JaegerConfiguration{
 							Enabled:      true,
 							SamplerType:  "const",
 							SamplerParam: "0",
 						},
-						Todo: v1alpha1.AddonSpec{Enabled: true},
-						DV: v1alpha1.DvConfiguration{
+						Todo: v1beta1.AddonSpec{Enabled: true},
+						DV: v1beta1.DvConfiguration{
 							Enabled: true,
 						},
-						CamelK: v1alpha1.AddonSpec{Enabled: true},
-						PublicApi: v1alpha1.PublicApiConfiguration{
+						CamelK: v1beta1.AddonSpec{Enabled: true},
+						PublicApi: v1beta1.PublicApiConfiguration{
 							Enabled:       true,
 							RouteHostname: "mypublichost.com",
 						},
@@ -395,7 +395,7 @@ func getConfigLiteral() *Config {
 					Resources: ResourcesWithPersistentVolume{
 						Memory:           "255Mi",
 						VolumeCapacity:   "1Gi",
-						VolumeAccessMode: string(v1alpha1.ReadWriteOnce),
+						VolumeAccessMode: string(v1beta1.ReadWriteOnce),
 					},
 				},
 				Prometheus: PrometheusConfiguration{
@@ -453,7 +453,7 @@ func TestConfig_SetRoute(t *testing.T) {
 	type args struct {
 		ctx      context.Context
 		client   client.Client
-		syndesis *v1alpha1.Syndesis
+		syndesis *v1beta1.Syndesis
 	}
 	tests := []struct {
 		name    string

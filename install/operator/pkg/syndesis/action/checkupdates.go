@@ -2,12 +2,13 @@ package action
 
 import (
 	"context"
+	"time"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"sigs.k8s.io/controller-runtime/pkg/manager"
 )
 
@@ -24,13 +25,13 @@ func newCheckUpdatesAction(mgr manager.Manager, api kubernetes.Interface) Syndes
 	}
 }
 
-func (a checkUpdatesAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
+func (a checkUpdatesAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 	return syndesisPhaseIs(syndesis,
-		v1alpha1.SyndesisPhaseInstalled,
-		v1alpha1.SyndesisPhaseStartupFailed)
+		v1beta1.SyndesisPhaseInstalled,
+		v1beta1.SyndesisPhaseStartupFailed)
 }
 
-func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
+func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 	if a.operatorVersion == "" {
 		a.operatorVersion = pkg.DefaultOperatorTag
 	}
@@ -39,16 +40,26 @@ func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Synd
 		// Everything fine
 		return nil
 	} else {
-		target := syndesis.DeepCopy()
-		target.Status.Phase = v1alpha1.SyndesisPhaseUpgrading
-		target.Status.TargetVersion = a.operatorVersion
-		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
-		target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
-		target.Status.LastUpgradeFailure = nil
-		target.Status.UpgradeAttempts = 0
-		target.Status.ForceUpgrade = false
-
-		a.log.Info("Starting upgrade of Syndesis resource", "name", syndesis.Name, "currentVersion", syndesis.Status.Version, "targetVersion", a.operatorVersion, "type", "checkUpdate")
-		return a.client.Update(ctx, target)
+		return a.setPhaseToUpgrading(ctx, syndesis)
 	}
+}
+
+/*
+ * Following functions have a sleep after updating the custom resource. This is
+ * needed to avoid race conditions where k8s wasn't able to update or
+ * kubernetes didn't change the object yet
+ */
+func (a checkUpdatesAction) setPhaseToUpgrading(ctx context.Context, syndesis *v1beta1.Syndesis) (err error) {
+	target := syndesis.DeepCopy()
+	target.Status.Phase = v1beta1.SyndesisPhaseUpgrading
+	target.Status.TargetVersion = a.operatorVersion
+	target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
+	target.Status.Description = "Upgrading from " + syndesis.Status.Version + " to " + a.operatorVersion
+	target.Status.LastUpgradeFailure = nil
+	target.Status.UpgradeAttempts = 0
+	target.Status.ForceUpgrade = false
+
+	err = a.client.Update(ctx, target)
+	time.Sleep(3 * time.Second)
+	return
 }

@@ -38,7 +38,7 @@ func (stepTestFail) infoRun()              {}
 func (stepTestFail) infoRollback()         {}
 
 func TestUpgrade_InstallFailed(t *testing.T) {
-	u := &Upgrade{attempts: []result{}}
+	u := &upgrade{attempts: []result{}}
 	u.InstallFailed()
 	assert.NotEmpty(t, u.attempts)
 	assert.IsType(t, install{}, u.attempts[0].step())
@@ -46,7 +46,7 @@ func TestUpgrade_InstallFailed(t *testing.T) {
 
 func TestUpgrade_Upgrade(t *testing.T) {
 	// Test successful upgrade
-	u := &Upgrade{
+	u := &upgrade{
 		steps:    []stepRunner{stepTestOk{}, stepTestOk{}},
 		attempts: []result{},
 	}
@@ -54,22 +54,22 @@ func TestUpgrade_Upgrade(t *testing.T) {
 	err := u.Upgrade()
 	assert.NoError(t, err)
 	assert.NotEmpty(t, u.attempts)
-	assert.IsType(t, Succeed{}, u.attempts[0])
+	assert.IsType(t, succeed{}, u.attempts[0])
 
 	// Test failed upgrade
-	u = &Upgrade{
+	u = &upgrade{
 		steps:    []stepRunner{stepTestOk{}, stepTestFail{}, stepTestOk{}},
 		attempts: []result{},
 	}
 	err = u.Upgrade()
 	assert.Error(t, err)
 	assert.NotEmpty(t, u.attempts)
-	assert.IsType(t, Failure{}, u.attempts[0])
+	assert.IsType(t, failure{}, u.attempts[0])
 	assert.IsType(t, stepTestFail{}, u.attempts[0].step())
 }
 
 func TestUpgrade_Rollback(t *testing.T) {
-	u := &Upgrade{
+	u := &upgrade{
 		steps:    []stepRunner{stepTestOk{}, stepTestFail{}, stepTestOk{}},
 		attempts: []result{},
 	}

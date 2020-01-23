@@ -28,10 +28,10 @@
     verbs:
     - get
   - apiGroups:
-    - ""
+    - "jobs"
     resources:
-    - serviceaccounts
-    verbs: [ impersonate ]
+    - batch
+    verbs: [ get list create delete update watch deletecollection ]
   - apiGroups:
     - ""
     resources:
