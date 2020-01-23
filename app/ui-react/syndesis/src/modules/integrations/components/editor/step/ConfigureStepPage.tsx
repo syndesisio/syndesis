@@ -1,4 +1,4 @@
-import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import { getSteps,WithIntegrationHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
@@ -78,9 +78,17 @@ export class ConfigureStepPage extends React.Component<
                 );
               };
 
+              /**
+               * Used to determine determine whether or not the user is allowed
+               * to press back on the Configure Step page. Leaving as a generic
+               * boolean until we need to add logic here, as this property is
+               * required for the WithConfigurationForm component anyway.
+               */
+              const allowBack = false;
+
               return (
                 <WithConfigurationForm
-                  isBackAllowed={false}
+                  isBackAllowed={allowBack}
                   step={state.step}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
