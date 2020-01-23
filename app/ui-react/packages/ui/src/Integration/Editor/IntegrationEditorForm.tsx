@@ -16,6 +16,7 @@ export interface IIntegrationEditorFormProps {
    * The callback fired when submitting the form.
    * @param e
    */
+  isBackAllowed: boolean;
   isValid: boolean;
   isLoading: boolean;
   error?: string;
@@ -62,6 +63,7 @@ export class IntegrationEditorForm extends React.Component<
                   <>
                     <ButtonLink
                       id={'integration-editor-form-back-button'}
+                      disabled={!this.props.isBackAllowed}
                       href={this.props.backActionHref}
                     >
                       <i className={'fa fa-chevron-left'} />{' '}

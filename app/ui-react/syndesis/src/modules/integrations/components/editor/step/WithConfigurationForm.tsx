@@ -54,6 +54,10 @@ export interface IWithConfigurationFormProps {
    */
   step: StepKind;
   /**
+   * determines whether or not 'Back' should be allowed.
+   */
+  isBackAllowed: boolean;
+  /**
    * the render prop that will receive the ready-to-be-rendered form and some
    * helpers.
    *
@@ -150,6 +154,7 @@ export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFo
                   : step!.name
               }
               i18nNext={t('shared:Next')}
+              isBackAllowed={props.isBackAllowed}
               isValid={isValid}
               isLoading={isSubmitting}
               submitForm={submitForm}

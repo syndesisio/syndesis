@@ -26,6 +26,7 @@ import { IWithConfigurationFormProps } from './WithConfigurationForm';
 export interface IConfigurationFormProps
   extends Pick<IWithConfigurationFormProps, 'configurationPage'>,
     Pick<IWithConfigurationFormProps, 'initialValue'>,
+    Pick<IWithConfigurationFormProps, 'isBackAllowed'>,
     Pick<IWithConfigurationFormProps, 'oldAction'>,
     Pick<IWithConfigurationFormProps, 'onUpdatedIntegration'>,
     Pick<IWithConfigurationFormProps, 'chooseActionHref'> {
@@ -33,6 +34,7 @@ export interface IConfigurationFormProps
   descriptor: ActionDescriptor;
   definitionOverride?: IConfigurationProperties;
   children: any;
+  isBackAllowed: boolean;
 }
 
 export const ConfigurationForm: React.FunctionComponent<
@@ -42,6 +44,7 @@ export const ConfigurationForm: React.FunctionComponent<
   configurationPage,
   descriptor,
   definitionOverride,
+  isBackAllowed,
   initialValue,
   oldAction,
   chooseActionHref,
@@ -94,6 +97,10 @@ export const ConfigurationForm: React.FunctionComponent<
       typeof step.description === 'undefined'
         ? action.name
         : `${action.name} - ${step.description}`;
+    console.log('definition: ' + JSON.stringify(definition));
+    console.log('step: ' + JSON.stringify(step));
+    console.log('action: ' + JSON.stringify(action));
+    console.log('oldAction: ' + JSON.stringify(oldAction));
     return (
       <AutoForm<IFormValue>
         i18nRequiredProperty={t('shared:requiredFieldMessage')}
@@ -106,12 +113,15 @@ export const ConfigurationForm: React.FunctionComponent<
         validateInitial={validator}
         key={key}
       >
-        {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => (
+        {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => {
+          console.log('isBackAllowed from ConfForm: ' + isBackAllowed);
+          return (
           <>
             <IntegrationEditorForm
               i18nFormTitle={formTitle}
               i18nBackAction={'Choose Action'}
               i18nNext={'Next'}
+              isBackAllowed={isBackAllowed}
               isValid={isValid}
               isLoading={isSubmitting}
               submitForm={() => {
@@ -125,7 +135,8 @@ export const ConfigurationForm: React.FunctionComponent<
               {fields}
             </IntegrationEditorForm>
           </>
-        )}
+          )
+        }}
       </AutoForm>
     );
   } catch (e) {
