@@ -154,9 +154,11 @@ type Resources struct {
 // +kubebuilder:validation:Enum=ReadWriteOnce;ReadOnlyMany;ReadWriteMany
 type VolumeAccessMode string
 
+// Possible VAM can be found here  https://docs.openshift.com/container-platform/4.2/storage/understanding-persistent-storage.html
 const (
 	ReadWriteOnce VolumeAccessMode = "ReadWriteOnce"
 	ReadOnlyMany  VolumeAccessMode = "ReadOnlyMany"
+	// ReadWriteMany VolumeAccessMode = "ReadWriteMany"
 )
 
 type ResourcesWithPersistentVolume struct {
