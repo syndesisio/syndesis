@@ -40,7 +40,9 @@ public class JaegerConfiguration {
     @Primary
     @Bean
     public io.opentracing.Tracer jaegerTracer() {
-        return io.jaegertracing.Configuration.fromEnv(serviceName).getTracer();
+        // use a microsecond precision clock for more accuracy as there could be span tracing less than 1ms
+        return io.jaegertracing.Configuration.fromEnv(serviceName).getTracerBuilder()
+            .withClock(new MicrosecondPrecisionClock()).build();
     }
 
 }
