@@ -7,13 +7,15 @@ import {
   DataListItemCells,
   DataListItemRow,
   DataListToggle,
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle,
   Text,
   TextContent,
   TextVariants,
-  Tooltip,
-  TooltipPosition,
 } from '@patternfly/react-core';
-import { DatabaseIcon, OutlinedTrashAltIcon } from '@patternfly/react-icons';
+import { DatabaseIcon } from '@patternfly/react-icons';
 import { Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
 import './SelectedConnectionListView.css'
@@ -26,6 +28,7 @@ export interface ISelectedConnectionListViewProps {
   index: number;
   rows: string[][];
   onTabelRemoved: (connectionName: string, teiidName: string) => void;
+  setShowPreviewData: () => void;
 }
 
 export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnectionListViewProps> = props => {
@@ -36,9 +39,13 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
   const onTrashClickHandler = () => {
     props.onTabelRemoved(props.connectionName, props.name);
   }
-  /*   
+
+  const onPreviewClickHandlere = () =>{
+    props.setShowPreviewData();
+  }
+  {/*   
   May use when implement the table preview
-  
+*/  }
   const [isOpen, setIsOpen] = React.useState(false);
 
   const onSelect = (event?: Event) => {
@@ -49,7 +56,7 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
   const onToggle = (isOpen: boolean) => {
     setIsOpen(isOpen);
   };
-  */
+  
 
   return (
     <DataList aria-label="Expandable data list example">
@@ -81,8 +88,8 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
             id={`selected-table-action${props.index}`}
             aria-label="Actions"
           >
-            {/* 
-            May use when implement the table preview
+            
+            {/* May use when implement the table preview */}
             
             <Dropdown
               isPlain={true}
@@ -92,15 +99,15 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
               onSelect={() => onSelect(event)}
               toggle={<KebabToggle onToggle={onToggle} />}
               dropdownItems={[
-                <DropdownItem key="link">Preview data</DropdownItem>,
-                <DropdownItem key="action" component="button">
+                <DropdownItem key="link" onClick={onPreviewClickHandlere}>Preview data</DropdownItem>,
+                <DropdownItem key="action" component="button" onClick={onTrashClickHandler}>
                   Remove Selection
                 </DropdownItem>,
               ]}
-            /> */}
-            <Tooltip position={TooltipPosition.top} content={<div>Remove</div>}>
+            />
+            {/* <Tooltip position={TooltipPosition.top} content={<div>Remove</div>}>
               <OutlinedTrashAltIcon onClick={onTrashClickHandler}/>
-            </Tooltip>
+            </Tooltip> */}
           </DataListAction>
         </DataListItemRow>
         <DataListContent
