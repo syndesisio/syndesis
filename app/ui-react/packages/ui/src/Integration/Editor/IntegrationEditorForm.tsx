@@ -59,11 +59,10 @@ export class IntegrationEditorForm extends React.Component<
                 </Container>
               </CardBody>
               <CardFooter className="syn-card__footer">
-                {this.props.backActionHref && (
+                {(this.props.backActionHref && this.props.isBackAllowed) && (
                   <>
                     <ButtonLink
                       id={'integration-editor-form-back-button'}
-                      disabled={!this.props.isBackAllowed}
                       href={this.props.backActionHref}
                     >
                       <i className={'fa fa-chevron-left'} />{' '}
