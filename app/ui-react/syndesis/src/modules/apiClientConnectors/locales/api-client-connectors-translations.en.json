@@ -1,7 +1,7 @@
 {
   "action": "<strong>{{actionName}}</strong> - {{actionDescription}}",
   "apiConnectorDetailsPageTitle": "Connector Details",
-  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.",
+  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI specification that describes the API you want to connect to.",
   "apiConnectorsPageTitle": "API Client Connectors",
   "basePath": "Base URL",
   "ConnectorIcon": "Connector Icon",

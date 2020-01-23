@@ -1,7 +1,7 @@
 {
   "action": "<strong>{{actionName}}</strong> - {{actionDescription}}",
   "apiConnectorDetailsPageTitle": "Dettagli del Connettore",
-  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> crea un connettore client API quando carichi una specifica OpenAPI 2.0 valida che descrive l'API a cui desideri connetterti.",
+  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> crea un connettore client API quando carichi una specifica OpenAPI valida che descrive l'API a cui desideri connetterti.",
   "apiConnectorsPageTitle": "Connettori Client API",
   "basePath": "URL di Base",
   "ConnectorIcon": "Icona del Connettore",
