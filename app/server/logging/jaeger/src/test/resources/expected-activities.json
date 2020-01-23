@@ -1,171 +1,323 @@
 [ {
-  "id" : "a5274516ae80e4fb",
-  "at" : 1575495301272,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "a27212220954b5d",
+  "at" : 1579122868112,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575495301272,
-    "duration" : 300000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122868112077,
+    "duration" : 34000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575495301273,
-    "duration" : 384000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHpbXNUF8qldA7ZvPUz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@5cd955f2, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=a5274516ae80e4fb:84c2ef479cc86062:63e957381c03d914:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122868112249,
+    "duration" : 224000,
+    "messages" : [ "Body: [[Wed Jan 15 21:14:15 UTC 2020 (bjoernstuetz) RT @jroper: 99% of the difficulties of doing SSL in Java would be solved if the JDK supported:\n\n* Parsing PEM encoded private keys\n* Parsin…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122868112560,
+    "duration" : 1855000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122868112892,
+    "duration" : 214000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2fyGNEx4SZdkYbOGz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=a27212220954b5d:4ec28f34902d242d:a27212220954b5d:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:15 UTC 2020 (bjoernstuetz) RT @jroper: 99% of the difficulties of doing SSL in Java would be solved if the JDK supported:\n\n* Parsing PEM encoded private keys\n* Parsin…]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122868113178,
+    "duration" : 936000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122868114171,
+    "duration" : 239000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "48971706c9b9bbb9",
-  "at" : 1575495288845,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "c7be45837ca6814e",
+  "at" : 1579122868109,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575495288845,
-    "duration" : 624000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122868109462,
+    "duration" : 47000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575495288846,
-    "duration" : 428000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHpZVCUF8qldA7ZvPSz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@744e6b61, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=48971706c9b9bbb9:724879abb01fa339:9138bfc0e7cafa39:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122868109732,
+    "duration" : 362000,
+    "messages" : [ "Body: [[Wed Jan 15 21:14:07 UTC 2020 (LlnuxBot) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122868110131,
+    "duration" : 1824000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122868110467,
+    "duration" : 253000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2fyDNEx4SZdkYbOBz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=c7be45837ca6814e:19105e2f70645874:c7be45837ca6814e:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:07 UTC 2020 (LlnuxBot) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122868110750,
+    "duration" : 929000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122868111705,
+    "duration" : 246000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "d366f27ed0081b97",
-  "at" : 1575495258724,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "9ab0a09b7c7bf463",
+  "at" : 1579122848669,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575495258724,
-    "duration" : 222000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122848669089,
+    "duration" : 74000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575495258724,
-    "duration" : 306000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHpS8YUF8qldA7ZvPQz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@68cf4c1b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=d366f27ed0081b97:8861bd5749192f6a:f087cb07f09f69ab:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122848669452,
+    "duration" : 745000,
+    "messages" : [ "Body: [[Wed Jan 15 21:14:03 UTC 2020 (Functionalworks) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #hiring\n\nhttps://t.co/ecVEqyqffP]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122848670267,
+    "duration" : 4273000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122848671695,
+    "duration" : 489000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDSNEx4SZdkYbO6z, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=9ab0a09b7c7bf463:248d894d6cec48cb:9ab0a09b7c7bf463:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:03 UTC 2020 (Functionalworks) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #hiring\n\nhttps://t.co/ecVEqyqffP]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122848672253,
+    "duration" : 1810000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122848674125,
+    "duration" : 408000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "760994999bd8cb5d",
-  "at" : 1575495234931,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "aca2a6eb97b29f43",
+  "at" : 1579122848663,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575495234931,
-    "duration" : 494000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122848663344,
+    "duration" : 71000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575495234932,
-    "duration" : 2046000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHpMKnUF8qldA7ZvPOz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@28374991, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=760994999bd8cb5d:db78260b4afa517e:19cf80672669a556:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122848664008,
+    "duration" : 460000,
+    "messages" : [ "Body: [[Wed Jan 15 21:14:03 UTC 2020 (workshub) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #jobs\n\nhttps://t.co/atDYOSLTYl]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122848664531,
+    "duration" : 3997000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122848665214,
+    "duration" : 646000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDNNEx4SZdkYbO1z, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=aca2a6eb97b29f43:dea0364ef748e93d:aca2a6eb97b29f43:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:03 UTC 2020 (workshub) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #jobs\n\nhttps://t.co/atDYOSLTYl]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122848665975,
+    "duration" : 1984000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122848668026,
+    "duration" : 488000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "4199d701a15f556a",
-  "at" : 1575494306092,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "4beb4c959a821c86",
+  "at" : 1579122848652,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494306092,
-    "duration" : 185000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122848653091,
+    "duration" : 119000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494306093,
-    "duration" : 433000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHloZgUF8qldA7ZvPMz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@3a89447b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=4199d701a15f556a:8662fac3be16cc01:a7885a1622ca35a0:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122848653524,
+    "duration" : 648000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:51 UTC 2020 (amil58317917) I love going to get coffee and meeting at Java House]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122848654226,
+    "duration" : 8864000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122848658199,
+    "duration" : 828000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDCNEx4SZdkYbNxz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=4beb4c959a821c86:7d8fb2d8194d2110:4beb4c959a821c86:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:51 UTC 2020 (amil58317917) I love going to get coffee and meeting at Java House]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122848659107,
+    "duration" : 3075000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122848662256,
+    "duration" : 816000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "a344bd3708ca7daf",
-  "at" : 1575494305685,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "52229c81ba6b8fe8",
+  "at" : 1579122829196,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494305685,
-    "duration" : 508000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122829196787,
+    "duration" : 58000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494305686,
-    "duration" : 438000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHloTKUF8qldA7ZvPKz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@23b51a8b, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=a344bd3708ca7daf:ac7e8cff92e1d53d:2e40953526963ba4:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122829197108,
+    "duration" : 381000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:42 UTC 2020 (cloudhispano) RT @Payara_Fish: Congratulations @netbeans you were our community's #IDE of choice according to our recent survey! There are loads more int…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122829197548,
+    "duration" : 490000
   } ]
 }, {
-  "id" : "b38c2f752dd0e863",
-  "at" : 1575494305333,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "83e9ac66b4822256",
+  "at" : 1579122829182,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494305333,
-    "duration" : 2293000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122829182145,
+    "duration" : 1024000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494305336,
-    "duration" : 467000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHloNpUF8qldA7ZvPIz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@6b4cf1de, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=b38c2f752dd0e863:c49c7ea38638f9ab:2352bf608ca9c71b:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122829183499,
+    "duration" : 651000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:42 UTC 2020 (wealldotcom) RT @javadevjournal: How Spring Boot can help you to accelerate your application development.\n#Java  #Spring #SpringBoot \nhttps://t.co/CypMR…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122829184203,
+    "duration" : 12347000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122829184904,
+    "duration" : 4618000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XSyNEx4SZdkYbNoz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=83e9ac66b4822256:71efabd7a0ff4db8:83e9ac66b4822256:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:42 UTC 2020 (wealldotcom) RT @javadevjournal: How Spring Boot can help you to accelerate your application development.\n#Java  #Spring #SpringBoot \nhttps://t.co/CypMR…]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122829189679,
+    "duration" : 6324000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122829196074,
+    "duration" : 455000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "78481f8153b09ea0",
-  "at" : 1575494304964,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "3b93eae95ad850a5",
+  "at" : 1579122829147,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494304964,
-    "duration" : 202000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122829147526,
+    "duration" : 54000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494304964,
-    "duration" : 6421000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHloI3UF8qldA7ZvPGz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@59ccc7c2, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=78481f8153b09ea0:75f12ac254164fad:bf6f8856cf70a416:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122829147852,
+    "duration" : 12067000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:39 UTC 2020 (OpenGenus) Java does not support Multiple and Multipath inheritance\n\nhttps://t.co/zEicM0zhjE\n\n#computerscience #coding #technology #opengenus #hourofcode]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122829160026,
+    "duration" : 13029000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122829164431,
+    "duration" : 657000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XSRNEx4SZdkYbNjz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=3b93eae95ad850a5:d363c544d1a9f65d:3b93eae95ad850a5:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:39 UTC 2020 (OpenGenus) Java does not support Multiple and Multipath inheritance\n\nhttps://t.co/zEicM0zhjE\n\n#computerscience #coding #technology #opengenus #hourofcode]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122829165154,
+    "duration" : 5973000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122829171207,
+    "duration" : 1823000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 }, {
-  "id" : "638abbeba80bb1f9",
-  "at" : 1575494304572,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "ac8d11bf85465219",
+  "at" : 1579122829142,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494304572,
-    "duration" : 209000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122829142307,
+    "duration" : 40000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494304573,
-    "duration" : 284000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHloBwUF8qldA7ZvPEz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@191d150a, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=638abbeba80bb1f9:42374fbf1a9fc5a6:8c79ebb48a72606a:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122829142535,
+    "duration" : 4369000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:33 UTC 2020 (wealldotcom) RT @sevalutus: Merhaba,  Iyzico'daki açık ilanlarımızı sitemizden takip edebilir, bilgi almak için bizlere ulaşabilirsiniz. Linki aşağıya b…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122829146979,
+    "duration" : 381000
   } ]
 }, {
-  "id" : "360a89a61239231",
-  "at" : 1575494304196,
-  "pod" : "i-myhook-2-cxt9r",
-  "ver" : "2",
+  "id" : "90906b5cfe4ebf8e",
+  "at" : 1579122829121,
+  "pod" : "i-twlog-11-mm6sc",
+  "ver" : "5",
   "status" : "done",
   "failed" : false,
   "steps" : [ {
-    "id" : "-LvGi4fQB7OpkM5ZEVB_",
-    "at" : 1575494304196,
-    "duration" : 241000
+    "id" : "-LyeFZiCxs8Tv9EAwD5s",
+    "at" : 1579122829121474,
+    "duration" : 95000
   }, {
-    "id" : "-LvGi5XAB7OpkM5ZEVB_",
-    "at" : 1575494304197,
-    "duration" : 297000,
-    "messages" : [ "Message Context: [{breadcrumbId=i-LvHlo63UF8qldA7ZvPCz, CamelHttpCharacterEncoding=UTF-8, CamelHttpMethod=POST, CamelHttpPath=, CamelHttpQuery=null, CamelHttpServletRequest=HttpServletRequestImpl [ POST /webhook/test ], CamelHttpServletResponse=io.undertow.servlet.spec.HttpServletResponseImpl@771869f8, CamelHttpUrl=http://i-myhook-syndesis.192.168.42.250.nip.io/webhook/test, CamelServletContextPath=/test, Content-Type=application/json, Syndesis.FLOW_ID=-LvGi2cEB7OpkM5ZEVB_, Syndesis.STEP_ID=-LvGi5XAB7OpkM5ZEVB_, Syndesis.STEP_SPAN=360a89a61239231:1a8b718ac2dd2066:689c50e5c6dbcca:1 - -LvGi5XAB7OpkM5ZEVB_}] " ]
+    "id" : "-LyelD-9xs8Tv9EAwD63",
+    "at" : 1579122829125980,
+    "duration" : 493000,
+    "messages" : [ "Body: [[Wed Jan 15 21:13:29 UTC 2020 (LinuxDreams) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] --- after split" ]
+  }, {
+    "id" : "-LyeFi1Pxs8Tv9EAwD5t",
+    "at" : 1579122829126527,
+    "duration" : 15624000
+  }, {
+    "id" : "-LyeFn4Gxs8Tv9EAwD5t",
+    "at" : 1579122829136674,
+    "duration" : 488000,
+    "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XS1NEx4SZdkYbNaz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=90906b5cfe4ebf8e:b4db82e22bfe370b:90906b5cfe4ebf8e:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:29 UTC 2020 (LinuxDreams) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] after conditional flow" ]
+  }, {
+    "id" : "-LyeM2B2xs8Tv9EAwD5t",
+    "at" : 1579122829137209,
+    "duration" : 4480000
+  }, {
+    "id" : "-LyeFbpgxs8Tv9EAwD5s",
+    "at" : 1579122829141756,
+    "duration" : 381000,
+    "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
 } ]

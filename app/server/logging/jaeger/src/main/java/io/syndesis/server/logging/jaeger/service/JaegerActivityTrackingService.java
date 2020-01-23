@@ -61,9 +61,6 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
         // http://localhost:16686/api/traces?end=1548280423588000&limit=20&lookback=1h&maxDuration&minDuration&service=io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest&start=1548276823588000
         ArrayList<JaegerQueryAPI.Trace> traces = jaegerQueryApi.tracesForService(integrationId, lookbackDays, limit);
 
-
-        LOG.debug("traces: {}", traces);
-
         ArrayList<Activity> rc = new ArrayList<>();
         for (JaegerQueryAPI.Trace trace : traces) {
             Activity activity = null;
@@ -74,7 +71,7 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                 for (JaegerQueryAPI.Span span : trace.spans) {
                     String kind = span.findTag(Tags.SPAN_KIND.getKey(), String.class);
                     if (kind == null) {
-                        LOG.debug("Cannot find tag 'span.kind' in span: {}", span);
+                        LOG.debug("Cannot find tag 'span.kind' in trace: {} and span: {}", trace.traceID, span);
                         continue;
                     }
                     switch (kind) {
@@ -98,7 +95,8 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                         case "step": {
                             ActivityStep step = new ActivityStep();
                             step.setId(span.operationName);
-                            step.setAt(span.startTime/1000);
+                            // use microseconds precision to improve accuracy
+                            step.setAt(span.startTime);
                             step.setDuration(span.duration*1000);
 
                             List<String> messages = span.findLogs("event");
