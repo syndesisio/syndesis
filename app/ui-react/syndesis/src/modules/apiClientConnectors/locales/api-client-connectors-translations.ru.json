@@ -1,7 +1,7 @@
 {
   "action": "<strong>{{actionName}}</strong> - {{actionDescription}}",
   "apiConnectorDetailsPageTitle": "Детали Коннектора",
-  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> предоставляет API Коннектор когда вы загружаете валидную OpenAPI 2.0 спецификацию, описываюшая API, с которым Вы хотите работать.",
+  "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> предоставляет API Коннектор когда вы загружаете валидную OpenAPI спецификацию, описываюшая API, с которым Вы хотите работать.",
   "apiConnectorsPageTitle": "API Коннектора",
   "basePath": "Базовый URL",
   "ConnectorIcon": "Иконка Коннектора",

@@ -54,7 +54,7 @@ const connectors = [
 
 const title = 'API Client Connectors';
 const description =
-  'Syndesis creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.';
+  'Syndesis creates an API client connector when you upload a valid OpenAPI specification that describes the API you want to connect to.';
 const createConnector = 'Create API Connector';
 const createConnectorTip = 'Upload file or use URL to create API connector';
 
