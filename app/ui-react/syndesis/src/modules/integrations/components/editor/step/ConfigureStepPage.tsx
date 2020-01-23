@@ -49,12 +49,14 @@ export class ConfigureStepPage extends React.Component<
   IConfigureStepPageProps
 > {
   public render() {
+
     return (
       <WithIntegrationHelpers>
         {({ addStep, updateStep }) => (
           <WithRouteData<IConfigureStepRouteParams, IConfigureStepRouteState>>
             {(params, state, { history }) => {
               const positionAsNumber = parseInt(params.position, 10);
+
               const onUpdatedIntegration = async ({
                 values,
               }: IOnUpdatedIntegrationProps) => {

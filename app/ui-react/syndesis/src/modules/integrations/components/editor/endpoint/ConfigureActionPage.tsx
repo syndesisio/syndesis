@@ -2,6 +2,7 @@ import {
   getFlow,
   getStep,
   getSteps,
+  isApiProviderFlow,
   isEndStep,
   isStartStep,
   requiresInputDescribeDataShape,
@@ -117,6 +118,15 @@ export class ConfigureActionPage extends React.Component<
                 (this.props.mode === 'editing' && useOldStepConfig
                   ? oldStepConfig!.configuredProperties
                   : {});
+
+              /**
+               * First, get the flow, and then check if API provider to determine
+               * whether or not to allow the user to press back on the Configure
+               * Action page.
+               */
+              const flow = getFlow(state.integration, params.flowId);
+              const allowBack = !isApiProviderFlow(flow!);
+
               const onUpdatedIntegration = async ({
                 action,
                 moreConfigurationSteps,
@@ -256,7 +266,7 @@ export class ConfigureActionPage extends React.Component<
                         configurationPage={pageAsNumber}
                         errorKeys={errorKeys}
                         initialValue={configuredProperties}
-                        isBackAllowed={false}
+                        isBackAllowed={allowBack}
                         oldAction={
                           useOldStepConfig && oldStepConfig!.action
                             ? oldStepConfig!.action!

@@ -97,10 +97,6 @@ export const ConfigurationForm: React.FunctionComponent<
       typeof step.description === 'undefined'
         ? action.name
         : `${action.name} - ${step.description}`;
-    console.log('definition: ' + JSON.stringify(definition));
-    console.log('step: ' + JSON.stringify(step));
-    console.log('action: ' + JSON.stringify(action));
-    console.log('oldAction: ' + JSON.stringify(oldAction));
     return (
       <AutoForm<IFormValue>
         i18nRequiredProperty={t('shared:requiredFieldMessage')}
@@ -114,7 +110,6 @@ export const ConfigurationForm: React.FunctionComponent<
         key={key}
       >
         {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => {
-          console.log('isBackAllowed from ConfForm: ' + isBackAllowed);
           return (
           <>
             <IntegrationEditorForm
