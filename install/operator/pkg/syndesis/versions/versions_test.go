@@ -21,6 +21,10 @@ import (
 	"reflect"
 	"testing"
 
+	"k8s.io/apimachinery/pkg/api/resource"
+
+	v1 "k8s.io/api/core/v1"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
 
@@ -29,13 +33,6 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
-)
-
-const (
-	s       = "syndesis-test"
-	ns      = "namespace"
-	succeed = "\u2713"
-	failed  = "\u2717"
 )
 
 func Test_syndesisApi_unstructuredToV1Alpha1(t *testing.T) {
@@ -190,10 +187,69 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 								Features: v1alpha1.ServerFeatures{
 									ManagementUrlFor3scale: "ManagementUrlFor3scale",
 								},
+								Resources: v1alpha1.Resources{
+									ResourceRequirements: v1.ResourceRequirements{
+										Limits: v1.ResourceList{
+											v1.ResourceMemory: resource.MustParse("500m"),
+										},
+									},
+								},
 							},
 							Db: v1alpha1.DbConfiguration{
 								User:     "user",
 								Database: "database",
+								Resources: v1alpha1.ResourcesWithVolume{
+									Resources: v1alpha1.Resources{
+										ResourceRequirements: v1.ResourceRequirements{
+											Limits: v1.ResourceList{
+												v1.ResourceCPU: resource.MustParse("0.5"),
+											},
+										},
+									},
+									VolumeCapacity: "1Gi",
+								},
+							},
+							Meta: v1alpha1.MetaConfiguration{
+								Resources: v1alpha1.ResourcesWithVolume{
+									VolumeCapacity: "5Gi",
+									Resources: v1alpha1.Resources{
+										ResourceRequirements: v1.ResourceRequirements{
+											Limits: v1.ResourceList{
+												v1.ResourceMemory: resource.MustParse("300m"),
+											},
+										},
+									},
+								},
+							},
+							Prometheus: v1alpha1.PrometheusConfiguration{
+								Resources: v1alpha1.ResourcesWithVolume{
+									Resources: v1alpha1.Resources{
+										ResourceRequirements: v1.ResourceRequirements{
+											Limits: v1.ResourceList{
+												v1.ResourceMemory: resource.MustParse("700m"),
+											},
+										},
+									},
+									VolumeCapacity: "2Gi",
+								},
+							},
+							Grafana: v1alpha1.GrafanaConfiguration{
+								Resources: v1alpha1.Resources{
+									ResourceRequirements: v1.ResourceRequirements{
+										Limits: v1.ResourceList{
+											v1.ResourceMemory: resource.MustParse("500m"),
+										},
+									},
+								},
+							},
+							Komodo: v1alpha1.KomodoConfiguration{
+								Resources: v1alpha1.Resources{
+									ResourceRequirements: v1.ResourceRequirements{
+										Limits: v1.ResourceList{
+											v1.ResourceMemory: resource.MustParse("500m"),
+										},
+									},
+								},
 							},
 							Oauth: v1alpha1.OauthConfiguration{
 								DisableSarCheck: &dsc,
@@ -218,7 +274,7 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 						Jaeger: v1beta1.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta1.AddonSpec{Enabled: true},
 						Todo:   v1beta1.AddonSpec{Enabled: true},
-						DV:     v1beta1.DvConfiguration{Enabled: true},
+						DV:     v1beta1.DvConfiguration{Enabled: true, Resources: v1beta1.Resources{Memory: "500m"}},
 						CamelK: v1beta1.AddonSpec{Enabled: false},
 					},
 					Components: v1beta1.ComponentsSpec{
@@ -233,11 +289,12 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 									"repo2": "repo2url",
 								},
 							},
+							Resources: v1beta1.Resources{Memory: "500m"},
 						},
-						Database: v1beta1.DatabaseConfiguration{
-							User: "user",
-							Name: "database",
-						},
+						Database:   v1beta1.DatabaseConfiguration{User: "user", Name: "database", Resources: v1beta1.ResourcesWithPersistentVolume{VolumeCapacity: "1Gi"}},
+						Meta:       v1beta1.MetaConfiguration{Resources: v1beta1.ResourcesWithVolume{Memory: "300m", VolumeCapacity: "5Gi"}},
+						Prometheus: v1beta1.PrometheusConfiguration{Resources: v1beta1.ResourcesWithVolume{Memory: "700m", VolumeCapacity: "2Gi"}},
+						Grafana:    v1beta1.GrafanaConfiguration{Resources: v1beta1.Resources{Memory: "500m"}},
 					},
 				},
 			},
