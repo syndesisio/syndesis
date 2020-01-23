@@ -21,6 +21,8 @@ import (
 	"encoding/json"
 	"fmt"
 
+	v1 "k8s.io/api/core/v1"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -212,17 +214,27 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 		}
 
 		// Server
-		// TODO: Migrate resources
 		if api.v1alpha1.Spec.Components.Server.Features.ManagementUrlFor3scale != "" {
 			api.v1beta1.Spec.Components.Server.Features.ManagementUrlFor3scale = api.v1alpha1.Spec.Components.Server.Features.ManagementUrlFor3scale
 		}
+		if api.v1alpha1.Spec.Components.Server.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Server.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Components.Server.Resources.Memory = m.String()
+			}
+		}
 
 		// Database
-		// TODO: Migrate resources
 		if api.v1alpha1.Spec.Components.Db.Database != "" {
 			api.v1beta1.Spec.Components.Database.Name = api.v1alpha1.Spec.Components.Db.Database
 		}
-
+		if api.v1alpha1.Spec.Components.Db.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Db.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Components.Database.Resources.Memory = m.String()
+			}
+		}
+		if api.v1alpha1.Spec.Components.Db.Resources.VolumeCapacity != "" {
+			api.v1beta1.Spec.Components.Database.Resources.VolumeCapacity = api.v1alpha1.Spec.Components.Db.Resources.VolumeCapacity
+		}
 		if api.v1alpha1.Spec.Components.Db.User != "" {
 			api.v1beta1.Spec.Components.Database.User = api.v1alpha1.Spec.Components.Db.User
 		}
@@ -233,25 +245,38 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 		}
 
 		// Meta
-		// TODO: Migrate resources
-
-		// UI
-		// TODO: Migrate resources
-
-		// S2I
-		// TODO: Migrate resources
+		if api.v1alpha1.Spec.Components.Meta.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Meta.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Components.Meta.Resources.Memory = m.String()
+			}
+		}
+		if api.v1alpha1.Spec.Components.Meta.Resources.VolumeCapacity != "" {
+			api.v1beta1.Spec.Components.Meta.Resources.VolumeCapacity = api.v1alpha1.Spec.Components.Meta.Resources.VolumeCapacity
+		}
 
 		// Prometheus
-		// TODO: Migrate resources
+		if api.v1alpha1.Spec.Components.Prometheus.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Prometheus.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Components.Prometheus.Resources.Memory = m.String()
+			}
+		}
+		if api.v1alpha1.Spec.Components.Prometheus.Resources.VolumeCapacity != "" {
+			api.v1beta1.Spec.Components.Prometheus.Resources.VolumeCapacity = api.v1alpha1.Spec.Components.Prometheus.Resources.VolumeCapacity
+		}
 
 		// Grafana
-		// TODO: Migrate resources
+		if api.v1alpha1.Spec.Components.Grafana.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Grafana.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Components.Grafana.Resources.Memory = m.String()
+			}
+		}
 
 		// Komodo
-		// TODO: Migrate resources
-
-		// Upgrade
-		// TODO: Migrate resources
+		if api.v1alpha1.Spec.Components.Komodo.Resources.Limits != nil {
+			if m, ok := api.v1alpha1.Spec.Components.Komodo.Resources.Limits[v1.ResourceMemory]; ok {
+				api.v1beta1.Spec.Addons.DV.Resources.Memory = m.String()
+			}
+		}
 
 		// General
 		if api.v1alpha1.Spec.RouteHostname != "" {
