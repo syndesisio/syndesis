@@ -26,4 +26,4 @@ and target fields in the data mapper canvas.
 
 .Next step
 
-See  link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping data fields to the next connection in the flow].
+See  link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields for the next connection].

@@ -36,7 +36,7 @@ field has 8 ordered parts. Starting at 1, the index of each part is:
 
 In the data mapper, to identify _apartment_, _zip+4_, and _country_ as missing, you 
 add padding fields at indexes 3, 7, and 8. See 
-link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map}[Combining multiple source fields into one target field].
+link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map[Combining multiple source fields into one target field].
 
 Now suppose that you want to combine source fields for 
 `number`, `street`, `city`, `state`, and `zip` into a `long_address`

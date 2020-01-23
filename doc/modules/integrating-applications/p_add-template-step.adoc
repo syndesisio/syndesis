@@ -121,4 +121,4 @@ A placeholder cannot contain a `.` (period).
 
 .Additional resources
 
-For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping integration data to fields for the next connection in the flow].
+For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_ug[Mapping integration data to fields for the next connection].

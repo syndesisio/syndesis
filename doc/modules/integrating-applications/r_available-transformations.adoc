@@ -128,7 +128,7 @@ from the *From Unit* and *To Unit* menus. The choices are:
 |`CurrentDate`
 |None
 |date
-|Note
+|None
 |Return the current date.
 
 |`CurrentDateTime`
@@ -166,13 +166,15 @@ from the *From Unit* and *To Unit* menus. The choices are:
 | string
 | Boolean
 | `string`
-| Return true if a string ends with the specified `string`, including case. 
+| Return true if a string ends with the specified `string` 
+and the case is the same in both strings. 
 
 |`Equals`
 | any
 | Boolean
 | `value`
-| Return true if a field is equal to the specified `value`, including case.
+| Return true if the input field is equal to the specified `value` 
+and the case is the same in the field and in the value.
 
 |`FileExtension`
 | string
@@ -204,11 +206,14 @@ as Java and C.
 |Create a string that represents a random UUID.
 
 |`IndexOf`
-| string
+| string +
+The first character is at index 0. 
 | number
-| `string`
-| In a string, starting at 0, return the first index of the specified
-`string`. Return `-1` if it is not found. 
+| `string` +
+Search the input string for this string.
+| Return the index of the character in the input string 
+that is the parameter string's first character.
+Return `-1` if the parameter string is not found. 
 
 |`IsNull`
 | any
@@ -217,11 +222,14 @@ as Java and C.
 | Return true if a field is null.
 
 |`LastIndexOf`
-| string
+| string +
+The first character is at index 0.
 | number
-| `string`
-| In a string, starting at 0, return the last index of the specified
-`string`. Return `-1` if it is not found. 
+| `string` +
+Search the input string for this string.
+| Return the index of the character in the input string 
+that is the parameter string's last character.
+Return `-1` if the parameter string is not found. 
 
 |`Length`
 | any

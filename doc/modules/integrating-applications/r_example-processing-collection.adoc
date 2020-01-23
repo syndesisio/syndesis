@@ -26,7 +26,7 @@ a spreadsheet for receiving the database records.
 . Click *Create Integration*. 
 . Add the start connection: 
 .. On the *Choose a connection* page, click *PostgresDB*. 
-.. On the *Choose an nction* page, select *Periodic SQL Invocation*. 
+.. On the *Choose an action* page, select *Periodic SQL Invocation*. 
 .. In the *SQL Statement* field, enter `*select * from todo*` and click *Next*. 
 
 +

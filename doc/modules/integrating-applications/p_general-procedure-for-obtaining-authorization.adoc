@@ -64,4 +64,4 @@ link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering {p
 * Information about using custom connectors that let 
 you access applications that use the
 OAuth protocol: 
-link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Creating connections from custom connectors]. 
+link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[About creating a connection from a custom connector]. 
