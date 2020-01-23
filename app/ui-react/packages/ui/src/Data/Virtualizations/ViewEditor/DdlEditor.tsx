@@ -4,9 +4,11 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Text,
+  TextContent,
   Title,
 } from '@patternfly/react-core';
-import monaco from 'monaco-editor';
+import * as monaco from 'monaco-editor-core';
 import {
   CloseAction,
   createConnection,
@@ -20,7 +22,9 @@ import { useRef } from 'react';
 import MonacoEditor from 'react-monaco-editor';
 import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import { Loader, PageSection } from '../../../Layout';
+import { ITextEditor, TextEditor } from '../../../Shared';
 import './DdlEditor.css';
+import { dvLanguageMode, loadDvMime } from './DvAutocomplete';
 
 export interface IViewEditValidationResult {
   message: string;
@@ -34,6 +38,21 @@ export interface ITableInfo {
 
 export interface IDdlEditorProps {
   viewDdl: string;
+
+  /**
+   * The localized text for the cursor Column.
+   */
+  i18nCursorColumn: string;
+
+  /**
+   * The localized text for the cursor Line.
+   */
+  i18nCursorLine: string;
+
+  /**
+   * The localized text for the DDL text placeholder when no content exists.
+   */
+  i18nDdlTextPlaceholder: string;
 
   /**
    * The localized text for the done button.
@@ -100,11 +119,20 @@ export interface IDdlEditorProps {
 
 export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
+  const [initialDdlValue] = React.useState(props.viewDdl);
   const [hasChanges, setHasChanges] = React.useState(false);
   const [savedValue, setSavedValue] = React.useState(props.viewDdl);
+  const [keywordsRegistered, setKeywordsRegistered] = React.useState(false);
+  const [cursorPosition, setCursorPosition] = React.useState(
+    `( ${props.i18nCursorLine} ?, ${props.i18nCursorColumn} ? )`
+  );
   const currentValueGetter = useRef();
   const editorRef = useRef();
   const LANGUAGE_ID = 'teiid-ddl';
+
+  const handleCloseValidationMessage = () => {
+    props.onCloseValidationMessage();
+  };
 
   /*
    * When the text editor has been rendered, we need to create the language server connection and wire
@@ -120,7 +148,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     // ***************************************************************************
 
     // install Monaco language client services
-    MonacoServices.install(editorRef.current);
+    MonacoServices.install(editor);
 
     // create the web socket
     const url = 'ws://localhost:8025/teiid-ddl-language-server';
@@ -138,6 +166,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     });
   };
 
+
   /*
    * When the text editor has been rendered, we need to create the language server connection and wire
    * it up to a new code mirror adapter
@@ -150,6 +179,12 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
       extensions: ['.ddl'],
       id: LANGUAGE_ID,
     });
+  };
+
+  const getCursorText = (pos: any) => {
+    return `( ${props.i18nCursorLine} ${pos.line + 1}, ${
+      props.i18nCursorColumn
+    } ${pos.ch + 1} )`;
   };
 
   const createLanguageClient = (connection: MessageConnection) => {
@@ -180,7 +215,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     props.onCloseValidationMessage();
   };
 
-  const handleEditorChange = (value: any) => {
+  const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
     setDdlValue(value);
     handleCloseValidationMessage();
 
@@ -207,9 +242,31 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     }
   };
 
+  /**
+   * reformats the tableInfo into the format expected by hintOptions
+   * Example -
+   *   tables: {
+   *     countries: ['name', 'population', 'size'],
+   *     users: ['name', 'score', 'birthDate'],
+   *   }
+   * @param tableInfos the table infos
+   */
+  const getHintOptions = (tableInfos: ITableInfo[]) => {
+    if (!keywordsRegistered) {
+      loadDvMime();
+      setKeywordsRegistered(true);
+    }
+
+    const result = { tables: {} };
+
+    for (const tableInfo of tableInfos) {
+      result.tables[tableInfo.name] = tableInfo.columnNames;
+    }
+    return result;
+  };
+
   const editorOptions = {
     codeLens: false,
-    matchBrackets: true,
     selectOnLineNumbers: true,
     useTabStops: true,
   };
@@ -219,6 +276,27 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
       <Title headingLevel="h5" size="lg">
         {props.i18nTitle}
       </Title>
+      {props.showValidationMessage
+        ? props.validationResults.map((e, idx) => (
+            <Alert
+              key={idx}
+              variant={e.type}
+              title={props.i18nValidationResultsTitle}
+              action={
+                <AlertActionCloseButton
+                  onClose={handleCloseValidationMessage}
+                />
+              }
+            >
+              {e.message}
+            </Alert>
+          ))
+        : null}
+      <TextContent>
+        <Text className={'ddl-editor-cursor-position-text'}>
+          {cursorPosition}
+        </Text>
+      </TextContent>
       <Card className={'ddl-editor__card'}>
         <CardBody className={'ddl-editor__card-body'}>
           {props.showValidationMessage
