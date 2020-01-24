@@ -21,7 +21,7 @@
     "@syndesis/ui": "*",
     "@syndesis/utils": "*",
     "http-proxy-middleware": "^0.20.0",
-    "i18next": "^15.0.4",
+    "i18next": "^19.0.3",
     "i18next-browser-languagedetector": "^4.0.1",
     "immer": "^5.0.0",
     "named-urls": "^2.0.0",
