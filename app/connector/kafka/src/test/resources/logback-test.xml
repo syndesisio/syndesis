@@ -29,7 +29,7 @@
     <encoder>
       <pattern>%d{HH:mm:ss.SSS} [%-15.15thread] %-5level %-30.30logger - %msg%n</pattern>
     </encoder>
-    <file>target/connector-sql-test.log</file>
+    <file>target/connector-kafka-test.log</file>
   </appender>
 
   <root level="DEBUG">
