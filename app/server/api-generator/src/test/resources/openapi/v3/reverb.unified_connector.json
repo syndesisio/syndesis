@@ -3930,6 +3930,10 @@
       "type": "MAVEN"
     },
     {
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
+      "type": "MAVEN"
+    },
+    {
       "id": "org.apache.camel:camel-http4:@camel.version@",
       "type": "MAVEN"
     }
