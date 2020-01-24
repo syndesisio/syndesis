@@ -69,7 +69,7 @@ public class ServiceVdbGeneratorTest {
     private static final String DS_NAME_2 = "pgconnection2";
     private static final String MODEL_NAME_2 = "pgconnection2schemamodel";
 
-    private boolean doPrint = false;
+    private boolean doPrint = true;
 
 
     private final static String TABLE_OPTION_FQN = "teiid_rel:fqn"; //$NON-NLS-1$
@@ -113,14 +113,22 @@ public class ServiceVdbGeneratorTest {
           + "A.ID = B.ID;";
 
     private final static String EXPECTED_NO_JOIN_SQL_SINGE_SOURCE =
-            "CREATE VIEW orderInfoView (ID, orderDate, PRIMARY KEY(ID)) OPTIONS (ANNOTATION 'test view description text') AS \n" +
-            "SELECT ID, orderDate\n" +
-            "FROM pgconnection1schemamodel.orders";
+            "CREATE VIEW orderInfoView (\n" +
+            "  ID long, orderDate timestamp, PRIMARY KEY(ID)\n" +
+            ") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+            "  SELECT \n" +
+            "	t1.ID, t1.orderDate\n" +
+            "  FROM \n" +
+            "	pgconnection1schemamodel.orders AS t1";
 
     private final static String EXPECTED_NO_JOIN_SQL_SINGE_SOURCE_WITH_KEYWORD =
-            "CREATE VIEW orderInfoView (ID, \"year\", orderDate, PRIMARY KEY(ID)) OPTIONS (ANNOTATION 'test view description text') AS \n" +
-            "SELECT ID, \"year\", orderDate\n" +
-            "FROM pgconnection1schemamodel.orders2";
+            "CREATE VIEW orderInfoView (\n" +
+            "  ID long, \"year\" string, orderDate timestamp, PRIMARY KEY(ID)\n" +
+            ") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+            "  SELECT \n" +
+            "	t1.ID, t1.\"year\", t1.orderDate\n" +
+            "  FROM \n" +
+            "	pgconnection1schemamodel.orders2 AS t1";
 
     // ===========================
     // orders
@@ -160,7 +168,8 @@ public class ServiceVdbGeneratorTest {
         schemas.put(connectionName, mf.getSchema());
     }
 
-    private String helpGenerateDdlForWithJoinType(String secondSourceTablePath, String joinType, boolean singleConnection, boolean useAll) throws KException {
+	private String helpGenerateDdlForWithJoinType(String secondSourceTablePath, String joinType,
+			boolean singleConnection, boolean useAll) throws KException {
         ServiceVdbGenerator vdbGenerator = new ServiceVdbGenerator(schemaFinder());
 
         String[] sourceTablePaths = { sourceTablePath1, secondSourceTablePath };
@@ -170,6 +179,17 @@ public class ServiceVdbGeneratorTest {
         when(viewDef.getDescription()).thenReturn(description);
         when(viewDef.isComplete()).thenReturn(isComplete);
         when(viewDef.getSourcePaths()).thenReturn(Arrays.asList(sourceTablePaths));
+
+        return vdbGenerator.getODataViewDdl(viewDef);
+    }
+
+	private String helpGenerateDdlFor(String ...tablePath) throws KException {
+        ServiceVdbGenerator vdbGenerator = new ServiceVdbGenerator(schemaFinder());
+        ViewDefinition viewDef = mock(ViewDefinition.class);
+        when(viewDef.getName()).thenReturn(viewDefinitionName);
+        when(viewDef.getDescription()).thenReturn(description);
+        when(viewDef.isComplete()).thenReturn(isComplete);
+        when(viewDef.getSourcePaths()).thenReturn(Arrays.asList(tablePath));
 
         return vdbGenerator.getODataViewDdl(viewDef);
     }
@@ -358,6 +378,45 @@ public class ServiceVdbGeneratorTest {
     }
 
     @Test
+    public void twoTables() throws Exception {
+        String EXPECTED_DDL = "CREATE VIEW orderInfoView (\n" +
+        		"  ID long, orderDate timestamp\n" +
+        		"  /*,ID long, customerName string*/, \n" +
+        		"  PRIMARY KEY(ID)\n" +
+        		") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+        		"  SELECT \n" +
+        		"	t1.ID, t1.orderDate\n" +
+        		"	/*,t2.ID, t2.customerName*/\n" +
+        		"  FROM \n" +
+        		"	pgconnection1schemamodel.orders AS t1\n" +
+        		"	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection2schemamodel.customers AS t2 ON t1.ID=t2.<?>*/";
+        String viewDdl = helpGenerateDdlFor(sourceTablePath1, sourceTablePath3);
+        printResults(EXPECTED_DDL, viewDdl);
+        assertEquals(EXPECTED_DDL, viewDdl);
+    }
+
+    @Test
+    public void threeTables() throws Exception {
+        String EXPECTED_DDL = "CREATE VIEW orderInfoView (\n" +
+        		"  ID long, orderDate timestamp\n" +
+        		"  /*,ID long, customerName string*/\n" +
+        		"  /*,ID long, customerName string*/, \n" +
+        		"  PRIMARY KEY(ID)\n" +
+        		") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+        		"  SELECT \n" +
+        		"	t1.ID, t1.orderDate\n" +
+        		"	/*,t2.ID, t2.customerName*/\n" +
+        		"	/*,t3.ID, t3.customerName*/\n" +
+        		"  FROM \n" +
+        		"	pgconnection1schemamodel.orders AS t1\n" +
+        		"	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection2schemamodel.customers AS t2 ON t1.ID=t2.<?>*/\n" +
+        		"	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection2schemamodel.customers AS t3 ON t1.ID=t3.<?>*/";
+        String viewDdl = helpGenerateDdlFor(sourceTablePath1, sourceTablePath3, sourceTablePath3);
+        printResults(EXPECTED_DDL, viewDdl);
+        assertEquals(EXPECTED_DDL, viewDdl);
+    }
+
+    @Test
     public void shouldGenerateOdataViewDDL_WithTwoSourcesViewDefinition_RightOuterJoin() throws Exception {
         String EXPECTED_DDL = EXPECTED_JOIN_SQL_TWO_SOURCES_START + RIGHT_OUTER_JOIN_STR + EXPECTED_JOIN_SQL_TWO_SOURCES_END;
         String viewDdl = helpGenerateDdlForWithJoinType(sourceTablePath3, ServiceVdbGenerator.JOIN_RIGHT_OUTER, false, false);
@@ -405,9 +464,17 @@ public class ServiceVdbGeneratorTest {
 
         assertEquals("<?xml version=\"1.0\" ?><vdb name=\"servicevdb\" version=\"1\"><connection-type>BY_VERSION</connection-type>" +
                 "<property name=\"hidden-qualified\" value=\"true\"></property>" +
-                "<model name=\"servicevdb\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[CREATE VIEW orderInfoView (ID, orderDate, name) OPTIONS (ANNOTATION 'test view description text') AS \n" +
-                "SELECT t1.ID, t1.orderDate, t2.name\n" +
-                "FROM pgconnection1schemamodel.orders AS t1;\n" +
+                "<model name=\"servicevdb\" type=\"VIRTUAL\" visible=\"true\"><metadata type=\"DDL\"><![CDATA[CREATE VIEW orderInfoView (\n" +
+                "  ID long, orderDate timestamp\n" +
+                "  /*,ID long, name string*/, \n" +
+                "  PRIMARY KEY(ID)\n" +
+                ") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+                "  SELECT \n" +
+                "	t1.ID, t1.orderDate\n" +
+                "	/*,t2.ID, t2.name*/\n" +
+                "  FROM \n" +
+                "	pgconnection1schemamodel.orders AS t1\n" +
+                "	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection1schemamodel.customers AS t2 ON t1.ID=t2.<?>*/;\n" +
                 "]]></metadata></model><model name=\"pgconnection1schemamodel\" type=\"PHYSICAL\" visible=\"false\"><metadata type=\"DDL\"><![CDATA[" +
                 "CREATE FOREIGN TABLE orders (\n" +
                 "\tID long,\n" +
@@ -426,9 +493,18 @@ public class ServiceVdbGeneratorTest {
         assertThat(models).hasSize(2);
         ModelMetaData viewModel = serviceVdb.getModel("servicevdb");
         assertNotNull(viewModel);
-        assertEquals("CREATE VIEW orderInfoView (ID, orderDate, name) OPTIONS (ANNOTATION 'test view description text') AS \n" +
-                "SELECT t1.ID, t1.orderDate, t2.name\n" +
-                "FROM pgconnection1schemamodel.orders AS t1;\n", viewModel.getSourceMetadataText().get(0));
+        assertEquals("CREATE VIEW orderInfoView (\n" +
+                "  ID long, orderDate timestamp\n" +
+                "  /*,ID long, name string*/, \n" +
+                "  PRIMARY KEY(ID)\n" +
+                ") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+                "  SELECT \n" +
+                "	t1.ID, t1.orderDate\n" +
+                "	/*,t2.ID, t2.name*/\n" +
+                "  FROM \n" +
+                "	pgconnection1schemamodel.orders AS t1\n" +
+                "	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection1schemamodel.customers AS t2 ON t1.ID=t2.<?>*/;\n",
+                viewModel.getSourceMetadataText().get(0));
 
     }
 
@@ -456,9 +532,18 @@ public class ServiceVdbGeneratorTest {
         assertThat(models).hasSize(3);
         ModelMetaData viewModel = serviceVdb.getModel("servicevdb");
         assertNotNull(viewModel);
-        assertEquals("CREATE VIEW orderInfoView (ID, orderDate, customerName) OPTIONS (ANNOTATION 'test view description text') AS \n" +
-                "SELECT t1.ID, t1.orderDate, t2.customerName\n" +
-                "FROM pgconnection1schemamodel.orders AS t1;\n", viewModel.getSourceMetadataText().get(0));
+        assertEquals("CREATE VIEW orderInfoView (\n" +
+        		"  ID long, orderDate timestamp\n" +
+        		"  /*,ID long, customerName string*/, \n" +
+        		"  PRIMARY KEY(ID)\n" +
+        		") OPTIONS (ANNOTATION 'test view description text') AS \n" +
+        		"  SELECT \n" +
+        		"	t1.ID, t1.orderDate\n" +
+        		"	/*,t2.ID, t2.customerName*/\n" +
+        		"  FROM \n" +
+        		"	pgconnection1schemamodel.orders AS t1\n" +
+        		"	/*, [INNER|LEFT OUTER|RIGHT OUTER] JOIN pgconnection2schemamodel.customers AS t2 ON t1.ID=t2.<?>*/;\n" +
+        		"", viewModel.getSourceMetadataText().get(0));
 
     }
 
