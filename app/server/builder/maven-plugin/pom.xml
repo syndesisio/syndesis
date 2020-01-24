@@ -351,12 +351,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>xml-apis</groupId>
       <artifactId>xml-apis</artifactId>
       <scope>provided</scope>
