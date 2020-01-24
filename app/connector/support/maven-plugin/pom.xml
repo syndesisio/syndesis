@@ -105,12 +105,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>common-util</artifactId>
     </dependency>

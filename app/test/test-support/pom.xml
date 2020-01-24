@@ -136,12 +136,6 @@
       <artifactId>slf4j-api</artifactId>
     </dependency>
 
-    <!-- Test scope -->
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 </project>

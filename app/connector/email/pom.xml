@@ -105,11 +105,6 @@
       <artifactId>integration-runtime</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>test</scope>
-    </dependency>
 
     <dependency>
       <groupId>junit</groupId>
