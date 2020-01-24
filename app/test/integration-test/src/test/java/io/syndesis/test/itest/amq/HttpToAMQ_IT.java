@@ -135,7 +135,7 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
                     .server()
                     .port(TODO_SERVER_PORT)
                     .autoStart(true)
-                    .timeout(60000L)
+                    .timeout(180000L)
                     .build();
         }
     }
