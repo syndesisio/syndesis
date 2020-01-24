@@ -16,6 +16,7 @@ export interface IIntegrationEditorFormProps {
    * The callback fired when submitting the form.
    * @param e
    */
+  isBackAllowed: boolean;
   isValid: boolean;
   isLoading: boolean;
   error?: string;
@@ -58,7 +59,7 @@ export class IntegrationEditorForm extends React.Component<
                 </Container>
               </CardBody>
               <CardFooter className="syn-card__footer">
-                {this.props.backActionHref && (
+                {(this.props.backActionHref && this.props.isBackAllowed) && (
                   <>
                     <ButtonLink
                       id={'integration-editor-form-back-button'}

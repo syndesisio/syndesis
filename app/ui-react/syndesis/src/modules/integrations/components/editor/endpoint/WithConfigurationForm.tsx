@@ -71,6 +71,12 @@ export interface IWithConfigurationFormProps {
    */
   initialValue?: { [key: string]: string };
 
+  /**
+   * Boolean value that determines whether or not the Back button is allowed on the
+   * configuration form.
+   */
+  isBackAllowed: boolean;
+
   chooseActionHref: H.LocationDescriptor;
 
   /**
