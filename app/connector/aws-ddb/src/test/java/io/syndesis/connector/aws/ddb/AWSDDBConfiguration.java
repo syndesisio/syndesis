@@ -44,6 +44,7 @@ public final class AWSDDBConfiguration {
     //TODO change this to your table constraints
 
     public static final String ELEMENT_VALUE = "{\"clave\":\"" + RANDOM_ID + "\", \"attr\":\"attribute\"}";
+    public static final String ELEMENT_VALUE_VARIABLE = "{\"clave\":\"" + RANDOM_ID + "\", \"attr\":\":#attribute\"}";
     public static final String KEY_VALUE = "{\"clave\":\"" + RANDOM_ID + "\"}";
     public static final String ATTRIBUTES_VALUE = "clave, attr";
     //TODO change this to your table constraints
