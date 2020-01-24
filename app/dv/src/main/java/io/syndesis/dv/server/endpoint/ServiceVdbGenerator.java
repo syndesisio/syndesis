@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.springframework.data.util.Pair;
@@ -64,10 +63,8 @@ public final class ServiceVdbGenerator implements StringConstants {
         TeiidDataSource findTeiidDatasource(String connectionName) throws KException;
     }
 
-    private static final char NEW_LINE = '\n';
-    private static final String OPEN_SQUARE_BRACKET = "["; //$NON-NLS-1$
-    private static final String CLOSE_SQUARE_BRACKET = "]"; //$NON-NLS-1$
-
+    private static final String COMMENT_START = "/*"; //$NON-NLS-1$
+    private static final String COMMENT_END = "*/"; //$NON-NLS-1$
     /**
      * Inner Join Type
      */
@@ -229,14 +226,11 @@ public final class ServiceVdbGenerator implements StringConstants {
         return model;
     }
 
+
     /*
      * Generates DDL for a view definition based on properties and supplied array of TableInfo from one or more sources
      */
     private String getODataViewDdl(ViewDefinition viewDef, TableInfo[] sourceTableInfos) {
-
-        // Need to construct DDL based on
-        //   * 1 or 2 source tables
-        //   * Join criteria in the form of left and right critieria column names
 
         String viewName = viewDef.getName();
 
@@ -244,158 +238,122 @@ public final class ServiceVdbGenerator implements StringConstants {
 
         // Generate the View DDL
         startView(viewName, sb);
-        sb.append(StringConstants.OPEN_BRACKET);
+        sb.append(OPEN_BRACKET);
+        sb.append(NEW_LINE);
+        sb.append(SPACE);
+        sb.append(SPACE);
 
-        // Check for join and single or 2 source join
-        // Disable join for Syndesis 7.4 DDL generation.
-        boolean isJoin = sourceTableInfos.length > 1;
-        boolean singleTable = sourceTableInfos.length == 1;
+        // add primary table
+        appendViewColumns(sourceTableInfos[0], false, false, sb);
 
-        TableInfo lhTableInfo = sourceTableInfos[0];
-        TableInfo rhTableInfo = null;
-        if( isJoin ) {
-            rhTableInfo = sourceTableInfos[1];
-        }
-        // Need to create 2 lists of column info
-        // 1) Projected symbol list including name + type
-        // 2) FQN list for (SELECT xx, xxx, xxx ) clause
-        // Note: need to filter out duplicate names from 2nd table (if join)
-
-        // So for the INNER JOIN we need to get create an ordered list of source table columns and types based on the 1 or 2 source tables
-
-        LinkedHashMap<String, ColumnInfo> columns = new LinkedHashMap<>();
-
-        // ------------------------------------------------------------------
-        // Assemble all left and right source table columns, in order
-        // Duplicate column names are omitted if found in right table
-        // ------------------------------------------------------------------
-        for( ColumnInfo info : lhTableInfo.getColumnInfos() ) {
-            columns.put(info.getName(), info);
-        }
-
-        // Add right table columns, if right table exists
-        if( rhTableInfo != null ) {
-            for( ColumnInfo info : rhTableInfo.getColumnInfos() ) {
-                if( !columns.containsKey(info.getName())) {
-                    columns.put(info.getName(), info);
-                }
+        // add all others in comments
+        if (sourceTableInfos.length > 1) {
+            for (int i = 1; i < sourceTableInfos.length; i++) {
+                sb.append(NEW_LINE);
+                sb.append(SPACE);
+                sb.append(SPACE);
+                sb.append(COMMENT_START);
+                sb.append(StringConstants.COMMA);
+                appendViewColumns(sourceTableInfos[i], false, false, sb);
+                sb.append(COMMENT_END);
             }
         }
 
-        // ---------------------------------------------
-        // Generate the View projected columns
-        // ---------------------------------------------
-        Set<String> selectedProjColumnNames = new LinkedHashSet<String>();
-
-        // If "SELECT ALL" then include all of the source table columns
-        for (Iterator<ColumnInfo> iter = columns.values().iterator(); iter.hasNext();) {
-            ColumnInfo info = iter.next();
-            // keep track of projected column names
-            String colName = info.getName();
-            selectedProjColumnNames.add(colName);
-            // append name and type
-            sb.append(info.getName());
-            if (iter.hasNext()) {
-                sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
+        // Add PK from primary
+        KeyRecord constraint = sourceTableInfos[0].getUniqueConstraint();
+        if (constraint != null) {
+        	sb.append(COMMA).append(SPACE);
+        	if (sourceTableInfos.length > 1) {
+                sb.append(NEW_LINE);
+                sb.append(SPACE);
+                sb.append(SPACE);
+        	}
+            List<Column> keyCols = constraint.getColumns();
+            sb.append(constraint.getType() == Type.Primary ? DDLConstants.PRIMARY_KEY : SQLConstants.Reserved.UNIQUE)
+                    .append(StringConstants.OPEN_BRACKET);
+            for (int i = 0; i < keyCols.size(); i++) {
+                if (i > 0) {
+                    sb.append(COMMA).append(SPACE);
+                }
+                sb.append(keyCols.get(i).getName());
             }
+            sb.append(StringConstants.CLOSE_BRACKET);
         }
 
-        if( singleTable ) {
-            KeyRecord constraint = lhTableInfo.getUniqueConstraint();
-            if (constraint != null) {
-                boolean usingKey = true;
-                List<Column> keyCols = constraint.getColumns();
-                for (Column c : keyCols) {
-                    if (!selectedProjColumnNames.contains(c.getName())) {
-                        usingKey = false;
-                        break;
-                    }
-                }
-                if (usingKey) {
-                    sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
-                    sb.append(constraint.getType()==Type.Primary?DDLConstants.PRIMARY_KEY:SQLConstants.Reserved.UNIQUE).append(StringConstants.OPEN_BRACKET);
-                    for (int i = 0; i < keyCols.size(); i++) {
-                        if (i > 0) {
-                            sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
-                        }
-                        sb.append(keyCols.get(i).getName());
-                    }
-                    sb.append(StringConstants.CLOSE_BRACKET);
-                }
-            }
-        } else {
-            //TODO: needs analysis of key preservation
-        }
-
-        sb.append(") "); //$NON-NLS-1$
+        sb.append(NEW_LINE).append(StringConstants.CLOSE_BRACKET).append(SPACE);
         sb.append(getTableAnnotation(viewDef.getDescription()));
-        sb.append("AS \nSELECT "); //$NON-NLS-1$
+        sb.append("AS \n  SELECT "); //$NON-NLS-1$
 
-        // Append column names
-        for (Iterator<String> iter = selectedProjColumnNames.iterator(); iter.hasNext();) {
-            ColumnInfo col = columns.get(iter.next());
-            if (col == null) {
-                continue;
-            }
-            sb.append(col.getAliasedName());
-            if (iter.hasNext()) {
-                sb.append(StringConstants.COMMA).append(StringConstants.SPACE);
+        sb.append(NEW_LINE);
+        sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
+        appendViewColumns(sourceTableInfos[0], true, false, sb);
+        if (sourceTableInfos.length > 1) {
+            for (int i = 1; i < sourceTableInfos.length; i++) {
+                sb.append(NEW_LINE);
+                sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
+                sb.append(COMMENT_START);
+                sb.append(COMMA);
+                appendViewColumns(sourceTableInfos[i], true, false, sb);
+                sb.append(COMMENT_END);
             }
         }
 
-        sb.append("\n"); //$NON-NLS-1$
-        sb.append("FROM "); //$NON-NLS-1$
+        sb.append(NEW_LINE); //$NON-NLS-1$
+        sb.append("  FROM "); //$NON-NLS-1$
+        sb.append(NEW_LINE);
+        sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
 
-        // --------- JOIN ---------
-
-        if( isJoin ) {
-            String lhTableName = lhTableInfo.getFQName() + " AS " + lhTableInfo.getAlias(); //$NON-NLS-1$
-            sb.append(lhTableName);
-            // Disable join for Syndesis 7.4 DDL generation.
-            /*String rhTableName = rhTableInfo.getFQName() + " AS " + rhTableInfo.getAlias(); //$NON-NLS-1$
-
-            sb.append(lhTableName+StringConstants.SPACE);
-
-            SqlComposition comp1 = viewDef.getSqlCompositions()[0];
-            String joinType = comp1.getType();
-
-
-
-            if(JOIN_INNER.equals(joinType)) {
-                sb.append("\nINNER JOIN \n").append(rhTableName+StringConstants.SPACE); //$NON-NLS-1$
-            } else if(JOIN_LEFT_OUTER.equals(joinType)) {
-                sb.append("\nLEFT OUTER JOIN \n").append(rhTableName+StringConstants.SPACE); //$NON-NLS-1$
-            } else if(JOIN_RIGHT_OUTER.equals(joinType)) {
-                sb.append("\nRIGHT OUTER JOIN \n").append(rhTableName+StringConstants.SPACE); //$NON-NLS-1$
-            } else if(JOIN_FULL_OUTER.equals(joinType)) {
-                sb.append("\nFULL OUTER JOIN \n").append(rhTableName+StringConstants.SPACE); //$NON-NLS-1$
+        for (int i = 0; i < sourceTableInfos.length; i++) {
+            if (i == 0) {
+                sb.append(sourceTableInfos[0].getFQName() + " AS " + sourceTableInfos[0].getAlias());
             } else {
-                sb.append("\nINNER JOIN \n").append(rhTableName+StringConstants.SPACE); //$NON-NLS-1$
+                sb.append(NEW_LINE);
+                sb.append(SPACE).append(SPACE).append(SPACE).append(SPACE);
+                sb.append(COMMENT_START);
+                sb.append(COMMA);
+                if (constraint != null) {
+                    sb.append(" [INNER|LEFT OUTER|RIGHT OUTER] JOIN ");
+                    sb.append(sourceTableInfos[i].getFQName() + " AS " + sourceTableInfos[i].getAlias());
+                    sb.append(" ON ");
+                    List<Column> keyCols = constraint.getColumns();
+                    for (int k = 0; k < keyCols.size(); k++) {
+                        if (k > 0) {
+                            sb.append(" AND ");
+                        }
+                        sb.append(sourceTableInfos[0].getAlias()).append(DOT)
+                                .append(keyCols.get(k).getName()).append(EQUALS)
+                                .append(sourceTableInfos[i].getAlias()).append(DOT)
+                                .append("<?>");
+                    }
+                }
+                sb.append(COMMENT_END);
             }
-
-            sb.append("\nON \n"); //$NON-NLS-1$
-
-            String lhColumn = comp1.getLeftCriteriaColumn();
-            String rhColumn = comp1.getRightCriteriaColumn();
-            String operator = getOperator(comp1);
-
-            sb.append(lhTableInfo.getAlias()+StringConstants.DOT).append(lhColumn)
-              .append(StringConstants.SPACE+operator+StringConstants.SPACE)
-              .append(rhTableInfo.getAlias()+StringConstants.DOT).append(rhColumn);
-
-            */
-        // --------- Single Source ---------
-        } else {
-            sb.append(lhTableInfo.getFQName());
         }
-
         return sb.toString();
+    }
+
+    private void appendViewColumns(TableInfo tableInfo, boolean useAliased, boolean useType, StringBuilder sb) {
+        for( Iterator<ColumnInfo> iter = tableInfo.getColumnInfos().iterator(); iter.hasNext();) {
+            ColumnInfo info = iter.next();
+            if (useAliased) {
+                sb.append(info.getAliasedName());
+            } else {
+                sb.append(info.getName());
+            }
+            if (useType) {
+                sb.append(SPACE);
+                sb.append(info.getType());
+            }
+            if (iter.hasNext()) {
+                sb.append(COMMA).append(SPACE);
+            }
+        }
     }
 
     private void startView(String viewName, StringBuilder sb) {
         sb.append("CREATE VIEW "); //$NON-NLS-1$
         sb.append(SQLStringVisitor.escapeSinglePart(viewName));
-        sb.append(StringConstants.SPACE);
+        sb.append(SPACE);
     }
 
     /**
@@ -477,7 +435,7 @@ public final class ServiceVdbGenerator implements StringConstants {
                 return null;
             }
             // create a new TableInfo object
-            sourceTableInfos.add(new TableInfo(path, table, sourceTablePaths.size()>1?("t" + (sourceTableInfos.size()+1)):null));
+            sourceTableInfos.add(new TableInfo(path, table, "t" + (sourceTableInfos.size()+1)));
         }
 
         return sourceTableInfos.toArray(new TableInfo[0]);
@@ -559,6 +517,7 @@ public final class ServiceVdbGenerator implements StringConstants {
         private String name;
         private String fqname;
         private String aliasedName;
+        private String type;
 
         private ColumnInfo(Column column, String tableFqn, String tblAlias) throws KException {
             this.name = SQLStringVisitor.escapeSinglePart(column.getName());
@@ -567,6 +526,7 @@ public final class ServiceVdbGenerator implements StringConstants {
                 this.aliasedName = tblAlias + DOT + name;
             }
             this.fqname = tableFqn + DOT + name;
+            this.type = column.getDatatype().getName();
         }
 
         public String getName() {
@@ -579,6 +539,10 @@ public final class ServiceVdbGenerator implements StringConstants {
 
         public String getFqname() {
             return this.fqname;
+        }
+
+        public String getType() {
+            return this.type;
         }
     }
 }
