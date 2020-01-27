@@ -110,7 +110,7 @@
     "jasmine-spec-reporter": "~4.2.1",
     "jquery": "^3.3.0",
     "jquery-match-height": "^0.7.2",
-    "karma": "~4.0.0",
+    "karma": "~4.4.1",
     "karma-chrome-launcher": "~2.2.0",
     "karma-cli": "~2.0.0",
     "karma-coverage-istanbul-reporter": "^2.0.5",
