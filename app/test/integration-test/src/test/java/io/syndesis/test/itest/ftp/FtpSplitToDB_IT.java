@@ -16,12 +16,15 @@
 
 package io.syndesis.test.itest.ftp;
 
+import java.time.Duration;
+
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.ftp.message.FtpMessage;
+import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import org.apache.commons.net.ftp.FTPCmd;
 import org.apache.ftpserver.DataConnectionConfiguration;
@@ -62,7 +65,7 @@ public class FtpSplitToDB_IT extends FtpTestSupport {
     public void testFtpSplitToDB(@CitrusResource TestRunner runner) {
         runner.receive(receiveMessageBuilder -> receiveMessageBuilder
                 .endpoint(ftpTestServer)
-                .timeout(60000L)
+                .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                 .message(FtpMessage.command(FTPCmd.RETR).arguments("todo.json")));
 
         runner.send(sendMessageBuilder -> sendMessageBuilder

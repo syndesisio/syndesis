@@ -18,6 +18,7 @@ package io.syndesis.test.itest.sheets;
 
 import javax.servlet.Filter;
 import javax.sql.DataSource;
+import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -26,6 +27,7 @@ import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
+import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import io.syndesis.test.itest.sheets.util.GzipServletFilter;
 import org.springframework.context.annotation.Bean;
@@ -46,7 +48,6 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
     }
 
     @Configuration
-    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public static class EndpointConfig {
 
         @Bean
@@ -59,7 +60,7 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
                     .server()
                     .port(GOOGLE_SHEETS_SERVER_PORT)
                     .autoStart(true)
-                    .timeout(60000L)
+                    .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .filters(filterMap)
                     .build();
         }

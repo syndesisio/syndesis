@@ -18,6 +18,7 @@ package io.syndesis.test.itest.mail;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.time.Duration;
 
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
@@ -163,7 +164,7 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
         @Bean
         public MailServer mailServer() {
             return CitrusEndpoints.mail().server()
-                    .timeout(60000L)
+                    .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .autoStart(true)
                     .autoAccept(true)
                     .port(MAIL_SERVER_PORT)

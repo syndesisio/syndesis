@@ -16,6 +16,8 @@
 
 package io.syndesis.test.itest.http;
 
+import java.time.Duration;
+
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
@@ -137,7 +139,7 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
                     .server()
                     .port(TODO_SERVER_PORT)
                     .autoStart(true)
-                    .timeout(60000L)
+                    .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .build();
         }
     }

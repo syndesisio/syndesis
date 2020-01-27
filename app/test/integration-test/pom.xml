@@ -45,6 +45,8 @@
     <syndesis.output.directory>${project.build.directory}/integrations</syndesis.output.directory>
     <syndesis.project.mount.path>/tmp/src</syndesis.project.mount.path>
     <syndesis.image.tag>${syndesis.version}</syndesis.image.tag>
+    <syndesis.container.startup.timeout>120</syndesis.container.startup.timeout>
+    <syndesis.default.timeout>60</syndesis.default.timeout>
   </properties>
 
   <dependencies>
@@ -245,6 +247,8 @@
             <syndesis.output.directory>${syndesis.output.directory}</syndesis.output.directory>
             <syndesis.project.mount.path>${syndesis.project.mount.path}</syndesis.project.mount.path>
             <syndesis.image.tag>${syndesis.image.tag}</syndesis.image.tag>
+            <syndesis.default.timeout>${syndesis.default.timeout}</syndesis.default.timeout>
+            <syndesis.container.startup.timeout>${syndesis.container.startup.timeout}</syndesis.container.startup.timeout>
           </systemProperties>
         </configuration>
         <executions>

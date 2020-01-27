@@ -564,7 +564,7 @@ jobs:
             mkdir -p ~/integrations/
             mkdir -p ~/junit/
             mkdir -p ~/logs/
-            ./tools/bin/syndesis integration-test --output /home/circleci/integrations | tee ~/logs/test_log.txt
+            ./tools/bin/syndesis integration-test --output /home/circleci/integrations --default-timeout 180 | tee ~/logs/test_log.txt
             cp ./app/test/integration-test/target/integration-runtime.log ~/logs/
       - run:
           name: Collect test results

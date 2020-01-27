@@ -6,14 +6,15 @@ integration-test::description() {
 
 integration-test::usage() {
     cat - <<EOT
--t  --test <test_name>         The test to run
--c  --clean                    Run clean builds (mvn clean)
-    --release <version>        Syndesis version to use
-    --image <tag>              Syndesis S2i image tag to use
-    --logging                  Container logging enabled
-    --s2i                      S2i build enabled
-    --mount-path <path>        Container mount path for integration projects
--o  --output <directory_path>  Integration project output directory
+-t  --test <test_name>          The test to run
+-c  --clean                     Run clean builds (mvn clean)
+    --release <version>         Syndesis version to use
+    --image <tag>               Syndesis S2i image tag to use
+    --logging                   Container logging enabled
+    --s2i                       S2i build enabled
+    --mount-path <path>         Container mount path for integration projects
+    --default-timeout <seconds> Default timeout in seconds used in mocked server components
+-o  --output <directory_path>   Integration project output directory
 EOT
 }
 
@@ -63,6 +64,11 @@ maven_args() {
     local mount_path="$(readopt --mount-path)"
     if [ -n "${mount_path}" ]; then
         args="$args -Dsyndesis.project.mount.path=${mount_path}"
+    fi
+
+    local timeout="$(readopt --default-timeout)"
+    if [ -n "${timeout}" ]; then
+        args="$args -Dsyndesis.default.timeout=${timeout}"
     fi
 
     args="$args -Dskip.integration.tests=false"

@@ -17,6 +17,7 @@
 package io.syndesis.test.itest.sql;
 
 import javax.sql.DataSource;
+import java.time.Duration;
 import java.util.Arrays;
 
 import com.consol.citrus.annotations.CitrusResource;
@@ -25,6 +26,7 @@ import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
 import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
 import com.consol.citrus.http.server.HttpServer;
+import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.junit.ClassRule;
@@ -105,7 +107,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
                     .server()
                     .port(HTTP_TEST_SERVER_PORT)
                     .autoStart(true)
-                    .timeout(60000L)
+                    .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .build();
         }
 
