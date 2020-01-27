@@ -99,7 +99,6 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.Route;
-import io.fabric8.openshift.api.model.RouteList;
 import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.TLSConfigBuilder;
 import io.fabric8.openshift.client.DefaultOpenShiftClient;
@@ -1629,33 +1628,14 @@ public class TeiidOpenShiftClient implements StringConstants {
         OpenShiftClient client = openshiftClient();
         RouteStatus theRoute = null;
         debug(openShiftName, "Getting route of type " + protocolType.id() + " for Service");
-        RouteList routes = client.routes().inNamespace(namespace).list();
-        if (routes == null || routes.getItems().isEmpty()) {
-            return theRoute;
-        }
 
-        for (Route route : routes.getItems()) {
+        Route route = client.routes().inNamespace(namespace).withName(openShiftName + HYPHEN + protocolType.id()).get();
+
+        if (route != null) {
             ObjectMeta metadata = route.getMetadata();
             String name = metadata.getName();
-            if (! name.endsWith(HYPHEN + protocolType.id())) {
-                continue;
-            }
-
             RouteSpec spec = route.getSpec();
             String target = spec.getTo().getName();
-
-            Map<String, String> annotations = metadata.getAnnotations();
-            String description = annotations.get(DESCRIPTION_ANNOTATION_LABEL);
-            if (description == null || ! SERVICE_DESCRIPTION.equals(description)) {
-                continue;
-            }
-
-            //
-            // Check we have the right route for the vdb in question
-            //
-            if (! target.equals(openShiftName + HYPHEN + protocolType.id())) {
-                continue;
-            }
 
             theRoute = new RouteStatus(name, protocolType);
             theRoute.setHost(spec.getHost());
