@@ -16,7 +16,10 @@
 
 package io.syndesis.dv.server.endpoint;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,20 +27,6 @@ import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
-import io.syndesis.dv.datasources.H2SQLDefinition;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
-import io.syndesis.dv.model.DataVirtualization;
-import io.syndesis.dv.model.ViewDefinition;
-import io.syndesis.dv.repository.RepositoryConfiguration;
-import io.syndesis.dv.repository.RepositoryManagerImpl;
-import io.syndesis.dv.rest.JsonMarshaller;
-import io.syndesis.dv.server.endpoint.DataVirtualizationService;
-import io.syndesis.dv.server.endpoint.ImportPayload;
-import io.syndesis.dv.server.endpoint.MetadataService;
-import io.syndesis.dv.server.endpoint.RestDataVirtualization;
-import io.syndesis.dv.server.endpoint.StatusObject;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -46,6 +35,15 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.web.server.ResponseStatusException;
+
+import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
+import io.syndesis.dv.datasources.H2SQLDefinition;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
+import io.syndesis.dv.model.DataVirtualization;
+import io.syndesis.dv.model.ViewDefinition;
+import io.syndesis.dv.repository.RepositoryConfiguration;
+import io.syndesis.dv.repository.RepositoryManagerImpl;
+import io.syndesis.dv.rest.JsonMarshaller;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -122,7 +120,7 @@ public class DataVirtualizationServiceTest {
         assertEquals("{\n" +
                 "  \"complete\" : true,\n" +
                 "  \"dataVirtualizationName\" : \"dv\",\n" +
-                "  \"ddl\" : \"CREATE VIEW tbl (col) AS \\nSELECT col\\nFROM source.tbl\",\n" +
+                "  \"ddl\" : \"CREATE VIEW tbl (\\n  col\\n) AS \\n  SELECT \\n    t1.col\\n  FROM \\n    source.tbl AS t1\",\n" +
                 "  \"id\" : \"consistent\",\n" +
                 "  \"name\" : \"tbl\",\n" +
                 "  \"sourcePaths\" : [ \"schema=source/table=tbl\" ],\n" +
