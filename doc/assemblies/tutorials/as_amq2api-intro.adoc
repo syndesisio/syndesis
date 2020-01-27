@@ -20,7 +20,7 @@ it provides instructions for customizing
 and extending {prodname} by leading you through the procedures for:
 
 * Adding a custom data operation by uploading an extension.
-* Adding a custom REST API client connector by uploading an OpenAPI (Swagger) document.
+* Adding a custom REST API client connector by uploading an OpenAPI document.
 
 {prodname} provides the extension file and the OpenAPI document.
 
@@ -28,14 +28,14 @@ ifeval::["{location}" == "downstream"]
 .Prerequisites
 
 * You must be logged in to {prodname}.
-If you are not already logged in, see 
-link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.] 
+If you are not already logged in, see
+link:{LinkFuseOnlineTutorials}#logging-in-and-out_tutorials[What to expect the first time that you use {prodname}.]
 
-* You are working in a {prodname} evaluation environment that is running 
-on OpenShift Online or OpenShift Dedicated. Or, you are working in a {prodname} 
-environment that is running in an OpenShift Container Platform project in which 
-an administrator added the {prodname} sample data, which provides the *To Do* 
-app for confirming that the integration works as expected. 
+* You are working in a {prodname} evaluation environment that is running
+on OpenShift Online or OpenShift Dedicated. Or, you are working in a {prodname}
+environment that is running in an OpenShift Container Platform project in which
+an administrator added the {prodname} sample data, which provides the *To Do*
+app for confirming that the integration works as expected.
 endif::[]
 
 To implement the AMQ to REST API sample integration, the main steps are:

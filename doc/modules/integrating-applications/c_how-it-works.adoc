@@ -9,11 +9,11 @@ more different applications or services without writing code. It also provides
 features that allow you to introduce code if it is needed for complex
 use cases.
 
-{prodname} lets you enable data transfer between different applications. 
-For example, a business analyst can use {prodname} to capture 
-tweets that mention customers and then leverage the data obtained from 
+{prodname} lets you enable data transfer between different applications.
+For example, a business analyst can use {prodname} to capture
+tweets that mention customers and then leverage the data obtained from
 Twitter to update Salesforce accounts. Another example is a service
-that makes stock trade recommendations. You can use {prodname} to 
+that makes stock trade recommendations. You can use {prodname} to
 capture recommendations for buying or selling stocks of interest
 and forward those recommendations to a service that automates stock transfers.
 
@@ -34,16 +34,16 @@ finish connection.
 . Give the integration a name.
 . Click *Publish* to start running the integration.
 
-Another kind of integration is an API provider integration. 
-An API provider integration allows REST API clients to invoke 
-commands that trigger execution of the integration. To create 
-and run an API provider integration, you upload an OpenAPI 2.0
+Another kind of integration is an API provider integration.
+An API provider integration allows REST API clients to invoke
+commands that trigger execution of the integration. To create
+and run an API provider integration, you upload an OpenAPI 3 (or 2)
 document to {prodname}. This document specifies the operations
-that clients can call. For each operation, you specify and 
+that clients can call. For each operation, you specify and
 configure the flow of connections and steps, such as data mapper
 or filter steps, that executes
-that operation. A simple integration has one primary flow while an 
-API provider integration has a primary flow for each operation. 
+that operation. A simple integration has one primary flow while an
+API provider integration has a primary flow for each operation.
 
 The {prodname} dashboard lets you monitor and manage integrations. You can
 see which integrations are running, and you can start, stop, and edit integrations.
