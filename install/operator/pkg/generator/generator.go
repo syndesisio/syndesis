@@ -1,3 +1,19 @@
+/*
+ * Copyright (C) 2020 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 //
 //go:generate go run assets/assets_generate.go
 package generator
@@ -78,7 +94,7 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 		return files[i].Name() < files[j].Name()
 	})
 
-	response := []unstructured.Unstructured{}
+	var response []unstructured.Unstructured
 	for _, f := range files {
 		filePath := directory + "/" + f.Name()
 		r, err := Render(filePath, context)
@@ -100,7 +116,7 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 	}
 
 	var obj interface{} = nil
-	response := []unstructured.Unstructured{}
+	var response []unstructured.Unstructured
 
 	// We can load plain yml files..
 	if strings.HasSuffix(filePath, ".yml") || strings.HasSuffix(filePath, ".yaml") {
@@ -163,11 +179,4 @@ func Render(filePath string, context interface{}) ([]unstructured.Unstructured, 
 	}
 
 	return response, nil
-}
-
-func Must(data []byte, err error) []byte {
-	if err != nil {
-		panic(err)
-	}
-	return data
 }
