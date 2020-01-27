@@ -118,7 +118,7 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
                     .server()
                     .port(TODO_SERVER_PORT)
                     .autoStart(true)
-                    .timeout(60000L)
+                    .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .build();
         }
     }

@@ -86,6 +86,10 @@ public final class SyndesisTestEnvironment {
     private static final String SYNDESIS_PROJECT_MOUNT_PATH = SYNDESIS_PREFIX + "project.mount.path";
     private static final String SYNDESIS_PROJECT_MOUNT_PATH_ENV = SYNDESIS_ENV_PREFIX + "PROJECT_MOUNT_PATH";
 
+    private static final String SYNDESIS_TIMEOUT_DEFAULT = "60";
+    private static final String SYNDESIS_DEFAULT_TIMEOUT = SYNDESIS_PREFIX + "default.timeout";
+    private static final String SYNDESIS_DEFAULT_TIMEOUT_ENV = SYNDESIS_ENV_PREFIX + "DEFAULT_TIMEOUT";
+
     /**
      * Prevent instantiation of utility class.
      */
@@ -178,5 +182,10 @@ public final class SyndesisTestEnvironment {
     public static String getProjectMountPath() {
         return System.getProperty(SYNDESIS_PROJECT_MOUNT_PATH, System.getenv(SYNDESIS_PROJECT_MOUNT_PATH_ENV) != null ?
                 System.getenv(SYNDESIS_PROJECT_MOUNT_PATH_ENV) : SYNDESIS_PROJECT_MOUNT_PATH_DEFAULT);
+    }
+
+    public static int getDefaultTimeout() {
+        return Integer.parseInt(System.getProperty(SYNDESIS_DEFAULT_TIMEOUT, System.getenv(SYNDESIS_DEFAULT_TIMEOUT_ENV) != null ?
+            System.getenv(SYNDESIS_DEFAULT_TIMEOUT_ENV) : SYNDESIS_TIMEOUT_DEFAULT));
     }
 }
