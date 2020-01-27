@@ -18,6 +18,10 @@ customer-managed environment.
 
 * In the cluster in which {prodname} is installed, each Knative resource 
 that you want an integration to connect to is also installed. 
+Before you can install Knative resources, you must install the 
+link:https://docs.openshift.com/container-platform/4.3/serverless/installing-openshift-serverless.html[OpenShift Serverless Operator]  
+and the 
+link:https://openshift-knative.github.io/docs/docs/proc_knative-eventing.html[Knative Eventing Operator]. 
 
 * You have permission to install {prodname}. 
 
