@@ -2,10 +2,10 @@
 include::attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.5
+:prodversion: 7.6
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.5
+:version: 7.6
 :parent-context: tutorials
 :location: upstream
 
