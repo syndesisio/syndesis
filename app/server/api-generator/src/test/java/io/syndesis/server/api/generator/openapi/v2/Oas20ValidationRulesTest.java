@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.openapi.v2;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
@@ -131,7 +132,7 @@ public class Oas20ValidationRulesTest {
     }
 
     @Test
-    public void shouldNotReportIssuesForTrivialSwagger() {
+    public void shouldNotReportIssuesForTrivialOpenAPISpec() {
         final Oas20Document openApiDoc = new Oas20Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
@@ -236,5 +237,107 @@ public class Oas20ValidationRulesTest {
             .error("missing-paths")
             .message("No paths defined")
             .build());
+    }
+
+    @Test
+    public void shouldValidateMissingRequestBodySchema() {
+        final Oas20Document openApiDoc = new Oas20Document();
+        final Oas20PathItem pathItem = new Oas20PathItem("/path");
+        Oas20Operation get = new Oas20Operation("get");
+        get.operationId = "o1";
+        pathItem.get = get;
+        Oas20Operation post = new Oas20Operation("post");
+        post.operationId = "o2";
+        final Oas20Parameter headerParameter = new Oas20Parameter();
+        headerParameter.in = "header";
+        final Oas20Parameter bodyParameter = new Oas20Parameter();
+        bodyParameter.in = "body";
+        post.parameters = Arrays.asList(headerParameter, bodyParameter);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(1);
+        final Violation nonUniqueWarning = warnings.get(0);
+        assertThat(nonUniqueWarning.error()).isEqualTo("missing-request-schema");
+        assertThat(nonUniqueWarning.property()).isEmpty();
+        assertThat(nonUniqueWarning.message()).isEqualTo("Operation POST /path does not provide a schema for the body parameter");
+    }
+
+    @Test
+    public void shouldValidateMissingResponseBodySchema() {
+        final Oas20Document openApiDoc = new Oas20Document();
+        final Oas20PathItem pathItem = new Oas20PathItem("/path");
+        Oas20Operation get = new Oas20Operation("get");
+        get.operationId = "o1";
+        get.responses = get.createResponses();
+        get.responses.addResponse("404", get.responses.createResponse("404"));
+        get.responses.addResponse("200", get.responses.createResponse("200"));
+        pathItem.get = get;
+        Oas20Operation post = new Oas20Operation("post");
+        post.operationId = "o2";
+        final Oas20Parameter headerParameter = new Oas20Parameter();
+        headerParameter.in = "header";
+        final Oas20Parameter bodyParameter = new Oas20Parameter();
+        bodyParameter.in = "body";
+        Oas20Schema bodySchema = new Oas20Schema();
+        bodySchema.addProperty("foo", new Oas20Schema());
+        bodyParameter.schema = bodySchema;
+        post.parameters = Arrays.asList(headerParameter, bodyParameter);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(1);
+        final Violation nonUniqueWarning = warnings.get(0);
+        assertThat(nonUniqueWarning.error()).isEqualTo("missing-response-schema");
+        assertThat(nonUniqueWarning.property()).isEmpty();
+        assertThat(nonUniqueWarning.message()).isEqualTo("Operation GET /path does not provide a response schema for code 200");
+    }
+
+    @Test
+    public void shouldNotReportIssuesForValidResponseBodySchema() {
+        final Oas20Document openApiDoc = new Oas20Document();
+        final Oas20PathItem pathItem = new Oas20PathItem("/path");
+        Oas20Operation get = new Oas20Operation("get");
+        get.operationId = "o1";
+        get.responses = get.createResponses();
+        get.responses.addResponse("404", get.responses.createResponse("404"));
+        Oas20Response response = (Oas20Response) get.responses.createResponse("200");
+        Oas20Schema responseSchema = new Oas20Schema();
+        responseSchema.addProperty("foo", new Oas20Schema());
+        response.schema = responseSchema;
+        get.responses.addResponse("200", response);
+        pathItem.get = get;
+        Oas20Operation post = new Oas20Operation("post");
+        post.operationId = "o2";
+        final Oas20Parameter headerParameter = new Oas20Parameter();
+        headerParameter.in = "header";
+        final Oas20Parameter bodyParameter = new Oas20Parameter();
+        bodyParameter.in = "body";
+        Oas20Schema bodySchema = new Oas20Schema();
+        bodySchema.addProperty("foo", new Oas20Schema());
+        bodyParameter.schema = bodySchema;
+        post.parameters = Arrays.asList(headerParameter, bodyParameter);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
     }
 }

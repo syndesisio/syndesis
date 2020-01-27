@@ -24,14 +24,18 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import io.apicurio.datamodels.openapi.models.OasOperation;
+import io.apicurio.datamodels.openapi.models.OasParameter;
+import io.apicurio.datamodels.openapi.models.OasSchema;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Document;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SchemaDefinition;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityDefinitions;
 import io.apicurio.datamodels.openapi.v2.models.Oas20SecurityScheme;
+import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.openapi.OpenApiModelInfo;
 import io.syndesis.server.api.generator.openapi.OpenApiValidationRules;
+import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
 
 /**
  * @author Christoph Deppisch
@@ -61,6 +65,28 @@ public class Oas20ValidationRules extends OpenApiValidationRules<Oas20Response, 
     @Override
     protected boolean hasResponseSchema(Oas20Response response) {
         return response.schema != null;
+    }
+
+    @Override
+    protected Optional<Violation> validateRequestSchema(String operationId, String path, OasOperation operation) {
+        for (final OasParameter parameter : OasModelHelper.getParameters(operation)) {
+            if (!OasModelHelper.isBody(parameter)) {
+                continue;
+            }
+            final OasSchema schema = (OasSchema) parameter.schema;
+            if (OasModelHelper.schemaIsNotSpecified(schema)) {
+                final String message = "Operation " + operationId + " " + path
+                    + " does not provide a schema for the body parameter";
+
+                return Optional.of(new Violation.Builder()//
+                    .property("")//
+                    .error("missing-request-schema")//
+                    .message(message)//
+                    .build());
+            }
+        }
+
+        return Optional.empty();
     }
 
     @Override
