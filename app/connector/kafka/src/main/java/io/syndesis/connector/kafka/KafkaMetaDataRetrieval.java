@@ -21,12 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Predicate;
 import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionNames;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionSpec;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
 import io.fabric8.kubernetes.client.KubernetesClient;
-import io.syndesis.connector.kafka.model.crd.KafkaResource;
+import io.syndesis.connector.kafka.model.crd.Listener;
+import io.syndesis.connector.kafka.model.crd.Address;
+import io.syndesis.connector.kafka.model.crd.Kafka;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceDoneable;
 import io.syndesis.connector.kafka.model.crd.KafkaResourceList;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
@@ -44,19 +47,6 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     public static final String PLURAL = "kafkas";
 
     /**
-     * Used to filter which types of connections are we interested in. Right now, only plain connections.
-     */
-    private final Predicate<? super Map<?, ?>>
-        typesAllowed = listener -> listener.get("type").toString().equalsIgnoreCase("plain");
-
-    /**
-     * Used to filter brokers. Right now, based on GROUP and PLURAL.
-     */
-    private final Predicate<? super CustomResourceDefinition> isKafkaBroker =
-        crd -> crd.getSpec().getGroup().equalsIgnoreCase(GROUP)
-                   && crd.getSpec().getNames().getPlural().equalsIgnoreCase(PLURAL);
-
-    /**
      * TODO: use local extension, remove when switching to camel 2.22.x
      */
     @Override
@@ -70,20 +60,16 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId,
                                      Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
-        try {
-            Set<String> topicsNames = (Set<String>) metadata.getPayload();
+        Set<String> topicsNames = (Set<String>) metadata.getPayload();
 
-            List<PropertyPair> topicsResult = new ArrayList<>();
-            topicsNames.forEach(
-                t -> topicsResult.add(new PropertyPair(t, t))
-            );
+        List<PropertyPair> topicsResult = new ArrayList<>();
+        topicsNames.forEach(
+            t -> topicsResult.add(new PropertyPair(t, t))
+        );
 
-            return SyndesisMetadata.of(
-                Collections.singletonMap("topic", topicsResult)
-            );
-        } catch (Exception e) {
-            return SyndesisMetadata.EMPTY;
-        }
+        return SyndesisMetadata.of(
+            Collections.singletonMap("topic", topicsResult)
+        );
     }
 
     /**
@@ -94,10 +80,10 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     public SyndesisMetadataProperties fetchProperties(CamelContext context, String componentId,
                                                       Map<String, Object> properties) {
         List<PropertyPair> brokers = new ArrayList<>();
-        try (KubernetesClient client = new DefaultKubernetesClient()) {
+        try (KubernetesClient client = createKubernetesClient()) {
             client.customResourceDefinitions().list().getItems()
-                .stream().filter(isKafkaBroker)
-                .forEach(kafka -> processKafkaCRD(brokers, client, kafka));
+                .stream().filter(KafkaMetaDataRetrieval::isKafkaCustomResourceDefinition)
+                .forEach(kafka -> processKafkaCustomResourceDefinition(brokers, client, kafka));
         } catch (Exception t) {
             LOG.warn("Couldn't auto discover any broker.");
             LOG.debug("Couldn't auto discover any broker.", t);
@@ -108,6 +94,10 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
         return new SyndesisMetadataProperties(dynamicProperties);
     }
 
+    KubernetesClient createKubernetesClient() {
+        return new DefaultKubernetesClient();
+    }
+
     /**
      * For each Kafka container definition found, process it.
      *
@@ -115,13 +105,13 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * @param client
      * @param crd
      */
-    private void processKafkaCRD(List<PropertyPair> brokers, KubernetesClient client, CustomResourceDefinition crd) {
+    private static void processKafkaCustomResourceDefinition(List<PropertyPair> brokers, KubernetesClient client, CustomResourceDefinition crd) {
         KafkaResourceList list = client.customResources(crd,
-            KafkaResource.class,
+            Kafka.class,
             KafkaResourceList.class,
             KafkaResourceDoneable.class).inAnyNamespace().list();
 
-        for (KafkaResource item : list.getItems()) {
+        for (Kafka item : list.getItems()) {
             processKafkaResource(brokers, item);
         }
     }
@@ -133,16 +123,14 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * @param brokers
      * @param item
      */
-    private void processKafkaResource(List<PropertyPair> brokers, KafkaResource item) {
+    private static void processKafkaResource(List<PropertyPair> brokers, Kafka item) {
         //Extract an identifier of this broker
         final ObjectMeta metadata = item.getMetadata();
         String id = metadata.getNamespace() + "::" + metadata.getName();
 
-        @SuppressWarnings("unchecked")
-        List<Map<String, List<Map<String, Object>>>> listeners =
-            (List<Map<String, List<Map<String, Object>>>>) item.getStatus().get("listeners");
+        List<Listener> listeners = item.getStatus().getListeners();
 
-        listeners.stream().filter(typesAllowed).forEach(
+        listeners.stream().filter(KafkaMetaDataRetrieval::typesAllowed).forEach(
             listener -> getAddress(listener, brokers, id));
     }
 
@@ -153,21 +141,43 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * @param brokers  list where all brokers are going to be added
      * @param name     identifier of this broker
      */
-    private static void getAddress(final Map<String, List<Map<String, Object>>> listener,
+    private static void getAddress(final Listener listener,
                                    final List<PropertyPair> brokers,
                                    final String name) {
         StringBuilder add = new StringBuilder();
 
-        List<Map<String, Object>> addresses = listener.get("addresses");
-        for (Map<String, Object> a : addresses) {
+        List<Address> addresses = listener.getAddresses();
+        for (Address a : addresses) {
             if (add.length() > 0) {
                 add.append(',');
             }
-            add.append(a.get("host"));
+            add.append(a.getHost());
             add.append(':');
-            add.append(a.get("port"));
+            add.append(a.getPort());
         }
 
         brokers.add(new PropertyPair(add.toString(), name));
+    }
+
+    /**
+     * Used to filter which types of connections are we interested in. Right now, only plain connections.
+     */
+    private static boolean typesAllowed(final Listener listener) {
+        return "plain".equalsIgnoreCase(listener.getType());
+    }
+
+    /**
+     * Used to filter brokers. Right now, based on GROUP and PLURAL.
+     */
+    static boolean isKafkaCustomResourceDefinition(final CustomResourceDefinition crd) {
+        final CustomResourceDefinitionSpec spec = crd.getSpec();
+
+        final String group = spec.getGroup();
+
+        final CustomResourceDefinitionNames names = spec.getNames();
+        final String plural = names.getPlural();
+
+        return GROUP.equalsIgnoreCase(group)
+            && PLURAL.equalsIgnoreCase(plural);
     }
 }

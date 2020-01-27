@@ -1,0 +1,98 @@
+apiVersion: v1
+items:
+- apiVersion: kafka.strimzi.io/v1beta1
+  kind: Kafka
+  metadata:
+    creationTimestamp: 2019-12-11T08:44:25Z
+    generation: 1
+    name: my-cluster
+    namespace: zregvart
+    resourceVersion: "19587464"
+    selfLink: /apis/kafka.strimzi.io/v1beta1/namespaces/zregvart/kafkas/my-cluster
+    uid: 6f926adf-1bf2-11ea-927d-02fd92f220aa
+  spec:
+    entityOperator:
+      topicOperator: {}
+      userOperator: {}
+    kafka:
+      config:
+        log.message.format.version: "2.3"
+        offsets.topic.replication.factor: 3
+        transaction.state.log.min.isr: 2
+        transaction.state.log.replication.factor: 3
+      listeners:
+        plain: {}
+        tls: {}
+      replicas: 3
+      storage:
+        type: ephemeral
+      version: 2.3.0
+    zookeeper:
+      replicas: 3
+      storage:
+        type: ephemeral
+  status:
+    conditions:
+    - lastTransitionTime: 2020-01-17T13:05:30+0000
+      status: "True"
+      type: Ready
+    listeners:
+    - addresses:
+      - host: my-cluster-kafka-bootstrap.zregvart.svc
+        port: 9092
+      type: plain
+    - addresses:
+      - host: my-cluster-kafka-bootstrap.zregvart.svc
+        port: 9093
+      type: tls
+    observedGeneration: 1
+- apiVersion: kafka.strimzi.io/v1beta1
+  kind: Kafka
+  metadata:
+    creationTimestamp: 2019-12-11T10:22:01Z
+    generation: 1
+    name: zorans-cluster
+    namespace: zregvart
+    resourceVersion: "19587534"
+    selfLink: /apis/kafka.strimzi.io/v1beta1/namespaces/zregvart/kafkas/zorans-cluster
+    uid: 122c1717-1c00-11ea-927d-02fd92f220aa
+  spec:
+    entityOperator:
+      topicOperator: {}
+      userOperator: {}
+    kafka:
+      config:
+        log.message.format.version: "2.3"
+        offsets.topic.replication.factor: 3
+        transaction.state.log.min.isr: 2
+        transaction.state.log.replication.factor: 3
+      listeners:
+        plain: {}
+        tls: {}
+      replicas: 3
+      storage:
+        type: ephemeral
+      version: 2.3.0
+    zookeeper:
+      replicas: 3
+      storage:
+        type: ephemeral
+  status:
+    conditions:
+    - lastTransitionTime: 2020-01-17T13:05:37+0000
+      status: "True"
+      type: Ready
+    listeners:
+    - addresses:
+      - host: zorans-cluster-kafka-bootstrap.zregvart.svc
+        port: 9092
+      type: plain
+    - addresses:
+      - host: zorans-cluster-kafka-bootstrap.zregvart.svc
+        port: 9093
+      type: tls
+    observedGeneration: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
