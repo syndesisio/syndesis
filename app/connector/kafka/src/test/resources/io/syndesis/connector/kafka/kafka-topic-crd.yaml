@@ -1,0 +1,104 @@
+kind: CustomResourceDefinition
+apiVersion: apiextensions.k8s.io/v1beta1
+metadata:
+  name: kafkatopics.kafka.strimzi.io
+  selfLink: >-
+    /apis/apiextensions.k8s.io/v1beta1/customresourcedefinitions/kafkatopics.kafka.strimzi.io
+  uid: ab4fd82c-1b9e-11ea-927d-02fd92f220aa
+  resourceVersion: '25640'
+  generation: 1
+  creationTimestamp: '2019-12-10T22:44:48Z'
+  labels:
+    app: strimzi
+spec:
+  subresources:
+    status: {}
+  names:
+    plural: kafkatopics
+    singular: kafkatopic
+    shortNames:
+      - kt
+    kind: KafkaTopic
+    listKind: KafkaTopicList
+  additionalPrinterColumns:
+    - name: Partitions
+      type: integer
+      description: The desired number of partitions in the topic
+      JSONPath: .spec.partitions
+    - name: Replication factor
+      type: integer
+      description: The desired number of replicas of each partition
+      JSONPath: .spec.replicas
+  scope: Namespaced
+  conversion:
+    strategy: None
+  version: v1beta1
+  validation:
+    openAPIV3Schema:
+      properties:
+        spec:
+          type: object
+          required:
+            - partitions
+            - replicas
+          properties:
+            config:
+              type: object
+            partitions:
+              type: integer
+              minimum: 1
+            replicas:
+              type: integer
+              maximum: 32767
+              minimum: 1
+            topicName:
+              type: string
+        status:
+          type: object
+          properties:
+            conditions:
+              type: array
+              items:
+                type: object
+                properties:
+                  lastTransitionTime:
+                    type: string
+                  message:
+                    type: string
+                  reason:
+                    type: string
+                  status:
+                    type: string
+                  type:
+                    type: string
+            observedGeneration:
+              type: integer
+  versions:
+    - name: v1beta1
+      served: true
+      storage: true
+    - name: v1alpha1
+      served: true
+      storage: false
+  group: kafka.strimzi.io
+status:
+  conditions:
+    - type: NamesAccepted
+      status: 'True'
+      lastTransitionTime: '2019-12-10T22:44:48Z'
+      reason: NoConflicts
+      message: no conflicts found
+    - type: Established
+      status: 'True'
+      lastTransitionTime: null
+      reason: InitialNamesAccepted
+      message: the initial names have been accepted
+  acceptedNames:
+    plural: kafkatopics
+    singular: kafkatopic
+    shortNames:
+      - kt
+    kind: KafkaTopic
+    listKind: KafkaTopicList
+  storedVersions:
+    - v1beta1

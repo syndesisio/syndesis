@@ -13,24 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package io.syndesis.connector.kafka.model.crd;
 
-import java.util.Map;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.fabric8.kubernetes.client.CustomResource;
+import org.junit.Test;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class KafkaResource extends CustomResource {
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
-    private Map<String, Object>  status;
+public class KafkaTest {
 
-    public Map<String, Object>  getStatus() {
-        return status;
-    }
-
-    public void setStatus(Map<String, Object>  status) {
-        this.status = status;
+    @Test
+    public void equalsHashCodeContract() {
+        EqualsVerifier.forClass(Kafka.class).suppress(Warning.NONFINAL_FIELDS).withIgnoredFields("apiVersion").verify();
     }
 
 }
