@@ -15,19 +15,15 @@
  */
 package io.syndesis.connector.kafka.model.crd;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.fabric8.kubernetes.api.builder.Function;
-import io.fabric8.kubernetes.client.CustomResourceDoneable;
+import org.junit.Test;
 
-/**
- * Custom class for the Kubernetes client.
- * We don't really need anything from this class, just to exist.
- */
-@JsonIgnoreProperties(ignoreUnknown = true)
-public final class KafkaResourceDoneable extends CustomResourceDoneable<Kafka> {
+import nl.jqno.equalsverifier.EqualsVerifier;
 
-    public KafkaResourceDoneable(Kafka resource, Function<Kafka, Kafka> function) {
-        super(resource, function);
+public class ListenerTest {
+
+    @Test
+    public void equalsHashCodeContract() {
+        EqualsVerifier.forClass(Listener.class).verify();
     }
 
 }
