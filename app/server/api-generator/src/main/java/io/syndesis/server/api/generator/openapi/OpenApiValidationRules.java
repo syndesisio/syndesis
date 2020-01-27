@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 import io.apicurio.datamodels.core.models.common.SecurityScheme;
 import io.apicurio.datamodels.openapi.models.OasDocument;
 import io.apicurio.datamodels.openapi.models.OasOperation;
-import io.apicurio.datamodels.openapi.models.OasParameter;
 import io.apicurio.datamodels.openapi.models.OasPathItem;
 import io.apicurio.datamodels.openapi.models.OasResponse;
 import io.apicurio.datamodels.openapi.models.OasSchema;
@@ -59,7 +59,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
         switch (context) {
         case CONSUMED_API:
             rules.addAll(consumerRules);
-            rules.add(this::validateResponses);
+            rules.add(this::validateRequestResponseBodySchemas);
             rules.add(this::validateConsumedAuthTypes);
             rules.add(this::validateScheme);
             rules.add(this::validateUniqueOperationIds);
@@ -68,7 +68,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
             return;
         case PROVIDED_API:
             rules.addAll(providerRules);
-            rules.add(this::validateResponses);
+            rules.add(this::validateRequestResponseBodySchemas);
             rules.add(this::validateProvidedAuthTypes);
             rules.add(this::validateUniqueOperationIds);
             rules.add(OpenApiValidationRules::validateNoMissingOperationIds);
@@ -90,6 +90,8 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
     protected abstract List<T> getResponses(OasOperation operation);
 
     protected abstract boolean hasResponseSchema(T responseEntry);
+
+    protected abstract Optional<Violation> validateRequestSchema(String operationId, String path, OasOperation operation);
 
     protected abstract Map<String, D> getSchemaDefinitions(OpenApiModelInfo info);
 
@@ -209,7 +211,7 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
      * Check if a request/response JSON schema is present
      */
     @SuppressWarnings({"PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity", "PMD.ModifiedCyclomaticComplexity"})
-    private OpenApiModelInfo validateResponses(final OpenApiModelInfo modelInfo) {
+    public OpenApiModelInfo validateRequestResponseBodySchemas(final OpenApiModelInfo modelInfo) {
         final OasDocument openApiDoc = modelInfo.getModel();
         if (openApiDoc == null) {
             return modelInfo;
@@ -221,25 +223,12 @@ public abstract class OpenApiValidationRules<T extends OasResponse, S extends Se
         for (final OasPathItem pathEntry : paths) {
             for (final Map.Entry<String, OasOperation> operationEntry : OasModelHelper.getOperationMap(pathEntry).entrySet()) {
 
-                // Check requests
-                for (final OasParameter parameter : OasModelHelper.getParameters(operationEntry.getValue())) {
-                    if (!OasModelHelper.isBody(parameter)) {
-                        continue;
-                    }
-                    final OasSchema schema = (OasSchema) parameter.schema;
-                    if (OasModelHelper.schemaIsNotSpecified(schema)) {
-                        final String message = "Operation " + operationEntry.getKey() + " " + pathEntry.getPath()
-                            + " does not provide a schema for the body parameter";
+                // Check request body schema
+                Optional<Violation> missingRequestSchema = validateRequestSchema(operationEntry.getKey().toUpperCase(Locale.US),
+                    pathEntry.getPath(), operationEntry.getValue());
+                missingRequestSchema.ifPresent(withWarnings::addWarning);
 
-                        withWarnings.addWarning(new Violation.Builder()//
-                            .property("")//
-                            .error("missing-parameter-schema")//
-                            .message(message)//
-                            .build());
-                    }
-                }
-
-                // Check responses
+                // Check response body schemas
                 List<T> responses = getResponses(operationEntry.getValue());
                 for (final T responseEntry : responses) {
                     if (responseEntry.getStatusCode() == null || responseEntry.getStatusCode().charAt(0) != '2') {
