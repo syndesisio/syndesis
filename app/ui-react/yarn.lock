@@ -7665,9 +7665,10 @@ commander@~2.19.0:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.19.0.tgz#f6198aa84e5b83c46054b94ddedbfed5ee9ff12a"
   integrity sha512-6tvAOO+D6OENvRAh524Dh9jcfKTYDQAqvqezbCW82xj5X0pSrcpxtvRKHLG0yBY6SD7PSDrJaj+0AiOcKVd1Xg==
 
-commandpost@^1.3.0:
+commandpost@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/commandpost/-/commandpost-1.4.0.tgz#89218012089dfc9b67a337ba162f15c88e0f1048"
+  integrity sha512-aE2Y4MTFJ870NuB/+2z1cXBhSBBzRydVVjzhFC4gtenEhpnj15yu0qptWGJsO9YGrcPZ3ezX8AWb1VA391MKpQ==
 
 common-tags@1.8.0, common-tags@^1.8.0:
   version "1.8.0"
@@ -9290,9 +9291,10 @@ drmonty-datatables-colvis@~1.1.2:
   dependencies:
     jquery ">=1.7.0"
 
-dtsgenerator@^1.0.0:
+dtsgenerator@^1.2.0:
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/dtsgenerator/-/dtsgenerator-1.2.0.tgz#2b9df6bf3dae3077f7d5315de58f18ee6585ffcb"
+  integrity sha512-MmLYw5DUhNl6U/3/hii8k0+a8y2NP/KhvteinE7RCsurZh0fDck0lu1txaMZuIRE7SoosYWrDI9fLz4NpjT7Ag==
   dependencies:
     commander "^2.18.0"
     cross-fetch "^2.2.2"
@@ -14051,14 +14053,14 @@ js-tokens@^3.0.2:
   resolved "https://registry.yarnpkg.com/js-tokens/-/js-tokens-3.0.2.tgz#9866df395102130e38f7f996bceb65443209c25b"
   integrity sha1-mGbfOVECEw449/mWvOtlRDIJwls=
 
-js-yaml@3.12.2, js-yaml@^3.11.0, js-yaml@^3.4.3:
+js-yaml@3.12.2:
   version "3.12.2"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.12.2.tgz#ef1d067c5a9d9cb65bd72f285b5d8105c77f14fc"
   dependencies:
     argparse "^1.0.7"
     esprima "^4.0.0"
 
-js-yaml@^3.12.0, js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@^3.5.1, js-yaml@^3.7.0, js-yaml@^3.9.0:
+js-yaml@^3.12.0, js-yaml@^3.13.0, js-yaml@^3.13.1, js-yaml@^3.4.3, js-yaml@^3.5.1, js-yaml@^3.7.0, js-yaml@^3.9.0:
   version "3.13.1"
   resolved "https://registry.yarnpkg.com/js-yaml/-/js-yaml-3.13.1.tgz#aff151b30bfdfa8e49e05da22e7415e9dfa37847"
   integrity sha512-YfbcO7jXDdyj0DGxYVSlSeQNHbD7XPWvrVWeVUujrQEoZzWJIRrCPoyk6kL6IAjAG2IolMK4T0hNUe0HOUs5Jw==
@@ -22239,12 +22241,13 @@ svgo@^1.2.2:
     util.promisify "~1.0.0"
 
 sw2dts@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/sw2dts/-/sw2dts-2.6.1.tgz#74772c1216b7dc08e0610123ea1598839d0d8a82"
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/sw2dts/-/sw2dts-2.6.2.tgz#2ce98b599b39f5f27ab06d7bdf4349b710950500"
+  integrity sha512-4XprnasqvfDg+GKj9jOk6qnZvrxlCGMlmkvwReYSyIIE+7Ny+90hVAPBBLFfdfmrfi61VFjE/KkJECuCQLjKkg==
   dependencies:
-    commandpost "^1.3.0"
-    dtsgenerator "^1.0.0"
-    js-yaml "^3.11.0"
+    commandpost "^1.4.0"
+    dtsgenerator "^1.2.0"
+    js-yaml "^3.13.1"
 
 symbol-observable@1.0.1:
   version "1.0.1"
