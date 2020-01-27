@@ -16,6 +16,7 @@
 package io.syndesis.connector.mongo.embedded;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -63,51 +64,63 @@ public class EmbedMongoConfiguration {
     private EmbedMongoConfiguration(){}
 
     static {
+        startEmbeddedMongo();
+        // init replica set
+        CLIENT = new MongoClient(HOST, PORT);
+        CLIENT.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
+        createAuthorizationUser();
+        DATABASE = CLIENT.getDatabase("test");
+    }
+
+    private static void startEmbeddedMongo() {
+        final IStreamProcessor logDestination = new Slf4jStreamProcessor(LoggerFactory.getLogger("embeddeddmongo"), Slf4jLevel.INFO);
+        final IStreamProcessor daemon = Processors.named("mongod", logDestination);
+        final IStreamProcessor error = Processors.named("mongod-error", logDestination);
+        final IStreamProcessor command = Processors.named("mongod-command", logDestination);
+        final ProcessOutput processOutput = new ProcessOutput(daemon, error, command);
+        final IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+            .defaults(Command.MongoD)
+            .artifactStore(new ExtractedArtifactStoreBuilder()
+                .defaults(Command.MongoD)
+                .extractDir(new FixedPath(".extracted"))
+                .download(new DownloadConfigBuilder()
+                    .defaultsForCommand(Command.MongoD)
+                    .artifactStorePath(new FixedPath(".cache"))
+                    .build())
+                .build())
+            .processOutput(processOutput)
+            .build();
+
+        final IMongodConfig mongodConfig = createEmbeddedMongoConfiguration();
+
+        final MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
+                .prepare(mongodConfig);
+        try {
+            mongodExecutable.start();
+        } catch (IOException e) {
+            throw new UncheckedIOException(e);
+        }
+    }
+
+    static IMongodConfig createEmbeddedMongoConfiguration() {
         try {
             final Path storagePath = Files.createTempDirectory("embeddeddmongo");
             storagePath.toFile().deleteOnExit();
-            IMongodConfig mongodConfig = new MongodConfigBuilder()
+            return new MongodConfigBuilder()
                     .version(V3_6)
                     .net(new Net(PORT, localhostIsIPv6()))
                     .replication(new Storage(storagePath.toString(), "replicationName", 5000))
                     .build();
-
-            final IStreamProcessor logDestination = new Slf4jStreamProcessor(LoggerFactory.getLogger("embeddeddmongo"), Slf4jLevel.INFO);
-            final IStreamProcessor daemon = Processors.named("mongod", logDestination);
-            final IStreamProcessor error = Processors.named("mongod-error", logDestination);
-            final IStreamProcessor command = Processors.named("mongod-command", logDestination);
-            final ProcessOutput processOutput = new ProcessOutput(daemon, error, command);
-            final IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
-                .defaults(Command.MongoD)
-                .artifactStore(new ExtractedArtifactStoreBuilder()
-                    .defaults(Command.MongoD)
-                    .extractDir(new FixedPath(".extracted"))
-                    .download(new DownloadConfigBuilder()
-                        .defaultsForCommand(Command.MongoD)
-                        .artifactStorePath(new FixedPath(".cache"))
-                        .build())
-                    .build())
-                .processOutput(processOutput)
-                .build();
-            MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
-                    .prepare(mongodConfig);
-            mongodExecutable.start();
-            // init replica set
-            CLIENT = new MongoClient(HOST, PORT);
-            CLIENT.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
-            createAuthorizationUser();
-            DATABASE = CLIENT.getDatabase("test");
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
     }
 
     private static void createAuthorizationUser() {
         MongoDatabase admin = CLIENT.getDatabase("admin");
         MongoCollection<Document> usersCollection = admin.getCollection("system.users");
-        usersCollection.insertOne(Document.parse("" + "{\n"
+        usersCollection.insertOne(Document.parse("{\n"
             + "    \"_id\": \"admin.test-user\",\n"
-            // + " \"userId\": Binary(\"rT2IgiexSzisOOsmjGXZEQ==\", 4),\n"
             + "    \"user\": \"test-user\",\n"
             + "    \"db\": \"admin\",\n"
             + "    \"credentials\": {\n"
@@ -124,7 +137,6 @@ public class EmbedMongoConfiguration {
             + "            \"db\": \"test\"\n"
             + "        }\n"
             + "    ]\n"
-            + "}"
-            + ""));
+            + "}"));
     }
 }
