@@ -120,12 +120,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.glassfish</groupId>
-      <artifactId>javax.el</artifactId>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>mockwebserver</artifactId>
       <scope>test</scope>
