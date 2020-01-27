@@ -28,12 +28,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
-
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.Condition;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.ArgumentMatchers;
 
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithName;
@@ -52,12 +57,6 @@ import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentH
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler.TargetStateRequest;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
-
-import org.apache.commons.lang3.RandomStringUtils;
-import org.assertj.core.api.Condition;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatchers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
@@ -298,7 +297,7 @@ public class PublicApiHandlerTest {
         when(monitoringProvider.getIntegrationStateDetails("integration-id")).thenReturn(stateDetails);
 
         // null's are not used
-        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, null, null, monitoringProvider, null, null, integrationHandler);
+        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, null, null, monitoringProvider, new EnvironmentHandler(dataManager), null, integrationHandler);
 
         final PublicApiHandler.IntegrationState integrationState = handler.getIntegrationState(newMockSecurityContext(),
             "integration-name");
@@ -418,7 +417,7 @@ public class PublicApiHandlerTest {
             .build());
 
         // null's are not used
-        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, null, null, null);
+        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, new EnvironmentHandler(dataManager), null, null);
 
         final IntegrationDeployment deployment = handler.publishIntegration(securityContext, "integration-id");
 
@@ -517,7 +516,7 @@ public class PublicApiHandlerTest {
         final IntegrationDeploymentHandler deploymentHandler = mock(IntegrationDeploymentHandler.class);
 
         // null's are not used
-        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, null, null, null);
+        final PublicApiHandler handler = new PublicApiHandler(dataManager, null, deploymentHandler, null, null, new EnvironmentHandler(dataManager), null, null);
 
         handler.stopIntegration(securityContext, "integration-id");
 
