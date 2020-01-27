@@ -19,11 +19,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.fabric8.kubernetes.client.CustomResourceList;
 
 /**
- * Custom class to map response from Kubernetes client.
- * We don't really need anything from this list, just to list
- * resources.
+ * Custom class to map response from Kubernetes client. We don't really need
+ * anything from this list, just to list resources.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class KafkaResourceList extends CustomResourceList<KafkaResource> {
+public final class KafkaResourceList extends CustomResourceList<Kafka> {
+
+    private static final long serialVersionUID = 1L;
 
 }
