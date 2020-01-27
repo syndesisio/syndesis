@@ -32,9 +32,9 @@ to add to an operation's flow.
 . On the *Choose a connection* page, click *API Provider*.
 . On the *Start integration with an API call* page:
 +
-* If you have an OpenAPI 2.0 document that defines the REST API
+* If you have an OpenAPI document that defines the REST API
 operations, upload the OpenAPI document.
-* If you need to define the OpenAPI 2.0 document, select *Create*.
+* If you need to define the OpenAPI document, select *Create a new OpenAPI 3.x document* or *Create a new OpenAPI 2.x document*.
 
 . Click *Next*.
 +
@@ -42,6 +42,9 @@ operations, upload the OpenAPI document.
 +
 .. Click *Review/Edit* to open the API Designer editor.
 .. Review and edit as needed.
++
+Optionally, if your document uses the OpenAPI 2 specification, you can click *Convert to OpenAPI 3* if you want the API Designer to convert your document to the OpenAPI 3 specification.
+
 .. In the upper right, click *Save* or *Cancel* to close the editor.
 .. Click *Next*.
 
