@@ -44,6 +44,7 @@ public interface EventBus {
     /**
      * Callback interface clients implement to receive events.
      */
+    @FunctionalInterface
     interface Subscription {
 
         /**

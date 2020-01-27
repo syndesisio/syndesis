@@ -71,7 +71,7 @@ public class EndpointController implements BackendController {
         if (scheduler == null) {
             scheduler = Executors.newSingleThreadScheduledExecutor(Threads.newThreadFactory("Endpoint Controller"));
             scheduler.scheduleWithFixedDelay(this::scanIntegrationDeployments, 5, 60, TimeUnit.SECONDS);
-            eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
+            eventBus.subscribe(EVENT_BUS_ID, this::onChangeEvent);
         }
     }
 
@@ -95,24 +95,22 @@ public class EndpointController implements BackendController {
         }
     }
 
-    private EventBus.Subscription getChangeEventSubscription() {
-        return (event, data) -> {
-            // Never do anything that could block in this callback!
-            if ("change-event".equals(event)) {
-                try {
-                    ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
-                    Optional.ofNullable(changeEvent)
-                        .flatMap(ChangeEvent::getId)
-                        .ifPresent(id -> changeEvent.getKind()
-                            .map(Kind::from)
-                            .filter(k -> k == Kind.IntegrationDeployment)
-                            .ifPresent(k -> this.scheduler.execute(() -> this.checkIntegrationDeployment(id))));
+    private void onChangeEvent(final String event, final String data) {
+        // Never do anything that could block in this callback!
+        if ("change-event".equals(event)) {
+            try {
+                ChangeEvent changeEvent = JsonUtils.reader().forType(ChangeEvent.class).readValue(data);
+                Optional.ofNullable(changeEvent)
+                    .flatMap(ChangeEvent::getId)
+                    .ifPresent(id -> changeEvent.getKind()
+                        .map(Kind::from)
+                        .filter(k -> k == Kind.IntegrationDeployment)
+                        .ifPresent(k -> this.scheduler.execute(() -> this.checkIntegrationDeployment(id))));
 
-                } catch (IOException e) {
-                    LOG.error("Error while subscribing to change-event {}", data, e);
-                }
+            } catch (IOException e) {
+                LOG.error("Error while subscribing to change-event {}", data, e);
             }
-        };
+        }
     }
 
     private void scanIntegrationDeployments() {

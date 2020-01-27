@@ -18,7 +18,6 @@ package io.syndesis.server.api.generator.openapi.v2;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -31,7 +30,6 @@ import io.apicurio.datamodels.openapi.v2.models.Oas20Parameter;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Response;
 import io.apicurio.datamodels.openapi.v2.models.Oas20Schema;
 import io.syndesis.common.model.DataShape;
-import io.syndesis.server.api.generator.openapi.DataShapeGenerator;
 import io.syndesis.server.api.generator.openapi.UnifiedJsonDataShapeSupport;
 import io.syndesis.server.api.generator.openapi.util.JsonSchemaHelper;
 import io.syndesis.server.api.generator.openapi.util.OasModelHelper;
@@ -40,9 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
-class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Document, Oas20Operation> implements DataShapeGenerator<Oas20Document, Oas20Operation> {
-
-    private static final Predicate<Oas20Response> RESPONSE_HAS_SCHEMA = response -> response.schema != null;
+class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Document, Oas20Operation> {
 
     @Override
     public DataShape createShapeFromRequest(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
@@ -55,7 +51,7 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
 
     @Override
     public DataShape createShapeFromResponse(final ObjectNode json, final Oas20Document openApiDoc, final Oas20Operation operation) {
-        final Optional<Oas20Response> maybeResponse = findResponse(openApiDoc, operation, RESPONSE_HAS_SCHEMA, Oas20Response.class);
+        final Optional<Oas20Response> maybeResponse = findResponse(openApiDoc, operation, UnifiedJsonDataShapeGenerator::responseHasSchema, Oas20Response.class);
 
         if (!maybeResponse.isPresent()) {
             return DATA_SHAPE_NONE;
@@ -158,4 +154,9 @@ class UnifiedJsonDataShapeGenerator extends UnifiedJsonDataShapeSupport<Oas20Doc
         }
         return schema;
     }
+
+    private static boolean responseHasSchema(final Oas20Response response) {
+        return response.schema != null;
+    }
+
 }
