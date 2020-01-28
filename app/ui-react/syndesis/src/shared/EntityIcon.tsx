@@ -39,9 +39,13 @@ function getConnectionIcon(
     connection.icon.toLowerCase().startsWith('db:') ||
     connection.icon.toLowerCase().startsWith('extension:')
   ) {
-    return `${apiUri}/connectors/${connection.connectorId}/icon?${
-      connection.icon
-    }`;
+    if (connection.connectorId) {
+      // on Connections, Integrations screen, when there is an existing Connection
+      return `${apiUri}/connectors/${connection.connectorId}/icon?${connection.icon}`;
+    } else {
+      // on Create Connection screen
+      return `${apiUri}/connectors/${connection.id}/icon?${connection.icon}`;
+    }
   }
   if (connection.icon.toLowerCase().startsWith('assets:')) {
     const fileName = connection.icon.replace('assets:', '');
@@ -63,9 +67,15 @@ function getExtensionIcon(apiUri: string, extension: Extension) {
     (extension.icon.toLowerCase().startsWith('db:') ||
       extension.icon.toLowerCase().startsWith('extension:'))
   ) {
-    // unfortunately we have to reverse engineer the connector ID
-    const connectorId = 'ext-' + extension.extensionId!.replace(/\.|:/g, '-');
-    return `${apiUri}/connectors/${connectorId}/icon?${extension.icon}`;
+    if (extension.extensionType === 'Connectors') {
+      // unfortunately we have to reverse engineer the connector ID
+      const connectorId = 'ext-' + extension.extensionId!.replace(/\.|:/g, '-');
+      return `${apiUri}/connectors/${connectorId}/icon?${extension.icon}`;
+    } else if (extension.extensionType === 'Steps') {
+      // retrieve the icon from a specific extension endpoint when the extesion is of type 'Steps'
+      return `${apiUri}/extensions/${extension.id}/stepIcon`;
+    }
+
   }
   return extension.icon || UNKNOWN_ICON;
 }
