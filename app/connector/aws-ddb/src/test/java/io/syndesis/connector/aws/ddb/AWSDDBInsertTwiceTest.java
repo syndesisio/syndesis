@@ -16,11 +16,10 @@
 package io.syndesis.connector.aws.ddb;
 
 import org.apache.camel.ProducerTemplate;
-import org.json.JSONException;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @Ignore("Make sure the AWSDDBConfiguration has the proper credentials before running this test")
 public class AWSDDBInsertTwiceTest extends AWSDDBGenericOperation {
@@ -47,7 +46,7 @@ public class AWSDDBInsertTwiceTest extends AWSDDBGenericOperation {
      * To run this test you need to change the values of the parameters for real values of an
      * actual account
      */
-    public void runIt() throws JSONException {
+    public void runIt() {
 
         assertNotNull(context());
 
@@ -57,17 +56,14 @@ public class AWSDDBInsertTwiceTest extends AWSDDBGenericOperation {
         String result = template.requestBody("direct:start",
             "{\"#attribute\":\"to overwrite\"}", String.class);
 
-        JSONAssert.assertEquals("{\"clave\":\"" + AWSDDBConfiguration.RANDOM_ID
-                                    + "\", \"attr\":\"to overwrite\"}",
-            result,
-            JSONCompareMode.STRICT);
+        assertThatJson(result).isEqualTo("{\"clave\":\"" + AWSDDBConfiguration.RANDOM_ID
+                                    + "\", \"attr\":\"to overwrite\"}");
 
         result = template.requestBody("direct:start",
             "{\"#attribute\":\"final value\"}", String.class);
 
-        JSONAssert.assertEquals("{\"clave\":\"" + AWSDDBConfiguration.RANDOM_ID
-                                    + "\", \"attr\":\"final value\"}", result,
-            JSONCompareMode.STRICT);
+        assertThatJson(result).isEqualTo("{\"clave\":\"" + AWSDDBConfiguration.RANDOM_ID
+                                    + "\", \"attr\":\"final value\"}");
 
     }
 

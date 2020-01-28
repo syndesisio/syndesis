@@ -23,11 +23,7 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.runtime.BaseITCase;
 
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONCompare;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-import org.skyscreamer.jsonassert.JSONCompareResult;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,9 +38,11 @@ import static io.syndesis.server.runtime.integration.MultipartUtil.specification
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+
 public class IntegrationSpecificationITCase extends BaseITCase {
     @Test
-    public void shouldServeOpenApiSpecificationInJsonFormat() throws IOException, JSONException {
+    public void shouldServeOpenApiSpecificationInJsonFormat() throws IOException {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.json");
 
         final ResponseEntity<Integration> integrationResponse = post("/api/v1/apis/generator", data, Integration.class, tokenRule.validToken(), HttpStatus.OK,
@@ -64,15 +62,11 @@ public class IntegrationSpecificationITCase extends BaseITCase {
         final String givenJson = getResourceAsText("io/syndesis/server/runtime/test-swagger.json");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
 
-        final JSONCompareResult compareResult = JSONCompare.compareJSON(givenJson, receivedJson, JSONCompareMode.NON_EXTENSIBLE);
-        assertThat(compareResult.getFieldMissing()).isEmpty();
-        assertThat(compareResult.getFieldFailures()).isEmpty();
-        assertThat(compareResult.getFieldUnexpected()).as("Backend is allowed to add missing operationId fields, found other differences").hasSize(3)
-            .allSatisfy(failure -> "operationId".equals(failure.getActual()));
+        assertThatJson(receivedJson).whenIgnoringPaths("$..operationId").isEqualTo(givenJson);
     }
 
     @Test
-    public void shouldServeOpenApiSpecificationInYamlFormat() throws IOException, JSONException {
+    public void shouldServeOpenApiSpecificationInYamlFormat() throws IOException {
         final MultiValueMap<Object, Object> data = specification("/io/syndesis/server/runtime/test-swagger.yaml");
 
         final ResponseEntity<Integration> integrationResponse = post("/api/v1/apis/generator", data, Integration.class, tokenRule.validToken(), HttpStatus.OK,
@@ -94,10 +88,6 @@ public class IntegrationSpecificationITCase extends BaseITCase {
         final Object givenYamlObject = new Yaml(new SafeConstructor()).load(givenYaml);
         final String givenJson = Json.mapper().writer().writeValueAsString(givenYamlObject);
 
-        final JSONCompareResult compareResult = JSONCompare.compareJSON(givenJson, receivedJson, JSONCompareMode.NON_EXTENSIBLE);
-        assertThat(compareResult.getFieldMissing()).isEmpty();
-        assertThat(compareResult.getFieldFailures()).isEmpty();
-        assertThat(compareResult.getFieldUnexpected()).as("Backend is allowed to add missing operationId fields, found other differences").hasSize(5)
-            .allSatisfy(failure -> "operationId".equals(failure.getActual()));
+        assertThatJson(receivedJson).whenIgnoringPaths("$..operationId").isEqualTo(givenJson);
     }
 }

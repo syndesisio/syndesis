@@ -34,11 +34,8 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.runtime.BaseITCase;
 
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -56,6 +53,8 @@ import static io.syndesis.server.runtime.integration.MultipartUtil.MULTIPART;
 import static io.syndesis.server.runtime.integration.MultipartUtil.specification;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class ApiIntegrationUpdateITCase extends BaseITCase {
 
@@ -84,7 +83,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldUpdateApiIntegration() throws IOException, JSONException {
+    public void shouldUpdateApiIntegration() throws IOException {
         final String integrationId = existing.getId().get();
         put("/api/v1/integrations/" + integrationId + "/specification", specification("/io/syndesis/server/runtime/updated-test-swagger.json"), Void.class,
             tokenRule.validToken(), HttpStatus.NO_CONTENT, MULTIPART);
@@ -117,11 +116,11 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
 
         final String givenJson = getResourceAsText("io/syndesis/server/runtime/updated-test-swagger.json");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
-        JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
+        assertThatJson(receivedJson).whenIgnoringPaths("$..operationId").isEqualTo(givenJson);
     }
 
     @Test
-    public void shouldUpdateApiIntegrationViaApiGenerator() throws IOException, JSONException {
+    public void shouldUpdateApiIntegrationViaApiGenerator() throws IOException {
         final MultiValueMap<Object, Object> update = specification("/io/syndesis/server/runtime/updated-test-swagger.json");
         update.add("integration", integration(existing));
 
@@ -158,7 +157,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         final OpenApi openApi = resourceManager.loadOpenApiDefinition(openApiResource.getId().get()).get();
 
         final String givenJson = getResourceAsText("io/syndesis/server/runtime/updated-test-swagger.json");
-        JSONAssert.assertEquals(givenJson, new String(openApi.getDocument(), StandardCharsets.UTF_8), JSONCompareMode.LENIENT);
+        assertThatJson(new String(openApi.getDocument(), StandardCharsets.UTF_8)).whenIgnoringPaths("$..operationId").isEqualTo(givenJson);
     }
 
     static HttpEntity<Resource> integration(final Integration integration) throws JsonProcessingException {

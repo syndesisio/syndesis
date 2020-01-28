@@ -30,11 +30,8 @@ import io.syndesis.server.api.generator.openapi.OpenApiConnectorGenerator;
 import io.syndesis.server.runtime.BaseITCase;
 import okio.Okio;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
@@ -46,6 +43,8 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @ContextConfiguration
 public class CustomSwaggerConnectorITCase extends BaseITCase {
@@ -87,7 +86,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
     }
 
     @Test
-    public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException, JSONException {
+    public void shouldOfferCustomConnectorInfoForUploadedSwagger() throws IOException {
         final ConnectorSettings connectorSettings = new ConnectorSettings.Builder().connectorTemplateId(TEMPLATE_ID).build();
 
         final ResponseEntity<APISummary> response = post("/api/v1/connectors/custom/info",
@@ -107,9 +106,7 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
         assertThat(got).isEqualToIgnoringGivenFields(expected, "icon", "configuredProperties");
         assertThat(got.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(got.getConfiguredProperties().keySet()).containsOnly("specification");
-        JSONAssert.assertEquals(got.getConfiguredProperties().get("specification"),
-            IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8),
-            JSONCompareMode.LENIENT);
+        assertThatJson(got.getConfiguredProperties().get("specification")).isEqualTo(IOUtils.toString(getClass().getResourceAsStream("/io/syndesis/server/runtime/test-swagger.json"), StandardCharsets.UTF_8));
     }
 
     private static MultiValueMap<String, Object> multipartBodyForInfo(final ConnectorSettings connectorSettings, final InputStream is)

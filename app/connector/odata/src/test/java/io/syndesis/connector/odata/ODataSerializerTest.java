@@ -40,8 +40,6 @@ import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
@@ -56,6 +54,9 @@ import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
 import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.connector.odata.customizer.json.ClientCollectionValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
@@ -104,7 +105,7 @@ public class ODataSerializerTest extends AbstractODataTest {
     private void checkEntity(ClientEntity entity, String testDataFile) throws Exception {
         String json = OBJECT_MAPPER.writeValueAsString(entity);
         String expected = testData(testDataFile);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
     }
 
     @Test

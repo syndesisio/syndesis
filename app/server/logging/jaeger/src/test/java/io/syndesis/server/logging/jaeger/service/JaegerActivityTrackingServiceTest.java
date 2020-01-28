@@ -26,10 +26,11 @@ import javax.ws.rs.WebApplicationException;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.endpoint.v1.handler.activity.Activity;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
 
 import static java.util.Objects.requireNonNull;
 import static org.assertj.core.api.Assertions.assertThat;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 /*
 
@@ -68,7 +69,7 @@ public class JaegerActivityTrackingServiceTest {
         // print the activitiesJson to replace the content of expected-activities.json
         // System.out.println(activitiesJson);
         String expectedActivitiesJson = resource("expected-activities.json").trim();
-        JSONAssert.assertEquals(expectedActivitiesJson, activitiesJson, true);
+        assertThatJson(activitiesJson).isEqualTo(expectedActivitiesJson);
     }
 
 

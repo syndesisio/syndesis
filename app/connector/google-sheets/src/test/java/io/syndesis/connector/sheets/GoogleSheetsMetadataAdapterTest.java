@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
+
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -32,14 +33,13 @@ import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static org.junit.Assert.assertTrue;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsMetadataAdapterTest {
@@ -78,7 +78,7 @@ public class GoogleSheetsMetadataAdapterTest {
     }
 
     @Test
-    public void adaptForMetadataTest() throws IOException, JSONException {
+    public void adaptForMetadataTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         GoogleSheetsMetaDataExtension ext = new GoogleSheetsMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -104,6 +104,6 @@ public class GoogleSheetsMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource(expectedJson), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 }

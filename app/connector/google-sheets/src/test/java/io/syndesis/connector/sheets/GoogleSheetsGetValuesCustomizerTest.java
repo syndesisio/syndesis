@@ -32,11 +32,11 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
@@ -113,7 +113,7 @@ public class GoogleSheetsGetValuesCustomizerTest extends AbstractGoogleSheetsCus
         Assert.assertEquals(expectedValueModel.size(), model.size());
         Iterator<String> modelIterator = model.iterator();
         for (String expected : expectedValueModel) {
-            JSONAssert.assertEquals(String.format(expected, getSpreadsheetId()), modelIterator.next(), JSONCompareMode.STRICT);
+            assertThatJson(modelIterator.next()).isEqualTo(String.format(expected, getSpreadsheetId()));
         }
     }
 }

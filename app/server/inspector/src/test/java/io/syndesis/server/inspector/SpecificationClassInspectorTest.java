@@ -22,18 +22,16 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.inspector.DataMapperBaseInspector.Context;
 
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class SpecificationClassInspectorTest {
 
     @Test
-    public void shouldFindNestedClassesWithinFullJson() throws IOException, JSONException {
+    public void shouldFindNestedClassesWithinFullJson() throws IOException {
         final SpecificationClassInspector inspector = new SpecificationClassInspector();
 
         final String specification = read("/twitter4j.Status.full.json");
@@ -42,7 +40,7 @@ public class SpecificationClassInspectorTest {
 
         final String json = inspector.fetchJsonFor("twitter4j.GeoLocation", context);
 
-        assertEquals(json, read("/twitter4j.GeoLocation.json"), JSONCompareMode.STRICT);
+        assertThatJson(json).isEqualTo(read("/twitter4j.GeoLocation.json"));
     }
 
     private static String read(final String path) throws IOException {

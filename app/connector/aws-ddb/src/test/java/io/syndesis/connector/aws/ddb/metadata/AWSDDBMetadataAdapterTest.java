@@ -31,15 +31,14 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class AWSDDBMetadataAdapterTest {
 
     @Test
-    public void adaptTest() throws JsonProcessingException, JSONException {
+    public void adaptTest() throws JsonProcessingException {
         CamelContext camelContext = new DefaultCamelContext();
         AWSDDBConnectorMetaDataExtension ext = new AWSDDBConnectorMetaDataExtension(camelContext);
         Map<String, Object> parameters = new HashMap<>();
@@ -104,12 +103,12 @@ public class AWSDDBMetadataAdapterTest {
             "  }\n" +
             "}";
 
-        JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
 
     @Test
-    public void adaptRemovalTest() throws JsonProcessingException, JSONException {
+    public void adaptRemovalTest() throws JsonProcessingException {
         CamelContext camelContext = new DefaultCamelContext();
         AWSDDBConnectorMetaDataExtension ext = new AWSDDBConnectorMetaDataExtension(camelContext);
         Map<String, Object> parameters = new HashMap<>();
@@ -169,7 +168,7 @@ public class AWSDDBMetadataAdapterTest {
             "  }\n" +
             "}\n";
 
-        JSONAssert.assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
 }
