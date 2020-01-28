@@ -161,9 +161,9 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   React.useEffect(() => {
     const publishedDetails: VirtualizationPublishingDetails = getPublishingDetails(
       appContext.config.consoleUrl,
-      props.routeState.virtualization
-        ? props.routeState.virtualization
-        : props.virtualization
+      props.virtualization.name
+        ? props.virtualization
+        : props.routeState.virtualization
     ) as VirtualizationPublishingDetails;
 
     setCurrPublishedState(publishedDetails);
@@ -294,10 +294,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
           publishingStepText={currPublishedState.stepText}
           virtualizationDescription={getDescription()}
           virtualizationName={props.routeParams.virtualizationId}
-          isWorking={
-            (!props.virtualization && !props.routeState.virtualization) ||
-            !currPublishedState
-          }
+          isWorking={!props.virtualization || !currPublishedState}
           onChangeDescription={doSetDescription}
         />
       </PageSection>
