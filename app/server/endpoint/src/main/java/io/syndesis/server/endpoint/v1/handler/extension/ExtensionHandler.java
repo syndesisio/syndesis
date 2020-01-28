@@ -39,11 +39,9 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import org.jboss.resteasy.plugins.providers.multipart.InputPart;
-import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.stereotype.Component;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -65,6 +63,7 @@ import io.syndesis.extension.converter.BinaryExtensionAnalyzer;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.api.generator.util.IconGenerator;
 import io.syndesis.server.dao.file.FileDAO;
+import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.util.FilterOptionsParser;
 import io.syndesis.server.endpoint.util.PaginationFilter;
@@ -77,6 +76,12 @@ import io.syndesis.server.endpoint.v1.operations.Getter;
 import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+import okio.BufferedSink;
+import okio.Okio;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.stereotype.Component;
 
 @Path("/extensions")
 @Api(value = "extensions")
@@ -85,12 +90,10 @@ import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
 
     private final FileDAO fileStore;
-
     private final ExtensionActivator extensionActivator;
-
     private final Validator validator;
-
     private final IntegrationResourceManager integrationResourceManager;
+    private final FileDataManager extensionDataManager;
 
     public ExtensionHandler(final DataManager dataMgr,
                             final FileDAO fileStore,
@@ -103,6 +106,7 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         this.extensionActivator = extensionActivator;
         this.validator = validator;
         this.integrationResourceManager = integrationResourceManager;
+        this.extensionDataManager = new FileDataManager(getDataManager(), fileStore);
     }
 
     @Override
@@ -257,6 +261,28 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
     }
+
+    @GET
+    @Path("/{id}/stepIcon")
+    public Response getStepIcon(@NotNull @PathParam("id") final String id) {
+        Extension extension = getDataManager().fetch(Extension.class, id);
+        String extensionIconVal = extension.getIcon();
+        if (extensionIconVal.startsWith("extension:")) {
+            String iconFile = extensionIconVal.substring(10);
+            Optional<InputStream> extensionIcon = extensionDataManager.getExtensionIcon(extension.getExtensionId(), iconFile);
+
+            if (extensionIcon.isPresent()) {
+                final StreamingOutput streamingOutput = (out) -> {
+                    try (BufferedSink sink = Okio.buffer(Okio.sink(out)); InputStream iconStream = extensionIcon.get()) {
+                        sink.writeAll(Okio.source(iconStream));
+                    }
+                };
+                return Response.ok(streamingOutput, extensionDataManager.getExtensionIconMediaType(iconFile)).build();
+            }
+        }
+        return Response.status(Response.Status.NOT_FOUND).build();
+    }
+
 
     // ===============================================================
 
