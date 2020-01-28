@@ -110,6 +110,10 @@ stories
             'Filter by Name...'
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
+          i18nRefresh={text('i18nRefresh', 'Refresh')}
+          i18nLoading={text('i18nLoading', 'Loading')}
+          refreshSchemaConnections={action('refreshSchemaConnections')}
+          loading={false}
           children={[]}
         />
       </Router>
@@ -161,6 +165,10 @@ stories
             'i18nResultsCount',
             filteredAndSorted.length + ' Results'
           )}
+          i18nRefresh={text('i18nRefresh', 'Refresh')}
+          i18nLoading={text('i18nLoading', 'Loading')}
+          refreshSchemaConnections={action('refreshSchemaConnections')}
+          loading={false}
           children={tableItems}
         />
       </Router>
