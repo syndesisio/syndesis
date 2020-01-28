@@ -11,6 +11,8 @@ import { IFormControlProps } from '../models';
 import { FormLabelHintComponent } from './FormLabelHintComponent';
 import { getHelperText, getValidationState, toValidHtmlId } from './helpers';
 
+import './FormDurationComponent.css';
+
 interface IDuration {
   label: string;
   value: number;
@@ -112,6 +114,7 @@ export const FormDurationComponent: React.FunctionComponent<
         </>
       }
       {...props.property.formGroupAttributes}
+      className={'form-duration-component__form-group'}
       fieldId={id}
       isRequired={props.property.required}
       isValid={getValidationState(props)}
@@ -141,6 +144,7 @@ export const FormDurationComponent: React.FunctionComponent<
             </DropdownToggle>
           }
           isOpen={isOpen}
+          className={'dropdown'}
           disabled={props.form.isSubmitting || props.property.disabled}
         >
           {durations.map(d => (
