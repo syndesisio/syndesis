@@ -67,7 +67,7 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
       ''
     ]
     setColumns(updatedColumn);
-  },[rowUpdate]);
+  },[rowUpdate,props.i18nSelectAll]);
   
   const onSelect = (event: any, isSelected: any, rowId: any) => {
     let rows;

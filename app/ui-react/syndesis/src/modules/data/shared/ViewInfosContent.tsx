@@ -1,4 +1,7 @@
-import { useVirtualizationConnectionSchema } from '@syndesis/api';
+import {
+  useVirtualizationConnectionSchema,
+  useVirtualizationHelpers,
+} from '@syndesis/api';
 import { SchemaNode, ViewInfo } from '@syndesis/models';
 import {
   IActiveFilter,
@@ -10,49 +13,12 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import { generateAllViewInfos } from './VirtualizationUtils';
-
-function getFilteredAndSortedViewInfos(
-  schemaNodes: SchemaNode[],
-  activeFilters: IActiveFilter[],
-  currentSortType: ISortType,
-  isSortAscending: boolean,
-  selectedViewNames: string[],
-  existingViewNames: string[]
-) {
-  const viewInfos: any[] = [];
-  if (schemaNodes && schemaNodes.length > 0) {
-    generateAllViewInfos(
-      viewInfos,
-      schemaNodes,
-      [],
-      selectedViewNames,
-      existingViewNames
-    );
-  }
-
-  let filteredAndSorted = viewInfos.slice();
-  activeFilters.forEach((filter: IActiveFilter) => {
-    const valueToLower = filter.value.toLowerCase();
-    filteredAndSorted = filteredAndSorted.filter((viewInfo: ViewInfo) =>
-      viewInfo.viewName.toLowerCase().includes(valueToLower)
-    );
-  });
-
-  filteredAndSorted = filteredAndSorted.sort((thisViewInfo, thatViewInfo) => {
-    if (isSortAscending) {
-      return thisViewInfo.viewName.localeCompare(thatViewInfo.viewName);
-    }
-
-    // sort descending
-    return thatViewInfo.viewName.localeCompare(thisViewInfo.viewName);
-  });
-
-  return filteredAndSorted;
-}
 
 const getSelectedViewName = (selectedViews: ViewInfo[]): string[] => {
   return selectedViews.map(view => view.viewName);
@@ -65,6 +31,7 @@ export interface IViewInfosContentProps {
   onViewDeselected: (viewName: string) => void;
   selectedViews: ViewInfo[];
   handleSelectAll: (isSelected: boolean, AllViewInfo: any[]) => void;
+  clearSelectedViews: () => void;
 }
 
 const filterByName = {
@@ -84,10 +51,47 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export const ViewInfosContent: React.FunctionComponent<
-  IViewInfosContentProps
-> = props => {
+export const ViewInfosContent: React.FunctionComponent<IViewInfosContentProps> = (props) => {
+
+  const getFilteredAndSortedViewInfos = (
+    activeFilters: IActiveFilter[],
+    isSortAscending: boolean,
+    selectedViewsNames: string[],
+    existingViewNames: string[]
+  ) => {
+    const viewInfos: any[] = [];
+    if (schemaNodes && schemaNodes.length > 0) {
+      generateAllViewInfos(
+        viewInfos,
+        schemaNodes,
+        [],
+        selectedViewsNames,
+        existingViewNames
+      );
+    }
+
+    let filteredAndSorted = viewInfos.slice();
+    activeFilters.forEach((filter: IActiveFilter) => {
+      const valueToLower = filter.value.toLowerCase();
+      filteredAndSorted = filteredAndSorted.filter((viewInfo: ViewInfo) =>
+        viewInfo.viewName.toLowerCase().includes(valueToLower)
+      );
+    });
+    filteredAndSorted = filteredAndSorted.sort((thisViewInfo, thatViewInfo) => {
+      if (isSortAscending) {
+        return thisViewInfo.viewName.localeCompare(thatViewInfo.viewName);
+      }
+      // sort descending
+      return thatViewInfo.viewName.localeCompare(thisViewInfo.viewName);
+    });
+    return filteredAndSorted;
+  };
+
+  const [loading,setLoading] = React.useState<boolean>(false);
+  const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
+
+  const { refreshSchemaConnections } = useVirtualizationHelpers();
 
   let displayedViews: ViewInfo[] = [];
   const selectedViewNames: string[] = getSelectedViewName(props.selectedViews);
@@ -110,6 +114,37 @@ export const ViewInfosContent: React.FunctionComponent<
     error,
   } = useVirtualizationConnectionSchema(props.connectionName);
 
+  const [schemaNodes, setSchemaNodes] = React.useState<SchemaNode[]>(schema);
+
+  const toggleRefreshState = async () => {
+    setLoading(true);
+    try {
+      const res = await refreshSchemaConnections(props.connectionName);
+      setSchemaNodes(res);
+      props.clearSelectedViews();
+      pushNotification(
+        t('refreshConnectionsSuccess'),
+        'success'
+      );
+      setLoading(false);
+    } catch (err) {
+      const details = err.message ? err.message : '';
+      pushNotification(
+        t('refreshConnectionsFailed', {
+          details
+        }),
+        'error'
+      );
+      setLoading(false);
+    }
+  };
+
+  React.useEffect(() => {
+    if (hasSchema === true) {
+      setSchemaNodes(schema);
+    }
+  }, [hasSchema, schema]);
+
   return (
     <WithListViewToolbarHelpers
       defaultFilterType={filterByName}
@@ -117,9 +152,7 @@ export const ViewInfosContent: React.FunctionComponent<
     >
       {helpers => {
         const filteredAndSorted = getFilteredAndSortedViewInfos(
-          schema,
           helpers.activeFilters,
-          helpers.currentSortType,
           helpers.isSortAscending,
           selectedViewNames,
           props.existingViewNames
@@ -136,9 +169,13 @@ export const ViewInfosContent: React.FunctionComponent<
             i18nEmptyStateTitle={t('emptyStateTitle')}
             i18nName={t('shared:Name')}
             i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
+            i18nRefresh={t('shared:Refresh')}
+            i18nLoading={t('shared:Loading')}
             i18nResultsCount={t('shared:resultsCount', {
               count: filteredAndSorted.length,
             })}
+            refreshSchemaConnections={toggleRefreshState}
+            loading={loading}
           >
             <WithLoader
               error={error !== false}
@@ -146,7 +183,7 @@ export const ViewInfosContent: React.FunctionComponent<
               loaderChildren={<ViewInfoListSkeleton width={800} />}
               errorChildren={<ApiError error={error as Error} />}
             >
-              {() =>
+              {() => (
                 <ViewInfoListItems
                   filteredAndSorted={filteredAndSorted}
                   onSelectionChanged={handleViewSelectionChange}
@@ -158,7 +195,7 @@ export const ViewInfosContent: React.FunctionComponent<
                     y: filteredAndSorted ? filteredAndSorted.length : 0,
                   })}
                 />
-              }
+              )}
             </WithLoader>
           </ViewInfoList>
         );

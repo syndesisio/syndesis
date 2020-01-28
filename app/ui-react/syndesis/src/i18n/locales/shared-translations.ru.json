@@ -52,6 +52,8 @@
       "Pending": "Ожидание",
       "Publish": "Опубликовать",
       "Published": "Запущено",
+      "Refresh": "обновление",
+      "Loading": "загрузка...",
       "Remove": "Удалить",
       "requiredFieldMessage": "* Обязательное поле",
       "resultsCount": "{{count}} Результаты",

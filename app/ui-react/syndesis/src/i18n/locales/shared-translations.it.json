@@ -49,6 +49,8 @@
       "Pending": "Pendente",
       "Publish": "Pubblicare",
       "Published": "Funzionante",
+      "Refresh": "Ricaricare",
+      "Loading": "Caricamento in corso...",
       "Remove": "Rimuovere",
       "requiredFieldMessage": "* Campo obbligatorio",
       "resultsCount": "{{count}} Risultati",

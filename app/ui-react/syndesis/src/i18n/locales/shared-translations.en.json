@@ -52,6 +52,8 @@
       "Pending": "Pending",
       "Publish": "Publish",
       "Published": "Running",
+      "Refresh": "Refresh",
+      "Loading": "Loading...",
       "Remove": "Remove",
       "requiredFieldMessage": "* Required field",
       "resultsCount": "{{count}} Results",

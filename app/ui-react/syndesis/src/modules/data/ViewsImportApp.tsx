@@ -116,6 +116,7 @@ export const ViewsImportApp: React.FunctionComponent = () => {
               handleAddView={handleAddView}
               handleRemoveView={handleRemoveView}
               handleSelectAll={handleSelectAll}
+              clearSelectedViews={clearViewSelection}
             />
           )}
         />

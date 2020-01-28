@@ -3,6 +3,7 @@ import {
   ImportSources,
   ImportSourcesStatus,
   QueryResults,
+  SchemaNode,
   TeiidStatus,
   ViewDefinition,
   ViewSourceInfo,
@@ -372,6 +373,28 @@ export const useVirtualizationHelpers = () => {
   };
 
   /**
+   * Fetch tables from the specified connection source
+   * @param teiidSourceName the name of the virtualization source
+   */
+  const refreshSchemaConnections = async (
+    teiidSourceName?: string
+  ): Promise<SchemaNode[]> => {
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${
+        apiContext.dvApiUri
+      }/metadata/${teiidSourceName}/schema`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return (await response.json()) as SchemaNode[];
+  };
+
+  /**
    * Validate the supplied Virtualization name
    * @param virtName the virutalization name
    */
@@ -562,6 +585,7 @@ export const useVirtualizationHelpers = () => {
     importVirtualization,
     publishVirtualization,
     queryVirtualization,
+    refreshSchemaConnections,
     revertVirtualization,
     saveViewDefinition,
     startVirtualization,
