@@ -7,11 +7,11 @@
 {prodname} can create connectors for REST APIs
 that support Hypertext Transfer Protocol (HTTP)/1.0 or HTTP/1.1.
 To do this, {prodname} requires a valid
-OpenAPI 2.0 document that describes a REST API that you want to connect to.
+OpenAPI 3 (or 2) document that describes a REST API that you want to connect to.
 
 Your {prodname} environment provides the To Do app, which has a REST API
 for accessing a database that contains tasks. Your environment also provides
-an OpenAPI (Swagger) document for this API.
+an OpenAPI document for this API.
 
 .Procedure
 
@@ -20,19 +20,19 @@ OpenAPI document:
 .. In the {prodname} navigation panel, click *Home*.
 .. Copy the URL into a text editor.
 .. At the beginning of the URL, insert `*todo-*`.
-.. At the end of the URL, add `*swagger.json*`.
+.. At the end of the URL, add `*openapi.json*`.
 .. Use the `http` scheme instead of `https`.
 
 +
 The result is something like this:
-`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/swagger.json`
+`\http://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com/openapi.json`
 
 +
 [NOTE]
-Specification of `http` rather than `https` avoids a runtime error 
-if TLS certificates are not valid.  In production 
-environments, ensure that valid certificates are in place, 
-and always specify secure URLs (`https`) to obtain an OpenAPI document. 
+Specification of `http` rather than `https` avoids a runtime error
+if TLS certificates are not valid.  In production
+environments, ensure that valid certificates are in place,
+and always specify secure URLs (`https`) to obtain an OpenAPI document.
 
 
 . In the {prodname} navigation panel, click *Customizations* > *API Client Connectors*.
@@ -43,15 +43,15 @@ click *Next*.
 . On the *Review Actions* page, click *Next*. If you see
 a warning, you can ignore it.
 . Click *Next* again to accept *HTTP Basic Authentication*.
-. On the *Review/Edit Connector Details* page: 
+. On the *Review/Edit Connector Details* page:
 .. If you want to, you can
 change the values in the *Name* and *Description* fields.
-.. In the *Host* field, enter the name of the service host, 
-which is something like this: 
+.. In the *Host* field, enter the name of the service host,
+which is something like this:
 `\https://todo-app-proj217402.6a63.fuse-ignite.openshiftapps.com`.
-.. In the *Base URL* field, enter the part of the URL that follows the 
+.. In the *Base URL* field, enter the part of the URL that follows the
 host name in service requests: `/api`.
- 
+
 . Click *Save*.
 +
 {prodname} displays the *API Client Connectors*. There is a new entry for
