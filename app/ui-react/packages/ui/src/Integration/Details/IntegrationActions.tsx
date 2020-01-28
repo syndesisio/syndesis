@@ -13,9 +13,12 @@ export interface IIntegrationAction {
 }
 
 export interface IIntegrationActionsProps {
+  i18nEditBtn: string;
+  i18nViewBtn: string;
   integrationId: string;
   actions: IIntegrationAction[];
   detailsHref?: H.LocationDescriptor;
+  editHref?: H.LocationDescriptor;
 }
 
 export class IntegrationActions extends React.Component<
@@ -25,15 +28,23 @@ export class IntegrationActions extends React.Component<
     return (
       <>
         <ButtonLink
+          data-testid={'integration-actions-edit-button'}
+          className={'edit-integration-btn'}
+          href={this.props.editHref}
+          as={'default'}
+        >
+          {this.props.i18nEditBtn}
+        </ButtonLink>
+        <ButtonLink
           data-testid={'integration-actions-view-button'}
-          className="view-integration-btn"
+          className={'view-integration-btn'}
           href={this.props.detailsHref}
           as={'default'}
         >
-          View
+          {this.props.i18nViewBtn}
         </ButtonLink>
         <DropdownKebab
-          className="integration-actions__dropdown-kebab"
+          className={'integration-actions__dropdown-kebab'}
           id={`integration-${this.props.integrationId}-action-menu`}
           pullRight={true}
         >
