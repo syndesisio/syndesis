@@ -54,12 +54,6 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     private static final String VALUE_CONTEXT = "context";
     private static final String VALUE_INTEGRATION = "integration";
 
-    private static final BinaryOperator<Long> SUM_LONGS = (aLong, aLong2) -> aLong == null
-        ? aLong2
-        : aLong2 == null ? aLong : aLong + aLong2;
-    private static final BinaryOperator<Instant> MAX_DATE = (date1, date2) -> date1 == null
-        ? date2
-        : date2 == null ? date1 : date1.isAfter(date2) ? date1 : date2;
     public static final String OPERATOR_TOPK = "topk";
 
     private final String serviceName;
@@ -112,22 +106,22 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
     public IntegrationMetricsSummary getIntegrationMetricsSummary(String integrationId) {
 
         // aggregate values across versions
-        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL, deploymentVersionLabel, Long.class, SUM_LONGS);
-        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId, METRIC_FAILED, deploymentVersionLabel, Long.class, SUM_LONGS);
+        final Map<String, Long> totalMessagesMap = getMetricValues(integrationId, METRIC_TOTAL, deploymentVersionLabel, Long.class, PrometheusMetricsProviderImpl::sum);
+        final Map<String, Long> failedMessagesMap = getMetricValues(integrationId, METRIC_FAILED, deploymentVersionLabel, Long.class, PrometheusMetricsProviderImpl::sum);
 
-        final Map<String, Instant> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
+        final Map<String, Instant> startTimeMap = getMetricValues(integrationId, METRIC_START_TIMESTAMP, deploymentVersionLabel, Instant.class, PrometheusMetricsProviderImpl::max);
 
         // compute last processed time from lastCompleted and lastFailure times
-        final Map<String, Instant> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
-        final Map<String, Instant> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Instant.class, MAX_DATE);
+        final Map<String, Instant> lastCompletedTimeMap = getMetricValues(integrationId, METRIC_COMPLETED_TIMESTAMP, deploymentVersionLabel, Instant.class, PrometheusMetricsProviderImpl::max);
+        final Map<String, Instant> lastFailedTimeMap = getMetricValues(integrationId, METRIC_FAILURE_TIMESTAMP, deploymentVersionLabel, Instant.class, PrometheusMetricsProviderImpl::max);
         final Map<String, Instant> lastProcessedTimeMap = Stream.concat(lastCompletedTimeMap.entrySet().stream(), lastFailedTimeMap.entrySet().stream())
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, MAX_DATE));
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, PrometheusMetricsProviderImpl::max));
 
         final Optional<Instant> startTime = getAggregateMetricValue(integrationId, METRIC_START_TIMESTAMP, Instant.class, "min");
 
         final Optional<Instant> lastCompletedTime = getAggregateMetricValue(integrationId, METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
         final Optional<Instant> lastFailureTime = getAggregateMetricValue(integrationId, METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
-        final Instant lastProcessedTime = MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
+        final Instant lastProcessedTime = max(lastCompletedTime.orElse(null), lastFailureTime.orElse(null));
 
         return createIntegrationMetricsSummary(totalMessagesMap, failedMessagesMap,
             startTimeMap, lastProcessedTimeMap, startTime, Optional.ofNullable(lastProcessedTime));
@@ -149,8 +143,8 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             final Optional<Instant> lastProcessed = Optional.ofNullable(lastProcessingTimeMap.get(version));
 
             // aggregate values while we are at it
-            totalMessages[0] = SUM_LONGS.apply(totalMessages[0], messages);
-            totalErrors[0] = SUM_LONGS.apply(totalErrors[0], errors);
+            totalMessages[0] = sum(totalMessages[0], messages);
+            totalErrors[0] = sum(totalErrors[0], errors);
 
             return new IntegrationDeploymentMetrics.Builder()
                 .version(version)
@@ -194,7 +188,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
         // compute last processed time
         final Optional<Instant> lastCompletedTime = getAggregateMetricValue(METRIC_COMPLETED_TIMESTAMP, Instant.class, "max");
         final Optional<Instant> lastFailureTime = getAggregateMetricValue(METRIC_FAILURE_TIMESTAMP, Instant.class, "max");
-        final Optional<Instant> lastProcessedTime = Optional.ofNullable(MAX_DATE.apply(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
+        final Optional<Instant> lastProcessedTime = Optional.ofNullable(max(lastCompletedTime.orElse(null), lastFailureTime.orElse(null)));
 
         // get top 5 integrations by total messages
         return new IntegrationMetricsSummary.Builder()
@@ -244,7 +238,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .build();
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
-        return QueryResult.getValueMap(response, integrationIdLabel, Long.class, SUM_LONGS);
+        return QueryResult.getValueMap(response, integrationIdLabel, Long.class, PrometheusMetricsProviderImpl::sum);
     }
 
     private HttpQuery createSummaryHttpQuery(String integrationId, String metric, String aggregationOperator) {
@@ -282,5 +276,36 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
             throw new IllegalArgumentException(
                 String.format("Error Type: %s, Error: %s", response.getErrorType(), response.getError()));
         }
+    }
+
+    private static long sum(final Long a, final Long b) {
+        if (a == null && b == null) {
+            return 0;
+        }
+
+        if (a == null) {
+            return b;
+        }
+
+        if (b == null) {
+            return a;
+        }
+
+        return a + b;
+    }
+
+    /**
+     * @return more recent of the two dates or null if both are null
+     */
+    private static Instant max(final Instant a, final Instant b) {
+        if (a == null) {
+            return b;
+        }
+
+        if (b == null) {
+            return a;
+        }
+
+        return a.compareTo(b) > 0 ? a : b;
     }
 }

@@ -109,9 +109,6 @@ public class IntegrationSupportHandler {
     private static final Logger LOG = LoggerFactory.getLogger(IntegrationSupportHandler.class);
     private static final String IMPORTED_SUFFIX = "-imported-";
 
-    private static final BiFunction<Extension, String, Extension> RENAME_EXTENSION = (e, n) -> new Extension.Builder().createFrom(e).name(n).build();
-    private static final BiFunction<Connection, String, Connection> RENAME_CONNECTION = (c, n) -> new Connection.Builder().createFrom(c).name(n).build();
-
     private final Migrator migrator;
     private final SqlJsonDB jsondb;
     private final IntegrationProjectGenerator projectGenerator;
@@ -403,7 +400,7 @@ public class IntegrationSupportHandler {
             public Class<Connection> getType() {
                 return Connection.class;
             }
-        }, RENAME_CONNECTION, renamedIds, result);
+        }, IntegrationSupportHandler::renameConnection, renamedIds, result);
 
         // remove hidden external secrets from imported connections
         final List<WithResourceId> connections = result.get("connections");
@@ -463,7 +460,7 @@ public class IntegrationSupportHandler {
 
     private void importExtensions(JsonDbDao<Extension> extensionDao, Map<String, String> replacedIds,
                                   Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
-        importModels(extensionDao, RENAME_EXTENSION, renamedIds, result, (e, i) -> {
+        importModels(extensionDao, IntegrationSupportHandler::renameExtension, renamedIds, result, (e, i) -> {
 
             boolean doImport = false;
 
@@ -558,17 +555,17 @@ public class IntegrationSupportHandler {
         builder.flows(integration.getFlows().stream()
             .map(flow -> flow.builder()
                 .connections(flow.getConnections().stream()
-                    .map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION))
+                    .map(c -> renameIfNeeded(c, renamedIds, IntegrationSupportHandler::renameConnection))
                     .collect(Collectors.toList()))
                 .steps(flow.getSteps().stream()
                     .map(s -> new Step.Builder().createFrom(s)
                             // step connections
-                            .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, RENAME_CONNECTION)))
+                            .connection(s.getConnection().map(c -> renameIfNeeded(c, renamedIds, IntegrationSupportHandler::renameConnection)))
                             // step extensions
                             .extension(s.getExtension().map(e -> {
                                 final String existingId = replacedIds.get(e.getId().get());
                                 return existingId != null ? dataManager.fetch(Extension.class, existingId) :
-                                        renameIfNeeded(e, renamedIds, RENAME_EXTENSION);
+                                        renameIfNeeded(e, renamedIds, IntegrationSupportHandler::renameExtension);
                             }))
                             .build())
                     .collect(Collectors.toList()))
@@ -674,4 +671,11 @@ public class IntegrationSupportHandler {
         os.closeEntry();
     }
 
+    private static Extension renameExtension(final Extension extension, final String newName) {
+        return new Extension.Builder().createFrom(extension).name(newName).build();
+    }
+
+    private static Connection renameConnection(final Connection connection, final String newName) {
+        return new Connection.Builder().createFrom(connection).name(newName).build();
+    }
 }

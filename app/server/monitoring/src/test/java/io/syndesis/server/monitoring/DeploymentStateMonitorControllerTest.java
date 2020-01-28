@@ -99,23 +99,21 @@ public class DeploymentStateMonitorControllerTest {
     public IntegrationDeploymentStateDetails expectedDetails;
 
     private DataManager dataManager;
-    private static final NamespacedOpenShiftClient client;
+
+    private final NamespacedOpenShiftClient client = Mockito.mock(NamespacedOpenShiftClient.class);
 
     private static final String TEST_NAMESPACE = "test-namespace";
 
-    static {
-        client = Mockito.mock(NamespacedOpenShiftClient.class);
+    @Before
+    @SuppressWarnings("unchecked")
+    public void before() throws Exception {
         try {
             Mockito.when(client.getOpenshiftUrl()).thenReturn(new URL("https://test-cluster"));
         } catch (MalformedURLException e) {
             fail(e.getMessage());
         }
         Mockito.when(client.getNamespace()).thenReturn(TEST_NAMESPACE);
-    }
 
-    @Before
-    @SuppressWarnings("unchecked")
-    public void before() throws Exception {
         CacheManager cacheManager = new LRUCacheManager(100);
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();

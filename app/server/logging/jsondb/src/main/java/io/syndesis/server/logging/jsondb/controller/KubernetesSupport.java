@@ -38,7 +38,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 /**
@@ -92,7 +91,7 @@ public class KubernetesSupport {
             Thread.currentThread().setName("Logs Controller [running], request: " + podLogUrl);
             Request request = new Request.Builder().url(new URL(podLogUrl)).get().tag("log-watcher").build();
             OkHttpClient clone = okHttpClient.newBuilder()
-                .readTimeout(readTimeout.toMillis(), TimeUnit.MILLISECONDS)
+                .readTimeout(readTimeout)
                 .build();
             clone.newCall(request).enqueue(new Callback() {
                 @Override

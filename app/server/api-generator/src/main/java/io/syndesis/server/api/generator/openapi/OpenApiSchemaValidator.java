@@ -16,16 +16,23 @@
 
 package io.syndesis.server.api.generator.openapi;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
 import com.github.fge.jsonschema.core.report.ProcessingMessage;
 import com.github.fge.jsonschema.core.report.ProcessingReport;
 import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+
 import io.syndesis.common.model.Violation;
+import io.syndesis.common.util.Resources;
+import io.syndesis.common.util.json.JsonUtils;
+
 import org.slf4j.LoggerFactory;
 
 import static java.util.Optional.ofNullable;
@@ -96,5 +103,17 @@ public interface OpenApiSchemaValidator {
         violations.add(new Violation.Builder().error(error.orElse("")).message(message.getMessage()).property(property.orElse("")).build());
 
         return true;
+    }
+
+    static JsonSchema loadSchema(final String path, final String uri) {
+        try {
+            final JsonNode oas30Schema = JsonUtils.reader().readTree(Resources.getResourceAsText(path));
+            final LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
+                .preloadSchema(oas30Schema)
+                .freeze();
+            return JsonSchemaFactory.newBuilder().setLoadingConfiguration(loadingConfiguration).freeze().getJsonSchema(uri);
+        } catch (final ProcessingException | IOException ex) {
+            throw new IllegalStateException("Unable to load the schema file embedded in the artifact", ex);
+        }
     }
 }
