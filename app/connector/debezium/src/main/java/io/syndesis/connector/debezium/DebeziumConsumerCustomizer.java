@@ -18,13 +18,15 @@ package io.syndesis.connector.debezium;
 import java.io.IOException;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+
 import org.apache.camel.Exchange;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
 
@@ -33,22 +35,22 @@ public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     @Override
-    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+    public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
         component.setBeforeConsumer(DebeziumConsumerCustomizer::convertToDebeziumFormat);
     }
 
-    private static void convertToDebeziumFormat(Exchange exchange) throws IOException {
-        String body = exchange.getMessage().getBody(String.class);
+    private static void convertToDebeziumFormat(final Exchange exchange) throws IOException {
+        final String body = exchange.getMessage().getBody(String.class);
         if (body == null) {
             // we have a tombstone
-            LOGGER.info("Tombstone found with kafka key {}", exchange.getMessage().getHeader("kafka.KEY"));
+            LOGGER.debug("Tombstone found with kafka key {}", exchange.getMessage().getHeader("kafka.KEY"));
             exchange.getMessage().setHeader("debezium.OPERATION", "TOMBSTONE");
             return;
         }
-        JsonNode root = MAPPER.readTree(body);
-        JsonNode before = root.get("before");
-        JsonNode after = root.get("after");
-        String operation = root.get("op").asText();
+        final JsonNode root = MAPPER.readTree(body);
+        final JsonNode before = root.get("before");
+        final JsonNode after = root.get("after");
+        final String operation = root.get("op").asText();
 
         if ("c".equals(operation)) {
             exchange.getMessage().setHeader("debezium.OPERATION", "CREATE");
@@ -61,7 +63,7 @@ public class DebeziumConsumerCustomizer implements ComponentProxyCustomizer {
             exchange.getMessage().setBody(after.toString());
             exchange.getMessage().setHeader("debezium.BEFORE", before.toString());
         } else {
-            LOGGER.error("Unknown operation {}, providing the after as fallback", operation);
+            LOGGER.warn("Unknown operation {}, providing the after as fallback", operation);
             exchange.getMessage().setBody(after.toString());
         }
     }
