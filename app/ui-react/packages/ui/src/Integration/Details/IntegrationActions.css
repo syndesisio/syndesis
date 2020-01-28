@@ -1,3 +1,4 @@
-.view-integration-btn + .integration-actions__dropdown-kebab {
+.view-integration-btn + .integration-actions__dropdown-kebab,
+.edit-integration-btn + .integration-actions__dropdown-kebab  {
   margin-left: 20px;
 }
