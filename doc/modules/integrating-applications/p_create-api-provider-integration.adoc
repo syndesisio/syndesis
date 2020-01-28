@@ -43,7 +43,7 @@ operations, upload the OpenAPI document.
 .. Click *Review/Edit* to open the API Designer editor.
 .. Review and edit as needed.
 +
-Optionally, if your document uses the OpenAPI 2 specification, you can click *Convert to OpenAPI 3* if you want the API Designer to convert your document to the OpenAPI 3 specification.
+Optionally, if your document uses the OpenAPI 2 specification, you can click *Convert to OpenAPI 3* if you want the API Designer to convert your document to conform with the OpenAPI 3 specification.
 
 .. In the upper right, click *Save* or *Cancel* to close the editor.
 .. Click *Next*.
