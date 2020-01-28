@@ -101,7 +101,7 @@
     "@types/node": "8.10.40",
     "@types/marked": "0.6.1",
     "cp-cli": "2.0.0",
-    "ng-packagr": "4.7.1",
+    "ng-packagr": "5.7.1",
     "ts-node": "8.6.2",
     "tsickle": "0.34.3",
     "tslib": "1.10.0",
