@@ -17,15 +17,14 @@ package io.syndesis.connector.debezium;
 
 import java.util.Arrays;
 
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class DebeziumMetaDataRetrievalTest {
 
     @Test
-    public void shouldBuildJsonSchema() throws JSONException {
+    public void shouldBuildJsonSchema() {
         final String generated = DebeziumMetaDataRetrieval.buildJsonSchema("table",
             Arrays.asList("\"prop1\":{\"type\":\"string\"}", "\"prop2\":{\"type\":\"string\"}", "\"prop3\":{\"type\":\"string\"}"));
 
@@ -46,11 +45,11 @@ public class DebeziumMetaDataRetrievalTest {
             "  }\n" +
             "}";
 
-        JSONAssert.assertEquals(expected, generated, JSONCompareMode.STRICT);
+        assertThatJson(generated).isEqualTo(expected);
     }
 
     @Test
-    public void shouldConvertDDLtoJsonSchema() throws JSONException {
+    public void shouldConvertDDLtoJsonSchema() {
         final String ddl = "CREATE TABLE `roles` (\n" +
             "`id` varchar(32) NOT NULL,\n" +
             "`name` varchar(100) NOT NULL,\n" +
@@ -90,6 +89,6 @@ public class DebeziumMetaDataRetrievalTest {
             "  }\n" +
             "}";
 
-        JSONAssert.assertEquals(expected, generated, JSONCompareMode.STRICT);
+        assertThatJson(generated).isEqualTo(expected);
     }
 }
