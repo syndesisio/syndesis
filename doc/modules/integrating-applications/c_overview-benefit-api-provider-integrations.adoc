@@ -5,7 +5,7 @@
 = Benefit, overview, and workflow for creating API provider integrations
 
 An API provider integration starts with a REST API service.
-This REST API service is defined by an OpenAPI (or 2)
+This REST API service is defined by an OpenAPI 3 (or 2)
 document that you provide when you create an API provider integration.
 After you publish an API provider integration,
 {prodname} deploys the REST API service on OpenShift.
