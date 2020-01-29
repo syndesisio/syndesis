@@ -498,7 +498,7 @@ jobs:
   operator:
     working_directory: /home/circleci/project
     docker:
-      - image: circleci/golang:1.12.5
+      - image: circleci/golang:1.13.7
     environment:
       DOCKER_IMAGES: syndesis-operator
       GOPROXY: https://proxy.golang.org
