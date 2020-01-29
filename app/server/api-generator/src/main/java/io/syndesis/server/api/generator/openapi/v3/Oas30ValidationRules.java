@@ -53,7 +53,10 @@ public final class Oas30ValidationRules extends OpenApiValidationRules<Oas30Resp
                 Oas30ValidationRules::validateUnsupportedCallbacksFeature,
                 Oas30ValidationRules::validateUnsupportedLinksFeature
             ),
-            Collections.singletonList(Oas30ValidationRules::validateServerBasePaths));
+            Arrays.asList(
+                Oas30ValidationRules::validateUnsupportedCallbacksFeature,
+                Oas30ValidationRules::validateUnsupportedLinksFeature,
+                Oas30ValidationRules::validateServerBasePaths));
     }
 
     public static Oas30ValidationRules get(final APIValidationContext context) {
