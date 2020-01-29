@@ -1,4 +1,5 @@
 .integration-list-item .label,
+.integration-list-item .edit-integration-btn,
 .integration-list-item .view-integration-btn {
   font-size: var(--pf-global--FontSize--sm);
 }
