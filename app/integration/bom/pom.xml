@@ -31,7 +31,6 @@
     <camel.version>2.23.2.fuse-760017</camel.version>
     <atlasmap.version>1.43.3</atlasmap.version>
     <jackson.databind.version>2.9.9</jackson.databind.version>
-    <mongo.driver.version>3.6.3</mongo.driver.version>
   </properties>
 
   <!-- Metadata need to publish to central -->
@@ -127,7 +126,7 @@
       <dependency>
         <groupId>org.mongodb</groupId>
         <artifactId>mongo-java-driver</artifactId>
-        <version>${mongo.driver.version}</version>
+        <version>${mongodb.version}</version>
       </dependency>
       <!--
           NOTE: the final BOM will be an extension of the FIS BOM.
