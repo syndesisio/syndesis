@@ -28,6 +28,14 @@
   <name>Extension :: Maven Plugin</name>
   <packaging>maven-plugin</packaging>
 
+  <properties>
+    <!-- repackage integration test is disabled due to the extremely long time it takes to execute, to run all tests run Maven with
+      `-Dinvoker.test=*`, or run the repackage test only with `-Dinvoker.test=repackage`, we define it here so we can extend it
+      below, also if we define `<invokerTest>` below it's always of higher priority than `-Dinvoker.test` (odd)
+    -->
+    <invoker.test>*,!repackage</invoker.test>
+  </properties>
+
   <dependencies>
 
     <dependency>
@@ -197,7 +205,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <configuration>
           <mojoDependencies />
@@ -220,13 +227,14 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-invoker-plugin</artifactId>
         <configuration>
           <!-- This is strongly discouraged in the invoker-plugin documentation, we need it though as the default repository
             (value of localRepositoryPath by default) used is pointing to the target directory, that would make us start on a clean repository
             on CI and since we download the whole Internet via Spring Boot and Camel BOMs would take too long -->
           <localRepositoryPath>${maven.repo.local}</localRepositoryPath>
+          <!-- invoker plugin considers files, such as settings.xml as Maven projects -->
+          <invokerTest>${invoker.test},!settings.xml</invokerTest>
         </configuration>
         <dependencies>
           <!-- The integration tests use this dependencies, we need to declare it so that Maven is aware of it -->
