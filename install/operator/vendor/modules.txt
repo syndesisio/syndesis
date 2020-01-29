@@ -138,8 +138,9 @@ github.com/openshift/api/oauth/v1
 github.com/openshift/api/pkg/serialization
 github.com/openshift/api/route/v1
 github.com/openshift/api/template/v1
-# github.com/operator-framework/operator-sdk v0.14.0
+# github.com/operator-framework/operator-sdk v0.15.0
 github.com/operator-framework/operator-sdk/pkg/k8sutil
+github.com/operator-framework/operator-sdk/pkg/kube-metrics
 github.com/operator-framework/operator-sdk/pkg/leader
 github.com/operator-framework/operator-sdk/pkg/log/zap
 github.com/operator-framework/operator-sdk/pkg/metrics
@@ -458,6 +459,9 @@ k8s.io/kube-openapi/pkg/generators
 k8s.io/kube-openapi/pkg/generators/rules
 k8s.io/kube-openapi/pkg/util/proto
 k8s.io/kube-openapi/pkg/util/sets
+# k8s.io/kube-state-metrics v1.7.2
+k8s.io/kube-state-metrics/pkg/metric
+k8s.io/kube-state-metrics/pkg/metrics_store
 # k8s.io/utils v0.0.0-20191010214722-8d271d903fe4
 k8s.io/utils/buffer
 k8s.io/utils/integer
