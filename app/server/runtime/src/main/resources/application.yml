@@ -130,6 +130,7 @@ maven:
 logging:
   level:
     io.swagger.parser: WARN
+    io.syndesis.server.endpoint.v1.handler.exception.EntityNotFoundExceptionMapper: OFF
 
 prometheus:
   # prometheus service name
