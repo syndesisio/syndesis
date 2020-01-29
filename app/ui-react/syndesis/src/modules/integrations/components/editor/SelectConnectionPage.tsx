@@ -51,10 +51,8 @@ export interface ISelectConnectionPageProps
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export const SelectConnectionPage: React.FunctionComponent<
-  ISelectConnectionPageProps
-> = props => {
-  const { getBreadcrumb, sidebar, cancelHref } = props;
+export const SelectConnectionPage: React.FunctionComponent<ISelectConnectionPageProps> = props => {
+  const { getBreadcrumb, sidebar, cancelHref, isAdding } = props;
   const { t } = useTranslation(['integrations', 'shared']);
   const { params, state } = useRouteData<
     ISelectConnectionRouteParams,
@@ -85,7 +83,8 @@ export const SelectConnectionPage: React.FunctionComponent<
   const visibleSteps = visibleStepsByPosition(
     stepKinds as StepKind[],
     positionAsNumber,
-    integrationSteps
+    integrationSteps,
+    isAdding
   ) as IUIStep[];
 
   const title = t('integrations:editor:selectStep:title');
