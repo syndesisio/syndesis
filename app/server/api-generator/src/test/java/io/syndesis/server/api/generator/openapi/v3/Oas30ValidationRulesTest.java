@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.openapi.v3;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.apicurio.datamodels.openapi.v3.models.Oas30Components;
@@ -134,7 +135,7 @@ public class Oas30ValidationRulesTest {
     }
 
     @Test
-    public void shouldNotReportIssuesForTrivialSwagger() {
+    public void shouldNotReportIssuesForTrivialOpenAPISpec() {
         final Oas30Document openApiDoc = new Oas30Document();
         final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
 
@@ -243,6 +244,114 @@ public class Oas30ValidationRulesTest {
     }
 
     @Test
+    public void shouldValidateMissingRequestBodySchema() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation get = new Oas30Operation("get");
+        get.operationId = "o1";
+        pathItem.get = get;
+        Oas30Operation post = new Oas30Operation("post");
+        post.operationId = "o2";
+        final Oas30Parameter headerParameter = new Oas30Parameter();
+        headerParameter.in = "header";
+        post.parameters = Collections.singletonList(headerParameter);
+        post.requestBody = post.createRequestBody();
+        Oas30MediaType requestBody = post.requestBody.createMediaType("application/json");
+        post.requestBody.content = Collections.singletonMap("application/json", requestBody);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(1);
+        final Violation reportedWarning = warnings.get(0);
+        assertThat(reportedWarning.error()).isEqualTo("missing-request-schema");
+        assertThat(reportedWarning.property()).isEmpty();
+        assertThat(reportedWarning.message()).isEqualTo("Operation POST /path does not provide a schema for the request " +
+            "body on media type application/json");
+    }
+
+    @Test
+    public void shouldValidateMissingResponseBodySchema() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation get = new Oas30Operation("get");
+        get.operationId = "o1";
+        get.responses = get.createResponses();
+        get.responses.addResponse("404", get.responses.createResponse("404"));
+        get.responses.addResponse("200", get.responses.createResponse("200"));
+        pathItem.get = get;
+        Oas30Operation post = new Oas30Operation("post");
+        post.operationId = "o2";
+        final Oas30Parameter headerParameter = new Oas30Parameter();
+        headerParameter.in = "header";
+        post.parameters = Collections.singletonList(headerParameter);
+        post.requestBody = post.createRequestBody();
+        Oas30Schema bodySchema = new Oas30Schema();
+        bodySchema.addProperty("foo", new Oas30Schema());
+        Oas30MediaType requestBody = post.requestBody.createMediaType("application/json");
+        requestBody.schema = bodySchema;
+        post.requestBody.content = Collections.singletonMap("application/json", requestBody);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(1);
+        final Violation reportedWarning = warnings.get(0);
+        assertThat(reportedWarning.error()).isEqualTo("missing-response-schema");
+        assertThat(reportedWarning.property()).isEmpty();
+        assertThat(reportedWarning.message()).isEqualTo("Operation GET /path does not provide a response schema for code 200");
+    }
+
+    @Test
+    public void shouldNotReportIssuesForValidResponseBodySchema() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation get = new Oas30Operation("get");
+        get.operationId = "o1";
+        get.responses = get.createResponses();
+        get.responses.addResponse("404", get.responses.createResponse("404"));
+        Oas30Response response = (Oas30Response) get.responses.createResponse("200");
+        Oas30Schema responseSchema = new Oas30Schema();
+        responseSchema.addProperty("foo", new Oas30Schema());
+        Oas30MediaType responseBody = response.createMediaType("application/json");
+        responseBody.schema = responseSchema;
+        response.content = Collections.singletonMap("application/json", responseBody);
+        get.responses.addResponse("200", response);
+        pathItem.get = get;
+        Oas30Operation post = new Oas30Operation("post");
+        post.operationId = "o2";
+        final Oas30Parameter headerParameter = new Oas30Parameter();
+        headerParameter.in = "header";
+        post.parameters = Collections.singletonList(headerParameter);
+        post.requestBody = post.createRequestBody();
+        Oas30Schema bodySchema = new Oas30Schema();
+        bodySchema.addProperty("foo", new Oas30Schema());
+        Oas30MediaType requestBody = post.requestBody.createMediaType("application/json");
+        requestBody.schema = bodySchema;
+        post.requestBody.content = Collections.singletonMap("application/json", requestBody);
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+        final OpenApiModelInfo validated = RULES.validateRequestResponseBodySchemas(info);
+
+        assertThat(validated.getErrors()).isEmpty();
+        assertThat(validated.getWarnings()).isEmpty();
+    }
+
+    @Test
     public void shouldNotGenerateWarningForSameServerBasePath() {
         final Oas30Document openApiDoc = new Oas30Document();
         openApiDoc.addServer("https://development.syndesis.io/v1", "Development server");
@@ -269,5 +378,76 @@ public class Oas30ValidationRulesTest {
         assertThat(validated.getErrors()).isEmpty();
         assertThat(validated.getWarnings()).containsOnly(new Violation.Builder().error("differing-base-paths")
             .message("Specified servers do not share the same base path. REST endpoint will use '/development' as base path.").build());
+    }
+
+    @Test
+    public void shouldValidateUnsupportedLinksFeature() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.components = openApiDoc.createComponents();
+        openApiDoc.components.links = Collections.singletonMap("foo", openApiDoc.components.createLinkDefinition("foo"));
+
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation get = new Oas30Operation("get");
+        get.operationId = "o1";
+        get.responses = get.createResponses();
+        Oas30Response response = (Oas30Response) get.responses.createResponse("200");
+        response.links = Collections.singletonMap("foo", openApiDoc.components.createLinkDefinition("foo"));
+        get.responses.addResponse("200", response);
+
+        pathItem.get = get;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateUnsupportedLinksFeature(info);
+        assertThat(validated.getErrors()).isEmpty();
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(2);
+        Violation reportedWarning = warnings.get(0);
+        assertThat(reportedWarning.error()).isEqualTo("unsupported-links-feature");
+        assertThat(reportedWarning.property()).isNull();
+        assertThat(reportedWarning.message()).isEqualTo("Links component is not supported yet. " +
+            "This part of the OpenAPI specification will be ignored.");
+
+        reportedWarning = warnings.get(1);
+        assertThat(reportedWarning.error()).isEqualTo("unsupported-links-feature");
+        assertThat(reportedWarning.property()).isEmpty();
+        assertThat(reportedWarning.message()).isEqualTo("Operation GET /path uses unsupported links feature. " +
+            "All links will be ignored.");
+    }
+
+    @Test
+    public void shouldValidateUnsupportedCallbacksFeature() {
+        final Oas30Document openApiDoc = new Oas30Document();
+        openApiDoc.components = openApiDoc.createComponents();
+        openApiDoc.components.callbacks = Collections.singletonMap("foo", openApiDoc.components.createCallbackDefinition("foo"));
+
+        final Oas30PathItem pathItem = new Oas30PathItem("/path");
+        Oas30Operation post = new Oas30Operation("post");
+        post.operationId = "o2";
+        post.callbacks = Collections.singletonMap("foo", post.createCallback("foo"));
+
+        pathItem.post = post;
+        openApiDoc.paths = openApiDoc.createPaths();
+        openApiDoc.paths.addPathItem("/path", pathItem);
+
+        final OpenApiModelInfo info = new OpenApiModelInfo.Builder().model(openApiDoc).build();
+
+        final OpenApiModelInfo validated = Oas30ValidationRules.validateUnsupportedCallbacksFeature(info);
+        assertThat(validated.getErrors()).isEmpty();
+        final List<Violation> warnings = validated.getWarnings();
+        assertThat(warnings).hasSize(2);
+        Violation reportedWarning = warnings.get(0);
+        assertThat(reportedWarning.error()).isEqualTo("unsupported-callbacks-feature");
+        assertThat(reportedWarning.property()).isNull();
+        assertThat(reportedWarning.message()).isEqualTo("Callbacks component is not supported yet. " +
+            "This part of the OpenAPI specification will be ignored.");
+
+        reportedWarning = warnings.get(1);
+        assertThat(reportedWarning.error()).isEqualTo("unsupported-callbacks-feature");
+        assertThat(reportedWarning.property()).isEmpty();
+        assertThat(reportedWarning.message()).isEqualTo("Operation POST /path uses unsupported callbacks feature. " +
+            "All callbacks will be ignored.");
     }
 }
