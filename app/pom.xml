@@ -68,7 +68,7 @@
     <spring-social-twitter.version>1.1.2.RELEASE</spring-social-twitter.version>
     <spring-cloud.version>Greenwich.SR3</spring-cloud.version>
 
-    <okhttp3.version>3.12.1</okhttp3.version>
+    <okhttp3.version>4.3.1</okhttp3.version>
 
     <swagger.version>1.6.0</swagger.version>
     <swagger-maven-plugin.version>3.1.8</swagger-maven-plugin.version>
