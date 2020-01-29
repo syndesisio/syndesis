@@ -447,7 +447,7 @@ export function filterStepsByPosition(
 
 /**
  * Filters connections based on the supplied position in the step array and their
- * visibility status, excluding the step at 'position'
+ * visibility status
  * @param steps
  * @param position
  * @param flowSteps
@@ -458,7 +458,7 @@ export function visibleStepsByPosition(
   flowSteps: Step[]
 ) {
   const previousSteps = getPreviousSteps(flowSteps, position);
-  const subsequentSteps = getSubsequentSteps(flowSteps, position);
+  const subsequentSteps = getSubsequentSteps(flowSteps, position - 1);
   return filterStepsByPosition(
     steps,
     position,
