@@ -37,7 +37,6 @@ import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-import org.json.JSONException;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -158,7 +157,7 @@ public class ConnectionActionHandlerTest {
     }
 
     @Test
-    public void shouldElicitActionPropertySuggestions() throws JSONException {
+    public void shouldElicitActionPropertySuggestions() {
         final DynamicActionMetadata suggestions = new DynamicActionMetadata.Builder()
             .putProperty("sObjectName",
                 Collections.singletonList(DynamicActionMetadata.ActionPropertySuggestion.Builder.of("Contact", "Contact")))

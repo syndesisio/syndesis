@@ -39,14 +39,12 @@ import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.server.api.generator.APIValidationContext;
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import static io.syndesis.server.api.generator.openapi.TestHelper.reformatJson;
 import static io.syndesis.server.api.generator.openapi.TestHelper.resource;
 import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class OpenApiConnectorGeneratorTest {
 
@@ -292,7 +290,7 @@ public class OpenApiConnectorGeneratorTest {
     }
 
     @Test
-    public void shouldParseSpecificationWithSecurityRequirements() throws JSONException {
+    public void shouldParseSpecificationWithSecurityRequirements() {
         final OpenApiModelInfo info = OpenApiConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}")
             .build(),
@@ -304,9 +302,7 @@ public class OpenApiConnectorGeneratorTest {
         assertThat(model.paths.getPathItem("/api").get.security.get(0).getScopes("secured")).isEmpty();
 
         final String resolvedSpecification = info.getResolvedSpecification();
-        JSONAssert.assertEquals(
-            "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}",
-            resolvedSpecification, JSONCompareMode.STRICT);
+        assertThatJson(resolvedSpecification).isEqualTo("{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}");
 
         final ObjectNode resolvedJsonGraph = info.getResolvedJsonGraph();
         final JsonNode securityRequirement = resolvedJsonGraph.get("paths").get("/api").get("get").get("security");

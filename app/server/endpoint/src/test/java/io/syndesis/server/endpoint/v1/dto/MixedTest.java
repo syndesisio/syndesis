@@ -21,36 +21,35 @@ import java.util.Map;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.json.JSONException;
 import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class MixedTest {
 
     @Test
-    public void shouldSerializeAsEmptyMap() throws JSONException {
-        assertEquals("{}", serialize(create()), true);
+    public void shouldSerializeAsEmptyMap() {
+        assertThatJson(serialize(create())).isEqualTo("{}");
     }
 
     @Test
-    public void shouldSerializeMultipleValue() throws JSONException {
+    public void shouldSerializeMultipleValue() {
         final ConfigurationProperty.PropertyValue val1 = new ConfigurationProperty.PropertyValue.Builder().label("label").value("value")
             .build();
 
         final Map<String, String> val2 = Collections.singletonMap("key", "value");
 
-        assertEquals("{\"label\": \"label\", \"value\": \"value\", \"key\": \"value\"}", serialize(create(val1, val2)), true);
+        assertThatJson(serialize(create(val1, val2))).isEqualTo("{\"label\": \"label\", \"value\": \"value\", \"key\": \"value\"}");
     }
 
     @Test
-    public void shouldSerializeSimpleValue() throws JSONException {
+    public void shouldSerializeSimpleValue() {
         final ConfigurationProperty.PropertyValue val = new ConfigurationProperty.PropertyValue.Builder().label("label").value("value")
             .build();
 
-        assertEquals("{\"label\": \"label\", \"value\": \"value\"}", serialize(create(val)), true);
+        assertThatJson(serialize(create(val))).isEqualTo("{\"label\": \"label\", \"value\": \"value\"}");
     }
 
     private static Mixed create(final Object... parts) {

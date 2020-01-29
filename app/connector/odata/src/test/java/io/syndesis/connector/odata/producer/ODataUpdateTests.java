@@ -49,8 +49,6 @@ import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
@@ -70,6 +68,8 @@ import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
 import io.syndesis.connector.odata.customizer.ODataPatchCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -219,7 +219,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
         String status = extractJsonFromExchgMsg(result, 0);
         String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-        JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+        assertThatJson(status).isEqualTo(expected);
 
         assertEquals(initialResultCount, defaultTestServer.getResultCount());
 
@@ -286,7 +286,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
             String status = extractJsonFromExchgMsg(result, i);
             String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-            JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+            assertThatJson(status).isEqualTo(expected);
 
             assertEquals(initialResultCount, defaultTestServer.getResultCount());
 
@@ -444,7 +444,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
             String status = extractJsonFromExchgMsg(result, 0);
             String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-            JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+            assertThatJson(status).isEqualTo(expected);
 
             String newName = queryProperty(refServiceURI, resourcePath, keyPredicate, nameProperty);
             assertEquals(newMiddleName, newName);

@@ -30,8 +30,6 @@ import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.BeforeClass;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
@@ -51,6 +49,8 @@ import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -245,7 +245,7 @@ public abstract class AbstractODataTest implements ODataConstants {
     protected void testResult(MockEndpoint result, int exchangeIdx, String testDataFile) throws Exception {
         String json = extractJsonFromExchgMsg(result, exchangeIdx);
         String expected = testData(testDataFile);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
     }
 
     @SuppressWarnings( "unchecked" )
@@ -254,7 +254,7 @@ public abstract class AbstractODataTest implements ODataConstants {
         assertEquals(testDataFiles.length, json.size());
         for (int i = 0; i < testDataFiles.length; ++i) {
             String expected = testData(testDataFiles[i]);
-            JSONAssert.assertEquals(expected, json.get(i), JSONCompareMode.LENIENT);
+            assertThatJson(json.get(i)).isEqualTo(expected);
         }
     }
 

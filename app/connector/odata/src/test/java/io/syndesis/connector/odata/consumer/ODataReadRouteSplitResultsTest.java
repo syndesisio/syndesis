@@ -30,14 +30,14 @@ import org.apache.camel.component.olingo4.Olingo4Endpoint;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
@@ -424,7 +424,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         String json = extractJsonFromExchgMsg(result, 0, String.class);
         assertNotNull(json);
         String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
     }
 
     @Test
@@ -449,12 +449,12 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         String json = extractJsonFromExchgMsg(result, 0, String.class);
         assertNotNull(json);
         String expected = testData(TEST_SERVER_DATA_2);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
 
         json = extractJsonFromExchgMsg(result, 1, String.class);
         assertNotNull(json);
         expected = testData(TEST_SERVER_DATA_1);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
     }
 
     @Test
@@ -566,22 +566,22 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
             switch (i) {
                 case 0:
                     expected = testData(TEST_SERVER_DATA_1);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                    assertThatJson(json).isEqualTo(expected);
                     break;
                 case 1:
                     expected = testData(TEST_SERVER_DATA_2);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                    assertThatJson(json).isEqualTo(expected);
                     break;
                 case 2:
                     expected = testData(TEST_SERVER_DATA_3);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                    assertThatJson(json).isEqualTo(expected);
                     break;
                 default:
                     //
                     // Subsequent polling messages should be empty
                     //
                     expected = testData(TEST_SERVER_DATA_EMPTY);
-                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+                    assertThatJson(json).isEqualTo(expected);
             }
         }
 
@@ -628,7 +628,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         String json = extractJsonFromExchgMsg(result, 0, String.class);
         assertNotNull(json);
         String expected = testData(REF_SERVER_AIRPORT_DATA_1);
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
+        assertThatJson(json).isEqualTo(expected);
 
         //
         // Check backup consumer options carried through to olingo4 component

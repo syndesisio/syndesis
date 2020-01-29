@@ -27,8 +27,6 @@ import org.apache.camel.component.olingo4.Olingo4Endpoint;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
@@ -36,6 +34,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -150,7 +151,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
         result.assertIsSatisfied();
 
         String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
-        JSONAssert.assertEquals(testData(TEST_SERVER_DATA_1, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+        assertThatJson(entityJson).isEqualTo(testData(TEST_SERVER_DATA_1, AbstractODataReadRouteTest.class));
         assertEquals(initialResultCount, defaultTestServer.getResultCount());
 
         //
@@ -197,7 +198,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
         result.assertIsSatisfied();
 
         String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
-        JSONAssert.assertEquals(testData(TEST_SERVER_DATA_2, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+        assertThatJson(entityJson).isEqualTo(testData(TEST_SERVER_DATA_2, AbstractODataReadRouteTest.class));
         assertEquals(initialResultCount, defaultTestServer.getResultCount());
     }
 
@@ -250,7 +251,7 @@ public class ODataReadTests extends AbstractODataRouteTest {
             }
 
             assertNotNull(expectedData);
-            JSONAssert.assertEquals(testData(expectedData, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+            assertThatJson(entityJson).isEqualTo(testData(expectedData, AbstractODataReadRouteTest.class));
             assertEquals(initialResultCount, defaultTestServer.getResultCount());
         }
     }
@@ -286,6 +287,6 @@ public class ODataReadTests extends AbstractODataRouteTest {
         result.assertIsSatisfied();
 
         String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
-        JSONAssert.assertEquals(testData(REF_SERVER_PEOPLE_DATA_KLAX_LOC, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+        assertThatJson(entityJson).isEqualTo(testData(REF_SERVER_PEOPLE_DATA_KLAX_LOC, AbstractODataReadRouteTest.class));
     }
 }

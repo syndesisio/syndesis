@@ -16,17 +16,16 @@
 package io.syndesis.server.credential;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.json.JSONException;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class AcquisitionMethodTest {
 
     @Test
-    public void shouldSerializeAsExpected() throws JsonProcessingException, JSONException {
+    public void shouldSerializeAsExpected() throws JsonProcessingException {
         final AcquisitionMethod acquisitionMethod = new AcquisitionMethod.Builder()
             .description("description")
             .icon("icon")
@@ -36,6 +35,6 @@ public class AcquisitionMethodTest {
 
         final String json = JsonUtils.writer().writeValueAsString(acquisitionMethod);
         final String expected = "{\"description\":\"description\",\"icon\":\"icon\",\"label\":\"label\",\"type\":\"OAUTH2\",\"configured\":false}";
-        JSONAssert.assertEquals(expected, json, JSONCompareMode.STRICT);
+        assertThatJson(json).isEqualTo(expected);
     }
 }

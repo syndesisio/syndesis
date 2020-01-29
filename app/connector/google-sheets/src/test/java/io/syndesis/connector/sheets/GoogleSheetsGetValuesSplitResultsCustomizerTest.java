@@ -32,10 +32,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.util.ConnectorOptions;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
@@ -98,6 +98,6 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         String model = inbound.getIn().getBody(String.class);
-        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);
+        assertThatJson(model).isEqualTo(String.format(expectedValueModel, getSpreadsheetId()));
     }
 }

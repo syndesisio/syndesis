@@ -23,8 +23,6 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestExecutionListeners;
@@ -44,6 +42,8 @@ import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
 import io.syndesis.connector.odata.customizer.ODataCreateCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -148,7 +148,7 @@ public class ODataCreateTests extends AbstractODataRouteTest {
         result.assertIsSatisfied();
 
         String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
-        JSONAssert.assertEquals(inputJson, entityJson, JSONCompareMode.LENIENT);
+        assertThatJson(entityJson).whenIgnoringPaths("ID", "SerialNumbers", "Specification").isEqualTo(inputJson);
 
         assertEquals(initialResultCount + 1, defaultTestServer.getResultCount());
     }

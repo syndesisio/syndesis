@@ -16,7 +16,6 @@
 package io.syndesis.connector.sql;
 
 import static org.assertj.core.api.Assertions.fail;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -34,15 +33,15 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.commons.io.IOUtils;
-import org.json.JSONException;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.skyscreamer.jsonassert.JSONCompareMode;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
+
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 
 public class SqlMetadataAdapterTest {
     private static final String DERBY_DEMO_ADD2_SQL =
@@ -102,7 +101,7 @@ public class SqlMetadataAdapterTest {
     }
 
     @Test
-    public void adaptForSqlTest() throws IOException, JSONException {
+    public void adaptForSqlTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -117,12 +116,12 @@ public class SqlMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_metadata.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
 
     }
 
     @Test
-    public void adaptForSqlNoParamTest() throws IOException, JSONException {
+    public void adaptForSqlNoParamTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -137,11 +136,11 @@ public class SqlMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
     @Test
-    public void adaptForSqlUpdateTest() throws IOException, JSONException {
+    public void adaptForSqlUpdateTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -156,11 +155,11 @@ public class SqlMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_metadata.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
     @Test
-    public void adaptForSqlBatchUpdateTest() throws IOException, JSONException {
+    public void adaptForSqlBatchUpdateTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -176,11 +175,11 @@ public class SqlMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_batch_update_metadata.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
     @Test
-    public void adaptForSqlUpdateNoParamTest() throws IOException, JSONException {
+    public void adaptForSqlUpdateNoParamTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -195,11 +194,11 @@ public class SqlMetadataAdapterTest {
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
         ObjectWriter writer = JsonUtils.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
     }
 
     @Test
-    public void adaptForSqlStoredTest() throws IOException, JSONException {
+    public void adaptForSqlStoredTest() throws IOException {
         CamelContext camelContext = new DefaultCamelContext();
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
@@ -215,18 +214,18 @@ public class SqlMetadataAdapterTest {
 
         String expectedListOfProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
         String actualListOfProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
-        assertEquals(expectedListOfProcedures, actualListOfProcedures, JSONCompareMode.STRICT);
+        assertThatJson(actualListOfProcedures).isEqualTo(expectedListOfProcedures);
 
         parameters.put(SqlMetadataRetrieval.PATTERN, SqlMetadataRetrieval.FROM_PATTERN);
         String expectedListOfStartProcedures = IOUtils.toString(this.getClass().getResource("/sql/stored_procedure_list.json"), StandardCharsets.UTF_8).trim();
         String actualListOfStartProcedures = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData);
-        assertEquals(expectedListOfStartProcedures, actualListOfStartProcedures, JSONCompareMode.STRICT);
+        assertThatJson(actualListOfStartProcedures).isEqualTo(expectedListOfStartProcedures);
 
         parameters.put("procedureName", "DEMO_ADD");
         SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-stored-connector", parameters, metadata.get());
         String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/demo_add_metadata.json"), StandardCharsets.UTF_8).trim();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
-        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+        assertThatJson(actualMetadata).isEqualTo(expectedMetadata);
 
     }
 }
