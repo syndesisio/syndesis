@@ -30,7 +30,6 @@
     </version.springboot.teiid>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <version.mysql>${version.mysql}</version.mysql>
-    <version.org.mongodb>${mongodb.version}</version.org.mongodb>
     <version.postgresql>${version.postgresql}</version.postgresql>
   </properties>
 
