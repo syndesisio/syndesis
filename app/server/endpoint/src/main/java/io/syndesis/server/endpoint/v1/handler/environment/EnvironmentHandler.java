@@ -307,7 +307,7 @@ public class EnvironmentHandler extends BaseHandler {
                 .collect(Collectors.toMap(v -> getDataManager().fetch(Environment.class, v.getEnvironmentId()).getName(), v -> v));
     }
 
-    private Integration getIntegration(String integrationId) {
+    public Integration getIntegration(String integrationId) {
         validateParam("integrationId", integrationId);
 
         // try fetching by name first, then by id

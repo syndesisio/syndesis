@@ -435,8 +435,7 @@ public class PublicApiHandler {
     }
 
     private Integration getIntegration(String integrationId) {
-        validateParam(PROPERTY_INTEGRATION_ID, integrationId);
-        return dataMgr.fetch(Integration.class, integrationId);
+        return environmentHandler.getIntegration(integrationId);
     }
 
     private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId, Predicate<? super T> operator) {
