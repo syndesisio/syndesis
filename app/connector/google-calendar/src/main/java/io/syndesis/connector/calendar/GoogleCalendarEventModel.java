@@ -252,7 +252,7 @@ public class GoogleCalendarEventModel {
         if (startTime == null) {
             start.setDate(DateTime.parseRfc3339(startDate));
         } else {
-            start.setDate(DateTime.parseRfc3339(startDate + "T" + startTime));
+            start.setDateTime(DateTime.parseRfc3339(startDate + "T" + startTime));
         }
 
         return start;
@@ -264,7 +264,7 @@ public class GoogleCalendarEventModel {
         if (endTime == null) {
             end.setDate(DateTime.parseRfc3339(endDate));
         } else {
-            end.setDate(DateTime.parseRfc3339(endDate + "T" + endTime));
+            end.setDateTime(DateTime.parseRfc3339(endDate + "T" + endTime));
         }
 
         return end;
