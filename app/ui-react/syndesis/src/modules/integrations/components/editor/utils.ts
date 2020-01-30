@@ -447,18 +447,25 @@ export function filterStepsByPosition(
 
 /**
  * Filters connections based on the supplied position in the step array and their
- * visibility status
+ * visibility status.  Set isAdding to false in cases where the position is a
+ * special case like the start/finish step in a flow and should be excluded
+ * from the calculation
  * @param steps
  * @param position
  * @param flowSteps
+ * @param isAdding
  */
 export function visibleStepsByPosition(
   steps: StepKind[],
   position: number,
-  flowSteps: Step[]
+  flowSteps: Step[],
+  isAdding: boolean
 ) {
   const previousSteps = getPreviousSteps(flowSteps, position);
-  const subsequentSteps = getSubsequentSteps(flowSteps, position - 1);
+  const subsequentSteps = getSubsequentSteps(
+    flowSteps,
+    position - (isAdding ? 1 : 0)
+  );
   return filterStepsByPosition(
     steps,
     position,
