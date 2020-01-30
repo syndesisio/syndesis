@@ -283,10 +283,6 @@ func (api syndesisApi) v1alpha1ToV1beta1() error {
 			api.v1beta1.Spec.RouteHostname = api.v1alpha1.Spec.RouteHostname
 		}
 
-		if api.v1alpha1.Spec.ImageStreamNamespace != "" {
-			api.v1beta1.Spec.ImageStreamNamespace = api.v1alpha1.Spec.ImageStreamNamespace
-		}
-
 		if api.v1alpha1.Spec.SarNamespace != "" {
 			api.v1beta1.Spec.Components.Oauth.SarNamespace = api.v1alpha1.Spec.SarNamespace
 		}

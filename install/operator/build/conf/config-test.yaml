@@ -4,7 +4,6 @@ Productized: false
 DevSupport: false
 Scheduled: true
 Syndesis:
-    ImageStreamNamespace: ""
     Addons:
         Jaeger:
             Enabled: false
@@ -55,7 +54,6 @@ Syndesis:
             Name: "syndesis"
             User: "syndesis"
             URL: "postgresql://syndesis-db:5432/syndesis?sslmode=disable"
-            ImageStreamNamespace: "openshift"
             Image: "postgresql:9.6"
             Exporter:
                 Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"
