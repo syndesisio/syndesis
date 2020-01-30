@@ -116,13 +116,13 @@
 
   <dependencyManagement>
     <dependencies>
-            <!--
-                NOTE: the final BOM will be an extension of the FIS BOM.
-                Once the FIS BOM is aligned with versions used in syndesis, the FIS BOM should be imported instead of
-                the spring-boot and camel BOMs.
-            -->
+      <!--
+          NOTE: the final BOM will be an extension of the FIS BOM.
+          Once the FIS BOM is aligned with versions used in syndesis, the FIS BOM should be imported instead of
+          the spring-boot and camel BOMs.
+      -->
 
-            <!-- Spring-boot full BOM -->
+      <!-- Spring-boot full BOM -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -130,7 +130,8 @@
         <type>pom</type>
         <scope>import</scope>
       </dependency>
-            <!-- Camel BOM for Spring-boot -->
+
+      <!-- Camel BOM for Spring-boot -->
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
@@ -139,7 +140,7 @@
         <scope>import</scope>
       </dependency>
 
-            <!-- Project dependencies -->
+      <!-- Project dependencies -->
       <dependency>
         <groupId>io.syndesis.extension</groupId>
         <artifactId>extension-annotation-processor</artifactId>
@@ -156,7 +157,7 @@
 
   <build>
     <pluginManagement>
-            <!-- Maven plugin -->
+      <!-- Maven plugin -->
       <plugins>
         <plugin>
           <groupId>io.syndesis.extension</groupId>

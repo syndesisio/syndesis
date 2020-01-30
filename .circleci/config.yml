@@ -360,6 +360,13 @@ jobs:
           path: /workspace/junit
       - store_artifacts:
           path: build_log.txt
+      - run:
+          name: Collect Extension Maven plugin integration test results
+          when: always
+          command: |
+            find ./app/extension/maven-plugin/target/it/ -type f -name build.log -exec sh -c 'DEST="/workspace/extension-maven-plugin-tests/$(basename $(dirname {}))" && mkdir -p $DEST && cp "{}" "$DEST/build.log"' \;
+      - store_artifacts:
+          path: /workspace/extension-maven-plugin-tests
       - <<: *persist_m2_workspace
       - save_cache:
           key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}

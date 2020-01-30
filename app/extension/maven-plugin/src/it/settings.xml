@@ -27,9 +27,11 @@
           <url>@localRepositoryUrl@</url>
           <releases>
             <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
           </releases>
           <snapshots>
             <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
           </snapshots>
         </repository>
       </repositories>
@@ -39,9 +41,11 @@
           <url>@localRepositoryUrl@</url>
           <releases>
             <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
           </releases>
           <snapshots>
             <enabled>true</enabled>
+            <checksumPolicy>fail</checksumPolicy>
           </snapshots>
         </pluginRepository>
       </pluginRepositories>
