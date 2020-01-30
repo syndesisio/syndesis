@@ -467,7 +467,8 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         return repositoryManager.runInTransaction(true, ()->{
             for (String teiidName : repositoryManager.findAllSchemaNames()) {
                 TeiidDataSource teiidSource = getMetadataInstance().getDataSource(teiidName);
-                RestSyndesisSourceStatus status = new RestSyndesisSourceStatus(teiidName);
+				RestSyndesisSourceStatus status = new RestSyndesisSourceStatus(
+						teiidSource.getSyndesisDataSource().getSyndesisName());
                 if (teiidSource != null) {
                     setSchemaStatus(teiidSource.getSyndesisId(), status);
                 }
