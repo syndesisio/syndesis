@@ -118,7 +118,7 @@
     "karma-jasmine-html-reporter": "^1.4.0",
     "karma-junit-reporter": "^2.0.1",
     "lodash": "^4.16.4",
-    "ng-packagr": "^4.4.0",
+    "ng-packagr": "^5.7.1",
     "ngx-bootstrap": "^3.0.1",
     "ngx-logger": "4.0.7",
     "pako": "^1.0.5",
