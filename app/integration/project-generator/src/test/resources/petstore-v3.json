@@ -15,7 +15,18 @@
     },
     "servers": [
         {
-            "url": "http://petstore.swagger.io/v2"
+            "url": "{scheme}://{hostname}/v2",
+            "variables": {
+              "scheme": {
+                "enum": ["http", "https"],
+                "default": "http",
+                "description": "The supported protocol schemes"
+              },
+              "hostname": {
+                "default": "petstore.swagger.io",
+                "description": "The server host name"
+              }
+            }
         }
     ],
     "paths": {
