@@ -93,7 +93,6 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
 						Meta:       MetaConfiguration{Image: "META_IMAGE"},
 						Database: DatabaseConfiguration{
-							Image: "DATABASE_IMAGE", ImageStreamNamespace: "DATABASE_NAMESPACE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteOnce",
@@ -130,7 +129,6 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Upgrade:    UpgradeConfiguration{Image: "docker.io/syndesis/syndesis-upgrade:latest"},
 						Meta:       MetaConfiguration{Image: "docker.io/syndesis/syndesis-meta:latest"},
 						Database: DatabaseConfiguration{
-							Image: "postgresql:9.6", ImageStreamNamespace: "openshift",
 							Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteMany",
@@ -177,7 +175,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				t.Errorf("loadFromFile() got = %v, want %v", tt.conf, tt.want)
 			}
 
-			for k, _ := range tt.env {
+			for k := range tt.env {
 				os.Unsetenv(k)
 			}
 		})
@@ -204,7 +202,6 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 			name: "When using a syndesis custom resource with values, those values should replace the template values",
 			args: args{syndesis: &v1beta1.Syndesis{
 				Spec: v1beta1.SyndesisSpec{
-					ImageStreamNamespace: "ImageStreamNamespace",
 					Addons: v1beta1.AddonsSpec{
 						Jaeger: v1beta1.JaegerConfiguration{
 							Enabled:      true,
@@ -327,7 +324,6 @@ func getConfigLiteral() *Config {
 		Productized:                false,
 		DevSupport:                 false,
 		Scheduled:                  true,
-		ImageStreamNamespace:       "",
 		PrometheusRules:            "",
 		OpenShiftProject:           "",
 		OpenShiftOauthClientSecret: "",
@@ -386,12 +382,11 @@ func getConfigLiteral() *Config {
 					},
 				},
 				Database: DatabaseConfiguration{
-					ImageStreamNamespace: "openshift",
-					Image:                "postgresql:9.6",
-					User:                 "syndesis",
-					Name:                 "syndesis",
-					URL:                  "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
-					Exporter:             ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
+					Image:    "postgresql:9.6",
+					User:     "syndesis",
+					Name:     "syndesis",
+					URL:      "postgresql://syndesis-db:5432/syndesis?sslmode=disable",
+					Exporter: ExporterConfiguration{Image: "docker.io/wrouesnel/postgres_exporter:v0.4.7"},
 					Resources: ResourcesWithPersistentVolume{
 						Memory:           "255Mi",
 						VolumeCapacity:   "1Gi",
@@ -442,7 +437,7 @@ func Test_setBoolFromEnv(t *testing.T) {
 				t.Errorf("setBoolFromEnv() = %v, want %v", got, tt.want)
 			}
 
-			for k, _ := range tt.env {
+			for k := range tt.env {
 				os.Unsetenv(k)
 			}
 		})
@@ -486,7 +481,7 @@ func TestConfig_SetRoute(t *testing.T) {
 			}
 			assert.Equal(t, config.Syndesis.RouteHostname, tt.want)
 
-			for k, _ := range tt.env {
+			for k := range tt.env {
 				os.Unsetenv(k)
 			}
 		})
@@ -517,7 +512,7 @@ func Test_setIntFromEnv(t *testing.T) {
 				t.Errorf("setIntFromEnv() = %v, want %v", got, tt.want)
 			}
 
-			for k, _ := range tt.env {
+			for k := range tt.env {
 				os.Unsetenv(k)
 			}
 		})
