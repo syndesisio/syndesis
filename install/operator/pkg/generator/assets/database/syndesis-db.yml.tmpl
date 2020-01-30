@@ -232,7 +232,7 @@
             value: {{.Syndesis.Components.Database.Name}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
             value: {{.Syndesis.Components.Database.SampledbPassword}}
-          image: ' '
+          image: '{{.Syndesis.Components.Database.Image}}'
           imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
@@ -316,11 +316,3 @@
           name: syndesis-db-conf
     triggers:
     - type: ConfigChange
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - postgresql
-        from:
-          kind: ImageStreamTag
-          name: {{.Syndesis.Components.Database.Image}}
-      type: ImageChange
