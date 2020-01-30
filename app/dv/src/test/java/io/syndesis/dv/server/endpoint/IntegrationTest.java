@@ -238,7 +238,7 @@ public class IntegrationTest {
         //directly with the synchronizer
 
         DefaultSyndesisDataSource dsd = new DefaultSyndesisDataSource();
-
+        dsd.setId("test");
         //invalid, but should silently fail
         syndesisConnectionSynchronizer.addConnection(dsd, false);
 
