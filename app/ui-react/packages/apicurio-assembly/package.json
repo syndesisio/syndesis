@@ -77,7 +77,7 @@
     "@angular/router": "7.2.6",
     "@patternfly/patternfly": "2.48.1",
     "apicurio-data-models": "1.0.17",
-    "apicurio-design-studio": "0.2.44",
+    "apicurio-design-studio": "0.2.45",
     "oai-ts-core": "0.2.38",
     "oai-ts-commands": "0.2.66",
     "apicurio-ts-core": "0.1.3",
