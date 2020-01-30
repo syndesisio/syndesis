@@ -242,7 +242,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 						CamelK: CamelKConfiguration{
 							Enabled:       true,
 							Image:         "fabric8/s2i-java:3.0-java8",
-							CamelVersion:  "2.23.2.fuse-760017",
+							CamelVersion:  "2.23.2.fuse-760024",
 							CamelKRuntime: "0.3.4.fuse-740008",
 						},
 						PublicApi: PublicApiConfiguration{
@@ -349,7 +349,7 @@ func getConfigLiteral() *Config {
 				},
 				CamelK: CamelKConfiguration{
 					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760017",
+					CamelVersion:  "2.23.2.fuse-760024",
 					CamelKRuntime: "0.3.4.fuse-740008",
 					Image:         "fabric8/s2i-java:3.0-java8",
 				},
