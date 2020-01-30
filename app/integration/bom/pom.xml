@@ -28,7 +28,7 @@
 
   <properties>
     <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-    <camel.version>2.23.2.fuse-760023</camel.version>
+    <camel.version>2.23.2.fuse-760024</camel.version>
     <atlasmap.version>1.43.3</atlasmap.version>
     <jackson.databind.version>2.9.10.1</jackson.databind.version>
     <mongo.driver.version>3.6.3</mongo.driver.version>
