@@ -54,7 +54,6 @@ type Config struct {
 	DevSupport                 bool           // If set to true, pull docker images from imagetag instead of upstream source
 	Scheduled                  bool           // Legacy parameter to set scheduled:true in the imagestreams, but we dont use many imagestreams nowadays
 	ProductName                string         // Usually syndesis or fuse-online
-	ImageStreamNamespace       string         // The OpenShift Namespace where the PostgreSQL ImageStream resides
 	PrometheusRules            string         // If some extra rules for prometheus need to be specified, they are defined here
 	OpenShiftProject           string         // The name of the OpenShift project Syndesis is being deployed into
 	OpenShiftOauthClientSecret string         // OpenShift OAuth client secret
@@ -64,11 +63,10 @@ type Config struct {
 }
 
 type SyndesisConfig struct {
-	DemoData             bool           // Enables starting up with demo data
-	RouteHostname        string         // The external hostname to access Syndesis
-	ImageStreamNamespace string         // Namespace where syndesis docker images are located and the operator should look after them
-	Components           ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
-	Addons               AddonsSpec     // Addons specifications and configurations
+	DemoData      bool           // Enables starting up with demo data
+	RouteHostname string         // The external hostname to access Syndesis
+	Components    ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
+	Addons        AddonsSpec     // Addons specifications and configurations
 }
 
 // Components
@@ -100,16 +98,15 @@ type S2IConfiguration struct {
 }
 
 type DatabaseConfiguration struct {
-	User                 string                        // Username for PostgreSQL user that will be used for accessing the database
-	Name                 string                        // Name of the PostgreSQL database accessed
-	URL                  string                        // Host and port of the PostgreSQL database to access
-	ExternalDbURL        string                        // If specified, use an external database instead of the installed by syndesis
-	Resources            ResourcesWithPersistentVolume // Resources, memory and database volume size
-	Exporter             ExporterConfiguration         // The exporter exports metrics in prometheus format
-	Image                string                        // Docker image for database
-	ImageStreamNamespace string                        // Namespace where the database image is located
-	Password             string                        // Password for the PostgreSQL connection user
-	SampledbPassword     string                        // Password for the PostgreSQL sampledb user
+	User             string                        // Username for PostgreSQL user that will be used for accessing the database
+	Name             string                        // Name of the PostgreSQL database accessed
+	URL              string                        // Host and port of the PostgreSQL database to access
+	ExternalDbURL    string                        // If specified, use an external database instead of the installed by syndesis
+	Resources        ResourcesWithPersistentVolume // Resources, memory and database volume size
+	Exporter         ExporterConfiguration         // The exporter exports metrics in prometheus format
+	Image            string                        // Docker image for database
+	Password         string                        // Password for the PostgreSQL connection user
+	SampledbPassword string                        // Password for the PostgreSQL sampledb user
 }
 
 type ExporterConfiguration struct {
@@ -409,7 +406,6 @@ func (config *Config) setConfigFromEnv() error {
 				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
 				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
 				Database: DatabaseConfiguration{
-					Image: os.Getenv("DATABASE_IMAGE"), ImageStreamNamespace: os.Getenv("DATABASE_NAMESPACE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),

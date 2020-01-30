@@ -142,13 +142,6 @@ func schema_pkg_apis_syndesis_v1beta1_SyndesisSpec(ref common.ReferenceCallback)
 							Ref:         ref("github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1.BackupConfig"),
 						},
 					},
-					"imageStreamNamespace": {
-						SchemaProps: spec.SchemaProps{
-							Description: "Namespace where syndesis docker images are located and the operator should look after them",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"routeHostname": {
 						SchemaProps: spec.SchemaProps{
 							Description: "The external hostname to access Syndesis",

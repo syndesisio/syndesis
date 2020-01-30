@@ -128,14 +128,6 @@ func checkSynMeta(t *testing.T, resource unstructured.Unstructured, syndesis *v1
 
 	assertResourcePropertyStr(t, resource, syndesis.Spec.Components.Meta.Resources.VolumeCapacity, "spec", "resources", "requests", "storage")
 
-	//
-	// Check the namespace defined in the triggers
-	//
-	triggers := sliceProperty(resource, "spec", "triggers")
-	if triggers != nil {
-		assertPropStr(t, triggers, syndesis.Spec.ImageStreamNamespace, "imageChangeParams", "from", "namespace")
-	}
-
 	return 1
 }
 
@@ -159,14 +151,6 @@ func checkSynServer(t *testing.T, resource unstructured.Unstructured, syndesis *
 			assert.True(t, ok)
 			assert.Equal(t, syndesis.Spec.Components.Server.Resources.Memory, limitMap["memory"])
 		}
-	}
-
-	//
-	// Check the namespace defined in the triggers
-	//
-	triggers := sliceProperty(resource, "spec", "triggers")
-	if triggers != nil {
-		assertPropStr(t, triggers, syndesis.Spec.ImageStreamNamespace, "imageChangeParams", "from", "namespace")
 	}
 
 	return 1

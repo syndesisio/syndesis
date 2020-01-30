@@ -544,10 +544,6 @@ spec:
               forceMigration:
                 description: Something
                 type: boolean
-              imageStreamNamespace:
-                description: Namespace where syndesis docker images are located and
-                  the operator should look after them
-                type: string
               routeHostname:
                 description: The external hostname to access Syndesis
                 type: string
