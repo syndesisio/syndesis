@@ -243,7 +243,7 @@ public class ConnectorHandlerTest {
     }
 
     private static Response responseWithEntity(final String data) {
-        final ClientConfiguration configuration = new ClientConfiguration(new ResteasyProviderFactory().register(JacksonJsonProvider.class));
+        final ClientConfiguration configuration = new ClientConfiguration(ResteasyProviderFactory.getInstance().register(JacksonJsonProvider.class));
         final Response metaResponse = spy(new ClientResponse(configuration) {
             @Override
             protected InputStream getInputStream() {

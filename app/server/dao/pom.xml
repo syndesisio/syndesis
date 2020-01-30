@@ -73,11 +73,6 @@
     </dependency>
 
     <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.1-api</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
     </dependency>
@@ -93,6 +88,11 @@
     </dependency>
 
     <dependency>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>jakarta.validation</groupId>
       <artifactId>jakarta.validation-api</artifactId>
     </dependency>
@@ -103,17 +103,8 @@
     </dependency>
 
     <dependency>
-      <!-- For @javax.annotation.Nullable in DataManager to declare optional constructor arg -->
-      <!-- That gut feeling,  that there should be a better solution -->
-      <groupId>com.google.code.findbugs</groupId>
-      <artifactId>jsr305</artifactId>
-    </dependency>
-
-    <dependency>
-      <!-- We need the net.jcip.annotations.GuardedBy for Infinispan (at compile time only) -->
-      <groupId>net.jcip</groupId>
-      <artifactId>jcip-annotations</artifactId>
-      <scope>provided</scope>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
 
     <dependency>
