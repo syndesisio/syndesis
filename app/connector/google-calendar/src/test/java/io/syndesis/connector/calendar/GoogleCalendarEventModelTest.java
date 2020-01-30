@@ -63,8 +63,8 @@ public class GoogleCalendarEventModelTest {
         expected.setEventId("eventId");
 
         assertThat(eventModel).isEqualToComparingFieldByField(expected);
-        googleModel.setStart(date("2018-05-18T15:30:00.000Z"));
-        googleModel.setEnd(date("2018-05-18T16:30:00.000Z"));
+        googleModel.setStart(dateTime("2018-05-18T15:30:00.000Z"));
+        googleModel.setEnd(dateTime("2018-05-18T16:30:00.000Z"));
         assertThat(eventModel.asEvent()).isEqualTo(googleModel);
     }
 
