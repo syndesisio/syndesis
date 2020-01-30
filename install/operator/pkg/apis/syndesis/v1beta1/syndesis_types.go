@@ -263,6 +263,8 @@ const (
 // Syndesis is the Schema for the syndeses API
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
+// +kubebuilder:object:root=true
+// +kubebuilder:storageversion
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 type Syndesis struct {
 	metav1.TypeMeta   `json:",inline"`
@@ -273,7 +275,7 @@ type Syndesis struct {
 }
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
-
+// +kubebuilder:object:root=true
 // SyndesisList contains a list of Syndesis
 type SyndesisList struct {
 	metav1.TypeMeta `json:",inline"`
