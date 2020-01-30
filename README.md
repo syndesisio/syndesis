@@ -10,7 +10,7 @@ All developer related documentation can be found at the [Syndesis Developer Hand
 
 ### Quickstart
 
-* To get started quickly please install [Minishift](https://www.openshift.org/minishift/) first.
+* To get started quickly please install [Minishift](https://www.okd.io/minishift/) first.
 * Clone this repository and enter it:
 
 ```
