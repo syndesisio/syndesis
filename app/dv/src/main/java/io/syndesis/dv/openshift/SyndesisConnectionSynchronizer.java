@@ -15,14 +15,19 @@
  */
 package io.syndesis.dv.openshift;
 
+import java.sql.Connection;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.teiid.spring.data.BaseConnection;
+import org.teiid.spring.data.BaseConnectionFactory;
 
 import io.syndesis.dv.KException;
 import io.syndesis.dv.RepositoryManager;
@@ -34,7 +39,6 @@ import io.syndesis.dv.server.endpoint.MetadataService.SourceDeploymentMode;
 
 /**
  * This class provides the communication and hooks
- *
  */
 @Component
 public class SyndesisConnectionSynchronizer {
@@ -145,6 +149,7 @@ public class SyndesisConnectionSynchronizer {
         if (create) {
             try {
                 this.openshiftClient.createDataSource(sds);
+                validateConnection(sds);
             } catch (Exception e) {
                 LOGGER.warn("Error creating data source for " + sds.getSyndesisName(), e);
                 return;
@@ -158,6 +163,26 @@ public class SyndesisConnectionSynchronizer {
             LOGGER.warn("Failed to fetch metadata for connection " + sds.getSyndesisName(), e);
         }
     }
+
+	private void validateConnection(DefaultSyndesisDataSource sds) throws Exception {
+		for (TeiidDataSource tds : this.openshiftClient.getDataSources()) {
+			LOGGER.warn("data sources" + tds.getSyndesisId() +"="+sds.getSyndesisConnectionId() + ", " + sds.getSyndesisName());
+			if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
+				Object obj = tds.getConnectionFactory();
+				if (obj instanceof BaseConnectionFactory) {
+					BaseConnection conn = (BaseConnection)((BaseConnectionFactory<?>)obj).getConnection();
+					if (conn != null) {
+						conn.close();
+					}
+				} else {
+					Connection conn = ((DataSource)obj).getConnection();
+					if (conn != null) {
+						conn.close();
+					}
+				}
+			}
+		}
+	}
 
     public void deleteConnection(DefaultSyndesisDataSource dsd) throws KException {
         try {
