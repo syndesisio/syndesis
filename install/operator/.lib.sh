@@ -82,11 +82,13 @@ build_operator()
 	        local hassdk=$(operatorsdk_is_available)
 	        if [ "$hassdk" == "OK" ]; then
 	            operator-sdk generate k8s
-	            operator-sdk generate openapi
+	            operator-sdk generate crds
 	        else
 	            # display warning message and move on
 	            printf "$hassdk\n\n"
 	        fi
+
+	        openapi_gen
 	        go generate ./pkg/...
     	    go mod tidy
 
@@ -143,7 +145,7 @@ build_operator()
         done
 
         cat > "${BUILDER_IMAGE_NAME}.tmp" <<EODockerfile
-FROM golang:1.12.0
+FROM golang:1.13.7
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
 COPY . .
@@ -240,4 +242,16 @@ build_image()
         echo invalid build strategy: $1
         exit 1
     esac
+}
+
+openapi_gen() {
+    if hash openapi-gen 2>/dev/null; then
+        openapi-gen --logtostderr=true -o "" \
+            -i ./pkg/apis/syndesis/v1alpha1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1alpha1
+
+        openapi-gen --logtostderr=true -o "" \
+            -i ./pkg/apis/syndesis/v1beta1 -O zz_generated.openapi -p ./pkg/apis/syndesis/v1beta1
+    else
+        echo "skipping go openapi generation"
+    fi
 }

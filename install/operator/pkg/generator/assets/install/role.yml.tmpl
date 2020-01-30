@@ -28,9 +28,10 @@
     verbs:
     - get
   - apiGroups:
-    - "jobs"
-    resources:
     - batch
+    - extensions
+    resources:
+    - jobs
     verbs: [ get list create delete update watch deletecollection ]
   - apiGroups:
     - ""

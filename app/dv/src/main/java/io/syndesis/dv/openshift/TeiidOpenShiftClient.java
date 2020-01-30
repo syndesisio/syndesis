@@ -1539,9 +1539,7 @@ public class TeiidOpenShiftClient implements StringConstants {
             // delete routes first
             client.routes().inNamespace(namespace).withName(openshiftName + HYPHEN + ProtocolType.ODATA.id()).delete();
             // delete services next
-            client.services().inNamespace(namespace).withName(openshiftName + HYPHEN + ProtocolType.JDBC.id()).delete();
-            client.services().inNamespace(namespace).withName(openshiftName + HYPHEN + ProtocolType.ODATA.id()).delete();
-            client.services().inNamespace(namespace).withName(openshiftName + HYPHEN + ProtocolType.PG.id()).delete();
+            client.services().inNamespace(namespace).withName(openshiftName).delete();
         } catch (KubernetesClientException e ) {
             error(openshiftName, e.getMessage());
             error(openshiftName, "requeueing the delete request");
