@@ -256,6 +256,10 @@
             <groupId>javax.interceptor</groupId>
             <artifactId>javax.interceptor-api</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
     </dependencies>

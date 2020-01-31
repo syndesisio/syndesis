@@ -21,6 +21,7 @@ import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
@@ -28,8 +29,6 @@ import javax.ws.rs.core.Response;
 
 import io.swagger.annotations.Api;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 @Api(value = "properties")
 public class ConnectorPropertiesHandler {
@@ -51,6 +50,6 @@ public class ConnectorPropertiesHandler {
     }
 
     Client createClient() {
-        return new ResteasyClientBuilder().build();
+        return ClientBuilder.newClient();
     }
 }

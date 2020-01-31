@@ -60,7 +60,7 @@ public class HttpClient {
 
         resteasyJacksonProvider.setMapper(mapper);
 
-        final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
+        final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
         providerFactory.register(resteasyJacksonProvider);
 
         final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);

@@ -631,8 +631,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
     </dependency>
 
     <dependency>
@@ -748,23 +748,23 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-validator-provider-11</artifactId>
+      <groupId>jakarta.ws.rs</groupId>
+      <artifactId>jakarta.ws.rs-api</artifactId>
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.spec.javax.ws.rs</groupId>
-      <artifactId>jboss-jaxrs-api_2.1_spec</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.jboss.spec.javax.annotation</groupId>
-      <artifactId>jboss-annotations-api_1.2_spec</artifactId>
+      <groupId>jakarta.annotation</groupId>
+      <artifactId>jakarta.annotation-api</artifactId>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.resteasy</groupId>
-      <artifactId>resteasy-jaxrs</artifactId>
+      <artifactId>resteasy-core-spi</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.jboss.resteasy</groupId>
+      <artifactId>resteasy-validator-provider</artifactId>
     </dependency>
 
     <dependency>
@@ -892,9 +892,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.ws.rs</groupId>
-      <artifactId>javax.ws.rs-api</artifactId>
-      <scope>runtime</scope>
+      <groupId>jakarta.persistence</groupId>
+      <artifactId>jakarta.persistence-api</artifactId>
     </dependency>
 
     <dependency>
@@ -941,11 +940,6 @@
     </dependency>
 
     <dependency>
-      <groupId>net.javacrumbs.json-unit</groupId>
-      <artifactId>json-unit-assertj</artifactId>
-    </dependency>
-
-    <dependency>
       <groupId>com.squareup.okio</groupId>
       <artifactId>okio</artifactId>
     </dependency>
@@ -954,11 +948,6 @@
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
       <scope>runtime</scope>
-    </dependency>
-
-    <dependency>
-      <groupId>org.hibernate.javax.persistence</groupId>
-      <artifactId>hibernate-jpa-2.1-api</artifactId>
     </dependency>
 
     <dependency>
