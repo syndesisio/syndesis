@@ -1,5 +1,5 @@
+import { AngleRightIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -23,34 +23,32 @@ export interface IIntegrationStepsHorizontalItemProps {
   isLast?: boolean;
 }
 
-export class IntegrationStepsHorizontalItem extends React.Component<
-  IIntegrationStepsHorizontalItemProps
-> {
-  public render() {
-    return (
-      <div className="integration-steps-horizontal-item">
-        {!this.props.href && (
-          <div>
-            <div className={'step-icon'} title={this.props.title}>
-              {this.props.icon}
-            </div>
-            <p>{this.props.name}</p>
-          </div>
-        )}
-        {this.props.href && (
-          <Link to={this.props.href}>
-            <div>
-              <div className={'step-icon'} title={this.props.title}>
-                {this.props.icon}
-              </div>
-              <p>{this.props.name}</p>
-            </div>
-          </Link>
-        )}
-        {this.props.isLast === false ? (
-          <Icon name={'angle-right'} className="step-arrow" />
-        ) : null}
+export const IntegrationStepsHorizontalItem: React.FunctionComponent<IIntegrationStepsHorizontalItemProps> = ({
+  name,
+  icon,
+  title,
+  href,
+  isLast,
+}) => (
+  <div className="integration-steps-horizontal-item">
+    {!href && (
+      <div>
+        <div className={'step-icon'} title={title}>
+          {icon}
+        </div>
+        <p>{name}</p>
       </div>
-    );
-  }
-}
+    )}
+    {href && (
+      <Link to={href}>
+        <div>
+          <div className={'step-icon'} title={title}>
+            {icon}
+          </div>
+          <p>{name}</p>
+        </div>
+      </Link>
+    )}
+    {isLast === false ? <AngleRightIcon className="step-arrow" /> : null}
+  </div>
+);

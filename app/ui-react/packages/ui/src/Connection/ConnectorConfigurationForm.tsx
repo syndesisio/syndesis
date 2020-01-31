@@ -1,7 +1,15 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
+import {
+  Alert,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Form,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Alert } from 'patternfly-react';
 import * as React from 'react';
+import { ERROR, WARNING } from '../constants';
 import { ButtonLink, Container, Loader } from '../Layout';
 
 export interface IConnectorConfigurationFormValidationResult {
@@ -54,14 +62,18 @@ export class ConnectorConfigurationForm extends React.Component<
           <Card>
             <CardHeader className="syn-card__header--border">
               {this.props.i18nFormTitle && (
-                <Title className="syn-card__title" headingLevel="h2" size="md">{this.props.i18nFormTitle}</Title>
+                <Title className="syn-card__title" headingLevel="h2" size="md">
+                  {this.props.i18nFormTitle}
+                </Title>
               )}
             </CardHeader>
             <CardBody>
               {this.props.validationResults!.map((e, idx) => (
-                <Alert key={idx} type={e.type}>
-                  {e.message}
-                </Alert>
+                <Alert
+                  title={e.message}
+                  key={idx}
+                  type={e.type === ERROR ? WARNING : e.type}
+                />
               ))}
               <Form
                 isHorizontal={true}

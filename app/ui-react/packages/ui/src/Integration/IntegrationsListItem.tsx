@@ -1,4 +1,13 @@
-import { Icon, ListView } from 'patternfly-react';
+import {
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Text,
+} from '@patternfly/react-core';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { global_warning_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../helpers';
 import { IntegrationIcon } from './IntegrationIcon';
@@ -31,72 +40,101 @@ export interface IIntegrationsListItemProps {
   checkboxComponent?: React.ReactNode;
 }
 
-export class IntegrationsListItem extends React.Component<
-  IIntegrationsListItemProps
-> {
-  public render() {
-    return (
-      <ListView.Item
+export const IntegrationsListItem: React.FunctionComponent<IIntegrationsListItemProps> = ({
+  actions,
+  checkboxComponent,
+  currentState,
+  finishConnectionIcon,
+  i18nConfigurationRequired,
+  i18nError,
+  i18nLogUrlText,
+  i18nProgressPending,
+  i18nProgressStarting,
+  i18nProgressStopping,
+  i18nPublished,
+  i18nUnpublished,
+  integrationName,
+  isConfigurationRequired,
+  monitoringCurrentStep,
+  monitoringLogUrl,
+  monitoringTotalSteps,
+  monitoringValue,
+  startConnectionIcon,
+  targetState,
+}) => {
+  return (
+    <>
+      <DataListItem
         data-testid={`integrations-list-item-${toValidHtmlId(
-          this.props.integrationName
+          integrationName
         )}-list-item`}
-        checkboxInput={this.props.checkboxComponent || undefined}
-        actions={this.props.actions}
-        heading={this.props.integrationName}
         className={'integration-list-item'}
-        additionalInfo={[
-          <ListView.InfoItem
-            key={1}
-            className={'integration-list-item__additional-info'}
-          >
-            {this.props.currentState === 'Pending' ? (
-              <IntegrationStatusDetail
-                targetState={this.props.targetState}
-                value={this.props.monitoringValue}
-                currentStep={this.props.monitoringCurrentStep}
-                totalSteps={this.props.monitoringTotalSteps}
-                logUrl={this.props.monitoringLogUrl}
-                i18nProgressPending={this.props.i18nProgressPending}
-                i18nProgressStarting={this.props.i18nProgressStarting}
-                i18nProgressStopping={this.props.i18nProgressStopping}
-                i18nLogUrlText={this.props.i18nLogUrlText}
-              />
-            ) : (
-              <IntegrationStatus
-                currentState={this.props.currentState}
-                i18nPublished={this.props.i18nPublished}
-                i18nUnpublished={this.props.i18nUnpublished}
-                i18nError={this.props.i18nError}
-              />
-            )}
-          </ListView.InfoItem>,
-          <ListView.InfoItem
-            key={2}
-            className={'integration-list-item__additional-info'}
-          >
-            {this.props.isConfigurationRequired && (
-              <div
-                className={'integration-list-item__config-required'}
-                data-testid={`integrations-list-item-config-required`}
-              >
-                <Icon
-                  type={'pf'}
-                  name={'warning-triangle-o'}
-                  className="pf-u-mr-xs"
+        aria-labelledby={'integrationName'}
+      >
+        <DataListItemRow>
+          {checkboxComponent ? checkboxComponent : null}
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell key={0}>
+                <IntegrationIcon
+                  startConnectionIcon={startConnectionIcon}
+                  finishConnectionIcon={finishConnectionIcon}
                 />
-                {this.props.i18nConfigurationRequired}
-              </div>
-            )}
-          </ListView.InfoItem>,
-        ]}
-        leftContent={
-          <IntegrationIcon
-            startConnectionIcon={this.props.startConnectionIcon}
-            finishConnectionIcon={this.props.finishConnectionIcon}
+              </DataListCell>,
+              <DataListCell key={1}>
+                <Text component={'h3'}>{integrationName}</Text>
+              </DataListCell>,
+              <DataListCell
+                key={2}
+                className={'integration-list-item__additional-info'}
+              >
+                {currentState === 'Pending' ? (
+                  <IntegrationStatusDetail
+                    targetState={targetState}
+                    value={monitoringValue}
+                    currentStep={monitoringCurrentStep}
+                    totalSteps={monitoringTotalSteps}
+                    logUrl={monitoringLogUrl}
+                    i18nProgressPending={i18nProgressPending}
+                    i18nProgressStarting={i18nProgressStarting}
+                    i18nProgressStopping={i18nProgressStopping}
+                    i18nLogUrlText={i18nLogUrlText}
+                  />
+                ) : (
+                  <IntegrationStatus
+                    currentState={currentState}
+                    i18nPublished={i18nPublished}
+                    i18nUnpublished={i18nUnpublished}
+                    i18nError={i18nError}
+                  />
+                )}
+              </DataListCell>,
+
+              <DataListCell
+                key={3}
+                className={'integration-list-item__additional-info'}
+              >
+                {isConfigurationRequired && (
+                  <div
+                    className={'integration-list-item__config-required'}
+                    data-testid={`integrations-list-item-config-required`}
+                  >
+                    <WarningTriangleIcon
+                      color={global_warning_color_100.value}
+                      size={'sm'}
+                    />
+                    &nbsp;
+                    {i18nConfigurationRequired}
+                  </div>
+                )}
+              </DataListCell>,
+            ]}
           />
-        }
-        stacked={false}
-      />
-    );
-  }
-}
+          <DataListAction id={''} aria-label={''} aria-labelledby={''}>
+            {actions}
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
+    </>
+  );
+};

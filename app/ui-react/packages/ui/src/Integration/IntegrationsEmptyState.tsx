@@ -1,5 +1,13 @@
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Title,
+  Tooltip,
+} from '@patternfly/react-core';
+import { CubesIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import { EmptyState, OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
 
@@ -11,40 +19,33 @@ export interface IIntegrationsEmptyStateProps {
   linkCreateIntegration: H.LocationDescriptor;
 }
 
-export class IntegrationsEmptyState extends React.Component<
-  IIntegrationsEmptyStateProps
-> {
-  public getCreateIntegrationTooltip() {
-    return (
-      <Tooltip id="createTip">
-        {this.props.i18nCreateIntegrationTip
-          ? this.props.i18nCreateIntegrationTip
-          : this.props.i18nCreateIntegration}
-      </Tooltip>
-    );
-  }
-
-  public render() {
-    return (
-      <EmptyState>
-        <EmptyState.Icon />
-        <EmptyState.Title>{this.props.i18nEmptyStateTitle}</EmptyState.Title>
-        <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-        <EmptyState.Action>
-          <OverlayTrigger
-            overlay={this.getCreateIntegrationTooltip()}
-            placement="top"
-          >
-            <ButtonLink
-              data-testid={'integrations-empty-state-create-button'}
-              href={this.props.linkCreateIntegration}
-              as={'primary'}
-            >
-              {this.props.i18nCreateIntegration}
-            </ButtonLink>
-          </OverlayTrigger>
-        </EmptyState.Action>
-      </EmptyState>
-    );
-  }
-}
+export const IntegrationsEmptyState: React.FunctionComponent<IIntegrationsEmptyStateProps> = ({
+  i18nCreateIntegration,
+  i18nCreateIntegrationTip,
+  i18nEmptyStateInfo,
+  i18nEmptyStateTitle,
+  linkCreateIntegration,
+}) => (
+  <EmptyState variant={EmptyStateVariant.full}>
+    <EmptyStateIcon icon={CubesIcon} />
+    <Title headingLevel="h5" size="lg">
+      {i18nEmptyStateTitle}
+    </Title>
+    <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>
+    <Tooltip
+      content={
+        i18nCreateIntegrationTip
+          ? i18nCreateIntegrationTip
+          : i18nCreateIntegration
+      }
+    >
+      <ButtonLink
+        data-testid={'integrations-empty-state-create-button'}
+        href={linkCreateIntegration}
+        as={'primary'}
+      >
+        {i18nCreateIntegration}
+      </ButtonLink>
+    </Tooltip>
+  </EmptyState>
+);

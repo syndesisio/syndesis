@@ -1,6 +1,15 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
-import { Alert, Button } from 'patternfly-react';
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Form,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
+import { ERROR, WARNING } from '../constants';
 import { Container, Loader, PageSection } from '../Layout';
 import './ConnectionDetailsForm.css';
 
@@ -100,16 +109,18 @@ export class ConnectionDetailsForm extends React.Component<
                   onSubmit={this.props.handleSubmit}
                 >
                   {this.props.validationResults.map((e, idx) => (
-                    <Alert key={idx} type={e.type}>
-                      {e.message}
-                    </Alert>
+                    <Alert
+                      title={e.message}
+                      key={idx}
+                      type={e.type === ERROR ? WARNING : e.type}
+                    />
                   ))}
                   {this.props.children}
                   <div>
                     {this.props.isEditing ? (
                       <Button
                         data-testid={'connection-details-form-validate-button'}
-                        bsStyle="default"
+                        variant="secondary"
                         disabled={this.props.isWorking || !this.props.isValid}
                         onClick={this.props.onValidate}
                       >
@@ -121,7 +132,7 @@ export class ConnectionDetailsForm extends React.Component<
                     ) : (
                       <Button
                         data-testid={'connection-details-form-edit-button'}
-                        bsStyle="primary"
+                        variant="primary"
                         onClick={this.props.onStartEditing}
                       >
                         {this.props.i18nEditLabel}
@@ -134,7 +145,7 @@ export class ConnectionDetailsForm extends React.Component<
                 <CardFooter>
                   <Button
                     data-testid={'connection-details-form-cancel-button'}
-                    bsStyle="default"
+                    variant="secondary"
                     className="connection-details-form__editButton"
                     disabled={this.props.isWorking}
                     onClick={this.props.onCancelEditing}
@@ -143,7 +154,7 @@ export class ConnectionDetailsForm extends React.Component<
                   </Button>
                   <Button
                     data-testid={'connection-details-form-save-button'}
-                    bsStyle="primary"
+                    variant="primary"
                     className="connection-details-form__editButton"
                     disabled={this.props.isWorking || !this.props.isValid}
                     onClick={this.props.handleSubmit}

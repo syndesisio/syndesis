@@ -1,5 +1,12 @@
-import { Card, CardBody, CardHeader, Title } from '@patternfly/react-core';
-import { DonutChart, patternfly } from 'patternfly-react';
+import { ChartDonut } from '@patternfly/react-charts';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  Grid,
+  GridItem,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IIntegrationBoardProps {
@@ -11,35 +18,40 @@ export interface IIntegrationBoardProps {
   i18nIntegrationStateStopped: string;
   i18nIntegrations: string;
   i18nTitle: string;
-  i18nTotal: string;
 }
 
 export class IntegrationBoard extends React.PureComponent<
   IIntegrationBoardProps
 > {
   public render() {
-    const data = {
-      colors: {
-        Pending: patternfly.pfPaletteColors.black200,
-        Published: patternfly.pfPaletteColors.blue400,
-        Stopped: patternfly.pfPaletteColors.black300,
+    const data = [
+      {
+        x: this.props.i18nIntegrationStateRunning,
+        y: this.props.runningIntegrations,
       },
-      columns: [
-        [
-          this.props.i18nIntegrationStateRunning,
-          this.props.runningIntegrations,
-        ],
-        [
-          this.props.i18nIntegrationStateStopped,
-          this.props.stoppedIntegrations,
-        ],
-        [
-          this.props.i18nIntegrationStatePending,
-          this.props.pendingIntegrations,
-        ],
-      ],
-      type: 'donut',
-    };
+      {
+        x: this.props.i18nIntegrationStateStopped,
+        y: this.props.stoppedIntegrations,
+      },
+      {
+        x: this.props.i18nIntegrationStatePending,
+        y: this.props.pendingIntegrations,
+      },
+    ];
+    const legendData = [
+      {
+        name: `${this.props.i18nIntegrationStateRunning}: ${this.props.runningIntegrations}`,
+      },
+      {
+        name: `${this.props.i18nIntegrationStateStopped}: ${this.props.stoppedIntegrations}`,
+      },
+      {
+        name: `${this.props.i18nIntegrationStatePending}: ${this.props.pendingIntegrations}`,
+      },
+    ];
+    const total = `${this.props.runningIntegrations +
+      this.props.stoppedIntegrations +
+      this.props.pendingIntegrations}`;
 
     return (
       <Card data-testid={'dashboard-integration-board'}>
@@ -47,20 +59,38 @@ export class IntegrationBoard extends React.PureComponent<
           <Title size={'md'}>{this.props.i18nTitle}</Title>
         </CardHeader>
         <CardBody>
-          <DonutChart
-            id="integration-board"
-            size={{ height: 120 }}
-            data={data}
-            tooltip={{
-              contents: patternfly.pfDonutTooltipContents,
-              show: true,
-            }}
-            title={{
-              secondary: this.props.i18nIntegrations,
-              type: this.props.i18nTotal,
-            }}
-            legend={{ show: true, position: 'right' }}
-          />
+          <Grid>
+            <GridItem span={6} offset={3}>
+              <div
+                style={{
+                  // these values are tied to how the chart figures out it's
+                  // sizing, best to leave them here
+                  height: '150px',
+                  width: '275px',
+                }}
+              >
+                <ChartDonut
+                  data-test-id="integration-board"
+                  constrainToVisibleArea={true}
+                  data={data}
+                  subTitle={this.props.i18nIntegrations}
+                  title={total}
+                  labels={({ datum }) => `${datum.x}: ${datum.y}`}
+                  legendData={legendData}
+                  legendOrientation="vertical"
+                  legendPosition="right"
+                  padding={{
+                    bottom: 20,
+                    left: 20,
+                    right: 145, // Adjusted to accommodate legend
+                    top: 20,
+                  }}
+                  height={150}
+                  width={275}
+                />
+              </div>
+            </GridItem>
+          </Grid>
         </CardBody>
       </Card>
     );
