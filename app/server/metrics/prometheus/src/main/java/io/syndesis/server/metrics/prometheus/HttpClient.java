@@ -15,18 +15,15 @@
  */
 package io.syndesis.server.metrics.prometheus;
 
+import java.util.concurrent.TimeUnit;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
-
-import java.util.concurrent.TimeUnit;
 
 public class HttpClient {
 
@@ -63,10 +60,8 @@ public class HttpClient {
         final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
         providerFactory.register(resteasyJacksonProvider);
 
-        final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
-
         return ClientBuilder.newBuilder()
-            .withConfig(configuration)
+            .withConfig(providerFactory)
             .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
             .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
             .build();
