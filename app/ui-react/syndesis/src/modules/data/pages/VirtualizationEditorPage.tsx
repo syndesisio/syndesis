@@ -299,7 +299,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
         />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
-        <VirtualizationNavBar virtualization={props.virtualization} />
+        <VirtualizationNavBar virtualization={props.routeState.virtualization} />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
         {props.children}
