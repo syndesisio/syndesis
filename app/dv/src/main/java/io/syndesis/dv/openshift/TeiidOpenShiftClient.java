@@ -83,6 +83,7 @@ import io.fabric8.kubernetes.api.model.ObjectMeta;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.ReplicationController;
+import io.fabric8.kubernetes.api.model.ReplicationControllerList;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.Service;
@@ -99,7 +100,6 @@ import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.Route;
-import io.fabric8.openshift.api.model.RouteList;
 import io.fabric8.openshift.api.model.RouteSpec;
 import io.fabric8.openshift.api.model.TLSConfigBuilder;
 import io.fabric8.openshift.client.DefaultOpenShiftClient;
@@ -1382,13 +1382,48 @@ public class TeiidOpenShiftClient implements StringConstants {
         }
     }
 
+    private Build findBuildWithNumber(long number, BuildList buildList) {
+    	for (Build b: buildList.getItems()) {
+    		String buildNumber = b.getMetadata().getAnnotations().get("openshift.io/build.number");
+    		if (buildNumber != null && Long.parseLong(buildNumber) == number) {
+    			return b;
+    		}
+    	}
+    	return buildList.getItems().get(0);
+    }
+
+    private long getDeployedRevision(DeploymentConfig dc, long defaultNumber, final OpenShiftClient client) {
+    	long latestVersion = dc.getStatus().getLatestVersion().longValue();
+		ReplicationControllerList list = client.replicationControllers().inNamespace(dc.getMetadata().getNamespace())
+				.withLabel("application", dc.getMetadata().getName()).list();
+
+		for (ReplicationController rc : list.getItems()) {
+			String version = rc.getMetadata().getAnnotations().get("openshift.io/deployment-config.latest-version");
+    		if (version != null && Long.parseLong(version) == latestVersion) {
+    			String deployedVersion = rc.getSpec().getTemplate().getMetadata().getLabels().get(DEPLOYMENT_VERSION_LABEL);
+    			if (deployedVersion != null) {
+    				try {
+						return Long.parseLong(deployedVersion);
+					} catch (NumberFormatException e) {
+						LOGGER.error("unexpected value for deployment-version", e);
+					}
+    			}
+    		}
+		}
+		return defaultNumber;
+    }
     private BuildStatus getVDBService(String openShiftName, String namespace, final OpenShiftClient client) {
         BuildStatus status = new BuildStatus(openShiftName);
         status.setNamespace(namespace);
 
+        long lastVersion = 1L;
+        BuildConfig bc = client.buildConfigs().inNamespace(namespace).withName(getBuildConfigName(openShiftName)).get();
+        if (bc != null) {
+        	lastVersion = bc.getStatus().getLastVersion().longValue();
+        }
         BuildList buildList = client.builds().inNamespace(namespace).withLabel("application", openShiftName).list();
         if ((buildList !=null) && !buildList.getItems().isEmpty()) {
-            Build build = buildList.getItems().get(0);
+            Build build = findBuildWithNumber(lastVersion, buildList);
             status.setName(build.getMetadata().getName());
             String deploymentVersion = build.getMetadata().getLabels().get(DEPLOYMENT_VERSION_LABEL);
             if (deploymentVersion != null) {
@@ -1437,6 +1472,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                     DeploymentCondition cond = getDeploymentConfigStatus(dc);
                     if (cond != null) {
                         status.setStatusMessage(cond.getMessage());
+                        status.setDeploymentVersion(getDeployedRevision(dc, status.getDeploymentVersion(), client));
                     } else {
                         status.setStatusMessage("Available condition not found in deployment, delete the service and re-deploy?");
                     }
@@ -1629,33 +1665,14 @@ public class TeiidOpenShiftClient implements StringConstants {
         OpenShiftClient client = openshiftClient();
         RouteStatus theRoute = null;
         debug(openShiftName, "Getting route of type " + protocolType.id() + " for Service");
-        RouteList routes = client.routes().inNamespace(namespace).list();
-        if (routes == null || routes.getItems().isEmpty()) {
-            return theRoute;
-        }
 
-        for (Route route : routes.getItems()) {
+        Route route = client.routes().inNamespace(namespace).withName(openShiftName + HYPHEN + protocolType.id()).get();
+
+        if (route != null) {
             ObjectMeta metadata = route.getMetadata();
             String name = metadata.getName();
-            if (! name.endsWith(HYPHEN + protocolType.id())) {
-                continue;
-            }
-
             RouteSpec spec = route.getSpec();
             String target = spec.getTo().getName();
-
-            Map<String, String> annotations = metadata.getAnnotations();
-            String description = annotations.get(DESCRIPTION_ANNOTATION_LABEL);
-            if (description == null || ! SERVICE_DESCRIPTION.equals(description)) {
-                continue;
-            }
-
-            //
-            // Check we have the right route for the vdb in question
-            //
-            if (! target.equals(openShiftName + HYPHEN + protocolType.id())) {
-                continue;
-            }
 
             theRoute = new RouteStatus(name, protocolType);
             theRoute.setHost(spec.getHost());
