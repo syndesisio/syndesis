@@ -164,9 +164,8 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 				v1alpha1: &v1alpha1.Syndesis{
 					Status: v1alpha1.SyndesisStatus{Phase: v1alpha1.SyndesisPhaseInstalled},
 					Spec: v1alpha1.SyndesisSpec{
-						SarNamespace:         "sar namespace",
-						ImageStreamNamespace: "imagestream namespace",
-						RouteHostname:        "routehostname",
+						SarNamespace:  "sar namespace",
+						RouteHostname: "routehostname",
 						Addons: v1alpha1.AddonsSpec{
 							"ops":    map[string]string{"enabled": "true"},
 							"todo":   map[string]string{"enabled": "true"},
@@ -267,9 +266,8 @@ func Test_syndesisApi_v1alpha1ToV1beta1(t *testing.T) {
 					Description: fmt.Sprintf("App migrated from %s to %s", v1alpha1.SchemeGroupVersion.String(), v1beta1.SchemeGroupVersion.String()),
 				},
 				Spec: v1beta1.SyndesisSpec{
-					ForceMigration:       false,
-					ImageStreamNamespace: "imagestream namespace",
-					RouteHostname:        "routehostname",
+					ForceMigration: false,
+					RouteHostname:  "routehostname",
 					Addons: v1beta1.AddonsSpec{
 						Jaeger: v1beta1.JaegerConfiguration{Enabled: false},
 						Ops:    v1beta1.AddonSpec{Enabled: true},

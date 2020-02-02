@@ -39,9 +39,9 @@ the following tools in this order:
 
 
 So at a minimum you should have one of those of tools installed.
-   
+
     usage: ./build.sh [options]
-    
+
     where options are:
       --help                             display this help messages
       --operator-build <auto|docker|go>  how to build the operator executable (default: auto)
@@ -70,7 +70,6 @@ These are the fields available. Only fields of type string or bool can be edited
 |Spec.DemoData|bool|Whether demo data should be installed or not|
 |Spec.DeployIntegrations|bool||
 |Spec.TestSupport|bool|Install with test support|
-|Spec.ImageStreamNamespace|string|Namespace where ImageStreams are located, default to the same namespace syndesis is installed|
 |Spec.Registry|string|registry to pull all syndesis components from|
 |Spec.OpenShiftMaster|string||
 |Spec.OpenShiftConsoleUrl|string||

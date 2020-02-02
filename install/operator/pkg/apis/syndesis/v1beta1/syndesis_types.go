@@ -30,9 +30,6 @@ type SyndesisSpec struct {
 	// +optional
 	Backup BackupConfig `json:"backup,omitempty"`
 
-	// Namespace where syndesis docker images are located and the operator should look after them
-	ImageStreamNamespace string `json:"imageStreamNamespace,omitempty"`
-
 	// The external hostname to access Syndesis
 	RouteHostname string `json:"routeHostname,omitempty"`
 
