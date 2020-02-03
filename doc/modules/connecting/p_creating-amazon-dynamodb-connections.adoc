@@ -10,7 +10,7 @@ connect to Amazon DynamoDB in an integration.
 .Prerequisites
 
 * You must have an AWS access key. See 
-link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials for creating connections to Amazon services].
 * You must know which AWS region contains the DynamoDB table that
 you want the connection to access. 
 * You must know the name of the DynamoDB table that you want the 
@@ -23,7 +23,7 @@ connects to DynamoDB.
 display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
-. Click the *AWS DDB* connector.
+. Click the *Amazon DynamoDB* connector.
 . In the *Access Key* field, enter an Amazon access key ID that is 
 part of a user access key in the AWS account that manages 
 the DynamoDB table that you want the connection to access. 
