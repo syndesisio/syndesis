@@ -41,8 +41,8 @@ import org.testcontainers.containers.GenericContainer;
 /**
  * @author Christoph Deppisch
  */
-@ContextConfiguration(classes = TodoOpenApiV2Connector_IT.EndpointConfig.class)
-public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
+@ContextConfiguration(classes = TodoApiV2ApiKeyInQuery_IT.EndpointConfig.class)
+public class TodoApiV2ApiKeyInQuery_IT extends SyndesisIntegrationTestSupport {
 
     private static final int TODO_SERVER_PORT = SocketUtils.findAvailableTcpPort();
     static {
@@ -54,19 +54,15 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
     /**
      * Integration uses api connector to send OpenAPI client requests to a REST endpoint. The client API connector was generated
-     * from OpenAPI 2.x specification.
+     * from OpenAPI 2.x specification and uses basic authentication security scheme.
      *
-     * The integration invokes following sequence of client requests on the test server
-     *  POST /api adds a new task
-     *  PUT /api update task
-     *  GET /api/{id} fetch task by id
+     * The test verifies the correct basic authentication headers to be sent by the client.
      *  GET /api list all tasks
-     *  DELETE /api/{id} delete task
      */
     @ClassRule
     public static SyndesisIntegrationRuntimeContainer integrationContainer = new SyndesisIntegrationRuntimeContainer.Builder()
                             .name("todo-api-client")
-                            .fromExport(TodoOpenApiV2Connector_IT.class.getResource("TodoOpenApiV2Connector-export"))
+                            .fromExport(TodoApiV2ApiKeyInQuery_IT.class.getResource("TodoApiV2ApiKeyInQuery-export"))
                             .customize("$..configuredProperties.period", "5000")
                             .customize("$..configuredProperties.host",
                                 String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
@@ -76,71 +72,22 @@ public class TodoOpenApiV2Connector_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testAddAndList(@CitrusResource TestRunner runner) {
+    public void testApiConnectorUsingApiKey(@CitrusResource TestRunner runner) {
         runner.variable("id", "citrus:randomNumber(4)");
-        runner.variable("task", "Hello from todo client!");
-
-        runner.echo("Add new task");
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .receive()
-            .post("/api")
-            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"task\":\"${task}\", \"completed\": 0}"));
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .send()
-            .response(HttpStatus.CREATED)
-            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
-
-        runner.echo("Update task");
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .receive()
-            .put("/api/${id}")
-            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"citrus:upperCase(${task})\", \"completed\": 0}"));
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .send()
-            .response(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
-
-        runner.echo("Fetch task by id");
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .receive()
-            .get("/api/${id}"));
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .send()
-            .response(HttpStatus.OK)
-            .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
-            .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
+        runner.variable("task", "Syndesis rocks!");
 
         runner.echo("List all tasks");
 
         runner.http(builder -> builder.server(todoApiServer)
             .receive()
-            .get("/api"));
+            .get("/api")
+            .queryParam("keyName", "citrus:urlEncode('secret', 'UTF-8')"));
 
         runner.http(builder -> builder.server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
-
-        runner.echo("Delete task by id");
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .receive()
-            .delete("/api/${id}"));
-
-        runner.http(builder -> builder.server(todoApiServer)
-            .send()
-            .response(HttpStatus.NO_CONTENT));
     }
 
     @Configuration
