@@ -60,7 +60,7 @@ Each operation has a flow defined for it. In {prodname}, a _flow_ defines the co
 endif::getting-started-with-apis-in-red-hat-integration[]
 
 . To examine the flows for each operation:
-.. Click its *Create flow* button to display the visualization for that flow.
+.. Click its *Edit flow* button to display the visualization for that flow.
 +
 Each flow already has a database connection, one or more data mapper
 steps, and a *Provided API Return Path* step that finishes the flow.
