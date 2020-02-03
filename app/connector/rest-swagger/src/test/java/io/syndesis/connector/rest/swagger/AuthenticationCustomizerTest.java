@@ -151,7 +151,7 @@ public class AuthenticationCustomizerTest {
     }
 
     @Test
-    public void shouldSupportAllAuthenticatioValues() {
+    public void shouldSupportAllAuthenticationValues() {
         final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
@@ -168,7 +168,7 @@ public class AuthenticationCustomizerTest {
     }
 
     @Test
-    public void shouldSupportNamedAuthenticatioValues() {
+    public void shouldSupportNamedAuthenticationValues() {
         final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);

@@ -28,15 +28,18 @@ import com.google.api.services.calendar.model.EventDateTime;
 
 import static java.time.temporal.ChronoField.HOUR_OF_DAY;
 import static java.time.temporal.ChronoField.MINUTE_OF_HOUR;
+import static java.time.temporal.ChronoField.SECOND_OF_MINUTE;
 
 import static io.syndesis.connector.calendar.GoogleCalendarUtils.formatAtendees;
 
 public class GoogleCalendarEventModel {
 
-    private static final DateTimeFormatter LOCAL_HOUR_MINUTES = new DateTimeFormatterBuilder()
+    private static final DateTimeFormatter LOCAL_DATE_TIME = new DateTimeFormatterBuilder()
         .appendValue(HOUR_OF_DAY, 2)
         .appendLiteral(':')
         .appendValue(MINUTE_OF_HOUR, 2)
+        .appendLiteral(':')
+        .appendValue(SECOND_OF_MINUTE, 2)
         .toFormatter();
 
     private String title;
@@ -168,7 +171,7 @@ public class GoogleCalendarEventModel {
             final TemporalAccessor dateTime = DateTimeFormatter.ISO_DATE_TIME.parse(asRfc3339);
 
             startDate = DateTimeFormatter.ISO_LOCAL_DATE.format(dateTime);
-            startTime = LOCAL_HOUR_MINUTES.format(dateTime);
+            startTime = LOCAL_DATE_TIME.format(dateTime);
         } else {
             final String asRfc3339 = start.getDate().toStringRfc3339();
             final TemporalAccessor date = DateTimeFormatter.ISO_DATE.parse(asRfc3339);
@@ -193,7 +196,7 @@ public class GoogleCalendarEventModel {
             TemporalAccessor dateTime = DateTimeFormatter.ISO_DATE_TIME.parse(asRfc3339);
 
             endDate = DateTimeFormatter.ISO_LOCAL_DATE.format(dateTime);
-            endTime = LOCAL_HOUR_MINUTES.format(dateTime);
+            endTime = LOCAL_DATE_TIME.format(dateTime);
         } else {
             final String asRfc3339 = end.getDate().toStringRfc3339();
             final TemporalAccessor date = DateTimeFormatter.ISO_DATE.parse(asRfc3339);
@@ -249,7 +252,7 @@ public class GoogleCalendarEventModel {
         if (startTime == null) {
             start.setDate(DateTime.parseRfc3339(startDate));
         } else {
-            start.setDate(DateTime.parseRfc3339(startDate + "T" + startTime));
+            start.setDateTime(DateTime.parseRfc3339(startDate + "T" + startTime));
         }
 
         return start;
@@ -261,7 +264,7 @@ public class GoogleCalendarEventModel {
         if (endTime == null) {
             end.setDate(DateTime.parseRfc3339(endDate));
         } else {
-            end.setDate(DateTime.parseRfc3339(endDate + "T" + endTime));
+            end.setDateTime(DateTime.parseRfc3339(endDate + "T" + endTime));
         }
 
         return end;

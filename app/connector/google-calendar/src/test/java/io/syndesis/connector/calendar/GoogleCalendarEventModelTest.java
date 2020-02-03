@@ -56,13 +56,16 @@ public class GoogleCalendarEventModelTest {
         expected.setDescription("description");
         expected.setAttendees("a1@mail.com,a2@mail.com");
         expected.setStartDate("2018-05-18");
-        expected.setStartTime("15:30");
+        expected.setStartTime("15:30:00");
         expected.setEndDate("2018-05-18");
-        expected.setEndTime("16:30");
+        expected.setEndTime("16:30:00");
         expected.setLocation("location");
         expected.setEventId("eventId");
 
         assertThat(eventModel).isEqualToComparingFieldByField(expected);
+        googleModel.setStart(dateTime("2018-05-18T15:30:00.000Z"));
+        googleModel.setEnd(dateTime("2018-05-18T16:30:00.000Z"));
+        assertThat(eventModel.asEvent()).isEqualTo(googleModel);
     }
 
     @Test
@@ -82,7 +85,7 @@ public class GoogleCalendarEventModelTest {
         eventModel.setStart(dateTime("2018-05-18T15:30:00+02:00"));
 
         assertThat(eventModel.getStartDate()).isEqualTo("2018-05-18");
-        assertThat(eventModel.getStartTime()).isEqualTo("15:30");
+        assertThat(eventModel.getStartTime()).isEqualTo("15:30:00");
     }
 
     @Test
@@ -102,7 +105,7 @@ public class GoogleCalendarEventModelTest {
         eventModel.setEnd(dateTime("2018-05-18T15:30:00+02:00"));
 
         assertThat(eventModel.getEndDate()).isEqualTo("2018-05-18");
-        assertThat(eventModel.getEndTime()).isEqualTo("15:30");
+        assertThat(eventModel.getEndTime()).isEqualTo("15:30:00");
     }
 
     @Test
