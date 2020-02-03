@@ -13,6 +13,15 @@ suppose the integration data contains a `Name` field and the next
 connection in the flow has a `CustomerName` field. You need to
 map the source `Name` field to the target `CustomerName` field.
 
+[IMPORTANT]
+The data mapper displays the largest possible set of source fields that can 
+be provided by the previous integration step. However, not all connections 
+provide data in each displayed source field. For example, a change to a 
+third-party application might discontinue providing data in a particular field. 
+As you create an integration, if you notice that data mapping is not behaving 
+as you expect, ensure that a source field that you want to map contains the 
+data that you expect.
+
 .Prerequisite
 
 You are creating or editing a flow. 

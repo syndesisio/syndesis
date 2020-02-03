@@ -12,6 +12,16 @@ been obtained or processed to data fields that the next connection in the
 flow can process.
 {prodname} provides a data mapper to help you do this. In a flow,
 at each point where you need to map data fields, add a data mapper step.
+
+[IMPORTANT]
+The data mapper displays the largest possible set of source fields that can 
+be provided by the previous integration step. However, not all connections 
+provide data in each displayed source field. For example, a change to a 
+third-party application might discontinue providing data in a particular field. 
+As you create an integration, if you notice that data mapping is not behaving 
+as you expect, ensure that a source field that you want to map contains the 
+data that you expect.
+
 Details for mapping data fields are in the following topics:
 
 * xref:identify-where-data-mapping-is-needed_{context}[]
