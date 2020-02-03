@@ -33,7 +33,7 @@ link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[inf
 .Procedure
 
 . In the *Operations* list page, for the operation
-whose flow you want to edit, click *Create flow*.
+whose flow you want to define, click *Create flow*.
 
 . For each connection that you want to add to this flow:
 .. In the flow visualization, click the plus sign to add a connection
