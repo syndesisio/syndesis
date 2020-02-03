@@ -22,7 +22,7 @@ you want to update.
 If this is a simple integration, {prodname} displays the
 integration's flow.  If this is an API provider integration, {prodname}
 displays the operations list. To update the flow for a particular
-operation, click  *Create flow* or *Edit flow* on the right of that 
+operation, click *Edit flow* on the right of that 
 operation to display its flow. 
 
 . Update the flow as needed:
