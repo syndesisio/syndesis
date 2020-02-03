@@ -68,3 +68,12 @@ the name of the source field.
 default *Map* action. 
 . In the *Target* section, enter the name of the
 field that you want to map to and click *Enter*. 
+
+.Troubleshooting tip
+The data mapper displays the largest possible set of source fields that can 
+be provided by the previous integration step. However, not all connections 
+provide data in each displayed source field. For example, a change to a 
+third-party application might discontinue providing data in a particular field. 
+As you create an integration, if you notice that data mapping is not behaving 
+as you expect, ensure that a source field that you want to map contains the 
+data that you expect.
