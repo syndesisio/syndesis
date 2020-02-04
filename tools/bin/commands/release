@@ -149,7 +149,7 @@ release::run() {
     fi
 
     # Release the binaries
-    publish_artifacts "${topdir}/install/operator/releases" "$release_version" $prerelease
+    publish_artifacts "${topdir}" "$release_version" $prerelease
 
     # Create release description based on commit between releases
     # if check_for_command gren; then
@@ -283,7 +283,7 @@ prepare_binaries() {
 }
 
 publish_artifacts() {
-    local release_dir=$1
+    local top_dir=$1
     local tag=$2
     local prerelease=$3
 
@@ -311,7 +311,7 @@ publish_artifacts() {
         return
     fi
 
-    for file in $release_dir/*; do
+    for file in $top_dir/install/operator/releases/*; do
         curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
@@ -323,6 +323,17 @@ publish_artifacts() {
           return
         fi
     done
+
+    (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+      -H "Accept: application/vnd.github.v3+json" \
+      -H "Content-Type: application/zip" \
+      --data-binary @- \
+      ${upload_url}?name=syndesis-cli.zip >/dev/null) 2>&1
+    local err=$?
+    if [ $err -ne 0 ]; then
+      echo "ERROR: Cannot upload release artifact syndesis-cli.zip on remote github repository"
+      return
+    fi
 }
 
 build_and_stage_artefacts() {
