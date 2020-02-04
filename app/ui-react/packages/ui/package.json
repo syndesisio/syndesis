@@ -75,7 +75,7 @@
   },
   "dependencies": {
     "@patternfly/patternfly": "^2.40.6",
-    "@patternfly/react-core": "^3.120.5",
+    "@patternfly/react-core": "^3.122.4",
     "@patternfly/react-icons": "^3.14.18",
     "@patternfly/react-styles": "^3.6.5",
     "@patternfly/react-table": "^2.24.17",

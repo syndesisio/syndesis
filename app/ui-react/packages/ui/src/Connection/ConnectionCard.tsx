@@ -98,7 +98,7 @@ export class ConnectionCard extends React.PureComponent<
   };
 
   public onMenuSelect = (
-    event: React.SyntheticEvent<HTMLDivElement, Event>
+    event?: React.SyntheticEvent<HTMLDivElement, Event> | undefined
   ) => {
     this.setState({
       isMenuOpen: !this.state.isMenuOpen,
