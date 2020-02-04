@@ -33,6 +33,7 @@
               },
               "uploadMode": {
                 "deprecated": false,
+                "defaultValue": "force",
                 "displayName": "Upload mode",
                 "enum": [
                   {
