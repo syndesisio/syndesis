@@ -2862,7 +2862,7 @@
   resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.40.6.tgz#f1e13069c6c948e194de53bbd00a031bb0ddd051"
   integrity sha512-YIusipnIPipCJNKN/Lw72MmV1dnsFQvc8Exwo5+IfROF2TnWMpVYaFPC3TvqnuMrysxrxpuGC2HzKJVX5bqbgA==
 
-"@patternfly/react-core@^3.120.5", "@patternfly/react-core@^3.120.8":
+"@patternfly/react-core@^3.120.8":
   version "3.120.8"
   resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.120.8.tgz#116cc1a4c03c3dbea889295e36b6d6bf86d40e9c"
   integrity sha512-YXyi1v7bXscjz8kDby8Qp8OSa1v83Pbre8Ow/Nzr7LuWi1IM/J1jOcTuOhDRH9+OHNAz9AUBnyxZNvE7ZL6ebQ==
@@ -2875,12 +2875,51 @@
     focus-trap-react "^4.0.1"
     tippy.js "3.4.1"
 
+"@patternfly/react-core@^3.122.4":
+  version "3.134.2"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-core/-/react-core-3.134.2.tgz#872eda04c8224614137bdd5430aa20292fd5e4e0"
+  integrity sha512-UywY0hqviAFxjr3kHKp9K6qNU7b1eBmSxYcCM03Zw0VlF5Y3XFUyYVq7HNvzS6eHiNXFADwFNJqyWC5r3AI2nQ==
+  dependencies:
+    "@patternfly/react-icons" "^3.14.39"
+    "@patternfly/react-styles" "^3.6.26"
+    "@patternfly/react-tokens" "^2.7.25"
+    emotion "^9.2.9"
+    exenv "^1.2.2"
+    focus-trap-react "^4.0.1"
+    tippy.js "5.1.2"
+
 "@patternfly/react-icons@^3.14.18", "@patternfly/react-icons@^3.14.19":
   version "3.14.24"
   resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.24.tgz#9320e75c627a6159d73cd01ab761e5fe38112b77"
   integrity sha512-R5vP/jpDScGJqbKYWA7gn0K9V4unhpu+THazxmDJtX55zR/AQgaiaQ70q+/URKtsQhWUFBPKjczuJnzOoo3S3Q==
   dependencies:
     "@fortawesome/free-brands-svg-icons" "^5.8.1"
+
+"@patternfly/react-icons@^3.14.39":
+  version "3.14.39"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-icons/-/react-icons-3.14.39.tgz#38e43781ff2c4550814208c68a68681b807270aa"
+  integrity sha512-/1hhKEFRtvBYNa8BFRurqHdlUYYzdovmllwtEWcxye5lffDC1Ghco1NGQzjm0FtzkxX1hPFvw04HRR2jBBG8xQ==
+  dependencies:
+    "@fortawesome/free-brands-svg-icons" "^5.8.1"
+
+"@patternfly/react-styles@^3.6.26":
+  version "3.6.26"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-styles/-/react-styles-3.6.26.tgz#514d97982de2d98fb331c812c3be1aae277b4a7f"
+  integrity sha512-PktPT7P7IuXIRyeQ00Z3yffE/OUGr/LBIbKuDl/9hO0C3zTKQpDH4vu/kQvh2/sW/Oe+nbpKMYt1+nRe0m9rSw==
+  dependencies:
+    "@babel/helper-plugin-utils" "^7.0.0-beta.48"
+    camel-case "^3.0.0"
+    css "^2.2.3"
+    cssom "^0.3.4"
+    cssstyle "^0.3.1"
+    emotion "^9.2.9"
+    emotion-server "^9.2.9"
+    fbjs-scripts "^0.8.3"
+    fs-extra "^6.0.1"
+    jsdom "^15.1.0"
+    relative "^3.0.2"
+    resolve-from "^4.0.0"
+    typescript "3.4.5"
 
 "@patternfly/react-styles@^3.6.5", "@patternfly/react-styles@^3.6.6":
   version "3.6.11"
@@ -2914,6 +2953,11 @@
     classnames "^2.2.5"
     exenv "^1.2.2"
     lodash "^4.17.15"
+
+"@patternfly/react-tokens@^2.7.25":
+  version "2.7.25"
+  resolved "https://registry.yarnpkg.com/@patternfly/react-tokens/-/react-tokens-2.7.25.tgz#69b517f635721bedcefa6b4535688a11586be115"
+  integrity sha512-04hRDWt07pyjLUO1VN9QbrPpQMJzjd+nQYp8vgoe6+mYBzw+D4banJeudZ1oTFii9hWV+mLEu6aiwPtTigPM1Q==
 
 "@patternfly/react-tokens@^2.7.5", "@patternfly/react-tokens@^2.7.6":
   version "2.7.10"
@@ -17673,7 +17717,7 @@ popper.js@^1.14.4, popper.js@^1.14.6:
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.15.0.tgz#5560b99bbad7647e9faa475c6b8056621f5a4ff2"
   integrity sha512-w010cY1oCUmI+9KwwlWki+r5jxKfTFDVoadl7MSrIujHU5MJ5OR6HTDj6Xo8aoR/QsA56x8jKjA59qGH4ELtrA==
 
-popper.js@^1.14.7:
+popper.js@^1.14.7, popper.js@^1.16.0:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
   integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
@@ -22788,6 +22832,13 @@ tippy.js@3.4.1:
   integrity sha512-ZiyGP9WZyCCcjxKM4G88cm4U1r1ytjeMDGa5FSKPaPzwc/3yZJVZsb1ffcmqUMCpryRp5LNxRNGKLzbs11sb/Q==
   dependencies:
     popper.js "^1.14.6"
+
+tippy.js@5.1.2:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/tippy.js/-/tippy.js-5.1.2.tgz#5ac91233c59ab482ef5988cffe6e08bd26528e66"
+  integrity sha512-Qtrv2wqbRbaKMUb6bWWBQWPayvcDKNrGlvihxtsyowhT7RLGEh1STWuy6EMXC6QLkfKPB2MLnf8W2mzql9VDAw==
+  dependencies:
+    popper.js "^1.16.0"
 
 tmp@0.0.30:
   version "0.0.30"

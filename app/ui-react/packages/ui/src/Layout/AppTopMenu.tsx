@@ -25,7 +25,7 @@ export class AppTopMenu extends React.Component<
       isOpen,
     });
   };
-  public onSelect = (event: React.SyntheticEvent<HTMLDivElement, Event>) => {
+  public onSelect = (event?: React.SyntheticEvent<HTMLDivElement, Event> | undefined) => {
     this.setState({
       isOpen: !this.state.isOpen,
     });
