@@ -716,10 +716,6 @@ public class TeiidOpenShiftClient implements StringConstants {
         this.metadata.registerDataSource(scd);
     }
 
-    public Collection<? extends TeiidDataSource> getDataSources() throws KException {
-        return this.metadata.getDataSources();
-    }
-
     /**
      * Create a unique and valid name the syndesis connection.  The name will be suitable
      * as a schema name as well.

@@ -61,7 +61,7 @@ public interface RepositoryManager {
 
     SourceSchema createSchema(String id, String name, String contents);
 
-    List<String> findAllSchemaNames();
+    List<String> findAllSourceIds();
 
 
     DataVirtualization createDataVirtualization(String virtualizationName);
