@@ -1,3 +1,4 @@
+{{- if and (not .Syndesis.Addons.Jaeger.ClientOnly) (not .Syndesis.Addons.Jaeger.OperatorOnly)}}
 - apiVersion: jaegertracing.io/v1
   kind: Jaeger
   metadata:
@@ -37,3 +38,4 @@
       app: jaeger
       app.kubernetes.io/component: all-in-one
       app.kubernetes.io/name: syndesis-jaeger
+{{- end}}
