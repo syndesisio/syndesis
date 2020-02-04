@@ -16,9 +16,10 @@
 
 package io.syndesis.dv.openshift;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+
 import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
 import io.syndesis.dv.openshift.BuildStatus.Status;
 import io.syndesis.dv.rest.JsonMarshaller;
@@ -29,10 +30,10 @@ public class StatusTest {
     @Test public void testJsonRoundtrip() throws Exception {
         BuildStatus bs = new BuildStatus("vdb");
         bs.setName("buildName");
-        bs.setDeploymentName("deploymentName");
+        bs.setStatus(Status.COMPLETE);
+        bs.setVersion(2l);
         bs.setNamespace("namespace");
         bs.setPublishPodName("pod");
-        bs.setStatus(Status.DEPLOYING);
         //not used by serialization
         bs.setPublishConfiguration(new PublishConfiguration());
         RouteStatus route = new RouteStatus("x", ProtocolType.JDBC);
@@ -41,31 +42,15 @@ public class StatusTest {
         route.setPort("port");
         route.setSecure(true);
         route.setTarget("target");
-        bs.addRoute(route);
-        bs.addRoute(new RouteStatus("y", ProtocolType.ODATA));
 
         String value = JsonMarshaller.marshall(bs);
         assertEquals("{\n" +
-                "  \"status\" : \"DEPLOYING\",\n" +
+                "  \"status\" : \"COMPLETE\",\n" +
                 "  \"name\" : \"buildName\",\n" +
-                "  \"deploymentName\" : \"deploymentName\",\n" +
                 "  \"namespace\" : \"namespace\",\n" +
                 "  \"lastUpdated\" : 0,\n" +
-                "  \"routes\" : [ {\n" +
-                "    \"name\" : \"x\",\n" +
-                "    \"protocol\" : \"jdbc\",\n" +
-                "    \"host\" : \"host\",\n" +
-                "    \"path\" : \"path\",\n" +
-                "    \"target\" : \"target\",\n" +
-                "    \"port\" : \"port\",\n" +
-                "    \"secure\" : true\n" +
-                "  }, {\n" +
-                "    \"name\" : \"y\",\n" +
-                "    \"protocol\" : \"odata\",\n" +
-                "    \"secure\" : false\n" +
-                "  } ],\n" +
-                "  \"usedBy\" : [ ],\n" +
-                "  \"openShiftName\" : \"vdb\"\n" +
+                "  \"openShiftName\" : \"vdb\",\n" +
+                "  \"version\" : 2\n" +
                 "}", value);
     }
 
