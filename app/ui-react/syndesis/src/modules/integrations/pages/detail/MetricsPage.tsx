@@ -101,12 +101,7 @@ export class MetricsPage extends React.Component {
                                             lastProcessed={
                                               metricsData.lastProcessed !==
                                               undefined
-                                                ? new Date(
-                                                    parseInt(
-                                                      metricsData.lastProcessed,
-                                                      10
-                                                    )
-                                                  ).toLocaleString()
+                                                ? new Date(metricsData.lastProcessed).toLocaleString()
                                                 : t('metrics.NoDataAvailable')
                                             }
                                             messages={metricsData.messages}
@@ -114,10 +109,7 @@ export class MetricsPage extends React.Component {
                                               typeof metricsData.start ===
                                               'undefined'
                                                 ? undefined
-                                                : parseInt(
-                                                    metricsData.start!,
-                                                    10
-                                                  )
+                                                : metricsData.start!
                                             }
                                             uptimeDuration={
                                               metricsData.uptimeDuration! > 0
