@@ -15,6 +15,7 @@
     "RUNNING": "Running",
     "SUBMITTED": "Submitted"
   },
+  "connectionErrorAlertTitle": "There was an error activating the connection",
   "createDataVirtualization": "Create $t(shared:DataVirtualization)",
   "createDataVirtualizationTip": "Create a data virtualization",
   "createDataVirtualizationTitle": "Create new $t(shared:DataVirtualization)",
@@ -103,6 +104,7 @@
   "queryResultsRowCountMsg": "Number of rows: ",
   "queryViewFailed": "Could not query the view. Details: {{details}}",
   "Refresh": "Refresh",
+  "refreshInProgress": "Refresh in progress...",
   "ReplaceDraft": "Replace draft",
   "replaceDraftVirtualizationFailed": "Could not replace draft for the virtualization \"{{name}}\". Details: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Replace draft?",

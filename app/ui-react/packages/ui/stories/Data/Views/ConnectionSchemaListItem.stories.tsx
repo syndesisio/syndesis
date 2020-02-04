@@ -1,3 +1,4 @@
+import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
@@ -14,7 +15,8 @@ stories.add('ACTIVE, not loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
+    dvStatusError={<div>The connection is active</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={false}
   />
@@ -26,7 +28,8 @@ stories.add('ACTIVE, loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
+    dvStatusError={<div>The connection is active</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={true}
   />
@@ -38,7 +41,8 @@ stories.add('INACTIVE, loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.INACTIVE}
-    dvStatusTooltip={'The connection is inactive'}
+    dvStatusError={<div>The connection is inactive</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={true}
   />
@@ -50,7 +54,8 @@ stories.add('FAILED, not loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.FAILED}
-    dvStatusTooltip={'The server exception is displayed here'}
+    dvStatusError={<div>Alert component goes here</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={false}
   />

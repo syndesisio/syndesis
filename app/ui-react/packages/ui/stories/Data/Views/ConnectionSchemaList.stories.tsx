@@ -69,6 +69,8 @@ const connectionItems = [
     connectionDescription={connectionDescription1}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
+    dvStatusError={<div>Error component</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={false}
   />,
@@ -79,6 +81,8 @@ const connectionItems = [
     children={conn2NodeItems}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
+    dvStatusError={<div>Error component</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={false}
   />,
@@ -89,6 +93,8 @@ const connectionItems = [
     children={conn3NodeItems}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
+    dvStatusError={<div>Error component</div>}
+    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
     icon={<div />}
     loading={false}
   />,
@@ -109,6 +115,7 @@ stories
           'i18nLinkCreateConnection',
           'Create Connection'
         )}
+        loading={false}
         children={[]}
         hasListData={false}
         linkToConnectionCreate={action('route to create connection')}
@@ -125,6 +132,7 @@ stories
           'i18nLinkCreateConnection',
           'Create Connection'
         )}
+        loading={false}
         children={connectionItems}
         hasListData={true}
         linkToConnectionCreate={action('route to create connection')}

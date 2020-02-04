@@ -15,6 +15,7 @@
     "RUNNING": "Запущено",
     "SUBMITTED": "Отправлено"
   },
+  "connectionErrorAlertTitle": "При активации соединения произошла ошибка",
   "createDataVirtualization": "Создать $t(shared:DataVirtualization)",
   "createDataVirtualizationTip": "Создать Виртуализацию данных",
   "createDataVirtualizationTitle": "Создайте новый $t(shared:DataVirtualization)",
@@ -103,6 +104,7 @@
   "queryResultsRowCountMsg": "Кол-во строк: ",
   "queryViewFailed": "Не удалось запросить представление. Подробности: {{details}}",
   "Refresh": "Обновить",
+  "refreshInProgress": "Обновление в процессе...",
   "ReplaceDraft": "Заменить черновик",
   "replaceDraftVirtualizationFailed": "Не удалось заменить черновик для виртуализации \"{{name}}\". Подробности: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Заменить черновик?",

@@ -10,6 +10,8 @@ import {
   ConnectionSchemaListItem,
   ConnectionSchemaListSkeleton,
   SchemaNodeListItem,
+  SyndesisAlert,
+  SyndesisAlertLevel
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -147,12 +149,21 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                 connectionName={c.name}
                 connectionDescription={''}
                 dvStatus={getDvConnectionStatus(c)}
-                dvStatusTooltip={getDvConnectionStatusMessage(c)}
+                dvStatusError={
+                  <SyndesisAlert
+                  level={SyndesisAlertLevel.ERROR}
+                  message={t('connectionErrorAlertTitle')}
+                  detail={getDvConnectionStatusMessage(c)}
+                  i18nTextExpanded={t('shared:HideDetails')}
+                  i18nTextCollapsed={t('shared:ShowDetails')}
+                />
+                }
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
                     ? isConnectionSelected(c.name)
                     : false
                 }
+                i18nRefreshInProgress={t('refreshInProgress')}
                 icon={<EntityIcon entity={c} alt={c.name} width={23} />}
                 loading={isDvConnectionLoading(c)}
                 // tslint:disable-next-line: no-shadowed-variable

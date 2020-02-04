@@ -19,6 +19,7 @@ export interface ISelectedConnectionTablesProps {
   selectedSchemaNodesLength: number;
   i18nTablesSelected: string;
   i18nEmptyTablePreview: string;
+  i18nEmptyTablePreviewTitle: string;
 }
 
 export const SelectedConnectionTables: React.FunctionComponent<ISelectedConnectionTablesProps> = props => {
@@ -43,7 +44,7 @@ export const SelectedConnectionTables: React.FunctionComponent<ISelectedConnecti
             <EmptyState variant={EmptyStateVariant.small}>
               <EmptyStateIcon icon={DatabaseIcon} />
               <Title headingLevel="h2" size="lg">
-                {props.i18nTablesSelected}
+                {props.i18nEmptyTablePreviewTitle}
               </Title>
               <EmptyStateBody>
                 {props.i18nEmptyTablePreview}
