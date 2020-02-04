@@ -181,8 +181,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
               {({ user, config }) => {
                 const isProductBuild = config && config.branding.productBuild;
                 setProductBuild(isProductBuild);
-                const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
-                const features = (config && config.features) || {} as Map<string, any>;
+                const productName = t('shared:project:name');
+                const features =
+                  (config && config.features) || ({} as Map<string, any>);
                 return (
                   <>
                     {
@@ -251,7 +252,12 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                 window.document.write(html);
                                 window.document.close();
                               };
-
+                              const tutorialLink = t('shared:links:tutorial');
+                              const userGuideLink = t('shared:links:userguide');
+                              const connectorsGuideLink = t(
+                                'shared:links:connectorsguide'
+                              );
+                              const contactUsLink = t('shared:links:contactus');
                               return (
                                 <AppLayout
                                   onShowAboutModal={toggleAboutModal}
@@ -259,26 +265,16 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                     history.push(resolvers.support.root());
                                   }}
                                   onSelectSampleIntegrationTutorials={() => {
-                                    window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/fuse_online_sample_integration_tutorials/',
-                                      '_blank'
-                                    );
+                                    window.open(tutorialLink, '_blank');
                                   }}
                                   onSelectUserGuide={() => {
-                                    window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/integrating_applications_with_fuse_online',
-                                      '_blank'
-                                    );
+                                    window.open(userGuideLink, '_blank');
                                   }}
                                   onSelectConnectorsGuide={() => {
-                                    window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/connecting_fuse_online_to_applications_and_services/',
-                                      '_blank'
-                                    );
+                                    window.open(connectorsGuideLink, '_blank');
                                   }}
                                   onSelectContactUs={() => {
-                                    window.location.href =
-                                      'mailto:fuse-online-tech-preview@redhat.com';
+                                    window.open(contactUsLink, '_blank');
                                   }}
                                   logoutItem={{
                                     children: t('Logout'),
