@@ -1,0 +1,5485 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Syndesis Internal API",
+    "description": "The Syndesis REST API connects to back-end services on the\nSyndesis and provides a single entry point for the Syndesis UI.\n",
+    "contact": {
+      "url": "https://syndesis.io/",
+      "email": "syndesis@googlegroups.com"
+    },
+    "license": {
+      "name": "Apache 2.0",
+      "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version": "v1-2.0-SNAPSHOT"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/connections/{id}/bulletins": {
+      "get": {
+        "tags": ["connections"],
+        "operationId": "getBulletins",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionBulletinBoard"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/{id}": {
+      "get": {
+        "tags": ["connections"],
+        "operationId": "get_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectionOverview"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["connections"],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Connection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["connections"],
+        "operationId": "delete",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["connections"],
+        "operationId": "patch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/connections": {
+      "get": {
+        "tags": ["connections"],
+        "operationId": "list",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultConnectionOverview"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["connections"],
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Connection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Connection"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/{id}/actions/{actionId}": {
+      "post": {
+        "tags": ["actions", "connections"],
+        "description": "Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties",
+        "operationId": "enrichWithMetadata",
+        "parameters": [
+          {
+            "name": "actionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "io.syndesis:salesforce-create-or-update:latest"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "my-connection"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A map of zero or more action property suggestions keyed by the property name",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorDescriptor"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connections/validation": {
+      "post": {
+        "tags": ["connections"],
+        "operationId": "validate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Connection"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "All validations pass"
+          },
+          "400": {
+            "description": "Found violations in validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectorgroups": {
+      "get": {
+        "tags": ["connectorgroups"],
+        "operationId": "list_1",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultConnectorGroup"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectorgroups/{id}": {
+      "get": {
+        "tags": ["connectorgroups"],
+        "operationId": "get",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorGroup"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}/icon": {
+      "get": {
+        "tags": ["connector", "connector-icon", "connectors"],
+        "operationId": "get_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["connector", "connector-icon", "connectors"],
+        "description": "Updates the connector icon for the specified connector and returns the updated connector",
+        "operationId": "create_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipartFormDataInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Updated Connector icon"
+          }
+        }
+      }
+    },
+    "/connectors/{id}/credentials": {
+      "get": {
+        "tags": ["credentials", "connectors"],
+        "operationId": "get_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AcquisitionMethod"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["credentials", "connectors"],
+        "operationId": "create_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AcquisitionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}/properties": {
+      "post": {
+        "tags": ["properties", "connectors"],
+        "operationId": "dynamicConnectionProperties",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DynamicConnectionPropertiesMetadata"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}": {
+      "get": {
+        "tags": ["connectors"],
+        "operationId": "get_5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Connector"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["connectors"],
+        "operationId": "update_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Connector"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["connectors"],
+        "operationId": "delete_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["connectors"],
+        "operationId": "patch_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/connectors": {
+      "get": {
+        "tags": ["connectors"],
+        "operationId": "list_2",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultConnector"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{connectorId}/actions/{id}": {
+      "get": {
+        "tags": ["actions", "connectors"],
+        "operationId": "get_6",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorAction"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{connectorId}/actions": {
+      "get": {
+        "tags": ["actions", "connectors"],
+        "operationId": "list_3",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultConnectorAction"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}/actions/{actionId}/filters/options": {
+      "get": {
+        "tags": ["connectors"],
+        "operationId": "getFilterOptions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "actionId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterOptions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}/verifier": {
+      "post": {
+        "tags": ["connectors"],
+        "operationId": "verifyConnectionParameters",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Result"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/custom/info": {
+      "post": {
+        "tags": ["custom-connector", "connector-template", "connectors"],
+        "description": "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`",
+        "operationId": "info_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectorSettings"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/APISummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connectors/custom": {
+      "post": {
+        "tags": ["custom-connector", "connector-template", "connectors"],
+        "description": "Creates a new Connector based on the ConnectorTemplate identified by the provided `id` and the data given in `connectorSettings` multipart part, plus optional `icon` file",
+        "operationId": "create_4",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CustomConnectorFormData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Newly created Connector"
+          }
+        }
+      }
+    },
+    "/connector-templates/{id}": {
+      "get": {
+        "tags": ["connector-template"],
+        "operationId": "get_7",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorTemplate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/connector-templates": {
+      "get": {
+        "tags": ["connector-template"],
+        "operationId": "list_4",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultConnectorTemplate"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credentials/callback": {
+      "get": {
+        "tags": ["credentials"],
+        "operationId": "callback",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/environments/integrations/{id}": {
+      "get": {
+        "operationId": "getReleaseTags",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/ContinuousDeliveryEnvironment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "operationId": "putTagsForRelease",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/ContinuousDeliveryEnvironment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "operationId": "patchTagsForRelease",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "$ref": "#/components/schemas/ContinuousDeliveryEnvironment"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/environments": {
+      "get": {
+        "operationId": "getReleaseEnvironments",
+        "parameters": [
+          {
+            "name": "withUses",
+            "in": "query",
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/environments/{env}": {
+      "put": {
+        "operationId": "renameEnvironment",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "post": {
+        "operationId": "addNewEnvironment",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "operationId": "deleteEnvironment",
+        "parameters": [
+          {
+            "name": "env",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/environments/integrations/{id}/{env}": {
+      "delete": {
+        "operationId": "deleteReleaseTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "env",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/organizations": {
+      "get": {
+        "operationId": "list_5",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultOrganization"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/organizations/{id}": {
+      "get": {
+        "operationId": "get_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Organization"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/event/reservations": {
+      "post": {
+        "tags": ["events"],
+        "operationId": "reserveEventStream",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventMessage"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions": {
+      "get": {
+        "tags": ["extensions"],
+        "operationId": "list_6",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "extensionType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultExtension"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["extensions"],
+        "operationId": "upload",
+        "parameters": [
+          {
+            "name": "updatedId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/MultipartFormDataInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Extension"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}": {
+      "get": {
+        "tags": ["extensions"],
+        "operationId": "get_8",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Extension"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["extensions"],
+        "operationId": "delete_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/validation": {
+      "post": {
+        "tags": ["extensions"],
+        "operationId": "validate_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All blocking validations pass",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Found violations in validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/validation": {
+      "post": {
+        "tags": ["extensions"],
+        "operationId": "validate_2",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Extension"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "All blocking validations pass",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Found violations in validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/install": {
+      "post": {
+        "tags": ["extensions"],
+        "operationId": "install",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Installed",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Found violations in validation",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/integrations": {
+      "get": {
+        "tags": ["extensions"],
+        "operationId": "integrations",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "uniqueItems": true,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ResourceIdentifier"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/stepIcon": {
+      "get": {
+        "tags": ["extensions"],
+        "operationId": "getStepIcon",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments/{version}": {
+      "get": {
+        "tags": ["integration-deployments"],
+        "operationId": "get_9",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDeployment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments": {
+      "get": {
+        "tags": ["integration-deployments"],
+        "operationId": "list_7",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultIntegrationDeployment"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["integration-deployments"],
+        "operationId": "update_1",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationDeployment"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments/{version}/targetState": {
+      "post": {
+        "tags": ["integration-deployments"],
+        "operationId": "updateTargetState",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "version",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/TargetStateRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {}
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}": {
+      "get": {
+        "tags": ["integrations"],
+        "operationId": "get_11",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationOverview"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["integrations"],
+        "operationId": "update_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Integration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["integrations"],
+        "operationId": "delete_3",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": ["integrations"],
+        "operationId": "patch_2",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonNode"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/integrations": {
+      "get": {
+        "tags": ["integrations"],
+        "operationId": "list_8",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultIntegrationOverview"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["integrations"],
+        "operationId": "create_3",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Integration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Integration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/overview": {
+      "get": {
+        "tags": ["integrations"],
+        "operationId": "getOverview",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/filters/options": {
+      "get": {
+        "tags": ["integrations"],
+        "operationId": "getGlobalFilterOptions",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterOptions"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["integrations"],
+        "operationId": "getFilterOptions_1",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "$ref": "#/components/schemas/DataShape"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FilterOptions"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/validation": {
+      "post": {
+        "tags": ["integrations"],
+        "operationId": "validate_3",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Integration"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "All validations pass"
+          },
+          "400": {
+            "description": "Found violations in validation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Violation"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/specification": {
+      "get": {
+        "tags": ["integrations"],
+        "description": "Responds with specification that defines this integration",
+        "operationId": "fetch",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the integration",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "integration-id"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "No specification resource defines this integration"
+          },
+          "204": {
+            "description": "Empty specification provided when definining this integration"
+          },
+          "200": {
+            "description": "Specification resource follows",
+            "headers": {
+              "Content-Disposition": {
+                "description": "Contains the `filename` parameter",
+                "style": "simple"
+              },
+              "Content-Type": {
+                "description": "The content type of the specification, e.g. `application/vnd.oai.openapi+json`",
+                "style": "simple"
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["integrations"],
+        "description": "For an integration that is generated from a specification updates it so it conforms to the updated specification",
+        "operationId": "update_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The ID of the integration",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "integration-id"
+          }
+        ],
+        "requestBody": {
+          "description": "Next revision of the specification",
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/APIFormData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/export.zip": {
+      "get": {
+        "tags": ["integration-support"],
+        "operationId": "export",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/octet-stream": {}
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/overviews": {
+      "get": {
+        "tags": ["integration-support"],
+        "operationId": "getOverviews",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultIntegrationOverview"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/generate/pom.xml": {
+      "post": {
+        "tags": ["integration-support"],
+        "operationId": "projectPom",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Integration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/octet-stream": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "format": "byte"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/import": {
+      "post": {
+        "tags": ["integration-support"],
+        "operationId": "importIntegration",
+        "requestBody": {
+          "content": {
+            "*/*": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/components/schemas/WithResourceId"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics/integrations": {
+      "get": {
+        "tags": ["integration-metrics"],
+        "description": "Retrieves a rolled up metrics summary for all integrations over their lifetime",
+        "operationId": "get_10",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationMetricsSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/metrics/integrations/{integrationId}": {
+      "get": {
+        "tags": ["integration-metrics"],
+        "operationId": "get_12",
+        "parameters": [
+          {
+            "name": "integrationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrationMetricsSummary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/resources/{kind}/{id}": {
+      "get": {
+        "tags": ["resources"],
+        "operationId": "get_13",
+        "parameters": [
+          {
+            "name": "kind",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "action",
+                "connection",
+                "connection-overview",
+                "connector",
+                "connector-action",
+                "connector-group",
+                "connector-template",
+                "icon",
+                "environment",
+                "environment-type",
+                "extension",
+                "step-action",
+                "organization",
+                "integration",
+                "integration-overview",
+                "integration-deployment",
+                "integration-deployment-state-details",
+                "integration-metrics-summary",
+                "integration-runtime",
+                "integration-endpoint",
+                "step",
+                "permission",
+                "role",
+                "user",
+                "connection-bulletin-board",
+                "integration-bulletin-board",
+                "open-api"
+              ]
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/setup/oauth-apps/{id}": {
+      "get": {
+        "tags": ["oauth-apps"],
+        "operationId": "get_14",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OAuthApp"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["oauth-apps"],
+        "operationId": "update_5",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OAuthApp"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["oauth-apps"],
+        "operationId": "delete_4",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/setup/oauth-apps": {
+      "get": {
+        "tags": ["oauth-apps"],
+        "operationId": "list_9",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultOAuthApp"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": ["tags"],
+        "operationId": "listTags",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultString"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/test-support/reset-db": {
+      "get": {
+        "operationId": "resetDBToDefault",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/test-support/restore-db": {
+      "post": {
+        "operationId": "restoreDB",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/ModelDataObject"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/test-support/delete-deployments": {
+      "get": {
+        "operationId": "deleteDeployments",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "*/*": {}
+            }
+          }
+        }
+      }
+    },
+    "/test-support/snapshot-db": {
+      "get": {
+        "operationId": "snapshotDB",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ModelDataObject"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permissions": {
+      "get": {
+        "tags": ["permissions"],
+        "operationId": "list_10",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultPermission"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/permissions/{id}": {
+      "get": {
+        "tags": ["permissions"],
+        "operationId": "get_15",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Permission"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles": {
+      "get": {
+        "tags": ["roles"],
+        "operationId": "list_11",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultRole"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/roles/{id}": {
+      "get": {
+        "tags": ["roles"],
+        "operationId": "get_16",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/~": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "whoAmI",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/~/quota": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "quota",
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Quota"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "list_12",
+        "parameters": [
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort the result list according to the given field value",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "direction",
+            "in": "query",
+            "description": "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+            "schema": {
+              "type": "string",
+              "enum": ["asc", "desc"]
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number to return",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 1
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of records per page",
+            "schema": {
+              "type": "integer",
+              "format": "int64",
+              "default": 20
+            }
+          },
+          {
+            "name": "query",
+            "in": "query",
+            "description": "The search query to filter results on",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListResultUser"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": ["users"],
+        "operationId": "get_17",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": "default response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConnectionBulletinBoard": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "warnings": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "notices": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "targetResourceId": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeveledMessage"
+            }
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "LeveledMessage": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["INFO", "WARN", "ERROR"]
+          },
+          "detail": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "enum": [
+              "SYNDESIS000",
+              "SYNDESIS001",
+              "SYNDESIS002",
+              "SYNDESIS003",
+              "SYNDESIS004",
+              "SYNDESIS005",
+              "SYNDESIS006",
+              "SYNDESIS007",
+              "SYNDESIS008",
+              "SYNDESIS009",
+              "SYNDESIS010",
+              "SYNDESIS011",
+              "SYNDESIS012"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Action": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptor": {
+            "$ref": "#/components/schemas/ActionDescriptor"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actionType": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string",
+            "enum": ["From", "Pipe", "To"]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "discriminator": {
+          "propertyName": "actionType"
+        }
+      },
+      "ActionDescriptor": {
+        "type": "object",
+        "properties": {
+          "inputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "outputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "propertyDefinitionSteps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionDescriptorStep"
+            }
+          }
+        }
+      },
+      "ActionDescriptorStep": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ActionsSummary": {
+        "type": "object",
+        "properties": {
+          "actionCountByTags": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "totalActions": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ConfigurationProperty": {
+        "type": "object",
+        "properties": {
+          "generator": {
+            "type": "string"
+          },
+          "secret": {
+            "type": "boolean"
+          },
+          "raw": {
+            "type": "boolean"
+          },
+          "type": {
+            "type": "string"
+          },
+          "defaultValue": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "deprecated": {
+            "type": "boolean"
+          },
+          "group": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "enum": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropertyValue"
+            }
+          },
+          "javaType": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "componentProperty": {
+            "type": "boolean"
+          },
+          "controlHint": {
+            "type": "string"
+          },
+          "dataList": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "labelHint": {
+            "type": "string"
+          },
+          "placeholder": {
+            "type": "string"
+          },
+          "relation": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PropertyRelation"
+            }
+          },
+          "multiple": {
+            "type": "boolean"
+          },
+          "connectorValue": {
+            "type": "string"
+          },
+          "extendedProperties": {
+            "type": "string"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "order": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      },
+      "Connection": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/Organization"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "connector": {
+            "$ref": "#/components/schemas/Connector"
+          },
+          "connectorId": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "derived": {
+            "type": "boolean"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "uses": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "ConnectionOverview": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "board": {
+            "$ref": "#/components/schemas/ConnectionBulletinBoard"
+          },
+          "id": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "options": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "organization": {
+            "$ref": "#/components/schemas/Organization"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "connector": {
+            "$ref": "#/components/schemas/Connector"
+          },
+          "connectorId": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "derived": {
+            "type": "boolean"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "uses": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "Connector": {
+        "required": ["actions", "name"],
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "connectorCustomizers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exceptionHandler": {
+            "type": "string"
+          },
+          "connectorGroup": {
+            "$ref": "#/components/schemas/ConnectorGroup"
+          },
+          "connectorGroupId": {
+            "type": "string"
+          },
+          "componentScheme": {
+            "type": "string"
+          },
+          "connectorFactory": {
+            "type": "string"
+          },
+          "uses": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "readOnly": true
+          },
+          "actionsSummary": {
+            "$ref": "#/components/schemas/ActionsSummary"
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectorAction"
+            }
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConnectorAction": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptor": {
+            "$ref": "#/components/schemas/ConnectorDescriptor"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actionType": {
+            "type": "string"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          },
+          "pattern": {
+            "type": "string",
+            "enum": ["From", "Pipe", "To"]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConnectorDescriptor": {
+        "type": "object",
+        "properties": {
+          "connectorCustomizers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "exceptionHandler": {
+            "type": "string"
+          },
+          "componentScheme": {
+            "type": "string"
+          },
+          "connectorFactory": {
+            "type": "string"
+          },
+          "camelConnectorGAV": {
+            "type": "string"
+          },
+          "connectorId": {
+            "type": "string"
+          },
+          "camelConnectorPrefix": {
+            "type": "string"
+          },
+          "standardizedErrors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/StandardizedError"
+            }
+          },
+          "inputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "outputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "propertyDefinitionSteps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionDescriptorStep"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConnectorGroup": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ContinuousDeliveryEnvironment": {
+        "type": "object",
+        "properties": {
+          "releaseTag": {
+            "type": "string"
+          },
+          "lastExportedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastImportedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "environmentId": {
+            "type": "string"
+          },
+          "lastTaggedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "DataShape": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DataShape"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "any",
+              "java",
+              "json-schema",
+              "json-instance",
+              "xml-schema",
+              "xml-schema-inspected",
+              "xml-instance",
+              "none"
+            ]
+          },
+          "specification": {
+            "type": "string"
+          },
+          "exemplar": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "byte"
+            }
+          },
+          "collectionClassName": {
+            "type": "string"
+          },
+          "collectionType": {
+            "type": "string"
+          }
+        }
+      },
+      "Dependency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["MAVEN", "EXTENSION", "EXTENSION_TAG", "ICON"]
+          }
+        }
+      },
+      "Environment": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Extension": {
+        "required": ["actions", "extensionType", "name", "schemaVersion"],
+        "type": "object",
+        "properties": {
+          "schemaVersion": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "extensionId": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Action"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": ["Draft", "Installed", "Deleted"]
+          },
+          "lastUpdated": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "createdDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "extensionType": {
+            "type": "string",
+            "enum": ["Steps", "Connectors", "Libraries"]
+          },
+          "id": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "uses": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        }
+      },
+      "Flow": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "scheduler": {
+            "$ref": "#/components/schemas/Scheduler"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["PRIMARY", "API_PROVIDER", "ALTERNATE"]
+          },
+          "description": {
+            "type": "string"
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          }
+        }
+      },
+      "ImmutableConnectorAction": {
+        "required": ["name"],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Action"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "$ref": "#/components/schemas/ConnectorDescriptor"
+              },
+              "dependencies": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Dependency"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ImmutableStepAction": {
+        "required": ["name"],
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Action"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "descriptor": {
+                "$ref": "#/components/schemas/StepDescriptor"
+              }
+            }
+          }
+        ]
+      },
+      "Integration": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            }
+          },
+          "continuousDeliveryState": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ContinuousDeliveryEnvironment"
+            }
+          },
+          "exposure": {
+            "type": "string"
+          },
+          "flows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Flow"
+            }
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            }
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceIdentifier"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          }
+        }
+      },
+      "Organization": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "environments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Environment"
+            }
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "PropertyRelation": {
+        "type": "object",
+        "properties": {
+          "when": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/When"
+            }
+          },
+          "action": {
+            "type": "string"
+          }
+        }
+      },
+      "PropertyValue": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "ResourceIdentifier": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "action",
+              "connection",
+              "connection-overview",
+              "connector",
+              "connector-action",
+              "connector-group",
+              "connector-template",
+              "icon",
+              "environment",
+              "environment-type",
+              "extension",
+              "step-action",
+              "organization",
+              "integration",
+              "integration-overview",
+              "integration-deployment",
+              "integration-deployment-state-details",
+              "integration-metrics-summary",
+              "integration-runtime",
+              "integration-endpoint",
+              "step",
+              "permission",
+              "role",
+              "user",
+              "connection-bulletin-board",
+              "integration-bulletin-board",
+              "open-api"
+            ]
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "Scheduler": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": ["timer", "cron"]
+          },
+          "expression": {
+            "type": "string"
+          }
+        }
+      },
+      "StandardizedError": {
+        "type": "object"
+      },
+      "Step": {
+        "type": "object",
+        "properties": {
+          "connection": {
+            "$ref": "#/components/schemas/Connection"
+          },
+          "name": {
+            "type": "string"
+          },
+          "extension": {
+            "$ref": "#/components/schemas/Extension"
+          },
+          "stepKind": {
+            "type": "string",
+            "enum": [
+              "endpoint",
+              "connector",
+              "expressionFilter",
+              "ruleFilter",
+              "extension",
+              "mapper",
+              "choice",
+              "split",
+              "aggregate",
+              "log",
+              "headers",
+              "template"
+            ]
+          },
+          "action": {
+            "$ref": "#/components/schemas/Action"
+          },
+          "id": {
+            "type": "string"
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "StepDescriptor": {
+        "type": "object",
+        "properties": {
+          "entrypoint": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": ["STEP", "BEAN", "ENDPOINT"]
+          },
+          "inputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "outputDataShape": {
+            "$ref": "#/components/schemas/DataShape"
+          },
+          "propertyDefinitionSteps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActionDescriptorStep"
+            }
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "fullName": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "integrations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Integration"
+            }
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "When": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "ListResultConnectionOverview": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectionOverview"
+            }
+          }
+        }
+      },
+      "JsonNode": {
+        "type": "object",
+        "properties": {
+          "float": {
+            "type": "boolean"
+          },
+          "nodeType": {
+            "type": "string",
+            "enum": [
+              "ARRAY",
+              "BINARY",
+              "BOOLEAN",
+              "MISSING",
+              "NULL",
+              "NUMBER",
+              "OBJECT",
+              "POJO",
+              "STRING"
+            ]
+          },
+          "array": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          },
+          "null": {
+            "type": "boolean"
+          },
+          "number": {
+            "type": "boolean"
+          },
+          "double": {
+            "type": "boolean"
+          },
+          "int": {
+            "type": "boolean"
+          },
+          "boolean": {
+            "type": "boolean"
+          },
+          "short": {
+            "type": "boolean"
+          },
+          "long": {
+            "type": "boolean"
+          },
+          "missingNode": {
+            "type": "boolean"
+          },
+          "containerNode": {
+            "type": "boolean"
+          },
+          "valueNode": {
+            "type": "boolean"
+          },
+          "object": {
+            "type": "boolean"
+          },
+          "pojo": {
+            "type": "boolean"
+          },
+          "integralNumber": {
+            "type": "boolean"
+          },
+          "floatingPointNumber": {
+            "type": "boolean"
+          },
+          "bigDecimal": {
+            "type": "boolean"
+          },
+          "bigInteger": {
+            "type": "boolean"
+          },
+          "textual": {
+            "type": "boolean"
+          },
+          "binary": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Violation": {
+        "type": "object"
+      },
+      "ListResultConnectorGroup": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectorGroup"
+            }
+          }
+        }
+      },
+      "InputPart": {
+        "type": "object",
+        "properties": {
+          "contentTypeFromMessage": {
+            "type": "boolean"
+          },
+          "bodyAsString": {
+            "type": "string"
+          },
+          "headers": {
+            "type": "object",
+            "properties": {
+              "empty": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "mediaType": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string"
+              },
+              "subtype": {
+                "type": "string"
+              },
+              "parameters": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string"
+                }
+              },
+              "wildcardType": {
+                "type": "boolean"
+              },
+              "wildcardSubtype": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "MultipartFormDataInput": {
+        "type": "object",
+        "properties": {
+          "formDataMap": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/InputPart"
+              }
+            }
+          },
+          "preamble": {
+            "type": "string"
+          },
+          "parts": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InputPart"
+            }
+          }
+        }
+      },
+      "AcquisitionMethod": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["OAUTH1", "OAUTH2"]
+          },
+          "label": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "configured": {
+            "type": "boolean"
+          }
+        }
+      },
+      "AcquisitionRequest": {
+        "type": "object",
+        "properties": {
+          "returnUrl": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "DynamicConnectionPropertiesMetadata": {
+        "type": "object"
+      },
+      "ConnectorFormData": {
+        "type": "object",
+        "properties": {
+          "connector": {
+            "$ref": "#/components/schemas/Connector"
+          },
+          "iconInputStream": {
+            "type": "object"
+          }
+        }
+      },
+      "ListResultConnector": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connector"
+            }
+          }
+        }
+      },
+      "ListResultConnectorAction": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectorAction"
+            }
+          }
+        }
+      },
+      "FilterOptions": {
+        "type": "object",
+        "properties": {
+          "ops": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Op"
+            }
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "Op": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "operator": {
+            "type": "string"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/VerifierError"
+            }
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["PARAMETERS", "CONNECTIVITY"]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["OK", "ERROR", "UNSUPPORTED"]
+          }
+        }
+      },
+      "VerifierError": {
+        "type": "object",
+        "properties": {
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "description": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          }
+        }
+      },
+      "APISummary": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Violation"
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Violation"
+            }
+          },
+          "actionsSummary": {
+            "$ref": "#/components/schemas/ActionsSummary"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ConnectorSettings": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "connectorTemplateId": {
+            "type": "string"
+          },
+          "icon": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "CustomConnectorFormData": {
+        "type": "object",
+        "properties": {
+          "connectorSettings": {
+            "$ref": "#/components/schemas/ConnectorSettings"
+          },
+          "iconInputStream": {
+            "type": "object"
+          },
+          "specification": {
+            "type": "object"
+          }
+        }
+      },
+      "ConnectorTemplate": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "connectorGroup": {
+            "$ref": "#/components/schemas/ConnectorGroup"
+          },
+          "componentScheme": {
+            "type": "string"
+          },
+          "connectorProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ListResultConnectorTemplate": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ConnectorTemplate"
+            }
+          }
+        }
+      },
+      "ListResultOrganization": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Organization"
+            }
+          }
+        }
+      },
+      "EventMessage": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object"
+          },
+          "event": {
+            "type": "string"
+          }
+        }
+      },
+      "ListResultExtension": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Extension"
+            }
+          }
+        }
+      },
+      "IntegrationDeployment": {
+        "type": "object",
+        "properties": {
+          "spec": {
+            "$ref": "#/components/schemas/Integration"
+          },
+          "integrationId": {
+            "type": "string"
+          },
+          "error": {
+            "$ref": "#/components/schemas/IntegrationDeploymentError"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "currentState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "stepsDone": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "targetState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "IntegrationDeploymentError": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "ListResultIntegrationDeployment": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationDeployment"
+            }
+          }
+        }
+      },
+      "TargetStateRequest": {
+        "type": "object",
+        "properties": {
+          "targetState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          }
+        }
+      },
+      "IntegrationBulletinBoard": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "warnings": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "notices": {
+            "type": "object",
+            "properties": {
+              "present": {
+                "type": "boolean"
+              },
+              "asInt": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          },
+          "targetResourceId": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "messages": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/LeveledMessage"
+            }
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "IntegrationDeploymentOverview": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/IntegrationDeploymentError"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "currentState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "stepsDone": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "statusMessage": {
+            "type": "string"
+          },
+          "targetState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "id": {
+            "type": "string"
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "IntegrationOverview": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "board": {
+            "$ref": "#/components/schemas/IntegrationBulletinBoard"
+          },
+          "draft": {
+            "type": "boolean"
+          },
+          "currentState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "deploymentVersion": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "exposureMeans": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "deployments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationDeploymentOverview"
+            }
+          },
+          "targetState": {
+            "type": "string",
+            "enum": ["Published", "Unpublished", "Error", "Pending"]
+          },
+          "managementUrl": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "connections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Connection"
+            }
+          },
+          "continuousDeliveryState": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ContinuousDeliveryEnvironment"
+            }
+          },
+          "exposure": {
+            "type": "string"
+          },
+          "flows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Flow"
+            }
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "updatedAt": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "name": {
+            "type": "string"
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Step"
+            }
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ResourceIdentifier"
+            }
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Dependency"
+            }
+          }
+        }
+      },
+      "ListResultIntegrationOverview": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationOverview"
+            }
+          }
+        }
+      },
+      "APIFormData": {
+        "type": "object",
+        "properties": {
+          "specification": {
+            "type": "object"
+          }
+        }
+      },
+      "WithResourceId": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "IntegrationDeploymentMetrics": {
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "string"
+          },
+          "errors": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "messages": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastProcessed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "start": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "uptimeDuration": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "IntegrationMetricsSummary": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "messages": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "lastProcessed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "integrationDeploymentMetrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/IntegrationDeploymentMetrics"
+            }
+          },
+          "start": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "topIntegrations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "uptimeDuration": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "metricsProvider": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          }
+        }
+      },
+      "OAuthApp": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "icon": {
+            "type": "string"
+          },
+          "derived": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "properties": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ConfigurationProperty"
+            }
+          },
+          "configuredProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ListResultOAuthApp": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OAuthApp"
+            }
+          }
+        }
+      },
+      "ListResultString": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ModelDataObject": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "action",
+              "connection",
+              "connection-overview",
+              "connector",
+              "connector-action",
+              "connector-group",
+              "connector-template",
+              "icon",
+              "environment",
+              "environment-type",
+              "extension",
+              "step-action",
+              "organization",
+              "integration",
+              "integration-overview",
+              "integration-deployment",
+              "integration-deployment-state-details",
+              "integration-metrics-summary",
+              "integration-runtime",
+              "integration-endpoint",
+              "step",
+              "permission",
+              "role",
+              "user",
+              "connection-bulletin-board",
+              "integration-bulletin-board",
+              "open-api"
+            ]
+          },
+          "condition": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          }
+        }
+      },
+      "ListResultPermission": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          }
+        }
+      },
+      "Permission": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ListResultRole": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          }
+        }
+      },
+      "Role": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "permissions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Permission"
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Quota": {
+        "type": "object",
+        "properties": {
+          "maxIntegrationsPerUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usedIntegrationsPerUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "usedDeploymentsPerUser": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxDeploymentsPerUser": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ListResultUser": {
+        "type": "object",
+        "properties": {
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      }
+    }
+  }
+}

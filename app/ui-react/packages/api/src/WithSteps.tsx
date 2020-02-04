@@ -18,7 +18,7 @@ import {
   SPLIT,
   TEMPLATE,
 } from './constants';
-import { toDataShapeKinds, toDataShapeKindType } from './helpers';
+import { toDataShapeKinds } from './helpers';
 
 export interface IStepKind extends StepKind {
   isTechPreview: boolean;
@@ -365,14 +365,14 @@ function requiresConsistentSplitAggregate(obj: IStepKind): IStepKind {
 
 function anyShape() {
   return {
-    kind: toDataShapeKindType(DataShapeKinds.ANY),
+    kind: DataShapeKinds.ANY,
     name: 'Any shape',
   } as DataShape;
 }
 
 function noShape() {
   return {
-    kind: toDataShapeKindType(DataShapeKinds.NONE),
+    kind: DataShapeKinds.NONE,
     name: 'No shape',
   } as DataShape;
 }
