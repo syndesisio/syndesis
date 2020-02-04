@@ -104,7 +104,7 @@
     "codacy-coverage": "^3.4.0",
     "codelyzer": "^5.2.1",
     "core-js": "^2.4.0",
-    "file-saver": "2.0.1",
+    "file-saver": "2.0.2",
     "font-awesome": "^4.7.0",
     "jasmine-core": "~3.3.0",
     "jasmine-spec-reporter": "~4.2.1",
