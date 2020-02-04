@@ -84,14 +84,14 @@
       "FieldsMarkedWithStarRequired": "The fields marked with <span class=\"required-pf\">*</span> are required.",
       "AllFieldsRequired": "All fields are required.",
       "links": {
-        "contactus": "//syndesis.io/community/",
+        "contactus": "//access.redhat.com/support/cases/#/case/new",
         "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
         "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/connecting_fuse_online_to_applications_and_services/",
         "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/fuse_online_sample_integration_tutorials/",
         "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
       },
       "project": {
-        "name": "Syndesis",
+        "name": "Fuse Online",
         "version": "7.6"
       },
       "error": {
