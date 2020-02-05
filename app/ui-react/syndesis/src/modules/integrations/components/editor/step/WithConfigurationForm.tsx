@@ -6,7 +6,10 @@ import {
 } from '@syndesis/api';
 import { AutoForm, IFormValue } from '@syndesis/auto-form';
 import { ConfigurationProperty, StepKind } from '@syndesis/models';
-import { IntegrationEditorForm } from '@syndesis/ui';
+import {
+  IntegrationEditorForm,
+  IntegrationEditorNothingToConfigureAlert,
+} from '@syndesis/ui';
 import {
   allFieldsRequired,
   getRequiredStatusText,
@@ -78,9 +81,7 @@ export interface IWithConfigurationFormProps {
  * @see [moreConfigurationSteps]{@link IWithConfigurationFormProps#moreConfigurationSteps}
  * @see [values]{@link IWithConfigurationFormProps#values}
  */
-export const WithConfigurationForm: React.FunctionComponent<
-  IWithConfigurationFormProps
-> = props => {
+export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFormProps> = props => {
   const { t } = useTranslation('shared');
 
   const onSave = async (
@@ -100,14 +101,20 @@ export const WithConfigurationForm: React.FunctionComponent<
   let definition: { [key: string]: ConfigurationProperty };
   // if step is undefined, maybe we are dealing with an extension
   if (!step) {
-    const steps = getActionSteps(props.step.action!.descriptor!);
-    const actionStep = getActionStep(steps, 0);
-    definition = getActionStepDefinition(actionStep);
+    try {
+      const steps = getActionSteps(props.step.action!.descriptor!);
+      const actionStep = getActionStep(steps, 0);
+      definition = getActionStepDefinition(actionStep);
+    } catch (err) {
+      // tslint:disable-next-line:no-console
+      console.warn('Caught error accessing property definition: ', err);
+      definition = {};
+    }
     step = props.step;
   } else {
     definition = step.properties;
   }
-
+  const hasProperties = Object.keys(definition).length > 0;
   const initialValue = props.step.configuredProperties;
   const requiredPrompt = getRequiredStatusText(
     definition,
@@ -115,14 +122,12 @@ export const WithConfigurationForm: React.FunctionComponent<
     i18n.t('shared:FieldsMarkedWithStarRequired'),
     ''
   );
-
   const validator = (values: IFormValue) =>
     validateRequiredProperties(
       definition,
       (name: string) => `${name} is required`,
       values
     );
-
   return (
     <AutoForm<IFormValue>
       i18nRequiredProperty={t('shared:requiredFieldMessage')}
@@ -150,7 +155,15 @@ export const WithConfigurationForm: React.FunctionComponent<
               submitForm={submitForm}
               handleSubmit={handleSubmit}
             >
-              {fields}
+              {hasProperties ? (
+                fields
+              ) : (
+                <IntegrationEditorNothingToConfigureAlert
+                  i18nAlert={i18n.t(
+                    'integrations:editor:configureStep:noProperties'
+                  )}
+                />
+              )}
             </IntegrationEditorForm>
           ),
           isSubmitting,

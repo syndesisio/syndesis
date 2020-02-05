@@ -9,6 +9,7 @@ export * from './IntegrationEditorConnectionsListItem';
 export * from './IntegrationEditorForm';
 export * from './IntegrationEditorLayout';
 export * from './IntegrationEditorNothingToConfigure';
+export * from './IntegrationEditorNothingToConfigureAlert';
 export * from './IntegrationEditorStepsAdderHeader';
 export * from './IntegrationEditorStepsList';
 export * from './IntegrationEditorStepsListItem';

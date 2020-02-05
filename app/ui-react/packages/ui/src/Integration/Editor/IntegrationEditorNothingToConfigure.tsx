@@ -1,7 +1,8 @@
-import { Card, CardBody, CardFooter, Text } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../Layout';
+import { IntegrationEditorNothingToConfigureAlert } from './IntegrationEditorNothingToConfigureAlert';
 
 export interface IIntegrationEditorNothingToConfigureProps {
   /**
@@ -29,10 +30,9 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
             <Card>
               <CardBody>
                 <Container>
-                  <Text className="alert alert-info">
-                    <span className="pficon pficon-info" />
-                    {this.props.i18nAlert}
-                  </Text>
+                  <IntegrationEditorNothingToConfigureAlert
+                    i18nAlert={this.props.i18nAlert}
+                  />
                 </Container>
               </CardBody>
               <CardFooter className="syn-card__footer">
