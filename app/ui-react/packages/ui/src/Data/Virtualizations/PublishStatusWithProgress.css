@@ -14,7 +14,8 @@
 }
 
 .publish-status-with-progress_text {
-    margin-right: 15px;
+    margin-right: 10px;
+    margin-left: 10px;
     font-size: 1rem;
     font-weight: 600;
 }

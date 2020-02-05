@@ -78,7 +78,12 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
         />
       )}
       <span className={'publish-status-with-progress_text'}>
-        {props.i18nPublishState}
+        <Label
+          className={'publish-status-with-progress_Label'}
+          type={props.labelType}
+        >
+          {props.i18nPublishState}
+        </Label>
         {props.publishVersion && ` version ${props.publishVersion}`}
       </span>
       {(props.i18nPublishState === 'Stopped' ||
