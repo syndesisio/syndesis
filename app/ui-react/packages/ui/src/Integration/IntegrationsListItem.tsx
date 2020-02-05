@@ -1,4 +1,5 @@
-import { Icon, ListView } from 'patternfly-react';
+import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../helpers';
 import { IntegrationIcon } from './IntegrationIcon';
@@ -79,11 +80,7 @@ export class IntegrationsListItem extends React.Component<
                 className={'integration-list-item__config-required'}
                 data-testid={`integrations-list-item-config-required`}
               >
-                <Icon
-                  type={'pf'}
-                  name={'warning-triangle-o'}
-                  className="pf-u-mr-xs"
-                />
+                <WarningTriangleIcon className="pf-u-mr-xs" />
                 {this.props.i18nConfigurationRequired}
               </div>
             )}
