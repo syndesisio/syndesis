@@ -1,0 +1,176 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: "2020-01-30T20:28:07Z"
+  generation: 1
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-server
+    syndesis.io/type: infrastructure
+  name: syndesis-server
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "198003"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-server
+  uid: 06542a12-439f-11ea-851f-0a580a80010d
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-server
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 20Mi
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-server
+        syndesis.io/type: infrastructure
+    spec:
+      containers:
+      - env:
+        - name: JAVA_APP_DIR
+          value: /deployments
+        - name: JAVA_OPTIONS
+          value: -Djava.net.preferIPv4Stack=true -Duser.home=/tmp
+        - name: NAMESPACE
+          valueFrom:
+            fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+        - name: ENDPOINTS_TEST_SUPPORT_ENABLED
+          value: "false"
+        - name: CONTROLLERS_INTEGRATION_ENABLED
+          value: "true"
+        - name: POSTGRESQL_SAMPLEDB_PASSWORD
+          value: pokuTtBgI5ra5h8V
+        - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
+          value: HmacSHA1
+        - name: CLIENT_STATE_AUTHENTICATION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: clientStateAuthenticationKey
+              name: syndesis-server-secret
+        - name: CLIENT_STATE_ENCRYPTION_ALGORITHM
+          value: AES/CBC/PKCS5Padding
+        - name: CLIENT_STATE_ENCRYPTION_KEY
+          valueFrom:
+            secretKeyRef:
+              key: clientStateEncryptionKey
+              name: syndesis-server-secret
+        - name: CLIENT_STATE_TID
+          value: "1"
+        - name: INTEGRATION_STATE_CHECK_INTERVAL
+          value: "60"
+        - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
+        image: docker.io/syndesis/syndesis-server:latest
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          httpGet:
+            httpHeaders:
+            - name: Accept
+              value: text/plain
+            path: /api/v1/version
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 300
+          periodSeconds: 20
+          successThreshold: 1
+          timeoutSeconds: 1
+        name: syndesis-server
+        ports:
+        - containerPort: 8080
+          name: http
+          protocol: TCP
+        - containerPort: 8181
+          name: metrics
+          protocol: TCP
+        - containerPort: 9779
+          name: prometheus
+          protocol: TCP
+        - containerPort: 8778
+          name: jolokia
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /health
+            port: 8181
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 750m
+            memory: 800Mi
+          requests:
+            cpu: 450m
+            memory: 256Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /deployments/config
+          name: config-volume
+        workingDir: /deployments
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: syndesis-server
+      serviceAccountName: syndesis-server
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: syndesis-server-config
+        name: config-volume
+  test: false
+  triggers:
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-01-30T20:28:15Z"
+    lastUpdateTime: "2020-01-30T20:30:24Z"
+    message: replication controller "syndesis-server-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2020-02-03T10:25:19Z"
+    lastUpdateTime: "2020-02-03T10:25:19Z"
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

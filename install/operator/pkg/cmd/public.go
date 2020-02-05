@@ -20,16 +20,16 @@ import (
 	"context"
 	"flag"
 
+	"os"
+
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/backup"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/grant"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/install"
-	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/restore"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/run"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/uninstall"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
-	"os"
 )
 
 // Creates a new operator command.
@@ -66,8 +66,8 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.AddCommand(grant.New(&options))
 	cmd.AddCommand(run.New(&options))
 	cmd.AddCommand(uninstall.New(&options))
-	cmd.AddCommand(backup.New(&options))
-	cmd.AddCommand(restore.New(&options))
+	cmd.AddCommand(backup.NewBackup(&options))
+	cmd.AddCommand(backup.NewRestore(&options))
 
 	return &cmd, nil
 }

@@ -14,23 +14,28 @@
  * limitations under the License.
  */
 
-package restore
+package backup
 
 import (
 	"github.com/operator-framework/operator-sdk/pkg/log/zap"
 	"github.com/spf13/cobra"
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/backup"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
-type Backup struct {
-	*internal.Options
-	backupDir string
+type Restore struct {
+	*Backup
+	customOptions string
 }
 
-func New(parent *internal.Options) *cobra.Command {
-	o := Backup{Options: parent}
+func NewRestore(parent *internal.Options) *cobra.Command {
+	o := Restore{
+		Backup: &Backup{
+			Options: parent,
+		},
+	}
 	cmd := cobra.Command{
 		Use:   "restore",
 		Short: "restore the data that was previously backed up",
@@ -38,19 +43,26 @@ func New(parent *internal.Options) *cobra.Command {
 			util.ExitOnError(o.Run())
 		},
 	}
+
+	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	cmd.Flags().StringVar(&o.backupDir, "backup", "/tmp/backup", "The directory where the backup is stored")
+	cmd.Flags().StringVar(&o.customOptions, "custom-options", "", "Set of custom options to provide to pg_restore (default: --no-password --clean --if-exists --create --verbose)")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
 
-func (o *Backup) Run() error {
-	b := backup.Backup{
-		Namespace: o.Namespace,
-		BackupDir: o.backupDir,
-		Context:   o.Context,
-		Client:    o.Client,
+func (o *Restore) Run() error {
+	syndesis, cl, err := o.prepare()
+	if err != nil {
+		return err
 	}
 
+	b, err := backup.NewBackup(o.Context, cl, syndesis, o.backupDir)
+	if err != nil {
+		return err
+	}
+
+	b.SetCustomOptions(o.customOptions)
 	return b.Restore()
 }

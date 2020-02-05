@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{.Job}}
+spec:
+  backoffLimit: 4
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+      name: {{.Job}}
+      labels:
+        job-name: {{.Job}}
+    spec:
+      restartPolicy: Never
+      volumes:
+      - name: tmp-pgdata
+        emptyDir: {}
+      containers:
+      - name: restore-db-compiler
+        image: "crunchydata/crunchy-pgrestore:centos7-12.1-4.2.1"
+        volumeMounts:
+        - mountPath: /pgdata
+          name: tmp-pgdata
+        env:
+        - name: PGRESTORE_HOST
+          value: {{.Host}}
+        - name: PGRESTORE_PORT
+          value: "{{.Port}}"
+        - name: PGRESTORE_USER
+          value: "{{.User}}"
+        - name: PGRESTORE_PASS
+          value: "{{.Password}}"
+        - name: PGRESTORE_DB
+          value: "{{.Name}}"
+        - name: PGRESTORE_BACKUP_TIMESTAMP
+          value: "{{.Timestamp}}"
+        - name: PGRESTORE_CUSTOM_OPTS
+          value: "{{.CustomOptions}}"
+        command:
+        - /bin/bash
+        args:
+        - "-c"
+        - |
+          (while true;  do if [[ -f "/pgdata/pg-upload-complete" ]]; then sleep 5; break; fi; sleep 3; done)
+          /opt/cpm/bin/start.sh

@@ -1,0 +1,33 @@
+apiVersion: v1
+data:
+  queries.yaml: |
+    pg_database:
+      query: " SELECT pg_database.datname, pg_database_size(pg_database.datname) as size FROM pg_database"
+      metrics:
+        - datname:
+            usage: "LABEL"
+            description: "Name of the database"
+        - size:
+            usage: "GAUGE"
+            description: "Disk space used by the database"
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2020-01-30T20:28:08Z"
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-db-metrics
+    syndesis.io/type: infrastructure
+  name: syndesis-db-metrics-config
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "110013"
+  selfLink: /api/v1/namespaces/syndesis/configmaps/syndesis-db-metrics-config
+  uid: 06ec6783-439f-11ea-ab61-52fdfc072182

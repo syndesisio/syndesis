@@ -1,0 +1,59 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{.Job}}
+spec:
+  backoffLimit: 4
+  parallelism: 1
+  ttlSecondsAfterFinished: 100
+  template:
+    metadata:
+      name: {{.Job}}
+      labels:
+        job-name: {{.Job}}
+    spec:
+      restartPolicy: OnFailure
+      volumes:
+      - name: tmp-pgdata
+        emptyDir: {}
+      containers:
+      - name: backup-db-compiler
+        image: "crunchydata/crunchy-pgdump:centos7-12.1-4.2.1"
+        volumeMounts:
+        - mountPath: /pgdata
+          name: tmp-pgdata
+        env:
+        - name: PGDUMP_HOST
+          value: {{.Host}}
+        - name: PGDUMP_PORT
+          value: "{{.Port}}"
+        - name: PGDUMP_USER
+          value: {{.User}}
+        - name: PGDUMP_PASS
+          value: {{.Password}}
+        - name: PGDUMP_DB
+          value: {{.Name}}
+        - name: PGDUMP_FILENAME
+          value: {{.FileName}}
+        - name: PGDUMP_ALL
+          value: "false"
+        - name: PGDUMP_CUSTOM_OPTS
+          value: "--format=custom"
+        command:
+        - /bin/bash
+        args:
+        - "-c"
+        - "/opt/cpm/bin/start.sh && sleep 5 && touch /pgdata/pg-dump-complete"
+      - name: backup-db-logger
+        image: centos:7
+        volumeMounts:
+        - mountPath: /pgdata
+          name: tmp-pgdata
+          readOnly: true
+        command:
+        - /bin/bash
+        - "-c"
+        - |
+          (while true; do if [[ -f "/pgdata/pg-dump-complete" ]]; then sleep 5; break; fi; sleep 3; done)
+          cat {{- .FileDir}}/{{- .FileName}}
+          sleep 120
