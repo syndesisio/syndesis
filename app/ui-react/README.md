@@ -106,7 +106,7 @@ Extra typings for pure JavaScript dependencies that should eventually be pushed 
 
 
 ```bash
-# install all the dependendencies and build the project
+# install all the dependencies and build the project
 syndesis ui --install --build
 ```
 
@@ -117,7 +117,9 @@ syndesis ui --install --build
 Builds the project for production.
 
 ### `syndesis ui --serve --minishift`
-Runs the app in development mode using minishift.  Automates running `yarn watch:app:minishift` and restores the console URL when you stop the development server
+
+Runs the app in development mode using minishift. Automates running `yarn watch:app:minishift` and restores the console URL when you stop the development server.
+It requires to have created a `syndesis` project on OpenShift.
 
 ### `yarn watch:app:minishift` 
 

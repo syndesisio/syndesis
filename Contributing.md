@@ -1,0 +1,1 @@
+To develop Syndesis locally, see [here](./app/ui-react/README.md#setup-and-preparation)
