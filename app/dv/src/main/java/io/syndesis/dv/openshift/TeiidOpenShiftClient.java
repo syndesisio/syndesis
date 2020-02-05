@@ -98,7 +98,6 @@ import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.BuildList;
 import io.fabric8.openshift.api.model.DeploymentCondition;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
@@ -134,6 +133,8 @@ import okhttp3.OkHttpClient;
 
 @SuppressWarnings("nls")
 public class TeiidOpenShiftClient implements StringConstants {
+
+    private static final String AVAILABLE = "Available";
 
     /**
      * Get the OpenShift name, requires lower case and must start/end with
@@ -268,7 +269,8 @@ public class TeiidOpenShiftClient implements StringConstants {
                     } else {
                         DeploymentConfig dc = client.deploymentConfigs().inNamespace(work.getNamespace())
                                 .withName(deploymentStatus.getDeploymentName()).get();
-                        if (isDeploymentInReadyState(dc)) {
+                        DeploymentCondition cond = getDeploymentCondition(dc, AVAILABLE);
+                        if (Boolean.TRUE.equals(asBoolean(cond))) {
                             // it is done now..
                             info(work.getOpenShiftName(), "Publishing - Deployment completed");
                             createService(client, work.getNamespace(), work.getOpenShiftName());
@@ -282,11 +284,10 @@ public class TeiidOpenShiftClient implements StringConstants {
                             if (!isDeploymentProgressing(dc)) {
                                 deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
                                 info(work.getOpenShiftName(), "Publishing - Deployment seems to be failed, this could be "
-                                        + "due to vdb failure, rediness check failed. Wait threshold is 2 minutes.");
+                                        + "due to vdb failure, rediness check failed. Wait threshold is 2 minutes: " + dc.getStatus().getConditions());
                                 shouldReQueue = false;
                             }
                             debug(work.getOpenShiftName(), "Publishing - Deployment not ready");
-                            DeploymentCondition cond = getDeploymentConfigStatus(dc);
                             if (cond != null) {
                                 debug(work.getOpenShiftName(), "Publishing - Deployment condition: " + cond.getMessage());
                                 deploymentStatus.setStatusMessage(cond.getMessage());
@@ -1046,35 +1047,30 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private boolean isDeploymentInReadyState(DeploymentConfig dc) {
-        List<DeploymentCondition> conditions = dc.getStatus().getConditions();
-        for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Available") && cond.getStatus().equals("True")) {
+    private Boolean asBoolean(DeploymentCondition cond) {
+        if (cond != null) {
+            if (cond.getStatus().equals("True")) {
                 return true;
             }
+            if (cond.getStatus().equals("False")) {
+                return false;
+            }
         }
-        return false;
+        return null;
     }
 
+    /**
+     * We'll consider things progressing if true or unknown
+     */
     private boolean isDeploymentProgressing(DeploymentConfig dc) {
-        DeploymentConfigStatus status = dc.getStatus();
-        List<DeploymentCondition> conditions = status.getConditions();
-        for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Progressing") && cond.getStatus().equals("True")) {
-                return true;
-            }
-        }
-        // let's try to deploy five times before giving up.
-        if (status.getObservedGeneration() < 4) {
-            return true;
-        }
-        return false;
+        Boolean result = asBoolean(getDeploymentCondition(dc, "Progressing"));
+        return result == null || result;
     }
 
-    private DeploymentCondition getDeploymentConfigStatus(DeploymentConfig dc) {
+    private DeploymentCondition getDeploymentCondition(DeploymentConfig dc, String type) {
         List<DeploymentCondition> conditions = dc.getStatus().getConditions();
         for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Available")) {
+            if (cond.getType().equals(type)) {
                 return cond;
             }
         }
@@ -1512,13 +1508,13 @@ public class TeiidOpenShiftClient implements StringConstants {
             deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
             deploymentStatus.setDeploymentName(dc.getMetadata().getName());
             deploymentStatus.setVersion(getDeployedRevision(dc, buildVersion, client));
-            if (isDeploymentInReadyState(dc)) {
+            DeploymentCondition cond = getDeploymentCondition(dc, AVAILABLE);
+            if (Boolean.TRUE.equals(asBoolean(cond))) {
                 deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
             } else {
                 if (!isDeploymentProgressing(dc)) {
                     deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
                 }
-                DeploymentCondition cond = getDeploymentConfigStatus(dc);
                 if (cond != null) {
                     deploymentStatus.setStatusMessage(cond.getMessage());
                 } else {
