@@ -1,0 +1,159 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: "2020-01-30T20:28:07Z"
+  generation: 1
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-oauthproxy
+    syndesis.io/type: infrastructure
+  name: syndesis-oauthproxy
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "110307"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-oauthproxy
+  uid: 064b17b3-439f-11ea-851f-0a580a80010d
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-oauthproxy
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 20Mi
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-oauthproxy
+        syndesis.io/type: infrastructure
+    spec:
+      containers:
+      - args:
+        - --provider=openshift
+        - --client-id=system:serviceaccount:syndesis:syndesis-oauth-client
+        - --upstream=http://syndesis-server/api/
+        - --upstream=http://syndesis-server/mapper/
+        - --upstream=http://syndesis-ui/
+        - --upstream=http://syndesis-dv/dv/
+        - --tls-cert=/etc/tls/private/tls.crt
+        - --tls-key=/etc/tls/private/tls.key
+        - --pass-access-token
+        - --skip-provider-button
+        - --skip-auth-regex=/logout
+        - --skip-auth-regex=/[^/]+\.(png|jpg|eot|svg|ttf|woff|woff2)
+        - --skip-auth-regex=/api/v1/swagger.*
+        - --skip-auth-regex=/api/v1/index.html
+        - --skip-auth-regex=/api/v1/credentials/callback
+        - --skip-auth-regex=/api/v1/version
+        - --skip-auth-regex=/config.json
+        - --skip-auth-preflight
+        - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
+        - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        - --openshift-sar={"namespace":"syndesis","resource":"pods","verb":"get"}
+        env:
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OAUTH_COOKIE_SECRET
+              name: syndesis-global-config
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              key: OPENSHIFT_OAUTH_CLIENT_SECRET
+              name: syndesis-global-config
+        image: quay.io/openshift/origin-oauth-proxy:v4.0.0
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /oauth/healthz
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        name: oauthproxy
+        ports:
+        - containerPort: 8443
+          name: public
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /oauth/healthz
+            port: 8443
+            scheme: HTTPS
+          initialDelaySeconds: 15
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/tls/private
+          name: syndesis-oauthproxy-tls
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: syndesis-oauth-client
+      serviceAccountName: syndesis-oauth-client
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: syndesis-oauthproxy-tls
+        secret:
+          defaultMode: 420
+          secretName: syndesis-oauthproxy-tls
+  test: false
+  triggers:
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-01-30T20:28:44Z"
+    lastUpdateTime: "2020-01-30T20:28:44Z"
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  - lastTransitionTime: "2020-01-30T20:28:45Z"
+    lastUpdateTime: "2020-01-30T20:28:45Z"
+    message: replication controller "syndesis-oauthproxy-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

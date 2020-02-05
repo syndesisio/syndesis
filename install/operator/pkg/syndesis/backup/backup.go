@@ -20,43 +20,83 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
+	"path"
 	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/go-logr/logr"
-
+	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg"
 	"k8s.io/client-go/dynamic"
 	"k8s.io/client-go/kubernetes"
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 
-	"k8s.io/client-go/tools/remotecommand"
-
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/operation"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"gopkg.in/yaml.v2"
+	batchv1 "k8s.io/api/batch/v1"
+	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/labels"
-	"sigs.k8s.io/controller-runtime/pkg/client"
+	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"k8s.io/client-go/tools/remotecommand"
+	rc "sigs.k8s.io/controller-runtime/pkg/client"
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
 var backupLog = logf.Log.WithName("backup")
 
+const (
+	pollTimeout  = 600 * time.Second
+	pollInterval = 5 * time.Second
+
+	compilerContainer = "backup-db-compiler"
+	loggerContainer   = "backup-db-logger"
+
+	dumpFilename = "syndesis-db.dump"
+
+	resDefaultCustomOptions = "--no-password --clean --if-exists --create --verbose"
+)
+
 type Backup struct {
-	log        logr.Logger
-	backupPath string
-	Namespace  string
-	BackupDir  string
-	Delete     bool
-	LocalOnly  bool
-	Context    context.Context
-	Client     *client.Client
+	isInited        bool              // Backup correctly initialised
+	log             logr.Logger       // Logger for this object
+	backupDir       string            // Root directory of the final backup location
+	backupPath      string            // Relative path of the final backup location (needs to be joined with backupDir)
+	delete          bool              // Remove the local backup artifacts if uploading to remote location
+	localOnly       bool              // If true, backup to local location. Otherwise, upload to remote lodation
+	context         context.Context   // Context for backup
+	client          rc.Client         // Kubernetes client instance
+	syndesis        *v1beta1.Syndesis // Syndesis runtime instance
+	customOptions   string            // Custom options required for restoring
+	backupDesign    backupDesign      // The credentials for the backup/restore operation
+	payloadComplete bool              // Is uploading of the restore payload complete
 }
+
+type backupDesign struct {
+	Job           string // Name of the unique job
+	Name          string // Name of the database
+	User          string // User used to access the database
+	Password      string // Password to access the database
+	Host          string // Hostname of the database server
+	Port          string // Port of the database service
+	FileDir       string // Directory where the remote backup file is stored
+	FileName      string // Name of the backup file
+	Timestamp     string // Value used as sub-directory name for restoring a backup
+	CustomOptions string // String of custom options for use with pg_restore (use-cases where alternatives will be required)
+}
+
+type BkpJobTask func(bkpPod *corev1.Pod) (bool, error)
 
 type Runner interface {
 	Run() error
@@ -64,7 +104,7 @@ type Runner interface {
 	Validate() error
 	RestoreResources() error
 	RestoreDb() error
-	BuildBackupDir(path string) (b *Backup, err error)
+	BuildBackupDir(path string) (r *Backup, err error)
 }
 
 // Uploader interface has methods to upload backup files
@@ -87,13 +127,117 @@ type Downloader interface {
 	Enabled() (result bool)
 }
 
+func clientConfig() (*rest.Config, error) {
+	c, err := config.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return c, err
+}
+
+func NewBackup(context context.Context, client rc.Client, syndesis *v1beta1.Syndesis, backupDir string) (*Backup, error) {
+	if client == nil {
+		cc, err := clientConfig()
+		if err != nil {
+			return nil, err
+		}
+
+		cl, err := rc.New(cc, rc.Options{})
+		if err != nil {
+			return nil, err
+		}
+		client = cl
+	}
+
+	b := &Backup{
+		isInited:  true,
+		log:       backupLog.WithValues("action", "backup"),
+		backupDir: backupDir,
+		context:   context,
+		client:    client,
+		syndesis:  syndesis,
+		delete:    false,
+		localOnly: false,
+	}
+
+	return b, nil
+}
+
+func (b *Backup) inited() error {
+	if !b.isInited {
+		return errors.New("Backup procedure not initialized correctly")
+	}
+
+	return nil
+}
+
+func (b *Backup) dynamicClient() (c dynamic.Interface, err error) {
+	cc, err := clientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return dynamic.NewForConfig(cc)
+}
+
+func (b *Backup) apiClient() (*kubernetes.Clientset, error) {
+	cc, err := clientConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	return kubernetes.NewForConfig(cc)
+}
+
+func (b *Backup) SetDelete(delete bool) error {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.delete = delete
+	return nil
+}
+
+func (b *Backup) SetLocalOnly(localOnly bool) error {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.localOnly = localOnly
+	return nil
+}
+
+func (b *Backup) SetCustomOptions(customOptions string) error {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.customOptions = customOptions
+	return nil
+}
+
 // Create a backup, zip it and upload it to different
 // datastores
 func (b *Backup) Run() (err error) {
-	b.logger("backup").Info("starting backup for syndesis")
+	if err := b.inited(); err != nil {
+		return err
+	}
 
-	if err = b.backup(); err != nil {
-		b.log.Error(err, "error performing backup")
+	b.log.Info("starting backup for syndesis")
+
+	if err = b.ensureDir(); err != nil {
+		b.log.Error(err, "error preparing backup directory")
+		return
+	}
+
+	if err = b.backupResources(); err != nil {
+		b.log.Error(err, "error backing up resources")
+		return
+	}
+
+	if err = b.backupDatabase(); err != nil {
+		b.log.Error(err, "error backup database")
 		return
 	}
 
@@ -103,17 +247,17 @@ func (b *Backup) Run() (err error) {
 		return
 	}
 
-	if b.Delete {
+	if b.delete {
 		defer os.RemoveAll(b.backupPath)
 		defer os.RemoveAll(zipped)
 	}
 
-	if !b.LocalOnly {
+	if !b.localOnly {
 		uploader := []Uploader{&S3{Backup: b, file: zipped}}
 
 		for _, u := range uploader {
 			if u.Enabled() {
-				if err = u.Upload(b.BackupDir); err != nil {
+				if err = u.Upload(b.backupDir); err != nil {
 					b.log.Error(err, "error uploading backup file to source", "source", u)
 					return
 				}
@@ -126,47 +270,51 @@ func (b *Backup) Run() (err error) {
 	return
 }
 
-/*
- * Because there is some incoherency with the path for backup and for restore,
- * it is needed to transform it from backup to restore so that the restore
- * can be performed
- */
-func (b *Backup) BuildBackupDir(path string) (r *Backup, err error) {
-	r = b
-	if err = b.Validate(); err != nil {
-		// Fix path to point to where backup files are stored
-		b.BackupDir = filepath.Join(b.BackupDir, path)
-		files, err := ioutil.ReadDir(b.BackupDir)
+// Restore backup from a zipped file or from a backup dir
+// Restore database and openshift resources
+func (b *Backup) Restore() (err error) {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.log.Info("restoring backup for syndesis", "backup", b.backupDir)
+	fi, err := os.Stat(b.backupDir)
+	if err != nil {
+		return
+	}
+
+	if !fi.IsDir() {
+		//
+		// Handle possibility that backup is zipped archive
+		// rather than a general directory
+		//
+		dir, err := ioutil.TempDir("/tmp", "restore-")
 		if err != nil {
-			return nil, err
+			return err
+		}
+		defer os.RemoveAll(dir)
+		os.Chmod(dir, 0755)
+
+		if err = b.unzip(b.backupDir, dir); err != nil {
+			return err
 		}
 
-		if len(files) != 1 {
-			// We are expecting to have only one dir inside the tag folder
-			return nil, fmt.Errorf("found more than one file or folder in %s", b.BackupDir)
-		} else {
-			b.BackupDir = filepath.Join(b.BackupDir, files[0].Name())
-			if fr, err := os.Stat(b.BackupDir); err != nil || !fr.IsDir() {
-				return nil, fmt.Errorf("%s is not a folder", b.BackupDir)
-			}
+		nfi, err := os.Stat(dir)
+		if !nfi.IsDir() {
+			return fmt.Errorf("Unzipped backup directory does not exist: %s", dir)
 		}
+		b.backupDir = dir
 	}
 
-	return r, nil
-}
-
-// Perform a backup of all relevant openshift resources
-// and the database
-func (b *Backup) backup() (err error) {
-	if err = b.ensureDir(); err != nil {
+	if err = b.Validate(); err != nil {
 		return
 	}
 
-	if err = b.backupResources(); err != nil {
+	if err = b.RestoreDb(); err != nil {
 		return
 	}
 
-	if err = b.backupDatabase(); err != nil {
+	if err = b.RestoreResources(); err != nil {
 		return
 	}
 
@@ -174,54 +322,23 @@ func (b *Backup) backup() (err error) {
 }
 
 func (b *Backup) ensureDir() (err error) {
-	if len(b.BackupDir) == 0 {
+	if len(b.backupDir) == 0 {
 		abs, err := filepath.Abs(".")
 		if err != nil {
 			return err
 		}
 
-		b.BackupDir = abs
+		b.backupDir = abs
 	}
 
 	b.backupPath = filepath.Join(pkg.DefaultOperatorTag, strconv.FormatInt(time.Now().Unix(), 10))
-	err = os.MkdirAll(filepath.Join(b.BackupDir, b.backupPath), 0755)
+	err = os.MkdirAll(filepath.Join(b.backupDir, b.backupPath), 0755)
 
 	if err == nil || os.IsExist(err) {
 		return nil
 	}
 
 	return
-}
-
-// Create a database backup
-func (b *Backup) backupDatabase() error {
-	api, err := b.apiClient()
-	if err != nil {
-		return err
-	}
-
-	pod, err := util.GetPodWithLabelSelector(api, b.Namespace, "syndesis.io/component=syndesis-db")
-	if err != nil {
-		return err
-	}
-	backupfile, err := os.Create(filepath.Join(b.BackupDir, b.backupPath, "syndesis-db.dump"))
-	if err != nil {
-		return err
-	}
-	defer backupfile.Close()
-
-	return util.Exec(util.ExecOptions{
-		Config:    b.clientConfig(),
-		Api:       api,
-		Namespace: b.Namespace,
-		Pod:       pod.Name,
-		Container: "postgresql",
-		Command:   []string{`bash`, `-c`, `pg_dump -Fc -b syndesis | base64`},
-		StreamOptions: remotecommand.StreamOptions{
-			Stdout: backupfile,
-			Stderr: os.Stderr,
-		},
-	})
 }
 
 // Create a openshift resource backup
@@ -245,14 +362,9 @@ func (b *Backup) backupResources() error {
 		return err
 	}
 
-	c, err := b.client()
-	if err != nil {
-		return err
-	}
-
 	for _, typeMeta := range backupTypes {
-		options := client.ListOptions{
-			Namespace:     b.Namespace,
+		options := rc.ListOptions{
+			Namespace:     b.syndesis.Namespace,
 			LabelSelector: selector,
 			Raw: &metav1.ListOptions{
 				TypeMeta: typeMeta,
@@ -265,15 +377,15 @@ func (b *Backup) backupResources() error {
 				"kind":       typeMeta.Kind,
 			},
 		}
-		err = util.ListInChunks(b.Context, c, &options, &list, func(resources []unstructured.Unstructured) error {
-			os.MkdirAll(filepath.Join(b.BackupDir, b.backupPath, "resources"), 0755)
+		err = util.ListInChunks(b.context, b.client, &options, &list, func(resources []unstructured.Unstructured) error {
+			os.MkdirAll(filepath.Join(b.backupDir, b.backupPath, "resources"), 0755)
 			for _, res := range resources {
 				data, err := yaml.Marshal(res.Object)
 				if err != nil {
 					return err
 				}
 
-				err = ioutil.WriteFile(filepath.Join(b.BackupDir, b.backupPath, "resources", strings.ToLower(typeMeta.Kind+"-"+res.GetName()+".yaml")), data, 0755)
+				err = ioutil.WriteFile(filepath.Join(b.backupDir, b.backupPath, "resources", strings.ToLower(typeMeta.Kind+"-"+res.GetName()+".yaml")), data, 0755)
 				if err != nil {
 					return err
 				}
@@ -284,35 +396,514 @@ func (b *Backup) backupResources() error {
 	return nil
 }
 
-func (b *Backup) clientConfig() *rest.Config {
-	c, err := config.GetConfig()
-	util.ExitOnError(err)
-	return c
+// Restore openshift resources
+func (b *Backup) RestoreResources() (err error) {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.log.Info("starting restore for syndesis resources", "backup", path.Join(b.backupDir, "resources"))
+	rss, err := ioutil.ReadDir(filepath.Join(b.backupDir, "resources"))
+	if err != nil {
+		return err
+	}
+
+	var obj interface{} = nil
+	resources := []unstructured.Unstructured{}
+	for _, rs := range rss {
+		if strings.HasSuffix(rs.Name(), ".yml") || strings.HasSuffix(rs.Name(), ".yaml") {
+			dat, err := ioutil.ReadFile(filepath.Join(b.backupDir, "resources", rs.Name()))
+			if err != nil {
+				return err
+			}
+
+			err = util.UnmarshalYaml(dat, &obj)
+			if err != nil {
+				return errors.Errorf("%s:\n%s\n", err, string(dat))
+			}
+
+			switch v := obj.(type) {
+			case []interface{}:
+				for _, value := range v {
+					if x, ok := value.(map[string]interface{}); ok {
+						u := unstructured.Unstructured{x}
+						//annotatedForDebugging(u, name, rawYaml)
+						resources = append(resources, u)
+					} else {
+						return errors.New("list did not contain objects")
+					}
+				}
+			case map[string]interface{}:
+				u := unstructured.Unstructured{v}
+				//annotatedForDebugging(u, name, rawYaml)
+				resources = append(resources, u)
+			case nil:
+				// It's ok if a template chooses not to generate any resources..
+
+			default:
+				return fmt.Errorf("unexptected yaml unmarshal type: %v", obj)
+			}
+		}
+	}
+
+	for _, res := range resources {
+		res.SetResourceVersion("")
+		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		if err != nil {
+			b.log.Error(nil, "error while restoring resources", "resources", res.GetName(), "kind", res.GetKind())
+			return err
+		}
+		b.log.Info("resource restored", "resources", res.GetName(), "kind", res.GetKind())
+	}
+
+	return nil
 }
 
-func (b *Backup) client() (c client.Client, err error) {
-	if b.Client == nil {
-		cl, err := client.New(b.clientConfig(), client.Options{})
+// Validates that a given backup has a correct format
+// and is the right version
+func (b *Backup) Validate() (err error) {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	if fr, err := os.Stat(filepath.Join(b.backupDir, "resources")); err != nil || !fr.IsDir() {
+		return fmt.Errorf("folder resources is missing or it is not accesible in backup dir %s", b.backupDir)
+	}
+
+	if _, err = os.Stat(filepath.Join(b.backupDir, dumpFilename)); err != nil {
+		return fmt.Errorf("database backup file is missing or it is not accesible in backup dir %s", b.backupDir)
+	}
+
+	return
+}
+
+/*
+ * Because there is some incoherency with the path for backup and for restore,
+ * it is needed to transform it from backup to restore so that the restore
+ * can be performed
+ */
+func (b *Backup) BuildBackupDir(path string) (r *Backup, err error) {
+	if err := b.inited(); err != nil {
+		return nil, err
+	}
+
+	r = b
+	if err = b.Validate(); err != nil {
+		// Fix path to point to where backup files are stored
+		b.backupDir = filepath.Join(b.backupDir, path)
+		files, err := ioutil.ReadDir(b.backupDir)
 		if err != nil {
 			return nil, err
 		}
-		b.Client = &cl
-	}
-	return *b.Client, nil
-}
 
-func (b *Backup) dynamicClient() (c dynamic.Interface, err error) {
-	return dynamic.NewForConfig(b.clientConfig())
-}
-
-func (b *Backup) apiClient() (*kubernetes.Clientset, error) {
-	return kubernetes.NewForConfig(b.clientConfig())
-}
-
-func (b *Backup) logger(t string) logr.Logger {
-	if b.log == nil {
-		b.log = backupLog.WithValues("action", t)
+		if len(files) != 1 {
+			// We are expecting to have only one dir inside the tag folder
+			return nil, fmt.Errorf("found more than one file or folder in %s", b.backupDir)
+		} else {
+			b.backupDir = filepath.Join(b.backupDir, files[0].Name())
+			if fr, err := os.Stat(b.backupDir); err != nil || !fr.IsDir() {
+				return nil, fmt.Errorf("%s is not a folder", b.backupDir)
+			}
+		}
 	}
 
-	return b.log
+	return r, nil
+}
+
+/*
+ * Rationale for architecture
+ *
+ * 2 containers in the pod - compilerContainer & loggerContainer
+ *
+ * Containers share a common ephemeral volume
+ *
+ * compilerContainer: Executes pg_dump to file then terminates
+ * loggerContainer: Logs the .dump file and sleeps for 2 minutes
+ *
+ * This monitors both containers ...
+ * - On observing that compilerContainer has terminated, excutes
+ *   a remote command on loggerContainer to fetch the dump file
+ *   as a base64 stream
+ * - If the fetch of the stream is successful then all finished!
+ *
+ * 2 containers necessary to allow for the detection of the termination
+ * but delay the completing of the pod to allow the execution of the
+ * remote command.
+ * Cannot use 1 container since the termination state change is what
+ * is detected for triggering the execution of the remote command
+ */
+// Create a database backup
+func (b *Backup) backupDatabase() error {
+
+	b.log.Info("Initiating database backup ...")
+
+	// Load configuration to to use as context for generator pkg
+	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
+	if err != nil {
+		return err
+	}
+
+	dbURL, err := url.Parse(sc.Syndesis.Components.Database.URL)
+	if err != nil {
+		return err
+	}
+
+	suffix := strconv.FormatInt(time.Now().Unix(), 10)
+
+	b.backupDesign = backupDesign{
+		Job:      "db-backup-" + suffix,
+		Name:     sc.Syndesis.Components.Database.Name,
+		User:     sc.Syndesis.Components.Database.User,
+		Password: sc.Syndesis.Components.Database.Password,
+		Host:     dbURL.Hostname(),
+		Port:     dbURL.Port(),
+		FileDir:  "/pgdata/syndesis-db-backups/*",
+		FileName: dumpFilename,
+	}
+
+	// Get migration resources, this should be the db migration job
+	resources, err := generator.Render("./backup/syndesis-backup-job.yml.tmpl", b.backupDesign)
+	if err != nil {
+		return err
+	}
+
+	// Install the resources
+	for _, res := range resources {
+		//
+		// The syndesis CR owns the job. This is necessary since the
+		// deploying of a job requires an OwnerReference (Name, UID & Kind)
+		// and jobs without a namespace require cluster-level privileges.
+		//
+		operation.SetNamespaceAndOwnerReference(res, b.syndesis)
+		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		if err != nil {
+			return err
+		}
+	}
+
+	return b.execJob(b.backupTask)
+}
+
+/*
+ * Rationale for architecture
+ *
+ * 1 container in the pod - RESTORE_CONTAINER
+ *
+ * Container mounts a single ephemeral volume
+ *
+ * RESTORE_CONTAINER: Restores the dump file
+ *
+ * This starts the process by executing a remote command on to the
+ * RESTORE_CONTAINER. The remote command uploads the dump file to
+ * the correct location then once finished touches a file as a signal
+ * for the RESTORE_CONTAINER.
+ *
+ * When the RESTORE_CONTAINER, espies the file, it breaks its wait loop
+ * & begins the restore process to the database host.
+ *
+ * Once the restore has completed then there is nothing more to be done.
+ */
+// Restore database
+func (b *Backup) RestoreDb() (err error) {
+	if err := b.inited(); err != nil {
+		return err
+	}
+
+	b.log.Info("starting restore for syndesis database", "backup", path.Join(b.backupDir, dumpFilename))
+
+	// Load configuration to to use as context for generator pkg
+	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
+	if err != nil {
+		return err
+	}
+
+	dbURL, err := url.Parse(sc.Syndesis.Components.Database.URL)
+	if err != nil {
+		return err
+	}
+
+	suffix := strconv.FormatInt(time.Now().Unix(), 10)
+	timestamp := "latest"
+	dataDir := "/pgdata/" + dbURL.Hostname() + "-backups/" + timestamp
+	customOptions := resDefaultCustomOptions
+	if len(b.customOptions) > 0 {
+		customOptions = b.customOptions
+	}
+
+	b.backupDesign = backupDesign{
+		Job:           "db-restore-" + suffix,
+		Name:          sc.Syndesis.Components.Database.Name,
+		User:          sc.Syndesis.Components.Database.User,
+		Password:      sc.Syndesis.Components.Database.Password,
+		Host:          dbURL.Hostname(),
+		Port:          dbURL.Port(),
+		Timestamp:     timestamp,
+		FileDir:       dataDir,
+		FileName:      dumpFilename,
+		CustomOptions: customOptions,
+	}
+
+	// Get migration resources, this should be the db migration job
+	resources, err := generator.Render("./backup/syndesis-restore-job.yml.tmpl", b.backupDesign)
+	if err != nil {
+		return err
+	}
+
+	// Install the resources
+	for _, res := range resources {
+		//
+		// The syndesis CR owns the job. This is necessary
+		// since the deploying of a job requires an OWnerReference
+		// complete with Name, UID & Kind.
+		//
+		operation.SetNamespaceAndOwnerReference(res, b.syndesis)
+		_, _, err := util.CreateOrUpdate(b.context, b.client, &res)
+		if err != nil {
+			return err
+		}
+	}
+
+	return b.execJob(b.restoreTask)
+}
+
+//
+// Execute a task within a Job
+//
+func (b *Backup) execJob(jobTask BkpJobTask) error {
+	//
+	// Wait for the job
+	//
+	err := wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
+		job := &batchv1.Job{}
+		if err := b.client.Get(b.context, types.NamespacedName{Namespace: b.syndesis.Namespace, Name: b.backupDesign.Job}, job); err != nil {
+			return false, err
+		}
+
+		if job.Status.Failed > 0 {
+			return false, fmt.Errorf("Backup job failure")
+		}
+
+		if job.Status.Succeeded > 0 {
+			// Job is done and presume the backup dump was obtained
+			if b.payloadComplete {
+				return true, nil
+			} else {
+				return false, fmt.Errorf("Backup job timeout failure")
+			}
+		}
+
+		//
+		// Job is preparing or actively running a pod
+		//
+		jobPod, err := b.podInJob(job)
+		if err != nil {
+			return false, err
+		}
+		if jobPod == nil {
+			return false, nil
+		}
+
+		//
+		// Found the job's pod now monitor its containers
+		//
+		return jobTask(jobPod)
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+/**
+ * Find the first pod that has been created by a Job
+ */
+func (b *Backup) podInJob(job *batchv1.Job) (*corev1.Pod, error) {
+	if job.Spec.Selector == nil || job.Spec.Selector.MatchLabels == nil {
+		return nil, fmt.Errorf("Contoller UID cannot be extracted from job")
+	}
+
+	controllerUid := job.Spec.Selector.MatchLabels[pkg.ControllerUidLabel]
+	podList := &corev1.PodList{}
+	err := b.client.List(b.context, podList,
+		rc.InNamespace(b.syndesis.Namespace),
+		rc.MatchingLabels{
+			pkg.ControllerUidLabel: controllerUid,
+			pkg.JobNameLabel:       job.Name,
+		})
+
+	if err != nil {
+		return nil, err
+	}
+
+	if len(podList.Items) == 0 {
+		// No pods found controlled by job yet
+		return nil, nil
+	}
+
+	return &podList.Items[0], nil
+}
+
+//
+// This will monitor a backup pod for its progress and
+// status before extracting the backup dump file to the
+// backup directory
+//
+func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
+	//
+	// The backup pod has gone wrong and failed
+	// so return with all speed
+	//
+	if bkpPod.Status.Phase == "Failed" {
+		return false, fmt.Errorf("Backup pod failure: %s", bkpPod.Status.Message)
+	}
+
+	// Calculate running time
+	rt := strconv.FormatInt(time.Now().Unix()-bkpPod.Status.StartTime.Unix(), 10) + "s"
+
+	//
+	// The pod's containers have completed so no longer any
+	// chance of extracting the dump file. In that case, no
+	// recourse but to quit out and fail
+	//
+	if bkpPod.Status.Phase == "Succeeded" {
+		return false, fmt.Errorf("Backup pod timeout while trying to extract backup dump. Running time: %s", rt)
+	}
+
+	//
+	// Pod is not complete and since this pod runs 2 containers
+	// need to drill down to that granularity to find out if
+	// the compiler container has completed. If it has finished,
+	// then we can extract the backup dump file from the backup volume
+	//
+	cStatuses := bkpPod.Status.ContainerStatuses
+	for _, status := range cStatuses {
+		if status.State.Terminated == nil { // Ignore non-terminated containers
+			// - If db-backup-compiler then need to wait longer for it to finish
+			return false, nil
+		}
+
+		if status.Name == loggerContainer {
+			return false, fmt.Errorf("Failed to extract backup data before logger container termination")
+		}
+
+		b.log.Info("Backup compiler container terminated so extracting data from logger container")
+
+		// The compilerContainer container has terminated; extract the log from the loggerContainer
+
+		backupfile, err := os.Create(filepath.Join(b.backupDir, b.backupPath, dumpFilename))
+		defer backupfile.Close()
+
+		//
+		// Execute a remote command on the container to 'cat' the dump file, convert it to base64
+		// and effectively download it to the local backup file
+		//
+		cc, _ := clientConfig()
+		api, _ := b.apiClient()
+		catCmd := "cat " + b.backupDesign.FileDir + "/" + b.backupDesign.FileName + " | base64"
+
+		err = util.Exec(util.ExecOptions{
+			Config:    cc,
+			Api:       api,
+			Namespace: b.syndesis.Namespace,
+			Pod:       bkpPod.Name,
+			Container: loggerContainer,
+			Command:   []string{`bash`, `-c`, catCmd},
+			StreamOptions: remotecommand.StreamOptions{
+				Stdout: backupfile,
+				Stderr: os.Stderr,
+			},
+		})
+		if err != nil {
+			return false, err
+		}
+
+		//
+		// Remote command execution complete so time to quit
+		//
+		b.log.Info("Backup extraction to complete", "Running time", rt)
+		b.payloadComplete = true
+		return true, nil
+	}
+
+	return false, nil
+}
+
+//
+// Creates a Conditional Function (ConditionFunc) for processing
+// by a polling wait function. This will monitor the restore pod
+// for its progress and status before returning and finishing.
+//
+func (b *Backup) restoreTask(bkpPod *corev1.Pod) (bool, error) {
+	//
+	// The backup pod has gone wrong and failed
+	// so return with all speed
+	//
+	if bkpPod.Status.Phase == "Failed" {
+		return false, fmt.Errorf("Restore pod failure: %s", bkpPod.Status.Message)
+	}
+
+	// Calculate running time
+	rt := strconv.FormatInt(time.Now().Unix()-bkpPod.Status.StartTime.Unix(), 10) + "s"
+
+	//
+	// The pod's containers have completed so no longer any
+	// chance of extracting the dump file. In that case, no
+	// recourse but to quit out and fail
+	//
+	if bkpPod.Status.Phase == "Succeeded" {
+		return false, fmt.Errorf("Backup pod timeout while trying to extract backup dump. Running time: %s", rt)
+	}
+
+	//
+	// Launch the payload to begin the restore
+	//
+	if bkpPod.Status.Phase == "Running" {
+		//
+		// Only execute the payload once
+		//
+		if b.payloadComplete {
+			return false, nil // payload done but pod still running
+		}
+
+		backupFile, err := os.Open(filepath.Join(b.backupDir, dumpFilename))
+		if err != nil {
+			return false, err
+		}
+		defer backupFile.Close()
+
+		cmds := "set -e; " +
+			"mkdir -p " + b.backupDesign.FileDir + "; " +
+			"base64 -d -i > " + b.backupDesign.FileDir + "/" + b.backupDesign.FileName + "; " +
+			"sleep 2; " +
+			"touch /pgdata/pg-upload-complete"
+
+		cc, _ := clientConfig()
+		api, _ := b.apiClient()
+		err = util.Exec(util.ExecOptions{
+			Config:    cc,
+			Api:       api,
+			Namespace: b.syndesis.Namespace,
+			Pod:       bkpPod.Name,
+			Container: "",
+			Command:   []string{`bash`, `-c`, cmds},
+			StreamOptions: remotecommand.StreamOptions{
+				Stdin:  backupFile,
+				Stdout: os.Stdout,
+				Stderr: os.Stderr,
+			},
+		})
+
+		if err != nil {
+			return false, err
+		}
+
+		// Flag that payload has been attempt at least once
+		b.payloadComplete = true
+		return true, nil
+	}
+
+	b.log.Info("Waiting for restore to complete", "Running time", rt)
+	return false, nil
 }

@@ -51,7 +51,7 @@ func (s *S3) Enabled() (result bool) {
 	}
 
 	_, err = api.CoreV1().
-		Secrets(s.Namespace).
+		Secrets(s.syndesis.Namespace).
 		Get(secret, metav1.GetOptions{
 			TypeMeta: metav1.TypeMeta{},
 		})
@@ -94,7 +94,7 @@ func (s *S3) credentials(unset bool) (err error) {
 	}
 
 	secret, err := api.CoreV1().
-		Secrets(s.Namespace).
+		Secrets(s.syndesis.Namespace).
 		Get(secret, metav1.GetOptions{
 			TypeMeta: metav1.TypeMeta{},
 		})

@@ -1,0 +1,194 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  creationTimestamp: "2020-01-30T20:28:08Z"
+  generation: 1
+  labels:
+    app: syndesis
+    owner: 05c92d60-439f-11ea-ab61-52fdfc072182
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-db
+    syndesis.io/type: infrastructure
+  name: syndesis-db
+  namespace: syndesis
+  ownerReferences:
+  - apiVersion: syndesis.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: Syndesis
+    name: app
+    uid: 05c92d60-439f-11ea-ab61-52fdfc072182
+  resourceVersion: "130093"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-db
+  uid: 0738ad05-439f-11ea-851f-0a580a80010d
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: syndesis-db
+  strategy:
+    activeDeadlineSeconds: 21600
+    recreateParams:
+      timeoutSeconds: 600
+    resources:
+      limits:
+        memory: 256Mi
+      requests:
+        memory: 20Mi
+    type: Recreate
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-db
+    spec:
+      containers:
+      - env:
+        - name: POSTGRESQL_USER
+          value: syndesis
+        - name: POSTGRESQL_PASSWORD
+          value: domovYcqb2pcU4gc
+        - name: POSTGRESQL_DATABASE
+          value: syndesis
+        - name: POSTGRESQL_SAMPLEDB_PASSWORD
+          value: pokuTtBgI5ra5h8V
+        image: centos/postgresql-96-centos7
+        imagePullPolicy: IfNotPresent
+        lifecycle:
+          postStart:
+            exec:
+              command:
+              - /bin/sh
+              - -c
+              - /var/lib/pgsql/sampledb/postStart.sh
+        livenessProbe:
+          failureThreshold: 3
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 5432
+          timeoutSeconds: 1
+        name: postgresql
+        ports:
+        - containerPort: 5432
+          protocol: TCP
+        readinessProbe:
+          exec:
+            command:
+            - /bin/sh
+            - -i
+            - -c
+            - psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c
+              'SELECT 1'
+          failureThreshold: 3
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 255Mi
+          requests:
+            memory: 255Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /var/lib/pgsql/data
+          name: syndesis-db-data
+        - mountPath: /var/lib/pgsql/sampledb
+          name: syndesis-sampledb-config
+        - mountPath: /opt/app-root/src/postgresql-cfg/
+          name: syndesis-db-conf
+      - env:
+        - name: DATA_SOURCE_NAME
+          value: postgresql://syndesis:domovYcqb2pcU4gc@localhost:5432/syndesis?sslmode=disable
+        - name: PG_EXPORTER_EXTEND_QUERY_PATH
+          value: /etc/postgres/exporter/queries.yaml
+        image: docker.io/wrouesnel/postgres_exporter:v0.4.7
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 60
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 9187
+          timeoutSeconds: 1
+        name: syndesis-db-metrics
+        ports:
+        - containerPort: 9187
+          name: metrics
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 5
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          successThreshold: 1
+          tcpSocket:
+            port: 9187
+          timeoutSeconds: 1
+        resources:
+          limits:
+            memory: 256Mi
+          requests:
+            memory: 20Mi
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /etc/postgres/exporter
+          name: syndesis-db-metrics-config
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      serviceAccount: syndesis-default
+      serviceAccountName: syndesis-default
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - configMap:
+          defaultMode: 420
+          name: syndesis-db-metrics-config
+        name: syndesis-db-metrics-config
+      - name: syndesis-db-data
+        persistentVolumeClaim:
+          claimName: syndesis-db
+      - configMap:
+          defaultMode: 511
+          name: syndesis-sampledb-config
+        name: syndesis-sampledb-config
+      - configMap:
+          defaultMode: 420
+          name: syndesis-db-conf
+        name: syndesis-db-conf
+  test: false
+  triggers:
+  - type: ConfigChange
+status:
+  availableReplicas: 1
+  conditions:
+  - lastTransitionTime: "2020-01-30T20:29:15Z"
+    lastUpdateTime: "2020-01-30T20:29:15Z"
+    message: replication controller "syndesis-db-1" successfully rolled out
+    reason: NewReplicationControllerAvailable
+    status: "True"
+    type: Progressing
+  - lastTransitionTime: "2020-01-31T11:55:36Z"
+    lastUpdateTime: "2020-01-31T11:55:36Z"
+    message: Deployment config has minimum availability.
+    status: "True"
+    type: Available
+  details:
+    causes:
+    - type: ConfigChange
+    message: config change
+  latestVersion: 1
+  observedGeneration: 1
+  readyReplicas: 1
+  replicas: 1
+  unavailableReplicas: 0
+  updatedReplicas: 1

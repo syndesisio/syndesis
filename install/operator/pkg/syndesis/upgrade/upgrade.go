@@ -145,7 +145,7 @@ func (u *upgrade) InstallFailed() (count int) {
 }
 
 // build the upgrade struct
-func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ctx context.Context) (r Upgrader) {
+func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ctx context.Context) (Upgrader, error) {
 	base := step{
 		log:       log,
 		executed:  false,
@@ -154,32 +154,37 @@ func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ct
 		namespace: syndesis.Namespace,
 	}
 
+	bkp, err := sbackup.NewBackup(ctx, client, syndesis,
+		strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""))
+	if err != nil {
+		return nil, err
+	}
+	bkp.SetLocalOnly(true)
+
 	u := &upgrade{
-		log:   log,
-		steps: nil,
-		backup: &sbackup.Backup{
-			Namespace: syndesis.Namespace,
-			BackupDir: strings.Join([]string{"/tmp/", strconv.FormatInt(time.Now().Unix(), 10)}, ""),
-			Delete:    false,
-			LocalOnly: true,
-			Context:   ctx,
-			Client:    &client,
-		},
+		log:      log,
+		steps:    nil,
+		backup:   bkp,
 		attempts: []result{},
 		ctx:      ctx,
 		syndesis: syndesis,
 		client:   client,
 	}
 
+	bbkp, err := newBackup(base, u.syndesis)
+	if err != nil {
+		return nil, err
+	}
+
 	u.steps = []stepRunner{
 		newScale(base).down(),
-		newBackup(base),
+		bbkp,
 		newMigration(base, u.syndesis, u.backup),
 		newInstall(base, u.backup),
 		newScale(base).up(),
 	}
 
-	return u
+	return u, nil
 }
 
 func (s step) canRun() (r bool) {
