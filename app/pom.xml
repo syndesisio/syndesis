@@ -763,6 +763,10 @@
               <ignoredResourcePattern>resource-handler.vm</ignoredResourcePattern>
               <ignoredResourcePattern>resource-operation.vm</ignoredResourcePattern>
               <ignoredResourcePattern>.gitkeep</ignoredResourcePattern>
+              <!-- Camel has component.properties and language.properties in most jars-->
+              <ignoredResourcePattern>component.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>language.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>other.properties</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
