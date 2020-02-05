@@ -1,5 +1,12 @@
 // TODO remove when these values are advertised by the swagger
 export interface Virtualization {
+  deployedMessage?: string;
+  deployedState:
+    | 'NOTFOUND'
+    | 'DEPLOYING'
+    | 'FAILED'
+    | 'RUNNING';
+  deployedRevision?: number;
   empty: boolean;
   id: string;
   modified: boolean;
@@ -7,10 +14,12 @@ export interface Virtualization {
   odataHostName?: string;
   podNamespace?: string;
   publishPodName?: string;
+  publishedMessage?: string;
   publishedState:
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
+    | 'COMPLETE'
     | 'DELETE_SUBMITTED'
     | 'DELETE_REQUEUE'
     | 'DELETE_DONE'
@@ -162,6 +171,7 @@ export interface VirtualizationPublishingDetails {
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
+    | 'COMPLETE'
     | 'DELETE_SUBMITTED'
     | 'DELETE_REQUEUE'
     | 'DELETE_DONE'
@@ -185,6 +195,7 @@ export interface TeiidStatus {
       | 'BUILDING'
       | 'CANCELLED'
       | 'CONFIGURING'
+      | 'COMPLETE'
       | 'DELETE_SUBMITTED'
       | 'DELETE_REQUEUE'
       | 'DELETE_DONE'
@@ -206,6 +217,7 @@ export interface BuildStatus {
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
+    | 'COMPLETE'
     | 'DELETE_SUBMITTED'
     | 'DELETE_REQUEUE'
     | 'DELETE_DONE'
