@@ -58,6 +58,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const [sourceTableColumns, setSourceTableColumns] = React.useState<
     TableColumns[]
   >([]);
+  const [sourceInfo, setSourceInfo] = React.useState<any>([])
   const [viewValid, setViewValid] = React.useState(true);
   const [
     validationMessageVisible,
@@ -261,6 +262,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
           setSourceTableColumns(
             generateTableColumns(results as ViewSourceInfo)
           );
+          setSourceInfo(results.schemas)
         } catch (error) {
           pushNotification(error.message, 'error');
         }
@@ -330,6 +332,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 showValidationMessage={validationMessageVisible}
                 isSaving={isSaving}
                 sourceTableInfos={sourceTableColumns}
+                sourceInfo={sourceInfo}
                 onCloseValidationMessage={handleHideValidationMessage}
                 onFinish={handleEditFinished}
                 onSave={handleSaveView}

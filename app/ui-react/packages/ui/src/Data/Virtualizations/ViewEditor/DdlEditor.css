@@ -1,7 +1,11 @@
 .ddl-editor {
-  min-height: 300px;
+  height: 100%;
   display: flex;
   flex-direction: column;
+}
+
+.ddl-editor > .pf-c-table tr > *{
+  padding: 1px 2px !important;
 }
 
 .ddl-editor__button {
@@ -34,3 +38,16 @@
   color: rgb(0, 50, 160) !important;
   font-size: 10px !important;
 }
+
+.ddl-editor_padding-left{
+  padding-left: 20px;
+}
+
+.ddl-editor_padding-left2{
+  padding-left: 40px;
+}
+
+.ddl-editor_color{
+  color: var(--pf-c-expandable__toggle--Color);
+}
+
