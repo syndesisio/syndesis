@@ -11,8 +11,8 @@ import {
   Title,
   Tooltip,
 } from '@patternfly/react-core';
+import { InfoIcon, WarningTriangleIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../helpers';
@@ -149,7 +149,7 @@ export class ConnectionCard extends React.PureComponent<
                 aria-label={this.props.i18nTechPreview!}
                 position={'left'}
               >
-                <Icon type={'pf'} name={'info'} />
+                <InfoIcon />
               </Popover>
             </div>
           )}
@@ -257,7 +257,7 @@ export class ConnectionCard extends React.PureComponent<
                 }
                 data-testid={'connection-card-config-required-footer'}
               >
-                <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
+                <WarningTriangleIcon />
                 {this.props.i18nConfigRequired}
               </CardFooter>
             )}

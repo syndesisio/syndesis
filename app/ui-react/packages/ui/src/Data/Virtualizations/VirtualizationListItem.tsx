@@ -1,7 +1,7 @@
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import {
   DropdownKebab,
-  Icon,
   ListView,
   ListViewIcon,
   ListViewInfoItem,
@@ -313,9 +313,8 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
                   href={props.odataUrl}
                 >
                   {props.i18nViewODataUrlText}
-                  <Icon
+                  <ExternalLinkAltIcon
                     className={'virtualization-list-item-odata-link-icon'}
-                    name={'external-link'}
                   />
                 </a>
               </span>

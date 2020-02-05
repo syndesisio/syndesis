@@ -6,11 +6,11 @@ import {
   GridItem,
   Title
 } from '@patternfly/react-core';
+import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
   AggregateStatusNotifications,
-  Icon,
 } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
@@ -49,7 +49,7 @@ export class IntegrationDetailMetrics extends React.Component<
               <CardBody>
                 <AggregateStatusNotifications>
                   <AggregateStatusNotification>
-                    <Icon type="pf" name="error-circle-o" />
+                    <ErrorCircleOIcon/>
                     {this.props.errors ? this.props.errors : 0}
                   </AggregateStatusNotification>
                 </AggregateStatusNotifications>
@@ -85,7 +85,7 @@ export class IntegrationDetailMetrics extends React.Component<
               <CardBody>
                 <AggregateStatusNotifications>
                   <AggregateStatusNotification>
-                    <Icon type="pf" name="ok" />
+                    <OkIcon/>
                     {this.props.errors !== undefined &&
                       this.props.messages !== undefined
                       ? okMessagesCount
@@ -93,7 +93,7 @@ export class IntegrationDetailMetrics extends React.Component<
                     &nbsp;
                     </AggregateStatusNotification>
                   <AggregateStatusNotification>
-                    <Icon type="pf" name="error-circle-o" />
+                    <ErrorCircleOIcon/>
                     {this.props.errors ? this.props.errors : 0}
                   </AggregateStatusNotification>
                 </AggregateStatusNotifications>

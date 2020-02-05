@@ -1,9 +1,9 @@
 import { Card, CardBody, Title } from '@patternfly/react-core';
+import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
   AggregateStatusNotifications,
-  Icon,
 } from 'patternfly-react';
 import * as React from 'react';
 
@@ -38,13 +38,13 @@ export class AggregatedMetricCard extends React.PureComponent<
         <CardBody>
           <AggregateStatusNotifications>
             <AggregateStatusNotification>
-              <Icon type="pf" name="ok" />
+              <OkIcon />
               <span data-testid={'aggregated-metric-card-ok-count'}>
                 {this.formatNumber(this.props.ok)}
               </span>{' '}
             </AggregateStatusNotification>
             <AggregateStatusNotification>
-              <Icon type="pf" name="error-circle-o" />
+              <ErrorCircleOIcon />
               <span data-testid={'aggregated-metric-card-error-count'}>
                 {this.formatNumber(this.props.error)}
               </span>

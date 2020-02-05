@@ -7,7 +7,7 @@ import {
   TextListVariants,
   TextVariants,
 } from '@patternfly/react-core';
-import { Icon } from 'patternfly-react';
+import { ErrorCircleOIcon, OkIcon  } from '@patternfly/react-icons';
 import * as React from 'react';
 import { toValidHtmlId } from '../helpers';
 import { Container } from '../Layout/Container';
@@ -175,7 +175,7 @@ export class DndFileChooser extends React.Component<
           component={TextVariants.p}
           className="dnd-file-chooser__uploadMessage"
         >
-          <Icon type="pf" name="ok" />
+          <OkIcon/>
           &nbsp;{this.props.i18nUploadSuccessMessage}
         </Text>
       );
@@ -186,7 +186,7 @@ export class DndFileChooser extends React.Component<
           component={TextVariants.p}
           className="dnd-file-chooser__uploadMessage"
         >
-          <Icon type="pf" name="error-circle-o" />
+          <ErrorCircleOIcon/>
           &nbsp;{this.props.i18nUploadFailedMessage}
         </Text>
       );
@@ -205,7 +205,7 @@ export class DndFileChooser extends React.Component<
               key={'success' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
-              <Icon type="pf" name="ok" />
+              <OkIcon/>
               &nbsp;{message}
             </li>
           ))}
@@ -217,7 +217,7 @@ export class DndFileChooser extends React.Component<
               key={'fail' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
-              <Icon type="pf" name="error-circle-o" />
+              <ErrorCircleOIcon/>
               &nbsp;{message}
             </li>
           ))}

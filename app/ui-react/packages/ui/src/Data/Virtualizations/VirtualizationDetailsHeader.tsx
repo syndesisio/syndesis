@@ -1,5 +1,5 @@
 import { Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
-import { Icon } from 'patternfly-react';
+import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { Loader, PageSection } from '../../Layout';
 import { InlineTextEdit } from '../../Shared';
@@ -73,11 +73,10 @@ export const VirtualizationDetailsHeader: React.FunctionComponent<
                       href={props.odataUrl}
                     >
                       {props.i18nODataUrlText}
-                      <Icon
+                      <ExternalLinkAltIcon
                         className={
                           'virtualization-details-header-odata-link-icon'
                         }
-                        name={'external-link'}
                       />
                     </a>
                   </span>
