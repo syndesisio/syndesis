@@ -173,11 +173,17 @@ public final class DataVirtualizationService extends DvService {
             DeploymentStatus deploymentStatus = status.getDeploymentStatus();
 
             //publish/build state
-            entity.setPublishedState(buildStatus.getStatus().name());
             entity.setPublishPodName(buildStatus.getPublishPodName());
             entity.setPodNamespace(buildStatus.getNamespace());
             entity.setPublishedRevision(buildStatus.getVersion());
-            entity.setPublishedMessage(buildStatus.getStatusMessage());
+
+            if (buildStatus.getStatus() == Status.COMPLETE) {
+                entity.setPublishedState(deploymentStatus.getStatus().name());
+                entity.setPublishedMessage(deploymentStatus.getStatusMessage());
+            } else {
+                entity.setPublishedState(buildStatus.getStatus().name());
+                entity.setPublishedMessage(buildStatus.getStatusMessage());
+            }
 
             //deployment state
             entity.setOdataHostName(getOdataHost(deploymentStatus));

@@ -253,16 +253,16 @@ public class TeiidOpenShiftClient implements StringConstants {
 
                 String lastStatus = build.getStatus().getPhase();
                 if (Builds.isCompleted(lastStatus)) {
-                    work.setStatus(Status.COMPLETE);
-                    work.setStatusMessage("Build complete, see deployment message");
                     DeploymentStatus deploymentStatus = work.getDeploymentStatus();
                     if (! DeploymentStatus.Status.DEPLOYING.equals(deploymentStatus.getStatus())) {
+                        deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
+                        work.setStatus(Status.COMPLETE);
+                        work.setStatusMessage("Build complete, see deployment message");
                         info(work.getOpenShiftName(), "Publishing - Build completed. Preparing to deploy");
                         deploymentStatus.setStatusMessage("build completed, deployment started");
                         createSecret(client, work.getNamespace(), work.getOpenShiftName(), work);
                         DeploymentConfig dc = createDeploymentConfig(client, work);
                         deploymentStatus.setDeploymentName(dc.getMetadata().getName());
-                        deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
                         client.deploymentConfigs().inNamespace(work.getNamespace())
                                 .withName(dc.getMetadata().getName()).deployLatest();
                     } else {
@@ -1367,11 +1367,13 @@ public class TeiidOpenShiftClient implements StringConstants {
                 status = getBuildStatus(openShiftName, ApplicationProperties.getNamespace(), client);
                 status.setDataVirtualizationName(virtualization);
                 deploymentStatus = status.getDeploymentStatus();
-            } else {
+            } else if (status.getStatus() != Status.COMPLETE){
                 //if we get one from the queue, we don't want to mess with its deployment status
                 //so we'll update one here
                 deploymentStatus = new DeploymentStatus();
                 updateDeploymentStatus(openShiftName, status.getNamespace(), client, null, deploymentStatus, status.getVersion());
+            } else {
+                deploymentStatus = status.getDeploymentStatus();
             }
         } catch (KubernetesClientException e) {
             LOGGER.debug("Could not get build status for VDB: "  +openShiftName +" error:"+ e.getMessage());
