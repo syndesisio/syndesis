@@ -87,7 +87,7 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
           }
         >
           {() => {
-            return virtualization.publishedState === 'RUNNING' ? (
+            return virtualization.deployedState === 'RUNNING' ? (
               <DvMetricsContainer
                 resultSetCacheProps={{
                   a11yInfoCloseButton: t('metricsCacheHitRatioA11yInfoClose'),
