@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import javax.xml.bind.JAXBException;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.model.ModelCamelContext;
-import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.spi.ModelToXMLDumper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -57,10 +57,16 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     protected void dumpRoutes(CamelContext context, RoutesDefinition definition) {
+        if (!LOGGER.isInfoEnabled()) {
+            return;
+        }
+
         try {
-            LOGGER.info("Routes: \n{}",ModelHelper.dumpModelAsXml(context, definition));
-        } catch (JAXBException e) {
-            LOGGER.warn("", e);
+            ExtendedCamelContext extendedCamelContext = context.adapt(ExtendedCamelContext.class);
+            ModelToXMLDumper dumper = extendedCamelContext.getModelToXMLDumper();
+            LOGGER.info("Routes: \n{}", dumper.dumpModelAsXml(context, definition));
+        } catch (Exception e) {
+            LOGGER.warn("Unable to dump routes as XML", e);
         }
     }
 
