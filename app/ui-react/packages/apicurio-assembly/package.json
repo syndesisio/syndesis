@@ -99,7 +99,7 @@
     "@angular/compiler-cli": "7.2.6",
     "@angular/language-service": "7.2.6",
     "@types/node": "8.10.40",
-    "@types/marked": "0.6.1",
+    "@types/marked": "0.7.2",
     "cp-cli": "2.0.0",
     "ng-packagr": "5.7.1",
     "ts-node": "8.6.2",
