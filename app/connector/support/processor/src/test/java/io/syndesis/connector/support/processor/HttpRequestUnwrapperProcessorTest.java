@@ -18,8 +18,8 @@ package io.syndesis.connector.support.processor;
 import java.util.HashMap;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 
 public class HttpRequestUnwrapperProcessorTest {
 
-    CamelContext camelContext = mock(CamelContext.class);
+    ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
 
     Exchange exchange = new DefaultExchange(camelContext);
 
@@ -46,6 +46,7 @@ public class HttpRequestUnwrapperProcessorTest {
     @Before
     public void setupMocks() {
         final HeadersMapFactory factory = mock(HeadersMapFactory.class);
+        when(camelContext.adapt(ExtendedCamelContext.class)).thenReturn(camelContext);
         when(camelContext.getHeadersMapFactory()).thenReturn(factory);
         when(factory.newMap()).thenReturn(new HashMap<>());
     }
