@@ -16,6 +16,8 @@
 
 package io.syndesis.test.itest.apiconnector;
 
+import java.time.Duration;
+
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
@@ -149,7 +151,7 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
                 .server()
                 .port(TODO_SERVER_PORT)
                 .autoStart(true)
-                .timeout(600000L)
+                .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                 .build();
         }
     }
