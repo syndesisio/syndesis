@@ -15,33 +15,6 @@
  */
 
 //
-// Helpers
-//
-var migrate = function(type, path, consumer) {
-    console.log("Start " + type + " migration")
-
-    var migrated  = 0;
-    var inspected = 0;
-    var elements  = jsondb.get(path);
-
-    if (elements) {
-        Object.keys(elements).forEach(function(elementId) {
-            inspected++;
-
-            if (consumer(elements[elementId])) {
-                migrated++;
-            }
-        });
-
-        if (migrated > 0) {
-            jsondb.update(path, elements);
-        }
-    }
-
-    console.log(type + ": migrated " + migrated + " out of " + inspected);
-}
-
-//
 // Migration
 //
 

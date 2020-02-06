@@ -36,7 +36,7 @@ public final class HttpConnectorFactories {
     // Http4
     // *******************************
 
-    public static final class Http4 implements ComponentProxyFactory {
+    public static final class Http implements ComponentProxyFactory {
         @Override
         public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
             return new ComponentProxyComponent(componentId, componentScheme) {
@@ -69,7 +69,7 @@ public final class HttpConnectorFactories {
     // Https4
     // *******************************
 
-    public static final class Https4 implements ComponentProxyFactory {
+    public static final class Https implements ComponentProxyFactory {
         @Override
         public ComponentProxyComponent newInstance(String componentId, String componentScheme) {
             return new ComponentProxyComponent(componentId, componentScheme) {

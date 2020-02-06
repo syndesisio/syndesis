@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Invoke an http endpoint URL",
       "descriptor": {
-        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
+        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https",
         "inputDataShape": {
           "kind": "any"
         },
@@ -77,7 +77,7 @@
           }
         ]
       },
-      "id": "@project.groupId@:@project.artifactId@:https4-invoke-url",
+      "id": "@project.groupId@:@project.artifactId@:https-invoke-url",
       "name": "Invoke URL",
       "pattern": "To"
     },
@@ -88,7 +88,7 @@
         "connectorCustomizers": [
           "io.syndesis.connector.http.HttpConnectorCustomizer"
         ],
-        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
+        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https",
         "inputDataShape": {
           "kind": "none"
         },
@@ -174,12 +174,12 @@
           }
         ]
       },
-      "id": "@project.groupId@:@project.artifactId@:ttps4-periodic-invoke-url",
+      "id": "@project.groupId@:@project.artifactId@:https-periodic-invoke-url",
       "name": "Periodic invoke URL",
       "pattern": "From"
     }
   ],
-  "componentScheme": "https4",
+  "componentScheme": "https",
   "configuredProperties": {
     "headerFilterStrategy": "syndesisHeaderStrategy"
   },
@@ -190,8 +190,8 @@
     }
   ],
   "description": "Invoke various HTTPS methods.",
-  "icon": "assets:https4.svg",
-  "id": "https4",
+  "icon": "assets:https.svg",
+  "id": "https",
   "name": "HTTPS",
   "properties": {
     "baseUrl": {

@@ -23,6 +23,6 @@ public class HttpVerifier extends ComponentVerifier {
 
     @Override
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new HttpConnectorVerifierExtension("http4", "http", context);
+        return new HttpConnectorVerifierExtension("http", "http", context);
     }
 }
