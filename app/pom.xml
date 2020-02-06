@@ -3301,6 +3301,17 @@
 
   <repositories>
     <repository>
+      <id>asf-snapshots</id>
+      <name>ASF Snapshots</name>
+      <url>https://repository.apache.org/content/groups/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+    <repository>
       <id>central</id>
       <name>Maven Central</name>
       <url>https://repo.maven.apache.org/maven2/</url>
@@ -3318,6 +3329,17 @@
   </repositories>
 
   <pluginRepositories>
+    <pluginRepository>
+      <id>asf-snapshots</id>
+      <name>ASF Snapshots</name>
+      <url>https://repository.apache.org/content/groups/snapshots/</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </pluginRepository>
     <pluginRepository>
       <id>central</id>
       <name>Maven Central</name>
