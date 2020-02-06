@@ -2684,6 +2684,19 @@
       </dependency>
 
       <dependency>
+        <groupId>org.awaitility</groupId>
+        <artifactId>awaitility</artifactId>
+        <version>4.0.2</version>
+        <scope>test</scope>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>pl.pragmatists</groupId>
         <artifactId>JUnitParams</artifactId>
         <version>1.1.1</version>
