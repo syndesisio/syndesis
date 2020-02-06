@@ -1,5 +1,15 @@
-import { ListView, ListViewItem } from 'patternfly-react';
+import {
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Label,
+  Text,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
+import { PUBLISHED } from '../models';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
   /**
@@ -22,6 +32,10 @@ export interface IIntegrationDetailHistoryListViewItemProps {
    */
   version?: number;
   /**
+   * The text string for the "Running" label
+   */
+  i18nRunning: string;
+  /**
    * The localized text for displaying the last published date.
    */
   i18nTextLastPublished?: string;
@@ -31,37 +45,46 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   i18nTextVersion?: string;
 }
 
-const states = {
-  Error: <ListView.Icon type="pf" name="error-circle-o" />,
-  Pending: <ListView.Icon name="blank" />,
-  Published: <ListView.Icon type="pf" name="ok" />,
-  Unpublished: <ListView.Icon name="blank" />,
-};
-
-export class IntegrationDetailHistoryListViewItem extends React.Component<
-  IIntegrationDetailHistoryListViewItemProps
-> {
-  public render() {
-    function getIntegrationState(currentState: string) {
-      return states[currentState] || null;
-    }
-    return (
-      <ListViewItem
-        actions={this.props.actions}
-        heading={
-          <>
-            {this.props.i18nTextVersion}: {this.props.version}
-          </>
-        }
-        description={
-          <>
-            {this.props.i18nTextLastPublished}
-            {this.props.updatedAt}
-          </>
-        }
-        leftContent={getIntegrationState(this.props.currentState!)}
-        stacked={false}
+export const IntegrationDetailHistoryListViewItem: React.FunctionComponent<IIntegrationDetailHistoryListViewItemProps> = ({
+  actions,
+  currentState,
+  updatedAt,
+  version,
+  i18nRunning,
+  i18nTextLastPublished,
+  i18nTextVersion,
+}) => (
+  <DataListItem aria-labelledby={'version-cell'}>
+    <DataListItemRow>
+      <DataListItemCells
+        dataListCells={[
+          <DataListCell key={1} width={2} name={'version-cell'}>
+            <Title headingLevel="h6" size={'md'}>
+              {i18nTextVersion} {version}
+            </Title>
+          </DataListCell>,
+          <DataListCell key={2} width={5}>
+            <Text>
+              {i18nTextLastPublished}
+              {updatedAt}
+            </Text>
+          </DataListCell>,
+          <DataListCell key={0} width={1}>
+            {currentState === PUBLISHED ? (
+              <Label>{i18nRunning}</Label>
+            ) : (
+              <>&nbsp;</>
+            )}
+          </DataListCell>,
+        ]}
       />
-    );
-  }
-}
+      <DataListAction
+        id={'integration-history-actions'}
+        aria-labelledby={''}
+        aria-label={''}
+      >
+        {actions}
+      </DataListAction>
+    </DataListItemRow>
+  </DataListItem>
+);
