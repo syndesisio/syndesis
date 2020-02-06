@@ -390,7 +390,7 @@
         "parameters": [
           {
             "in": "header",
-            "name": "api_key",
+            "name": "api_key_name",
             "required": false,
             "type": "string"
           },
@@ -996,7 +996,7 @@
   "securityDefinitions": {
     "api_key": {
       "in": "header",
-      "name": "api_key",
+      "name": "api_key_name",
       "type": "apiKey"
     },
     "petstore_auth": {

@@ -56,7 +56,7 @@ public abstract class OpenApiPropertyGenerator<T extends OasDocument, S extends 
     protected OpenApiPropertyGenerator() {
         propertyGenerators.put("accessToken", this::ifHasOAuthSecurityDefinition);
         propertyGenerators.put("accessTokenExpiresAt", this::ifHasOAuthSecurityDefinition);
-        propertyGenerators.put("authenticationParameterName", (info, template, settings) -> apiKeyProperty(info, template, settings, SecurityScheme::getSchemeName));
+        propertyGenerators.put("authenticationParameterName", (info, template, settings) -> apiKeyProperty(info, template, settings, scheme -> scheme.name));
         propertyGenerators.put("authenticationParameterPlacement", this::apiKeyPropertyPlacement);
         propertyGenerators.put("authenticationParameterValue", this::ifHasApiKeysSecurityDefinition);
         propertyGenerators.put("authenticationType", (info, template, settings) -> authenticationTypeProperty(info, template));

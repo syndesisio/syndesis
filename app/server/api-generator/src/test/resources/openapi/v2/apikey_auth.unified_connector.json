@@ -1,0 +1,158 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send GET request to /operation",
+      "descriptor": {
+        "componentScheme": "rest-openapi",
+        "configuredProperties": {
+          "operationId": "operation-0"
+        },
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "_id_:operation-0",
+      "name": "GET /operation",
+      "pattern": "To"
+    }
+  ],
+  "componentScheme": "rest-openapi",
+  "configuredProperties": {
+    "authenticationType": "apiKey:api_key",
+    "basePath": "/api",
+    "host": "http://sample.io",
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}},\"securityDefinitions\":{\"api_key\":{\"type\":\"apiKey\",\"name\":\"secretKey\",\"in\":\"header\"}}}"
+  },
+  "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
+    "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
+    "io.syndesis.connector.rest.swagger.RequestCustomizer",
+    "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+  ],
+  "connectorFactory": "io.syndesis.connector.rest.swagger.ConnectorFactory",
+  "connectorGroup": {
+    "id": "swagger-connector-template"
+  },
+  "connectorGroupId": "swagger-connector-template",
+  "dependencies": [
+    {
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-rest-openapi:@camel.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-http4:@camel.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Sample Swagger file with HTTP Basic Authentication",
+  "name": "HTTP Basic Authentication Sample",
+  "properties": {
+    "authenticationParameterName": {
+      "defaultValue": "secretKey",
+      "description": "Name of the API key parameter",
+      "displayName": "API key parameter name",
+      "javaType": "java.lang.String",
+      "order": 2,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterPlacement": {
+      "defaultValue": "header",
+      "displayName": "Placement of the API key parameter",
+      "javaType": "java.lang.String",
+      "order": 4,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterValue": {
+      "description": "Value of the API key authentication parameter",
+      "displayName": "API key",
+      "javaType": "java.lang.String",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "authenticationType": {
+      "componentProperty": true,
+      "defaultValue": "apiKey:api_key",
+      "deprecated": false,
+      "description": "Type of authentication used to connect to the API",
+      "displayName": "Authentication Type",
+      "enum": [
+        {
+          "label": "API Key - api_key",
+          "value": "apiKey:api_key"
+        }
+      ],
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 1,
+      "required": false,
+      "secret": false,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "hidden"
+    },
+    "basePath": {
+      "componentProperty": true,
+      "defaultValue": "/api",
+      "deprecated": false,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
+      "displayName": "Base path",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 11,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "host": {
+      "componentProperty": true,
+      "defaultValue": "http://sample.io",
+      "deprecated": false,
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
+      "displayName": "Host",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 10,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "specification": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OpenAPI document of the service",
+      "displayName": "Document",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": true,
+      "secret": false,
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "type": "hidden"
+    }
+  }
+}
