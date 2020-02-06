@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -33,7 +34,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.DataShape;
@@ -263,7 +263,7 @@ public class ProjectGeneratorTest {
         configuration.setSecretMaskingEnabled(true);
 
         generate(integration, configuration, resourceManager);
-        await().atMost(5000L, TimeUnit.MILLISECONDS).until(() -> !errors.isEmpty());
+        await().atMost(Duration.ofSeconds(5)).until(() -> !errors.isEmpty());
         assertThat(errors.get(0)).isExactlyInstanceOf(IllegalArgumentException.class);
     }
 
