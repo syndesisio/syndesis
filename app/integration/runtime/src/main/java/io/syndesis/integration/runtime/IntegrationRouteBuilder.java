@@ -387,7 +387,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 properties.put("timerName", "integration");
                 properties.put("period", scheduler.getExpression());
 
-                final RuntimeCamelCatalog catalog = getContext().getExtension(RuntimeCamelCatalog.class);
+                final RuntimeCamelCatalog catalog = getContext().adapt(ExtendedCamelContext.class).getRuntimeCamelCatalog();
                 final String uri = catalog.asEndpointUri("timer", properties, false);
 
                 RouteDefinition route = this.from(uri);

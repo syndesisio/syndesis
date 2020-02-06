@@ -19,6 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.catalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ObjectHelper;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -80,7 +81,7 @@ public class SimpleEndpointStepHandler implements IntegrationStepHandler, Integr
         properties.putAll(descriptor.getConfiguredProperties());
 
         try {
-            final RuntimeCamelCatalog catalog = builder.getContext().getExtension(RuntimeCamelCatalog.class);
+            final RuntimeCamelCatalog catalog = builder.getContext().adapt(ExtendedCamelContext.class).getRuntimeCamelCatalog();
             final String uri = catalog.asEndpointUri(componentScheme, Map.class.cast(properties), false);
 
             if (route == null) {
