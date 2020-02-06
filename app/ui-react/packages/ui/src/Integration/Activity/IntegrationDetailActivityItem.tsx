@@ -1,4 +1,5 @@
-import { Icon, ListView, Table } from 'patternfly-react';
+import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
+import { ListView, Table } from 'patternfly-react';
 import * as React from 'react';
 
 import './IntegrationDetailActivityItem.css';
@@ -28,11 +29,11 @@ const statusCellFormat = (status: string) => (
   <Table.Cell className="integration-detail-activity-item__status">
     {status === 'Success' ? (
       <>
-        <Icon type="pf" name="ok" /> Success
+        <OkIcon /> Success
       </>
     ) : (
       <>
-        <Icon type="pf" name="error-circle-o" /> Error
+        <ErrorCircleOIcon /> Error
       </>
     )}
   </Table.Cell>
@@ -65,13 +66,13 @@ export class IntegrationDetailActivityItem extends React.Component<
             <div className="integration-detail-activity-item__status-item">
               {this.props.errorCount > 0 ? (
                 <>
-                  <Icon type="pf" name="error-circle-o" />
+                  <ErrorCircleOIcon />
                   {'  '}
                   {this.props.i18nErrorsFound}
                 </>
               ) : (
                 <>
-                  <Icon type="pf" name="ok" />
+                  <OkIcon />
                   {'  '}
                   {this.props.i18nNoErrors}
                 </>

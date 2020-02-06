@@ -7,8 +7,8 @@ import {
   TitleLevel,
   TitleProps,
 } from '@patternfly/react-core';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 import classnames from 'classnames';
-import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../Layout';
 import './SimplePageHeader.css';
@@ -25,9 +25,7 @@ export interface ISimplePageHeaderProps {
   techPreviewPopoverHtml?: React.ReactNode;
 }
 
-export const SimplePageHeader: React.FunctionComponent<
-  ISimplePageHeaderProps
-> = ({
+export const SimplePageHeader: React.FunctionComponent<ISimplePageHeaderProps> = ({
   i18nTitle,
   i18nDescription,
   variant = 'light',
@@ -66,11 +64,7 @@ export const SimplePageHeader: React.FunctionComponent<
                 aria-label={i18nTechPreview}
                 position={'bottom'}
               >
-                <Icon
-                  type={'pf'}
-                  name={'info'}
-                  className="simple-page-header__tech-preview-icon"
-                />
+                <InfoCircleIcon className="simple-page-header__tech-preview-icon" />
               </Popover>
             </span>
           )}

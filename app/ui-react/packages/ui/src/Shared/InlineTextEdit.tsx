@@ -1,11 +1,11 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
+import { EditIcon } from '@patternfly/react-icons';
 import classnames from 'classnames';
 import {
   FormControl,
   FormGroup,
   HelpBlock,
-  Icon,
   InlineEdit,
   InputGroup,
 } from 'patternfly-react';
@@ -33,12 +33,7 @@ const ReadWidget: React.FunctionComponent<IReadWidget> = ({
   >
     {value}
     {allowEditing ? (
-      <Icon
-        className="inline-text-editIcon"
-        name="edit"
-        onClick={onEdit}
-        type="pf"
-      />
+      <EditIcon className="inline-text-editIcon" onClick={onEdit} />
     ) : null}
   </span>
 );

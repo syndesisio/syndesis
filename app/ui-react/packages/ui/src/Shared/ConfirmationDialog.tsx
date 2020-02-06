@@ -1,4 +1,10 @@
-import { Icon, MessageDialog } from 'patternfly-react';
+import {
+  ErrorCircleOIcon,
+  InfoIcon,
+  OkIcon,
+  WarningTriangleIcon,
+} from '@patternfly/react-icons';
+import { MessageDialog } from 'patternfly-react';
 import * as React from 'react';
 
 /**
@@ -85,15 +91,28 @@ export class ConfirmationDialog extends React.Component<
   IConfirmationDialogProps
 > {
   public render() {
+    let icon: React.ReactNode | null = null;
+    switch (this.props.icon) {
+      case ConfirmationIconType.DANGER:
+        icon = <ErrorCircleOIcon />;
+        break;
+      case ConfirmationIconType.WARNING:
+        icon = <WarningTriangleIcon />;
+        break;
+      case ConfirmationIconType.INFO:
+        icon = <InfoIcon />;
+        break;
+      case ConfirmationIconType.OK:
+        icon = <OkIcon />;
+        break;
+      default:
+      // No icon
+    }
     return (
       <MessageDialog
         accessibleName="deleteConfirmationDialog"
         accessibleDescription="deleteConfirmationDialogContent"
-        icon={
-          this.props.icon !== ConfirmationIconType.NONE && (
-            <Icon type="pf" name={this.props.icon} />
-          )
-        }
+        icon={icon}
         onHide={this.props.onCancel}
         primaryAction={this.props.onConfirm}
         primaryActionButtonContent={this.props.i18nConfirmButtonText}
