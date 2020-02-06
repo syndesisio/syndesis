@@ -276,7 +276,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot</artifactId>
       <scope>test</scope>
     </dependency>

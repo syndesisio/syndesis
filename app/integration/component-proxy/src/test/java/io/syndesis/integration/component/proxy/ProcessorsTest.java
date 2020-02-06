@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
 import org.apache.camel.support.AsyncProcessorConverterHelper;
@@ -30,6 +30,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
 public class ProcessorsTest {
@@ -106,7 +107,10 @@ public class ProcessorsTest {
         // this uses a component from camel-catalog, sql component is
         // likely to be present there
         final ComponentProxyComponent component = new ComponentProxyComponent("sql", "sql");
-        component.setCamelContext(mock(CamelContext.class));
+        final ExtendedCamelContext mockContext = mock(ExtendedCamelContext.class);
+        component.setCamelContext(mockContext);
+
+        when(mockContext.adapt(ExtendedCamelContext.class)).thenReturn(mockContext);
 
         return component;
     }
