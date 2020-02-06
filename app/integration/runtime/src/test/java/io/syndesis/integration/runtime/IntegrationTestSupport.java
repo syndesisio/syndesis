@@ -19,14 +19,14 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import javax.xml.bind.JAXBException;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ModelCamelContext;
-import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.spi.ModelToXMLDumper;
 import org.apache.camel.support.SimpleRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,10 +69,17 @@ public final class IntegrationTestSupport {
     }
 
     public static void dumpRoutes(CamelContext context, RoutesDefinition definition) {
+        if (!LOGGER.isInfoEnabled()) {
+            return;
+        }
+
         try {
-            LOGGER.info("Routes: \n{}",ModelHelper.dumpModelAsXml(context, definition));
-        } catch (JAXBException e) {
-            LOGGER.warn("", e);
+            ExtendedCamelContext extendedCamelContext = context.adapt(ExtendedCamelContext.class);
+            ModelToXMLDumper dumper = extendedCamelContext.getModelToXMLDumper();
+            LOGGER.info("Routes: \n{}", dumper.dumpModelAsXml(context, definition));
+        } catch (Exception e) {
+            LOGGER.warn("Unable to dump route definition as XML");
+            LOGGER.debug("Error encountered while dumping route definition as XML", e);
         }
     }
 

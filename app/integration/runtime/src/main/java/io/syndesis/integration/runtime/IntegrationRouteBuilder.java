@@ -46,6 +46,7 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
@@ -53,13 +54,13 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.LogDefinition;
 import org.apache.camel.model.ModelCamelContext;
-import org.apache.camel.model.ModelHelper;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.catalog.RuntimeCamelCatalog;
 import org.apache.camel.spi.RoutePolicy;
+import org.apache.camel.spi.XMLRoutesDefinitionLoader;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.support.ResourceHelper;
 import org.slf4j.Logger;
@@ -447,7 +448,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         if (resource.startsWith("classpath:")) {
             try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(context, resource)) {
-                instance = ModelHelper.loadRoutesDefinition(context, is);
+                ExtendedCamelContext extendedCamelContext = context.adapt(ExtendedCamelContext.class);
+                XMLRoutesDefinitionLoader loader = extendedCamelContext.getXMLRoutesDefinitionLoader();
+                instance = loader.loadRoutesDefinition(context, is);
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }

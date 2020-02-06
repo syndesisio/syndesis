@@ -19,7 +19,7 @@ import java.net.URISyntaxException;
 import java.util.Map;
 import java.util.Optional;
 import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.catalog.RuntimeCamelCatalog;
 import org.apache.camel.util.ObjectHelper;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
