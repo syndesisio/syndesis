@@ -51,7 +51,7 @@ public class OpenApiConnectorGeneratorExampleTest extends BaseOpenApiGeneratorEx
 
     @Parameters(name = "{0}")
     public static Iterable<String> parameters() {
-        return Arrays.asList("reverb", "petstore", "petstore_xml", "basic_auth", "todo", "complex_xml", "kie-server", "machine_history", "damage_service");
+        return Arrays.asList("reverb", "petstore", "petstore_xml", "basic_auth", "apikey_auth", "todo", "complex_xml", "kie-server", "machine_history", "damage_service");
     }
 
 }
