@@ -43,8 +43,12 @@ public final class RestDataVirtualization {
     private boolean empty = true;
     private List<String> usedBy;
     private Long publishedRevision;
+    private Long deployedRevision;
     private boolean modified;
     private long editionCount;
+    private String publishedMessage;
+    private String deployedMessage;
+    private String deployedState;
 
     /**
      * Constructor for use when deserializing
@@ -220,5 +224,37 @@ public final class RestDataVirtualization {
 
     public void setEditionCount(long editionCount) {
         this.editionCount = editionCount;
+    }
+
+    public void setDeployedRevision(Long version) {
+        this.deployedRevision = version;
+    }
+
+    public Long getDeployedRevision() {
+        return deployedRevision;
+    }
+
+    public String getPublishedMessage() {
+        return publishedMessage;
+    }
+
+    public void setPublishedMessage(String statusMessage) {
+        this.publishedMessage = statusMessage;
+    }
+
+    public String getDeployedState() {
+        return deployedState;
+    }
+
+    public void setDeployedState(String status) {
+        this.deployedState = status;
+    }
+
+    public String getDeployedMessage() {
+        return deployedMessage;
+    }
+
+    public void setDeployedMessage(String statusMessage) {
+        this.deployedMessage = statusMessage;
     }
 }

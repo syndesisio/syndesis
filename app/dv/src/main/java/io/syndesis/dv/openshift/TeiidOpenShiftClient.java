@@ -33,6 +33,7 @@ import java.util.Base64;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -252,18 +253,21 @@ public class TeiidOpenShiftClient implements StringConstants {
 
                 String lastStatus = build.getStatus().getPhase();
                 if (Builds.isCompleted(lastStatus)) {
-                    if (! Status.DEPLOYING.equals(work.getStatus())) {
+                    DeploymentStatus deploymentStatus = work.getDeploymentStatus();
+                    if (! DeploymentStatus.Status.DEPLOYING.equals(deploymentStatus.getStatus())) {
+                        deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
+                        work.setStatus(Status.COMPLETE);
+                        work.setStatusMessage("Build complete, see deployment message");
                         info(work.getOpenShiftName(), "Publishing - Build completed. Preparing to deploy");
-                        work.setStatusMessage("build completed, deployment started");
+                        deploymentStatus.setStatusMessage("build completed, deployment started");
                         createSecret(client, work.getNamespace(), work.getOpenShiftName(), work);
                         DeploymentConfig dc = createDeploymentConfig(client, work);
-                        work.setDeploymentName(dc.getMetadata().getName());
-                        work.setStatus(Status.DEPLOYING);
+                        deploymentStatus.setDeploymentName(dc.getMetadata().getName());
                         client.deploymentConfigs().inNamespace(work.getNamespace())
                                 .withName(dc.getMetadata().getName()).deployLatest();
                     } else {
                         DeploymentConfig dc = client.deploymentConfigs().inNamespace(work.getNamespace())
-                                .withName(work.getDeploymentName()).get();
+                                .withName(deploymentStatus.getDeploymentName()).get();
                         if (isDeploymentInReadyState(dc)) {
                             // it is done now..
                             info(work.getOpenShiftName(), "Publishing - Deployment completed");
@@ -272,11 +276,11 @@ public class TeiidOpenShiftClient implements StringConstants {
                                 createRoute(client, work.getNamespace(), work.getOpenShiftName(), ProtocolType.ODATA.id());
                             }
                             createSyndesisConnection(client, work.getNamespace(), work.getOpenShiftName(), work.getDataVirtualizationName());
-                            work.setStatus(Status.RUNNING);
+                            deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
                             shouldReQueue = false;
                         } else {
                             if (!isDeploymentProgressing(dc)) {
-                                work.setStatus(Status.FAILED);
+                                deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
                                 info(work.getOpenShiftName(), "Publishing - Deployment seems to be failed, this could be "
                                         + "due to vdb failure, rediness check failed. Wait threshold is 2 minutes.");
                                 shouldReQueue = false;
@@ -285,9 +289,9 @@ public class TeiidOpenShiftClient implements StringConstants {
                             DeploymentCondition cond = getDeploymentConfigStatus(dc);
                             if (cond != null) {
                                 debug(work.getOpenShiftName(), "Publishing - Deployment condition: " + cond.getMessage());
-                                work.setStatusMessage(cond.getMessage());
+                                deploymentStatus.setStatusMessage(cond.getMessage());
                             } else {
-                                work.setStatusMessage("Available condition not found in the Deployment Config");
+                                deploymentStatus.setStatusMessage("Available condition not found in the Deployment Config");
                             }
                         }
                     }
@@ -858,7 +862,7 @@ public class TeiidOpenShiftClient implements StringConstants {
                   .addToLabels("application", config.getOpenShiftName())
                   .addToLabels("deploymentConfig", config.getOpenShiftName())
                   .addToLabels("syndesis.io/type", "datavirtualization")
-                  .addToLabels(DEPLOYMENT_VERSION_LABEL, String.valueOf(config.getDeploymentVersion()))
+                  .addToLabels(DEPLOYMENT_VERSION_LABEL, String.valueOf(config.getVersion()))
                   .addToAnnotations("prometheus.io/scrape", "true")
                   .addToAnnotations("prometheus.io/port", String.valueOf(ProtocolType.PROMETHEUS.getTargetPort()))
                 .endMetadata()
@@ -1085,7 +1089,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         work.setLastUpdated();
         work.setPublishConfiguration(publishConfig);
         work.setDataVirtualizationName(publishConfig.getDataVirtualizationName());
-        work.setDeploymentVersion(publishConfig.getPublishedRevision());
+        work.setVersion(publishConfig.getPublishedRevision());
         this.workExecutor.submit(new BuildStatusRunner(work));
         return work;
     }
@@ -1251,7 +1255,7 @@ public class TeiidOpenShiftClient implements StringConstants {
         removeLog(openShiftName);
         info(openShiftName, "Publishing - Start publishing of virtualization: " + openShiftName);
 
-        BuildStatus status = getVirtualizationStatus(publishConfig.getDataVirtualizationName());
+        BuildStatus status = getVirtualizationStatus(publishConfig.getDataVirtualizationName()).getBuildStatus();
         info(openShiftName, "Publishing - Virtualization status: " + status.getStatus());
 
         if (status.getStatus().equals(Status.BUILDING)) {
@@ -1343,24 +1347,57 @@ public class TeiidOpenShiftClient implements StringConstants {
                 .withValueFrom(new EnvVarSourceBuilder().withNewSecretKeyRef(key, secret, false).build()).build();
     }
 
-    public BuildStatus getVirtualizationStatus(String virtualization) throws KException {
+    /**
+     * Get the current build and deployment status for a virtualization
+     * @param virtualization
+     * @return the status, never null
+     * @throws KException
+     */
+    public VirtualizationStatus getVirtualizationStatus(String virtualization) throws KException {
         String openShiftName = getOpenShiftName(virtualization);
         BuildStatus status = getVirtualizationStatusFromQueue(openShiftName);
-        if (status != null) {
-            return status;
-        }
+        DeploymentStatus deploymentStatus = null;
         try {
             OpenShiftClient client = openshiftClient();
-            status = getVDBService(openShiftName, ApplicationProperties.getNamespace(), client);
+            if (status == null) {
+                status = getBuildStatus(openShiftName, ApplicationProperties.getNamespace(), client);
+                status.setDataVirtualizationName(virtualization);
+                deploymentStatus = status.getDeploymentStatus();
+            } else if (status.getStatus() != Status.COMPLETE){
+                //if we get one from the queue, we don't want to mess with its deployment status
+                //so we'll update one here
+                deploymentStatus = new DeploymentStatus();
+                updateDeploymentStatus(openShiftName, status.getNamespace(), client, null, deploymentStatus, status.getVersion());
+            } else {
+                deploymentStatus = status.getDeploymentStatus();
+            }
         } catch (KubernetesClientException e) {
             LOGGER.debug("Could not get build status for VDB: "  +openShiftName +" error:"+ e.getMessage());
             status = new BuildStatus(openShiftName);
+            deploymentStatus = status.getDeploymentStatus();
         }
-        status.setDataVirtualizationName(virtualization);
-        if (status.getStatus() == BuildStatus.Status.RUNNING) {
-            status.setUsedBy(findIntegrationUsedIn(virtualization));
+        if (deploymentStatus.getStatus() == DeploymentStatus.Status.RUNNING) {
+            deploymentStatus.setUsedBy(findIntegrationUsedIn(virtualization));
+            //
+            // Only if status is running then populate the routes
+            // for this virtualization
+            //
+            ProtocolType[] types = { ProtocolType.ODATA, ProtocolType.JDBC, ProtocolType.PG };
+            ArrayList<RouteStatus> routes = new ArrayList<>(1);
+            for (ProtocolType type : types) {
+                try {
+                    RouteStatus route = getRoute(openShiftName, type);
+                    if (route == null) {
+                        continue;
+                    }
+                    routes.add(route);
+                } catch(KubernetesClientException e) {
+                    // ignore..
+                }
+            }
+            deploymentStatus.setRoutes(routes);
         }
-        return status;
+        return new VirtualizationStatus(status, deploymentStatus);
     }
 
     public String getVirtualizationLog(String virtualization) {
@@ -1388,35 +1425,37 @@ public class TeiidOpenShiftClient implements StringConstants {
     	return buildList.getItems().get(0);
     }
 
-    private long getDeployedRevision(DeploymentConfig dc, long defaultNumber, final OpenShiftClient client) {
-    	long latestVersion = dc.getStatus().getLatestVersion().longValue();
-		ReplicationControllerList list = client.replicationControllers().inNamespace(dc.getMetadata().getNamespace())
-				.withLabel("application", dc.getMetadata().getName()).list();
+    private Long getDeployedRevision(DeploymentConfig dc, Long defaultNumber, final OpenShiftClient client) {
+        long latestVersion = dc.getStatus().getLatestVersion().longValue();
+        ReplicationControllerList list = client.replicationControllers().inNamespace(dc.getMetadata().getNamespace())
+                .withLabel("application", dc.getMetadata().getName()).list();
 
-		for (ReplicationController rc : list.getItems()) {
-			String version = rc.getMetadata().getAnnotations().get("openshift.io/deployment-config.latest-version");
-    		if (version != null && Long.parseLong(version) == latestVersion) {
-    			String deployedVersion = rc.getSpec().getTemplate().getMetadata().getLabels().get(DEPLOYMENT_VERSION_LABEL);
-    			if (deployedVersion != null) {
-    				try {
-						return Long.parseLong(deployedVersion);
-					} catch (NumberFormatException e) {
-						LOGGER.error("unexpected value for deployment-version", e);
-					}
-    			}
-    		}
-		}
-		return defaultNumber;
+        for (ReplicationController rc : list.getItems()) {
+            String version = rc.getMetadata().getAnnotations().get("openshift.io/deployment-config.latest-version");
+            if (version != null && Long.parseLong(version) == latestVersion) {
+                String deployedVersion = rc.getSpec().getTemplate().getMetadata().getLabels().get(DEPLOYMENT_VERSION_LABEL);
+                if (deployedVersion != null) {
+                    try {
+                        return Long.parseLong(deployedVersion);
+                    } catch (NumberFormatException e) {
+                        LOGGER.error("unexpected value for deployment-version", e);
+                    }
+                }
+            }
+        }
+        return defaultNumber;
     }
-    private BuildStatus getVDBService(String openShiftName, String namespace, final OpenShiftClient client) {
+
+    private BuildStatus getBuildStatus(String openShiftName, String namespace, final OpenShiftClient client) {
         BuildStatus status = new BuildStatus(openShiftName);
         status.setNamespace(namespace);
 
         long lastVersion = 1L;
         BuildConfig bc = client.buildConfigs().inNamespace(namespace).withName(getBuildConfigName(openShiftName)).get();
         if (bc != null) {
-        	lastVersion = bc.getStatus().getLastVersion().longValue();
+            lastVersion = bc.getStatus().getLastVersion().longValue();
         }
+        String completionTimestamp = null;
         BuildList buildList = client.builds().inNamespace(namespace).withLabel("application", openShiftName).list();
         if ((buildList !=null) && !buildList.getItems().isEmpty()) {
             Build build = findBuildWithNumber(lastVersion, buildList);
@@ -1424,7 +1463,7 @@ public class TeiidOpenShiftClient implements StringConstants {
             String deploymentVersion = build.getMetadata().getLabels().get(DEPLOYMENT_VERSION_LABEL);
             if (deploymentVersion != null) {
                 try {
-                    status.setDeploymentVersion(Long.valueOf(deploymentVersion));
+                    status.setVersion(Long.valueOf(deploymentVersion));
                 } catch (NumberFormatException e) {
                     LOGGER.error("unexpected value for deployment-version", e);
                 }
@@ -1436,53 +1475,9 @@ public class TeiidOpenShiftClient implements StringConstants {
                 status.setStatus(Status.FAILED);
                 status.setStatusMessage(build.getStatus().getMessage());
             } else if (Builds.isCompleted(build.getStatus().getPhase())) {
-                DeploymentConfig dc = client.deploymentConfigs().inNamespace(namespace).withName(openShiftName).get();
-                if (dc != null) {
-                    status.setStatus(Status.DEPLOYING);
-                    status.setDeploymentName(dc.getMetadata().getName());
-                    if (isDeploymentInReadyState(dc)) {
-                        status.setStatus(Status.RUNNING);
-
-                        //
-                        // Only if status is running then populate the routes
-                        // for this virtualization
-                        //
-                        ProtocolType[] types = { ProtocolType.ODATA, ProtocolType.JDBC, ProtocolType.PG };
-                        for (ProtocolType type : types) {
-                            try {
-                                RouteStatus route = getRoute(openShiftName, type);
-                                if (route == null) {
-                                    continue;
-                                }
-                                status.addRoute(route);
-                            } catch(KubernetesClientException e) {
-                                // ignore..
-                            }
-                        }
-                    }
-
-                    if (!isDeploymentProgressing(dc)) {
-                        status.setStatus(Status.FAILED);
-                    }
-
-                    DeploymentCondition cond = getDeploymentConfigStatus(dc);
-                    if (cond != null) {
-                        status.setStatusMessage(cond.getMessage());
-                        status.setDeploymentVersion(getDeployedRevision(dc, status.getDeploymentVersion(), client));
-                    } else {
-                        status.setStatusMessage("Available condition not found in deployment, delete the service and re-deploy?");
-                    }
-                } else {
-                    // need to account for some time between build complete and deployment is in progress
-                    Instant completionTime = Instant.parse(build.getStatus().getCompletionTimestamp());
-                    if (Instant.now().getEpochSecond() - completionTime.plusMillis(15000).getEpochSecond() > 0) {
-                        status.setStatusMessage("Build Completed, but no deployment found. Reason unknown, please redeploy");
-                        status.setStatus(Status.FAILED);
-                    } else {
-                        status.setStatusMessage("Build Completed, Waiting for deployment.");
-                        status.setStatus(Status.DEPLOYING);
-                    }
-                }
+                status.setStatus(Status.COMPLETE);
+                status.setStatusMessage("Build complete, see deployment message");
+                completionTimestamp = build.getStatus().getCompletionTimestamp();
             } else {
                 status.setStatus(Status.BUILDING);
                 status.setStatusMessage(build.getStatus().getMessage());
@@ -1493,33 +1488,71 @@ public class TeiidOpenShiftClient implements StringConstants {
                     .withLabel("application", openShiftName).list().getItems();
             if (!rcs.isEmpty()) {
                 ReplicationController rc = rcs.get(0);
-                if (rc.getStatus().getReplicas() == 0) {
+                if (rc.getStatus().getReplicas().intValue() == 0) {
                     status.setStatusMessage("Build Completed, but no deployment found. Reason unknown, please redeploy");
                     status.setStatus(Status.FAILED);
                 }
             }
         }
+
+        DeploymentStatus deploymentStatus = status.getDeploymentStatus();
+        Long buildVersion = status.getVersion();
+        updateDeploymentStatus(openShiftName, namespace, client,
+                completionTimestamp, deploymentStatus, buildVersion);
+
         status.setLastUpdated();
         return status;
     }
 
+    private void updateDeploymentStatus(String openShiftName, String namespace,
+            final OpenShiftClient client, String completionTimestamp,
+            DeploymentStatus deploymentStatus, Long buildVersion) {
+        DeploymentConfig dc = client.deploymentConfigs().inNamespace(namespace).withName(openShiftName).get();
+        if (dc != null) {
+            deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
+            deploymentStatus.setDeploymentName(dc.getMetadata().getName());
+            deploymentStatus.setVersion(getDeployedRevision(dc, buildVersion, client));
+            if (isDeploymentInReadyState(dc)) {
+                deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
+            } else {
+                if (!isDeploymentProgressing(dc)) {
+                    deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
+                }
+                DeploymentCondition cond = getDeploymentConfigStatus(dc);
+                if (cond != null) {
+                    deploymentStatus.setStatusMessage(cond.getMessage());
+                } else {
+                    deploymentStatus.setStatusMessage("Available condition not found in deployment, delete the service and re-deploy?");
+                }
+            }
+        } else if (completionTimestamp != null) {
+            // need to account for some time between build complete and deployment is in progress
+            Instant completionTime = Instant.parse(completionTimestamp);
+            if (Instant.now().getEpochSecond() - completionTime.plusMillis(15000).getEpochSecond() > 0) {
+                deploymentStatus.setStatusMessage("Build Completed, but no deployment found. Reason unknown, please redeploy");
+                deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
+            } else {
+                deploymentStatus.setStatusMessage("Build Completed, Waiting for deployment.");
+                deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
+            }
+        } else {
+            deploymentStatus.setStatus(DeploymentStatus.Status.NOTFOUND);
+        }
+    }
+
     public BuildStatus deleteVirtualization(String virtualizationName) throws KException {
         String openShiftName = getOpenShiftName(virtualizationName);
-        BuildStatus runningBuild = getVirtualizationStatusFromQueue(openShiftName);
+        VirtualizationStatus status = getVirtualizationStatus(virtualizationName);
+        BuildStatus runningBuild = status.getBuildStatus();
+        DeploymentStatus deploymentStatus = status.getDeploymentStatus();
 
-        boolean queue = false;
-        if (runningBuild == null) {
-            runningBuild = getVirtualizationStatus(virtualizationName);
-            queue = true;
-        }
-
-        if (BuildStatus.Status.NOTFOUND.equals(runningBuild.getStatus())) {
+        if (EnumSet.of(Status.NOTFOUND, Status.DELETE_DONE, Status.DELETE_SUBMITTED).contains(status.getBuildStatus().getStatus())) {
             return runningBuild;
         }
 
-        List<String> usedIn = runningBuild.getUsedBy();
+        //check if the lasted deployment is used
+        List<String> usedIn = deploymentStatus.getUsedBy();
         if (!usedIn.isEmpty()) {
-            runningBuild.setStatus(Status.CANCELLED);
             runningBuild.setStatusMessage(
                     "The virtualization \"" + virtualizationName + "\" is currently used in integration(s) \""
                     + usedIn + "\" thus can not be deleted. The unpublish has been CANCELED");
@@ -1527,24 +1560,21 @@ public class TeiidOpenShiftClient implements StringConstants {
         }
 
         info(openShiftName, "Deleting virtualization deployed as Service");
+
+        runningBuild.setStatus(Status.DELETE_SUBMITTED);
+        runningBuild.setStatusMessage("delete submitted");
         final String inProgressBuildName = runningBuild.getName();
-        final BuildStatus status = runningBuild;
+        workExecutor.submit(new BuildStatusRunner(runningBuild));
+        //workExecutor.schedule(new BuildStatusRunner(runningBuild), 1, TimeUnit.SECONDS);
         configureService.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 final OpenShiftClient client = openshiftClient();
-                deleteVDBServiceResources(openShiftName, inProgressBuildName, status, client);
+                deleteVDBServiceResources(openShiftName, inProgressBuildName, runningBuild, client);
                 debug(openShiftName, "finished deleteing " + openShiftName + " service");
                 return true;
             }
         });
-        runningBuild.setStatus(Status.DELETE_SUBMITTED);
-        runningBuild.setStatusMessage("delete submitted");
-        // since delete is async process too, monitor it in the monitor thread.
-        if (queue) {
-            workExecutor.submit(new BuildStatusRunner(runningBuild));
-        }
-
         return runningBuild;
     }
 
