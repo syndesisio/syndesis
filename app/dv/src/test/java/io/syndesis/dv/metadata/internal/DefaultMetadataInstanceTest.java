@@ -16,20 +16,23 @@
 
 package io.syndesis.dv.metadata.internal;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
-import io.syndesis.dv.metadata.TeiidVdb;
-import io.syndesis.dv.metadata.internal.DefaultMetadataInstance.TeiidVdbImpl;
 import org.teiid.adminapi.impl.VDBMetadataParser;
 import org.teiid.runtime.EmbeddedConfiguration;
 
 import io.syndesis.dv.KException;
+import io.syndesis.dv.metadata.MetadataInstance.ValidationResult;
+import io.syndesis.dv.metadata.TeiidVdb;
+import io.syndesis.dv.metadata.internal.DefaultMetadataInstance.TeiidVdbImpl;
 
 @SuppressWarnings("nls")
 public class DefaultMetadataInstanceTest {
@@ -78,6 +81,9 @@ public class DefaultMetadataInstanceTest {
 
         report = metadataInstance.getVdb("myservice").validate("create view v as select * from tbl1");
         assertTrue(report.toString(), report.getReport().hasItems());
+
+        //redo with the same name
+        report = metadataInstance.getVdb("myservice").validate("create view v (col, col1) as select col from tbl");
     }
 
     @Test
