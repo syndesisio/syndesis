@@ -144,6 +144,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.glassfish.jaxb</groupId>
+      <artifactId>jaxb-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.atlasmap</groupId>
       <artifactId>camel-atlasmap</artifactId>
       <scope>test</scope>
