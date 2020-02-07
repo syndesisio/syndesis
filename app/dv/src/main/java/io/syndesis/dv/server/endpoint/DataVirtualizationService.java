@@ -92,10 +92,12 @@ import io.syndesis.dv.model.export.v1.ViewDefinitionV1Adapter;
 import io.syndesis.dv.openshift.BuildStatus;
 import io.syndesis.dv.openshift.BuildStatus.RouteStatus;
 import io.syndesis.dv.openshift.BuildStatus.Status;
+import io.syndesis.dv.openshift.DeploymentStatus;
 import io.syndesis.dv.openshift.ProtocolType;
 import io.syndesis.dv.openshift.PublishConfiguration;
 import io.syndesis.dv.openshift.SyndesisHttpClient;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
+import io.syndesis.dv.openshift.VirtualizationStatus;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
 import io.syndesis.dv.server.V1Constants;
@@ -159,19 +161,38 @@ public final class DataVirtualizationService extends DvService {
 
     private RestDataVirtualization createRestDataVirtualization(final DataVirtualization virtualization) throws KException {
         RestDataVirtualization entity = new RestDataVirtualization(virtualization);
-        // Set published status of virtualization
-        BuildStatus status = this.openshiftClient.getVirtualizationStatus(virtualization.getName());
-        if (status != null) {
-            entity.setPublishedState(status.getStatus().name());
-            entity.setPublishPodName(status.getPublishPodName());
-            entity.setPodNamespace(status.getNamespace());
-            entity.setOdataHostName(getOdataHost(status));
-            entity.setUsedBy(status.getUsedBy());
-            entity.setPublishedRevision(status.getDeploymentVersion());
-        }
-        entity.setEmpty(this.getWorkspaceManager().findViewDefinitionsNames(virtualization.getName()).isEmpty());
 
+        //working state
+        entity.setEmpty(this.getWorkspaceManager().findViewDefinitionsNames(virtualization.getName()).isEmpty());
         entity.setEditionCount(this.getWorkspaceManager().getEditionCount(virtualization.getName()));
+
+        // Set published status of virtualization
+        VirtualizationStatus status = this.openshiftClient.getVirtualizationStatus(virtualization.getName());
+        if (status != null) { //can be null for unit tests
+            BuildStatus buildStatus = status.getBuildStatus();
+            DeploymentStatus deploymentStatus = status.getDeploymentStatus();
+
+            //publish/build state
+            entity.setPublishPodName(buildStatus.getPublishPodName());
+            entity.setPodNamespace(buildStatus.getNamespace());
+            entity.setPublishedRevision(buildStatus.getVersion());
+
+            if (buildStatus.getStatus() == Status.COMPLETE) {
+                entity.setPublishedState(deploymentStatus.getStatus().name());
+                entity.setPublishedMessage(deploymentStatus.getStatusMessage());
+            } else {
+                entity.setPublishedState(buildStatus.getStatus().name());
+                entity.setPublishedMessage(buildStatus.getStatusMessage());
+            }
+
+            //deployment state
+            entity.setOdataHostName(getOdataHost(deploymentStatus));
+            entity.setUsedBy(deploymentStatus.getUsedBy());
+            entity.setDeployedRevision(deploymentStatus.getVersion());
+            entity.setDeployedState(deploymentStatus.getStatus().name());
+            entity.setDeployedMessage(deploymentStatus.getStatusMessage());
+        }
+
         return entity;
     }
 
@@ -395,21 +416,19 @@ public final class DataVirtualizationService extends DvService {
     }
 
     /**
-     * Get OData hostname from the buildStatus
-     * @param buildStatus the BuildStatus
+     * Get OData hostname from the deployment status
+     * @param status
      * @return the odata hostname
      */
-    private String getOdataHost(final BuildStatus buildStatus) {
+    private String getOdataHost(final DeploymentStatus status) {
         String odataHost = null;
-        if(buildStatus != null) {
-            List<RouteStatus> routeStatuses = buildStatus.getRoutes();
-            if(!routeStatuses.isEmpty()) {
-                // Find Odata route if it exists
-                for(RouteStatus routeStatus: routeStatuses) {
-                    if(routeStatus.getProtocol() == ProtocolType.ODATA) {
-                        odataHost = routeStatus.getHost();
-                        break;
-                    }
+        List<RouteStatus> routeStatuses = status.getRoutes();
+        if(!routeStatuses.isEmpty()) {
+            // Find Odata route if it exists
+            for(RouteStatus routeStatus: routeStatuses) {
+                if(routeStatus.getProtocol() == ProtocolType.ODATA) {
+                    odataHost = routeStatus.getHost();
+                    break;
                 }
             }
         }
@@ -1031,22 +1050,24 @@ public final class DataVirtualizationService extends DvService {
             required = true) final @PathVariable(VIRTUALIZATION) String virtualization)
             throws Exception {
 
-        BuildStatus status = this.openshiftClient.getVirtualizationStatus(virtualization);
+        VirtualizationStatus status = this.openshiftClient.getVirtualizationStatus(virtualization);
+        BuildStatus buildStatus = status.getBuildStatus();
+        DeploymentStatus deploymentStatus = status.getDeploymentStatus();
 
-        if (status == null) {
+        if (buildStatus.getStatus() == Status.NOTFOUND) {
             throw notFound(virtualization);
         }
 
-        if (status.getStatus() != Status.RUNNING) {
+        if (deploymentStatus.getStatus() != DeploymentStatus.Status.RUNNING) {
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
         }
 
         PodMetrics metrics = new PodMetrics();
 
-        String startedAt = this.openshiftClient.getPodStartedAt(status.getNamespace(), status.getOpenShiftName());
+        String startedAt = this.openshiftClient.getPodStartedAt(buildStatus.getNamespace(), buildStatus.getOpenShiftName());
         metrics.setStartedAt(startedAt);
 
-        String baseUrl = String.format("http://%s:%s/jolokia/read/", status.getOpenShiftName(), ProtocolType.JOLOKIA.getTargetPort()); //$NON-NLS-1$
+        String baseUrl = String.format("http://%s:%s/jolokia/read/", buildStatus.getOpenShiftName(), ProtocolType.JOLOKIA.getTargetPort()); //$NON-NLS-1$
 
         String auth = "jolokia:jolokia"; //$NON-NLS-1$
         String authValue = "Basic " + Base64.getEncoder().encodeToString(auth.getBytes(StandardCharsets.ISO_8859_1)); //$NON-NLS-1$
