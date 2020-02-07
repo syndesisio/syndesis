@@ -16,6 +16,8 @@
 
 package io.syndesis.dv.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,5 +34,8 @@ public interface SourceSchemaRepository extends JpaRepository<SourceSchema, Stri
     @Modifying
     @Query("delete from SourceSchema s where s.sourceId=:sourceId")
     public int deleteBySourceId(@Param("sourceId") String sourceid);
+
+    @Query("SELECT sourceId FROM SourceSchema")
+    public List<String> findAllSourceIds();
 
 }

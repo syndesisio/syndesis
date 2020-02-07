@@ -57,7 +57,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.dv.KException;
 import io.syndesis.dv.StringConstants;
-import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.MetadataInstance;
 import io.syndesis.dv.metadata.TeiidDataSource;
 import io.syndesis.dv.metadata.TeiidVdb;
@@ -267,7 +266,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
 
     public void deploySourceVdb(String teiidSourceName,
             SourceDeploymentMode sourceDeploymentMode ) throws Exception {
-        TeiidDataSource teiidSource = getMetadataInstance().getDataSource(teiidSourceName);
+        TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
 
         if (teiidSource == null) {
             throw notFound(teiidSourceName);
@@ -279,16 +278,16 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         });
     }
 
-    public boolean deleteSchema(DefaultSyndesisDataSource dsd) throws Exception {
+    public boolean deleteSchema(String sourceId, String teiidDataSourceName) throws Exception {
         //TODO: this can invalidate a lot of stuff
         boolean result = repositoryManager.runInTransaction(false, () -> {
-            return repositoryManager.deleteSchemaBySourceId(dsd.getSyndesisConnectionId());
+            return repositoryManager.deleteSchemaBySourceId(sourceId);
         });
 
         if (result) {
             connectionExecutor.execute(()->{
                 try {
-                    removeVdb(getWorkspaceSourceVdbName(dsd.getTeiidName()));
+                    removeVdb(getWorkspaceSourceVdbName(teiidDataSourceName));
                     refreshPreviewVdb();
                 } catch (KException e) {
                     LOGGER.warn("Error removing the source vdb", e); //$NON-NLS-1$
@@ -388,7 +387,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                                @PathVariable(TEIID_SOURCE) final String teiidSourceName ) throws Exception {
         return repositoryManager.runInTransaction(true, ()->{
             // Find the bound teiid source corresponding to the syndesis source
-            TeiidDataSource teiidSource = getMetadataInstance().getDataSource(teiidSourceName);
+            TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
 
             if (teiidSource == null) {
                 LOGGER.debug( "Connection '%s' was not found", teiidSourceName ); //$NON-NLS-1$
@@ -465,16 +464,12 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         final List< RestSyndesisSourceStatus > statuses = new ArrayList<>();
 
         return repositoryManager.runInTransaction(true, ()->{
-            for (String teiidName : repositoryManager.findAllSchemaNames()) {
-                TeiidDataSource teiidSource = getMetadataInstance().getDataSource(teiidName);
-				RestSyndesisSourceStatus status = new RestSyndesisSourceStatus(
-						teiidSource.getSyndesisDataSource().getSyndesisName());
-                if (teiidSource != null) {
-                    setSchemaStatus(teiidSource.getSyndesisId(), status);
-                }
-
+            for (TeiidDataSource tds : getTeiidDatasources()) {
+                RestSyndesisSourceStatus status = new RestSyndesisSourceStatus(
+                        tds.getSyndesisDataSource().getSyndesisName());
+                setSchemaStatus(tds.getSyndesisId(), status);
                 // Name of vdb based on source name
-                String vdbName = getWorkspaceSourceVdbName(teiidName);
+                String vdbName = getWorkspaceSourceVdbName(tds.getName());
                 TeiidVdb teiidVdb = getMetadataInstance().getVdb(vdbName+LOAD_SUFFIX);
                 if (teiidVdb != null) {
                     status.setLoading(teiidVdb.isLoading());
@@ -831,4 +826,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         return getMetadataInstance().getDataSource(connectionName);
     }
 
+    public Collection<? extends TeiidDataSource> getTeiidDatasources() throws KException {
+        return getMetadataInstance().getDataSources();
+    }
 }
