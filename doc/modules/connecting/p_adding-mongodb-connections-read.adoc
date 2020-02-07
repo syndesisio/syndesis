@@ -59,8 +59,9 @@ This field contains data that can be sorted, such as a date or an ID.
 tracking is enabled for the database that you want the connection 
 to read. 
 .. Optional. In the *Unique id to identify this tracking process* field, 
-specify a different ID if you have more than one tracking process 
-in your integrations. 
+specify a unique ID if there are multiple consumers that monitor the same 
+collection. For more information, see the Camel documentation for 
+link:https://camel.apache.org/components/latest/mongodb-component.html#_tailable_cursor_consumer[Tailable Cursor Consumer].
 .. Optional. In the *DB used to store tail tracking* field, enter 
 the name of the MongoDB database that contains tail tracking information. 
 .. Optional. In the *Collection used to store tail tracking* field, enter
