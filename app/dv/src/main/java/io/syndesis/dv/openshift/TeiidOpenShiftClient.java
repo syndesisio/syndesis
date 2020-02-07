@@ -485,7 +485,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     private void createSyndesisConnection(final OpenShiftClient client, final String namespace,
             final String openshiftName, final String virtualizationName) throws KException {
         try {
-            Service service = client.services().inNamespace(namespace).withName(openshiftName+"-"+ProtocolType.JDBC.id()).get();
+            Service service = client.services().inNamespace(namespace).withName(openshiftName).get();
             if (service == null) {
                 info(openshiftName, "Database connection to Virtual Database " +
                         openshiftName + " not created beacuse no service found");
