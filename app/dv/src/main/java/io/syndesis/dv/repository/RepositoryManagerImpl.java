@@ -115,8 +115,8 @@ public class RepositoryManagerImpl implements RepositoryManager {
     }
 
     @Override
-    public List<String> findAllSchemaNames() {
-        return dataVirtualizationRepository.findNamesByTypeLike("s"); //$NON-NLS-1$
+    public List<String> findAllSourceIds() {
+        return schemaRepository.findAllSourceIds(); //$NON-NLS-1$
     }
 
     @Override
