@@ -40,7 +40,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 
 /**
  * @author Christoph Deppisch
@@ -59,8 +58,12 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
     @Autowired
     private JmsEndpoint todoJms;
 
-    @ClassRule
-    public static JBossAMQBrokerContainer amqBrokerContainer = new JBossAMQBrokerContainer();
+    private static final JBossAMQBrokerContainer amqBrokerContainer;
+
+    static {
+        amqBrokerContainer = new JBossAMQBrokerContainer();
+        amqBrokerContainer.start();
+    }
 
     /**
      * Integration periodically requests list of tasks (as Json array) from Http service and maps the results to AMQ queue.
@@ -74,8 +77,7 @@ public class HttpToAMQ_IT extends SyndesisIntegrationTestSupport {
             .customize("$..configuredProperties.baseUrl",
                         String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
-            .withNetwork(amqBrokerContainer.getNetwork())
-            .waitingFor(Wait.defaultWaitStrategy().withStartupTimeout(Duration.ofSeconds(SyndesisTestEnvironment.getContainerStartupTimeout())));
+            .withNetwork(amqBrokerContainer.getNetwork());
 
     @Test
     @CitrusTest
