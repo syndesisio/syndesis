@@ -53,7 +53,7 @@ public class AuthenticationCustomizerTest {
         options.put("username", "username");
         options.put("password", "{{password}}");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -75,7 +75,7 @@ public class AuthenticationCustomizerTest {
         options.put("authenticationType", AuthenticationType.oauth2);
         options.put("accessToken", "{{accessToken}}");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -98,7 +98,7 @@ public class AuthenticationCustomizerTest {
         options.put("authenticationParameterValue", "{{key}}");
         options.put("authenticationParameterPlacement", "header");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -129,7 +129,7 @@ public class AuthenticationCustomizerTest {
         final String authorizationEndpoint = "http://localhost:" + wiremock.port() + "/oauth/authorize";
         options.put("authorizationEndpoint", authorizationEndpoint);
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -148,9 +148,11 @@ public class AuthenticationCustomizerTest {
 
     @Test
     public void shouldSupportAllAuthenticationValues() {
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
-        final CamelContext context = mock(CamelContext.class);
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         component.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
 
         final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
 
@@ -165,9 +167,11 @@ public class AuthenticationCustomizerTest {
 
     @Test
     public void shouldSupportNamedAuthenticationValues() {
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
-        final CamelContext context = mock(CamelContext.class);
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         component.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
 
         final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
 

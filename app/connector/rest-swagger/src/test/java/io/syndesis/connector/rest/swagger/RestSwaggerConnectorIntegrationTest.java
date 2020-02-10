@@ -40,10 +40,9 @@ import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.support.SimpleRegistry;
 import org.apache.camel.model.ModelCamelContext;
+import org.apache.camel.spi.PropertiesComponent;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
@@ -409,6 +408,10 @@ public class RestSwaggerConnectorIntegrationTest {
     private RouteBuilder createRouteBuilder() {
         return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
 
+            {
+                setContext(createContext());
+            }
+
             @Override
             public void configure() throws Exception {
                 errorHandler(defaultErrorHandler().maximumRedeliveries(1));
@@ -416,8 +419,7 @@ public class RestSwaggerConnectorIntegrationTest {
                 super.configure();
             }
 
-            @Override
-            protected ModelCamelContext createContainer() {
+            private ModelCamelContext createContext() {
                 final Properties properties = new Properties();
 
                 properties.put("flow-3.rest-openapi-1.password", "supersecret");
@@ -438,13 +440,10 @@ public class RestSwaggerConnectorIntegrationTest {
 
                 properties.put("flow-10.rest-openapi-1.authenticationParameterValue", "supersecret");
 
-                final PropertiesComponent propertiesComponent = new PropertiesComponent();
+                final ModelCamelContext leanContext = new DefaultCamelContext();
+                final PropertiesComponent propertiesComponent = leanContext.getPropertiesComponent();
                 propertiesComponent.setInitialProperties(properties);
 
-                final SimpleRegistry registry = new SimpleRegistry();
-                registry.put("properties", propertiesComponent);
-
-                final ModelCamelContext leanContext = new DefaultCamelContext(registry);
                 leanContext.disableJMX();
 
                 return leanContext;
