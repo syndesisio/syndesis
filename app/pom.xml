@@ -132,7 +132,7 @@
     <mockito.version>2.19.0</mockito.version>
     <mongodb.version>3.9.0</mongodb.version>
 
-    <spring-security.version>5.2.1.RELEASE</spring-security.version>
+    <spring-security.version>5.2.2.RELEASE</spring-security.version>
     <resteasy.version>4.4.2.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.4.0.Final</resteasy-spring-boot-starter.version>
 
