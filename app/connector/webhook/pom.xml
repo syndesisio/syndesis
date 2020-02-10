@@ -69,7 +69,7 @@
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
     </dependency>
-    
+
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-base</artifactId>
@@ -77,6 +77,11 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-dataset</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>
