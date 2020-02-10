@@ -58,12 +58,8 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
     @Autowired
     private JmsEndpoint todoJms;
 
-    private static final JBossAMQBrokerContainer amqBrokerContainer;
-
-    static {
-        amqBrokerContainer = new JBossAMQBrokerContainer();
-        amqBrokerContainer.start();
-    }
+    @ClassRule
+    public static JBossAMQBrokerContainer amqBrokerContainer = new JBossAMQBrokerContainer();
 
     /**
      * Integration waits for messages on AMQ queue and maps incoming tasks to Http service. Both AMQ and Http connections use
@@ -77,6 +73,7 @@ public class AMQToHttp_IT extends SyndesisIntegrationTestSupport {
             .customize("$..configuredProperties.baseUrl",
                         String.format("http://%s:%s", GenericContainer.INTERNAL_HOST_HOSTNAME, TODO_SERVER_PORT))
             .build()
+            .dependsOn(amqBrokerContainer)
             .withNetwork(amqBrokerContainer.getNetwork());
 
     @Test
