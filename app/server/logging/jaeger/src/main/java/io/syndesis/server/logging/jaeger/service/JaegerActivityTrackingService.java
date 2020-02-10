@@ -15,7 +15,6 @@
  */
 package io.syndesis.server.logging.jaeger.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -47,7 +46,8 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
 
     // NOPMD
     @Override
-    public List<Activity> getActivities(String integrationId, String from, Integer requestedLimit) throws IOException {
+    @SuppressWarnings({"PMD.NPathComplexity"})
+    public List<Activity> getActivities(String integrationId, String from, Integer requestedLimit) {
 
         int lookbackDays = 30;
         int limit = 10;
@@ -95,12 +95,12 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                         case "step": {
                             ActivityStep step = new ActivityStep();
                             step.setId(span.operationName);
-                            // use microseconds precision to improve accuracy
+                            // use microseconds precision to improve accuracy for ordering purposes
+                            // do not divide to 1000 at this moment, as the span can run in the same millisecond moment
                             step.setAt(span.startTime);
                             step.setDuration(span.duration*1000);
 
                             List<String> messages = span.findLogs("event");
-
                             Boolean failed = span.findTag(Tags.ERROR.getKey(), Boolean.class);
                             if (failed != null && failed) {
                                 String msg = messages != null && !messages.isEmpty() ? messages.get(0) : "";
@@ -108,7 +108,6 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
                             } else {
                                 step.setMessages(messages);
                             }
-
                             steps.add(step);
                         }
                         break;
@@ -122,6 +121,10 @@ public class JaegerActivityTrackingService implements ActivityTrackingService {
 
             if (activity != null) {
                 steps.sort(Comparator.comparing(ActivityStep::getAt));
+                // set time to milliseconds to correctly display in UI
+                for (ActivityStep step: steps) {
+                    step.setAt(step.getAt()/1000);
+                }
                 activity.setSteps(steps);
                 rc.add(activity);
             }
