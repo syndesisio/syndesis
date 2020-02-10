@@ -77,18 +77,18 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
         Assertions.assertThat(createdBeforeProducer).isInstanceOf(Pipeline.class);
 
         final Pipeline beforePipeline = (Pipeline) createdBeforeProducer;
-        Assertions.assertThat(beforePipeline.getProcessors()).isInstanceOf(List.class).hasSize(2);
+        Assertions.assertThat(beforePipeline.next()).isInstanceOf(List.class).hasSize(2);
         //Using toString() since there's no direct access to a processor in Camel 3, which is wrapped in AsyncProcessorConverterHelper.ProcessorToAsyncProcessorBridge
-        Assertions.assertThat(beforePipeline.getProcessors().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
-        Assertions.assertThat(beforePipeline.getProcessors().get(1).toString()).isEqualTo(BEFORE_PROCESSOR.toString());
+        Assertions.assertThat(beforePipeline.next().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
+        Assertions.assertThat(beforePipeline.next().get(1).toString()).isEqualTo(BEFORE_PROCESSOR.toString());
 
         final Processor createdAfterProducer = component.getAfterProducer();
         Assertions.assertThat(createdAfterProducer).isInstanceOf(Pipeline.class);
 
         final Pipeline afterPipeline = (Pipeline) createdAfterProducer;
-        Assertions.assertThat(afterPipeline.getProcessors()).isInstanceOf(List.class).hasSize(2);
-        Assertions.assertThat(afterPipeline.getProcessors().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
-        Assertions.assertThat(afterPipeline.getProcessors().get(1).toString()).isEqualTo(AFTER_PROCESSOR.toString());
+        Assertions.assertThat(afterPipeline.next()).isInstanceOf(List.class).hasSize(2);
+        Assertions.assertThat(afterPipeline.next().get(0).toString()).contains(DataShapeCustomizer.UnmarshallProcessor.class.getName());
+        Assertions.assertThat(afterPipeline.next().get(1).toString()).isEqualTo(AFTER_PROCESSOR.toString());
     }
 
     @Test
