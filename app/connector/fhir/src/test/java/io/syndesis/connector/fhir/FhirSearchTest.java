@@ -54,7 +54,7 @@ public class FhirSearchTest extends FhirTestBase {
         bundle.getEntry().add(new Bundle.BundleEntryComponent().setResource(one));
         bundle.getEntry().add(new Bundle.BundleEntryComponent().setResource(two));
 
-        stubFhirRequest(get(urlEqualTo("/Patient?gender=unknown")).willReturn(okXml(toXml(bundle))));
+        stubFhirRequest(get(urlEqualTo("/Patient?gender=unknown&_format=xml")).willReturn(okXml(toXml(bundle))));
 
         FhirResourceQuery query = new FhirResourceQuery();
         query.setQuery("gender=unknown");

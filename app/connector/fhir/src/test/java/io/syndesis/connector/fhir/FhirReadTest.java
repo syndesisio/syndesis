@@ -42,7 +42,7 @@ public class FhirReadTest extends FhirTestBase {
 
     @Test
     public void readWithIdProvidedAsParameterTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new Patient().setId("1234")))));
+        stubFhirRequest(get(urlEqualTo("/Patient/1234?_format=xml")).willReturn(okXml(toXml(new Patient().setId("1234")))));
 
         String patient = template.requestBody("direct:start", "", String.class);
 
@@ -51,7 +51,7 @@ public class FhirReadTest extends FhirTestBase {
 
     @Test
     public void readWithIdProvidedInBodyTest() {
-        stubFhirRequest(get(urlEqualTo("/Patient/4321")).willReturn(okXml(toXml(new Patient().setId("4321")))));
+        stubFhirRequest(get(urlEqualTo("/Patient/4321?_format=xml")).willReturn(okXml(toXml(new Patient().setId("4321")))));
 
         FhirResourceId id = new FhirResourceId();
         id.setId("4321");

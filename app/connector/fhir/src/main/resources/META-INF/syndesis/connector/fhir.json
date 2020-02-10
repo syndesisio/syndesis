@@ -445,7 +445,9 @@
     }
   ],
   "componentScheme": "fhir",
-  "configuredProperties": {},
+  "configuredProperties": {
+    "encoding": "XML"
+  },
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",

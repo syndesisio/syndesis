@@ -40,6 +40,7 @@ import java.util.function.Consumer;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
 import static com.github.tomakehurst.wiremock.client.WireMock.get;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -77,9 +78,13 @@ public abstract class FhirTestBase extends ConnectorTestSupport {
 
     @Before
     public void stubFhirServerMetadata() throws IOException {
+        try (InputStream bundleResponse = FhirReadTest.class.getResourceAsStream("bundle_response.xml")) {
+            String response = IOUtils.toString(bundleResponse, StandardCharsets.UTF_8);
+            fhirServer.stubFor(post(urlEqualTo("/?_format=xml")).willReturn(okXml(response)));
+        }
         try (InputStream metadataResponseIn = FhirReadTest.class.getResourceAsStream("metadata_response.xml")) {
             String metadataResponse = IOUtils.toString(metadataResponseIn, StandardCharsets.UTF_8);
-            fhirServer.stubFor(get(urlEqualTo("/metadata")).willReturn(okXml(metadataResponse)));
+            fhirServer.stubFor(get(urlEqualTo("/metadata?_format=xml")).willReturn(okXml(metadataResponse)));
         }
     }
 
