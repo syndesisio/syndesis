@@ -295,6 +295,7 @@ export const DetailsPage: React.FunctionComponent = () => {
                                               currentState={
                                                 deployment.currentState!
                                               }
+                                              i18nRunning={t('shared:Published')}
                                               i18nTextLastPublished={t(
                                                 'integrations:detail:lastPublished'
                                               )}
