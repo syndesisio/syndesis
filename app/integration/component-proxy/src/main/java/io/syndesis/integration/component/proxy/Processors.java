@@ -15,7 +15,6 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.camel.CamelContext;
@@ -87,7 +86,7 @@ public final class Processors {
     static Processor replacementPipelineFrom(final CamelContext camelContext, final Processor existing, final Processor additional) {
         final Processor replacement;
         if (existing instanceof Pipeline) {
-            final List<Processor> processors = new ArrayList<>(((Pipeline) existing).getProcessors());
+            final List<Processor> processors = ((Pipeline) existing).next();
             processors.add(additional);
 
             replacement = Pipeline.newInstance(camelContext, processors);

@@ -70,7 +70,7 @@ public class ProcessorsTest {
         final Processor got = getter.apply(component);
         assertThat(got).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) got;
-        assertThat(pipeline.getProcessors()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
+        assertThat(pipeline.next()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
             AsyncProcessorConverterHelper.convert(processor2), AsyncProcessorConverterHelper.convert(processor3));
     }
 
@@ -84,7 +84,7 @@ public class ProcessorsTest {
         final Processor got = getter.apply(component);
         assertThat(got).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) got;
-        assertThat(pipeline.getProcessors()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
+        assertThat(pipeline.next()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
             AsyncProcessorConverterHelper.convert(processor2));
     }
 
