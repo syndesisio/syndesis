@@ -45,6 +45,7 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
       i18nTablesSelected={t('shared:TablesSelected')}
       i18nEmptyTablePreview={t('shared:EmptyTablePreview')}
+      i18nEmptyTablePreviewTitle={t('shared:EmptyTablePreviewTitle')}
       >
         {props.selectedSchemaNodes.map((info, index) => (
           <SelectedConnectionListView
