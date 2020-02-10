@@ -71,7 +71,7 @@ public class ProcessorsTest {
         assertThat(got).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) got;
         assertThat(pipeline.getProcessors()).containsExactly(AsyncProcessorConverterHelper.convert(processor1),
-            AsyncProcessorConverterHelper.convert(processor2), processor3);
+            AsyncProcessorConverterHelper.convert(processor2), AsyncProcessorConverterHelper.convert(processor3));
     }
 
     @Test

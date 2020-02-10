@@ -15,8 +15,10 @@
  */
 package io.syndesis.integration.component.proxy;
 
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
 
@@ -31,13 +33,12 @@ public final class Processors {
 
         if (existing == null) {
             component.setAfterConsumer(processor);
-        } else if (existing instanceof Pipeline) {
-            final Pipeline pipeline = (Pipeline) existing;
-            final Collection<Processor> processors = pipeline.getProcessors();
-            processors.add(processor);
         } else {
-            final Processor pipeline = Pipeline.newInstance(component.getCamelContext(), existing, processor);
-            component.setAfterConsumer(pipeline);
+            final CamelContext camelContext = component.getCamelContext();
+
+            final Processor replacement = replacementPipelineFrom(camelContext, existing, processor);
+
+            component.setAfterConsumer(replacement);
         }
     }
 
@@ -46,13 +47,12 @@ public final class Processors {
 
         if (existing == null) {
             component.setAfterProducer(processor);
-        } else if (existing instanceof Pipeline) {
-            final Pipeline pipeline = (Pipeline) existing;
-            final Collection<Processor> processors = pipeline.getProcessors();
-            processors.add(processor);
         } else {
-            final Processor pipeline = Pipeline.newInstance(component.getCamelContext(), existing, processor);
-            component.setAfterProducer(pipeline);
+            final CamelContext camelContext = component.getCamelContext();
+
+            final Processor replacement = replacementPipelineFrom(camelContext, existing, processor);
+
+            component.setAfterProducer(replacement);
         }
     }
 
@@ -61,13 +61,12 @@ public final class Processors {
 
         if (existing == null) {
             component.setBeforeConsumer(processor);
-        } else if (existing instanceof Pipeline) {
-            final Pipeline pipeline = (Pipeline) existing;
-            final Collection<Processor> processors = pipeline.getProcessors();
-            processors.add(processor);
         } else {
-            final Processor pipeline = Pipeline.newInstance(component.getCamelContext(), existing, processor);
-            component.setBeforeConsumer(pipeline);
+            final CamelContext camelContext = component.getCamelContext();
+
+            final Processor replacement = replacementPipelineFrom(camelContext, existing, processor);
+
+            component.setBeforeConsumer(replacement);
         }
     }
 
@@ -76,14 +75,26 @@ public final class Processors {
 
         if (existing == null) {
             component.setBeforeProducer(processor);
-        } else if (existing instanceof Pipeline) {
-            final Pipeline pipeline = (Pipeline) existing;
-            final Collection<Processor> processors = pipeline.getProcessors();
-            processors.add(processor);
         } else {
-            final Processor pipeline = Pipeline.newInstance(component.getCamelContext(), existing, processor);
-            component.setBeforeProducer(pipeline);
+            final CamelContext camelContext = component.getCamelContext();
+
+            final Processor replacement = replacementPipelineFrom(camelContext, existing, processor);
+
+            component.setBeforeProducer(replacement);
         }
+    }
+
+    static Processor replacementPipelineFrom(final CamelContext camelContext, final Processor existing, final Processor additional) {
+        final Processor replacement;
+        if (existing instanceof Pipeline) {
+            final List<Processor> processors = new ArrayList<>(((Pipeline) existing).getProcessors());
+            processors.add(additional);
+
+            replacement = Pipeline.newInstance(camelContext, processors);
+        } else {
+            replacement = Pipeline.newInstance(camelContext, existing, additional);
+        }
+        return replacement;
     }
 
 }
