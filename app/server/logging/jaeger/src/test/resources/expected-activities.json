@@ -7,29 +7,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122868112077,
+    "at" : 1579122868112,
     "duration" : 34000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122868112249,
+    "at" : 1579122868112,
     "duration" : 224000,
     "messages" : [ "Body: [[Wed Jan 15 21:14:15 UTC 2020 (bjoernstuetz) RT @jroper: 99% of the difficulties of doing SSL in Java would be solved if the JDK supported:\n\n* Parsing PEM encoded private keys\n* Parsin…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122868112560,
+    "at" : 1579122868112,
     "duration" : 1855000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122868112892,
+    "at" : 1579122868112,
     "duration" : 214000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2fyGNEx4SZdkYbOGz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=a27212220954b5d:4ec28f34902d242d:a27212220954b5d:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:15 UTC 2020 (bjoernstuetz) RT @jroper: 99% of the difficulties of doing SSL in Java would be solved if the JDK supported:\n\n* Parsing PEM encoded private keys\n* Parsin…]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122868113178,
+    "at" : 1579122868113,
     "duration" : 936000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122868114171,
+    "at" : 1579122868114,
     "duration" : 239000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -42,29 +42,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122868109462,
+    "at" : 1579122868109,
     "duration" : 47000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122868109732,
+    "at" : 1579122868109,
     "duration" : 362000,
     "messages" : [ "Body: [[Wed Jan 15 21:14:07 UTC 2020 (LlnuxBot) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122868110131,
+    "at" : 1579122868110,
     "duration" : 1824000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122868110467,
+    "at" : 1579122868110,
     "duration" : 253000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2fyDNEx4SZdkYbOBz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=c7be45837ca6814e:19105e2f70645874:c7be45837ca6814e:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:07 UTC 2020 (LlnuxBot) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122868110750,
+    "at" : 1579122868110,
     "duration" : 929000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122868111705,
+    "at" : 1579122868111,
     "duration" : 246000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -77,29 +77,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122848669089,
+    "at" : 1579122848669,
     "duration" : 74000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122848669452,
+    "at" : 1579122848669,
     "duration" : 745000,
     "messages" : [ "Body: [[Wed Jan 15 21:14:03 UTC 2020 (Functionalworks) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #hiring\n\nhttps://t.co/ecVEqyqffP]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122848670267,
+    "at" : 1579122848670,
     "duration" : 4273000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122848671695,
+    "at" : 1579122848671,
     "duration" : 489000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDSNEx4SZdkYbO6z, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=9ab0a09b7c7bf463:248d894d6cec48cb:9ab0a09b7c7bf463:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:03 UTC 2020 (Functionalworks) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #hiring\n\nhttps://t.co/ecVEqyqffP]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122848672253,
+    "at" : 1579122848672,
     "duration" : 1810000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122848674125,
+    "at" : 1579122848674,
     "duration" : 408000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -112,29 +112,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122848663344,
+    "at" : 1579122848663,
     "duration" : 71000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122848664008,
+    "at" : 1579122848664,
     "duration" : 460000,
     "messages" : [ "Body: [[Wed Jan 15 21:14:03 UTC 2020 (workshub) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #jobs\n\nhttps://t.co/atDYOSLTYl]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122848664531,
+    "at" : 1579122848664,
     "duration" : 3997000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122848665214,
+    "at" : 1579122848665,
     "duration" : 646000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDNNEx4SZdkYbO1z, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=aca2a6eb97b29f43:dea0364ef748e93d:aca2a6eb97b29f43:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:14:03 UTC 2020 (workshub) Spotify are HIRING!\n\nThere are millions of tracks on Spotify.\n\n#scala #java #dataengineering #jobs\n\nhttps://t.co/atDYOSLTYl]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122848665975,
+    "at" : 1579122848665,
     "duration" : 1984000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122848668026,
+    "at" : 1579122848668,
     "duration" : 488000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -147,29 +147,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122848653091,
+    "at" : 1579122848653,
     "duration" : 119000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122848653524,
+    "at" : 1579122848653,
     "duration" : 648000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:51 UTC 2020 (amil58317917) I love going to get coffee and meeting at Java House]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122848654226,
+    "at" : 1579122848654,
     "duration" : 8864000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122848658199,
+    "at" : 1579122848658,
     "duration" : 828000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2bDCNEx4SZdkYbNxz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=4beb4c959a821c86:7d8fb2d8194d2110:4beb4c959a821c86:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:51 UTC 2020 (amil58317917) I love going to get coffee and meeting at Java House]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122848659107,
+    "at" : 1579122848659,
     "duration" : 3075000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122848662256,
+    "at" : 1579122848662,
     "duration" : 816000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -182,16 +182,16 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122829196787,
+    "at" : 1579122829196,
     "duration" : 58000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122829197108,
+    "at" : 1579122829197,
     "duration" : 381000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:42 UTC 2020 (cloudhispano) RT @Payara_Fish: Congratulations @netbeans you were our community's #IDE of choice according to our recent survey! There are loads more int…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122829197548,
+    "at" : 1579122829197,
     "duration" : 490000
   } ]
 }, {
@@ -203,29 +203,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122829182145,
+    "at" : 1579122829182,
     "duration" : 1024000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122829183499,
+    "at" : 1579122829183,
     "duration" : 651000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:42 UTC 2020 (wealldotcom) RT @javadevjournal: How Spring Boot can help you to accelerate your application development.\n#Java  #Spring #SpringBoot \nhttps://t.co/CypMR…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122829184203,
+    "at" : 1579122829184,
     "duration" : 12347000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122829184904,
+    "at" : 1579122829184,
     "duration" : 4618000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XSyNEx4SZdkYbNoz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=83e9ac66b4822256:71efabd7a0ff4db8:83e9ac66b4822256:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:42 UTC 2020 (wealldotcom) RT @javadevjournal: How Spring Boot can help you to accelerate your application development.\n#Java  #Spring #SpringBoot \nhttps://t.co/CypMR…]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122829189679,
+    "at" : 1579122829189,
     "duration" : 6324000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122829196074,
+    "at" : 1579122829196,
     "duration" : 455000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -238,29 +238,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122829147526,
+    "at" : 1579122829147,
     "duration" : 54000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122829147852,
+    "at" : 1579122829147,
     "duration" : 12067000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:39 UTC 2020 (OpenGenus) Java does not support Multiple and Multipath inheritance\n\nhttps://t.co/zEicM0zhjE\n\n#computerscience #coding #technology #opengenus #hourofcode]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122829160026,
+    "at" : 1579122829160,
     "duration" : 13029000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122829164431,
+    "at" : 1579122829164,
     "duration" : 657000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XSRNEx4SZdkYbNjz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=3b93eae95ad850a5:d363c544d1a9f65d:3b93eae95ad850a5:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:39 UTC 2020 (OpenGenus) Java does not support Multiple and Multipath inheritance\n\nhttps://t.co/zEicM0zhjE\n\n#computerscience #coding #technology #opengenus #hourofcode]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122829165154,
+    "at" : 1579122829165,
     "duration" : 5973000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122829171207,
+    "at" : 1579122829171,
     "duration" : 1823000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
@@ -273,16 +273,16 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122829142307,
+    "at" : 1579122829142,
     "duration" : 40000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122829142535,
+    "at" : 1579122829142,
     "duration" : 4369000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:33 UTC 2020 (wealldotcom) RT @sevalutus: Merhaba,  Iyzico'daki açık ilanlarımızı sitemizden takip edebilir, bilgi almak için bizlere ulaşabilirsiniz. Linki aşağıya b…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122829146979,
+    "at" : 1579122829146,
     "duration" : 381000
   } ]
 }, {
@@ -294,29 +294,29 @@
   "failed" : false,
   "steps" : [ {
     "id" : "-LyeFZiCxs8Tv9EAwD5s",
-    "at" : 1579122829121474,
+    "at" : 1579122829121,
     "duration" : 95000
   }, {
     "id" : "-LyelD-9xs8Tv9EAwD63",
-    "at" : 1579122829125980,
+    "at" : 1579122829125,
     "duration" : 493000,
     "messages" : [ "Body: [[Wed Jan 15 21:13:29 UTC 2020 (LinuxDreams) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] --- after split" ]
   }, {
     "id" : "-LyeFi1Pxs8Tv9EAwD5t",
-    "at" : 1579122829126527,
+    "at" : 1579122829126,
     "duration" : 15624000
   }, {
     "id" : "-LyeFn4Gxs8Tv9EAwD5t",
-    "at" : 1579122829136674,
+    "at" : 1579122829136,
     "duration" : 488000,
     "messages" : [ "Message Context: [{breadcrumbId=i-Lyf2XS1NEx4SZdkYbNaz, CamelTwitterEventType=STATUS, Syndesis.FLOW_ID=-LyeFWXFxs8Tv9EAwD5s, Syndesis.STEP_ID=-LyeFn4Gxs8Tv9EAwD5t, Syndesis.STEP_SPAN=90906b5cfe4ebf8e:b4db82e22bfe370b:90906b5cfe4ebf8e:1 - -LyeFn4Gxs8Tv9EAwD5t}] Body: [[Wed Jan 15 21:13:29 UTC 2020 (LinuxDreams) RT @advait_me: Helping Beginners #coding #programming #programmer #developer #code #javascript #technology #coder #python #tech #html #…]] after conditional flow" ]
   }, {
     "id" : "-LyeM2B2xs8Tv9EAwD5t",
-    "at" : 1579122829137209,
+    "at" : 1579122829137,
     "duration" : 4480000
   }, {
     "id" : "-LyeFbpgxs8Tv9EAwD5s",
-    "at" : 1579122829141756,
+    "at" : 1579122829141,
     "duration" : 381000,
     "messages" : [ "Body: [[{\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}, {\"first_name\":\"Joe\",\"last_name\":\"Jackson\"}]] final step" ]
   } ]
