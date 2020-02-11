@@ -70,8 +70,5 @@
     "singleQuote": true,
     "semi": true
   },
-  "dependencies": {},
-  "resolutions": {
-    "@patternfly/patternfly": "2.40.6"
-  }
+  "dependencies": {}
 }
