@@ -88,16 +88,25 @@ download_operator_binary() {
     esac
 
     if [[ "${pattern}" != "unknown" ]]; then
-        release_uri="https://api.github.com/repos/syndesisio/syndesis/releases?per_page=1"
         release_tag="$(readopt --tag)"
+        url=""
         if [[ -n "$release_tag" ]]; then
             release_uri="https://api.github.com/repos/syndesisio/syndesis/releases/tags/${release_tag}"
+            url=$(curl -s $release_uri \
+                | grep browser_download_url \
+                | grep ${pattern} \
+                | cut -d '"' -f 4)
+        else
+            # retrieve the last 4 releases and get the latest 2.0 release
+            url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=4" \
+                | grep "download/2" \
+                | grep browser_download_url \
+                | grep ${pattern} \
+                | cut -d '"' -f 4 \
+                | sort -nr \
+                | head -1)
+            release_tag=$(echo $url| awk -F '/' '{print $8}')
         fi
-
-        url=$(curl -s $release_uri \
-            | grep browser_download_url \
-            | grep ${pattern} \
-            | cut -d '"' -f 4)
 
         if $(curl -sL ${url} | tar xz -C $(dirname ${OPERATOR_BINARY})); then
             chmod +x ${OPERATOR_BINARY}
@@ -107,7 +116,7 @@ download_operator_binary() {
         fi
 
         if $(check_operator_binary); then
-            echo "operator binary successfully downloaded"
+            echo "operator binary version $release_tag successfully downloaded"
             return 0
         else
             echo "operator binary download failed. Please try manually downloading from ${url} into $(dirname ${OPERATOR_BINARY})"
