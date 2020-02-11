@@ -53,7 +53,7 @@ crc::run() {
     source "$(basedir)/commands/util/operator_funcs"
 
     release_tag="$(readopt --tag)"
-    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]]; then
+    if [[ $(hasflag -f --force-binary-download) ]] || [[ -n "$release_tag" ]] || [[ $(hasflag --full-reset) ]]; then
         if [[ -f ${OPERATOR_BINARY} ]]; then
             rm ${OPERATOR_BINARY}
         fi
