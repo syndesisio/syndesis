@@ -3,8 +3,6 @@ package backup
 
 import (
 	"context"
-	"io/ioutil"
-	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -41,28 +39,6 @@ func TestBackupInit(t *testing.T) {
 	// Using factory method Backup correctly inited
 	err = b2.SetDelete(true)
 	assert.NoError(t, err)
-}
-
-func TestBackupRun_InvalidDirectory(t *testing.T) {
-	ctx := context.TODO()
-	objs := []runtime.Object{}
-	cl := fake.NewFakeClient(objs...)
-	ns := "syndesis"
-	s, _ := v1beta1.NewSyndesis(ns)
-
-	dirpath, err := ioutil.TempDir("", "foo")
-	assert.NoError(t, err)
-
-	err = os.Chmod(dirpath, 0444)
-	assert.NoError(t, err)
-
-	defer os.RemoveAll(dirpath) // clean up
-
-	b, err := NewBackup(ctx, cl, s, dirpath)
-	assert.NoError(t, err)
-
-	err = b.Run()
-	assert.EqualError(t, err, "mkdir "+dirpath+"/latest: permission denied")
 }
 
 func TestValidate(t *testing.T) {
