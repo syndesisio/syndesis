@@ -13,7 +13,6 @@ an expression that tests the zip code source
 field to determine if it is empty, and if it is empty, 
 inserts `99999` into the zip code target field. 
 
-
 ifeval::["{location}" == "downstream"]
 [IMPORTANT]
 ====
@@ -27,11 +26,9 @@ see link:https://access.redhat.com/support/offerings/techpreview/[].
 ====
 endif::[]
 
-
 The data mapper supports expressions that are similar to a Microsoft 
 Excel expressions, but does not support all Microsoft Excel expression 
-syntax. In this release, a conditional expression cannot refer to a 
-field that is a collection. This is expected to change in a future release.
+syntax. 
 
 You can define zero or one condition for each mapping. 
 
@@ -39,7 +36,6 @@ The following procedure gets you started with applying
 conditions to mappings. As you work with mappings and 
 conditions, you can perform the required steps in the 
 order that is most convenient for you. 
-
 
 .Prerequisites
 
@@ -144,6 +140,11 @@ a transformation to.
 .. If needed, specify input parameters. 
 
 +
+For more information, see 
+link:{LinkFuseOnlineIntegrationGuide}#available-transformations_map[Descriptions of available transformations] and 
+link:{LinkFuseOnlineIntegrationGuide}#about-transformations-on-multiple-source-values_map[About transformations on multiple source values before mapping to one target field].
+
++
 For example, in the same mapping presented in this procedure, in the 
 *Mapping Details* panel, you could apply the `Uppercase`
  transformation to the `firstName` field. You can test this by entering 
@@ -208,6 +209,15 @@ During execution, the data mapper evaluates the `lastName` field.
 ** However, when the third argument is null, if the `lastName` field contains 
 a value, that is, `ISEMPTY(lastName)` returns false, the data mapper does 
 not map anything into the target `customerName` field. 
+
+* `LT(x,y)` or `<(x,y)`
++
+The data mapper evaluates `x` and `y` and returns the lower value. 
+Both `x` and `y` must be numbers. 
+
+* `TOLOWER(string)`
++
+The data mapper converts the specified string to lowercase and returns it. 
 
 .Supported operators in conditional expressions
 
