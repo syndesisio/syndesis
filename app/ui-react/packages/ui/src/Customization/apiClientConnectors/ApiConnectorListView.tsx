@@ -1,7 +1,6 @@
-import { Text, Title } from '@patternfly/react-core';
+import { DataList, Text, Title } from '@patternfly/react-core';
 import {
   EmptyState,
-  ListView,
   OverlayTrigger,
   Tooltip,
 } from 'patternfly-react';
@@ -51,7 +50,7 @@ export class ApiConnectorListView extends React.Component<
           />
         )}
         {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
+          <DataList aria-label={'api connector list'}>{this.props.children}</DataList>
         ) : (
           <EmptyState>
             <EmptyState.Icon />
