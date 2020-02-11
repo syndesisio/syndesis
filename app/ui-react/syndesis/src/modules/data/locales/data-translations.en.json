@@ -103,6 +103,7 @@
   "queryResultsRowCountMsg": "Number of rows: ",
   "queryViewFailed": "Could not query the view. Details: {{details}}",
   "Refresh": "Refresh",
+  "refreshInProgress": "Refresh in progress...",
   "ReplaceDraft": "Replace draft",
   "replaceDraftVirtualizationFailed": "Could not replace draft for the virtualization \"{{name}}\". Details: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Replace draft?",

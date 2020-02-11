@@ -1,7 +1,7 @@
 import {
-  Tooltip
+  Split, SplitItem, Title, Tooltip
 } from '@patternfly/react-core';
-import { Label, ListView, ListViewItem, Spinner } from 'patternfly-react';
+import { Label, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ConnectionStatus } from '../../DvConnection/DvConnectionCard';
@@ -13,6 +13,7 @@ export interface IConnectionSchemaListItemProps {
   dvStatusTooltip: string;
   dvStatus: string;
   haveSelectedSource: boolean;
+  i18nRefreshInProgress: string;
   icon: React.ReactNode;
   loading: boolean;
 }
@@ -32,11 +33,6 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
         leftContent={
           <span>
             {props.icon}
-            {props.loading && props.dvStatus !== ConnectionStatus.ACTIVE ? (
-              <Spinner loading={true} inline={true} />
-            ) : (
-              <></>
-            )}
             <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
               <Label
                 className="connection-schema-list-item__status"
@@ -51,10 +47,23 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
             </Tooltip>
           </span>
         }
+        actions={
+          <Split>
+            <SplitItem>
+              {props.loading ? (
+                <Title size="md">{props.i18nRefreshInProgress}</Title>
+              ) : (
+                <></>
+              )}
+            </SplitItem>
+          </Split>
+        }
         initExpanded={props.haveSelectedSource}
         stacked={false}
       >
-        {props.children ? <ListView>{props.children}</ListView> : null}
+        {props.children && props.dvStatus === ConnectionStatus.ACTIVE ? (
+          <ListView>{props.children}</ListView>
+        ) : null}
       </ListViewItem>
     </>
   );

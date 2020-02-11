@@ -103,6 +103,7 @@
   "queryResultsRowCountMsg": "Numero di righe: ",
   "queryViewFailed": "Impossibile interrogare la vista. Dettagli: {{details}}",
   "Refresh": "Aggiorna",
+  "refreshInProgress": "Aggiorna in corso...",
   "ReplaceDraft": "Sostituisci bozza",
   "replaceDraftVirtualizationFailed": "Impossibile sostituire la bozza per la virtualizzazione \"{{name}}\". Dettagli: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Sostituisci bozza?",
