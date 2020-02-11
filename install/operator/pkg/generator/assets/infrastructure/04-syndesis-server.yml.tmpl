@@ -87,7 +87,11 @@
             value: '{{ .Syndesis.Components.Server.Features.ManagementUrlFor3scale }}'
 {{- if .Syndesis.Addons.Jaeger.Enabled}}
           - name: JAEGER_ENDPOINT
+        {{- if .Syndesis.Addons.Jaeger.CollectorUri}}
+            value: "{{.Syndesis.Addons.Jaeger.CollectorUri}}"
+        {{- else}}
             value: "http://syndesis-jaeger-collector:14268/api/traces"
+        {{- end}}
           - name: JAEGER_SAMPLER_TYPE
             value: "{{.Syndesis.Addons.Jaeger.SamplerType}}"
           - name: JAEGER_SAMPLER_PARAM
