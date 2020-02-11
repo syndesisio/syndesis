@@ -4,6 +4,14 @@
 [id='troubleshooting-data-mapping_{context}']
 = Troubleshooting data mapping
 
+The data mapper displays the largest possible set of source fields that 
+can be provided by the previous integration step. However, not all 
+connections provide data in each displayed source field. For example, 
+a change to a third-party application might discontinue providing data 
+in a particular field. As you create an integration, if you notice that 
+data mapping is not behaving as you expect, ensure that a source field 
+that you want to map contains the data that you expect.
+
 A data shape change that affects a field that is already mapped 
 might prevent the data mapper from loading a document. In this 
 situation, when you try to edit a data mapper step that maps the 
