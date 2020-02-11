@@ -46,6 +46,8 @@ build_operator()
     shift
     local source_gen="$1"
     shift
+    local go_proxy_url="$1"
+    shift
 
     local hasgo=$(go_is_available)
     local hasdocker=$(docker_is_available)
@@ -74,6 +76,7 @@ build_operator()
         echo Building executable with go tooling
         echo ======================================================
         export GO111MODULE=on
+        export GOPROXY="$go_proxy_url"
 
         if [[ ( "$source_gen" == "on" ) || ( "$source_gen" == "verify-none" ) ]]; then
         	echo "generating sources"
@@ -148,6 +151,7 @@ build_operator()
 FROM golang:1.13.7
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
+ENV GOPROXY=$go_proxy_url
 COPY . .
 RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
 RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/syndesis-operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
