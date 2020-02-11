@@ -11,6 +11,12 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.5",
+    "@patternfly/patternfly": "^2.40.6",
+    "@patternfly/react-core": "^3.122.4",
+    "@patternfly/react-icons": "^3.14.18",
+    "@patternfly/react-styles": "^3.6.5",
+    "@patternfly/react-table": "^2.24.17",
+    "@patternfly/react-tokens": "^2.7.5",
     "@types/expect": "^24.3.0",
     "@types/jest": "^24.0.11",
     "@types/mustache": "^3.2.0",

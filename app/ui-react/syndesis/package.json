@@ -12,6 +12,12 @@
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "@craco/craco": "^5.0.2",
+    "@patternfly/patternfly": "^2.40.6",
+    "@patternfly/react-core": "^3.122.4",
+    "@patternfly/react-icons": "^3.14.18",
+    "@patternfly/react-styles": "^3.6.5",
+    "@patternfly/react-table": "^2.24.17",
+    "@patternfly/react-tokens": "^2.7.5",
     "@syndesis/api": "*",
     "@syndesis/apicurio-adapter": "*",
     "@syndesis/atlasmap-adapter": "*",
