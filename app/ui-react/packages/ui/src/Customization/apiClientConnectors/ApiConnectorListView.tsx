@@ -1,6 +1,15 @@
-import { DataList, Text, Title } from '@patternfly/react-core';
 import {
+  Button,
+  DataList,
   EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Text,
+  Title
+} from '@patternfly/react-core';
+import { AddCircleOIcon } from '@patternfly/react-icons';
+import {
   OverlayTrigger,
   Tooltip,
 } from 'patternfly-react';
@@ -52,28 +61,28 @@ export class ApiConnectorListView extends React.Component<
         {this.props.children ? (
           <DataList aria-label={'api connector list'}>{this.props.children}</DataList>
         ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
+          <EmptyState variant={EmptyStateVariant.full}>
+            <EmptyStateIcon icon={AddCircleOIcon} />
+            <Title size={'lg'}>
               {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
-              <OverlayTrigger
-                overlay={this.getCreateConnectorTooltip()}
-                placement="top"
-              >
-                <ButtonLink
-                  data-testid={
-                    'api-connector-list-view-empty-state-create-button'
-                  }
-                  href={this.props.linkCreateApiConnector}
-                  as={'primary'}
-                >
-                  {this.props.i18nLinkCreateApiConnector}
-                </ButtonLink>
-              </OverlayTrigger>
-            </EmptyState.Action>
+            </Title>
+            <EmptyStateBody>{this.props.i18nEmptyStateInfo}</EmptyStateBody>
+            <Tooltip
+              position={'top'}
+              content={
+                <div id={'createTip'}>
+                {this.props.i18nLinkCreateApiConnectorTip
+                    ? this.props.i18nLinkCreateApiConnectorTip
+                    : this.props.i18nLinkCreateApiConnector}
+                </div>
+              }
+            >
+              <Button data-testid={'api-connector-list-view-empty-state-create-button'}
+                      href={this.props.linkCreateApiConnector}
+                      variant={'primary'}>
+                {this.props.i18nLinkCreateApiConnector}
+              </Button>
+            </Tooltip>
           </EmptyState>
         )}
       </PageSection>
