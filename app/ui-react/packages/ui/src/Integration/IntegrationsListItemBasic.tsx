@@ -1,34 +1,48 @@
+import {
+  DataListCell,
+  DataListCheck,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+} from '@patternfly/react-core';
 import classnames from 'classnames';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../helpers';
 
 export interface IIntegrationsListItemBasicProps {
-  integrationName: string;
-  checkboxComponent?: React.ReactNode;
   additionalInfo: string;
   className?: string;
+
+  integrationName: string;
+  isChecked: (name: string) => boolean;
+  onCheck: (checked: boolean, name: string) => void;
 }
 
-export class IntegrationsListItemBasic extends React.Component<
-  IIntegrationsListItemBasicProps
-> {
-  public render() {
-    const {
-      className,
-      checkboxComponent,
-      integrationName,
-      additionalInfo,
-    } = this.props;
-    return (
-      <ListView.Item
-        className={classnames('', className)}
-        checkboxInput={checkboxComponent || undefined}
-        heading={integrationName}
-        additionalInfo={[
-          <ListView.InfoItem key={1}>{additionalInfo}</ListView.InfoItem>,
-        ]}
-        stacked={true}
-      />
-    );
-  }
-}
+export const IntegrationsListItemBasic: React.FunctionComponent<IIntegrationsListItemBasicProps> = ({
+  additionalInfo,
+  className,
+  integrationName,
+  isChecked,
+  onCheck,
+}) => {
+  const id = `data-list-item-${toValidHtmlId(integrationName)}`;
+  return (
+    <DataListItem aria-labelledby={id} className={classnames('', className)}>
+      <DataListItemRow>
+        <DataListCheck
+          checked={isChecked(integrationName)}
+          aria-labelledby={id}
+          onChange={(checked, event) => onCheck(checked, integrationName)}
+        />
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key={0}>
+              <span id={id}>{integrationName}</span>
+            </DataListCell>,
+            <DataListCell key={1}>{additionalInfo}</DataListCell>,
+          ]}
+        />
+      </DataListItemRow>
+    </DataListItem>
+  );
+};
