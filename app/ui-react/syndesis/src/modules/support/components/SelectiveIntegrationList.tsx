@@ -13,11 +13,13 @@ import i18n from '../../../i18n';
 
 export interface ISelectiveIntegrationListProps {
   data: any;
-  onIntegrationChecked(event: React.ChangeEvent<HTMLInputElement>): void;
+  isChecked(name: string): boolean;
+  onIntegrationChecked(checked: boolean, name: string): void;
 }
 
 export const SelectiveIntegrationList: React.FunctionComponent<ISelectiveIntegrationListProps> = ({
   data,
+  isChecked,
   onIntegrationChecked,
   children,
 }) => {
@@ -102,17 +104,8 @@ export const SelectiveIntegrationList: React.FunctionComponent<ISelectiveIntegra
                         key={`${si.updatedAt}-${si.name.split(' ').join('-')}`}
                         additionalInfo={si.description || ''}
                         integrationName={si.name}
-                        checkboxComponent={
-                          <input
-                            aria-label={`${si.name}`}
-                            data-testid={
-                              'selective-integration-list-integrations-input'
-                            }
-                            type="checkbox"
-                            defaultValue={si.name}
-                            onChange={event => onIntegrationChecked(event)}
-                          />
-                        }
+                        isChecked={isChecked}
+                        onCheck={onIntegrationChecked}
                       />
                     );
                   }
