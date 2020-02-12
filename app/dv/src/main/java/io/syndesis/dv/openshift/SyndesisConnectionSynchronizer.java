@@ -17,8 +17,7 @@ package io.syndesis.dv.openshift;
 
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import javax.sql.DataSource;
 
@@ -33,6 +32,7 @@ import io.syndesis.dv.KException;
 import io.syndesis.dv.RepositoryManager;
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
 import io.syndesis.dv.metadata.TeiidDataSource;
+import io.syndesis.dv.model.SourceSchema;
 import io.syndesis.dv.openshift.SyndesisConnectionMonitor.EventMsg;
 import io.syndesis.dv.server.endpoint.MetadataService;
 import io.syndesis.dv.server.endpoint.MetadataService.SourceDeploymentMode;
@@ -86,19 +86,27 @@ public class SyndesisConnectionSynchronizer {
         synchronizeConnections(update, dataSources);
     }
 
-    public void synchronizeConnections(boolean update,
-            Collection<DefaultSyndesisDataSource> dataSources)
+    public void synchronizeConnections(boolean update, Collection<DefaultSyndesisDataSource> dataSources)
             throws KException {
-        Map<String, ? extends TeiidDataSource> existing = openshiftClient
-                .getDataSources().stream().collect(Collectors.toMap(TeiidDataSource::getSyndesisId, ds->{return ds;}));
 
+        List<String> existingSchemas = this.repositoryManager.findAllSourceIds();
         for (DefaultSyndesisDataSource sds : dataSources) {
-            existing.remove(sds.getSyndesisConnectionId());
+            existingSchemas.remove(sds.getSyndesisConnectionId());
             addConnection(sds, update);
         }
 
-        for (TeiidDataSource removed : existing.values()) {
-            handleDeleteConnection(removed.getSyndesisId());
+        if (update) {
+            // for these there are no syndesis connection
+            for (String removed : existingSchemas) {
+                SourceSchema schema = this.repositoryManager.findSchemaBySourceId(removed);
+                if (schema != null) {
+                    deleteConnectionSchema(removed, schema.getName());
+                }
+            }
+        } else {
+            for (String removed : existingSchemas) {
+                handleDeleteConnection(removed);
+            }
         }
     }
 
@@ -164,29 +172,29 @@ public class SyndesisConnectionSynchronizer {
         }
     }
 
-	private void validateConnection(DefaultSyndesisDataSource sds) throws Exception {
-		for (TeiidDataSource tds : this.openshiftClient.getDataSources()) {
-			LOGGER.warn("data sources" + tds.getSyndesisId() +"="+sds.getSyndesisConnectionId() + ", " + sds.getSyndesisName());
-			if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
-				Object obj = tds.getConnectionFactory();
-				if (obj instanceof BaseConnectionFactory) {
-					BaseConnection conn = (BaseConnection)((BaseConnectionFactory<?>)obj).getConnection();
-					if (conn != null) {
-						conn.close();
-					}
-				} else {
-					Connection conn = ((DataSource)obj).getConnection();
-					if (conn != null) {
-						conn.close();
-					}
-				}
-			}
-		}
-	}
+    private void validateConnection(DefaultSyndesisDataSource sds) throws Exception {
+        for (TeiidDataSource tds : this.metadataService.getTeiidDatasources()) {
+            LOGGER.warn("data sources" + tds.getSyndesisId() +"="+sds.getSyndesisConnectionId() + ", " + sds.getSyndesisName());
+            if (tds.getSyndesisId().contentEquals(sds.getSyndesisConnectionId())){
+                Object obj = tds.getConnectionFactory();
+                if (obj instanceof BaseConnectionFactory) {
+                    BaseConnection conn = (BaseConnection)((BaseConnectionFactory<?>)obj).getConnection();
+                    if (conn != null) {
+                        conn.close();
+                    }
+                } else {
+                    Connection conn = ((DataSource)obj).getConnection();
+                    if (conn != null) {
+                        conn.close();
+                    }
+                }
+            }
+        }
+    }
 
     public void deleteConnection(DefaultSyndesisDataSource dsd) throws KException {
         try {
-            if (this.metadataService.deleteSchema(dsd)) {
+            if (this.metadataService.deleteSchema(dsd.getSyndesisConnectionId(), dsd.getTeiidName())) {
                 LOGGER.info("Workspace schema " + dsd.getTeiidName() + " deleted.");
             } // else already deleted
         } catch (Exception e) {
@@ -197,4 +205,13 @@ public class SyndesisConnectionSynchronizer {
         LOGGER.info("Connection deleted " + dsd.getSyndesisName());
     }
 
+    public void deleteConnectionSchema(String sourceId, String teiidDatasourceName) throws KException {
+        try {
+            if (this.metadataService.deleteSchema(sourceId, teiidDatasourceName)) {
+                LOGGER.info("Workspace schema " + teiidDatasourceName + " deleted.");
+            } // else already deleted
+        } catch (Exception e) {
+            LOGGER.info("Failed to delete schema " + teiidDatasourceName, e);
+        }
+    }
 }
