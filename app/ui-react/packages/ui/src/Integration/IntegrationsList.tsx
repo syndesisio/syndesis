@@ -1,8 +1,10 @@
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import * as React from 'react';
 
-export class IntegrationsList extends React.Component<{}> {
-  public render() {
-    return <ListView>{this.props.children}</ListView>;
-  }
+export interface IIntegrationsListProps {
+  i18nAriaLabel: string;
 }
+export const IntegrationsList: React.FunctionComponent<IIntegrationsListProps> = ({
+  i18nAriaLabel,
+  children,
+}) => <DataList aria-label={i18nAriaLabel}>{children}</DataList>;

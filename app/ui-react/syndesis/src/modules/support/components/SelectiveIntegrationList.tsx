@@ -9,15 +9,18 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
+import i18n from '../../../i18n';
 
 export interface ISelectiveIntegrationListProps {
   data: any;
   onIntegrationChecked(event: React.ChangeEvent<HTMLInputElement>): void;
 }
 
-export const SelectiveIntegrationList: React.FunctionComponent<
-  ISelectiveIntegrationListProps
-> = ({ data, onIntegrationChecked, children }) => {
+export const SelectiveIntegrationList: React.FunctionComponent<ISelectiveIntegrationListProps> = ({
+  data,
+  onIntegrationChecked,
+  children,
+}) => {
   const filterByName = {
     filterType: 'text',
     id: 'name',
@@ -86,11 +89,11 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                 filterTypes={filterTypes}
                 sortTypes={sortTypes}
                 resultsCount={filteredAndSortedIntegrations.length}
-                i18nResultsCount={`${
-                  filteredAndSortedIntegrations.length
-                } Results`}
+                i18nResultsCount={`${filteredAndSortedIntegrations.length} Results`}
               />
-              <IntegrationsList>
+              <IntegrationsList
+                i18nAriaLabel={i18n.t('integrations:IntegrationsListAriaLabel')}
+              >
                 {filteredAndSortedIntegrations.map(
                   (si: IntegrationOverview) => {
                     return (
