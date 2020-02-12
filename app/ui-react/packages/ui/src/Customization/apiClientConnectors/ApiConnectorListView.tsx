@@ -31,25 +31,12 @@ export class ApiConnectorListView extends React.Component<
     return (
       <PageSection>
         <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <Tooltip
-              position={'top'}
-              content={
-                this.props.i18nLinkCreateApiConnectorTip
-                  ? this.props.i18nLinkCreateApiConnectorTip
-                  : this.props.i18nLinkCreateApiConnector
-              }
-              enableFlip={true}
-            >
-              <>
-                <br/>
-                <ButtonLink data-testid={'api-connector-list-view-create-button'}
-                            href={this.props.linkCreateApiConnector}
-                            as={'primary'}>
-                  {this.props.i18nLinkCreateApiConnector}
-                </ButtonLink>
-              </>
-            </Tooltip>
+          <div className={'form-group'}>
+            <ButtonLink data-testid={'api-connector-list-view-create-button'}
+                        href={this.props.linkCreateApiConnector}
+                        as={'primary'}>
+              {this.props.i18nLinkCreateApiConnector}
+            </ButtonLink>
           </div>
         </ListViewToolbar>
         {this.props.i18nTitle !== '' && (
