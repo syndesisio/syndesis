@@ -18,7 +18,6 @@ package io.syndesis.connector.mongo;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.model.CreateCollectionOptions;
@@ -28,8 +27,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -44,40 +41,32 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
     protected MongoCollection<Document> collection;
 
+    @Override
+    protected List<Step> createSteps() {
+        List<Step> steps = fromMongoTailToMock("result",
+            "io.syndesis.connector:connector-mongodb-consumer-tail",
+            DATABASE,
+            COLLECTION,
+            COLLECTION_TRACKING_FIELD, true, "idTracker",
+            DATABASE, COLLECTION_TRACKING, COLLECTION_TRACKING_FIELD);
+        return steps;
+    }
+
     // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION, opts);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION, opts);
         LOG.debug("Created a capped collection named {}", COLLECTION);
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION_TRACKING);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION_TRACKING);
         LOG.debug("Created a tracking collection named {}", COLLECTION_TRACKING);
     }
 
-    /**
-     * The test will be interrupted and we do expect to have the valid tracked stored before completion
-     */
-    @AfterClass
-    public static void testTrackingIdValue() {
-        List<Document> docsFound = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
-        assertEquals(25, (int) docsFound.get(0).getInteger(COLLECTION_TRACKING_FIELD));
-    }
-
-    @Before
-    public void init(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
-    }
-
-    @Override
-    protected List<Step> createSteps() {
-        return fromMongoTailToMock("result", "io.syndesis.connector:connector-mongodb-consumer-tail", DATABASE, COLLECTION,
-            COLLECTION_TRACKING_FIELD, true, "idTracker",
-            DATABASE, COLLECTION_TRACKING, COLLECTION_TRACKING_FIELD);
-    }
 
     @Test
     public void mongoTest() throws Exception {
+        collection = EmbedMongoConfiguration.getDB().getCollection(COLLECTION);
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
         // We just retain last message
@@ -112,5 +101,9 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
         // Then
         mock.assertIsSatisfied();
+
+        List<Document> docsFound =
+            EmbedMongoConfiguration.getDB().getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
+        assertEquals(25, (int) docsFound.get(0).getInteger(COLLECTION_TRACKING_FIELD));
     }
 }

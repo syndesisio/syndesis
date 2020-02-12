@@ -19,8 +19,11 @@ import java.util.Map;
 
 import static org.apache.camel.util.CastUtils.cast;
 
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientURI;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
@@ -49,13 +52,25 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
         MongoCustomizersUtil.replaceAdminDBIfMissing(options);
         // Set connection parameter
         if (!options.containsKey("mongoConnection")) {
-            if (options.containsKey("user") && options.containsKey("password") && options.containsKey("host")) {
+            if (options.containsKey("user") && options.containsKey("password")
+                    && options.containsKey("host")) {
                 ConnectionParamsConfiguration mongoConf = new ConnectionParamsConfiguration(cast(options));
                 // We need to force consumption in order to perform property placeholder done by Camel
                 consumeOption(camelContext, options, "password", String.class, mongoConf::setPassword);
                 LOGGER.debug("Creating and registering a client connection to {}", mongoConf);
-                MongoClientURI mongoClientURI = new MongoClientURI(mongoConf.getMongoClientURI());
-                MongoClient mongoClient = new MongoClient(mongoClientURI);
+
+                MongoClientSettings.Builder settings = MongoClientSettings.builder();
+                MongoCredential credentials = MongoCredential.createCredential(
+                    mongoConf.getUser(),
+                    mongoConf.getAdminDB(),
+                    mongoConf.getPassword().toCharArray());
+
+                ConnectionString uri = new ConnectionString(mongoConf.getMongoClientURI());
+                settings.applyConnectionString(uri);
+                settings.credential(credentials);
+
+                MongoClient mongoClient = MongoClients.create(settings.build());
+
                 options.put("mongoConnection", mongoClient);
                 if (!options.containsKey("connectionBean")) {
                     //We safely put a default name instead of leaving null
@@ -63,7 +78,8 @@ public class MongoClientCustomizer implements ComponentProxyCustomizer, CamelCon
                 }
             } else {
                 LOGGER.warn(
-                    "Not enough information provided to set-up the MongoDB client. Required at least host, user and password.");
+                    "Not enough information provided to set-up the MongoDB client. Required at least host, user and " +
+                        "password.");
             }
         }
     }

@@ -17,9 +17,9 @@ package io.syndesis.connector.mongo;
 
 import java.io.IOException;
 import java.util.List;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.apache.camel.Exchange;
@@ -27,11 +27,11 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTestSupport {
 
@@ -40,19 +40,17 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     protected MongoCollection<Document> collection;
 
+    @Autowired
+    private MongoDatabase database;
+
     @BeforeClass
-    public static void doCollectionSetup() {
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION);
+    public static void before() {
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION);
         LOG.debug("Created a change stream collection named {}", COLLECTION);
     }
 
-    @Before
-    public void before(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
-    }
-
     @After
-    public void after(){
+    public void after() {
         collection.drop();
     }
 
@@ -63,6 +61,7 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     @Test
     public void singleInsertTest() throws Exception {
+        collection = database.getCollection(COLLECTION);
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
         mock.setRetainLast(1);

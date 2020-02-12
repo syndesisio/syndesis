@@ -4,7 +4,7 @@
       "actionType": "connector",
       "description": "Find documents",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "findAll"
         },
@@ -65,7 +65,7 @@
       "actionType": "connector",
       "description": "Insert documents",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "insert"
         },
@@ -111,7 +111,7 @@
       "actionType": "connector",
       "description": "Update or insert documents",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "save"
         },
@@ -175,7 +175,7 @@
       "actionType": "connector",
       "description": "Update documents",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "update"
         },
@@ -252,7 +252,7 @@
       "actionType": "connector",
       "description": "Delete a document",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "remove"
         },
@@ -316,7 +316,7 @@
       "actionType": "connector",
       "description": "Count the number of documents",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "operation": "count"
         },
@@ -380,7 +380,7 @@
       "actionType": "connector",
       "description": "Document tailing",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "consumerType": "tailable"
         },
@@ -504,7 +504,7 @@
       "actionType": "connector",
       "description": "Document change stream",
       "descriptor": {
-        "componentScheme": "mongodb3",
+        "componentScheme": "mongodb",
         "configuredProperties": {
           "consumerType": "changeStreams"
         },
@@ -559,7 +559,7 @@
   ],
   "description": "Read and writes JSON-like documents.",
   "icon": "assets:mongodb.png",
-  "id": "mongodb3",
+  "id": "mongodb",
   "name": "MongoDB",
   "properties": {
     "host": {

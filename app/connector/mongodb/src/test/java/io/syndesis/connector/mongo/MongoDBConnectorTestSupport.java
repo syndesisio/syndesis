@@ -17,13 +17,19 @@ package io.syndesis.connector.mongo;
 
 import java.util.Arrays;
 import java.util.List;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+import org.apache.camel.test.spring.CamelSpringDelegatingTestContextLoader;
+import org.apache.camel.test.spring.CamelSpringJUnit4ClassRunner;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
 
+@RunWith(CamelSpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {EmbedMongoConfiguration.class},
+    loader = CamelSpringDelegatingTestContextLoader.class)
 public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
 
     protected static final ObjectMapper MAPPER = new ObjectMapper();
@@ -42,7 +48,7 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
                                            String filter, String updateExession) {
         return Arrays.asList(
             newSimpleEndpointStep("direct", builder -> builder.putConfiguredProperty("name", directStart)),
-            newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
+            newEndpointStep("mongodb", connector, nop(Connection.Builder.class), builder -> {
                 builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
                 builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
                 builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
@@ -69,34 +75,34 @@ public abstract class MongoDBConnectorTestSupport extends ConnectorTestSupport {
     protected List<Step> fromMongoTailToMock(String mock, String connector, String db, String collection,
                                              String tailTrackIncreasingField, Boolean persistentTailTracking, String persistentId,
                                              String tailTrackDb, String tailTrackCollection, String tailTrackField) {
-        return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
-            builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
-            builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
-            builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
-            builder.putConfiguredProperty("adminDB", EmbedMongoConfiguration.ADMIN_DB);
-            builder.putConfiguredProperty("database", db);
-            builder.putConfiguredProperty("collection", collection);
-            builder.putConfiguredProperty("tailTrackIncreasingField", tailTrackIncreasingField);
-            if (persistentTailTracking != null) {
-                builder.putConfiguredProperty("persistentTailTracking", persistentTailTracking.toString());
-            }
-            if (persistentId != null) {
-                builder.putConfiguredProperty("persistentId", persistentId);
-            }
-            if (tailTrackDb != null) {
-                builder.putConfiguredProperty("tailTrackDb", tailTrackDb);
-            }
-            if (tailTrackCollection != null) {
-                builder.putConfiguredProperty("tailTrackCollection", tailTrackCollection);
-            }
-            if (tailTrackField != null) {
-                builder.putConfiguredProperty("tailTrackField", tailTrackField);
-            }
-        }), newSimpleEndpointStep("mock", builder -> builder.putConfiguredProperty("name", mock)));
+        return Arrays.asList(newEndpointStep("mongodb", connector, nop(Connection.Builder.class), builder -> {
+                builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
+                builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
+                builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
+                builder.putConfiguredProperty("adminDB", EmbedMongoConfiguration.ADMIN_DB);
+                builder.putConfiguredProperty("database", db);
+                builder.putConfiguredProperty("collection", collection);
+                builder.putConfiguredProperty("tailTrackIncreasingField", tailTrackIncreasingField);
+                if (persistentTailTracking != null) {
+                    builder.putConfiguredProperty("persistentTailTracking", persistentTailTracking.toString());
+                }
+                if (persistentId != null) {
+                    builder.putConfiguredProperty("persistentId", persistentId);
+                }
+                if (tailTrackDb != null) {
+                    builder.putConfiguredProperty("tailTrackDb", tailTrackDb);
+                }
+                if (tailTrackCollection != null) {
+                    builder.putConfiguredProperty("tailTrackCollection", tailTrackCollection);
+                }
+                if (tailTrackField != null) {
+                    builder.putConfiguredProperty("tailTrackField", tailTrackField);
+                }
+            }), newSimpleEndpointStep("mock", builder -> builder.putConfiguredProperty("name", mock)));
     }
 
     protected List<Step> fromMongoChangeStreamToMock(String mock, String connector, String db, String collection) {
-        return Arrays.asList(newEndpointStep("mongodb3", connector, nop(Connection.Builder.class), builder -> {
+        return Arrays.asList(newEndpointStep("mongodb", connector, nop(Connection.Builder.class), builder -> {
             builder.putConfiguredProperty("host", String.format("%s:%s", EmbedMongoConfiguration.HOST, EmbedMongoConfiguration.PORT));
             builder.putConfiguredProperty("user", EmbedMongoConfiguration.USER);
             builder.putConfiguredProperty("password", EmbedMongoConfiguration.PASSWORD);
