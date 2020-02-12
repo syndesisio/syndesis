@@ -44,6 +44,7 @@
   "ImportUploadFailedAlertMessage": "<span>File <strong>'{{fileName}}'</strong> could not be uploaded</span>.",
   "ImportUploadFailedMessage": "Upload failed for {{fileName}}.",
   "ImportUploadSuccessMessage": "Successfully imported {{fileName}}.",
+  "IntegrationsListAriaLabel": "Integrations",
   "PublishingIntegrationMessage": "Starting integration. Your integration will start running in a few moments.",
   "UnpublishingIntegrationMessage": "Stopping integration. It takes a few moments to stop the integration.",
   "DeletingIntegrationMessage": "Deleting integration.  It takes a few moments to delete the integration.",
