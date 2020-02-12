@@ -102,7 +102,7 @@
           {{- if .DevSupport}}
           name: syndesis-operator:latest
           {{else}}
-          syndesis-operator:{{.Tag}}
+          name: syndesis-operator:{{.Tag}}
           {{- end}}
       type: ImageChange
     - type: ConfigChange
