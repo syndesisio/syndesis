@@ -1,7 +1,16 @@
-import { Card, CardBody, CardFooter, CardHeader, Form, Title } from '@patternfly/react-core';
-import { Alert, Button } from 'patternfly-react';
+import {
+  Alert,
+  Button,
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  Form,
+  Title,
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';
+import { ERROR, WARNING } from '../Shared/models';
 import './ConnectionDetailsForm.css';
 
 export interface IConnectionDetailsValidationResult {
@@ -77,85 +86,90 @@ export interface IConnectionDetailsFormProps {
   onStartEditing: () => void;
 }
 
-export class ConnectionDetailsForm extends React.Component<
-  IConnectionDetailsFormProps
-> {
-  public static defaultProps = {
-    validationResults: [],
-  };
-
-  public render() {
-    return (
-      <PageSection>
-        <Container>
-          <div className="row row-cards-pf">
-            <Card>
-              <CardHeader>
-                <Title size="2xl">{this.props.i18nTitle}</Title>
-              </CardHeader>
-              <CardBody>
-                <Form
-                  isHorizontal={true}
-                  data-testid={'connection-details-form'}
-                  onSubmit={this.props.handleSubmit}
-                >
-                  {this.props.validationResults.map((e, idx) => (
-                    <Alert key={idx} type={e.type}>
-                      {e.message}
-                    </Alert>
-                  ))}
-                  {this.props.children}
-                  <div>
-                    {this.props.isEditing ? (
-                      <Button
-                        data-testid={'connection-details-form-validate-button'}
-                        bsStyle="default"
-                        disabled={this.props.isWorking || !this.props.isValid}
-                        onClick={this.props.onValidate}
-                      >
-                        {this.props.isWorking ? (
-                          <Loader size={'sm'} inline={true} />
-                        ) : null}
-                        {this.props.i18nValidateLabel}
-                      </Button>
-                    ) : (
-                      <Button
-                        data-testid={'connection-details-form-edit-button'}
-                        bsStyle="primary"
-                        onClick={this.props.onStartEditing}
-                      >
-                        {this.props.i18nEditLabel}
-                      </Button>
-                    )}
-                  </div>
-                </Form>
-              </CardBody>
-              {this.props.isEditing ? (
-                <CardFooter>
+export const ConnectionDetailsForm: React.FunctionComponent<IConnectionDetailsFormProps> = ({
+  children,
+  i18nCancelLabel,
+  i18nEditLabel,
+  i18nSaveLabel,
+  i18nTitle,
+  i18nValidateLabel,
+  isValid,
+  isWorking,
+  validationResults,
+  handleSubmit,
+  onValidate,
+  isEditing,
+  onCancelEditing,
+  onStartEditing,
+}) => (
+  <PageSection>
+    <Container>
+      <div className="row row-cards-pf">
+        <Card>
+          <CardHeader>
+            <Title size="2xl">{i18nTitle}</Title>
+          </CardHeader>
+          <CardBody>
+            <Form
+              isHorizontal={true}
+              data-testid={'connection-details-form'}
+              onSubmit={handleSubmit}
+            >
+              {validationResults.map((e, idx) => (
+                <Alert
+                  title={e.message}
+                  key={idx}
+                  type={e.type === ERROR ? WARNING : e.type}
+                />
+              ))}
+              {children}
+              <div>
+                {isEditing ? (
                   <Button
-                    data-testid={'connection-details-form-cancel-button'}
-                    bsStyle="default"
-                    className="connection-details-form__editButton"
-                    disabled={this.props.isWorking}
-                    onClick={this.props.onCancelEditing}
+                    data-testid={'connection-details-form-validate-button'}
+                    variant="secondary"
+                    disabled={isWorking || !isValid}
+                    onClick={onValidate}
                   >
-                    {this.props.i18nCancelLabel}
+                    {isWorking ? <Loader size={'sm'} inline={true} /> : null}
+                    {i18nValidateLabel}
                   </Button>
+                ) : (
                   <Button
-                    data-testid={'connection-details-form-save-button'}
-                    bsStyle="primary"
-                    className="connection-details-form__editButton"
-                    disabled={this.props.isWorking || !this.props.isValid}
-                    onClick={this.props.handleSubmit}
+                    data-testid={'connection-details-form-edit-button'}
+                    variant="primary"
+                    onClick={onStartEditing}
                   >
-                    {this.props.i18nSaveLabel}
+                    {i18nEditLabel}
                   </Button>
-                </CardFooter>
-              ) : null}
-            </Card>
-          </div>
-        </Container>
-      </PageSection>
-    );
-  }
-}
+                )}
+              </div>
+            </Form>
+          </CardBody>
+          {isEditing && (
+            <CardFooter>
+              <Button
+                data-testid={'connection-details-form-cancel-button'}
+                variant="secondary"
+                className="connection-details-form__editButton"
+                disabled={isWorking}
+                onClick={onCancelEditing}
+              >
+                {i18nCancelLabel}
+              </Button>
+              <Button
+                data-testid={'connection-details-form-save-button'}
+                variant="primary"
+                className="connection-details-form__editButton"
+                disabled={isWorking || !isValid}
+                onClick={handleSubmit}
+              >
+                {i18nSaveLabel}
+              </Button>
+            </CardFooter>
+          )}
+        </Card>
+      </div>
+    </Container>
+  </PageSection>
+);
