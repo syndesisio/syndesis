@@ -99,6 +99,10 @@
         - syndesis-operator
         from:
           kind: ImageStreamTag
-          name: syndesis-operator:{{.Tag}}
+          {{- if .DevSupport}}
+          name: syndesis-operator:latest
+          {{else}}
+          syndesis-operator:{{.Tag}}
+          {{- end}}
       type: ImageChange
     - type: ConfigChange
