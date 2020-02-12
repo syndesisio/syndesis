@@ -28,7 +28,7 @@ endif::[]
 
 The data mapper supports expressions that are similar to a Microsoft 
 Excel expressions, but does not support all Microsoft Excel expression 
-syntax. 
+syntax. A conditional expression can refer to an individual field or to a field that is in a collection.
 
 You can define zero or one condition for each mapping. 
 
