@@ -1,0 +1,11 @@
+.api-connector-list-item .api-connector-list-item__icon-wrapper {
+  width: 7em;
+}
+
+.api-connector-list-item .api-connector-list-item__text-wrapper {
+  margin-top: 7px;
+}
+
+.api-connector-list-item .api-connector-list-item__used-by {
+  margin-top: 16px;
+}

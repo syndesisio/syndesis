@@ -1,11 +1,11 @@
 import * as H from '@syndesis/history';
 import {
-  Button,
-  ListViewInfoItem,
-  ListViewItem,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
@@ -14,6 +14,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import './ApiConnectorListItem.css';
 
 export interface IApiConnectorListItemProps {
   apiConnectorDescription?: string;
@@ -68,26 +69,6 @@ export class ApiConnectorListItem extends React.Component<
     this.props.onDelete(this.props.apiConnectorId);
   }
 
-  public getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  public getDetailsTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.i18nDetailsTip
-          ? this.props.i18nDetailsTip
-          : this.props.i18nDetails}
-      </Tooltip>
-    );
-  }
-
   public showDeleteDialog() {
     this.setState({
       showDeleteDialog: true,
@@ -108,61 +89,63 @@ export class ApiConnectorListItem extends React.Component<
           onCancel={this.doCancel}
           onConfirm={this.doDelete}
         />
-        <ListViewItem
-          data-testid={`api-connector-list-item-${toValidHtmlId(
-            this.props.apiConnectorName
-          )}-list-item`}
-          actions={
-            <>
-              <OverlayTrigger
-                overlay={this.getDetailsTooltip()}
-                placement="top"
+        <DataListItem aria-labelledby={'single-action-item1'}
+                      data-testid={`api-connector-list-item-${toValidHtmlId(this.props.apiConnectorName)}-list-item`}
+                      className={'api-connector-list-item'}
+        >
+          <DataListItemRow>
+            <DataListItemCells
+              dataListCells={[
+                <DataListCell width={1} key={0}>
+                  {this.props.apiConnectorIcon ? (
+                    <div className={'api-connector-list-item__icon-wrapper'}>
+                      <img
+                        src={this.props.apiConnectorIcon}
+                        alt={this.props.apiConnectorName}
+                        width={46}
+                      />
+                    </div>
+                  ) : null}
+                </DataListCell>,
+                <DataListCell key={'primary content'} width={4}>
+                  <div className={'api-connector-list-item__text-wrapper'}>
+                    <b>{this.props.apiConnectorName}</b><br/>
+                    {
+                      this.props.apiConnectorDescription
+                        ? this.props.apiConnectorDescription
+                        : ''
+                    }
+                  </div>
+                </DataListCell>,
+                <DataListCell key={'secondary content'} width={4}>
+                  <div className={'api-connector-list-item__used-by'}>
+                    {this.props.i18nUsedByMessage}
+                  </div>
+                </DataListCell>
+              ]}
+            />
+            <DataListAction
+              aria-labelledby={'single-action-item1 single-action-action1'}
+              id={'single-action-action1'}
+              aria-label={'Actions'}
+            >
+              <ButtonLink
+                data-testid={'api-connector-list-item-details-button'}
+                href={this.props.detailsPageLink}
+                as={'default'}
               >
-                <ButtonLink
-                  data-testid={'api-connector-list-item-details-button'}
-                  href={this.props.detailsPageLink}
-                  as={'default'}
-                >
-                  {this.props.i18nDetails}
-                </ButtonLink>
-              </OverlayTrigger>
-              <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
-                <Button
-                  data-testid={'api-connector-list-item-delete-button'}
-                  bsStyle="default"
-                  disabled={this.props.usedBy !== 0}
-                  onClick={this.showDeleteDialog}
-                >
-                  {this.props.i18nDelete}
-                </Button>
-              </OverlayTrigger>
-            </>
-          }
-          additionalInfo={[
-            <ListViewInfoItem key={1}>
-              {this.props.i18nUsedByMessage}
-            </ListViewInfoItem>,
-          ]}
-          description={
-            this.props.apiConnectorDescription
-              ? this.props.apiConnectorDescription
-              : ''
-          }
-          heading={this.props.apiConnectorName}
-          hideCloseIcon={true}
-          leftContent={
-            this.props.apiConnectorIcon ? (
-              <div className="blank-slate-pf-icon">
-                <img
-                  src={this.props.apiConnectorIcon}
-                  alt={this.props.apiConnectorName}
-                  width={46}
-                />
-              </div>
-            ) : null
-          }
-          stacked={true}
-        />
+                {this.props.i18nDetails}
+              </ButtonLink>
+              <ButtonLink
+                data-testid={'api-connector-list-item-delete-button'}
+                disabled={this.props.usedBy !== 0}
+                onClick={this.showDeleteDialog}
+              >
+                {this.props.i18nDelete}
+              </ButtonLink>
+            </DataListAction>
+          </DataListItemRow>
+        </DataListItem>
       </>
     );
   }
