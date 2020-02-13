@@ -13,7 +13,7 @@ import {
   IConfigurationProperty,
   IConnectionOverview,
 } from '@syndesis/models';
-import { PageSection, PageSectionLoader } from '@syndesis/ui';
+import { PageLoader, PageSection } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import resolvers from '../../../../connections/resolvers';
@@ -129,9 +129,7 @@ function applyErrorKeysToForm(action: Action, errorKeys: ErrorKey[]) {
  * @see [moreConfigurationSteps]{@link IWithConfigurationFormProps#moreConfigurationSteps}
  * @see [values]{@link IWithConfigurationFormProps#values}
  */
-export const WithConfigurationForm: React.FunctionComponent<
-  IWithConfigurationFormProps
-> = props => {
+export const WithConfigurationForm: React.FunctionComponent<IWithConfigurationFormProps> = props => {
   // Use the action configuration that was set on the step, otherwise find it in the connection definition
   const action =
     props.oldAction ||
@@ -169,7 +167,7 @@ export const WithConfigurationForm: React.FunctionComponent<
         <WithLoader
           error={error}
           loading={loading}
-          loaderChildren={<PageSectionLoader />}
+          loaderChildren={<PageLoader />}
           errorChildren={
             <PageSection>
               <ActionDescriptorFetchError
