@@ -175,6 +175,7 @@ export const ConfirmationDialog: React.FunctionComponent<IConfirmationDialogProp
           {i18nCancelButtonText}
         </Button>,
       ]}
+      width={'50%'}
       isFooterLeftAligned={true}
       hideTitle={true}
     >
