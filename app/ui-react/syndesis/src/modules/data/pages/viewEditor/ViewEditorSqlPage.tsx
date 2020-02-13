@@ -220,7 +220,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       if (isValid) {
         queryResult = await queryVirtualization(
           params.virtualizationId,
-          getPreviewSql(viewDefn),
+          getPreviewSql(viewDefn.name),
           15,
           0
         );

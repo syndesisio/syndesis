@@ -163,7 +163,7 @@ export const WithVirtualizationSqlClientForm: React.FunctionComponent<
         const viewDefinition: ViewDefinition = await getViewDefinition(
           viewDefn.id
         );
-        sqlStatement = getPreviewSql(viewDefinition);
+        sqlStatement = getPreviewSql(viewDefinition.name);
       }
       const results: QueryResults = await queryVirtualization(
         props.virtualizationId,
