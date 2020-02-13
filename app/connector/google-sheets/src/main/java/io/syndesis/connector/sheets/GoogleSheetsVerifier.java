@@ -18,17 +18,16 @@ package io.syndesis.connector.sheets;
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
-import org.apache.camel.component.google.sheets.GoogleSheetsVerifierExtension;
 
 public class GoogleSheetsVerifier extends ComponentVerifier {
 
     public GoogleSheetsVerifier() {
-        super("google-sheets", GoogleSheetsVerifierExtension.class);
+        super("google-sheets", CustomGoogleSheetsVerifierExtension.class);
     }
 
     @Override
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new GoogleSheetsVerifierExtension(scheme, context);
+        return new CustomGoogleSheetsVerifierExtension(scheme, context);
     }
 
 }
