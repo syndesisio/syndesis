@@ -153,6 +153,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                     ? isConnectionSelected(c.name)
                     : false
                 }
+                i18nRefreshInProgress={t('refreshInProgress')}
                 icon={<EntityIcon entity={c} alt={c.name} width={23} />}
                 loading={isDvConnectionLoading(c)}
                 // tslint:disable-next-line: no-shadowed-variable

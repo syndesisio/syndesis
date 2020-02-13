@@ -103,6 +103,7 @@
   "queryResultsRowCountMsg": "Кол-во строк: ",
   "queryViewFailed": "Не удалось запросить представление. Подробности: {{details}}",
   "Refresh": "Обновить",
+  "refreshInProgress": "Обновление в процессе...",
   "ReplaceDraft": "Заменить черновик",
   "replaceDraftVirtualizationFailed": "Не удалось заменить черновик для виртуализации \"{{name}}\". Подробности: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Заменить черновик?",

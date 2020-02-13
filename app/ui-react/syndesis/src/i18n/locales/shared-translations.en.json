@@ -33,6 +33,7 @@
       "DurationMillis": "{{duration}} ms",
       "Edit": "Edit",
       "EmptyTablePreview": "Please select one or more tables for your view. If no table is selected, a default view will be generated.",
+      "EmptyTablePreviewTitle": "No tables selected",
       "Error": "Error",
       "Export": "Export",
       "Extension": "Extension",
