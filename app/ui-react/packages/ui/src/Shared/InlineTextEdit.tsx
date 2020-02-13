@@ -76,7 +76,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
           />
           {saving ? (
             <span className="btn">
-              <Loader inline={true} loading={saving} size={'sm'} />
+              <Loader inline={true} size={'sm'} />
             </span>
           ) : (
             <InlineEdit.ConfirmButton
@@ -102,7 +102,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
             <InputGroup.Button>
               {saving ? (
                 <span className="btn">
-                  <Loader inline={true} loading={saving} size={'sm'} />
+                  <Loader inline={true} size={'sm'} />
                 </span>
               ) : (
                 <InlineEdit.ConfirmButton
