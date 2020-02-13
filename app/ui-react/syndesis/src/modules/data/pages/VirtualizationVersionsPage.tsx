@@ -106,7 +106,7 @@ const getVersionState = (
   if (virtState === 'NOTFOUND' && virtPublishedRevision && virtPublishedRevision === itemVersion) {
     if (virtPublishedState === 'FAILED') {
       virtState = 'FAILED';
-    } else if (virtPublishedState !== 'COMPLETE') {
+    } else if (virtPublishedState !== 'RUNNING') {
       virtState = 'IN_PROGRESS';
     }
   }
