@@ -1,5 +1,12 @@
-import { ListView } from 'patternfly-react';
+import {
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+} from '@patternfly/react-core';
 import * as React from 'react';
+import { toValidHtmlId } from '../helpers';
 import { ButtonLink } from '../Layout';
 
 export interface IIntegrationsListItemUnreadableProps {
@@ -8,23 +15,37 @@ export interface IIntegrationsListItemUnreadableProps {
   rawObject: string;
 }
 
-export const IntegrationsListItemUnreadable: React.FC<
-  IIntegrationsListItemUnreadableProps
-> = ({ integrationName, i18nDescription, rawObject }) => {
+export const IntegrationsListItemUnreadable: React.FC<IIntegrationsListItemUnreadableProps> = ({
+  integrationName,
+  i18nDescription,
+  rawObject,
+}) => {
   const onClick = () => window.alert(rawObject);
+  const id = `data-list-item-${toValidHtmlId(integrationName)}`;
   return (
-    <ListView.Item
-      heading={integrationName}
-      actions={
-        <ButtonLink
-          data-testid={'integrations-list-item-unreadable-json-button'}
-          onClick={onClick}
+    <DataListItem aria-labelledby={id}>
+      <DataListItemRow>
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key={0}>
+              <span id={id}>{integrationName}</span>
+            </DataListCell>,
+            <DataListCell key={1}>{i18nDescription}</DataListCell>,
+          ]}
+        />
+        <DataListAction
+          id={`${id}-action`}
+          aria-label={`${integrationName} button`}
+          aria-labelledby={id}
         >
-          Integration JSON
-        </ButtonLink>
-      }
-      description={i18nDescription}
-      stacked={true}
-    />
+          <ButtonLink
+            data-testid={'integrations-list-item-unreadable-json-button'}
+            onClick={onClick}
+          >
+            Integration JSON
+          </ButtonLink>
+        </DataListAction>
+      </DataListItemRow>
+    </DataListItem>
   );
 };

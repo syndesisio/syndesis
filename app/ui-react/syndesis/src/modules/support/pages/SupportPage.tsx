@@ -47,15 +47,16 @@ export const SupportPage: React.FunctionComponent = () => {
                       >
                         {() => {
                           const handleIntegrationChecked = (
-                            event: React.ChangeEvent<HTMLInputElement>
+                            checked: boolean,
+                            name: string
                           ) => {
-                            if (event.target.value in integrationsToDl) {
+                            if (!checked && name in integrationsToDl) {
                               const filteredIntegrations = integrationsToDl;
-                              delete filteredIntegrations[event.target.value];
+                              delete filteredIntegrations[name];
                               setIntegrationsToDl({ ...filteredIntegrations });
                             } else {
                               const newIntegrations = Object.assign(
-                                { [`${event.target.value}`]: true },
+                                { [name]: true },
                                 integrationsToDl
                               );
                               setIntegrationsToDl(newIntegrations);
@@ -114,6 +115,9 @@ export const SupportPage: React.FunctionComponent = () => {
                                       data={data}
                                       onIntegrationChecked={
                                         handleIntegrationChecked
+                                      }
+                                      isChecked={(name: string) =>
+                                        name in integrationsToDl
                                       }
                                     />
                                   )}

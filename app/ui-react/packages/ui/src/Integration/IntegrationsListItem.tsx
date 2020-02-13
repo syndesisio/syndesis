@@ -1,5 +1,12 @@
+import {
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+} from '@patternfly/react-core';
 import { WarningTriangleIcon } from '@patternfly/react-icons';
-import { ListView } from 'patternfly-react';
+import { global_warning_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../helpers';
 import { IntegrationIcon } from './IntegrationIcon';
@@ -32,68 +39,113 @@ export interface IIntegrationsListItemProps {
   checkboxComponent?: React.ReactNode;
 }
 
-export class IntegrationsListItem extends React.Component<
-  IIntegrationsListItemProps
-> {
-  public render() {
-    return (
-      <ListView.Item
-        data-testid={`integrations-list-item-${toValidHtmlId(
-          this.props.integrationName
-        )}-list-item`}
-        checkboxInput={this.props.checkboxComponent || undefined}
-        actions={this.props.actions}
-        heading={this.props.integrationName}
-        className={'integration-list-item'}
-        additionalInfo={[
-          <ListView.InfoItem
-            key={1}
-            className={'integration-list-item__additional-info'}
-          >
-            {this.props.currentState === 'Pending' ? (
-              <IntegrationStatusDetail
-                targetState={this.props.targetState}
-                value={this.props.monitoringValue}
-                currentStep={this.props.monitoringCurrentStep}
-                totalSteps={this.props.monitoringTotalSteps}
-                logUrl={this.props.monitoringLogUrl}
-                i18nProgressPending={this.props.i18nProgressPending}
-                i18nProgressStarting={this.props.i18nProgressStarting}
-                i18nProgressStopping={this.props.i18nProgressStopping}
-                i18nLogUrlText={this.props.i18nLogUrlText}
-              />
-            ) : (
-              <IntegrationStatus
-                currentState={this.props.currentState}
-                i18nPublished={this.props.i18nPublished}
-                i18nUnpublished={this.props.i18nUnpublished}
-                i18nError={this.props.i18nError}
-              />
-            )}
-          </ListView.InfoItem>,
-          <ListView.InfoItem
-            key={2}
-            className={'integration-list-item__additional-info'}
-          >
-            {this.props.isConfigurationRequired && (
-              <div
-                className={'integration-list-item__config-required'}
-                data-testid={`integrations-list-item-config-required`}
-              >
-                <WarningTriangleIcon className="pf-u-mr-xs" />
-                {this.props.i18nConfigurationRequired}
+export const IntegrationsListItem: React.FunctionComponent<IIntegrationsListItemProps> = ({
+  actions,
+  checkboxComponent,
+  currentState,
+  finishConnectionIcon,
+  i18nConfigurationRequired,
+  i18nError,
+  i18nLogUrlText,
+  i18nProgressPending,
+  i18nProgressStarting,
+  i18nProgressStopping,
+  i18nPublished,
+  i18nUnpublished,
+  integrationName,
+  isConfigurationRequired,
+  monitoringCurrentStep,
+  monitoringLogUrl,
+  monitoringTotalSteps,
+  monitoringValue,
+  startConnectionIcon,
+  targetState,
+}) => {
+  const id = toValidHtmlId(integrationName);
+  return (
+    <DataListItem
+      data-testid={`integrations-list-item-${id}-list-item`}
+      className={'integration-list-item'}
+      aria-labelledby={`integration-list-item-${id}-title`}
+    >
+      <DataListItemRow>
+        {checkboxComponent ? checkboxComponent : null}
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell width={1} key={0}>
+              <div className={'integration-list-item__icon-wrapper'}>
+                <IntegrationIcon
+                  startConnectionIcon={startConnectionIcon}
+                  finishConnectionIcon={finishConnectionIcon}
+                />
               </div>
-            )}
-          </ListView.InfoItem>,
-        ]}
-        leftContent={
-          <IntegrationIcon
-            startConnectionIcon={this.props.startConnectionIcon}
-            finishConnectionIcon={this.props.finishConnectionIcon}
-          />
-        }
-        stacked={false}
-      />
-    );
-  }
-}
+            </DataListCell>,
+            <DataListCell width={3} key={1}>
+              <div
+                id={`integration-list-item-${id}-title`}
+                className={'integration-list-item__text-wrapper'}
+              >
+                {integrationName}
+              </div>
+            </DataListCell>,
+            <DataListCell
+              key={2}
+              className={'integration-list-item__additional-info'}
+              width={1}
+            >
+              {currentState === 'Pending' ? (
+                <IntegrationStatusDetail
+                  targetState={targetState}
+                  value={monitoringValue}
+                  currentStep={monitoringCurrentStep}
+                  totalSteps={monitoringTotalSteps}
+                  logUrl={monitoringLogUrl}
+                  i18nProgressPending={i18nProgressPending}
+                  i18nProgressStarting={i18nProgressStarting}
+                  i18nProgressStopping={i18nProgressStopping}
+                  i18nLogUrlText={i18nLogUrlText}
+                />
+              ) : (
+                <IntegrationStatus
+                  currentState={currentState}
+                  i18nPublished={i18nPublished}
+                  i18nUnpublished={i18nUnpublished}
+                  i18nError={i18nError}
+                />
+              )}
+            </DataListCell>,
+
+            <DataListCell
+              key={3}
+              className={'integration-list-item__additional-info'}
+              width={3}
+            >
+              {isConfigurationRequired && (
+                <div
+                  className={'integration-list-item__config-required'}
+                  data-testid={`integrations-list-item-config-required`}
+                >
+                  <div className={'integration-list-item__text-wrapper'}>
+                    <WarningTriangleIcon
+                      color={global_warning_color_100.value}
+                      size={'sm'}
+                    />
+                    &nbsp;
+                    {i18nConfigurationRequired}
+                  </div>
+                </div>
+              )}
+            </DataListCell>,
+          ]}
+        />
+        <DataListAction
+          id={`integration-list-item-${id}-actions`}
+          aria-label={`${integrationName} actions`}
+          aria-labelledby={`integration-list-item-${id}-title`}
+        >
+          {actions}
+        </DataListAction>
+      </DataListItemRow>
+    </DataListItem>
+  );
+};
