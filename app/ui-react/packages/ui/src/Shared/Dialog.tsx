@@ -1,4 +1,4 @@
-import { MessageDialog } from 'patternfly-react';
+import { Modal } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IDialogProps {
@@ -8,16 +8,20 @@ export interface IDialogProps {
   title: string;
 }
 
-export class Dialog extends React.Component<IDialogProps> {
-  public render() {
-    return (
-      <MessageDialog
-        title={this.props.title}
-        primaryContent={this.props.body}
-        footer={this.props.footer}
-        show={true}
-        onHide={this.props.onHide}
-      />
-    );
-  }
-}
+export const Dialog: React.FunctionComponent<IDialogProps> = ({
+  body,
+  footer,
+  onHide,
+  title,
+}) => (
+  <Modal
+    width={'50%'}
+    title={title}
+    footer={footer}
+    isOpen={true}
+    onClose={onHide}
+    isFooterLeftAligned={true}
+  >
+    {body}
+  </Modal>
+);
