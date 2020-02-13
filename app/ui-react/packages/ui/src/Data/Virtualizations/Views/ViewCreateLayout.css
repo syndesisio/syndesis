@@ -47,7 +47,8 @@
 }
 
 .view-create-layout__grid_withDataPreview {
-  max-height: 400px;
+  max-height: 500px;
+  border-bottom: 2px solid #e1e1e1;
 }
 
 .view-create-layout__header {

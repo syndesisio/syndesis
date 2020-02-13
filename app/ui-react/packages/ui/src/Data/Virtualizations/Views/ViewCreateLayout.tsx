@@ -8,7 +8,6 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { Table, TableBody, TableHeader, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
 import { PageSection } from '../../../Layout';
 import './ViewCreateLayout.css';
@@ -17,30 +16,25 @@ import './ViewCreateLayout.css';
  * @param header - Header Component for the Create View.
  * @param content - the main content of the wizard. In case of overflow, only
  * the body will scroll.
- * @param preview - The Preview section for selected connection on right side of page.
+ * @param selectedTables - ConnectionTables component for showing the selected connection on right side of page.
+ * @param previewTable - SqlResultsTable component for providing the data preview of seleted tables.
  */
+
 export interface IViewCreateLayoutProps {
   header: JSX.Element;
   content: JSX.Element;
   selectedTables?: JSX.Element;
   showPreviewData?: boolean;
+  previewTable?: JSX.Element;
 }
 
 export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> = ({
   header,
   content,
   selectedTables,
-  showPreviewData
+  showPreviewData,
+  previewTable
 }: IViewCreateLayoutProps) => {
-
-  const columns = [
-    { title: 'Repositories' },
-    'Branches',
-    { title: 'Pull requests'},
-    'Workspaces',
-    'Last Commit'
-  ];
-  const rows = [['one', 'two', 'a', 'four', 'five'], ['a', 'two', 'k', 'four', 'five'], ['p', 'two', 'b', 'four', 'five']];
 
   return (
     <div className={'view-create-layout'}>
@@ -76,14 +70,7 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
                         <TextContent>
                           <Text component={TextVariants.h2}>
                             <span>Preview</span>
-                            <Table
-                              variant={TableVariant.compact}
-                              cells={columns}
-                              rows={rows}
-                            >
-                              <TableHeader />
-                              <TableBody />
-                            </Table>
+                            {previewTable}
                           </Text>
                         </TextContent>
                       </GridItem>

@@ -1,18 +1,21 @@
 import {
   useConnections,
   useVirtualizationConnectionStatuses,
+  useVirtualizationHelpers,
   useVirtualizationRuntimeMetadata,
 } from '@syndesis/api';
 import {
   SchemaNodeInfo,
   Virtualization,
 } from '@syndesis/models';
-import { CreateViewHeader, ViewCreateLayout } from '@syndesis/ui';
+import { QueryResults } from '@syndesis/models/src';
+import { CreateViewHeader, SqlResultsTable, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import resolvers from '../../../resolvers';
-import { ConnectionSchemaContent, ConnectionTables } from '../../shared';
+import { getQueryColumns,getQueryRows } from '../../shared'
+import { ConnectionSchemaContent, ConnectionTables, getPreviewSql } from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -44,10 +47,30 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   const { t } = useTranslation(['data', 'shared']);
   const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
   const virtualization = state.virtualization;
+  const queryResultsEmpty: QueryResults = {
+    columns: [],
+    rows: [],
+  };
+
+  const {
+    queryVirtualization,
+  } = useVirtualizationHelpers();
 
   const [showPreviewData, setShowPreviewData] = React.useState(false);
+  const [queryResults, setQueryResults] = React.useState(queryResultsEmpty);
 
-  const toggelShowPreviewData = () =>{
+  const toggelShowPreviewData = async () =>{
+    if(!showPreviewData){
+      const queryResult = await queryVirtualization(
+        virtualization.name,
+        getPreviewSql('winelist'),
+        15,
+        0
+      );
+      // tslint:disable-next-line: no-console
+      console.log('QueryResult:-',queryResult)
+      setQueryResults(queryResult)
+    }
     setShowPreviewData(!showPreviewData);
   }
 
@@ -127,6 +150,12 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
         />
       }
       showPreviewData={showPreviewData}
+      previewTable={
+        <SqlResultsTable
+        queryResultCols={getQueryColumns(queryResults)}
+        queryResultRows={getQueryRows(queryResults)}
+      />
+      }
     />
   );
 };
