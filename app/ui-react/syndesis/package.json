@@ -62,7 +62,8 @@
     "prebuild": "npm-run-all copyasset:*"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.5",
+    "@babel/core": "^7.4.4",
+    "@babel/runtime-corejs3": "^7.4.4",
     "@storybook/addon-a11y": "^5.0.11",
     "@storybook/addon-actions": "^5.0.11",
     "@storybook/addon-info": "^5.0.11",
@@ -84,7 +85,7 @@
     "@types/react-loadable": "*",
     "@types/react-router-dom": "^4.3.1",
     "@types/storybook__react": "^4.0.1",
-    "babel-loader": "^8.0.4",
+    "babel-loader": "^8.0.5",
     "babel-plugin-named-asset-import": "^0.3.1",
     "babel-preset-react-app": "^9.1.0",
     "cpr": "^3.0.1",
