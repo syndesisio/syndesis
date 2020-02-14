@@ -182,7 +182,7 @@ export default () => (
                           start={parseInt(metricsData.start!, 10)}
                           uptimeDuration={toUptimeDurationString(
                             metricsData.uptimeDuration!,
-                            t('metrics.NoDataAvailable')
+                            t('metricsNoDataAvailable')
                           )}
                           i18nTitle={t('titleUptimeMetric')}
                         />
