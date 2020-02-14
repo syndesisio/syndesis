@@ -16291,10 +16291,10 @@ ngx-clipboard@11.1.9:
     ngx-window-token "^1.0.2"
     tslib "^1.9.0"
 
-ngx-logger@4.0.7:
-  version "4.0.7"
-  resolved "https://registry.yarnpkg.com/ngx-logger/-/ngx-logger-4.0.7.tgz#23b5e6d8d9fd8257beecb892af491d6e6c04c354"
-  integrity sha512-dWTedsBvIcg2qNfOhrz4BPcUQCP2rfCqz1BZ5A0Hz2x7HB5EZby8W8albmzSW2Di85zQsCG77iuF7iB+ivzldg==
+ngx-logger@4.1.2:
+  version "4.1.2"
+  resolved "https://registry.yarnpkg.com/ngx-logger/-/ngx-logger-4.1.2.tgz#32cf433aa8803ee899e43e94713b669ef7b6a231"
+  integrity sha512-BVVxoAftK4QpMVQt3vnjmjyen9HaCWaI5+hHzskUWjjgIdhCYvfzRvMuR2bzFmCCBVn5gKtgeacNHbSmk5yVeA==
   dependencies:
     tslib "^1.9.0"
     vlq "^1.0.0"
