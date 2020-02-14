@@ -1,11 +1,12 @@
-import * as H from '@syndesis/history';
 import {
   DataListAction,
   DataListCell,
   DataListItem,
   DataListItemCells,
-  DataListItemRow
+  DataListItemRow,
+  Tooltip
 } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { useState } from 'react';
 import { toValidHtmlId } from '../../helpers';
@@ -48,7 +49,9 @@ export const ApiConnectorListItem: React.FC<
     i18nDelete,
     i18nDeleteModalMessage,
     i18nDeleteModalTitle,
+    i18nDeleteTip,
     i18nDetails,
+    i18nDetailsTip,
     i18nUsedByMessage,
     onDelete,
     usedBy
@@ -124,20 +127,45 @@ export const ApiConnectorListItem: React.FC<
             id={'single-action-action1'}
             aria-label={'Actions'}
           >
-            <ButtonLink
-              data-testid={'api-connector-list-item-details-button'}
-              href={detailsPageLink}
-              as={'default'}
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'detailsTip'}>
+                  {i18nDetailsTip
+                    ? i18nDetailsTip
+                    : i18nDetails}
+                </div>
+              }
             >
-              {i18nDetails}
-            </ButtonLink>
-            <ButtonLink
-              data-testid={'api-connector-list-item-delete-button'}
-              disabled={usedBy !== 0}
-              onClick={showDeleteDialogAction}
+              <ButtonLink
+                data-testid={'api-connector-list-item-details-button'}
+                href={detailsPageLink}
+                as={'default'}
+              >
+                {i18nDetails}
+              </ButtonLink>
+            </Tooltip>
+
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'deleteTip'}>
+                  {i18nDeleteTip
+                    ?i18nDeleteTip
+                    : i18nDelete}
+                </div>
+              }
             >
-              {i18nDelete}
-            </ButtonLink>
+              <ButtonLink
+                data-testid={'api-connector-list-item-delete-button'}
+                disabled={usedBy !== 0}
+                onClick={showDeleteDialogAction}
+              >
+                {i18nDelete}
+              </ButtonLink>
+            </Tooltip>
           </DataListAction>
         </DataListItemRow>
       </DataListItem>
