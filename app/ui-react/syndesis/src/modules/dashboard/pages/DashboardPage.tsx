@@ -18,7 +18,7 @@ import {
 import {
   toShortDateAndTimeString,
   toUptimeDurationString,
-  WithLoader
+  WithLoader,
 } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -150,46 +150,42 @@ export default () => (
                         0 /* TODO makes the UI component hide the board and recent updates, needs a revisit */
                       }
                       integrationsOverview={
-                        <div data-testid={'dashboard-page-total-integrations'}>
-                          <AggregatedMetricCard
-                            title={t('titleTotalIntegrations')}
-                            total={integrationsData.totalCount}
-                            ok={
-                              integrationsData.totalCount -
-                              integrationStatesCount.Error
-                            }
-                            error={integrationStatesCount.Error}
-                          />
-                        </div>
+                        <AggregatedMetricCard
+                          data-testid={'dashboard-page-total-integrations'}
+                          title={t('titleTotalIntegrations')}
+                          total={integrationsData.totalCount}
+                          ok={
+                            integrationsData.totalCount -
+                            integrationStatesCount.Error
+                          }
+                          error={integrationStatesCount.Error}
+                        />
                       }
                       connectionsOverview={
-                        <div data-testid={'dashboard-page-total-connections'}>
-                          <ConnectionsMetric
-                            i18nTitle={t('titleTotalConnections', {
-                              count:
-                                connectionsData.connectionsForDisplay.length,
-                            })}
-                          />
-                        </div>
+                        <ConnectionsMetric
+                          i18nTitle={t('titleTotalConnections', {
+                            count: connectionsData.connectionsForDisplay.length,
+                          })}
+                        />
                       }
                       messagesOverview={
-                        <div data-testid={'dashboard-page-total-messages'}>
-                          <AggregatedMetricCard
-                            title={t('titleTotalMessages')}
-                            total={metricsData.messages!}
-                            ok={metricsData.messages! - metricsData.errors!}
-                            error={metricsData.errors!}
-                          />
-                        </div>
+                        <AggregatedMetricCard
+                          data-testid={'dashboard-page-total-messages'}
+                          title={t('titleTotalMessages')}
+                          total={metricsData.messages!}
+                          ok={metricsData.messages! - metricsData.errors!}
+                          error={metricsData.errors!}
+                        />
                       }
                       uptimeOverview={
-                        <div data-testid={'dashboard-page-metrics-uptime'}>
-                          <UptimeMetric
-                            start={parseInt(metricsData.start!, 10)}
-                            uptimeDuration={toUptimeDurationString(metricsData.uptimeDuration!, t('metrics.NoDataAvailable'))}
-                            i18nTitle={t('titleUptimeMetric')}
-                          />
-                        </div>
+                        <UptimeMetric
+                          start={parseInt(metricsData.start!, 10)}
+                          uptimeDuration={toUptimeDurationString(
+                            metricsData.uptimeDuration!,
+                            t('metrics.NoDataAvailable')
+                          )}
+                          i18nTitle={t('titleUptimeMetric')}
+                        />
                       }
                       topIntegrations={
                         <TopIntegrationsCard
