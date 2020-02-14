@@ -7,6 +7,7 @@ import {
   DataListItemRow
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { useState } from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 import {
@@ -34,119 +35,113 @@ export interface IApiConnectorListItemProps {
   usedBy: number;
 }
 
-export interface IApiConnectorListItemState {
-  showDeleteDialog: boolean;
-}
+export const ApiConnectorListItem: React.FC<
+  IApiConnectorListItemProps
+> = (
+  {
+    apiConnectorDescription,
+    apiConnectorId,
+    apiConnectorIcon,
+    apiConnectorName,
+    detailsPageLink,
+    i18nCancelLabel,
+    i18nDelete,
+    i18nDeleteModalMessage,
+    i18nDeleteModalTitle,
+    i18nDetails,
+    i18nUsedByMessage,
+    onDelete,
+    usedBy
+  }) => {
+  // initial visibility of delete dialog
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
-export class ApiConnectorListItem extends React.Component<
-  IApiConnectorListItemProps,
-  IApiConnectorListItemState
-> {
-  public constructor(props: IApiConnectorListItemProps) {
-    super(props);
+  const doCancel = () => {
+    setShowDeleteDialog(false);
+  };
 
-    this.state = {
-      showDeleteDialog: false, // initial visibility of delete dialog
-    };
-
-    this.doCancel = this.doCancel.bind(this);
-    this.doDelete = this.doDelete.bind(this);
-    this.showDeleteDialog = this.showDeleteDialog.bind(this);
-  }
-
-  public doCancel() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
-  }
-
-  public doDelete() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
+  const doDelete = () => {
+    setShowDeleteDialog(false);
 
     // TODO: disable components while delete is processing
-    this.props.onDelete(this.props.apiConnectorId);
-  }
+    onDelete(apiConnectorId);
+  };
 
-  public showDeleteDialog() {
-    this.setState({
-      showDeleteDialog: true,
-    });
-  }
+  const showDeleteDialogAction = () => {
+    setShowDeleteDialog(true);
+  };
 
-  public render() {
-    return (
-      <>
-        <ConfirmationDialog
-          buttonStyle={ConfirmationButtonStyle.DANGER}
-          i18nCancelButtonText={this.props.i18nCancelLabel}
-          i18nConfirmButtonText={this.props.i18nDelete}
-          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
-          i18nTitle={this.props.i18nDeleteModalTitle}
-          icon={ConfirmationIconType.DANGER}
-          showDialog={this.state.showDeleteDialog}
-          onCancel={this.doCancel}
-          onConfirm={this.doDelete}
-        />
-        <DataListItem aria-labelledby={'single-action-item1'}
-                      data-testid={`api-connector-list-item-${toValidHtmlId(this.props.apiConnectorName)}-list-item`}
-                      className={'api-connector-list-item'}
-        >
-          <DataListItemRow>
-            <DataListItemCells
-              dataListCells={[
-                <DataListCell width={1} key={0}>
-                  {this.props.apiConnectorIcon ? (
-                    <div className={'api-connector-list-item__icon-wrapper'}>
-                      <img
-                        src={this.props.apiConnectorIcon}
-                        alt={this.props.apiConnectorName}
-                        width={46}
-                      />
-                    </div>
-                  ) : null}
-                </DataListCell>,
-                <DataListCell key={'primary content'} width={4}>
-                  <div className={'api-connector-list-item__text-wrapper'}>
-                    <b>{this.props.apiConnectorName}</b><br/>
-                    {
-                      this.props.apiConnectorDescription
-                        ? this.props.apiConnectorDescription
-                        : ''
-                    }
+  return (
+    <>
+      <ConfirmationDialog
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        i18nCancelButtonText={i18nCancelLabel}
+        i18nConfirmButtonText={i18nDelete}
+        i18nConfirmationMessage={i18nDeleteModalMessage}
+        i18nTitle={i18nDeleteModalTitle}
+        icon={ConfirmationIconType.DANGER}
+        showDialog={showDeleteDialog}
+        onCancel={doCancel}
+        onConfirm={doDelete}
+      />
+      <DataListItem aria-labelledby={'single-action-item1'}
+                    data-testid={`api-connector-list-item-${toValidHtmlId(apiConnectorName)}-list-item`}
+                    className={'api-connector-list-item'}
+      >
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell width={1} key={0}>
+                {apiConnectorIcon ? (
+                  <div className={'api-connector-list-item__icon-wrapper'}>
+                    <img
+                      src={apiConnectorIcon}
+                      alt={apiConnectorName}
+                      width={46}
+                    />
                   </div>
-                </DataListCell>,
-                <DataListCell key={'secondary content'} width={4}>
-                  <div className={'api-connector-list-item__used-by'}>
-                    {this.props.i18nUsedByMessage}
-                  </div>
-                </DataListCell>
-              ]}
-            />
-            <DataListAction
-              aria-labelledby={'single-action-item1 single-action-action1'}
-              id={'single-action-action1'}
-              aria-label={'Actions'}
+                ) : null}
+              </DataListCell>,
+              <DataListCell key={'primary content'} width={4}>
+                <div className={'api-connector-list-item__text-wrapper'}>
+                  <b>{apiConnectorName}</b><br/>
+                  {
+                    apiConnectorDescription
+                      ? apiConnectorDescription
+                      : ''
+                  }
+                </div>
+              </DataListCell>,
+              <DataListCell key={'secondary content'} width={4}>
+                <div className={'api-connector-list-item__used-by'}>
+                  {i18nUsedByMessage}
+                </div>
+              </DataListCell>
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={'single-action-item1 single-action-action1'}
+            id={'single-action-action1'}
+            aria-label={'Actions'}
+          >
+            <ButtonLink
+              data-testid={'api-connector-list-item-details-button'}
+              href={detailsPageLink}
+              as={'default'}
             >
-              <ButtonLink
-                data-testid={'api-connector-list-item-details-button'}
-                href={this.props.detailsPageLink}
-                as={'default'}
-              >
-                {this.props.i18nDetails}
-              </ButtonLink>
-              <ButtonLink
-                data-testid={'api-connector-list-item-delete-button'}
-                disabled={this.props.usedBy !== 0}
-                onClick={this.showDeleteDialog}
-              >
-                {this.props.i18nDelete}
-              </ButtonLink>
-            </DataListAction>
-          </DataListItemRow>
-        </DataListItem>
-      </>
-    );
-  }
-}
+              {i18nDetails}
+            </ButtonLink>
+            <ButtonLink
+              data-testid={'api-connector-list-item-delete-button'}
+              disabled={usedBy !== 0}
+              onClick={showDeleteDialogAction}
+            >
+              {i18nDelete}
+            </ButtonLink>
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
+    </>
+  );
+
+};
