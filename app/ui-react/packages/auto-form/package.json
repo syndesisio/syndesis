@@ -12,6 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.4.4",
+    "@babel/runtime-corejs3": "^7.4.4",
     "@storybook/addon-a11y": "^5.0.11",
     "@storybook/addon-actions": "^5.0.11",
     "@storybook/addon-info": "^5.0.11",
@@ -29,6 +30,7 @@
     "@types/react-dom": "^16.0.9",
     "@types/storybook__react": "^4.0.0",
     "babel-loader": "^8.0.5",
+    "core-js": "2.5.7",
     "expect": "^24.5.0",
     "jest": "^24.5.0",
     "jest-cli": "^24.5.0",
