@@ -138,7 +138,9 @@ public abstract class DDBConnectorCustomizer implements ComponentProxyCustomizer
                         final String replacement = entry.getValue().toString();
 
                         element = element.replace(searchKey, replacement);
-                        attributes = attributes.replace(searchKey, replacement);
+                        if(attributes != null) {
+                            attributes = attributes.replace(searchKey, replacement);
+                        }
                     }
                 }
             }
