@@ -106,7 +106,7 @@
     "core-js": "^2.4.0",
     "file-saver": "2.0.2",
     "font-awesome": "^4.7.0",
-    "jasmine-core": "~3.3.0",
+    "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "jquery": "^3.3.0",
     "jquery-match-height": "^0.7.2",
