@@ -1,4 +1,4 @@
-.list-view-toolbar__child-items a.btn {
+.list-view-toolbar__child-items .btn, .list-view-toolbar__child-items .pf-c-button {
   margin: 0 0.3em 0 0.3em;
 }
 
