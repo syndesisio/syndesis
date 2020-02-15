@@ -26,13 +26,13 @@ credentials.
 ifeval::["{context}" == "t2sf"]
 If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to 
-link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Creating Twitter to Salesforce integration].
+link:{LinkFuseOnlineTutorials}#create-twitter-sf-integration_t2sf[Creating and deploying the Twitter to Salesforce integration].
 endif::[]
 
 ifeval::["{context}" == "sf2db"]
 If you already registered {prodname} as a Salesforce
 client and created a Salesforce connection, skip to 
-link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Creating Salesforce to database integration]. 
+link:{LinkFuseOnlineTutorials}#create-sf-db-integration_sf2db[Creating and deploying the Salesforce to database integration]. 
 endif::[]
 
  
