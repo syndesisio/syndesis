@@ -34,7 +34,27 @@ When a collection contains more
 than one kind of primitive type or when it contains at least one complex 
 type then the data mapper displays the collection’s child fields. 
 You can map from/to each field.
-However, you cannot map from or to a nested collection. 
+
+When a source field is nested in a number of collections you can map 
+it to a target field that meets one of these conditions: 
+
+* The target field is nested in the same number of collections as the source 
+field. For example, these mappings are allowed: 
++
+** /A<>/B<>/C  ->  /D<>/E<>/F
+** /A<>/B<>/C  ->  /G<>/H/I<>/J
+
+* The target field is nested in only one collection. For example, this mapping is allowed: 
++
+/A<>/B<>/C  ->  /K<>/L
++
+In this case, the data mapper uses a depth-first algorithm to iterate over 
+all values in the source. In order of occurrence, the data mapper puts the 
+source values into a single target collection. 
+
+The following mapping is not allowed: 
+
+/A<>/B<>/C  cannot-map-to  /M<>/N/O<>/P<>/Q
 
 When {prodname} executes the flow, it iterates over the source 
 collection elements to populate the target collection elements.
