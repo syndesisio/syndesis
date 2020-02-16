@@ -5,7 +5,7 @@ build::description() {
 }
 
 build::usage() {
-    cat <<EOT
+    cat <<"EOT"
 -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
     --all-images               Build all modules with images: ui-react, server, meta, s2i, operator, upgrade
     --app-images               Build only application modules with Docker images (ui-react, server, meta, s2i)
