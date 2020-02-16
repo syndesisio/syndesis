@@ -73,12 +73,10 @@ func InstalledSyndesis(ctx context.Context, c client.Client, namespace string) (
 		//
 
 		//
-		// Assign the uid and name of the syndesis CR
-		// Vital for the backup Job as it requires an
-		// owner reference and uses these credentials
+		// Copy the installed syndesis as it will include
+		// a valid UID but also properties such as ExternalDatabase
 		//
-		syndesis.SetUID(synRes.GetUID())
-		syndesis.SetName(synRes.GetName())
+		synRes.DeepCopyInto(syndesis)
 		return syndesis, nil
 	}
 
