@@ -1,11 +1,15 @@
-import { Text, Title } from '@patternfly/react-core';
-import * as H from '@syndesis/history';
 import {
+  DataList,
   EmptyState,
-  ListView,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Text,
+  Title,
+  Tooltip
+} from '@patternfly/react-core';
+import { AddCircleOIcon } from '@patternfly/react-icons';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
@@ -25,53 +29,48 @@ export interface IExtensionListViewProps extends IListViewToolbarProps {
 export const ExtensionListView: React.FunctionComponent<
   IExtensionListViewProps
 > = props => {
-  const getImportTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="importTip">
-        {props.i18nLinkImportExtensionTip
-          ? props.i18nLinkImportExtensionTip
-          : props.i18nLinkImportExtension}
-      </Tooltip>
-    );
-  };
-
   return (
     <PageSection>
       <ListViewToolbar {...props}>
-        <div className="form-group">
-          <OverlayTrigger overlay={getImportTooltip()} placement="top">
-            <ButtonLink
-              data-testid={'extension-list-view-import-button'}
-              href={props.linkImportExtension}
-              as={'primary'}
-            >
-              {props.i18nLinkImportExtension}
-            </ButtonLink>
-          </OverlayTrigger>
+        <div className={'form-group'}>
+          <ButtonLink data-testid={'extension-list-view-import-button'}
+                      href={props.linkImportExtension}
+                      as={'primary'}>
+            {props.i18nLinkImportExtension}
+          </ButtonLink>
         </div>
       </ListViewToolbar>
-      {props.i18nTitle !== '' && <Title size="lg">{props.i18nTitle}</Title>}
+      {props.i18nTitle !== '' && <Title size={'lg'}>{props.i18nTitle}</Title>}
       {props.i18nDescription !== '' && (
         <Text dangerouslySetInnerHTML={{ __html: props.i18nDescription }} />
       )}
       {props.children ? (
-        <ListView>{props.children}</ListView>
+        <DataList aria-label={'extension list'}>{props.children}</DataList>
       ) : (
-        <EmptyState>
-          <EmptyState.Icon />
-          <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
-          <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
-          <EmptyState.Action>
-            <OverlayTrigger overlay={getImportTooltip()} placement="top">
-              <ButtonLink
-                data-testid={'extension-list-view-empty-state-import-button'}
-                href={props.linkImportExtension}
-                as={'primary'}
-              >
+        <EmptyState variant={EmptyStateVariant.full}>
+          <EmptyStateIcon icon={AddCircleOIcon}/>
+          <Title headingLevel={'h5'} size={'lg'}>
+            {props.i18nEmptyStateTitle}
+          </Title>
+          <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
+          <Tooltip
+            position={'top'}
+            content={
+              props.i18nLinkImportExtensionTip
+                ? props.i18nLinkImportExtensionTip
+                : props.i18nLinkImportExtension
+            }
+            enableFlip={true}
+          >
+            <>
+              <br/>
+              <ButtonLink data-testid={'extension-list-view-empty-state-import-button'}
+                          href={props.linkImportExtension}
+                          as={'primary'}>
                 {props.i18nLinkImportExtension}
               </ButtonLink>
-            </OverlayTrigger>
-          </EmptyState.Action>
+            </>
+          </Tooltip>
         </EmptyState>
       )}
     </PageSection>
