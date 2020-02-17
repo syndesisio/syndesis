@@ -93,6 +93,7 @@
     "resultsTableValidEmptyTitle": "No data available",
     "showPreview": "Show preview"
   },
+  "previewData": "Preview data",
   "publishedDataVirtualization": "Running",
   "publishInProgress": "Publishing...",
   "publishVirtualizationFailed": "The virtualization \"{{name}}\" could not be published. Details: {{details}}",
@@ -102,8 +103,10 @@
   "queryResultsTitle": "Query results",
   "queryResultsRowCountMsg": "Number of rows: ",
   "queryViewFailed": "Could not query the view. Details: {{details}}",
+  "queryTableFailed": "Could not query the table preview. Details: {{details}}",
   "Refresh": "Refresh",
   "refreshInProgress": "Refresh in progress...",
+  "removeSelection": "Remove Selection",
   "ReplaceDraft": "Replace draft",
   "replaceDraftVirtualizationFailed": "Could not replace draft for the virtualization \"{{name}}\". Details: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Replace draft?",

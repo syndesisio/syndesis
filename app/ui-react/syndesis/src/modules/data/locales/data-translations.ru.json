@@ -93,6 +93,7 @@
     "resultsTableValidEmptyTitle": "Данные недоступны",
     "showPreview": "Предварительный просмотр"
   },
+  "previewData": "Предварительный просмотр данных",
   "publishedDataVirtualization": "Запущено",
   "publishInProgress": "Публикация...",
   "publishVirtualizationFailed": "Виртуализация \"{{name}}\" не может быть опубликована. Детали: {{details}}",
@@ -102,8 +103,10 @@
   "queryResultsTitle": "Результаты запроса",
   "queryResultsRowCountMsg": "Кол-во строк: ",
   "queryViewFailed": "Не удалось запросить представление. Подробности: {{details}}",
+  "queryTableFailed": "Не удалось запросить предварительный просмотр таблицы. Детали: {{details}}",
   "Refresh": "Обновить",
   "refreshInProgress": "Обновление в процессе...",
+  "removeSelection": "Удалить выделение",
   "ReplaceDraft": "Заменить черновик",
   "replaceDraftVirtualizationFailed": "Не удалось заменить черновик для виртуализации \"{{name}}\". Подробности: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Заменить черновик?",
