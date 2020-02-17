@@ -31,6 +31,7 @@
     <camel.version>2.23.2.fuse-760024</camel.version>
     <atlasmap.version>1.43.4</atlasmap.version>
     <jackson.databind.version>2.9.9</jackson.databind.version>
+    <mongodb.version>3.9.0</mongodb.version>
   </properties>
 
   <!-- Metadata need to publish to central -->
