@@ -4,18 +4,24 @@ import {
   useVirtualizationHelpers,
   useVirtualizationRuntimeMetadata,
 } from '@syndesis/api';
-import {
-  SchemaNodeInfo,
-  Virtualization,
-} from '@syndesis/models';
+import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
 import { QueryResults } from '@syndesis/models/src';
-import { CreateViewHeader, SqlResultsTable, ViewCreateLayout } from '@syndesis/ui';
+import {
+  CreateViewHeader,
+  SqlResultsTable,
+  ViewCreateLayout,
+} from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
-import { getQueryColumns,getQueryRows } from '../../shared'
-import { ConnectionSchemaContent, ConnectionTables, getPreviewSql } from '../../shared';
+import { getQueryColumns, getQueryRows } from '../../shared';
+import {
+  ConnectionSchemaContent,
+  ConnectionTables,
+  getPreviewSql,
+} from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -43,54 +49,66 @@ export interface ISelectSourcesPageProps {
 }
 
 export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps> = props => {
-  const { state } = useRouteData<null, ISelectSourcesRouteState>();
   const { t } = useTranslation(['data', 'shared']);
   const schemaNodeInfo: SchemaNodeInfo[] = props.selectedSchemaNodes;
-  const virtualization = state.virtualization;
+  const { pushNotification } = React.useContext(UIContext);
   const queryResultsEmpty: QueryResults = {
     columns: [],
     rows: [],
   };
 
-  const {
-    queryVirtualization,
-  } = useVirtualizationHelpers();
-
+  /* State used in component */
   const [showPreviewData, setShowPreviewData] = React.useState(false);
   const [queryResults, setQueryResults] = React.useState(queryResultsEmpty);
+  const { state } = useRouteData<null, ISelectSourcesRouteState>();
 
-  const toggelShowPreviewData = async () =>{
-    if(!showPreviewData){
-      const queryResult = await queryVirtualization(
-        virtualization.name,
-        getPreviewSql('winelist'),
-        15,
-        0
-      );
-      // tslint:disable-next-line: no-console
-      console.log('QueryResult:-',queryResult)
-      setQueryResults(queryResult)
-    }
-    setShowPreviewData(!showPreviewData);
-  }
-
+  const virtualization = state.virtualization;
+  
+  /* API Request */
+  const { queryVirtualization } = useVirtualizationHelpers();
   const {
     resource: connectionStatuses,
     hasData: hasConnectionStatuses,
     error: connectionStatusesError,
   } = useVirtualizationConnectionStatuses();
-
   const {
     resource: connectionsData,
     hasData: hasConnectionsData,
     error: connectionsError,
   } = useConnections();
-
   const {
     resource: viewSourceInfo,
     hasData: hasViewSourceInfo,
     error: viewSourceInfoError,
   } = useVirtualizationRuntimeMetadata(virtualization.name);
+
+  const toggelShowPreviewData = async (
+    connectionName: string,
+    tableName: string
+  ) => {
+    try {
+    const queryResult = await queryVirtualization(
+      virtualization.name,
+      getPreviewSql(`${connectionName}.${tableName}`),
+      15,
+      0
+    );
+    setShowPreviewData(true);
+    setQueryResults(queryResult);
+    } catch (error) {
+        const details = error.message ? error.message : '';
+        pushNotification(
+          t('queryTableFailed', {
+            details,
+            name: virtualization.name,
+          }),
+          'error'
+        );
+    }
+
+
+    
+  };
 
   /**
    * Get error message based on the required fetches
@@ -131,9 +149,15 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
       }
       content={
         <ConnectionSchemaContent
-          error={connectionsError !== false || connectionStatusesError !== false || viewSourceInfoError !== false}
+          error={
+            connectionsError !== false ||
+            connectionStatusesError !== false ||
+            viewSourceInfoError !== false
+          }
           errorMessage={getErrorMessage()}
-          loading={!hasConnectionsData || !hasConnectionStatuses || !hasViewSourceInfo}
+          loading={
+            !hasConnectionsData || !hasConnectionStatuses || !hasViewSourceInfo
+          }
           dvSourceStatuses={connectionStatuses}
           connections={connectionsData.connectionsForDisplay}
           onNodeSelected={props.handleNodeSelected}
@@ -146,15 +170,15 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           selectedSchemaNodes={props.selectedSchemaNodes}
           onNodeDeselected={props.handleNodeDeselected}
           columnDetails={viewSourceInfo.schemas}
-          setShowPreviewData = {toggelShowPreviewData}
+          setShowPreviewData={toggelShowPreviewData}
         />
       }
       showPreviewData={showPreviewData}
       previewTable={
         <SqlResultsTable
-        queryResultCols={getQueryColumns(queryResults)}
-        queryResultRows={getQueryRows(queryResults)}
-      />
+          queryResultCols={getQueryColumns(queryResults)}
+          queryResultRows={getQueryRows(queryResults)}
+        />
       }
     />
   );

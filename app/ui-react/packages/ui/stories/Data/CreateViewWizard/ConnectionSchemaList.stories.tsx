@@ -11,7 +11,7 @@ import {
   SchemaNodeListItem,
 } from '../../../src';
 
-const stories = storiesOf('Data/Views/ConnectionSchemaList', module);
+const stories = storiesOf('Data/CreateViewWizard/ConnectionSchemaList', module);
 
 const connectionName1 = 'Connection_1';
 const connectionDescription1 = 'Connection 1 description';
@@ -70,7 +70,10 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
     icon={<div />}
     loading={false}
   />,
@@ -82,7 +85,10 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
     icon={<div />}
     loading={false}
   />,
@@ -94,7 +100,10 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusTooltip={'The connection is active'}
-    i18nRefreshInProgress={text('i18nRefreshInProgress', 'Refresh in progress...')}
+    i18nRefreshInProgress={text(
+      'i18nRefreshInProgress',
+      'Refresh in progress...'
+    )}
     icon={<div />}
     loading={false}
   />,
@@ -118,7 +127,7 @@ stories
         children={[]}
         hasListData={false}
         loading={false}
-        linkToConnectionCreate={action('route to create connection')}
+        linkToConnectionCreate={'/connections/create'}
       />
     </Router>
   ))
@@ -135,7 +144,7 @@ stories
         children={connectionItems}
         hasListData={true}
         loading={false}
-        linkToConnectionCreate={action('route to create connection')}
+        linkToConnectionCreate={'/connections/create'}
       />
     </Router>
   ));

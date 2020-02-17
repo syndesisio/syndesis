@@ -506,11 +506,11 @@ export function isStateOperationInProgress(
 
 /**
  * Generate preview SQL for the specified view definition
- * @param viewDefinition the ViewDefinition
+ * @param viewDefinitionName the viewDefinitionName
  */
-export function getPreviewSql(viewDefinition: string): string {
+export function getPreviewSql(viewDefinitionName: string): string {
   // replace any double quotes in name with 2 double quotes and wrap in double quotes
-  return 'SELECT * FROM "' + viewDefinition.replace(/"/g, '""') + '"';
+  return 'SELECT * FROM "' + viewDefinitionName.replace(/"/g, '""') + '"';
 }
 
 /**

@@ -2,6 +2,7 @@
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import {
   Card,
+  Expandable,
   Grid,
   GridItem,
   Text,
@@ -33,8 +34,15 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
   content,
   selectedTables,
   showPreviewData,
-  previewTable
+  previewTable,
 }: IViewCreateLayoutProps) => {
+
+  /* State used in component */
+  const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
+
+  const onToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
 
   return (
     <div className={'view-create-layout'}>
@@ -46,7 +54,13 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
               <Card className={'view-create-layout__card'}>
                 {selectedTables ? (
                   <>
-                    <Grid className={showPreviewData ? 'view-create-layout__grid view-create-layout__grid_withDataPreview' : 'view-create-layout__grid'}>
+                    <Grid
+                      className={
+                        showPreviewData && isExpanded
+                          ? 'view-create-layout__grid view-create-layout__grid_withDataPreview'
+                          : 'view-create-layout__grid'
+                      }
+                    >
                       <GridItem
                         span={9}
                         className={'view-create-layout_connection'}
@@ -60,23 +74,32 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
                         {selectedTables}
                       </GridItem>
                     </Grid>
-                    {
-                      showPreviewData ? (
-                        <Grid className={'view-create-layout__previewData'}>
-                      <GridItem
-                        span={12}
-                        className={'view-create-layout_previewSection'}
-                      >
-                        <TextContent>
-                          <Text component={TextVariants.h2}>
-                            <span>Preview</span>
-                            {previewTable}
-                          </Text>
-                        </TextContent>
-                      </GridItem>
-                    </Grid>
-                      ) : ('')
-                    }
+                    {showPreviewData ? (
+                      <Grid className={'view-create-layout__previewData'}>
+                        <GridItem
+                          span={12}
+                          className={'view-create-layout_previewSection'}
+                        >
+                          <TextContent>
+                            <Text component={TextVariants.h2}>
+                              <span>Preview</span>
+                              <Expandable
+                                toggleText={
+                                  isExpanded ? 'Show Less' : 'Show More'
+                                }
+                                onToggle={onToggle}
+                                isExpanded={isExpanded}
+                                className={'view-create-layout_expandable'}
+                              >
+                                {previewTable}
+                              </Expandable>
+                            </Text>
+                          </TextContent>
+                        </GridItem>
+                      </Grid>
+                    ) : (
+                      ''
+                    )}
                   </>
                 ) : (
                   <Grid className={'view-create-layout__grid'}>
