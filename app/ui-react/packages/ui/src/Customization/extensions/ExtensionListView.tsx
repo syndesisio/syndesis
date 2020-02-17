@@ -26,48 +26,58 @@ export interface IExtensionListViewProps extends IListViewToolbarProps {
   linkImportExtension: H.LocationDescriptor;
 }
 
-export const ExtensionListView: React.FunctionComponent<
-  IExtensionListViewProps
-> = props => {
+export const ExtensionListView: React.FunctionComponent<IExtensionListViewProps> = (
+  {
+    children,
+    i18nDescription,
+    i18nEmptyStateInfo,
+    i18nEmptyStateTitle,
+    i18nLinkImportExtension,
+    i18nLinkImportExtensionTip,
+    i18nTitle,
+    linkImportExtension,
+    ...rest
+  }
+) => {
   return (
     <PageSection>
-      <ListViewToolbar {...props}>
+      <ListViewToolbar {...rest}>
         <div className={'form-group'}>
           <ButtonLink data-testid={'extension-list-view-import-button'}
-                      href={props.linkImportExtension}
+                      href={linkImportExtension}
                       as={'primary'}>
-            {props.i18nLinkImportExtension}
+            {i18nLinkImportExtension}
           </ButtonLink>
         </div>
       </ListViewToolbar>
-      {props.i18nTitle !== '' && <Title size={'lg'}>{props.i18nTitle}</Title>}
-      {props.i18nDescription !== '' && (
-        <Text dangerouslySetInnerHTML={{ __html: props.i18nDescription }} />
+      {i18nTitle !== '' && <Title size={'lg'}>{i18nTitle}</Title>}
+      {i18nDescription !== '' && (
+        <Text dangerouslySetInnerHTML={{ __html: i18nDescription }}/>
       )}
-      {props.children ? (
-        <DataList aria-label={'extension list'}>{props.children}</DataList>
+      {children ? (
+        <DataList aria-label={'extension list'}>{children}</DataList>
       ) : (
         <EmptyState variant={EmptyStateVariant.full}>
           <EmptyStateIcon icon={AddCircleOIcon}/>
           <Title headingLevel={'h5'} size={'lg'}>
-            {props.i18nEmptyStateTitle}
+            {i18nEmptyStateTitle}
           </Title>
-          <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
+          <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>
           <Tooltip
             position={'top'}
             content={
-              props.i18nLinkImportExtensionTip
-                ? props.i18nLinkImportExtensionTip
-                : props.i18nLinkImportExtension
+              i18nLinkImportExtensionTip
+                ? i18nLinkImportExtensionTip
+                : i18nLinkImportExtension
             }
             enableFlip={true}
           >
             <>
               <br/>
               <ButtonLink data-testid={'extension-list-view-empty-state-import-button'}
-                          href={props.linkImportExtension}
+                          href={linkImportExtension}
                           as={'primary'}>
-                {props.i18nLinkImportExtension}
+                {i18nLinkImportExtension}
               </ButtonLink>
             </>
           </Tooltip>
