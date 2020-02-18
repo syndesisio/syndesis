@@ -32,11 +32,10 @@ const RoleName = "syndesis-installer"
 
 type Grant struct {
 	*internal.Options
-	Role      string
-	Kind      string
-	User      string
-	cluster   bool
-	publicApi bool
+	Role    string
+	Kind    string
+	User    string
+	cluster bool
 }
 
 func New(parent *internal.Options) *cobra.Command {
@@ -51,7 +50,6 @@ func New(parent *internal.Options) *cobra.Command {
 
 	cmd.PersistentFlags().BoolVarP(&o.cluster, "cluster", "", false, "add the permission for all projects in the cluster(requires cluster admin privileges)")
 	cmd.PersistentFlags().StringVarP(&o.User, "user", "u", pkg.DefaultOperatorImage, "add permissions for the given User")
-	cmd.PersistentFlags().BoolVarP(&o.publicApi, "publicApi", "", false, "add permissions required for publicApi addon in the cluster(requires cluster admin privileges)")
 	cmd.PersistentFlags().AddFlagSet(zap.FlagSet())
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	cmd.MarkFlagRequired("user")
@@ -86,13 +84,11 @@ func (o *Grant) grant() error {
 	}
 	resources = append(resources, jaegerRole...)
 
-	if o.publicApi {
-		pubRole, err := generator.Render("./install/grant/grant_public_api_cluster_role.yml.tmpl", o)
-		if err != nil {
-			return err
-		}
-		resources = append(resources, pubRole...)
+	pubRole, err := generator.Render("./install/grant/grant_public_api_cluster_role.yml.tmpl", o)
+	if err != nil {
+		return err
 	}
+	resources = append(resources, pubRole...)
 
 	client, err := o.GetClient()
 	for _, res := range resources {
@@ -104,9 +100,6 @@ func (o *Grant) grant() error {
 		}
 	}
 
-	if o.publicApi {
-		fmt.Println("Public API ClusterRoleBinding created for namespace ", o.Namespace)
-	}
 	fmt.Println("role", o.Role, "granted to", o.User)
 
 	return nil
