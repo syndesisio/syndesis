@@ -4,7 +4,7 @@ import {
   useVirtualizationHelpers,
   useVirtualizationRuntimeMetadata,
 } from '@syndesis/api';
-import { SchemaNodeInfo, Virtualization, TableInfo } from '@syndesis/models';
+import { SchemaNodeInfo, TableInfo, Virtualization } from '@syndesis/models';
 import { QueryResults } from '@syndesis/models/src';
 import { CreateViewHeader, PreviewData, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
