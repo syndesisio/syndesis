@@ -1,11 +1,12 @@
-import * as H from '@syndesis/history';
 import {
-  Button,
-  ListViewInfoItem,
-  ListViewItem,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+  DataListAction,
+  DataListCell,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+  Tooltip
+} from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
@@ -14,6 +15,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import './ExtensionListItem.css';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
@@ -62,30 +64,6 @@ export const ExtensionListItem: React.FunctionComponent<
     props.onDelete(props.extensionId);
   };
 
-  const getDeleteTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="deleteTip">
-        {props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete}
-      </Tooltip>
-    );
-  };
-
-  const getDetailsTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="detailsTip">
-        {props.i18nDetailsTip ? props.i18nDetailsTip : props.i18nDetails}
-      </Tooltip>
-    );
-  };
-
-  const getUpdateTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="updateTip">
-        {props.i18nUpdateTip ? props.i18nUpdateTip : props.i18nUpdate}
-      </Tooltip>
-    );
-  };
-
   const showConfirmationDialog = () => {
     setShowDeleteDialog(true);
   };
@@ -104,13 +82,52 @@ export const ExtensionListItem: React.FunctionComponent<
         onCancel={doCancel}
         onConfirm={doDelete}
       />
-      <ListViewItem
-        data-testid={`extension-list-item-${toValidHtmlId(
-          props.extensionName
-        )}-list-item`}
-        actions={
-          <>
-            <OverlayTrigger overlay={getDetailsTooltip()} placement="top">
+      <DataListItem aria-labelledby={'extension list item'}
+                    className={'extension-list-item'}
+                    data-testid={`extension-list-item-${toValidHtmlId(
+                      props.extensionName
+                    )}-list-item`}
+      >
+        <DataListItemRow>
+          <DataListItemCells
+            dataListCells={[
+              <DataListCell width={1} key={0} className={'extension-list-item__icon-wrapper'}>
+                {props.extensionIcon}
+              </DataListCell>,
+              <DataListCell key={'primary content'} width={4}>
+                <div className={'extension-list-item__text-wrapper'}>
+                  <b>{props.extensionName}</b><br/>
+                  {
+                    props.extensionDescription ? props.extensionDescription : ''
+                  }
+                </div>
+              </DataListCell>,
+
+              <DataListCell key={'type content'} width={3} className={'extension-list-item__type'}>
+                {props.i18nExtensionType}
+              </DataListCell>,
+              <DataListCell key={'used by content'} width={3} className={'extension-list-item__used-by'}>
+                {props.i18nUsedByMessage}
+              </DataListCell>
+            ]}
+          />
+          <DataListAction
+            aria-labelledby={'extension list actions'}
+            id={'extension-list-action'}
+            aria-label={'Actions'}
+            className={'extension-list-item__actions'}
+          >
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'detailsTip'}>
+                  {props.i18nDetailsTip
+                    ? props.i18nDetailsTip
+                    : props.i18nDetails}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'extension-list-item-details-button'}
                 href={props.detailsPageLink}
@@ -118,8 +135,17 @@ export const ExtensionListItem: React.FunctionComponent<
               >
                 {props.i18nDetails}
               </ButtonLink>
-            </OverlayTrigger>
-            <OverlayTrigger overlay={getUpdateTooltip()} placement="top">
+            </Tooltip>
+
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'updateTip'}>
+                  {props.i18nUpdateTip ? props.i18nUpdateTip : props.i18nUpdate}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'extension-list-item-update-button'}
                 href={props.linkUpdateExtension}
@@ -127,35 +153,30 @@ export const ExtensionListItem: React.FunctionComponent<
               >
                 {props.i18nUpdate}
               </ButtonLink>
-            </OverlayTrigger>
-            <OverlayTrigger overlay={getDeleteTooltip()} placement="top">
-              <Button
+            </Tooltip>
+
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'deleteTip'}>
+                  {props.i18nDeleteTip
+                    ?props.i18nDeleteTip
+                    : props.i18nDelete}
+                </div>
+              }
+            >
+              <ButtonLink
                 data-testid={'extension-list-item-delete-button'}
-                bsStyle="default"
                 disabled={props.usedBy !== 0}
                 onClick={showConfirmationDialog}
               >
                 {props.i18nDelete}
-              </Button>
-            </OverlayTrigger>
-          </>
-        }
-        additionalInfo={[
-          <ListViewInfoItem key={1}>
-            {props.i18nExtensionType}
-          </ListViewInfoItem>,
-          <ListViewInfoItem key={2}>
-            {props.i18nUsedByMessage}
-          </ListViewInfoItem>,
-        ]}
-        description={
-          props.extensionDescription ? props.extensionDescription : ''
-        }
-        heading={props.extensionName}
-        hideCloseIcon={true}
-        leftContent={props.extensionIcon}
-        stacked={true}
-      />
+              </ButtonLink>
+            </Tooltip>
+          </DataListAction>
+        </DataListItemRow>
+      </DataListItem>
     </>
   );
 };
