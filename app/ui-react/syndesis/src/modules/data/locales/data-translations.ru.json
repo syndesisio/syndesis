@@ -91,7 +91,8 @@
     "resultsTableInvalidEmptyTitle": "Текущий вид недействителен",
     "resultsTableValidEmptyInfo": "Сохраните редактор представления и нажмите «Обновить», чтобы отобразить результаты предварительного просмотра.",
     "resultsTableValidEmptyTitle": "Данные недоступны",
-    "showPreview": "Предварительный просмотр"
+    "showPreview": "Предварительный просмотр",
+    "previewHeading": "Предварительный просмотр {{name}} ({{connection}})"
   },
   "previewData": "Предварительный просмотр данных",
   "publishedDataVirtualization": "Запущено",

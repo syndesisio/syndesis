@@ -91,7 +91,8 @@
     "resultsTableInvalidEmptyTitle": "La vista corrente non è valida",
     "resultsTableValidEmptyInfo": "Salvare l'editor della vista e fare clic su Aggiorna per visualizzare i risultati dell'anteprima.",
     "resultsTableValidEmptyTitle": "Nessun dato disponibile",
-    "showPreview": "Anteprima dello spettacolo"
+    "showPreview": "Anteprima dello spettacolo",
+    "previewHeading": "Anteprima di {{name}} ({{connection}})"
   },
   "previewData": "Anteprima dei dati",
   "publishedDataVirtualization": "In esecuzione",

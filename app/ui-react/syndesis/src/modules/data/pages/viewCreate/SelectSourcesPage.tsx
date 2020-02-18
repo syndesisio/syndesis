@@ -4,13 +4,9 @@ import {
   useVirtualizationHelpers,
   useVirtualizationRuntimeMetadata,
 } from '@syndesis/api';
-import { SchemaNodeInfo, Virtualization } from '@syndesis/models';
+import { SchemaNodeInfo, Virtualization, TableInfo } from '@syndesis/models';
 import { QueryResults } from '@syndesis/models/src';
-import {
-  CreateViewHeader,
-  SqlResultsTable,
-  ViewCreateLayout,
-} from '@syndesis/ui';
+import { CreateViewHeader, PreviewData, ViewCreateLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -56,14 +52,31 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
     columns: [],
     rows: [],
   };
+  const emptyTableInfo : TableInfo = {connectionName:'', tableName:''};
 
   /* State used in component */
-  const [showPreviewData, setShowPreviewData] = React.useState(false);
+  const [showPreviewData, setShowPreviewData] = React.useState<boolean>(false);
+  const [isLoadingPreview, setIsLoadingPreview] = React.useState<boolean>(false);
+  const [previewTable,setPreviewTable] = React.useState<TableInfo>(emptyTableInfo);
+  const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
   const [queryResults, setQueryResults] = React.useState(queryResultsEmpty);
   const { state } = useRouteData<null, ISelectSourcesRouteState>();
 
   const virtualization = state.virtualization;
-  
+
+  const onToggle = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const onTableDeselect = (connectionName: string,
+    teiidName: string) =>{
+    props.handleNodeDeselected(connectionName,teiidName);
+    if(previewTable.connectionName ===connectionName && previewTable.tableName ===teiidName){
+      setShowPreviewData(false);
+      setPreviewTable(emptyTableInfo);
+    }
+  }
+
   /* API Request */
   const { queryVirtualization } = useVirtualizationHelpers();
   const {
@@ -83,31 +96,36 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   } = useVirtualizationRuntimeMetadata(virtualization.name);
 
   const toggelShowPreviewData = async (
-    connectionName: string,
-    tableName: string
+    cName: string,
+    selectedTableName: string
   ) => {
-    try {
-    const queryResult = await queryVirtualization(
-      virtualization.name,
-      getPreviewSql(`${connectionName}.${tableName}`),
-      15,
-      0
-    );
+    const selectedTableInfo : TableInfo ={
+      connectionName: cName,
+      tableName: selectedTableName
+    };
+    setIsLoadingPreview(true);
     setShowPreviewData(true);
-    setQueryResults(queryResult);
+    setPreviewTable(selectedTableInfo)
+    try {
+      const queryResult = await queryVirtualization(
+        virtualization.name,
+        getPreviewSql(`${cName}.${selectedTableName}`),
+        15,
+        0
+      );
+      setIsLoadingPreview(false);
+      setQueryResults(queryResult);
     } catch (error) {
-        const details = error.message ? error.message : '';
-        pushNotification(
-          t('queryTableFailed', {
-            details,
-            name: virtualization.name,
-          }),
-          'error'
-        );
+      const details = error.message ? error.message : '';
+      pushNotification(
+        t('queryTableFailed', {
+          details,
+          name: virtualization.name,
+        }),
+        'error'
+      );
+      setIsLoadingPreview(false);
     }
-
-
-    
   };
 
   /**
@@ -161,23 +179,33 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           dvSourceStatuses={connectionStatuses}
           connections={connectionsData.connectionsForDisplay}
           onNodeSelected={props.handleNodeSelected}
-          onNodeDeselected={props.handleNodeDeselected}
+          onNodeDeselected={onTableDeselect}
           selectedSchemaNodes={props.selectedSchemaNodes}
         />
       }
       selectedTables={
         <ConnectionTables
           selectedSchemaNodes={props.selectedSchemaNodes}
-          onNodeDeselected={props.handleNodeDeselected}
+          onNodeDeselected={onTableDeselect}
           columnDetails={viewSourceInfo.schemas}
           setShowPreviewData={toggelShowPreviewData}
         />
       }
       showPreviewData={showPreviewData}
-      previewTable={
-        <SqlResultsTable
+      previewData={
+        <PreviewData
           queryResultCols={getQueryColumns(queryResults)}
           queryResultRows={getQueryRows(queryResults)}
+          i18nEmptyResultsTitle={t('preview.resultsTableValidEmptyTitle')}
+          i18nEmptyResultsMsg={t('preview.resultsTableValidEmptyInfo')}
+          i18nLoadingQueryResults={t('preview.loadingQueryResults')}
+          i18nPreviewHeading={t('preview.previewHeading', {
+            connection: previewTable.connectionName,
+            name: previewTable.tableName
+          })}
+          isLoadingPreview={isLoadingPreview}
+          isExpanded={isExpanded}
+          onToggle={onToggle}
         />
       }
     />

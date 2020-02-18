@@ -91,7 +91,8 @@
     "resultsTableInvalidEmptyTitle": "Current view is invalid",
     "resultsTableValidEmptyInfo": "Save the view editor and click Refresh to display the preview results.",
     "resultsTableValidEmptyTitle": "No data available",
-    "showPreview": "Show preview"
+    "showPreview": "Show preview",
+    "previewHeading": "Preview of {{name}} ({{connection}})"
   },
   "previewData": "Preview data",
   "publishedDataVirtualization": "Running",
