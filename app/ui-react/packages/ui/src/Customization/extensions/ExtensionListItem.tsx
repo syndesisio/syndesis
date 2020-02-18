@@ -1,4 +1,3 @@
-import * as H from '@syndesis/history';
 import {
   DataListAction,
   DataListCell,
@@ -7,6 +6,7 @@ import {
   DataListItemRow,
   Tooltip
 } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';

@@ -34,6 +34,8 @@ export const ExtensionListView: React.FunctionComponent<IExtensionListViewProps>
     i18nEmptyStateTitle,
     i18nLinkImportExtension,
     i18nLinkImportExtensionTip,
+    i18nName,
+    i18nNameFilterPlaceholder,
     i18nTitle,
     linkImportExtension,
     ...rest
