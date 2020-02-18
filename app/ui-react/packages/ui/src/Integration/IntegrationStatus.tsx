@@ -1,5 +1,5 @@
+import { Label } from '@patternfly/react-core';
 import classnames from 'classnames';
-import { Label } from 'patternfly-react';
 import * as React from 'react';
 import {
   ERROR,
@@ -43,8 +43,8 @@ export class IntegrationStatus extends React.Component<
     return (
       <Label
         data-testid={'integration-status-status-label'}
-        className={classnames('', this.props.className)}
-        type={labelType}>
+        className={classnames('', labelType, this.props.className)}
+      >
         {label}
       </Label>
     );

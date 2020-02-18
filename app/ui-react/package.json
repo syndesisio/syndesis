@@ -72,6 +72,6 @@
   },
   "dependencies": {},
   "resolutions": {
-    "@patternfly/patternfly": "2.40.6"
+    "terser": "4.6.3"
   }
 }

@@ -30,7 +30,7 @@ export const DvConnectionsListView: React.FunctionComponent<
                   'dv-connections-list-view-create-connection-button'
                 }
                 href={props.linkToConnectionCreate}
-                as={'primary'}
+                as={'default'}
               >
                 {props.i18nLinkCreateConnection}
               </ButtonLink>

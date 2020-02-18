@@ -1,5 +1,5 @@
+import { Tooltip } from '@patternfly/react-core';
 import classnames from 'classnames';
-import { OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import './IntegrationFlowStep.css';
 
@@ -32,9 +32,6 @@ export class IntegrationFlowStep extends React.Component<
   };
 
   public render() {
-    const tooltip = (
-      <Tooltip id={'integration-flow-step'}>{this.props.i18nTooltip}</Tooltip>
-    );
     const icon = (
       <div className={'integration-flow-step__icon'}>{this.props.icon}</div>
     );
@@ -52,14 +49,13 @@ export class IntegrationFlowStep extends React.Component<
           </>
         ) : (
           <div className={'integration-flow-step__iconWrapper'}>
-            <OverlayTrigger
-              overlay={tooltip}
-              placement="right"
-              trigger={['hover', 'focus']}
-              rootClose={false}
+            <Tooltip
+              content={this.props.i18nTooltip}
+              enableFlip={true}
+              position={'right'}
             >
               {icon}
-            </OverlayTrigger>
+            </Tooltip>
           </div>
         )}
       </div>

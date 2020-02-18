@@ -36,8 +36,8 @@ const getDraftActions = (virtualization: Virtualization) => {
 
 const getVersionActions = (virtualization: Virtualization, edition: number) => {
   const kebabItems =
-    virtualization.publishedState === 'RUNNING' &&
-    edition === virtualization.publishedRevision
+    virtualization.deployedState === 'RUNNING' &&
+    edition === virtualization.deployedRevision
       ? [VirtualizationActionId.Stop, VirtualizationActionId.Export]
       : [
           VirtualizationActionId.Start,
@@ -67,9 +67,11 @@ const getSortedEditions = (
   for (const edition of sorted) {
     const versionItem: IVirtualizationVersionItem = {
       actions: getVersionActions(virtualization, edition.revision),
-      publishedState: getVersionPublishedState(
+      publishedState: getVersionState(
         edition.revision,
+        virtualization.deployedState,
         virtualization.publishedState,
+        virtualization.deployedRevision,
         virtualization.publishedRevision
       ),
       timePublished: edition.createdAt
@@ -82,23 +84,33 @@ const getSortedEditions = (
   return versionItems;
 };
 
-const getVersionPublishedState = (
+const getVersionState = (
   itemVersion: number,
+  virtDeployedState: string,
   virtPublishedState: string,
+  virtDeployedRevision?: number,
   virtPublishedRevision?: number
 ) => {
-  if (virtPublishedRevision && virtPublishedRevision === itemVersion) {
-    if (virtPublishedState === 'RUNNING') {
-      return 'RUNNING';
-    } else if (virtPublishedState === 'FAILED') {
-      return 'FAILED';
-    } else if (virtPublishedState === 'NOTFOUND') {
-      return 'NOTFOUND';
-    } else {
-      return 'IN_PROGRESS';
+  // First consider the version deployed state
+  let virtState: any = 'NOTFOUND';
+  if (virtDeployedRevision && virtDeployedRevision === itemVersion) {
+    if (virtDeployedState === 'RUNNING') {
+      virtState = 'RUNNING';
+    } else if (virtDeployedState === 'FAILED') {
+      virtState = 'FAILED';
+    } else if (virtDeployedState === 'DEPLOYING') {
+      virtState = 'IN_PROGRESS';
     }
   }
-  return 'NOTFOUND';
+  // If no deploy status found, consider the version publish state
+  if (virtState === 'NOTFOUND' && virtPublishedRevision && virtPublishedRevision === itemVersion) {
+    if (virtPublishedState === 'FAILED') {
+      virtState = 'FAILED';
+    } else if (virtPublishedState !== 'RUNNING') {
+      virtState = 'IN_PROGRESS';
+    }
+  }
+  return virtState;
 };
 
 /**

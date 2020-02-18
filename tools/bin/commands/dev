@@ -192,12 +192,17 @@ dev::run() {
         # error deleting blob sha256:1daebdc712936afb9b1ba54cfd8b06ad55470e05ad346dc8156c448ed2223c6b from the registry: 401 Unauthorized
         # the following block retrieves the full image address to remove it
         if [[ $prune_output == *"error deleting blob"* ]]; then
-            echo Error removing some images, forcing their removal.
+            echo "There were errors trying to prune images, forcing their removal."
             local imgs=`echo $prune_output|grep 'error deleting blob' | awk '{print $4}'  ORS='|' | sed 's/|$//g'`
-            oc --as system:admin get images --show-kind=true|awk '{print $1}'|grep -E "$imgs" | while read img; do
-                oc --as system:admin delete $img;
-            done
+            oc --as system:admin get images --show-kind=true|awk '{print $1}'|grep -E "$imgs" | xargs oc --as system:admin delete
         fi
+        eval $(minishift docker-env)
+        docker login -u $(oc whoami) -p $(oc whoami -t) $(minishift openshift registry) >/dev/null 2>&1
+        echo 'Removing dangling images from openshift image registry...'
+        docker rmi $(docker images -f "dangling=true" -q) >/dev/null 2>&1
+        docker logout $(minishift openshift registry) >/dev/null 2>&1
+        eval $(minishift docker-env -u)
+
         set -e
 
         if [ $(hasflag --nuke) ]; then

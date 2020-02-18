@@ -23,9 +23,9 @@ function joinClassnames(...classnames: Array<string | undefined>): string {
 }
 
 export const PfNavLink = ({
-  activeClassName = 'active',
+  activeClassName = 'pf-m-current',
   activeStyle,
-  className: classNameProp,
+  className: classNameProp = 'pf-c-nav__link',
   exact,
   isActive: isActiveProp,
   location,
@@ -39,10 +39,8 @@ export const PfNavLink = ({
   ...rest
 }: INavLink) => {
   const path = typeof to === 'object' ? to.pathname : to;
-
   // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
   const escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
-
   const NavLinkChildren = ({
     location: childLocation,
     match,
@@ -53,20 +51,23 @@ export const PfNavLink = ({
     const isActive = !!(isActiveProp
       ? isActiveProp(match, childLocation)
       : match);
-
-    const className = isActive
+    const classname = isActive
       ? joinClassnames(classNameProp, activeClassName)
       : classNameProp;
-    const style = isActive ? { ...styleProp, ...activeStyle } : styleProp;
-
+    const style = isActive ? activeStyle : styleProp;
     return (
-      <li className={className}>
-        <Link style={style} to={to} children={label} {...rest} />
+      <li className={'pf-c-nav__item'}>
+        <Link
+          style={style}
+          className={classname}
+          to={to}
+          children={label}
+          {...rest}
+        />
         {children}
       </li>
     );
   };
-
   return (
     <Route
       path={escapedPath}

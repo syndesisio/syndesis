@@ -11,14 +11,9 @@
   padding: 0 10px;
 }
 
-.dashboard__metrics .pf-c-card.aggregate-status {
-  padding: 10px 10px 16px 10px;
+.dashboard__metrics .aggregate-status {
   text-align: center;
-  min-height: 118px;
-}
-
-.dashboard__metrics .aggregate-status .pf-c-card__body {
-  margin-top: var(--pf-global--spacer--md);
+  min-height: 11.5em;
 }
 
 .dashboard__metrics .pf-c-card .pf-c-title .card-pf-aggregate-status-count {

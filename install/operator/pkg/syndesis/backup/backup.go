@@ -542,6 +542,9 @@ func (b *Backup) backupDatabase() error {
 	if err != nil {
 		return err
 	}
+	if err = sc.ExternalDatabase(b.context, b.client, b.syndesis); err != nil {
+		return err
+	}
 
 	dbURL, err := url.Parse(sc.Syndesis.Components.Database.URL)
 	if err != nil {
@@ -557,7 +560,7 @@ func (b *Backup) backupDatabase() error {
 		Password: sc.Syndesis.Components.Database.Password,
 		Host:     dbURL.Hostname(),
 		Port:     dbURL.Port(),
-		FileDir:  "/pgdata/syndesis-db-backups/*",
+		FileDir:  "/pgdata/" + dbURL.Hostname() + "-backups/*",
 		FileName: dumpFilename,
 	}
 
@@ -614,6 +617,9 @@ func (b *Backup) RestoreDb() (err error) {
 	// Load configuration to to use as context for generator pkg
 	sc, err := configuration.GetProperties(configuration.TemplateConfig, b.context, b.client, b.syndesis)
 	if err != nil {
+		return err
+	}
+	if err = sc.ExternalDatabase(b.context, b.client, b.syndesis); err != nil {
 		return err
 	}
 
@@ -792,7 +798,7 @@ func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
 
 		// The compilerContainer container has terminated; extract the log from the loggerContainer
 
-		backupfile, err := os.Create(filepath.Join(b.backupDir, b.backupPath, dumpFilename))
+		backupfile, err := os.Create(filepath.Join(b.backupDir, b.backupPath, b.backupDesign.FileName))
 		defer backupfile.Close()
 
 		//
@@ -817,6 +823,14 @@ func (b *Backup) backupTask(bkpPod *corev1.Pod) (bool, error) {
 		})
 		if err != nil {
 			return false, err
+		}
+
+		fi, err := backupfile.Stat()
+		if err != nil {
+			return false, errors.New("Failed to get attribues of new backup dump file")
+		}
+		if fi.Size() == 0 {
+			return false, errors.New("Backup of database failed. Backup dump file is empty")
 		}
 
 		//

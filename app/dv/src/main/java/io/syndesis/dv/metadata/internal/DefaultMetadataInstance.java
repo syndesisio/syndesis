@@ -69,6 +69,7 @@ import org.teiid.query.function.GeometryUtils;
 import org.teiid.query.metadata.BasicQueryMetadataWrapper;
 import org.teiid.query.metadata.CompositeMetadataStore;
 import org.teiid.query.metadata.MetadataValidator;
+import org.teiid.query.metadata.QueryMetadataInterface;
 import org.teiid.query.metadata.SystemMetadata;
 import org.teiid.query.metadata.TransformationMetadata;
 import org.teiid.query.parser.QueryParser;
@@ -536,7 +537,7 @@ public class DefaultMetadataInstance implements MetadataInstance {
                 throw new KException("Preview VDB is not available");
             }
             VDBMetaData vdb = preview.getVDBMetaData();
-            TransformationMetadata qmi = preview.getVDBMetaData().getAttachment(TransformationMetadata.class);
+            TransformationMetadata qmi = vdb.getAttachment(TransformationMetadata.class);
 
             //create an metadata facade so we can find stuff that was parsed
             CompositeMetadataStore compositeMetadataStore = new CompositeMetadataStore(mf.asMetadataStore());
@@ -548,6 +549,18 @@ public class DefaultMetadataInstance implements MetadataInstance {
                     } catch (QueryMetadataException e) {
                         return compositeMetadataStore.findGroup(groupName);
                     }
+                }
+
+                @Override
+                public Object addToMetadataCache(Object metadataID, String key,
+                        Object value)
+                        throws TeiidComponentException, QueryMetadataException {
+                    return null; //don't cache for validation
+                }
+
+                @Override
+                public QueryMetadataInterface getDesignTimeMetadata() {
+                    return this; //this is the same as design time, and we want to prevent caching
                 }
             };
 

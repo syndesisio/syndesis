@@ -1,10 +1,14 @@
-import { Text, Title } from '@patternfly/react-core';
 import {
+  DataList,
   EmptyState,
-  ListView,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+  EmptyStateBody,
+  EmptyStateIcon,
+  EmptyStateVariant,
+  Text,
+  Title,
+  Tooltip
+} from '@patternfly/react-core';
+import { AddCircleOIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
@@ -20,74 +24,67 @@ export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   linkCreateApiConnector: string;
 }
 
-export class ApiConnectorListView extends React.Component<
-  IApiConnectorListViewProps
-> {
-  public render() {
-    return (
-      <PageSection>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger
-              overlay={this.getCreateConnectorTooltip()}
-              placement="top"
-            >
-              <ButtonLink
-                data-testid={'api-connector-list-view-create-button'}
-                href={this.props.linkCreateApiConnector}
-                as={'primary'}
-              >
-                {this.props.i18nLinkCreateApiConnector}
+export const ApiConnectorListView: React.FunctionComponent<IApiConnectorListViewProps> = (
+  {
+    children,
+    i18nDescription,
+    i18nEmptyStateInfo,
+    i18nEmptyStateTitle,
+    i18nLinkCreateApiConnector,
+    i18nLinkCreateApiConnectorTip,
+    i18nName,
+    i18nTitle,
+    linkCreateApiConnector,
+    ...rest
+  }) => {
+  return (
+    <PageSection>
+      <ListViewToolbar {...rest}>
+        <div className={'form-group'}>
+          <ButtonLink data-testid={'api-connector-list-view-create-button'}
+                      href={linkCreateApiConnector}
+                      as={'primary'}>
+            {i18nLinkCreateApiConnector}
+          </ButtonLink>
+        </div>
+      </ListViewToolbar>
+      {i18nTitle !== '' && (
+        <Title size="xl">{i18nTitle}</Title>
+      )}
+      {i18nDescription !== '' && (
+        <Text
+          dangerouslySetInnerHTML={{ __html: i18nDescription }}
+        />
+      )}
+      {children ? (
+        <DataList aria-label={'api connector list'}>{children}</DataList>
+      ) : (
+        <EmptyState variant={EmptyStateVariant.full}>
+          <EmptyStateIcon icon={AddCircleOIcon}/>
+          <Title headingLevel={'h5'} size={'lg'}>
+            {i18nEmptyStateTitle}
+          </Title>
+          <EmptyStateBody>{i18nEmptyStateInfo}</EmptyStateBody>
+          <Tooltip
+            position={'top'}
+            content={
+              i18nLinkCreateApiConnectorTip
+                ? i18nLinkCreateApiConnectorTip
+                : i18nLinkCreateApiConnector
+            }
+            enableFlip={true}
+          >
+            <>
+              <br/>
+              <ButtonLink data-testid={'api-connector-list-view-empty-state-create-button'}
+                          href={linkCreateApiConnector}
+                          as={'primary'}>
+                {i18nLinkCreateApiConnector}
               </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        {this.props.i18nTitle !== '' && (
-          <Title size="xl">{this.props.i18nTitle}</Title>
-        )}
-        {this.props.i18nDescription !== '' && (
-          <Text
-            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
-          />
-        )}
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
-              <OverlayTrigger
-                overlay={this.getCreateConnectorTooltip()}
-                placement="top"
-              >
-                <ButtonLink
-                  data-testid={
-                    'api-connector-list-view-empty-state-create-button'
-                  }
-                  href={this.props.linkCreateApiConnector}
-                  as={'primary'}
-                >
-                  {this.props.i18nLinkCreateApiConnector}
-                </ButtonLink>
-              </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
-      </PageSection>
-    );
-  }
-
-  private getCreateConnectorTooltip() {
-    return (
-      <Tooltip id="createTip">
-        {this.props.i18nLinkCreateApiConnectorTip
-          ? this.props.i18nLinkCreateApiConnectorTip
-          : this.props.i18nLinkCreateApiConnector}
-      </Tooltip>
-    );
-  }
-}
+            </>
+          </Tooltip>
+        </EmptyState>
+      )}
+    </PageSection>
+  );
+};

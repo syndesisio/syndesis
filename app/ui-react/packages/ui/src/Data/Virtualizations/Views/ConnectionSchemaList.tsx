@@ -43,14 +43,14 @@ export const ConnectionSchemaList: React.FunctionComponent<IConnectionSchemaList
                   </Text>
                 </TextContent>
               </FlexItem> */}
-              <FlexItem>
+              <FlexItem breakpointMods={[{ modifier: 'align-right', breakpoint: 'md' }]}>
                 <ButtonLink
                   className={'connection-schema-list-create-connection-button'}
                   data-testid={
                     'dv-connection-schema-list-create-connection-button'
                   }
                   href={props.linkToConnectionCreate}
-                  as={'primary'}
+                  as={'default'}
                 >
                   {props.i18nLinkCreateConnection}
                 </ButtonLink>

@@ -1,5 +1,6 @@
 export const NOTFOUND = 'NOTFOUND';
 export const SUBMITTED = 'SUBMITTED';
+export const COMPLETE = 'COMPLETE';
 export const CONFIGURING = 'CONFIGURING';
 export const BUILDING = 'BUILDING';
 export const DEPLOYING = 'DEPLOYING';
@@ -14,6 +15,7 @@ export const UNPUBLISH_SUBMITTED = 'UNPUBLISH_SUBMITTED';
 export type VirtualizationPublishState =
   | 'NOTFOUND'
   | 'SUBMITTED'
+  | 'COMPLETE'
   | 'CONFIGURING'
   | 'BUILDING'
   | 'DEPLOYING'
