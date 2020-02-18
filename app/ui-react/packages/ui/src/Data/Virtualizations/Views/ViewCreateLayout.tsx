@@ -2,12 +2,8 @@
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import {
   Card,
-  Expandable,
   Grid,
   GridItem,
-  Text,
-  TextContent,
-  TextVariants,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../../Layout';
@@ -18,7 +14,7 @@ import './ViewCreateLayout.css';
  * @param content - the main content of the wizard. In case of overflow, only
  * the body will scroll.
  * @param selectedTables - ConnectionTables component for showing the selected connection on right side of page.
- * @param previewTable - SqlResultsTable component for providing the data preview of seleted tables.
+ * @param previewData - SqlResultsTable component for providing the data preview of seleted tables.
  */
 
 export interface IViewCreateLayoutProps {
@@ -26,7 +22,8 @@ export interface IViewCreateLayoutProps {
   content: JSX.Element;
   selectedTables?: JSX.Element;
   showPreviewData?: boolean;
-  previewTable?: JSX.Element;
+  previewData?: JSX.Element;
+  isExpanded?: boolean;
 }
 
 export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> = ({
@@ -34,15 +31,13 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
   content,
   selectedTables,
   showPreviewData,
-  previewTable,
+  previewData,
+  isExpanded
 }: IViewCreateLayoutProps) => {
 
   /* State used in component */
-  const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
+  // const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
 
-  const onToggle = () => {
-    setIsExpanded(!isExpanded);
-  };
 
   return (
     <div className={'view-create-layout'}>
@@ -80,21 +75,9 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
                           span={12}
                           className={'view-create-layout_previewSection'}
                         >
-                          <TextContent>
-                            <Text component={TextVariants.h2}>
-                              <span>Preview</span>
-                              <Expandable
-                                toggleText={
-                                  isExpanded ? 'Show Less' : 'Show More'
-                                }
-                                onToggle={onToggle}
-                                isExpanded={isExpanded}
-                                className={'view-create-layout_expandable'}
-                              >
-                                {previewTable}
-                              </Expandable>
-                            </Text>
-                          </TextContent>
+                         
+                                {previewData}
+                             
                         </GridItem>
                       </Grid>
                     ) : (

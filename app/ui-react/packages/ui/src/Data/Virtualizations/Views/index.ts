@@ -7,6 +7,7 @@ export * from './ViewConfigurationForm';
 export * from './ViewCreateLayout';
 export * from './SelectedConnectionTables';
 export * from './SelectedConnectionListView';
+export * from './PreviewData'
 export * from './CreateViewHeader';
 export * from './ViewInfoList';
 export * from './ViewInfoListItems';
