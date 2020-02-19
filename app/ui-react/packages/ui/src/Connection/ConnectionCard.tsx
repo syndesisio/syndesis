@@ -51,11 +51,6 @@ export interface IConnectionProps {
   techPreviewPopoverHtml?: React.ReactNode;
 }
 
-export interface IConnectionCardState {
-  isMenuOpen: boolean;
-  showDeleteDialog: boolean;
-}
-
 export const ConnectionCard: React.FunctionComponent<IConnectionProps> = ({
   description,
   href,
