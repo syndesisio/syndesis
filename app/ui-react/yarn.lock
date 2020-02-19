@@ -7659,7 +7659,7 @@ classlist.js@^1.1.20150312:
   version "1.1.20150312"
   resolved "https://registry.yarnpkg.com/classlist.js/-/classlist.js-1.1.20150312.tgz#1d70842f7022f08d9ac086ce69e5b250f2c57789"
 
-classnames@^2.2.0, classnames@^2.2.3, classnames@^2.2.5, classnames@^2.2.6:
+classnames@^2.2.0, classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
 
@@ -7818,6 +7818,11 @@ clone@^1.0.2:
 clone@^2.1.1, clone@^2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/clone/-/clone-2.1.2.tgz#1b7f4b9f591f1e8f83670401600345a02887435f"
+
+clsx@^1.0.1:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.0.tgz#62937c6adfea771247c34b54d320fb99624f5702"
+  integrity sha512-3avwM37fSK5oP6M5rQ9CNe99lwxhXDOeSWVPAOYF6OazUTgZCMb0yWlJpmdD74REy1gkEaFiub2ULv4fq9GUhA==
 
 cmd-shim@^2.0.2:
   version "2.0.2"
@@ -8968,6 +8973,11 @@ csstype@^2.5.2:
   resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.8.tgz#0fb6fc2417ffd2816a418c9336da74d7f07db431"
   integrity sha512-msVS9qTuMT5zwAGCVm4mxfrZ18BNc6Csd0oJAtiFMZ1FAx1CCvy2+5MDmYoix63LM/6NDbNtodCiGYGmFgO0dA==
 
+csstype@^2.6.7:
+  version "2.6.9"
+  resolved "https://registry.yarnpkg.com/csstype/-/csstype-2.6.9.tgz#05141d0cd557a56b8891394c1911c40c8a98d098"
+  integrity sha512-xz39Sb4+OaTsULgUERcCk+TJj8ylkL4aSVDQiX/ksxbELSqwkgt4d4RD7fovIdgJGSuNYqwZEiVjYY5l0ask+Q==
+
 cuint@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/cuint/-/cuint-0.2.2.tgz#408086d409550c2631155619e9fa7bcadc3b991b"
@@ -9519,11 +9529,19 @@ dom-converter@^0.2:
   dependencies:
     utila "~0.4"
 
-"dom-helpers@^2.4.0 || ^3.0.0", dom-helpers@^3.2.0, dom-helpers@^3.2.1, dom-helpers@^3.3.1, dom-helpers@^3.4.0:
+dom-helpers@^3.2.0, dom-helpers@^3.2.1, dom-helpers@^3.3.1, dom-helpers@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-3.4.0.tgz#e9b369700f959f62ecde5a6babde4bccd9169af8"
   dependencies:
     "@babel/runtime" "^7.1.2"
+
+dom-helpers@^5.0.0:
+  version "5.1.3"
+  resolved "https://registry.yarnpkg.com/dom-helpers/-/dom-helpers-5.1.3.tgz#7233248eb3a2d1f74aafca31e52c5299cc8ce821"
+  integrity sha512-nZD1OtwfWGRBWlpANxacBEZrEuLa16o1nh7YopFWeoF68Zt8GGEmzHu6Xv4F3XaFIC+YXtTLrzgqKxFgLEe4jw==
+  dependencies:
+    "@babel/runtime" "^7.6.3"
+    csstype "^2.6.7"
 
 dom-serialize@^2.2.0:
   version "2.2.1"
@@ -20104,12 +20122,13 @@ react-transition-group@^2.2.1:
     react-lifecycles-compat "^3.0.4"
 
 react-virtualized@^9.20.1:
-  version "9.21.0"
-  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.21.0.tgz#8267c40ffb48db35b242a36dea85edcf280a6506"
+  version "9.21.2"
+  resolved "https://registry.yarnpkg.com/react-virtualized/-/react-virtualized-9.21.2.tgz#02e6df65c1e020c8dbf574ec4ce971652afca84e"
+  integrity sha512-oX7I7KYiUM7lVXQzmhtF4Xg/4UA5duSA+/ZcAvdWlTLFCoFYq1SbauJT5gZK9cZS/wdYR6TPGpX/dqzvTqQeBA==
   dependencies:
     babel-runtime "^6.26.0"
-    classnames "^2.2.3"
-    dom-helpers "^2.4.0 || ^3.0.0"
+    clsx "^1.0.1"
+    dom-helpers "^5.0.0"
     loose-envify "^1.3.0"
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
