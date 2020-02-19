@@ -1,7 +1,8 @@
 import {
-  Split, SplitItem, Title, Tooltip
+  Label, Split, SplitItem, Title, Tooltip
 } from '@patternfly/react-core';
-import { Label, ListView, ListViewItem } from 'patternfly-react';
+import { global_active_color_100, global_danger_color_100 } from '@patternfly/react-tokens';
+import { ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 import { ConnectionStatus } from '../../DvConnection/DvConnectionCard';
@@ -36,10 +37,10 @@ export const ConnectionSchemaListItem: React.FunctionComponent<IConnectionSchema
             <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
               <Label
                 className="connection-schema-list-item__status"
-                type={
+                style={
                   props.dvStatus === ConnectionStatus.ACTIVE
-                    ? 'success'
-                    : 'danger'
+                    ? { background: global_active_color_100.value }
+                    : { background: global_danger_color_100.value }
                 }
               >
                 {props.dvStatus}

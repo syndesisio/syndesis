@@ -2,6 +2,7 @@ import {
   CardBody,
   CardHeader,
   Popover,
+  Spinner,
   Split,
   SplitItem,
   Text,
@@ -9,7 +10,6 @@ import {
   TextVariants,
 } from '@patternfly/react-core';
 import { InfoCircleIcon } from '@patternfly/react-icons';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvResultSetCacheMetric.css';
@@ -49,7 +49,7 @@ export const DvResultSetCacheMetric: React.FunctionComponent<
       </CardHeader>
       <CardBody>
         {props.loading ? (
-          <Spinner loading={true} inline={false} />
+          <Spinner size={'lg'} />
         ) : props.cacheHitRatioPercentage &&
           props.cacheHitRatioPercentage.length > 0 &&
           props.i18nCacheHitRatioText &&

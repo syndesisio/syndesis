@@ -1,13 +1,13 @@
 import {
   CardBody,
   CardHeader,
+  Spinner,
   Split,
   SplitItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './DvClientSessionMetric.css';
 import './DvMetricsContainer.css';
@@ -41,7 +41,7 @@ export const DvClientSessionMetric: React.FunctionComponent<
       </CardHeader>
       <CardBody>
         {props.loading ? (
-          <Spinner loading={true} inline={false} />
+          <Spinner size={'lg'} />
         ) : props.sessionCount >= 0 &&
           props.i18nSessionText &&
           props.i18nSessionText.length > 0 ? (
