@@ -94,7 +94,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>3.1.0-SNAPSHOT</camel.version>
-    <camel-k-runtime.version>1.0.7</camel-k-runtime.version>
+    <camel-k-runtime.version>1.0.9</camel-k-runtime.version>
 
     <!-- CXF version, to be kept in sync with the one referenced by camel version above -->
     <cxf.version>3.2.7.fuse-sb2-760012</cxf.version>

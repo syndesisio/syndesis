@@ -16,6 +16,7 @@
 package io.syndesis.server.openshift;
 
 import java.util.Map;
+import java.util.Objects;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.validation.annotation.Validated;
@@ -82,7 +83,8 @@ public class OpenShiftConfigurationProperties {
     public void setOpenShiftHost(String openShiftHost) {
         this.masterUrlHost = openShiftHost;
 
-        if (!masterUrlHost.equals(openShiftHost)) {
+        final String current = openShiftClientConfig.getMasterUrl();
+        if (!Objects.equals(current, openShiftHost)) {
             openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
         }
     }

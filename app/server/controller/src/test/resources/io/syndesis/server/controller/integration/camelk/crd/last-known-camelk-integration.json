@@ -1,0 +1,98 @@
+{
+    "apiVersion": "camel.apache.org/v1",
+    "kind": "Integration",
+    "metadata": {
+        "annotations": {
+            "prometheus.io/port": "9779",
+            "prometheus.io/scrape": "true",
+            "syndesis.io/deploy-id": "i-M0SZstrdU_fCuujYkqGz:4",
+            "syndesis.io/deployment-version": "4",
+            "syndesis.io/integration-id": "i-M0SZstrdU_fCuujYkqGz",
+            "syndesis.io/integration-name": "t2l"
+        },
+        "creationTimestamp": "2020-02-19T13:38:05Z",
+        "generation": 1,
+        "labels": {
+            "syndesis.io/app": "syndesis",
+            "syndesis.io/component": "integration",
+            "syndesis.io/deployment-version": "4",
+            "syndesis.io/integration": "t2l",
+            "syndesis.io/integration-id": "i-M0SZstrdU_fCuujYkqGz",
+            "syndesis.io/type": "integration",
+            "syndesis.io/username": "user"
+        },
+        "name": "i-t2l",
+        "namespace": "demo",
+        "resourceVersion": "37327326",
+        "selfLink": "/apis/camel.apache.org/v1/namespaces/demo/integrations/i-t2l",
+        "uid": "0edb4cd1-531d-11ea-8f19-0ac60ceac538"
+    },
+    "spec": {
+        "configuration": [
+            {
+                "type": "env",
+                "value": "AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml"
+            },
+            {
+                "type": "property",
+                "value": "camel.context.streamCaching=true"
+            },
+            {
+                "type": "secret",
+                "value": "i-t2l"
+            }
+        ],
+        "dependencies": [
+            "bom:io.syndesis.integration/integration-bom-camel-k/pom/2.0-SNAPSHOT",
+            "mvn:io.syndesis.integration/integration-runtime-camelk",
+            "mvn:org.apache.camel/camel-quartz",
+            "mvn:io.syndesis.connector/connector-timer"
+        ],
+        "repositories": [
+        ],
+        "resources": [
+            {
+                "contentKey": "prometheus-config.yml",
+                "contentRef": "syndesis-prometheus-agent-config",
+                "mountPath": "/etc/camel/resources",
+                "name": "prometheus-config.yml",
+                "type": "data"
+            }
+        ],
+        "sources": [
+            {
+                "compression": false,
+                "content": "{\"id\":\"i-M0SZstrdU_fCuujYkqGz\",\"version\":4,\"createdAt\":1582117916278,\"updatedAt\":1582119485136,\"tags\":[\"timer\"],\"name\":\"t2l\",\"flows\":[{\"id\":\"-M0SZoUYjer-CsG0k31I\",\"tags\":[\"timer\"],\"steps\":[{\"id\":\"-M0SZqKPjer-CsG0k31I\",\"configuredProperties\":{\"period\":\"60000\"},\"metadata\":{\"configured\":\"true\"},\"action\":{\"id\":\"io.syndesis:timer-action\",\"name\":\"Simple\",\"description\":\"Specify an amount of time and its unit to periodically trigger integration execution. \",\"descriptor\":{\"inputDataShape\":{\"kind\":\"none\"},\"outputDataShape\":{\"kind\":\"none\"},\"propertyDefinitionSteps\":[{\"name\":\"Period\",\"properties\":{\"period\":{\"componentProperty\":false,\"defaultValue\":\"60000\",\"deprecated\":false,\"description\":\"Period\",\"displayName\":\"Period\",\"javaType\":\"long\",\"kind\":\"parameter\",\"labelHint\":\"Delay between each execution of the integration.\",\"required\":true,\"secret\":false,\"type\":\"duration\"}}}],\"configuredProperties\":{\"timerName\":\"syndesis-timer\"},\"componentScheme\":\"timer\"},\"actionType\":\"connector\",\"pattern\":\"From\"},\"connection\":{\"uses\":0,\"id\":\"timer\",\"name\":\"Timer\",\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"connector\":{\"id\":\"timer\",\"version\":8,\"name\":\"Timer\",\"dependencies\":[{\"type\":\"MAVEN\",\"id\":\"io.syndesis.connector:connector-timer:2.0-SNAPSHOT\"},{\"type\":\"MAVEN\",\"id\":\"org.apache.camel:camel-quartz:3.1.0-SNAPSHOT\"}],\"metadata\":{\"hide-from-connection-pages\":\"true\"},\"description\":\"Trigger events based on an interval or a quartz expression\"},\"connectorId\":\"timer\",\"description\":\"Trigger integration execution based on an interval or a cron expression\",\"isDerived\":false},\"stepKind\":\"endpoint\"},{\"id\":\"-M0SZr14jer-CsG0k31I\",\"configuredProperties\":{\"bodyLoggingEnabled\":\"false\",\"contextLoggingEnabled\":\"false\"},\"metadata\":{\"configured\":\"true\"},\"stepKind\":\"log\",\"name\":\"Log\"}],\"type\":\"PRIMARY\"}]}",
+                "language": "syndesis",
+                "name": "i-m0szstrdu-fcuujykqgz"
+            }
+        ],
+        "traits": {
+            "camel": {
+                "configuration": {
+                    "runtime-version": "1.0.9",
+                    "version": "3.1.0-SNAPSHOT"
+                }
+            },
+            "jolokia": {
+                "configuration": {
+                    "enabled": "true",
+                    "port": "8778"
+                }
+            },
+            "owner": {
+                "configuration": {
+                    "target-annotations": "prometheus.io/port,prometheus.io/scrape",
+                    "target-labels": "syndesis.io/component,syndesis.io/integration-id,syndesis.io/deployment-version,syndesis.io/username,syndesis.io/integration,syndesis.io/type,syndesis.io/app"
+                }
+            },
+            "prometheus": {
+                "configuration": {
+                    "enabled": "true",
+                    "port": "9779",
+                    "service-monitor": "false"
+                }
+            }
+        }
+    }
+}

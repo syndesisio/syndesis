@@ -28,14 +28,13 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.tracing.TracingActivityTrackingPolicyFactory;
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.k.RoutesLoader;
+import org.apache.camel.k.Runtime;
 import org.apache.camel.k.Source;
+import org.apache.camel.k.SourceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class IntegrationRouteLoader implements RoutesLoader {
+public class IntegrationRouteLoader implements SourceLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteLoader.class);
 
     private ActivityTracker activityTracker;
@@ -60,10 +59,10 @@ public class IntegrationRouteLoader implements RoutesLoader {
     }
 
     @Override
-    public RouteBuilder load(CamelContext camelContext, Source source) throws Exception {
+    public void load(Runtime runtime, Source source) throws Exception {
         if (activityTracker == null) {
             LOGGER.info("Loading ActivityTracker from Camel RuntimeRegistry.");
-            activityTracker = camelContext.getRegistry().lookupByNameAndType("activityTracker", ActivityTracker.class);
+            activityTracker = runtime.getRegistry().lookupByNameAndType("activityTracker", ActivityTracker.class);
         }
         if (activityTracker == null) {
             LOGGER.info("ActivityTracker not provided or not found in Camel RuntimeRegistry, using new instance of " +
@@ -80,7 +79,7 @@ public class IntegrationRouteLoader implements RoutesLoader {
 
         if (tracer == null) {
             LOGGER.info("Loading tracer from Camel RuntimeRegistry.");
-            tracer = camelContext.getRegistry().lookupByNameAndType("tracer", Tracer.class);
+            tracer = runtime.getRegistry().lookupByNameAndType("tracer", Tracer.class);
             if (tracer != null) {
                 LOGGER.info("Tracer {} loaded.", tracer);
             } else {
@@ -88,11 +87,13 @@ public class IntegrationRouteLoader implements RoutesLoader {
             }
         }
 
-        return new IntegrationRouteBuilder(ctx -> source.resolveAsInputStream(ctx),
+        IntegrationRouteBuilder routeBuilder = new IntegrationRouteBuilder(ctx -> source.resolveAsInputStream(ctx),
             integrationStepHandlers,
             Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
                 new FlowActivityTrackingPolicyFactory(activityTracker),
                 new TracingActivityTrackingPolicyFactory(tracer))
         );
+
+        runtime.addRoutes(routeBuilder);
     }
 }
