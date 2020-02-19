@@ -16,8 +16,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../Layout';
-import { Container } from '../../Layout/Container';
+import { ButtonLink, Container } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
