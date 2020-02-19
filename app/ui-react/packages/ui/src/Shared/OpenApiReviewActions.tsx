@@ -1,6 +1,7 @@
 import {
   Card,
   CardBody,
+  Label,
   Text,
   TextContent,
   TextList,
@@ -10,7 +11,10 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { Label } from 'patternfly-react';
+import {
+  global_danger_color_100,
+  global_warning_color_100,
+} from '@patternfly/react-tokens';
 import * as React from 'react';
 import { Container } from '../Layout';
 
@@ -109,7 +113,10 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nErrorsHeading}
-                  <Label bsStyle={'danger'} className={'heading__label'}>
+                  <Label
+                    style={{ background: global_danger_color_100.value }}
+                    className={'heading__label'}
+                  >
                     {this.props.errorMessages.length}
                   </Label>
                 </Title>
@@ -134,7 +141,10 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nWarningsHeading}
-                  <Label bsStyle={'warning'} className={'heading__label'}>
+                  <Label
+                    style={{ background: global_warning_color_100.value }}
+                    className={'heading__label'}
+                  >
                     {this.props.warningMessages.length}
                   </Label>
                 </Title>
