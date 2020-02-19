@@ -63,6 +63,7 @@ import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.assertj.core.api.Assertions.entry;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -103,14 +104,11 @@ public class PublicApiHandlerTest {
         // null's are not used
         final PublicApiHandler handler = new PublicApiHandler(dataManager, null, null, null, null, environmentHandler, integrationSupportHandler, null);
 
-        try (Response response = handler.exportResources("env", false)) {
+        try (Response response = handler.exportResources("env", false, false)) {
             assertThat(response).isNotNull();
             assertThat(response.getStatusInfo().toEnum()).isEqualTo(Status.OK);
             assertThat(response.getEntity()).isSameAs(someStream);
         }
-
-        verify(dataManager).update(withLastExportedTimestamp(integration1, envId));
-        verify(dataManager).update(withLastExportedTimestamp(integration2, envId));
 
         final Integration integration3 = new Integration.Builder()
             .id("integration3")
@@ -125,6 +123,15 @@ public class PublicApiHandlerTest {
             .get(0);
 
         assertThat(filterFunction.apply(ListResult.of(integration1, integration2, integration3))).isEqualTo(ListResult.of(integration1, integration2));
+
+        try (Response response = handler.exportResources("env", false, true)) {
+            assertThat(response).isNotNull();
+            assertThat(response.getStatusInfo().toEnum()).isEqualTo(Status.OK);
+            assertThat(response.getEntity()).isSameAs(someStream);
+        }
+
+        verify(dataManager, times(2)).update(withLastExportedTimestamp(integration1, envId));
+        verify(dataManager, times(2)).update(withLastExportedTimestamp(integration2, envId));
     }
 
     @Test
