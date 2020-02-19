@@ -1,13 +1,13 @@
 import {
   CardBody,
   CardHeader,
+  Spinner,
   Stack,
   StackItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvUptimeMetric.css';
@@ -41,7 +41,7 @@ export const DvUptimeMetric: React.FunctionComponent<
       </CardHeader>
       <CardBody>
         {props.loading ? (
-          <Spinner loading={true} inline={false} />
+          <Spinner size={'lg'} />
         ) : props.i18nSinceMessage &&
           props.i18nSinceMessage.length > 0 &&
           props.i18nUptime &&

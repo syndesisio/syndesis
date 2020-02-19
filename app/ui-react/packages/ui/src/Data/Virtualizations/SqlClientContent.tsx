@@ -1,6 +1,6 @@
-import { Grid, GridItem, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import { Grid, GridItem, Spinner, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState, Spinner } from 'patternfly-react';
+import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
@@ -75,7 +75,7 @@ export const SqlClientContent: React.FunctionComponent<ISqlClientContentProps> =
             {props.isQueryRunning ? (
               <Split>
                 <SplitItem isFilled={false}>
-                  <Spinner loading={true} inline={false} />
+                  <Spinner size={'lg'} />
                 </SplitItem>
                 <SplitItem isFilled={true}>
                   &nbsp;&nbsp;{props.i18nLoadingQueryResults}
