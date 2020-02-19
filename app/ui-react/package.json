@@ -70,8 +70,5 @@
     "singleQuote": true,
     "semi": true
   },
-  "dependencies": {},
-  "resolutions": {
-    "terser": "4.6.3"
-  }
+  "dependencies": {}
 }

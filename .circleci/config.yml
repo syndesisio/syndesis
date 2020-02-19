@@ -670,8 +670,6 @@ workflows:
               only: master
       - license-check:
           <<: *ignore_cherry_pick_branches
-      - ui-doc:
-          <<: *ignore_cherry_pick_branches
       - ui:
           <<: *ignore_cherry_pick_branches
       - common:
