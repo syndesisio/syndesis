@@ -4401,8 +4401,9 @@
     "@types/jquery" "*"
 
 "@types/jasmine@*", "@types/jasmine@^3.3.9":
-  version "3.3.9"
-  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.3.9.tgz#ee886a9113db567e722a8a0c37f0e6283f2cefa3"
+  version "3.5.5"
+  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-3.5.5.tgz#3cad028470cf36ea24771078ec7ef86939af0d48"
+  integrity sha512-LlhwGivHkUV8ehNmaXjGGXopLm91G9ORIRcjw7Ya47jVAIGudewFZM2PdPXBvueZfRWwYzLt083wiPfKRXrSlg==
 
 "@types/jasminewd2@^2.0.3":
   version "2.0.8"
