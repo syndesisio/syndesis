@@ -8,7 +8,6 @@ export * from './ViewCreateLayout';
 export * from './SelectedConnectionTables';
 export * from './SelectedConnectionListView';
 export * from './CreateViewHeader';
-export * from './ViewHeaderBreadcrumb';
 export * from './ViewInfoList';
 export * from './ViewInfoListItems';
 export * from './ViewInfoListSkeleton';
