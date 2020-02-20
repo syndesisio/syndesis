@@ -204,7 +204,8 @@ public class PublicApiHandler {
     @Path("integrations/{env}/export.zip")
     @Produces(MediaType.APPLICATION_OCTET_STREAM)
     public Response exportResources(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
-        @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
+                                    @QueryParam("all") @ApiParam boolean exportAll,
+                                    @QueryParam("ignoreTimestamp") @ApiParam boolean ignoreTimestamp) throws IOException {
 
         // validate environment
         EnvironmentHandler.validateEnvironment("environment", environment);
@@ -233,10 +234,10 @@ public class PublicApiHandler {
             // export integrations freshly tagged or tagged after last export
             integrations = dataMgr.fetchAll(Integration.class, listResult -> listResult.getItems().stream().filter(i -> {
 
-                boolean result = false;
+                boolean result = ignoreTimestamp;
                 final Map<String, ContinuousDeliveryEnvironment> map = i.getContinuousDeliveryState();
                 final ContinuousDeliveryEnvironment cdEnv = map.get(envId);
-                if (cdEnv != null) {
+                if (!ignoreTimestamp && cdEnv != null) {
                     final Date taggedAt = cdEnv.getLastTaggedAt();
                     final Date exportedAt = cdEnv.getLastExportedAt().orElse(null);
                     result = exportedAt == null || exportedAt.before(taggedAt);
