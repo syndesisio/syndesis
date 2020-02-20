@@ -1,3 +1,4 @@
+import { Tooltip } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
   DropdownKebab,
@@ -5,8 +6,6 @@ import {
   ListViewInfoItem,
   ListViewItem,
   MenuItem,
-  OverlayTrigger,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
@@ -52,22 +51,6 @@ export const ViewListItem: React.FunctionComponent<
     props.onDelete(props.viewId, props.viewName);
   }
 
-  const getDeleteTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="deleteTip">
-        {props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  const getEditTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="editTip">
-        {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
-      </Tooltip>
-    );
-  }
-
   const showConfirmationDialog = () => {
     setShowDeleteDialog(true);
   }
@@ -91,7 +74,15 @@ export const ViewListItem: React.FunctionComponent<
         )}-list-item`}
         actions={
           <div className="form-group">
-            <OverlayTrigger overlay={getEditTooltip()} placement="top">
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'editTip'}>
+                  {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'view-list-item-edit-button'}
                 href={props.viewEditPageLink}
@@ -99,19 +90,26 @@ export const ViewListItem: React.FunctionComponent<
               >
                 {props.i18nEdit}
               </ButtonLink>
-            </OverlayTrigger>
+            </Tooltip>
             <DropdownKebab
               id={`view-${props.viewName}-action-menu`}
               pullRight={true}
             >
-              <OverlayTrigger
-                overlay={getDeleteTooltip()}
-                placement="left"
+              <Tooltip
+                position={'left'}
+                enableFlip={true}
+                content={
+                  <div id={'deleteTip'}>
+                    {props.i18nDeleteTip
+                      ? props.i18nDeleteTip
+                      : props.i18nDelete}
+                  </div>
+                }
               >
                 <MenuItem onClick={showConfirmationDialog}>
                   {props.i18nDelete}
                 </MenuItem>
-              </OverlayTrigger>
+              </Tooltip>
             </DropdownKebab>
           </div>
         }
@@ -123,26 +121,20 @@ export const ViewListItem: React.FunctionComponent<
                   <div className={'view-list-item__invalidView'}>
                     {props.i18nInvalid}
                   </div>
-                </ListViewInfoItem>
+                </ListViewInfoItem>,
               ]
         }
         heading={props.viewName}
-        description={
-          props.viewDescription ? props.viewDescription : ''
-        }
+        description={props.viewDescription ? props.viewDescription : ''}
         hideCloseIcon={true}
         leftContent={
           props.viewIcon ? (
             <div className="blank-slate-pf-icon">
-              <img
-                src={props.viewIcon}
-                alt={props.viewName}
-                width={46}
-              />
+              <img src={props.viewIcon} alt={props.viewName} width={46} />
             </div>
           ) : (
-              <ListViewIcon name={'table'} />
-            )
+            <ListViewIcon name={'table'} />
+          )
         }
         stacked={true}
       />

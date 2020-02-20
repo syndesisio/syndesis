@@ -1,6 +1,17 @@
-import { Grid, GridItem, Spinner, Split, SplitItem, Stack, StackItem } from '@patternfly/react-core';
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateVariant,
+  Grid,
+  GridItem,
+  Spinner,
+  Split,
+  SplitItem,
+  Stack,
+  StackItem,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../src/Layout';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
@@ -68,10 +79,7 @@ export const SqlClientContent: React.FunctionComponent<ISqlClientContentProps> =
       {props.viewNames.length > 0 ? (
         <Grid gutter="md">
           <GridItem span={3}>{props.formContent}</GridItem>
-          <GridItem
-            span={9}
-            className={'sql-client-content__resultsSection'}
-          >
+          <GridItem span={9} className={'sql-client-content__resultsSection'}>
             {props.isQueryRunning ? (
               <Split>
                 <SplitItem isFilled={false}>
@@ -100,11 +108,11 @@ export const SqlClientContent: React.FunctionComponent<ISqlClientContentProps> =
                 </StackItem>
               </Stack>
             ) : (
-              <EmptyState>
-                <EmptyState.Title>
+              <EmptyState variant={EmptyStateVariant.full}>
+                <Title headingLevel="h5" size="lg">
                   {props.i18nEmptyResultsTitle}
-                </EmptyState.Title>
-                <EmptyState.Info>{props.i18nEmptyResultsMsg}</EmptyState.Info>
+                </Title>
+                <EmptyStateBody>{props.i18nEmptyResultsMsg}</EmptyStateBody>
               </EmptyState>
             )}
           </GridItem>

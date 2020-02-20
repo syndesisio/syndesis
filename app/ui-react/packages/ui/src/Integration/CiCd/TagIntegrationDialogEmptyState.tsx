@@ -1,5 +1,5 @@
+import { EmptyState, EmptyStateBody, EmptyStateVariant, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
 
@@ -15,29 +15,19 @@ export class TagIntegrationDialogEmptyState extends React.Component<
 > {
   public render() {
     return (
-      <EmptyState
-        style={
-          {
-            background: 'inherit',
-            border: 'none',
-          } /* todo component specific override */
-        }
-      >
-        <EmptyState.Icon />
-        <EmptyState.Title>{this.props.i18nTitle}</EmptyState.Title>
-        <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
-        <EmptyState.Action>
-          <ButtonLink
-            data-testid={
-              'tag-integration-dialog-empty-state-manage-cicd-button'
-            }
-            as="primary"
-            size="lg"
-            href={this.props.href}
-          >
-            {this.props.i18nGoToManageCiCdButtonText}
-          </ButtonLink>
-        </EmptyState.Action>
+      <EmptyState variant={EmptyStateVariant.full}>
+        <Title headingLevel="h5" size="lg">
+          {this.props.i18nTitle}
+        </Title>
+        <EmptyStateBody>{this.props.i18nInfo}</EmptyStateBody>
+        <ButtonLink
+          data-testid={'tag-integration-dialog-empty-state-manage-cicd-button'}
+          as="primary"
+          size="lg"
+          href={this.props.href}
+        >
+          {this.props.i18nGoToManageCiCdButtonText}
+        </ButtonLink>
       </EmptyState>
     );
   }

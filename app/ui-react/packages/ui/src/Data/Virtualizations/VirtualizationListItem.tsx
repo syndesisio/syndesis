@@ -1,3 +1,4 @@
+import { Tooltip } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import {
@@ -7,8 +8,6 @@ import {
   ListViewInfoItem,
   ListViewItem,
   MenuItem,
-  OverlayTrigger,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
@@ -132,14 +131,6 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
     setShowConfirmationDialog(false);
   };
 
-  const getEditTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="detailsTip">
-        {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
-      </Tooltip>
-    );
-  };
-
   const doDelete = async () => {
     setWorking(true);
     const saveText = publishStateText;
@@ -250,7 +241,15 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
               publishingTotalSteps={props.publishingTotalSteps}
               publishingStepText={props.publishingStepText}
             />
-            <OverlayTrigger overlay={getEditTooltip()} placement="top">
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'editTip'}>
+                  {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'virtualization-list-item-edit-button'}
                 href={props.detailsPageLink}
@@ -258,7 +257,7 @@ export const VirtualizationListItem: React.FunctionComponent<IVirtualizationList
               >
                 {props.i18nEdit}
               </ButtonLink>
-            </OverlayTrigger>
+            </Tooltip>
             <DropdownKebab
               id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}

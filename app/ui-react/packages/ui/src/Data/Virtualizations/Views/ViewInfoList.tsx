@@ -1,4 +1,4 @@
-import { EmptyState } from 'patternfly-react';
+import { EmptyState, EmptyStateBody, EmptyStateVariant, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 import './ViewInfoList.css';
@@ -20,14 +20,13 @@ export const ViewInfoList: React.FunctionComponent<
         <div />
       </ListViewToolbar>
       {props.children ? (
-        <div className={'view-info-list'}>
-          {props.children}
-        </div>
+        <div className={'view-info-list'}>{props.children}</div>
       ) : (
-        <EmptyState>
-          <EmptyState.Icon />
-          <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
-          <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
+        <EmptyState variant={EmptyStateVariant.full}>
+          <Title headingLevel="h5" size="lg">
+            {props.i18nEmptyStateTitle}
+          </Title>
+          <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
         </EmptyState>
       )}
     </>
