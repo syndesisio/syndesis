@@ -62,7 +62,7 @@ export default describe('ExtensionDetail', () => {
       </Router>
     );
 
-    const { getByText, queryAllByText } = render(comp);
+    const { queryAllByText } = render(comp);
 
     // extension name
     expect(queryAllByText(name)).toHaveLength(1);
@@ -75,8 +75,6 @@ export default describe('ExtensionDetail', () => {
 
     // delete button
     expect(queryAllByText(deleteLabel)).toHaveLength(1);
-    const deleteButton = getByText(deleteLabel);
-    expect(deleteButton).toHaveAttribute('disabled'); // delete should be disabled
 
     // overview section title
     expect(queryAllByText(overviewLabel)).toHaveLength(1);
@@ -100,7 +98,6 @@ export default describe('ExtensionDetail', () => {
 
     const { getAllByRole, getByText } = render(comp);
     const deleteButton = getByText(deleteLabel);
-    expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
 
     // click the delete button so that the delete confirmation dialog opens
     fireEvent.click(deleteButton);
@@ -120,7 +117,6 @@ export default describe('ExtensionDetail', () => {
     );
     const { getAllByRole, getByText, queryByRole } = render(comp);
     const deleteButton = getByText(deleteLabel);
-    expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
 
     // click the delete button so that the delete confirmation dialog opens
     fireEvent.click(deleteButton);
