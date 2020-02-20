@@ -1,5 +1,4 @@
-import { Card, CardBody, Form, Stack, StackItem } from '@patternfly/react-core';
-import { Button } from 'patternfly-react';
+import { Button, ButtonVariant, Card, CardBody, Form, Stack, StackItem } from '@patternfly/react-core';
 import * as React from 'react';
 import './SqlClientForm.css';
 
@@ -37,8 +36,9 @@ export const SqlClientForm: React.FunctionComponent<
       <StackItem isFilled={false}>
         <Button
           data-testid={'sql-client-form-submit-button'}
-          bsStyle="primary"
           className={'sql-client-form__submitButton'}
+          isDisabled={false}
+          variant={ButtonVariant.primary}
           onClick={props.handleSubmit}
         >
           {props.i18nSubmit}
