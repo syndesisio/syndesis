@@ -11,6 +11,6 @@
   display: inline-block;
 }
 
-.extension-detail__titleButtons .btn + button {
-  margin-left: 4px;
+.extension-detail__titleButtons button {
+  margin-left: 5px;
 }
