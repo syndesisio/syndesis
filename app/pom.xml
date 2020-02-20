@@ -119,7 +119,7 @@
     <node-sass-version>4.12.0</node-sass-version>
 
     <!-- Common dependencies -->
-    <assertj-core.version>3.14.0</assertj-core.version>
+    <assertj-core.version>3.15.0</assertj-core.version>
 
     <mailapi.version>1.6.4</mailapi.version>
     <json-schema-core.version>1.2.8</json-schema-core.version>
