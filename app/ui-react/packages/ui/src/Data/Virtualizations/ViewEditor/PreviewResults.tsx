@@ -2,9 +2,9 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateVariant,
+  Spinner,
   Title,
 } from '@patternfly/react-core';
-import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../../../src/Layout';
 import { SqlResultsTable } from '../SqlResultsTable';
@@ -52,7 +52,7 @@ export const PreviewResults: React.FunctionComponent<IPreviewResultsProps> = pro
     <PageSection>
       {props.isLoadingPreview ? (
         <>
-          <Spinner loading={true} inline={true} />
+          <Spinner size={'lg'} />
           {props.i18nLoadingQueryResults}
         </>
       ) : (

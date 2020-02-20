@@ -1,6 +1,6 @@
-import { Badge } from '@patternfly/react-core';
+import { Badge, Label } from '@patternfly/react-core';
 import { OkIcon } from '@patternfly/react-icons';
-import { Label } from 'patternfly-react';
+import { global_active_color_100, global_danger_color_100, global_default_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { ProgressWithLink } from '../../Shared';
 import './PublishStatusWithProgress.css';
@@ -20,6 +20,17 @@ export interface IPublishStatusWithProgressProps {
 }
 
 export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWithProgressProps> = props => {
+  const getLabelClass = () => {
+    switch (props.labelType) {
+      case 'danger':
+        return { background: global_danger_color_100.value };
+      case 'primary':
+        return { background: global_active_color_100.value };
+      case 'default':
+        return { background: global_default_color_100.value };
+    }
+  };
+  
   if (props.isProgressWithLink) {
     return (
       <div
@@ -58,7 +69,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
       <React.Fragment>
         <Label
           className={'publish-status-with-progress_Label'}
-          type={props.labelType}
+          style={getLabelClass()}
         >
           {props.i18nPublishState}
         </Label>
@@ -80,7 +91,7 @@ export const PublishStatusWithProgress: React.FunctionComponent<IPublishStatusWi
       <span className={'publish-status-with-progress_text'}>
         <Label
           className={'publish-status-with-progress_Label'}
-          type={props.labelType}
+          style={getLabelClass()}
         >
           {props.i18nPublishState}
         </Label>
