@@ -186,13 +186,16 @@ type AddonsSpec struct {
 }
 
 type JaegerConfiguration struct {
-	Enabled      bool
-	ClientOnly   bool
-	OperatorOnly bool
-	QueryUri     string
-	CollectorUri string
-	SamplerType  string
-	SamplerParam string
+	Enabled       bool
+	ClientOnly    bool
+	OperatorOnly  bool
+	QueryUri      string
+	CollectorUri  string
+	SamplerType   string
+	SamplerParam  string
+	ImageAgent    string
+	ImageAllInOne string
+	ImageOperator string
 }
 
 type DvConfiguration struct {
