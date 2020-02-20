@@ -1,9 +1,8 @@
+import { EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title, Tooltip } from '@patternfly/react-core';
+import { AddCircleOIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import {
-  EmptyState,
   ListView,
-  OverlayTrigger,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
@@ -29,28 +28,19 @@ export const VirtualizationList: React.FunctionComponent<
   IVirtualizationListProps
 > = props => {
 
-  const getCreateVirtualizationTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="createTip">
-        {props.i18nLinkCreateVirtualizationTip
-          ? props.i18nLinkCreateVirtualizationTip
-          : props.i18nLinkCreateVirtualization}
-      </Tooltip>
-    );
-  };
-
   return (
     <>
       <PageSection noPadding={true} variant={'light'}>
         <ListViewToolbar {...props}>
           <div className="form-group">
-            <OverlayTrigger
-              overlay={
-                <Tooltip id="importTip">
-                  {props.i18nImportTip}
-                </Tooltip>
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'importVirtualizationTip'}>
+                  {props.i18nImportTip ? props.i18nImportTip : props.i18nImport}
+                </div>
               }
-              placement="top"
             >
               <ButtonLink
                 data-testid={'virtualization-list-import-button'}
@@ -58,22 +48,27 @@ export const VirtualizationList: React.FunctionComponent<
                 as={'default'}
               >
                 {props.i18nImport}
-              </ButtonLink> 
-            </OverlayTrigger>
-            <OverlayTrigger
-              overlay={getCreateVirtualizationTooltip()}
-              placement="top"
+              </ButtonLink>
+            </Tooltip>
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'createVirtualizationTip'}>
+                  {props.i18nLinkCreateVirtualizationTip
+                    ? props.i18nLinkCreateVirtualizationTip
+                    : props.i18nLinkCreateVirtualization}
+                </div>
+              }
             >
               <ButtonLink
-                data-testid={
-                  'virtualization-list-create-virtualization-button'
-                }
+                data-testid={'virtualization-list-create-virtualization-button'}
                 href={props.linkCreateHRef}
                 as={'primary'}
               >
                 {props.i18nLinkCreateVirtualization}
               </ButtonLink>
-            </OverlayTrigger>
+            </Tooltip>
           </div>
         </ListViewToolbar>
       </PageSection>
@@ -81,30 +76,33 @@ export const VirtualizationList: React.FunctionComponent<
         {props.hasListData ? (
           <ListView>{props.children}</ListView>
         ) : (
-            <EmptyState>
-              <EmptyState.Icon />
-              <EmptyState.Title>
-                {props.i18nEmptyStateTitle}
-              </EmptyState.Title>
-              <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
-              <EmptyState.Action>
-                <OverlayTrigger
-                  overlay={getCreateVirtualizationTooltip()}
-                  placement="top"
-                >
-                  <ButtonLink
-                    data-testid={
-                      'virtualization-list-empty-state-create-button'
-                    }
-                    href={props.linkCreateHRef}
-                    as={'primary'}
-                  >
-                    {props.i18nLinkCreateVirtualization}
-                  </ButtonLink>
-                </OverlayTrigger>
-              </EmptyState.Action>
-            </EmptyState>
-          )}
+          <EmptyState variant={EmptyStateVariant.full}>
+            <EmptyStateIcon icon={AddCircleOIcon} />
+            <Title headingLevel="h5" size="lg">
+              {props.i18nEmptyStateTitle}
+            </Title>
+            <EmptyStateBody>{props.i18nEmptyStateInfo}</EmptyStateBody>
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'createVirtualizationTip'}>
+                  {props.i18nLinkCreateVirtualizationTip
+                    ? props.i18nLinkCreateVirtualizationTip
+                    : props.i18nLinkCreateVirtualization}
+                </div>
+              }
+            >
+              <ButtonLink
+                data-testid={'virtualization-list-empty-state-create-button'}
+                href={props.linkCreateHRef}
+                as={'primary'}
+              >
+                {props.i18nLinkCreateVirtualization}
+              </ButtonLink>
+            </Tooltip>
+          </EmptyState>
+        )}
       </PageSection>
     </>
   );

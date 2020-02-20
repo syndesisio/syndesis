@@ -1,3 +1,4 @@
+import { Tooltip } from '@patternfly/react-core';
 import { ExternalLinkAltIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import {
@@ -7,8 +8,6 @@ import {
   ListViewInfoItem,
   ListViewItem,
   MenuItem,
-  OverlayTrigger,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
@@ -134,14 +133,6 @@ export const VirtualizationListItem: React.FunctionComponent<
     setShowConfirmationDialog(false);
   };
 
-  const getEditTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="detailsTip">
-        {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
-      </Tooltip>
-    );
-  };
-
   const doDelete = async () => {
     setWorking(true);
     const saveText = publishStateText;
@@ -252,7 +243,15 @@ export const VirtualizationListItem: React.FunctionComponent<
               publishingTotalSteps={props.publishingTotalSteps}
               publishingStepText={props.publishingStepText}
             />
-            <OverlayTrigger overlay={getEditTooltip()} placement="top">
+            <Tooltip
+              position={'top'}
+              enableFlip={true}
+              content={
+                <div id={'editTip'}>
+                  {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
+                </div>
+              }
+            >
               <ButtonLink
                 data-testid={'virtualization-list-item-edit-button'}
                 href={props.detailsPageLink}
@@ -260,21 +259,17 @@ export const VirtualizationListItem: React.FunctionComponent<
               >
                 {props.i18nEdit}
               </ButtonLink>
-            </OverlayTrigger>
+            </Tooltip>
             <DropdownKebab
               id={`virtualization-${props.virtualizationName}-action-menu`}
               pullRight={true}
-              data-testid={`virtualization-list-item-${
-                props.virtualizationName
-              }-dropdown-kebab`}
+              data-testid={`virtualization-list-item-${props.virtualizationName}-dropdown-kebab`}
             >
               <MenuItem
                 className={'virtualization-list-item__menuItem'}
                 onClick={doPublish}
                 disabled={shouldDisablePublish}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-publish`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-publish`}
               >
                 {props.i18nPublish}
               </MenuItem>
@@ -282,9 +277,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                 className={'virtualization-list-item__menuItem'}
                 onClick={doStop}
                 disabled={shouldDisableStop}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-stop`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-stop`}
               >
                 {props.i18nStop}
               </MenuItem>
@@ -292,9 +285,7 @@ export const VirtualizationListItem: React.FunctionComponent<
                 className={'virtualization-list-item__menuItem'}
                 onClick={showConfirmDialog}
                 disabled={shouldDisableDelete}
-                data-testid={`virtualization-list-item-${
-                  props.virtualizationName
-                }-delete`}
+                data-testid={`virtualization-list-item-${props.virtualizationName}-delete`}
               >
                 {props.i18nDelete}
               </MenuItem>
@@ -307,7 +298,11 @@ export const VirtualizationListItem: React.FunctionComponent<
         }
         additionalInfo={[
           <ListViewInfoItem key={1} stacked={true}>
-            {props.usedBy.length > 0 ? props.i18nInUseText :  <span className={'virtualization-list-item__usedby-text'}/>}
+            {props.usedBy.length > 0 ? (
+              props.i18nInUseText
+            ) : (
+              <span className={'virtualization-list-item__usedby-text'} />
+            )}
           </ListViewInfoItem>,
           <ListViewInfoItem key={2} stacked={true}>
             {props.odataUrl && (

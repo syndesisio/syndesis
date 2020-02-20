@@ -1,5 +1,6 @@
+import { Tooltip } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { ListView, OverlayTrigger, Tooltip } from 'patternfly-react';
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
@@ -21,33 +22,23 @@ export interface IViewsListProps extends IListViewToolbarProps {
 }
 
 export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
-  const getCreateViewTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="createTip">
-        {props.i18nCreateViewTip
-          ? props.i18nCreateViewTip
-          : props.i18nCreateView}
-      </Tooltip>
-    );
-  };
-
-  const getImportViewsTooltip = (): JSX.Element => {
-    return (
-      <Tooltip id="importViewsTip">
-        {props.i18nImportViewsTip
-          ? props.i18nImportViewsTip
-          : props.i18nImportViews}
-      </Tooltip>
-    );
-  };
-
   return (
     <PageSection>
       {props.hasListData ? (
         <React.Fragment>
           <ListViewToolbar {...props}>
             <div className="form-group">
-              <OverlayTrigger overlay={getImportViewsTooltip()} placement="top">
+              <Tooltip
+                position={'top'}
+                enableFlip={true}
+                content={
+                  <div id={'importViewsTip'}>
+                    {props.i18nImportViewsTip
+                      ? props.i18nImportViewsTip
+                      : props.i18nImportViews}
+                  </div>
+                }
+              >
                 <ButtonLink
                   data-testid={'view-list-import-views-button'}
                   href={props.linkImportViewsHRef}
@@ -55,8 +46,18 @@ export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
                 >
                   {props.i18nImportViews}
                 </ButtonLink>
-              </OverlayTrigger>
-              <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
+              </Tooltip>
+              <Tooltip
+                position={'top'}
+                enableFlip={true}
+                content={
+                  <div id={'createViewsTip'}>
+                    {props.i18nCreateViewTip
+                      ? props.i18nCreateViewTip
+                      : props.i18nCreateView}
+                  </div>
+                }
+              >
                 <ButtonLink
                   data-testid={'view-list-create-view-button'}
                   href={props.linkCreateViewHRef}
@@ -64,7 +65,7 @@ export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
                 >
                   {props.i18nCreateView}
                 </ButtonLink>
-              </OverlayTrigger>
+              </Tooltip>
             </div>
           </ListViewToolbar>
           <ListView>{props.children}</ListView>
