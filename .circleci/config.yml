@@ -158,7 +158,7 @@ jobs:
         name: Build Circle CI App
         command: |
           # 105563335 is GH project id, but it's not exposed as an env variable.
-          PUBLIC_URL="https://$CIRCLE_BUILD_NUM-105563335-gh.circle-artifacts.com/0/home/circleci/src/app/ui-react/doc/app" yarn build
+          PUBLIC_URL="https://$CIRCLE_BUILD_NUM-105563335-gh.circle-artifacts.com/0/doc/app" yarn build
           cp -a syndesis/build doc/app
           cp syndesis/config.staging.json doc/app/config.json
     - run:
@@ -669,6 +669,8 @@ workflows:
             branches:
               only: master
       - license-check:
+          <<: *ignore_cherry_pick_branches
+      - ui-doc:
           <<: *ignore_cherry_pick_branches
       - ui:
           <<: *ignore_cherry_pick_branches
