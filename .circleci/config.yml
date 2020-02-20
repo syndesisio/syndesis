@@ -104,14 +104,17 @@ quay_transfer: &quay_transfer
 
 jobs:
   ui:
-    <<: *job_defaults
+    working_directory: ~/src
     environment:
       DOCKER_IMAGES: syndesis-ui
       CHROME_BIN: "/usr/bin/google-chrome"
       <<: *common_env
+    docker:
+      - image: circleci/node:10.15-browsers
     steps:
       - setup_remote_docker
-      - checkout
+      - checkout:
+          path: ~/src
       - restore_cache:
           key: syndesis-mvn-ui-{{ checksum "app/ui-react/pom.xml" }}
       - restore_cache:
@@ -119,10 +122,6 @@ jobs:
       - run:
           name: Build UI
           command: |
-            echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
-            curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
-            apt-get update -y
-            apt-get install -y --force-yes libxss1 patch apt-transport-https google-chrome-stable
             ./tools/bin/syndesis build --batch-mode --module ui-react --docker | tee build_log.txt
       - save_cache:
           key: syndesis-yarn-ui-v2-{{ checksum "app/ui-react/yarn.lock" }}
