@@ -21205,15 +21205,16 @@ rx-lite@^3.1.2:
   resolved "https://registry.yarnpkg.com/rx-lite/-/rx-lite-3.1.2.tgz#19ce502ca572665f3b647b10939f97fd1615f102"
   integrity sha1-Gc5QLKVyZl87ZHsQk5+X/RYV8QI=
 
-rxjs-tslint@0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/rxjs-tslint/-/rxjs-tslint-0.1.5.tgz#9cddba80633e155fb47f7f0a25a6e33971f7dbf9"
-  integrity sha512-odvEAx6VoZSJs5o9gWZ7SxgTuS8ldq0mr4qnprbr6flNtIt4DtNJSYJpBK0WEy0o+f1oe92XVHrmgco1e7Cpdw==
+rxjs-tslint@0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/rxjs-tslint/-/rxjs-tslint-0.1.7.tgz#5ed841d1837cc0dc2187e5b57a2d45aa2af337e4"
+  integrity sha512-NnOfqutNfdT7VQnQm32JLYh2gDZjc0gdWZFtrxf/czNGkLKJ1nOO6jbKAFI09W0f9lCtv6P2ozxjbQH8TSPPFQ==
   dependencies:
     chalk "^2.4.0"
     optimist "^0.6.1"
     tslint "^5.9.1"
     tsutils "^2.25.0"
+    typescript ">=2.8.3"
 
 rxjs@6.3.3:
   version "6.3.3"
@@ -23435,7 +23436,7 @@ tslint-react@^4.0.0:
   dependencies:
     tsutils "^3.9.1"
 
-tslint@^5.11.0, tslint@^5.13.0:
+tslint@^5.11.0, tslint@^5.13.0, tslint@^5.9.1:
   version "5.16.0"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.16.0.tgz#ae61f9c5a98d295b9a4f4553b1b1e831c1984d67"
   integrity sha512-UxG2yNxJ5pgGwmMzPMYh/CCnCnh0HfPgtlVRDs1ykZklufFBL1ZoTlWFRz2NQjcoEiDoRp+JyT0lhBbbH/obyA==
@@ -23454,7 +23455,7 @@ tslint@^5.11.0, tslint@^5.13.0:
     tslib "^1.8.0"
     tsutils "^2.29.0"
 
-tslint@^5.9.1, tslint@~5.13.0:
+tslint@~5.13.0:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/tslint/-/tslint-5.13.1.tgz#fbc0541c425647a33cd9108ce4fd4cd18d7904ed"
   dependencies:
@@ -23485,17 +23486,10 @@ tsutils@^2.25.0, tsutils@^2.27.2, tsutils@^2.29.0:
   dependencies:
     tslib "^1.8.1"
 
-tsutils@^3.17.1:
+tsutils@^3.17.1, tsutils@^3.9.1:
   version "3.17.1"
   resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.17.1.tgz#ed719917f11ca0dee586272b2ac49e015a2dd759"
   integrity sha512-kzeQ5B8H3w60nFY2g8cJIuH7JDpsALXySGtwGJ0p2LSjLgay3NdIpqq5SoOBe46bKDW2iq25irHCr8wjomUS2g==
-  dependencies:
-    tslib "^1.8.1"
-
-tsutils@^3.9.1:
-  version "3.10.0"
-  resolved "https://registry.yarnpkg.com/tsutils/-/tsutils-3.10.0.tgz#6f1c95c94606e098592b0dff06590cf9659227d6"
-  integrity sha512-q20XSMq7jutbGB8luhKKsQldRKWvyBO2BGqni3p4yq8Ys9bEP/xQw3KepKmMRt9gJ4lvQSScrihJrcKdKoSU7Q==
   dependencies:
     tslib "^1.8.1"
 
