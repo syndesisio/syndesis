@@ -15,18 +15,13 @@
  */
 package io.syndesis.dv.openshift;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.Reader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -47,6 +42,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -98,7 +94,6 @@ import io.fabric8.openshift.api.model.BuildConfig;
 import io.fabric8.openshift.api.model.BuildList;
 import io.fabric8.openshift.api.model.DeploymentCondition;
 import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.DeploymentConfigStatus;
 import io.fabric8.openshift.api.model.ImageStream;
 import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteSpec;
@@ -134,6 +129,10 @@ import okhttp3.OkHttpClient;
 
 @SuppressWarnings("nls")
 public class TeiidOpenShiftClient implements StringConstants {
+
+    private static final int MONITOR_DELAY = 500;
+    private static final String AVAILABLE = "Available";
+    private static final String PROGRESSING = "Progressing";
 
     /**
      * Get the OpenShift name, requires lower case and must start/end with
@@ -178,83 +177,40 @@ public class TeiidOpenShiftClient implements StringConstants {
 
         @Override
         public void run() {
+            work.setLastUpdated();
+            boolean shouldReQueue = true;
             try {
-                activeJobs.put(this.work.getOpenShiftName(), this.work);
-                // introduce some delay..
-                long elapsed = System.currentTimeMillis() - work.getLastUpdated();
-                if (elapsed < 3000) {
-                    try {
-                        Thread.sleep(3000 - elapsed);
-                    } catch (InterruptedException e) {
-                        Thread.interrupted();
-                        return;
-                    }
-                }
-
-                if (BuildStatus.Status.DELETE_SUBMITTED.equals(work.getStatus())) {
-                    work.setLastUpdated();
-                    workExecutor.submit(this); // add at end
-                    return;
-                }
-
-                if (BuildStatus.Status.DELETE_REQUEUE.equals(work.getStatus())) {
+                switch (work.getStatus()) {
+                case CONFIGURING:
+                case DELETE_SUBMITTED:
+                    //continue to monitor the other thread
+                    debug(work.getOpenShiftName(), "Monitoring " + work.getStatus());
+                    break;
+                case DELETE_REQUEUE:
                     // requeue will change state to submitted and
-                    work.setLastUpdated();
                     deleteVirtualization(work.getDataVirtualizationName());
-                    workExecutor.submit(this); // add at end
-                    return;
-                }
-
-                if (BuildStatus.Status.DELETE_DONE.equals(work.getStatus())) {
-                    removeSyndesisConnection(work.getDataVirtualizationName());
-                    return;
-                }
-
-                if (BuildStatus.Status.FAILED.equals(work.getStatus()) || BuildStatus.Status.CANCELLED.equals(work.getStatus())) {
-                    work.setLastUpdated();
-                    return;
-                }
-
-                if (BuildStatus.Status.SUBMITTED.equals(work.getStatus())) {
+                    break;
+                case SUBMITTED:
                     //
                     // build submitted for configuration. This is done on another
                     // thread to avoid clogging up the monitor thread.
                     //
                     info(work.getOpenShiftName(), "Publishing - Submitted build to be configured");
-
                     configureBuild(work);
+                    break;
+                case BUILDING: {
+                    final OpenShiftClient client = openshiftClient();
+                    Build build = client.builds().inNamespace(work.getNamespace()).withName(work.getName()).get();
+                    if (build == null) {
+                        // build got deleted some how ignore, remove from monitoring..
+                        error(work.getOpenShiftName(), "Publishing - No build available for building");
+                        shouldReQueue = false;
+                        break;
+                    }
 
-                    work.setLastUpdated();
-                    workExecutor.submit(this); // add at end
-
-                    return;
-                }
-
-                //
-                // build is being configured which is done on another thread
-                // so ignore this build for the moment
-                //
-                if (Status.CONFIGURING.equals(work.getStatus())) {
-                    work.setLastUpdated();
-                    workExecutor.submit(this); // add at end
-
-                    debug(work.getOpenShiftName(), "Publishing - Continuing monitoring as configuring");
-                    return;
-                }
-
-                boolean shouldReQueue = true;
-                final OpenShiftClient client = openshiftClient();
-                Build build = client.builds().inNamespace(work.getNamespace()).withName(work.getName()).get();
-                if (build == null) {
-                    // build got deleted some how ignore, remove from monitoring..
-                    error(work.getOpenShiftName(), "Publishing - No build available for building");
-                    return;
-                }
-
-                String lastStatus = build.getStatus().getPhase();
-                if (Builds.isCompleted(lastStatus)) {
-                    DeploymentStatus deploymentStatus = work.getDeploymentStatus();
-                    if (! DeploymentStatus.Status.DEPLOYING.equals(deploymentStatus.getStatus())) {
+                    String lastStatus = build.getStatus().getPhase();
+                    if (Builds.isCompleted(lastStatus)) {
+                        DeploymentStatus deploymentStatus = work.getDeploymentStatus();
                         deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
                         work.setStatus(Status.COMPLETE);
                         work.setStatusMessage("Build complete, see deployment message");
@@ -265,57 +221,68 @@ public class TeiidOpenShiftClient implements StringConstants {
                         deploymentStatus.setDeploymentName(dc.getMetadata().getName());
                         client.deploymentConfigs().inNamespace(work.getNamespace())
                                 .withName(dc.getMetadata().getName()).deployLatest();
+                    } else if (Builds.isCancelled(lastStatus)) {
+                        info(work.getOpenShiftName(), "Publishing - Build cancelled");
+                        // once failed do not queue the work again.
+                        shouldReQueue = false;
+                        work.setStatus(Status.CANCELLED);
+                        work.setStatusMessage(build.getStatus().getMessage());
+                        debug(work.getOpenShiftName(), "Build cancelled: " + work.getName() + ". Reason "
+                                + build.getStatus().getLogSnippet());
+                    } else if (Builds.isFailed(lastStatus)) {
+                        error(work.getOpenShiftName(), "Publishing - Build failed");
+                        // once failed do not queue the work again.
+                        shouldReQueue = false;
+                        work.setStatus(Status.FAILED);
+                        work.setStatusMessage(build.getStatus().getMessage());
+                        error(work.getOpenShiftName(),
+                                "Build failed :" + work.getName() + ". Reason " + build.getStatus().getLogSnippet());
                     } else {
-                        DeploymentConfig dc = client.deploymentConfigs().inNamespace(work.getNamespace())
-                                .withName(deploymentStatus.getDeploymentName()).get();
-                        if (isDeploymentInReadyState(dc)) {
-                            // it is done now..
-                            info(work.getOpenShiftName(), "Publishing - Deployment completed");
-                            createService(client, work.getNamespace(), work.getOpenShiftName());
-                            if (!config.isExposeVia3scale()) {
-                                createRoute(client, work.getNamespace(), work.getOpenShiftName(), ProtocolType.ODATA.id());
-                            }
-                            createSyndesisConnection(client, work.getNamespace(), work.getOpenShiftName(), work.getDataVirtualizationName());
-                            deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
+                        //still building
+                    }
+                    break;
+                }
+                case COMPLETE: {
+                    final OpenShiftClient client = openshiftClient();
+                    DeploymentStatus deploymentStatus = work.getDeploymentStatus();
+                    DeploymentConfig dc = client.deploymentConfigs().inNamespace(work.getNamespace())
+                            .withName(deploymentStatus.getDeploymentName()).get();
+                    DeploymentCondition available = getDeploymentCondition(dc, AVAILABLE);
+                    DeploymentCondition progressing = getDeploymentCondition(dc, PROGRESSING);
+                    if (isDeploymentAvailable(available, progressing)) {
+                        // it is done now..
+                        info(work.getOpenShiftName(), "Publishing - Deployment completed");
+                        createService(client, work.getNamespace(), work.getOpenShiftName());
+                        if (!config.isExposeVia3scale()) {
+                            createRoute(client, work.getNamespace(), work.getOpenShiftName(), ProtocolType.ODATA.id());
+                        }
+                        createSyndesisConnection(client, work.getNamespace(), work.getOpenShiftName(), work.getDataVirtualizationName());
+                        deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
+                        shouldReQueue = false;
+                    } else {
+                        if (!isDeploymentProgressing(progressing)) {
+                            deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
+                            info(work.getOpenShiftName(), "Publishing - Deployment seems to be failed, this could be "
+                                    + "due to vdb failure, rediness check failed. Wait threshold is 2 minutes.");
                             shouldReQueue = false;
+                        }
+                        debug(work.getOpenShiftName(), "Publishing - Deployment not ready");
+                        if (available != null) {
+                            debug(work.getOpenShiftName(), "Publishing - Deployment condition: " + available.getMessage());
+                            deploymentStatus.setStatusMessage(available.getMessage());
                         } else {
-                            if (!isDeploymentProgressing(dc)) {
-                                deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
-                                info(work.getOpenShiftName(), "Publishing - Deployment seems to be failed, this could be "
-                                        + "due to vdb failure, rediness check failed. Wait threshold is 2 minutes.");
-                                shouldReQueue = false;
-                            }
-                            debug(work.getOpenShiftName(), "Publishing - Deployment not ready");
-                            DeploymentCondition cond = getDeploymentConfigStatus(dc);
-                            if (cond != null) {
-                                debug(work.getOpenShiftName(), "Publishing - Deployment condition: " + cond.getMessage());
-                                deploymentStatus.setStatusMessage(cond.getMessage());
-                            } else {
-                                deploymentStatus.setStatusMessage("Available condition not found in the Deployment Config");
-                            }
+                            deploymentStatus.setStatusMessage("Available condition not found in the Deployment Config");
                         }
                     }
-                } else if (Builds.isCancelled(lastStatus)) {
-                    info(work.getOpenShiftName(), "Publishing - Build cancelled");
-                    // once failed do not queue the work again.
+                    break;
+                }
+                default:
                     shouldReQueue = false;
-                    work.setStatus(Status.CANCELLED);
-                    work.setStatusMessage(build.getStatus().getMessage());
-                    debug(work.getOpenShiftName(), "Build cancelled: " + work.getName() + ". Reason "
-                            + build.getStatus().getLogSnippet());
-                } else if (Builds.isFailed(lastStatus)) {
-                    error(work.getOpenShiftName(), "Publishing - Build failed");
-                    // once failed do not queue the work again.
-                    shouldReQueue = false;
-                    work.setStatus(Status.FAILED);
-                    work.setStatusMessage(build.getStatus().getMessage());
-                    error(work.getOpenShiftName(),
-                            "Build failed :" + work.getName() + ". Reason " + build.getStatus().getLogSnippet());
+                    break; // a terminal state - should generally not reach here
                 }
 
-                work.setLastUpdated();
                 if (shouldReQueue) {
-                    workExecutor.submit(this); // add at end
+                    workExecutor.schedule(this, MONITOR_DELAY, TimeUnit.MILLISECONDS); // add at end
                 } else {
                     // Close the log as no longer needed actively
                     closeLog(work.getOpenShiftName());
@@ -325,8 +292,6 @@ public class TeiidOpenShiftClient implements StringConstants {
                 // Does not specify an id so will only be logged in the KLog.
                 //
                 error(null, "Monitor exception", ex);
-            } finally {
-                activeJobs.remove(this.work.getOpenShiftName());
             }
         }
     }
@@ -355,8 +320,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     private EncryptionComponent encryptionComponent;
     private DvConfigurationProperties config;
 
-    private ThreadPoolExecutor workExecutor = new ThreadPoolExecutor(1, 1, 60, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
-    private Map<String, BuildStatus> activeJobs = new ConcurrentHashMap<>();
+    private ScheduledThreadPoolExecutor workExecutor = new ScheduledThreadPoolExecutor(1);
     private RepositoryManager repositoryManager;
     private Map<String, String> mavenRepos;
 
@@ -366,7 +330,6 @@ public class TeiidOpenShiftClient implements StringConstants {
         this.encryptionComponent = encryptor;
         this.config = config;
         this.repositoryManager = repositoryManager;
-        this.workExecutor.allowCoreThreadTimeOut(true);
         this.configureService.allowCoreThreadTimeOut(true);
         this.mavenRepos = mavenRepos;
 
@@ -1046,35 +1009,41 @@ public class TeiidOpenShiftClient implements StringConstants {
         return null;
     }
 
-    private boolean isDeploymentInReadyState(DeploymentConfig dc) {
-        List<DeploymentCondition> conditions = dc.getStatus().getConditions();
-        for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Available") && cond.getStatus().equals("True")) {
+    private Boolean asBoolean(DeploymentCondition cond) {
+        if (cond != null) {
+            if (cond.getStatus().equals("True")) {
                 return true;
             }
-        }
-        return false;
-    }
-
-    private boolean isDeploymentProgressing(DeploymentConfig dc) {
-        DeploymentConfigStatus status = dc.getStatus();
-        List<DeploymentCondition> conditions = status.getConditions();
-        for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Progressing") && cond.getStatus().equals("True")) {
-                return true;
+            if (cond.getStatus().equals("False")) {
+                return false;
             }
         }
-        // let's try to deploy five times before giving up.
-        if (status.getObservedGeneration() < 4) {
-            return true;
-        }
-        return false;
+        //null or unknown
+        return null;
     }
 
-    private DeploymentCondition getDeploymentConfigStatus(DeploymentConfig dc) {
+    /**
+     * We'll consider things progressing if true or unknown
+     */
+    private boolean isDeploymentProgressing(DeploymentCondition progressing) {
+        return !(Boolean.FALSE.equals(asBoolean(progressing)));
+    }
+
+    /**
+     * We're available if available=true and either progressing true, null (not unknown), or old
+     */
+    private boolean isDeploymentAvailable(DeploymentCondition available,
+            DeploymentCondition progressing) {
+        return Boolean.TRUE.equals(asBoolean(available)) &&
+                (Boolean.TRUE.equals(asBoolean(progressing))
+                        || progressing == null
+                        || available.getLastTransitionTime().compareTo(progressing.getLastTransitionTime()) > 0);
+    }
+
+    private DeploymentCondition getDeploymentCondition(DeploymentConfig dc, String type) {
         List<DeploymentCondition> conditions = dc.getStatus().getConditions();
         for (DeploymentCondition cond : conditions) {
-            if (cond.getType().equals("Available")) {
+            if (cond.getType().equals(type)) {
                 return cond;
             }
         }
@@ -1233,15 +1202,7 @@ public class TeiidOpenShiftClient implements StringConstants {
     }
 
     private static String inputStreamToString(InputStream inputStream) throws IOException {
-        StringBuilder textBuilder = new StringBuilder();
-        try (Reader reader = new BufferedReader(new InputStreamReader
-          (inputStream, Charset.forName(StandardCharsets.UTF_8.name())))) {
-            int c = 0;
-            while ((c = reader.read()) != -1) {
-                textBuilder.append((char) c);
-            }
-        }
-        return textBuilder.toString();
+        return ObjectConverterUtil.convertToString(inputStream);
     }
 
     /**
@@ -1258,7 +1219,8 @@ public class TeiidOpenShiftClient implements StringConstants {
         BuildStatus status = getVirtualizationStatus(publishConfig.getDataVirtualizationName()).getBuildStatus();
         info(openShiftName, "Publishing - Virtualization status: " + status.getStatus());
 
-        if (status.getStatus().equals(Status.BUILDING)) {
+        //if we are not in a terminal state, don't allow yet
+        if (!EnumSet.of(Status.FAILED, Status.NOTFOUND, Status.CANCELLED, Status.DELETE_DONE, Status.COMPLETE).contains(status.getStatus())) {
             info(openShiftName, "Publishing - Previous build request in progress, failed to submit new build request: "
                     + status.getStatus());
             return status;
@@ -1512,15 +1474,16 @@ public class TeiidOpenShiftClient implements StringConstants {
             deploymentStatus.setStatus(DeploymentStatus.Status.DEPLOYING);
             deploymentStatus.setDeploymentName(dc.getMetadata().getName());
             deploymentStatus.setVersion(getDeployedRevision(dc, buildVersion, client));
-            if (isDeploymentInReadyState(dc)) {
+            DeploymentCondition available = getDeploymentCondition(dc, AVAILABLE);
+            DeploymentCondition progressing = getDeploymentCondition(dc, PROGRESSING);
+            if (isDeploymentAvailable(available, progressing)) {
                 deploymentStatus.setStatus(DeploymentStatus.Status.RUNNING);
             } else {
-                if (!isDeploymentProgressing(dc)) {
+                if (!isDeploymentProgressing(progressing)) {
                     deploymentStatus.setStatus(DeploymentStatus.Status.FAILED);
                 }
-                DeploymentCondition cond = getDeploymentConfigStatus(dc);
-                if (cond != null) {
-                    deploymentStatus.setStatusMessage(cond.getMessage());
+                if (available != null) {
+                    deploymentStatus.setStatusMessage(available.getMessage());
                 } else {
                     deploymentStatus.setStatusMessage("Available condition not found in deployment, delete the service and re-deploy?");
                 }
@@ -1564,13 +1527,15 @@ public class TeiidOpenShiftClient implements StringConstants {
         runningBuild.setStatus(Status.DELETE_SUBMITTED);
         runningBuild.setStatusMessage("delete submitted");
         final String inProgressBuildName = runningBuild.getName();
-        workExecutor.submit(new BuildStatusRunner(runningBuild));
-        //workExecutor.schedule(new BuildStatusRunner(runningBuild), 1, TimeUnit.SECONDS);
+        workExecutor.schedule(new BuildStatusRunner(runningBuild), MONITOR_DELAY, TimeUnit.MILLISECONDS);
         configureService.submit(new Callable<Boolean>() {
             @Override
             public Boolean call() throws Exception {
                 final OpenShiftClient client = openshiftClient();
                 deleteVDBServiceResources(openShiftName, inProgressBuildName, runningBuild, client);
+                //the last call in delete sets the status to delete done, making it very unlikely
+                //that we'll requeue, so we'll just remove the connection here
+                removeSyndesisConnection(virtualizationName);
                 debug(openShiftName, "finished deleteing " + openShiftName + " service");
                 return true;
             }
@@ -1579,10 +1544,6 @@ public class TeiidOpenShiftClient implements StringConstants {
     }
 
     private BuildStatus getVirtualizationStatusFromQueue(String openshiftName) {
-        BuildStatus work = this.activeJobs.get(openshiftName);
-        if (work != null) {
-            return work;
-        }
         for(Runnable r : workExecutor.getQueue()) {
             if (r instanceof BuildStatusRunner) {
                 BuildStatusRunner status = (BuildStatusRunner)r;
