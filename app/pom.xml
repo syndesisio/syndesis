@@ -2113,6 +2113,12 @@
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-http</artifactId>
         <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
 
       <dependency>

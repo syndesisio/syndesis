@@ -82,6 +82,12 @@
       <groupId>org.apache.camel.k</groupId>
       <artifactId>camel-k-runtime-core</artifactId>
       <version>${camel-k-runtime.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>

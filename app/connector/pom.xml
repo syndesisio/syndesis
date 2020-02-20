@@ -79,6 +79,22 @@
     <module>debezium</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>9.4.25.v20191220</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>
@@ -91,26 +107,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <!--
-            We're throwing the enforcement rules out the window because
-            we need to allow dependencies that end up being used at
-            runtime to be dictated by the dependency information from
-            Camel and Spring Boot BOMs.
-          -->
-          <rules combine.self="override">
-            <bannedDependencies>
-              <excludes>
-                <exclude>org.hamcrest:*</exclude>
-              </excludes>
-              <message>Prefer using AssertJ for assertions</message>
-              <searchTransitive>false</searchTransitive>
-            </bannedDependencies>
-          </rules>
-        </configuration>
       </plugin>
     </plugins>
   </build>

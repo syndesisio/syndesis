@@ -59,18 +59,6 @@
     </dependencies>
   </dependencyManagement>
 
-  <profiles>
-    <profile>
-      <id>doclint-java8-disable</id>
-      <activation>
-        <jdk>[1.8,)</jdk>
-      </activation>
-      <properties>
-        <javadoc.opts>-Xdoclint:none</javadoc.opts>
-      </properties>
-    </profile>
-  </profiles>
-
   <modules>
     <module>support/camel-acme</module>
     <module>api</module>
@@ -82,30 +70,5 @@
     <module>bom-camel-k</module>
     <module>runtime-springboot</module>
   </modules>
-
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <!--
-            We're throwing the enforcement rules out the window because
-            we need to allow dependencies that end up being used at
-            runtime to be dictated by the dependency information from
-            Camel and Spring Boot BOMs.
-          -->
-          <rules combine.self="override">
-            <bannedDependencies>
-              <excludes>
-                <exclude>org.hamcrest:*</exclude>
-              </excludes>
-              <message>Prefer using AssertJ for assertions</message>
-              <searchTransitive>false</searchTransitive>
-            </bannedDependencies>
-          </rules>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
 
 </project>
