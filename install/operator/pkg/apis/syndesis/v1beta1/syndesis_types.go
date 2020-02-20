@@ -195,13 +195,16 @@ type AddonsSpec struct {
 }
 
 type JaegerConfiguration struct {
-	Enabled      bool   `json:"enabled,omitempty"`
-	ClientOnly   bool   `json:"clientOnly,omitempty"`
-	OperatorOnly bool   `json:"operatorOnly,omitempty"`
-	QueryUri     string `json:"queryUri,omitempty"`
-	CollectorUri string `json:"collectorUri,omitempty"`
-	SamplerType  string `json:"samplerType,omitempty"`
-	SamplerParam string `json:"samplerParam,omitempty"`
+	Enabled       bool   `json:"enabled,omitempty"`
+	ClientOnly    bool   `json:"clientOnly,omitempty"`
+	ImageAgent    string `json:"imageAgent,omitempty"`
+	ImageAllInOne string `json:"imageAllInOne,omitempty"`
+	ImageOperator string `json:"imageOperator,omitempty"`
+	OperatorOnly  bool   `json:"operatorOnly,omitempty"`
+	QueryUri      string `json:"queryUri,omitempty"`
+	CollectorUri  string `json:"collectorUri,omitempty"`
+	SamplerType   string `json:"samplerType,omitempty"`
+	SamplerParam  string `json:"samplerParam,omitempty"`
 }
 
 type AddonSpec struct {
