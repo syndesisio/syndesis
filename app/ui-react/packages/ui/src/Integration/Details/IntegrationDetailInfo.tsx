@@ -1,4 +1,5 @@
-import { Label } from 'patternfly-react';
+import { Label } from '@patternfly/react-core';
+import { global_default_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { IntegrationStatusDetail } from '../IntegrationStatusDetail';
 import { IntegrationState } from '../models';
@@ -46,7 +47,11 @@ export class IntegrationDetailInfo extends React.PureComponent<
               Published version {this.props.version}
             </div>
           )}
-          {this.props.currentState === 'Unpublished' && <Label>Stopped</Label>}
+          {this.props.currentState === 'Unpublished' && (
+            <Label style={{ background: global_default_color_100.value }}>
+              Stopped
+            </Label>
+          )}
         </>
       </div>
     );

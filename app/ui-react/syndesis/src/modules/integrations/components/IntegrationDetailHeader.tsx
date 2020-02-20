@@ -105,7 +105,6 @@ export const IntegrationDetailHeader: React.FunctionComponent<
               i18nHome={t('shared:Home')}
               i18nIntegrations={t('shared:Integrations')}
               i18nPageTitle={t('integrations:detail:pageTitle')}
-              integrationId={props.data.integration.id}
               integrationsHref={resolvers.integrations.list()}
               menuActions={breadcrumbMenuActions}
             />
