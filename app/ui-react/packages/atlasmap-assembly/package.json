@@ -127,7 +127,7 @@
     "protractor": "~5.4.2",
     "puppeteer": "^1.12.2",
     "rimraf": "^3.0.2",
-    "rxjs-tslint": "0.1.5",
+    "rxjs-tslint": "0.1.7",
     "tether": "1.4.7",
     "ts-node": "~8.6.2",
     "tsickle": "0.34.3",
