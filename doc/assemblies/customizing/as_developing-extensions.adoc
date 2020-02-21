@@ -24,7 +24,7 @@ that helps you develop a step extension or a connector extension. It is
 a matter of personal preference whether you choose to develop a step
 extension or a connector extension in Developer Studio or in some other
 IDE. For information about using the Developer Studio plugin, see 
-link:{LinkToolingUserGuide}#igniteextension[Developing extensions for {prodname} integrations].
+link:{LinkToolingUserGuide}#FuseOnlineExtension[Developing extensions for {prodname} integrations].
 
 In this document, the following topics outline the 
 procedure, describe the requirements, and provide additional examples for
