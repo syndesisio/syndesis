@@ -39,6 +39,7 @@ import de.flapdoodle.embed.mongo.config.IMongodConfig;
 import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
+import de.flapdoodle.embed.mongo.config.Storage;
 import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
@@ -55,15 +56,28 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class EmbedMongoConfiguration {
+
     public static MongoClient getClient(Boolean useCredentials) {
+        return getClient(useCredentials, REPLICA_SET);
+    }
+
+    public static MongoClient getClientNoReplicaSet(Boolean useCredentials) {
+        return getClient(useCredentials, null);
+    }
+
+    private static MongoClient getClient(Boolean useCredentials, String replicaSet) {
         MongoClientSettings.Builder settings = MongoClientSettings.builder();
 
-        if(useCredentials) {
+        if (useCredentials) {
             MongoCredential credentials = MongoCredential.createCredential(
                 USER, ADMIN_DB, PASSWORD.toCharArray());
             settings.credential(credentials);
         }
-        ConnectionString uri = new ConnectionString( "mongodb://" + HOST + ":" + PORT);
+        StringBuilder connectionString = new StringBuilder(String.format("mongodb://%s:%d", HOST, PORT));
+        if (replicaSet != null) {
+            connectionString.append(String.format("/?replicaSet=%s", REPLICA_SET));
+        }
+        ConnectionString uri = new ConnectionString(connectionString.toString());
         settings.applyConnectionString(uri);
 
         settings.readPreference(ReadPreference.primaryPreferred());
@@ -78,6 +92,7 @@ public class EmbedMongoConfiguration {
     public static MongoDatabase getDB() {
         return getDB(true, "test");
     }
+
     public static MongoDatabase getDB(Boolean useCredentials, String db) {
         return getClient(useCredentials).getDatabase(db);
     }
@@ -99,13 +114,20 @@ public class EmbedMongoConfiguration {
     public final static String PASSWORD = "test-pwd";
     public final static String ADMIN_DB = "admin";
 
+    public final static String REPLICA_SET = "rs0";
+
     public EmbedMongoConfiguration() {
 
     }
 
     static {
-            startEmbeddedMongo();
-            createAuthorizationUser();
+        startEmbeddedMongo();
+        startReplicationSet();
+        createAuthorizationUser();
+    }
+
+    private static void startReplicationSet() {
+        getClientNoReplicaSet(false).getDatabase(ADMIN_DB).runCommand(new Document("replSetInitiate", new Document()));
     }
 
     private static void startEmbeddedMongo() {
@@ -115,23 +137,23 @@ public class EmbedMongoConfiguration {
         final IStreamProcessor command = Processors.named("mongod-command", logDestination);
         final ProcessOutput processOutput = new ProcessOutput(daemon, error, command);
         final IRuntimeConfig runtimeConfig = new RuntimeConfigBuilder()
+            .defaults(Command.MongoD)
+            .artifactStore(new ExtractedArtifactStoreBuilder()
                 .defaults(Command.MongoD)
-                .artifactStore(new ExtractedArtifactStoreBuilder()
-                                   .defaults(Command.MongoD)
-                                   .extractDir(new FixedPath(".extracted"))
-                                   .download(new DownloadConfigBuilder()
-                                                 .defaultsForCommand(Command.MongoD)
-                                                 .artifactStorePath(new FixedPath(".cache"))
-                                                 .build())
-                                   .build())
-                .processOutput(processOutput)
-                .build();
+                .extractDir(new FixedPath(".extracted"))
+                .download(new DownloadConfigBuilder()
+                    .defaultsForCommand(Command.MongoD)
+                    .artifactStorePath(new FixedPath(".cache"))
+                    .build())
+                .build())
+            .processOutput(processOutput)
+            .build();
 
         try {
             final IMongodConfig mongodConfig = createEmbeddedMongoConfiguration();
 
             final MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
-                                                          .prepare(mongodConfig);
+                .prepare(mongodConfig);
 
 
             mongodExecutable.start();
@@ -145,11 +167,11 @@ public class EmbedMongoConfiguration {
             final Path storagePath = Files.createTempDirectory("embeddeddmongo");
             storagePath.toFile().deleteOnExit();
             return new MongodConfigBuilder()
-                   .version(Version.Main.PRODUCTION)
-                       .net(new Net(PORT, Network.localhostIsIPv6()))
-//                   .replication(new Storage(storagePath.toString(),
-//                       "replicationName", 5000))
-                   .build();
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(PORT, Network.localhostIsIPv6()))
+                .replication(new Storage(storagePath.toString(),
+                    REPLICA_SET, 5000))
+                .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
@@ -160,23 +182,23 @@ public class EmbedMongoConfiguration {
         MongoCollection<Document> usersCollection =
             admin.getCollection("system.users");
         usersCollection.insertOne(Document.parse("{\n"
-                                                     + "    \"_id\": \"admin.test-user\",\n"
-                                                     + "    \"user\": \"test-user\",\n"
-                                                     + "    \"db\": \"admin\",\n"
-                                                     + "    \"credentials\": {\n"
-                                                     + "        \"SCRAM-SHA-1\": {\n"
-                                                     + "            \"iterationCount\": 10000,\n"
-                                                     + "            \"salt\": \"gmmPAoNdvFSWCV6PGnNcAw==\",\n"
-                                                     + "            \"storedKey\": \"qE9u1Ax7Y40hisNHL2b8/LAvG7s=\",\n"
-                                                     + "            \"serverKey\": \"RefeJcxClt9JbOP/VnrQ7YeQh6w=\"\n"
-                                                     + "        }\n"
-                                                     + "    },\n"
-                                                     + "    \"roles\": [\n"
-                                                     + "        {\n"
-                                                     + "            \"role\": \"readWrite\",\n"
-                                                     + "            \"db\": \"test\"\n"
-                                                     + "        }\n"
-                                                     + "    ]\n"
-                                                     + "}"));
+            + "    \"_id\": \"admin.test-user\",\n"
+            + "    \"user\": \"test-user\",\n"
+            + "    \"db\": \"admin\",\n"
+            + "    \"credentials\": {\n"
+            + "        \"SCRAM-SHA-1\": {\n"
+            + "            \"iterationCount\": 10000,\n"
+            + "            \"salt\": \"gmmPAoNdvFSWCV6PGnNcAw==\",\n"
+            + "            \"storedKey\": \"qE9u1Ax7Y40hisNHL2b8/LAvG7s=\",\n"
+            + "            \"serverKey\": \"RefeJcxClt9JbOP/VnrQ7YeQh6w=\"\n"
+            + "        }\n"
+            + "    },\n"
+            + "    \"roles\": [\n"
+            + "        {\n"
+            + "            \"role\": \"readWrite\",\n"
+            + "            \"db\": \"test\"\n"
+            + "        }\n"
+            + "    ]\n"
+            + "}"));
     }
 }

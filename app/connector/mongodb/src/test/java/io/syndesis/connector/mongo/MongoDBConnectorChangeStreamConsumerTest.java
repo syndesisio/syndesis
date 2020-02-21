@@ -17,9 +17,9 @@ package io.syndesis.connector.mongo;
 
 import java.io.IOException;
 import java.util.List;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
 import org.apache.camel.Exchange;
@@ -27,11 +27,11 @@ import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTestSupport {
 
@@ -40,13 +40,15 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     protected MongoCollection<Document> collection;
 
-    @Autowired
-    private MongoDatabase database;
-
     @BeforeClass
-    public static void before() {
+    public static void doCollectionSetup() {
         EmbedMongoConfiguration.getDB().createCollection(COLLECTION);
         LOG.debug("Created a change stream collection named {}", COLLECTION);
+    }
+
+    @Before
+    public void before() {
+        collection = EmbedMongoConfiguration.getDB().getCollection(COLLECTION);
     }
 
     @After
@@ -61,24 +63,13 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     @Test
     public void singleInsertTest() throws Exception {
-        collection = database.getCollection(COLLECTION);
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.setRetainLast(1);
         mock.expectedMessageCount(2);
-        mock.expectedMessagesMatches((Exchange e) -> {
-            try {
-                // We just want to validate the output is coming as json well format
-                @SuppressWarnings("unchecked")
-                List<String> doc = e.getMessage().getBody(List.class);
-                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
-                Assertions.assertThat(jsonNode).isNotNull();
-                Assertions.assertThat(jsonNode.get("test").asText()).isEqualTo("junit2");
-            } catch (IOException ex) {
-                return false;
-            }
-            return true;
-        });
+        mock.expectedMessagesMatches(
+            exchange -> validateDocument(exchange, "junit"),
+            exchange -> validateDocument(exchange, "junit2")
+        );
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");
@@ -90,5 +81,18 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
         collection.insertOne(doc2);
         // Then
         mock.assertIsSatisfied();
+    }
+
+    private static boolean validateDocument(Exchange e, String text) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> doc = e.getMessage().getBody(List.class);
+            JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+            Assertions.assertThat(jsonNode).isNotNull();
+            Assertions.assertThat(jsonNode.get("test").asText()).isEqualTo(text);
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
     }
 }
