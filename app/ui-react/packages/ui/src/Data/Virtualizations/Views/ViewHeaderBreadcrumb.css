@@ -1,4 +1,0 @@
-/* Disable click events when MenuItem is disabled */
-.view-header-breadcrumb__menuItem {
-  pointer-events: none;
-}

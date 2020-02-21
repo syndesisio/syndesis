@@ -1,6 +1,8 @@
 import {
   Alert,
   AlertActionCloseButton,
+  Button,
+  ButtonVariant,
   Card,
   CardBody,
   CardFooter,
@@ -8,7 +10,6 @@ import {
   TextContent,
   Title,
 } from '@patternfly/react-core';
-import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
@@ -237,18 +238,18 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
         <CardFooter className={'ddl-editor__card-footer'}>
           <Button
             data-testid={'ddl-editor-done-button'}
-            bsStyle="default"
             className="ddl-editor__button"
-            disabled={props.isSaving}
+            isDisabled={props.isSaving}
+            variant={ButtonVariant.secondary}
             onClick={handleFinish}
           >
             {props.i18nDoneLabel}
           </Button>
           <Button
             data-testid={'ddl-editor-save-button'}
-            bsStyle="primary"
             className="ddl-editor__button"
-            disabled={props.isSaving || !hasChanges}
+            isDisabled={props.isSaving || !hasChanges}
+            variant={ButtonVariant.primary}
             onClick={handleSave}
           >
             {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}

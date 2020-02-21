@@ -2,6 +2,7 @@
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import {
   Button,
+  ButtonVariant,
   Expandable,
   PageSection,
   Split,
@@ -109,7 +110,7 @@ export const ExpandablePreview: React.FunctionComponent<
           </SplitItem>
           <SplitItem isFilled={false}>
             <Button
-              variant="plain"
+              variant={ButtonVariant.plain}
               aria-label="Action"
               onClick={onRefreshResults}
               isDisabled={false}
