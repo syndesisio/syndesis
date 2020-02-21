@@ -197,7 +197,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         }
 
         MailConfiguration configuration = new MailConfiguration(getCamelContext());
-        configuration.setProtocol(protocol);
+        configuration.configureProtocol(protocol);
         configuration.setHost(getHost());
         configuration.setPort(getPort());
         configuration.setUsername(getUsername());
