@@ -56,7 +56,7 @@
     <node.version>v10.15.1</node.version>
     <yarn.version>v1.22.0</yarn.version>
 
-    <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.1.2.Final</hibernate.validator.version>
 
     <jackson.version>2.10.2</jackson.version>
     <json-patch.version>1.9</json-patch.version>
