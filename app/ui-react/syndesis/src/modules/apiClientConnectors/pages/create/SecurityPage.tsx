@@ -23,25 +23,54 @@ export interface ISecurityPageRouteState {
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
+  const { specification } = state;
+  const { properties } = specification;
   const backHref = resolvers.create.review({
-    specification: state.specification.configuredProperties!.specification,
+    specification: specification.configuredProperties!.specification,
   });
-
-  const onNext = (
-    accessToken?: string,
-    authType?: string,
-    authUrl?: string
-  ) => {
+  const onNext = (authType?: string, authUrl?: string, tokenUrl?: string) => {
+    if (authType === 'unselected') {
+      throw new Error('Invalid authentication typp allowed');
+    }
     history.push(
       resolvers.create.save({
         authenticationType: authType,
         authorizationEndpoint: authUrl,
-        specification: state.specification,
-        tokenEndpoint: accessToken,
+        specification,
+        tokenEndpoint: tokenUrl,
       })
     );
   };
-
+  const extractAuthType = (authType?: string): string => {
+    // avoid npe
+    if (typeof authType === 'undefined') {
+      return 'unselected';
+    }
+    // mask out this special value
+    if (authType === 'none') {
+      return 'none';
+    }
+    // extract the type from the type:value scheme that this field uses
+    return authType.split(':')[0];
+  };
+  const isValid = (authType?: string, authUrl?: string, tokenUrl?: string) => {
+    const type = extractAuthType(authType);
+    switch (type) {
+      case 'apiKey':
+      case 'basic':
+      case 'none':
+        return true;
+      case 'oauth2':
+        return (
+          typeof authUrl !== 'undefined' &&
+          typeof tokenUrl !== 'undefined' &&
+          authUrl !== '' &&
+          tokenUrl !== ''
+        );
+      default:
+        return false;
+    }
+  };
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
@@ -67,25 +96,25 @@ export const SecurityPage: React.FunctionComponent = () => {
                 content={
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
-                      accessToken={
-                        state.specification.properties!.tokenEndpoint &&
-                        state.specification.properties!.tokenEndpoint
-                          .defaultValue
+                      initialAccessTokenUrl={
+                        (properties!.tokenEndpoint &&
+                          properties!.tokenEndpoint.defaultValue)
                       }
-                      authenticationTypeDefault={
-                        state.specification.properties!.authenticationType
-                          .defaultValue
+                      initialAuthenticationType={
+                        properties!.authenticationType.defaultValue
+                      }
+                      initialAuthorizationUrl={
+                        (properties!.authorizationEndpoint &&
+                          properties!.authorizationEndpoint.defaultValue)
                       }
                       authenticationTypes={
-                        state.specification.properties!.authenticationType &&
-                        state.specification.properties!.authenticationType.enum
-                      }
-                      authorizationUrl={
-                        state.specification.properties!.authorizationEndpoint &&
-                        state.specification.properties!.authorizationEndpoint
-                          .defaultValue
+                        properties!.authenticationType &&
+                        (
+                          properties!.authenticationType.enum || []
+                        ).sort((a, b) => a.value!.localeCompare(b.value!))
                       }
                       backHref={backHref}
+                      extractAuthType={extractAuthType}
                       i18nAccessTokenUrl={t(
                         'apiClientConnectors:create:security:accessTokenUrl'
                       )}
@@ -98,7 +127,10 @@ export const SecurityPage: React.FunctionComponent = () => {
                         'apiClientConnectors:create:security:noSecurity'
                       )}
                       i18nTitle={t('apiClientConnectors:create:security:title')}
-                      i18nDescription={t('apiClientConnectors:create:security:description')}
+                      i18nDescription={t(
+                        'apiClientConnectors:create:security:description'
+                      )}
+                      isValid={isValid}
                       onNext={onNext}
                     />
                   </PageSection>
