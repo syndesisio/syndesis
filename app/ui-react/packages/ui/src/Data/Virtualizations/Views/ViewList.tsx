@@ -1,6 +1,5 @@
-import { Tooltip } from '@patternfly/react-core';
+import { DataList, Tooltip } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
@@ -68,7 +67,7 @@ export const ViewList: React.FunctionComponent<IViewsListProps> = props => {
               </Tooltip>
             </div>
           </ListViewToolbar>
-          <ListView>{props.children}</ListView>
+          <DataList aria-label={'views list'}>{props.children}</DataList>
         </React.Fragment>
       ) : (
         <EmptyViewsState
