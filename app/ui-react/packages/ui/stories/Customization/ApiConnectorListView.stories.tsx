@@ -130,7 +130,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateApiConnector={action('/customizations/create')}
+          linkCreateApiConnector={text('createUrl', '/customizations/create')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -181,7 +181,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateApiConnector={action('/customizations/create')}
+          linkCreateApiConnector={text('createUrl', '/customizations/create')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}

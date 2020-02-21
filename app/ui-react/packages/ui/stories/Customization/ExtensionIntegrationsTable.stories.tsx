@@ -47,8 +47,6 @@ const usedByMessage0 = 'Used by 0 integrations';
 const usedByMessage1 = 'Used by 1 integration';
 const usedByMessage2 = 'Used by 2 integrations';
 
-//onSelectIntegration: (integrationId: string) => void;
-
 stories.add(
   '0 Integrations',
   () => (
