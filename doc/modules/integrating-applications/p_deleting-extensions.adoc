@@ -28,4 +28,4 @@ integration to remove the customization.
 
 .Additional resources
 * link:{LinkFuseOnlineIntegrationGuide}#identifying-extension-use_add-extension[Identifying extension use]
-* link:{LinkFuseOnlineIntegrationGuide}#updating-integrations_add-extension[Updating an extension]
+* link:{LinkFuseOnlineIntegrationGuide}#updating-extensions_add-extension[Updating extensions]

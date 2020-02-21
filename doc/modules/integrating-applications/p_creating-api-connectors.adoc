@@ -41,7 +41,7 @@ new API client connector. Then click *Next* to continue creating the
 API client connector. 
 +
 For details about using the API editor, see 
-link:{LinkDesigningAPIs}#create-api-definition[Designing and developing an API definition with API Designer].
+link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
 +
 Sometimes, if you provide a URL for the OpenAPI document, {prodname} 
 can upload it but  cannot open it for editing. Typically, this is caused by 

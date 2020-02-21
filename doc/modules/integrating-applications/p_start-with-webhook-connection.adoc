@@ -26,7 +26,7 @@ the {prodname} external URL, which has this token at the end.
 .. Click in the *Select Type* field, and select *JSON schema*.
 .. In the *Definition* field, paste the JSON schema that defines the data 
 types of the parameters in the HTTP request. See 
-link:{LinkFuseOnlineConnectorGuide}#about-json-schema-for-http-requests_webhook[About the JSON schema for specifying request parameters]. 
+link:{LinkFuseOnlineIntegrationGuide}#about-json-schema-for-http-requests_webhook[About the JSON schema for specifying request parameters]. 
 .. In the *Data Type Name* field, specify a name for this data type. 
 Although this is optional, if you specify a name, it appears in the 
 data mapper *Sources* list, which can make it easier to correctly map fields. 

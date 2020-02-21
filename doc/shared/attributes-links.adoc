@@ -55,7 +55,7 @@
 :LinkFISGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/
 :NameOfFISGuide: Fuse on OpenShift Guide
 
-:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/fuse_on_openshift_guide/designing_apis/
+:LinkDesigningAPIs: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis/
 :NameDesigningAPIs: Designing APIs
 
 // Fuse Online titles

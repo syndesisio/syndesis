@@ -102,7 +102,7 @@ Any number of integrations and operation flows can use the same connection. A pa
 integration or flow can use the same connection more than once. 
 
 For details, see 
-link:{LinkFuseOnlineIntegrationGuide}#connecting-to-applications_connections[About connecting to applications].
+link:{LinkFuseOnlineIntegrationGuide}#connecting-to-applications_ug[About connections to applications that you want to integrate].
 
 .Actions
 
@@ -153,7 +153,7 @@ automatically provides.
 
 To operate on data between connections in a way that is not built into
 {prodname}, you can upload an extension that provides a custom step.
-See link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_extensions[Developing extensions].
+See link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_custom[Developing {prodname} extensions].
 
 .Flow 
 A flow is a set of ordered steps that an integration executes. 
@@ -170,4 +170,4 @@ associated flow.
 In a flow, each step can operate on the data that is output from
 the previous steps. To determine the steps that you need in a flow, 
 see 
-link:{LinkFuseOnlineIntegrationGuide}#planning_ready[Planning integrations].
+link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Considerations for planning your integrations].
