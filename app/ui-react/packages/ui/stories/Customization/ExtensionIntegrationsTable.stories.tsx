@@ -12,7 +12,7 @@ const stories = storiesOf(
 const storyNotes = '- Verify that the used by message makes sense with the number provided.\n';
 
 interface IExtensionIntegration {
-  id: string; // used to create link to integration details page
+  id: string;
   name: string;
   description: string;
 }
@@ -45,14 +45,14 @@ const integrations: IExtensionIntegration[] = [
 
 const usedByMessage0 = 'Used by 0 integrations';
 const usedByMessage1 = 'Used by 1 integration';
-const usedByMessage2 = 'Used by 2 integrations';
+const usedByMessage3 = 'Used by ' + (integrations.length ? integrations.length : 2) + ' integrations';
 
 stories.add(
   '0 Integrations',
   () => (
     <ExtensionIntegrationsTable
-      i18nDescription={text('Description', undefined)}
-      i18nName={text('Name', undefined)}
+      i18nDescription={text('i18nDescription', 'Description')}
+      i18nName={text('i18nName', 'Name')}
       i18nUsageMessage={usedByMessage0}
       onSelectIntegration={action('select')}
       data={[]}
@@ -65,8 +65,8 @@ stories.add(
   '1 Integration',
   () => (
     <ExtensionIntegrationsTable
-      i18nDescription={text('Description', undefined)}
-      i18nName={text('Name', undefined)}
+      i18nDescription={text('i18nDescription', 'Description')}
+      i18nName={text('i18nName', 'Name')}
       i18nUsageMessage={usedByMessage1}
       onSelectIntegration={action('select')}
       data={integration}
@@ -76,12 +76,12 @@ stories.add(
 );
 
 stories.add(
-  '2 Integrations',
+  '3 Integrations',
   () => (
     <ExtensionIntegrationsTable
-      i18nDescription={text('Description', undefined)}
-      i18nName={text('Name', undefined)}
-      i18nUsageMessage={usedByMessage2}
+      i18nDescription={text('i18nDescription', 'Description')}
+      i18nName={text('i18nName', 'Name')}
+      i18nUsageMessage={usedByMessage3}
       onSelectIntegration={action('select')}
       data={integrations}
     />
