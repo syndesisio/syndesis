@@ -1,8 +1,9 @@
 import { Flex, FlexItem, Text } from '@patternfly/react-core';
 import {
   Table,
+  TableBody,
   TableHeader,
-  TableBody
+  TableVariant
 } from '@patternfly/react-table';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
@@ -102,6 +103,7 @@ export const ExtensionIntegrationsTable: React.FunctionComponent<
           aria-label={'extension-integrations-table'}
           cells={columns}
           rows={rows()}
+          variant={TableVariant.compact}
         >
           <TableHeader />
           <TableBody />
