@@ -78,7 +78,7 @@ export const ExtensionIntegrationsTable: React.FunctionComponent<
   };
 
   return (
-    <div className="extension-group">
+    <div className={'extension-group'}>
       <Text>{props.i18nUsageMessage}</Text>
       {props.data.length !== 0 ? (
         <Table.PfProvider
