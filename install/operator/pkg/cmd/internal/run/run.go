@@ -125,7 +125,14 @@ func (o *options) run() error {
 		return err
 	}
 
-	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
+	cli, err := o.GetClient()
+	if err != nil {
+		return err
+	}
+
+	syndesis := &v1beta1.Syndesis{}
+	syndesis.SetNamespace(namespace)
+	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, cli, syndesis)
 	if err != nil {
 		return err
 	}
@@ -166,11 +173,6 @@ func (o *options) run() error {
 	}
 
 	openshift.AddToScheme(mgr.GetScheme())
-
-	cli, err := o.GetClient()
-	if err != nil {
-		return err
-	}
 
 	am, err := versions.ApiMigrator(cli, o.Context, namespace)
 	if err != nil {
