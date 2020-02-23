@@ -68,7 +68,14 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	} else if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
 		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
 		a.deleteDeploymentConfigs(ctx, syndesis)
+	} else {
+		// Only install resources if phase is either Installing or PostUpgradeRun
+		return nil
 	}
+
+	//
+	// Only if phase is Installing of PostUpgradeRun do we continue
+	//
 
 	resourcesThatShouldExist := map[types.UID]bool{}
 
@@ -511,7 +518,10 @@ func (a *installAction) deleteDeploymentConfigs(ctx context.Context, syndesis *v
 	time.Sleep(5 * time.Second)
 }
 
-// after after the syndesis-db pod starts and has finished migrating we need to remove the POSTGRESQL_UPGRADE=copy environment variable
+//
+// After the syndesis-db pod starts and has finished upgrading to the version consistent with the image
+// of the container then the POSTGRESQL_UPGRADE=copy environment variable needs to be removed.
+//
 func (a *installAction) removePostgresUpgradeTrigger(context context.Context, syndesis *v1beta1.Syndesis) {
 	pollTimeout := 600 * time.Second
 	pollInterval := 5 * time.Second
