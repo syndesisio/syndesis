@@ -1,5 +1,9 @@
 // This module is included in the following assemblies:
 // as_connecting-to-knative-resources.adoc
+// There are cross-reference links to this module. 
+// If you move this module to a new or different assembly or change the heading 
+// in this file, update the cross-reference link in these files:
+// modules/fuse-online-installing/c_configuration-changes-allowed-after-installation.adoc
 
 [id='enabling-connections-to-knative-resources_{context}']
 = Enabling connections to Knative resources
@@ -34,11 +38,10 @@ For example:
 $ oc login -u developer -p developer
 ----
 
-. Ensure that the current project is the project in which {prodname} is running. 
-To view the current project, invoke the following command:
+. Switch to the project in which {prodname} is running, for example: 
 +
 ----
-$ oc project
+$ oc project my-integration-project
 ----
 
 . Edit the `syndesis` custom resource:
