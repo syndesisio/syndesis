@@ -38,23 +38,23 @@ export class Integrations extends React.Component<IIntegrationsProps> {
             {({ getPodLogUrl }) => (
               <IntegrationsList>
                 {!this.props.loading &&
-                  !this.props.error &&
-                  this.props.integrations.length === 0 && (
-                    <IntegrationsEmptyState
-                      i18nCreateIntegration={t('shared:linkCreateIntegration')}
-                      i18nCreateIntegrationTip={t(
-                        'integrationsEmptyState.createTip'
-                      )}
-                      i18nEmptyStateInfo={t('integrationsEmptyState.info')}
-                      i18nEmptyStateTitle={t('integrationsEmptyState.title')}
-                      linkCreateIntegration={resolvers.create.start.selectStep()}
-                    />
-                  )}
+                !this.props.error &&
+                this.props.integrations.length === 0 && (
+                  <IntegrationsEmptyState
+                    i18nCreateIntegration={t('shared:linkCreateIntegration')}
+                    i18nCreateIntegrationTip={t(
+                      'integrationsEmptyState.createTip'
+                    )}
+                    i18nEmptyStateInfo={t('integrationsEmptyState.info')}
+                    i18nEmptyStateTitle={t('integrationsEmptyState.title')}
+                    linkCreateIntegration={resolvers.create.start.selectStep()}
+                  />
+                )}
                 <WithLoader
                   error={this.props.error}
                   loading={this.props.loading}
-                  loaderChildren={<IntegrationsListSkeleton />}
-                  errorChildren={<ApiError error={this.props.errorMessage!} />}
+                  loaderChildren={<IntegrationsListSkeleton/>}
+                  errorChildren={<ApiError error={this.props.errorMessage!}/>}
                 >
                   {() =>
                     this.props.integrations.map(
@@ -100,63 +100,68 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                               key={mi.integration.id}
                               integration={mi.integration}
                             >
-                              {({ actions }) => (
-                                <IntegrationsListItem
-                                  integrationName={mi.integration.name}
-                                  currentState={mi.integration!.currentState!}
-                                  targetState={mi.integration!.targetState!}
-                                  isConfigurationRequired={
-                                    !!(
-                                      mi.integration!.board!.warnings ||
-                                      mi.integration!.board!.errors ||
-                                      mi.integration!.board!.notices
-                                    )
-                                  }
-                                  monitoringValue={
-                                    mi.monitoring &&
-                                    t(
-                                      'integrations:' +
+                              {({ actions, editAction }) => {
+                                return (
+                                  <IntegrationsListItem
+                                    integrationName={mi.integration.name}
+                                    currentState={mi.integration!.currentState!}
+                                    targetState={mi.integration!.targetState!}
+                                    isConfigurationRequired={
+                                      !!(
+                                        mi.integration!.board!.warnings ||
+                                        mi.integration!.board!.errors ||
+                                        mi.integration!.board!.notices
+                                      )
+                                    }
+                                    monitoringValue={
+                                      mi.monitoring &&
+                                      t(
+                                        'integrations:' +
                                         mi.monitoring.detailedState.value
-                                    )
-                                  }
-                                  monitoringCurrentStep={
-                                    mi.monitoring &&
-                                    mi.monitoring.detailedState.currentStep
-                                  }
-                                  monitoringTotalSteps={
-                                    mi.monitoring &&
-                                    mi.monitoring.detailedState.totalSteps
-                                  }
-                                  monitoringLogUrl={getPodLogUrl(mi.monitoring)}
-                                  startConnectionIcon={startIcon}
-                                  finishConnectionIcon={endIcon}
-                                  actions={
-                                    <IntegrationActions
-                                      integrationId={mi.integration!.id!}
-                                      actions={actions}
-                                      detailsHref={resolvers.integration.details(
-                                        {
-                                          integrationId: mi.integration.id!,
-                                        }
-                                      )}
-                                    />
-                                  }
-                                  i18nConfigurationRequired={t(
-                                    'integrations:ConfigurationRequired'
-                                  )}
-                                  i18nError={t('shared:Error')}
-                                  i18nPublished={t('shared:Published')}
-                                  i18nUnpublished={t('shared:Unpublished')}
-                                  i18nProgressPending={t('shared:Pending')}
-                                  i18nProgressStarting={t(
-                                    'integrations:progressStarting'
-                                  )}
-                                  i18nProgressStopping={t(
-                                    'integrations:progressStopping'
-                                  )}
-                                  i18nLogUrlText={t('shared:viewLogs')}
-                                />
-                              )}
+                                      )
+                                    }
+                                    monitoringCurrentStep={
+                                      mi.monitoring &&
+                                      mi.monitoring.detailedState.currentStep
+                                    }
+                                    monitoringTotalSteps={
+                                      mi.monitoring &&
+                                      mi.monitoring.detailedState.totalSteps
+                                    }
+                                    monitoringLogUrl={getPodLogUrl(mi.monitoring)}
+                                    startConnectionIcon={startIcon}
+                                    finishConnectionIcon={endIcon}
+                                    actions={
+                                      <IntegrationActions
+                                        integrationId={mi.integration!.id!}
+                                        actions={actions}
+                                        detailsHref={resolvers.integration.details(
+                                          {
+                                            integrationId: mi.integration.id!,
+                                          }
+                                        )}
+                                        editHref={editAction.href}
+                                        i18nEditBtn={'Edit'}
+                                        i18nViewBtn={'View'}
+                                      />
+                                    }
+                                    i18nConfigurationRequired={t(
+                                      'integrations:ConfigurationRequired'
+                                    )}
+                                    i18nError={t('shared:Error')}
+                                    i18nPublished={t('shared:Published')}
+                                    i18nUnpublished={t('shared:Unpublished')}
+                                    i18nProgressPending={t('shared:Pending')}
+                                    i18nProgressStarting={t(
+                                      'integrations:progressStarting'
+                                    )}
+                                    i18nProgressStopping={t(
+                                      'integrations:progressStopping'
+                                    )}
+                                    i18nLogUrlText={t('shared:viewLogs')}
+                                  />
+                                )
+                              }}
                             </WithIntegrationActions>
                           );
                         } catch (e) {
