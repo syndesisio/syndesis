@@ -8,7 +8,13 @@
 [id='enabling-connections-to-knative-resources_{context}']
 = Enabling connections to Knative resources
 
-You must enable Knative connections before you can add them to simple integrations. 
+You must enable Knative connections before you can add them to 
+simple integrations. 
+
+Knative connections might have been enabled when {prodname} was 
+installed. To check this view the content of the `syndesis` custom resource.
+If the `camelk` and `knative` add-ons specify `enabled: true` then Knative
+connections are already enabled. 
 
 .Prerequisites
 
@@ -63,9 +69,12 @@ spec:
 ----
 .. Save the resource.
 +
-Saving this change to the `syndesis` custom resource triggers the 
+Saving this change to the `syndesis` custom resource triggers 
 `syndesis-operator`, which is responsible for installing {prodname}, 
 to redeploy `syndesis-server`. 
++
+If `camelk` and `knative` are already enabled, you can close the file.
+Connections to Knative resources are enabled. 
 
 
 .Result
