@@ -50,7 +50,7 @@ For completeness, the *Insert* action is described in this
 table as well.  
 +
 [options="header"]
-[cols="1,1,1,1"]
+[cols="1,1,2,2"]
 |===
 |Action
 |What it does
@@ -59,12 +59,14 @@ table as well.
 
 |*Count*
 |Counts the number of documents that satisfy the count expression that you specify.
-|In the *Count expression* field, specify a JSON filter expression in the form of `{"test":"unit"}`. The action counts the number of documents that have a `test` attribute value of `unit`.
+|In the *Count expression* field, specify a JSON filter expression in the form of `{"test":"unit"}`. 
+The action counts the number of documents that have a `test` attribute value of `unit`.
 |An instance of `java.lang.Long` that specifies the number of documents that were found.
 
 |*Delete*
 |Removes one or more documents from the collection. 
-|In the *Delete expression* field, specify a JSON expression in the form of `{"test":"unit"}`. The operation removes each  document whose `test` attribute has a value of `unit`.
+|In the *Delete expression* field, specify a JSON expression in the form of `{"test":"unit"}`. 
+The operation removes each document whose `test` attribute has a value of `unit`.
 |An instance of `java.lang.Long` that specifies the number of documents that were deleted.
 
 |*Find*
@@ -72,18 +74,26 @@ table as well.
 |In the *Filter expression* field, specify a JSON notation string that identifies one or more documents. 
 |JSON notation that specifies a list (an array). Each list element identifies a document that matches the 
 filter expression and provides the document content. If no documents are found, the action returns an empty list. +
+ +
 You must be familiar with the data model of the collection. If the collection adheres to a JSON schema, 
 you must be familiar with this schema because the returned list elements adhere to this schema. For additional information, see 
-link:https://docs.mongodb.com/manual/data-modeling/[MongoDB Data Models]. 
+link:https://docs.mongodb.com/manual/data-modeling/[MongoDB Data Models]. +
+ +
+To use output data from the *Find* action in a subsequent data mapper step, 
+the collection must adhere to a JSON schema. This enables the data mapper to 
+display data fields. For more information, see 
+link:https://docs.mongodb.com/manual/core/schema-validation/#json-schema[MongoDB documentation for JSON schema validation].
 
 |*Insert*
 |Adds one or more documents to the collection. 
-|There is no action configuration parameter for inserting a document. The data coming in to the MongoDB connection must contain JSON notation that specifies one ore more documents to add to the collection.
+|There is no action configuration parameter for inserting a document. The data coming in 
+to the MongoDB connection must contain JSON notation that specifies one ore more documents to add to the collection.
 |JSON notation that specifies a list (an array). Each list element is a document that this action inserted. 
 
 |*Update*
 |Updates one or more documents in the collection. 
-|In the *Filter criteria* field, specify an array of 2 arguments. The first argument is a filter expression that identifies the documents to update. 
+|In the *Filter criteria* field, specify an array of 2 arguments. 
+The first argument is a filter expression that identifies the documents to update. 
 The second argument is a MongoDB update statement that specifies how to update the documents. Update statement 
 format is described in link:https://docs.mongodb.com/manual/reference/method/db.collection.update/[]. For example: 
 `[{"_id":11},{$set: {"test":"updated!"}}]`.
@@ -93,7 +103,7 @@ format is described in link:https://docs.mongodb.com/manual/reference/method/db.
 |Updates one or more documents in the collection or creates a document if no documents match the *Upsert expression*. 
 |In the *Upsert expression* field, specify JSON notation that identifies one or more documents. The action uses this expression 
 to detect any matching documents. If the action finds a matching document(s) in the collection, it updates it. If the action does 
-not find a matching document, the action creates a new document.  The data coming in to the MongoDB connection must contain 
+not find a matching document, the action creates a new document. The data coming in to the MongoDB connection must contain 
 JSON notation that specifies the content to add or update. 
 |An instance of `com.mongodb.client.result.UpdateResult` that specifies either the number of updated documents or the ID of the new, inserted document.
 

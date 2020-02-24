@@ -75,6 +75,41 @@ To identify the tail tracking field, you can specify the tail tracking database
 or tail tracking collection. With one of these pieces of information, the connection can
 find the tail tracking field. 
 
+. Click *Next* to specify the action's output type. 
+
+. In the *Select Type* field, if the data type does not need to be known, 
+accept *Type specification not required* 
+and click *Next*. You do not need to follow the rest of these
+instructions. 
++
+Otherwise, click in the *Select Type* field and select one of the following as the schema type:
++
+* *JSON schema* is a document that describes the structure of JSON data.
+The document's media type is `application/schema+json`. 
+* *JSON instance* is a document that contains JSON data. The document's 
+media type is `application/json`. 
+* *XML schema* is a document that describes the structure of XML data.
+The document's file extension is `.xsd`.
+* *XML instance* is a document that contains XML data. The
+document's file extension is `.xml`. 
+
+. In the *Definition* input box, paste a definition that conforms to the
+schema type you selected. 
+For example, if you select *JSON schema* then you would paste the content of
+a JSON schema file, which has a media type of `application/schema+json`.
+
+. In the *Data Type Name* field, enter a name that you choose for the
+data type. For example, if you are specifying a JSON schema for
+vendors then you might specify `*Vendor*` as the data type name. 
++
+You will see this data type name when you are creating 
+or editing an integration that uses the connection
+for which you are specifying this type. {prodname} displays the type name
+in the integration visualization and in the data mapper. 
+
+. In the *Data Type Description* field, provide information that helps you
+distinguish this type. This description appears in the data mapper when 
+you hover over the step that processes this type. 
 . Click *Next*. 
 
 .Result

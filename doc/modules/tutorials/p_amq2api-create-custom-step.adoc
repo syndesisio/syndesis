@@ -37,5 +37,5 @@ the list of extensions that have been imported.
 .Additional resources
 For information about coding an extension and creating its `.jar` file, see: 
 
-* link:{LinkToolingUserGuide}#fuseonlineextension[{NameOfToolingUserGuide} - Use Fuse tooling to develop an extension.]
+* link:{LinkToolingUserGuide}#FuseOnlineExtension[{NameOfToolingUserGuide} - Use Fuse tooling to develop an extension.]
 * link:{LinkFuseOnlineIntegrationGuide}#developing-extensions_custom[{NameOfFuseOnlineIntegrationGuide} - Manually code an extension.]
