@@ -5367,10 +5367,10 @@ apicurio-data-models@1.0.17:
   dependencies:
     core-js "3.4.1"
 
-apicurio-design-studio@0.2.45:
-  version "0.2.45"
-  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.45.tgz#389ad146b44b3088340c76596bcde9afe43a59f3"
-  integrity sha512-K0bxnR4xTDPAx1oQbFKs1wA/970YKK+QZQ8CT5fthptwcsqzH4Ypvjsi+1/scS/Xd2eXINHzCceMmrtcdgtATw==
+apicurio-design-studio@0.2.46:
+  version "0.2.46"
+  resolved "https://registry.yarnpkg.com/apicurio-design-studio/-/apicurio-design-studio-0.2.46.tgz#90b393e216ae92bc1d2f6047a93f8463a6afc75d"
+  integrity sha512-tONZEh7kUI37cOuloB72czQAiKMui7bkRtWiaGlxO9hHGzTxHMuz6Z9DFqbSNzuCpJ+DDkfit0O0618M447byw==
   dependencies:
     tslib "^1.9.0"
 
