@@ -26,8 +26,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import static java.time.Duration.ofSeconds;
 import static java.util.Objects.requireNonNull;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.given;
 import static org.mockito.Mockito.mock;
@@ -142,8 +142,8 @@ public class ActivityTrackingControllerTest {
 
             // Eventually all the log data should make it into the jsondb
             given().await()
-                .atMost(20, SECONDS)
-                .pollInterval(1, SECONDS)
+                .atMost(ofSeconds(20))
+                .pollInterval(ofSeconds(1))
                 .untilAsserted(() -> {
                     String db = jsondb.getAsString("/", new GetOptions().prettyPrint(true));
                     assertThat(db).isEqualTo(expectedDBState);
@@ -163,8 +163,8 @@ public class ActivityTrackingControllerTest {
 
             // Eventually all the log data should make it into the jsondb
             given().await()
-                .atMost(20, SECONDS)
-                .pollInterval(1, SECONDS)
+                .atMost(ofSeconds(20))
+                .pollInterval(ofSeconds(1))
                 .untilAsserted(() -> {
                     final String json = jsondb.getAsString("/", new GetOptions().prettyPrint(true));
                     assertThat(json).isNotNull();
