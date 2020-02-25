@@ -12,7 +12,7 @@ You must enable Knative connections before you can add them to
 simple integrations. 
 
 Knative connections might have been enabled when {prodname} was 
-installed. To check this view the content of the `syndesis` custom resource.
+installed. To check this, view the content of the `syndesis` custom resource.
 If the `camelk` and `knative` add-ons specify `enabled: true` then Knative
 connections are already enabled. 
 
