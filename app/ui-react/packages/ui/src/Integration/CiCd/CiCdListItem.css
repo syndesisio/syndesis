@@ -1,0 +1,11 @@
+.cicd-list-item .cicd-list-item__icon-wrapper {
+  width: 7em;
+}
+
+.cicd-list-item .cicd-list-item__text-wrapper {
+  margin-top: 7px;
+}
+
+.cicd-list-item .cicd-list-item__uses-text {
+  margin-top: 16px;
+}
