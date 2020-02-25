@@ -15,22 +15,21 @@
  */
 package io.syndesis.server.runtime.integration;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.runtime.BaseITCase;
-
 import org.awaitility.Awaitility;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationDeploymentITCase extends BaseITCase {
 
@@ -92,7 +91,7 @@ public class IntegrationDeploymentITCase extends BaseITCase {
             Collections.singletonMap("targetState", IntegrationDeploymentState.Unpublished), Void.class,
             tokenRule.validToken(), HttpStatus.NO_CONTENT);
 
-        Awaitility.await().atMost(6, TimeUnit.SECONDS).untilAsserted(() -> {
+        Awaitility.await().atMost(Duration.ofSeconds(6)).untilAsserted(() -> {
             final ResponseEntity<IntegrationDeployment> fetched = get("/api/v1/integrations/test-id/deployments/1",
                 IntegrationDeployment.class);
 

@@ -84,7 +84,7 @@ public class UpgradeVersion40Test {
                         connector.getActions().forEach(UpgradeVersion40Test::assertHttpAction);
 
                         return connector;
-                    });
+                    }).isNotEmpty();
                 });
             });
         }
