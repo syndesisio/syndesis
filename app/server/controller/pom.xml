@@ -75,6 +75,25 @@
         </exclusions>
       </dependency>
       <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-xml-jaxb</artifactId>
+        <version>${camel.version}</version>
+        <!--
+          not required for running the test, it collides with
+          org.glassfish.jaxb implementation
+        -->
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-webhook</artifactId>
         <version>${project.version}</version>
@@ -139,6 +158,11 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-xml-jaxb</artifactId>
+      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
