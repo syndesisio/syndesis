@@ -1,9 +1,6 @@
-import { EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title, Tooltip } from '@patternfly/react-core';
+import { DataList, EmptyState, EmptyStateBody, EmptyStateIcon, EmptyStateVariant, Title, Tooltip } from '@patternfly/react-core';
 import { AddCircleOIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import {
-  ListView,
-} from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
@@ -74,7 +71,7 @@ export const VirtualizationList: React.FunctionComponent<
       </PageSection>
       <PageSection noPadding={true} variant={'light'}>
         {props.hasListData ? (
-          <ListView>{props.children}</ListView>
+          <DataList aria-label={'virtualization list'}>{props.children}</DataList>
         ) : (
           <EmptyState variant={EmptyStateVariant.full}>
             <EmptyStateIcon icon={AddCircleOIcon} />
@@ -106,5 +103,4 @@ export const VirtualizationList: React.FunctionComponent<
       </PageSection>
     </>
   );
-
-}
+};
