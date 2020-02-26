@@ -34,15 +34,15 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
     setExpanded(newArray);
   };
 
-  const getSeletedTableColumns = (
+  const getSelectedTableColumns = (
     connectionName: string,
-    tabelName: string
+    tableName: string
   ) => {
     let columnList: SourceColumn[] = [];
     for (const connection of props.columnDetails) {
       if (connection.name === connectionName) {
         for (const table of connection.tables) {
-          if (table.name === tabelName) {
+          if (table.name === tableName) {
             columnList = table.columns;
           }
         }
@@ -69,11 +69,11 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
           index={index}
           toggle={toggle}
           expanded={expanded}
-          onTabelRemoved={props.onNodeDeselected}
+          onTableRemoved={props.onNodeDeselected}
           setShowPreviewData={props.setShowPreviewData}
           i18nRemoveSelection={t('removeSelection')}
           i18nPreviewData={t('previewData')}
-          rows={getSeletedTableColumns(info.connectionName, info.teiidName)}
+          rows={getSelectedTableColumns(info.connectionName, info.teiidName)}
         />
       ))}
     </SelectedConnectionTables>

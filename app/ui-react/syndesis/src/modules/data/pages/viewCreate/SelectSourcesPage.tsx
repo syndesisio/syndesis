@@ -95,7 +95,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
     error: viewSourceInfoError,
   } = useVirtualizationRuntimeMetadata(virtualization.name);
 
-  const toggelShowPreviewData = async (
+  const toggleShowPreviewData = async (
     cName: string,
     selectedTableName: string
   ) => {
@@ -188,7 +188,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           selectedSchemaNodes={props.selectedSchemaNodes}
           onNodeDeselected={onTableDeselect}
           columnDetails={viewSourceInfo.schemas}
-          setShowPreviewData={toggelShowPreviewData}
+          setShowPreviewData={toggleShowPreviewData}
         />
       }
       showPreviewData={showPreviewData}
@@ -199,6 +199,8 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           i18nEmptyResultsTitle={t('preview.resultsTableValidEmptyTitle')}
           i18nEmptyResultsMsg={t('preview.resultsTableValidEmptyInfo')}
           i18nLoadingQueryResults={t('preview.loadingQueryResults')}
+          i18nHidePreview={t('preview.hidePreview')}
+          i18nShowPreview={t('preview.showPreview')}
           i18nPreviewHeading={t('preview.previewHeading', {
             connection: previewTable.connectionName,
             name: previewTable.tableName
