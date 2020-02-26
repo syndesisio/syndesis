@@ -136,6 +136,8 @@
     <mockito.version>2.19.0</mockito.version>
     <mongodb.version>3.11.2</mongodb.version>
 
+    <greenmail.version>1.5.11</greenmail.version>
+
     <spring-security.version>5.2.2.RELEASE</spring-security.version>
     <resteasy.version>4.4.2.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>4.4.0.Final</resteasy-spring-boot-starter.version>
@@ -2916,6 +2918,12 @@
 
       <dependency>
         <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter</artifactId>
+        <version>${junit5.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
         <artifactId>junit-jupiter-api</artifactId>
         <version>${junit5.version}</version>
       </dependency>
@@ -3150,7 +3158,7 @@
       <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
-        <version>1.5.10</version>
+        <version>${greenmail.version}</version>
         <exclusions>
           <exclusion>
             <groupId>javax.mail</groupId>
