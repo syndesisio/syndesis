@@ -133,21 +133,21 @@
               <goal>generate-mapper-inspections</goal>
             </goals>
           </execution>
-          <dependencies>
-            <!-- ==== REST Swagger ==== -->
-            <dependency>
-              <groupId>io.syndesis.connector</groupId>
-              <artifactId>connector-rest-swagger</artifactId>
-              <version>${project.version}</version>
-            </dependency>
-            <!-- ==== SOAP CXF ==== -->
-            <dependency>
-              <groupId>io.syndesis.connector</groupId>
-              <artifactId>connector-soap</artifactId>
-              <version>${project.version}</version>
-            </dependency>
-          </dependencies>
         </executions>
+        <dependencies>
+          <!-- ==== REST Swagger ==== -->
+          <dependency>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-rest-swagger</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+          <!-- ==== SOAP CXF ==== -->
+          <dependency>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-soap</artifactId>
+            <version>${project.version}</version>
+          </dependency>
+        </dependencies>
       </plugin>
 
       <plugin>
