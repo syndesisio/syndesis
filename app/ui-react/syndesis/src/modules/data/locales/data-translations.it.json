@@ -91,8 +91,10 @@
     "resultsTableInvalidEmptyTitle": "La vista corrente non è valida",
     "resultsTableValidEmptyInfo": "Salvare l'editor della vista e fare clic su Aggiorna per visualizzare i risultati dell'anteprima.",
     "resultsTableValidEmptyTitle": "Nessun dato disponibile",
-    "showPreview": "Anteprima dello spettacolo"
+    "showPreview": "Anteprima dello spettacolo",
+    "previewHeading": "Anteprima di {{name}} ({{connection}})"
   },
+  "previewData": "Anteprima dei dati",
   "publishedDataVirtualization": "In esecuzione",
   "publishInProgress": "Le Editoria...",
   "publishVirtualizationFailed": "La virtualizzazione \"{{name}}\" non può essere pubblicata. Dettagli: {{details}}",
@@ -102,8 +104,10 @@
   "queryResultsTitle": "Risultati della query",
   "queryResultsRowCountMsg": "Numero di righe: ",
   "queryViewFailed": "Impossibile interrogare la vista. Dettagli: {{details}}",
+  "queryTableFailed": "Impossibile interrogare l'anteprima della tabella. Dettagli: {{details}}",
   "Refresh": "Aggiorna",
   "refreshInProgress": "Aggiorna in corso...",
+  "removeSelection": "Rimuovi selezione",
   "ReplaceDraft": "Sostituisci bozza",
   "replaceDraftVirtualizationFailed": "Impossibile sostituire la bozza per la virtualizzazione \"{{name}}\". Dettagli: {{details}}",
   "replaceDraftVirtualizationConfirmTitle": "Sostituisci bozza?",
