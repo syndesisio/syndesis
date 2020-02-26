@@ -29,7 +29,7 @@ export interface ISelectedConnectionListViewProps {
   i18nPreviewData: string;
   i18nRemoveSelection: string;
   toggle: (id: string) => void;
-  onTabelRemoved: (connectionName: string, teiidName: string) => void;
+  onTableRemoved: (connectionName: string, teiidName: string) => void;
   setShowPreviewData: (connectionName: string, tableName: string) => void;
 }
 
@@ -40,11 +40,11 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
   const [isOpen, setIsOpen] = React.useState(false);
 
   /* DataList kabab menu option handler */
-  const onTrashClickHandler = () => {
-    props.onTabelRemoved(props.connectionName, props.name);
+  const onTableRemovedHandler = () => {
+    props.onTableRemoved(props.connectionName, props.name);
   };
 
-  const onPreviewClickHandlere = () => {
+  const onPreviewClickHandler = () => {
     props.setShowPreviewData(props.connectionName, props.name);
   };
 
@@ -102,13 +102,13 @@ export const SelectedConnectionListView: React.FunctionComponent<ISelectedConnec
               onSelect={() => onSelect(event)}
               toggle={<KebabToggle onToggle={onToggle} />}
               dropdownItems={[
-                <DropdownItem key="link" onClick={onPreviewClickHandlere}>
+                <DropdownItem key="link" onClick={onPreviewClickHandler}>
                   {props.i18nPreviewData}
                 </DropdownItem>,
                 <DropdownItem
                   key="action"
                   component="button"
-                  onClick={onTrashClickHandler}
+                  onClick={onTableRemovedHandler}
                 >
                   {props.i18nRemoveSelection}
                 </DropdownItem>,

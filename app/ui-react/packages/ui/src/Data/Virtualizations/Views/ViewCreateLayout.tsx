@@ -35,10 +35,6 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
   isExpanded
 }: IViewCreateLayoutProps) => {
 
-  /* State used in component */
-  // const [isExpanded, setIsExpanded] = React.useState<boolean>(true);
-
-
   return (
     <div className={'view-create-layout'}>
       <div className={'view-create-layout__header'}>{header}</div>
@@ -75,7 +71,6 @@ export const ViewCreateLayout: React.FunctionComponent<IViewCreateLayoutProps> =
                           span={12}
                           className={'view-create-layout_previewSection'}
                         >
-                         
                                 {previewData}
                              
                         </GridItem>

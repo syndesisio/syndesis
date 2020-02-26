@@ -14,6 +14,8 @@ export interface IPreviewDataProps {
   i18nEmptyResultsMsg: string;
   i18nLoadingQueryResults: string;
   i18nPreviewHeading: string;
+  i18nHidePreview: string;
+  i18nShowPreview: string;
   isLoadingPreview: boolean;
   isExpanded: boolean;
   onToggle: () => void;
@@ -28,7 +30,7 @@ export const PreviewData: React.FunctionComponent<IPreviewDataProps> = props => 
         </Text>
       </TextContent>
       <Expandable
-        toggleText={props.isExpanded ? 'Show Less' : 'Show More'}
+        toggleText={props.isExpanded ? props.i18nHidePreview : props.i18nShowPreview}
         onToggle={props.onToggle}
         isExpanded={props.isExpanded}
         className={'view-create-layout_expandable'}
