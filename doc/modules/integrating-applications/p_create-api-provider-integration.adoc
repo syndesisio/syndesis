@@ -51,13 +51,18 @@ Optionally, if your document uses the OpenAPI 2 specification, you can click *Co
 * If you are creating a document, then in the API Designer editor
 that {prodname} opens:
 +
-.. Define the OpenAPI document.
+ifdef::integrating-applications-with-fuse-online[]
+.. Define the OpenAPI document as described in
+link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
+endif::integrating-applications-with-fuse-online[]
+ifdef::developing-and-deploying-apis-with-red-hat-integration[]
+.. Define the OpenAPI document as described in
+link:{LinkIntegrationDevDeploy}#p_creating_api_{context}[Creating a REST API definition in API Designer].
+endif::developing-and-deploying-apis-with-red-hat-integration[]
+
 .. In the upper right, click *Save*, which closes the editor.
 .. Click *Next*.
 
-+
-For information about using the API editor, see
-link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
 
 .Result
 {prodname} displays a list of the operations that the OpenAPI
