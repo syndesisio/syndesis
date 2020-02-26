@@ -157,17 +157,11 @@ For examples of doing this, see
 link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
 
 * Testing API provider integrations running on OpenShift Container Platform
-when specifying *API discovery is enabled*
+when *API discovery is enabled*
 +
-An OCP administrator might have set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE`
-environment variable. When this environment variable is set,  Red Hat 3scale
-publishes your API provider integration, which means that 3scale controls
-access to the integration’s API. To test the integration, open the 3scale
-dashboard to obtain the integration’s URL.
+Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
 +
-If you do not want Red Hat 3scale to control access to the integration’s API,
-you can disable discovery. You do this in {prodname} by viewing the integration’s
-summary page. On this page, click *Disable discovery*. {prodname} republishes
-the integration and provides an external URL for invoking integration execution.
+You can disable discovery if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in Fuse Online. If you disable discovery, {prodname} republishes the integration and provides an external URL for invoking and testing integration execution. To do this, in {prodname} go to the integration’s summary page. On this page, click *Disable discovery*. {prodname} republishes the integration and provides the integration’s URL. For examples of how to test an integration, see
+link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
 +
 You can enable or disable discovery for each API provider integration.
