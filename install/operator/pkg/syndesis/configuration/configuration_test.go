@@ -22,7 +22,11 @@ import (
 	"reflect"
 	"testing"
 
+	imagev1 "github.com/openshift/api/image/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	"sigs.k8s.io/controller-runtime/pkg/client/fake"
 
 	"github.com/stretchr/testify/assert"
 
@@ -204,10 +208,10 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Spec: v1beta1.SyndesisSpec{
 					Addons: v1beta1.AddonsSpec{
 						Jaeger: v1beta1.JaegerConfiguration{
-							Enabled:      true,
-							SamplerType:  "const",
-							SamplerParam: "0",
-							ImageAgent: "jaegertracing/jaeger-agent:1.13",
+							Enabled:       true,
+							SamplerType:   "const",
+							SamplerParam:  "0",
+							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
@@ -227,10 +231,10 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						Jaeger: JaegerConfiguration{
-							Enabled:      true,
-							SamplerType:  "const",
-							SamplerParam: "0",
-							ImageAgent: "jaegertracing/jaeger-agent:1.13",
+							Enabled:       true,
+							SamplerType:   "const",
+							SamplerParam:  "0",
+							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
@@ -338,10 +342,10 @@ func getConfigLiteral() *Config {
 			RouteHostname: "",
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
-					Enabled:      false,
-					SamplerType:  "const",
-					SamplerParam: "0",
-					ImageAgent: "jaegertracing/jaeger-agent:1.13",
+					Enabled:       false,
+					SamplerType:   "const",
+					SamplerParam:  "0",
+					ImageAgent:    "jaegertracing/jaeger-agent:1.13",
 					ImageAllInOne: "jaegertracing/all-in-one:1.13",
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
@@ -525,5 +529,64 @@ func Test_setIntFromEnv(t *testing.T) {
 				os.Unsetenv(k)
 			}
 		})
+	}
+}
+
+func Test_postgresqlVersionFromImage(t *testing.T) {
+	tests := []struct {
+		imageName string
+		err       bool
+		expected  float64
+		image     *imagev1.Image
+	}{
+		{"", true, 0, nil},
+		{" ", true, 0, nil},
+		{"img1", true, 0, nil},
+		{"registry.redhat.io/rhscl/postgresql-95-rhel7", true, 0, nil},
+		{"sha256:0cf19c73fb1ed0784a5092edd42ce662d7328dac529f56b6bfc3d85b24552ed4", true, 0, nil},
+		{"registry.redhat.io/rhscl/postgresql-95-rhel7@sha256:0cf19c73fb1ed0784a5092edd42ce662d7328dac529f56b6bfc3d85b24552ed4", false, 9.5, &imagev1.Image{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: "sha256:0cf19c73fb1ed0784a5092edd42ce662d7328dac529f56b6bfc3d85b24552ed4",
+			},
+			DockerImageMetadata: runtime.RawExtension{
+				Raw: []byte(`{"config": {"env": ["PATH=...", "POSTGRESQL_VERSION=9.5", "APP_DATA="]}}`),
+			},
+		}},
+		{"registry.redhat.io/rhscl/postgresql-96-rhel7@sha256:a57cf6fcabc6bf716979c6fcba788819b29e4846ac28cdf678bbf62601c0db96", false, 9.6, &imagev1.Image{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: "sha256:a57cf6fcabc6bf716979c6fcba788819b29e4846ac28cdf678bbf62601c0db96",
+			},
+			DockerImageMetadata: runtime.RawExtension{
+				Raw: []byte(`{"config": {"env": ["PATH=...", "POSTGRESQL_VERSION=9.6", "APP_DATA="]}}`),
+			},
+		}},
+		{"centos/postgresql-96-centos7@sha256:617c75aab798753ee5e0323d60069757b17a2255abd9de44ca342e4a8bb68b15", false, 9.6, &imagev1.Image{
+			ObjectMeta: metav1.ObjectMeta{
+				Name: "sha256:617c75aab798753ee5e0323d60069757b17a2255abd9de44ca342e4a8bb68b15",
+			},
+			DockerImageMetadata: runtime.RawExtension{
+				Raw: []byte(`{"containerConfig": {"labels": {"name": "centos/postgresql-96-centos7", "version": "9.6"}}}`),
+			},
+		}},
+	}
+
+	scheme := runtime.NewScheme()
+	imagev1.Install(scheme)
+
+	for _, test := range tests {
+		var client client.Client
+		if test.image != nil {
+			client = fake.NewFakeClientWithScheme(scheme, test.image)
+		} else {
+			client = fake.NewFakeClientWithScheme(scheme)
+		}
+
+		version, err := postgresqlVersionFromImage(client, test.imageName)
+		if !test.err && err != nil {
+			t.Errorf("postgresqlVersionFromImage(client, %v) = nil, %v", test.imageName, err)
+		}
+		if version != test.expected {
+			t.Errorf("postgresqlVersionFromImage(client, %v) = %v, wanted %v", test.imageName, version, test.expected)
+		}
 	}
 }

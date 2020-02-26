@@ -20,6 +20,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
@@ -33,7 +34,10 @@ import (
 	"k8s.io/apimachinery/pkg/types"
 
 	appsv1 "github.com/openshift/api/apps/v1"
+	dockerv10 "github.com/openshift/api/image/docker10"
+	imagev1 "github.com/openshift/api/image/v1"
 	routev1 "github.com/openshift/api/route/v1"
+	imageutil "github.com/openshift/library-go/pkg/image/imageutil"
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
@@ -48,6 +52,9 @@ var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Location from where the template configuration is located
 var TemplateConfig string
+
+// Version of PostgreSQL installed by this version of the operator, needs to be updated each time database version is upgraded
+const wantedPostgreSQLVersion = 9.6
 
 type Config struct {
 	AllowLocalHost             bool
@@ -291,7 +298,11 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
 			for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
 				if c.Name == "postgresql" {
-					configuration.DatabaseNeedsUpgrade = c.Image != configuration.Syndesis.Components.Database.Image
+					currentPostgreSQLVersion, err := postgresqlVersionFromImage(client, c.Image)
+					if err != nil {
+						return nil, err
+					}
+					configuration.DatabaseNeedsUpgrade = currentPostgreSQLVersion < wantedPostgreSQLVersion
 					break
 				}
 			}
@@ -299,6 +310,54 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 	}
 
 	return configuration, nil
+}
+
+// postgresqlVersionFromImage determines the version of the database from the given image name
+// the imageName needs to be resolved (in the pullspec@ID syntax) otherwise lookup of Image will
+// fail. Version is determined by looking for `POSTGRESQL_VERSION` environment variable in the
+// docker image metadata, and falling back to `version` label in the docker metadata.
+// Take note that some PostgreSQL images have `version` label set to "1" and some have it set
+// to the version of PostgreSQL
+func postgresqlVersionFromImage(api client.Client, imageName string) (float64, error) {
+	if len(imageName) <= 1 {
+		return 0, fmt.Errorf("Unable to determine sha from image `%s`, was the ImageStreamTag resolved?", imageName)
+	}
+
+	ref, err := imageutil.ParseDockerImageReference(imageName)
+	if err != nil {
+		return 0, err
+	}
+
+	if len(ref.ID) == 0 {
+		return 0, fmt.Errorf("Unable to determine sha from image `%s`, no `@` in the image name", imageName)
+	}
+
+	image := imagev1.Image{}
+	err = api.Get(context.TODO(), types.NamespacedName{Name: ref.ID}, &image)
+	if err != nil {
+		return 0, err
+	}
+
+	imageutil.ImageWithMetadataOrDie(&image)
+
+	metadata, ok := image.DockerImageMetadata.Object.(*dockerv10.DockerImage)
+	if !ok {
+		return 0, fmt.Errorf("Unable to fetch Docker metadata for image `%s`", imageName)
+	}
+
+	if metadata.Config != nil && metadata.Config.Env != nil {
+		for _, env := range metadata.Config.Env {
+			if strings.HasPrefix(env, "POSTGRESQL_VERSION=") {
+				version := env[19:]
+				return strconv.ParseFloat(version, 64)
+			}
+		}
+	} else if metadata.ContainerConfig.Labels != nil {
+		version := metadata.ContainerConfig.Labels["version"]
+		return strconv.ParseFloat(version, 64)
+	}
+
+	return 0, fmt.Errorf("Unable to determine PostgreSQL version from image, Docker image metadata missing")
 }
 
 // Load configuration from config file. Config file is expected to be a yaml
