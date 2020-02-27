@@ -98,7 +98,7 @@
           - sh
           - -c
           - postgres -V
-          image: '{{.Syndesis.Components.Database.Image}}'
+          image: '{{.DatabaseImage}}'
           name: postgres-version
     triggers:
     - imageChangeParams:

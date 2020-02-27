@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/pkg/errors"
@@ -47,6 +48,7 @@ type Install struct {
 	addons         string
 	customResource string
 	devSupport     bool
+	databaseImage  string
 
 	// processing state
 	ejectedResources []unstructured.Unstructured
@@ -145,6 +147,12 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.image = "syndesis-operator"
 	}
 
+	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
+	if err != nil {
+		return err
+	}
+	o.databaseImage = config.Syndesis.Components.Database.Image
+
 	return
 }
 
@@ -186,6 +194,7 @@ type RenderScope struct {
 	Role          string
 	Kind          string
 	EnabledAddons []string
+	DatabaseImage string
 }
 
 func (o *Install) install(action string, resources []unstructured.Unstructured) error {
@@ -242,6 +251,7 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 		Role:          RoleName,
 		Kind:          "Role",
 		EnabledAddons: addons,
+		DatabaseImage: o.databaseImage,
 	})
 	return resources, err
 }
