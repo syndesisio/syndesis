@@ -1,6 +1,13 @@
-import { ListViewItem } from 'patternfly-react';
+import { 
+  DataListCell, 
+  DataListCheck, 
+  DataListItem, 
+  DataListItemCells, 
+  DataListItemRow 
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
+import './TagIntegrationListItem.css';
 
 export interface ITagIntegrationListItemProps {
   selected: boolean;
@@ -8,33 +15,36 @@ export interface ITagIntegrationListItemProps {
   onChange: (name: string, selected: boolean) => void;
 }
 
-export class TagIntegrationListItem extends React.Component<
-  ITagIntegrationListItemProps
-> {
-  constructor(props: ITagIntegrationListItemProps) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  public handleChange(event: React.ChangeEvent<HTMLInputElement>) {
-    this.props.onChange(this.props.name, event.target.checked);
-  }
-  public render() {
-    return (
-      <ListViewItem
-        checkboxInput={
-          <input
-            data-testid={`tag-integration-list-item-${toValidHtmlId(
-              this.props.name
-            )}-selected-input`}
-            type="checkbox"
-            defaultChecked={this.props.selected}
-            onChange={this.handleChange}
-          />
-        }
-        heading={this.props.name}
-        description={''}
-        additionalInfo={[]}
-      />
-    );
-  }
-}
+export const TagIntegrationListItem: React.FunctionComponent<ITagIntegrationListItemProps> = props => {
+
+  const [itemSelected, setItemSelected] = React.useState(props.selected);
+
+  return (
+    <DataListItem
+      aria-labelledby={'tag integration list item'}
+      data-testid={`tag-integration-list-item-${toValidHtmlId(
+        props.name
+      )}-selected-input`}
+      className={'tag-integration-list-item'}
+    >
+      <DataListItemRow>
+        <DataListCheck
+          aria-labelledby="tag-integration-list-item-check"
+          name="tag-integration-list-item-check"
+          checked={itemSelected}
+          // tslint:disable-next-line: jsx-no-lambda
+          onChange={(checked, event) => {setItemSelected(checked); props.onChange(props.name, checked)}}
+        />
+        <DataListItemCells
+          dataListCells={[
+            <DataListCell key={'primary content'} width={2}>
+              <div className={'tag-integration-list-item__text-wrapper'}>
+                <b>{props.name}</b>
+              </div>
+            </DataListCell>,
+          ]}
+        />
+      </DataListItemRow>
+    </DataListItem>
+  );
+};

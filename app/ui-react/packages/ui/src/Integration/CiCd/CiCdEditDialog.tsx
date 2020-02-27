@@ -1,5 +1,4 @@
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
-import { Button } from 'patternfly-react';
+import { Button, ButtonVariant, Text, TextContent, TextVariants } from '@patternfly/react-core';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
 import { TagNameValidationError } from './CiCdUIModels';
@@ -23,103 +22,97 @@ export interface ICiCdEditDialogState {
   tagName: string;
 }
 
-export class CiCdEditDialog extends React.Component<
-  ICiCdEditDialogProps,
-  ICiCdEditDialogState
-> {
-  constructor(props: ICiCdEditDialogProps) {
-    super(props);
-    this.state = {
-      tagName: this.props.tagName,
-    };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  public handleChange(event: React.ChangeEvent<HTMLInputElement>) {
+export const CiCdEditDialog: React.FC<ICiCdEditDialogProps> = ({
+  i18nTitle,
+  i18nDescription,
+  tagName,
+  i18nInputLabel,
+  i18nSaveButtonText,
+  i18nCancelButtonText,
+  i18nNoNameError,
+  i18nNameInUseError,
+  validationError,
+  onHide,
+  onValidate,
+  onSave,
+}) => {
+  const [theTagName, setTagName] = React.useState(tagName);
+
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const name = event.target.value.trim();
-    this.setState({ tagName: name }, () => this.props.onValidate(name));
-  }
-  public handleClick() {
-    this.props.onSave(this.state.tagName);
-  }
-  public render() {
-    return (
-      <Dialog
-        body={
-          <TextContent data-testid={'cicd-edit-dialog'}>
-            <form className="form-horizontal">
-              <Text component={TextVariants.p}>
-                {this.props.i18nDescription}
-              </Text>
-              <div
-                className={
-                  this.props.validationError === TagNameValidationError.NoErrors
-                    ? 'form-group'
-                    : 'form-group has-error'
-                }
-              >
-                <label
-                  className="col-sm-3 control-label"
-                  htmlFor="tagNameInput"
-                >
-                  {this.props.i18nInputLabel}
-                </label>
-                <div className="col-sm-9">
-                  <input
-                    id="tagNameInput"
-                    data-testid={'cicd-edit-dialog-tag-name'}
-                    className="form-control"
-                    type="text"
-                    defaultValue={this.props.tagName}
-                    onChange={this.handleChange}
-                  />
-                  {this.props.validationError ===
-                    TagNameValidationError.NoErrors && (
-                    <span className="help-block">
-                      &nbsp;{/* todo: pad out the area */}
-                    </span>
-                  )}
-                  {this.props.validationError ===
-                    TagNameValidationError.NoName && (
-                    <span className="help-block">
-                      {this.props.i18nNoNameError}
-                    </span>
-                  )}
-                  {this.props.validationError ===
-                    TagNameValidationError.NameInUse && (
-                    <span className="help-block">
-                      {this.props.i18nNameInUseError}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </form>
-          </TextContent>
-        }
-        footer={
-          <>
-            <Button
-              data-testid={'cicd-edit-dialog-cancel-button'}
-              onClick={this.props.onHide}
-            >
-              {this.props.i18nCancelButtonText}
-            </Button>
-            <Button
-              data-testid={'cicd-edit-dialog-save-button'}
-              bsStyle={'primary'}
-              onClick={this.handleClick}
-              disabled={
-                this.state.tagName === '' ||
-                this.props.validationError !== TagNameValidationError.NoErrors
+    setTagName(name);
+    onValidate(name);
+  };
+
+  const handleClick = () => {
+    onSave(theTagName);
+  };
+
+  return (
+    <Dialog
+      body={
+        <TextContent data-testid={'cicd-edit-dialog'}>
+          <form className="form-horizontal">
+            <Text component={TextVariants.p}>{i18nDescription}</Text>
+            <div
+              className={
+                validationError === TagNameValidationError.NoErrors
+                  ? 'form-group'
+                  : 'form-group has-error'
               }
             >
-              {this.props.i18nSaveButtonText}
-            </Button>
-          </>
-        }
-        onHide={this.props.onHide}
-        title={this.props.i18nTitle}
-      />
-    );
-  }
-}
+              <label className="col-sm-3 control-label" htmlFor="tagNameInput">
+                {i18nInputLabel}
+              </label>
+              <div className="col-sm-9">
+                <input
+                  id="tagNameInput"
+                  data-testid={'cicd-edit-dialog-tag-name'}
+                  className="form-control"
+                  type="text"
+                  defaultValue={tagName}
+                  onChange={handleChange}
+                />
+                {validationError === TagNameValidationError.NoErrors && (
+                  <span className="help-block">
+                    &nbsp;{/* todo: pad out the area */}
+                  </span>
+                )}
+                {validationError === TagNameValidationError.NoName && (
+                  <span className="help-block">{i18nNoNameError}</span>
+                )}
+                {validationError === TagNameValidationError.NameInUse && (
+                  <span className="help-block">{i18nNameInUseError}</span>
+                )}
+              </div>
+            </div>
+          </form>
+        </TextContent>
+      }
+      footer={
+        <>
+          <Button
+            data-testid={'cicd-edit-dialog-cancel-button'}
+            variant={ButtonVariant.secondary}
+            onClick={onHide}
+          >
+            {i18nCancelButtonText}
+          </Button>
+          <Button
+            data-testid={'cicd-edit-dialog-save-button'}
+            variant={ButtonVariant.primary}
+            onClick={handleClick}
+            isDisabled={
+              theTagName === '' ||
+              validationError !== TagNameValidationError.NoErrors
+            }
+          >
+            {i18nSaveButtonText}
+          </Button>
+        </>
+      }
+      onHide={onHide}
+      title={i18nTitle}
+    />
+  );
+};

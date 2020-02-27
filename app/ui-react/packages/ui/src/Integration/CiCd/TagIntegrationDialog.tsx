@@ -1,4 +1,4 @@
-import { Button } from 'patternfly-react';
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
 import { ITagIntegrationEntry } from './CiCdUIModels';
@@ -22,63 +22,55 @@ export interface ITagIntegrationDialogState {
   disableSave: boolean;
 }
 
-export class TagIntegrationDialog extends React.Component<
-  ITagIntegrationDialogProps,
-  ITagIntegrationDialogState
-> {
-  private itemsDraft: ITagIntegrationEntry[] | undefined;
-  constructor(props: ITagIntegrationDialogProps) {
-    super(props);
-    this.state = {
-      disableSave: true,
-    };
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-  }
-  public handleChange(
+export const TagIntegrationDialog: React.FunctionComponent<ITagIntegrationDialogProps> = props => {
+
+  const [disableSave, setDisableSave] = React.useState(true);
+  const [draftItems, setDraftItems] = React.useState();
+
+  const handleSelectionChange = (
     items: ITagIntegrationEntry[],
     initialItems: ITagIntegrationEntry[]
-  ) {
-    const disableSave = initialItems
+  ) => {
+    setDraftItems(items);
+    const shouldDisable = initialItems
       .map(
         (item, index) =>
           item.name === items[index].name &&
           item.selected === items[index].selected
       )
       .reduce((acc, current) => acc && current, true);
-    this.itemsDraft = items;
-    this.setState({ disableSave });
+    setDisableSave(shouldDisable);
   }
-  public handleClick() {
-    this.props.onSave(this.itemsDraft!);
+
+  const handleClick = () => {
+    props.onSave(draftItems);
   }
-  public render() {
-    return (
+
+  return (
       <Dialog
-        body={this.props.children({
-          handleChange: this.handleChange,
+        body={props.children({
+          handleChange: handleSelectionChange,
         })}
         footer={
           <>
             <Button
               data-testid={'tag-integration-dialog-cancel-button'}
-              onClick={this.props.onHide}
+              onClick={props.onHide}
             >
-              {this.props.i18nCancelButtonText}
+              {props.i18nCancelButtonText}
             </Button>
             <Button
               data-testid={'tag-integration-dialog-save-button'}
-              bsStyle={'primary'}
-              onClick={this.handleClick}
-              disabled={this.state.disableSave}
+              variant={ButtonVariant.primary}
+              onClick={handleClick}
+              isDisabled={disableSave}
             >
-              {this.props.i18nSaveButtonText}
+              {props.i18nSaveButtonText}
             </Button>
           </>
         }
-        title={this.props.i18nTitle}
-        onHide={this.props.onHide}
+        title={props.i18nTitle}
+        onHide={props.onHide}
       />
     );
-  }
 }
