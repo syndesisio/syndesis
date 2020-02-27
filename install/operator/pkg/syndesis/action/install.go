@@ -138,6 +138,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
+		// TODO: Remove for 7.7. Migrate database upgrade to a step in upgrade process
 		if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) || syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
 			dbResources, err := generator.RenderDir("./database/", config)
 			if err != nil {
