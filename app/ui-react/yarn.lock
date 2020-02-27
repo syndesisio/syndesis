@@ -23245,13 +23245,10 @@ tsconfig-paths@^3.4.0:
     minimist "^1.2.0"
     strip-bom "^3.0.0"
 
-tsickle@0.34.3:
-  version "0.34.3"
-  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.34.3.tgz#8085067a26d7bff466ddadb2eba18849b49159b8"
-  dependencies:
-    minimist "^1.2.0"
-    mkdirp "^0.5.1"
-    source-map "^0.7.3"
+tsickle@0.38.0:
+  version "0.38.0"
+  resolved "https://registry.yarnpkg.com/tsickle/-/tsickle-0.38.0.tgz#89f5952c9bb3ba0b36dc384975e23cf90e584822"
+  integrity sha512-k7kI6afBuLd2jIrj9JR8lKhEkp99sFVRKQbHeaHQkdvDaH5AvzwqA/qX+aNj28OfuAsWryOKAZoXm24l7JelEw==
 
 tslib@1.10.0, tslib@^1.7.1, tslib@^1.8.0, tslib@^1.8.1, tslib@^1.9.0, tslib@^1.9.3:
   version "1.10.0"
