@@ -103,6 +103,11 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   const [currPublishedState, setCurrPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
+  
+  /**
+   * State for showing Publishing... on virtualization publish clicked.
+   */
+  const [publishing, setPublishing] = React.useState<boolean>(false);
 
   /**
    * State for the virtualization description.
@@ -154,6 +159,10 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
     return '';
   });
 
+  const setPublishingState = (state: boolean) => {
+    setPublishing(state);
+  };
+
   /**
    * Update publishing details and description whenever a virtualization state changes.
    */
@@ -193,6 +202,11 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
       setPublishStateText(getStateLabelText(currPublishedState));
     }
   }, [currPublishedState, isProgressWithLink, isSubmitted]);
+
+  React.useEffect(() => {
+    // tslint:disable-next-line: no-unused-expression
+    publishing && setPublishStateText(t('data:publishInProgress'));
+  }, [publishing, t]);
 
   /**
    * Updates the virtualization description.
@@ -258,6 +272,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
               startActionProps={props.startActionCustomProps}
               stopActionProps={props.stopActionCustomProps}
               virtualization={props.virtualization}
+              setPublishingState={setPublishingState}
             />
           }
           dataPageHref={resolvers.data.root()}
@@ -298,7 +313,9 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
         />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
-        <VirtualizationNavBar virtualization={props.routeState.virtualization} />
+        <VirtualizationNavBar
+          virtualization={props.routeState.virtualization}
+        />
       </PageSection>
       <PageSection variant={'light'} noPadding={true}>
         {props.children}

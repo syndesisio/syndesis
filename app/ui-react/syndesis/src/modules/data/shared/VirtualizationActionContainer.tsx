@@ -88,6 +88,7 @@ export interface IVirtualizationActionContainerProps {
   startActionProps?: any;
   stopActionProps?: any;
   virtualization: Virtualization;
+  setPublishingState?: (state: boolean) => void;
 }
 
 /**
@@ -290,7 +291,8 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       id: VirtualizationActionId.Publish,
       onClick: async () => {
         setPublish(true);
-
+          // tslint:disable-next-line: no-unused-expression
+          props.setPublishingState && props.setPublishingState(true)
         if (props.virtualization.empty) {
           pushNotification(
             t('publishVirtualizationNoViews', {
@@ -303,7 +305,7 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           throw e;
         }
 
-        publishVirtualization(props.virtualization.name).catch((e: any) => {
+        await publishVirtualization(props.virtualization.name).catch((e: any) => {
           pushNotification(
             t('publishVirtualizationFailed', {
               details: e.errorMessage || e.message || e,
@@ -312,9 +314,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             'error'
           );
         });
+        // tslint:disable-next-line: no-unused-expression
+        props.setPublishingState && props.setPublishingState(false)
       },
     };
-
+    
     if (!customProps) {
       return publishAction;
     }
