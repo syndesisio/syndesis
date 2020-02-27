@@ -138,22 +138,24 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	// Render the database resource if needed...
 	if syndesis.Spec.Components.Database.ExternalDbURL == "" {
-		dbResources, err := generator.RenderDir("./database/", config)
-		if err != nil {
-			return err
-		}
+		if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) || syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
+			dbResources, err := generator.RenderDir("./database/", config)
+			if err != nil {
+				return err
+			}
 
-		//
-		// Log the possible combination of values chosen for the db persistent volume claim
-		//
-		if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
-			a.log.Info("Will bind sydnesis-db to persistent volume with criteria ",
-				"volume-access-mode", config.Syndesis.Components.Database.Resources.VolumeAccessMode,
-				"volume-name", config.Syndesis.Components.Database.Resources.VolumeName,
-				"storage-class", config.Syndesis.Components.Database.Resources.VolumeStorageClass)
-		}
+			//
+			// Log the possible combination of values chosen for the db persistent volume claim
+			//
+			if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhaseInstalling) {
+				a.log.Info("Will bind sydnesis-db to persistent volume with criteria ",
+					"volume-access-mode", config.Syndesis.Components.Database.Resources.VolumeAccessMode,
+					"volume-name", config.Syndesis.Components.Database.Resources.VolumeName,
+					"storage-class", config.Syndesis.Components.Database.Resources.VolumeStorageClass)
+			}
 
-		all = append(all, dbResources...)
+			all = append(all, dbResources...)
+		}
 	}
 
 	addons := configuration.GetAddons(*config)
