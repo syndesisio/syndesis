@@ -57,7 +57,7 @@ link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definit
 endif::[]
 ifdef::developing-and-deploying-apis-with-red-hat-integration[]
 .. Define the OpenAPI document as described in
-link:{LinkIntegrationDevDeploy}#p_creating_api_{context}[Creating a REST API definition in API Designer].
+link:{LinkIntegrationDevDeploy}#p_creating_api_create-api-definition[Creating a REST API definition in API Designer].
 endif::[]
 
 .. In the upper right, click *Save*, which closes the editor.
