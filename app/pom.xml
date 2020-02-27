@@ -769,6 +769,7 @@
               <ignoredResourcePattern>component.properties</ignoredResourcePattern>
               <ignoredResourcePattern>language.properties</ignoredResourcePattern>
               <ignoredResourcePattern>other.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>dataformat.properties</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <ignoredClassPatterns>
               <ignoredClassPattern>META-INF.versions.9.module-info</ignoredClassPattern>
@@ -793,6 +794,21 @@
                 </conflictingDependencies>
                 <packages>
                   <package>org.apache.camel.util.json</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>jakarta.activation</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.sun.activation</groupId>
+                    <artifactId>javax.activation</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>com.sun.activation</package>
                 </packages>
               </exception>
               <exception>
