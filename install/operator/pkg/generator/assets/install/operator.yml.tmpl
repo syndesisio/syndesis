@@ -93,6 +93,13 @@
             value: "syndesis-operator"
           - name: DEV_SUPPORT
             value: "{{.DevSupport}}"
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - postgres -V
+          image: '{{.DatabaseImage}}'
+          name: postgres-version
     triggers:
     - imageChangeParams:
         automatic: true
