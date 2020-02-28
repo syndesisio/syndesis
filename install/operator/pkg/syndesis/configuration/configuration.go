@@ -291,7 +291,19 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
 			for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
 				if c.Name == "postgresql" {
-					configuration.DatabaseNeedsUpgrade = c.Image != configuration.Syndesis.Components.Database.Image
+
+					//
+					// Does deploment config already contain UPGRADE Env Var?
+					// if it does then DO NOT remove it.
+					//
+					hasUpgradeEnvVar := false
+					for _, env := range c.Env {
+						if env.Name == "POSTGRESQL_UPGRADE" {
+							hasUpgradeEnvVar = true
+						}
+					}
+
+					configuration.DatabaseNeedsUpgrade = hasUpgradeEnvVar || c.Image != configuration.Syndesis.Components.Database.Image
 					break
 				}
 			}

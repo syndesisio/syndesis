@@ -68,14 +68,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	} else if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
 		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
 		a.deleteDeploymentConfigs(ctx, syndesis)
-	} else {
-		// Only install resources if phase is either Installing or PostUpgradeRun
-		return nil
 	}
-
-	//
-	// Only if phase is Installing of PostUpgradeRun do we continue
-	//
 
 	resourcesThatShouldExist := map[types.UID]bool{}
 
