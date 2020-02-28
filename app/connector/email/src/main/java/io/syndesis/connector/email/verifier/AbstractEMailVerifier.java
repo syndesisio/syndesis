@@ -109,7 +109,11 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         // setProperties will strip parameters key/values so copy the map
         //
         try {
-            return setProperties(new MailConfiguration(), new HashMap<>(parameters));
+            MailConfiguration configuration = setProperties(new MailConfiguration(), new HashMap<>(parameters));
+            Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters,
+                                                                     PROTOCOL, Protocol::getValueOf, null);
+            configuration.configureProtocol(protocol.id());
+            return configuration;
         } catch (Exception e) {
             throw new IllegalArgumentException("Unable to set parameters", e);
         }

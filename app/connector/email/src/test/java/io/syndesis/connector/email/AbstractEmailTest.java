@@ -74,6 +74,7 @@ public class AbstractEmailTest implements EMailConstants {
     protected CamelContext createCamelContext() {
         CamelContext ctx = new SpringCamelContext(applicationContext);
         ctx.disableJMX();
+        ctx.init();
 
         PropertiesComponent pc = new PropertiesComponent();
         pc.addLocation(new PropertiesLocation("classpath:mail-test-options.properties"));
