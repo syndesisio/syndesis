@@ -242,6 +242,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
         // check if deployment config exists
         final DoneableDeploymentConfig deploymentConfig;
         final DeploymentConfig oldConfig = openShiftClient.deploymentConfigs().withName(name).get();
+        String jaegerCollectorUri = System.getenv("JAEGER_ENDPOINT");
+        if (jaegerCollectorUri == null) {
+            jaegerCollectorUri = "http://syndesis-jaeger-collector:14268/api/traces";
+        }
         if (oldConfig != null) {
             // make sure replicas is set to at least 1 or restore the previous replica count if present
             final PodTemplateSpec oldTemplate = oldConfig.getSpec().getTemplate();
@@ -252,7 +256,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             // environment variables are stored in a list, so remove duplicates manually before patching
             final EnvVar[] vars = { new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
                     new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
-                    new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
+                    new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
                     new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                     new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
                     new EnvVar("JAEGER_SAMPLER_PARAM", "1", null) };
@@ -386,7 +390,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                                     .withEnv(
                                             new EnvVar("LOADER_HOME", config.getIntegrationDataPath(), null),
                                             new EnvVar("AB_JMX_EXPORTER_CONFIG", "/tmp/src/prometheus-config.yml", null),
-                                            new EnvVar("JAEGER_ENDPOINT", "http://syndesis-jaeger-collector:14268/api/traces", null),
+                                            new EnvVar("JAEGER_ENDPOINT", jaegerCollectorUri, null),
                                             new EnvVar("JAEGER_TAGS", "integration.version="+deploymentData.getVersion(), null),
                                             new EnvVar("JAEGER_SAMPLER_TYPE", "const", null),
                                             new EnvVar("JAEGER_SAMPLER_PARAM", "1", null))
