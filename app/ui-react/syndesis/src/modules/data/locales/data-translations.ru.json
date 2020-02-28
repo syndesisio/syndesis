@@ -15,6 +15,8 @@
     "RUNNING": "Запущено",
     "SUBMITTED": "Отправлено"
   },
+  "connectionStatusPopoverLink": "Ошибка подключения",
+  "connectionStatusPopoverTitle": "Ошибка подключения",
   "createDataVirtualization": "Создать $t(shared:DataVirtualization)",
   "createDataVirtualizationTip": "Создать Виртуализацию данных",
   "createDataVirtualizationTitle": "Создайте новый $t(shared:DataVirtualization)",

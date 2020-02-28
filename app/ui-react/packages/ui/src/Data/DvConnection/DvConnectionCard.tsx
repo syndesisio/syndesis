@@ -4,16 +4,13 @@ import {
   Card,
   CardBody,
   CardHeader,
-  Label,
-  Spinner,
   Text,
   Title,
-  Tooltip
 } from '@patternfly/react-core';
-import { global_active_color_100, global_danger_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import './DvConnectionCard.css';
+import { DvConnectionStatus } from './DvConnectionStatus';
 
 export enum ConnectionStatus {
   ACTIVE = 'ACTIVE',
@@ -24,8 +21,11 @@ export enum ConnectionStatus {
 export interface IDvConnectionCardProps {
   name: string;
   description: string;
-  dvStatusTooltip: string;
+  dvStatusMessage?: string;
   dvStatus: string;
+  i18nRefreshInProgress: string;
+  i18nStatusErrorPopoverTitle: string;
+  i18nStatusErrorPopoverLink: string;
   icon: React.ReactNode;
   loading: boolean;
   selected: boolean;
@@ -51,23 +51,14 @@ export const DvConnectionCard: React.FunctionComponent<
       onClick={doToggleSelected(props.name)}
     >
       <CardHeader>
-        {props.loading && props.dvStatus !== ConnectionStatus.ACTIVE ? (
-          <Spinner size={'lg'} />
-        ) : (
-          <></>
-        )}
-        <Tooltip content={props.dvStatusTooltip} position={'bottom'}>
-          <Label
-            className="dv-connection-card__status"
-            style={
-              props.dvStatus === ConnectionStatus.ACTIVE
-                ? { background: global_active_color_100.value }
-                : { background: global_danger_color_100.value }
-            }
-          >
-            {props.dvStatus}
-          </Label>
-        </Tooltip>
+        <DvConnectionStatus 
+          dvStatus={props.dvStatus}
+          dvStatusMessage={props.dvStatusMessage}
+          i18nRefreshInProgress={props.i18nRefreshInProgress}
+          i18nStatusErrorPopoverTitle={props.i18nStatusErrorPopoverTitle}
+          i18nStatusErrorPopoverLink={props.i18nStatusErrorPopoverLink}
+          loading={props.loading}
+        />
       </CardHeader>
       <CardBody>
         <div className={'dv-connection-card__body'}>
