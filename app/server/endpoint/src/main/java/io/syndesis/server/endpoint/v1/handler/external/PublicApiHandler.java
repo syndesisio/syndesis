@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
@@ -322,7 +323,7 @@ public class PublicApiHandler {
                 connections.forEach(c -> {
                     final Map<String, String> values = params.get(c.getName());
                     if (values != null) {
-                        updateConnection(c, values, lastImportedAt);
+                        updateConnection(c, values, formInput.getRefreshIntegrations(), lastImportedAt, results);
                     }
                 });
             }
@@ -350,13 +351,15 @@ public class PublicApiHandler {
     @Path("connections/{id}/properties")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
-    public ConnectionOverview configureConnection(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
-        @NotNull @ApiParam(required = true) Map<String, String> properties) {
+    public ConnectionOverview configureConnection(@Context SecurityContext sec,
+                                                  @NotNull @PathParam("id") @ApiParam(required = true) String connectionId,
+                                                  @NotNull @QueryParam("refreshIntegrations") @ApiParam() Boolean refeshIntegrations,
+                                                  @NotNull @ApiParam(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
         final Connection connection = getResource(Connection.class, connectionId, WithResourceId::hasId);
 
-        updateConnection(connection, properties);
+        updateConnection(connection, properties, refeshIntegrations, new Date(), null);
         return connectionHandler.get(connection.getId().get());
     }
 
@@ -412,11 +415,11 @@ public class PublicApiHandler {
         return deploymentHandler.update(sec, integration.getId().get());
     }
 
-    private void updateConnection(Connection c, Map<String, String> values) {
-        updateConnection(c, values, new Date());
-    }
+    private void updateConnection(Connection c, Map<String, String> values, Boolean refreshIntegrations,
+                                  Date lastImportedAt, List<WithResourceId> results) {
 
-    private void updateConnection(Connection c, Map<String, String> values, Date lastImportedAt) {
+        final String connectionId = c.getId().get();
+
         // encrypt properties
         final Connector connector = dataMgr.fetch(Connector.class, c.getConnectorId());
         final Map<String, String> encryptedValues = encryptionComponent.encryptPropertyValues(values,
@@ -429,10 +432,47 @@ public class PublicApiHandler {
         // TODO how can credential flow be handled without a user session??
         // is there any way to determine which connections require manual
         // intervention??
-        dataMgr.update(c.builder()
+        final Connection updatedConnection = c.builder()
             .configuredProperties(map)
             .lastUpdated(lastImportedAt)
-            .build());
+            .build();
+        dataMgr.update(updatedConnection);
+
+        // refresh integrations that reference this connection?
+        if (Boolean.TRUE.equals(refreshIntegrations)) {
+            // we have to use the super heavy weight getOverview method below,
+            // which returns a bunch of other data we ignore,
+            // but it's also deeply involved with refreshing the integration,
+            // which is what the UI does
+            final Map<String, Integration> updated = dataMgr.fetchAll(Integration.class, l -> {
+                final List<Integration> integrations = l.getItems().stream()
+                    .filter(i -> i.getConnectionIds().contains(connectionId))
+                    .collect(Collectors.toList());
+                return new ListResult.Builder<Integration>().addAllItems(integrations).build();
+            }, l -> new ListResult.Builder<Integration>().addAllItems(l.getItems().stream()
+                        .map(i -> integrationHandler.getOverview(i.getId().get()))
+                        .map(i -> new Integration.Builder().createFrom(i).build())
+                        .collect(Collectors.toList())).build()
+            ).getItems().stream()
+                .peek(i -> integrationHandler.update(i.getId().get(), i))
+                .collect(Collectors.toMap(i -> i.getId().get(), Function.identity()));
+
+            int updatedCount = updated.size();
+            // if necessary, update results
+            if (results != null) {
+                for (int i = 0; i < results.size(); i++) {
+                    final WithResourceId resource = results.get(i);
+                    if (resource instanceof Integration) {
+                        final Integration newInt = updated.remove(resource.getId().get());
+                        if (newInt != null) {
+                            results.set(i, newInt);
+                        }
+                    }
+                }
+            }
+
+            LOG.debug("Refreshed {} integrations for connection {}", updatedCount, connectionId);
+        }
     }
 
     private Integration getIntegration(String integrationId) {
@@ -498,6 +538,9 @@ public class PublicApiHandler {
         @FormParam("properties")
         private InputStream properties;
 
+        @FormParam("refreshIntegrations")
+        private Boolean refreshIntegrations;
+
         @FormParam("environment")
         private String environment;
 
@@ -518,6 +561,14 @@ public class PublicApiHandler {
 
         public void setProperties(InputStream properties) {
             this.properties = properties;
+        }
+
+        public Boolean getRefreshIntegrations() {
+            return refreshIntegrations;
+        }
+
+        public void setRefreshIntegrations(Boolean refreshIntegrations) {
+            this.refreshIntegrations = refreshIntegrations;
         }
 
         public String getEnvironment() {
