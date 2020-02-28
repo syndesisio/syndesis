@@ -15,11 +15,13 @@ stories.add('ACTIVE, not loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
+    dvStatusMessage={'The connection is active'}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
     )}
+    i18nStatusErrorPopoverTitle={'Connection Error'}
+    i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={false}
   />
@@ -31,11 +33,13 @@ stories.add('ACTIVE, loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
-    dvStatusTooltip={'The connection is active'}
+    dvStatusMessage={'The connection is active'}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
     )}
+    i18nStatusErrorPopoverTitle={'Connection Error'}
+    i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={true}
   />
@@ -47,11 +51,13 @@ stories.add('INACTIVE, loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.INACTIVE}
-    dvStatusTooltip={'The connection is inactive'}
+    dvStatusMessage={'The connection is inactive'}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
     )}
+    i18nStatusErrorPopoverTitle={'Connection Error'}
+    i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={true}
   />
@@ -63,11 +69,13 @@ stories.add('FAILED, not loading', () => (
     connectionDescription={connectionDescription}
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.FAILED}
-    dvStatusTooltip={'The server exception is displayed here'}
+    dvStatusMessage={'The server exception is displayed here'}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
     )}
+    i18nStatusErrorPopoverTitle={'Connection Error'}
+    i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={false}
   />
