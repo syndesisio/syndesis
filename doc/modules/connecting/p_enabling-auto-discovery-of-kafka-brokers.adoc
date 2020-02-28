@@ -100,11 +100,11 @@ oc create clusterrole kafkas.kafka.strimzi.io-view --verb=get,list --resource=ka
 ----
 
 .. Add this cluster role to an `oc` user. In the following example, 
-`syndesis-default` is the name of the `oc` user account: 
+`syndesis-server` is the name of the `oc` user account: 
 +
 [listing,options="nowrap"]
 ----
-oc adm policy add-cluster-role-to-user kafkas.kafka.strimzi.io-view syndesis-default
+oc adm policy add-cluster-role-to-user kafkas.kafka.strimzi.io-view -z syndesis-server
 ----
 
 .Result
