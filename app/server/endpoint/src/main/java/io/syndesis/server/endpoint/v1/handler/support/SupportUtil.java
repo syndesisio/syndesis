@@ -15,6 +15,28 @@
  */
 package io.syndesis.server.endpoint.v1.handler.support;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.StreamingOutput;
+import javax.ws.rs.core.UriInfo;
+
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.DoneablePod;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -39,34 +61,15 @@ import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.StreamingOutput;
-import javax.ws.rs.core.UriInfo;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Reader;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 @Service
 @ConditionalOnProperty(value = "openshift.enabled", matchIfMissing = true, havingValue = "true")
 public class SupportUtil {
+
     public Logger log = LoggerFactory.getLogger(SupportUtil.class);
     static final String[] PLATFORM_PODS = {"syndesis-db", "syndesis-oauthproxy", "syndesis-server", "syndesis-ui", "syndesis-meta"};
+    static final Map<String, String> PLATFORM_PODS_CONTAINER = new HashMap<>();
     protected static final Yaml YAML;
-    public static final String MASKING_REGEXP="(?<=password)[:=](\\w+)";
     public static final String COMPONENT_LABEL = "syndesis.io/component";
 
     private final NamespacedOpenShiftClient client;
@@ -78,18 +81,21 @@ public class SupportUtil {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
         YAML = new Yaml(options);
+        PLATFORM_PODS_CONTAINER.put("syndesis-db", "postgresql");
     }
 
     /**
      * Used in SupportUtilUnitTest
      */
-    SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler, Logger log) {
+    SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler,
+                IntegrationSupportHandler integrationSupportHandler, Logger log) {
         this(client, integrationHandler, integrationSupportHandler);
         this.log = log;
     }
 
     @Autowired
-    public SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler, IntegrationSupportHandler integrationSupportHandler) {
+    public SupportUtil(NamespacedOpenShiftClient client, IntegrationHandler integrationHandler,
+                       IntegrationSupportHandler integrationSupportHandler) {
         this.client = Objects.requireNonNull(client, "client");
         this.integrationHandler = integrationHandler;
         this.integrationSupportHandler = integrationSupportHandler;
@@ -97,21 +103,21 @@ public class SupportUtil {
 
     public File createSupportZipFile(Map<String, Boolean> configurationMap, UriInfo uriInfo) {
         File zipFile = null;
-        try{
+        try {
             zipFile = File.createTempFile("syndesis.", ".zip");
         } catch (IOException e) {
             log.error("Error creating Support zip file", e);
             throw new WebApplicationException(e, 500);
         }
 
-        try ( ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
+        try (ZipOutputStream os = new ZipOutputStream(new FileOutputStream(zipFile))) {
             addPlatformPodsLogs(os);
             addResourceDescriptors(os);
             addIntegrationsFiles(configurationMap, uriInfo, os);
             log.info("Created Support file: {}", zipFile);
         } catch (IOException e) {
             log.error("Error producing Support zip file", e);
-            if(zipFile!=null && !zipFile.delete()) {
+            if (zipFile != null && !zipFile.delete()) {
                 zipFile.deleteOnExit();
             }
             throw new WebApplicationException(e, 500);
@@ -127,7 +133,7 @@ public class SupportUtil {
         });
     }
 
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
+    @SuppressWarnings( {"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
     protected void addSourceFiles(UriInfo uriInfo, ZipOutputStream os, String integrationName) {
         ListResult<IntegrationOverview> list = integrationHandler.list(uriInfo);
         list.getItems().stream()
@@ -145,7 +151,7 @@ public class SupportUtil {
                 });
     }
 
-    @SuppressWarnings({"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
+    @SuppressWarnings( {"PMD.AvoidCatchingGenericException", "PMD.ExceptionAsFlowControl"})
     protected void addResourceDescriptors(ZipOutputStream os) {
 
         Stream<BuildConfig> bcStream = client.buildConfigs().list().getItems().stream();
@@ -153,26 +159,25 @@ public class SupportUtil {
         Stream<ConfigMap> cmStream = client.configMaps().list().getItems().stream();
         Stream<ImageStreamTag> istStream = client.imageStreamTags().list().getItems().stream();
 
-        Stream<? extends HasMetadata    > stream = Stream.concat(bcStream, dcStream);
+        Stream<? extends HasMetadata> stream = Stream.concat(bcStream, dcStream);
         stream = Stream.concat(stream, cmStream);
         stream = Stream.concat(stream, istStream);
 
-        stream.forEach( res -> {
-            HasMetadata resWithMetadata = (HasMetadata) res;
+        stream.forEach(res -> {
             try {
-                ZipEntry ze = new ZipEntry("descriptors/"+ resWithMetadata.getKind() + '/' + resWithMetadata.getMetadata().getName() + ".YAML");
+                ZipEntry ze = new ZipEntry("descriptors/" + res.getKind() + '/' + res.getMetadata().getName() + ".YAML");
                 os.putNextEntry(ze);
-                dumpAsYaml(resWithMetadata, os);
+                dumpAsYaml(res, os);
                 os.closeEntry();
-            } catch (Exception e){
-                log.error("Error adding resource {} {}", resWithMetadata.getKind(), resWithMetadata.getMetadata().getName(), e);
+            } catch (Exception e) {
+                log.error("Error adding resource {} {}", res.getKind(), res.getMetadata().getName(), e);
             }
         });
     }
 
-    @SuppressWarnings({ "PMD.ExceptionAsFlowControl"})
+    @SuppressWarnings( {"PMD.ExceptionAsFlowControl"})
     protected void addIntegrationLogs(ZipOutputStream os, String integrationName) {
-        getIntegrationLogs(integrationName).ifPresent(( fileContent) -> {
+        getIntegrationLogs(integrationName).ifPresent((fileContent) -> {
             try {
                 addEntryToZip(integrationName, fileContent, os);
             } catch (IOException e) {
@@ -204,7 +209,7 @@ public class SupportUtil {
             FileUtils.copyFile(file, os);
             os.closeEntry();
         } finally {
-            if(file!=null && !file.delete()) {
+            if (file != null && !file.delete()) {
                 file.deleteOnExit();
             }
         }
@@ -240,7 +245,7 @@ public class SupportUtil {
             .map(this::fetchLogsFor);
     }
 
-    public Optional<Reader> getIntegrationLogs(String integrationName){
+    public Optional<Reader> getIntegrationLogs(String integrationName) {
         return client.pods().list().getItems().stream()
             .filter(pod -> integrationName.equals(pod.getMetadata().getAnnotations().get(OpenShiftService.INTEGRATION_NAME_ANNOTATION)))
             .findAny()
@@ -248,7 +253,7 @@ public class SupportUtil {
             .map(this::fetchLogsFor);
     }
 
-    public Optional<Reader> getComponentLogs(String componentName){
+    public Optional<Reader> getComponentLogs(String componentName) {
         return getLogs(COMPONENT_LABEL, componentName);
     }
 
@@ -258,8 +263,13 @@ public class SupportUtil {
 
     private Reader fetchLogsFor(String podName) {
         final PodResource<Pod, DoneablePod> pod = client.pods().withName(podName);
-
-        return pod.getLogReader();
+        String componentName = pod.get().getMetadata().getLabels().get(COMPONENT_LABEL);
+        String container = PLATFORM_PODS_CONTAINER.get(componentName);
+        if (container != null) {
+            return pod.inContainer(container).getLogReader();
+        } else {
+            return pod.getLogReader();
+        }
     }
 
 }
