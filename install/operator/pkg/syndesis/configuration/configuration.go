@@ -20,10 +20,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"math/rand"
 	"net/url"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -35,10 +37,14 @@ import (
 	appsv1 "github.com/openshift/api/apps/v1"
 	routev1 "github.com/openshift/api/route/v1"
 	corev1 "k8s.io/api/core/v1"
+	v1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
+	logf "sigs.k8s.io/controller-runtime/pkg/log"
 
 	"k8s.io/apimachinery/pkg/util/yaml"
+	corev1client "k8s.io/client-go/kubernetes/typed/core/v1"
+	"sigs.k8s.io/controller-runtime/pkg/client/config"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -48,6 +54,8 @@ var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
 // Location from where the template configuration is located
 var TemplateConfig string
+
+var log = logf.Log.WithName("configuration")
 
 type Config struct {
 	AllowLocalHost             bool
@@ -232,6 +240,10 @@ const (
 	SyndesisGlobalConfigSecret = "syndesis-global-config"
 )
 
+// matches anything followed by space followed by number.number followed (optionally) by another .number and an optional space
+// meant to parse strings like "PostgreSQL 9.5.14" to "9.5" and "postgres (PostgreSQL) 10.6 (Debian 10.6-1.pgdg90+1)" to "10.6"
+var postgresVersionRegex = regexp.MustCompile(`^.* (\d+\.\d+)(?:\.d+)? ?`)
+
 /*
 / Returns an array of the addons names and if configuration has been defined
 / whether they've been enabled in that configuration instance
@@ -281,36 +293,90 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 		return nil, err
 	}
 
-	if client != nil {
-		//
-		// If the image running the db container no longer matches the image specified by
-		// the operator configuration then the database needs to be upgraded using the internal
-		// postgresql upgrade procedure. This will flag that process to be initiated.
-		//
-		databaseDeployment := &appsv1.DeploymentConfig{}
-		if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
-			for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
-				if c.Name == "postgresql" {
+	if client == nil || len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
+		return configuration, nil
+	}
 
-					//
-					// Does deploment config already contain UPGRADE Env Var?
-					// if it does then DO NOT remove it.
-					//
-					hasUpgradeEnvVar := false
-					for _, env := range c.Env {
-						if env.Name == "POSTGRESQL_UPGRADE" {
-							hasUpgradeEnvVar = true
-						}
+	databaseDeployment := &appsv1.DeploymentConfig{}
+	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
+		for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
+			if c.Name == "postgresql" {
+				//
+				// Does deploment config already contain UPGRADE Env Var?
+				// if it does then DO NOT remove it.
+				//
+				for _, env := range c.Env {
+					if env.Name == "POSTGRESQL_UPGRADE" {
+						configuration.DatabaseNeedsUpgrade = true
+						return configuration, nil
 					}
-
-					configuration.DatabaseNeedsUpgrade = hasUpgradeEnvVar || c.Image != configuration.Syndesis.Components.Database.Image
-					break
 				}
 			}
 		}
 	}
 
+	// Determine if the PostgreSQL database running in syndesis-db pod needs upgrading, first fetch the version currently running
+	currentPostgreSQLVersion, err := util.PostgreSQLVersionAt("syndesis", configuration.Syndesis.Components.Database.Password, syndesis.Spec.Components.Database.Name, "syndesis-db", 5432)
+	if err != nil {
+		log.Error(err, "Unable to determine current version of PostgreSQL running in syndesis-db pod")
+		return configuration, nil
+	}
+
+	goC, err := goClient()
+	if err != nil {
+		return nil, err
+	}
+	wantedPostgreSQLVersion, err := postgreSQLVersionFromInitPod(goC, syndesis)
+	if err != nil {
+		log.Error(err, "Unable to determine next version of PostgreSQL from the operator init container")
+		return configuration, nil
+	}
+
+	configuration.DatabaseNeedsUpgrade = currentPostgreSQLVersion < wantedPostgreSQLVersion
+	log.Info("PostgreSQL upgrade summary", "source-postgres-version", strconv.FormatFloat(currentPostgreSQLVersion, 'f', 2, 64), "target-postgres-version", strconv.FormatFloat(wantedPostgreSQLVersion, 'f', 2, 64), "perform-upgrade", strconv.FormatBool(configuration.DatabaseNeedsUpgrade))
+
 	return configuration, nil
+}
+
+func goClient() (corev1client.CoreV1Interface, error) {
+	restConfig, err := config.GetConfig()
+	if err != nil {
+		return nil, err
+	}
+
+	client, err := corev1client.NewForConfig(restConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	return client, nil
+}
+
+func postgreSQLVersionFromInitPod(client corev1client.CoreV1Interface, syndesis *v1beta1.Syndesis) (float64, error) {
+	operatorPodName := os.Getenv("POD_NAME")
+	req := client.Pods(syndesis.Namespace).GetLogs(operatorPodName, &v1.PodLogOptions{
+		Container: "postgres-version",
+	})
+
+	stream, err := req.Stream()
+	if err != nil {
+		return 0, err
+	}
+	defer stream.Close()
+
+	binaryLog, err := ioutil.ReadAll(stream)
+	if err != nil {
+		return 0, err
+	}
+
+	versionString := string(binaryLog)
+	extracted := postgresVersionRegex.FindStringSubmatch(versionString)
+	if len(extracted) < 2 {
+		return 0, fmt.Errorf("Unable to parse PostgreSQL version from version string: `%s`", versionString)
+	}
+
+	// first group should contain the version
+	return strconv.ParseFloat(extracted[1], 64)
 }
 
 // Load configuration from config file. Config file is expected to be a yaml

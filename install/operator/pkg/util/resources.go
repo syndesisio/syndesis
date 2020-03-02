@@ -19,7 +19,7 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/log"
 )
 
-var log = logf.Log.WithName("resources")
+var log = logf.Log.WithName("util")
 
 func NewObjectKey(name string, namespace string) client.ObjectKey {
 	return client.ObjectKey{
