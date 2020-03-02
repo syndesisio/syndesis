@@ -115,7 +115,7 @@
 
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
-    <shrinkwrap.version>2.2.6</shrinkwrap.version>
+    <shrinkwrap.version>3.1.4</shrinkwrap.version>
 
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
