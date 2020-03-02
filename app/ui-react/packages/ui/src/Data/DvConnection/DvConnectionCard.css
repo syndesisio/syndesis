@@ -43,10 +43,6 @@
   max-height: var(--pf-global--spacer--3xl);
 }
 
-.dv-connection-card__status {
-  margin-bottom: 10px;
-}
-
 .dv-connection-card--accented {
   border-width: 2px;
   border-style: solid;

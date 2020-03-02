@@ -145,15 +145,17 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
               <ConnectionSchemaListItem
                 key={index}
                 connectionName={c.name}
-                connectionDescription={''}
+                connectionDescription={c.description}
                 dvStatus={getDvConnectionStatus(c)}
-                dvStatusTooltip={getDvConnectionStatusMessage(c)}
+                dvStatusMessage={getDvConnectionStatusMessage(c)}
                 haveSelectedSource={
                   props.selectedSchemaNodes[0]
                     ? isConnectionSelected(c.name)
                     : false
                 }
                 i18nRefreshInProgress={t('refreshInProgress')}
+                i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
+                i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
                 icon={<EntityIcon entity={c} alt={c.name} width={23} />}
                 loading={isDvConnectionLoading(c)}
                 // tslint:disable-next-line: no-shadowed-variable
