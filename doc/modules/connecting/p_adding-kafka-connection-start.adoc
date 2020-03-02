@@ -23,12 +23,17 @@ you want to use to start the integration.
 to receive data from the topic that you specify. 
 . In the *Topic Name* field, click the down carat to display a list
 of topics and click the topic that you want to subscribe to. 
+Or, type a topic name to create that topic. 
 . Click *Next* to specify the action's output type. 
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
 and click *Next*. You do not need to follow the rest of these
 instructions. 
++
+However, a structured data type is recommended. For example, if you want 
+to map the Kafka connection output to a subsequent step then you must 
+specify the data type. The data mapper does not recognize unstructured data. 
 +
 Otherwise, click in the *Select Type* field and select one of the following as the schema type:
 +
