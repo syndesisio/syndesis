@@ -102,6 +102,7 @@ export const PRIMARY_FLOW_ID_METADATA_KEY = 'primaryFlowId';
 export const API_PROVIDER_END_ACTION_ID = 'io.syndesis:api-provider-end';
 export const FLOW_START_ACTION_ID = 'io.syndesis:flow-start';
 export const FLOW_END_ACTION_ID = 'io.syndesis:flow-end';
+export const WEBHOOK_INCOMING_ACTION_ID = 'io.syndesis:webhook-incoming';
 
 // Special sekret connection metadata keys
 export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';
