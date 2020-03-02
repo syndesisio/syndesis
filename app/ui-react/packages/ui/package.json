@@ -14,6 +14,7 @@
     "@babel/core": "^7.4.4",
     "@dump247/storybook-state": "^1.6.1",
     "@patternfly/patternfly": "^2.60.1",
+    "@patternfly/react-charts": "5.2.21",
     "@patternfly/react-core": "^3.122.4",
     "@patternfly/react-icons": "^3.14.42",
     "@patternfly/react-styles": "^3.6.26",
