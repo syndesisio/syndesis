@@ -9,7 +9,8 @@ import {
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { HelpIcon } from '@patternfly/react-icons';
+import { global_info_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvResultSetCacheMetric.css';
@@ -67,7 +68,7 @@ export const DvResultSetCacheMetric: React.FunctionComponent<
                 bodyContent={<div>{props.i18nInfoMessage}</div>}
                 closeBtnAriaLabel={props.a11yInfoCloseButton}
               >
-                <InfoCircleIcon color={'blue'} />
+                <HelpIcon size={'md'} color={global_info_color_100.value} />
               </Popover>
             </SplitItem>
           </Split>
