@@ -55,19 +55,22 @@ public class BaseOlingo4Test extends AbstractODataTest {
 
     private static class MyMain extends Main {
 
-        CamelContext context;
+        @Override
+        public CamelContext getCamelContext() {
+            if (camelContext == null) {
+                camelContext = createCamelContext();
+            }
 
-        public void setCamelContext(CamelContext context) {
-            this.context = context;
+            return camelContext;
         }
 
         @Override
         protected CamelContext createCamelContext() {
-            if (context == null) {
+            if (camelContext == null) {
                 return super.createCamelContext();
             }
 
-            return context;
+            return camelContext;
         }
     }
 
@@ -79,66 +82,60 @@ public class BaseOlingo4Test extends AbstractODataTest {
         //
         // Create own main class to allow for setting the context
         //
-        MyMain main = new MyMain();
+        try (MyMain main = new MyMain()) {
 
-        //
-        // Get a context we can play with
-        //
-        CamelContext context = main.getCamelContext();
+            //
+            // Get a context we can play with
+            //
+            CamelContext context = main.getCamelContext();
 
-        //
-        // Find the olingo4 component to configure
-        //
-        Olingo4Component component = (Olingo4Component) context.getComponent("olingo4");
+            //
+            // Find the olingo4 component to configure
+            //
+            Olingo4Component component = (Olingo4Component) context.getComponent("olingo4");
 
-        //
-        // Create a configuration and apply the sevice url to
-        // workaround the no serviceUri problem.
-        //
-        Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
+            //
+            // Create a configuration and apply the sevice url to
+            // workaround the no serviceUri problem.
+            //
+            Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
 
-        //
-        // Override the ACCEPT header since it does not take account of the odata.metadata parameter
-        //
-        Map<String, String> httpHeaders = new HashMap<>();
-        httpHeaders.put(HttpHeaders.ACCEPT, "application/json;odata.metadata=full,application/xml,*/*");
-        configuration.setHttpHeaders(httpHeaders);
+            //
+            // Override the ACCEPT header since it does not take account of the odata.metadata parameter
+            //
+            Map<String, String> httpHeaders = new HashMap<>();
+            httpHeaders.put(HttpHeaders.ACCEPT, "application/json;odata.metadata=full,application/xml,*/*");
+            configuration.setHttpHeaders(httpHeaders);
 
-        configuration.setServiceUri(defaultTestServer.servicePlainUri());
+            configuration.setServiceUri(defaultTestServer.servicePlainUri());
 
-        //
-        // Apply empty values to these properties so they are
-        // not violated as missing
-        //
-        configuration.setQueryParams(new HashMap<>());
-        configuration.setEndpointHttpHeaders(new HashMap<>());
+            //
+            // Apply empty values to these properties so they are
+            // not violated as missing
+            //
+            configuration.setQueryParams(new HashMap<>());
+            configuration.setEndpointHttpHeaders(new HashMap<>());
 
-        //
-        // Apply the configurtion to the component
-        //
-        component.setConfiguration(configuration);
+            //
+            // Apply the configuration to the component
+            //
+            component.setConfiguration(configuration);
 
-        //
-        // Apply the component to the context
-        //
-        context.removeComponent("olingo4");
-        context.addComponent("olingo4", component);
+            //
+            // Apply the component to the context
+            //
+            context.removeComponent("olingo4");
+            context.addComponent("olingo4", component);
 
-        //
-        // Apply the context to main
-        //
-        main.setCamelContext(context);
+            //
+            // Apply the route and run
+            //
+            main.addRoutesBuilder(new MyRouteBuilder(camelURI));
 
-        //
-        // Apply the route and run
-        //
-        main.addRouteBuilder(new MyRouteBuilder(camelURI));
-
-        try {
             ClientEntitySet olEntitySet = null;
             ODataRetrieveResponse<ClientEntitySet> response = null;
+            ODataClient client = ODataClientFactory.getClient();
             try {
-                ODataClient client = ODataClientFactory.getClient();
                 response = client.getRetrieveRequestFactory().getEntitySetRequest(httpURI).execute();
                 assertEquals(HttpStatus.SC_OK, response.getStatusCode());
 
@@ -175,9 +172,6 @@ public class BaseOlingo4Test extends AbstractODataTest {
 
             ClientEntity olEntity = olEntitySet.getEntities().get(0);
             assertEquals(olEntity.getProperties(), cmEntity.getProperties());
-
-        } finally {
-            main.stop();
         }
     }
 }

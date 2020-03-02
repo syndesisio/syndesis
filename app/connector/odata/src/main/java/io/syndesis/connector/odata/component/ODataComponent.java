@@ -245,6 +245,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
 
             configuration.setQueryParams(queryParams);
             configuration.setFilterAlreadySeen(isFilterAlreadySeen());
+            configuration.setSplitResult(isSplitResult());
         }
 
         Olingo4Component component = new Olingo4Component(getCamelContext());
@@ -284,25 +285,21 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
              */
             Map<String, Object> properties = new HashMap<>();
             if (getInitialDelay() > -1) {
-                properties.put(CONSUMER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
+                properties.put(SCHEDULER + DOT + INITIAL_DELAY, Long.toString(getInitialDelay()));
             }
 
             if (getDelay() > -1) {
-                properties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
+                properties.put(SCHEDULER + DOT + DELAY, Long.toString(getDelay()));
             }
 
             if (getBackoffIdleThreshold() > -1) {
-                properties.put(CONSUMER + DOT + BACKOFF_IDLE_THRESHOLD, Integer.toString(getBackoffIdleThreshold()));
+                properties.put(BACKOFF_IDLE_THRESHOLD, getBackoffIdleThreshold());
             }
 
             if (getBackoffMultiplier() > -1) {
-                properties.put(CONSUMER + DOT + BACKOFF_MULTIPLIER, Integer.toString(getBackoffMultiplier()));
+                properties.put(BACKOFF_MULTIPLIER, getBackoffMultiplier());
             }
 
-            //
-            // Mandate that the results are split into individual messages
-            //
-            properties.put(CONSUMER + DOT + SPLIT_RESULT, isSplitResult());
             if (! properties.isEmpty()) {
                 endpoint.configureProperties(properties);
             }

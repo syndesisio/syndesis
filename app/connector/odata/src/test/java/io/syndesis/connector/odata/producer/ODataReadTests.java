@@ -15,15 +15,13 @@
  */
 package io.syndesis.connector.odata.producer;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import java.util.Map;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.component.olingo4.Olingo4Endpoint;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,9 +32,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
-
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -153,15 +148,6 @@ public class ODataReadTests extends AbstractODataRouteTest {
         String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
         assertThatJson(entityJson).isEqualTo(testData(TEST_SERVER_DATA_1, AbstractODataReadRouteTest.class));
         assertEquals(initialResultCount, defaultTestServer.getResultCount());
-
-        //
-        // Check no consumer properties are created on the endpoint
-        // Not applicable & should be stopped by connectorDirection property
-        //
-        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_TO_ENDPOINT, Olingo4Endpoint.class);
-        assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getEndpointProperties();
-        assertThat(consumerProperties).isEmpty();
     }
 
     @Test
