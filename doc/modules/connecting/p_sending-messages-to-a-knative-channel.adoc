@@ -46,7 +46,11 @@ or if the output from the previous integration step is the expected type,
 accept *Type specification not required* and click *Next*. 
 You do not need to follow the rest of these instructions.
 +
-Otherwise, click in the *Select Type* field and select one of the following 
+However, a structured data type is recommended. For example, if you want 
+to map the connection input in a data mapper step then you must specify 
+the data type. The data mapper cannot display fields for unstructured data.
++
+To specify the data type, click in the *Select Type* field and select one of the following 
 as the schema type:
 +
 * *JSON schema* is a document that describes the structure of JSON data.
