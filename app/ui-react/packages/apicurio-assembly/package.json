@@ -73,7 +73,7 @@
     "@angular/platform-browser": "7.2.6",
     "@angular/platform-browser-dynamic": "7.2.6",
     "@angular/router": "7.2.6",
-    "apicurio-data-models": "1.0.17",
+    "apicurio-data-models": "1.1.1",
     "apicurio-design-studio": "0.2.45",
     "oai-ts-core": "0.2.38",
     "oai-ts-commands": "0.2.66",
