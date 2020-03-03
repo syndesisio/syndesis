@@ -14,7 +14,7 @@ triggers.
 * {prodname} indicates that the *TaskAPI* integration is *Running*. 
 * If your {prodname} environment is running on OCP, 
 {prodname} is not configured to expose APIs to 3scale or
-you disabled discovery. 
+you disabled discovery for the *TaskAPI* integration. 
 
 .Procedure
 
