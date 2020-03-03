@@ -121,8 +121,8 @@ export const SelectNamePage: React.FunctionComponent = () => {
         value.name,
         value.description
       );
-      try {
-        await saveViewDefinition(viewDefinition);
+      const saveResult = await saveViewDefinition(viewDefinition);
+      if (!saveResult.hasError) {
         const newView = await getView(
           state.virtualization.name,
           viewDefinition.name
@@ -135,8 +135,8 @@ export const SelectNamePage: React.FunctionComponent = () => {
             viewDefinition: undefined,
           })
         );
-      } catch (error) {
-        const details = error.message ? error.message : '';
+      } else {
+        const details = saveResult.message ? saveResult.message : '';
         pushNotification(
           t('createViewFailed', {
             details,
