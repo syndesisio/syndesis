@@ -13,6 +13,9 @@ import {
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import {
+  VirtualizationActionId,
+} from '../shared/VirtualizationActionContainer';
+import {
   IVirtualizationEditorPageRouteParams,
   IVirtualizationEditorPageRouteState,
   VirtualizationEditorPage,
@@ -73,6 +76,9 @@ export const VirtualizationMetricsPage: React.FunctionComponent = () => {
       routeParams={params}
       routeState={state}
       virtualization={virtualization}
+      items={[VirtualizationActionId.Stop, VirtualizationActionId.Delete]}
+      actions={[VirtualizationActionId.Publish]}
+      publishActionCustomProps={{ as: 'default' }}
     >
       <PageSection>
         <WithLoader
