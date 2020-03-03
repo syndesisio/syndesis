@@ -100,7 +100,7 @@ API calls specify URLs that start with this base URL.
 If you are using {prodname} on OpenShift Container
 Platform, if the external URL is not on the integration’s summary page,
 then an administrator has enabled Red Hat 3scale discovery. 
-This means that Red Hat 3scale controls access to the integraion's API
+This means that Red Hat 3scale controls access to the integration's API
 and also publishes your API provider integration. 
 To test the integration,
 open the 3scale dashboard to obtain the integration’s URL.
