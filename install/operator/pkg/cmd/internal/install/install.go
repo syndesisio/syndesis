@@ -125,6 +125,7 @@ func New(parent *internal.Options) *cobra.Command {
 	return &cmd
 }
 
+//go:generate go run generator/generator.go
 func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	switch o.eject {
 	case "":
@@ -147,13 +148,13 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.image = "syndesis-operator"
 	}
 
+	o.databaseImage = defaultDatabaseImage
 	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
-	if err != nil {
-		return err
+	if err == nil {
+		o.databaseImage = config.Syndesis.Components.Database.Image
 	}
-	o.databaseImage = config.Syndesis.Components.Database.Image
 
-	return
+	return nil
 }
 
 func (o *Install) after(cmd *cobra.Command, args []string) {
