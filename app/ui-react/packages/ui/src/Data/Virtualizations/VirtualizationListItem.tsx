@@ -56,6 +56,10 @@ export interface IVirtualizationListItemProps {
   usedBy: string[];
   virtualizationName: string;
   virtualizationDescription: string;
+  publishingAction: string;
+  publishingState:string;
+  publishingActionText: string;
+  setPublishingState: (action: string, state: string, virtualizationName: string) => void;
 }
 
 export const VirtualizationListItem: React.FunctionComponent<
@@ -88,6 +92,17 @@ export const VirtualizationListItem: React.FunctionComponent<
   React.useEffect(() => {
     setLabelType(props.labelType);
   }, [props.labelType]);
+
+  React.useEffect(() => {
+    if(props.publishingState === 'submitted'){
+      setLabelType('default');
+      setPublishStateText(props.publishingActionText);
+      props.setPublishingState(props.publishingAction,'done', props.virtualizationName)
+    }else if(props.publishingState === 'error'){
+      setPublishStateText(props.i18nPublishState);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.publishingAction, props.publishingState,props.publishingActionText]);
 
   return (
       <DataListItem

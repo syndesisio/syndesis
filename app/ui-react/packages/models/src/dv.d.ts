@@ -169,6 +169,12 @@ export interface ImportSources {
   tables: string[];
 }
 
+export interface VirtualizationUserAction {
+  action: string;
+  state: string;
+  virtualizationName: string;
+}
+
 export interface VirtualizationPublishingDetails {
   logUrl?: string;
   modified: boolean;

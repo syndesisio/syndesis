@@ -2,6 +2,7 @@ import { useVirtualizationHelpers } from '@syndesis/api';
 import {
   Virtualization,
   VirtualizationPublishingDetails,
+  VirtualizationUserAction,
 } from '@syndesis/models';
 import {
   PageSection,
@@ -20,6 +21,7 @@ import {
 import {
   getOdataUrl,
   getPublishingDetails,
+  getStateActionText,
   getStateLabelStyle,
   getStateLabelText,
   isPublishStep,
@@ -107,7 +109,7 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   /**
    * State for showing Publishing... on virtualization publish clicked.
    */
-  const [publishing, setPublishing] = React.useState<boolean>(false);
+  const [publishing, setPublishing] = React.useState<VirtualizationUserAction>({action: '', state:'', virtualizationName: ''});
 
   /**
    * State for the virtualization description.
@@ -159,8 +161,8 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
     return '';
   });
 
-  const setPublishingState = (state: boolean) => {
-    setPublishing(state);
+  const setPublishingState = (uAction: string, uState: string, vName: string) => {
+    setPublishing({action: uAction, state: uState, virtualizationName: vName});
   };
 
   /**
@@ -204,8 +206,14 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
   React.useEffect(() => {
-    // tslint:disable-next-line: no-unused-expression
-    publishing && setPublishStateText(t('data:publishInProgress'));
+    if(publishing.state === 'submitted'){
+      setLabelType('default');
+      setPublishStateText(getStateActionText(publishing.action));
+    }else if(publishing.state === 'error') {
+      setLabelType(getStateLabelStyle(currPublishedState));
+      setPublishStateText(getStateLabelText(currPublishedState));
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [publishing, t]);
 
   /**

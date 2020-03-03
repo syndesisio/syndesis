@@ -88,7 +88,7 @@ export interface IVirtualizationActionContainerProps {
   startActionProps?: any;
   stopActionProps?: any;
   virtualization: Virtualization;
-  setPublishingState?: (state: boolean) => void;
+  setPublishingState?: (action: string, state: string, virtualizationName: string) => void;
 }
 
 /**
@@ -291,8 +291,6 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       id: VirtualizationActionId.Publish,
       onClick: async () => {
         setPublish(true);
-          // tslint:disable-next-line: no-unused-expression
-          props.setPublishingState && props.setPublishingState(true)
         if (props.virtualization.empty) {
           pushNotification(
             t('publishVirtualizationNoViews', {
@@ -303,9 +301,12 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           const e = new Error();
           e.name = 'NoViews';
           throw e;
+        }else{
+          // tslint:disable-next-line: no-unused-expression
+          props.setPublishingState && props.setPublishingState('PUBLISHING','submitted', props.virtualization.name);
         }
 
-        await publishVirtualization(props.virtualization.name).catch((e: any) => {
+        publishVirtualization(props.virtualization.name).catch((e: any) => {
           pushNotification(
             t('publishVirtualizationFailed', {
               details: e.errorMessage || e.message || e,
@@ -313,9 +314,9 @@ export const VirtualizationActionContainer: React.FunctionComponent<
             }),
             'error'
           );
+          // tslint:disable-next-line: no-unused-expression
+          props.setPublishingState && props.setPublishingState('PUBLISHING','error',props.virtualization.name);
         });
-        // tslint:disable-next-line: no-unused-expression
-        props.setPublishingState && props.setPublishingState(false)
       },
     };
     
@@ -483,7 +484,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Stop'),
       id: VirtualizationActionId.Stop,
       onClick: async () => {
+        // tslint:disable-next-line: no-unused-expression
+        props.setPublishingState && props.setPublishingState('STOPPING','submitted', props.virtualization.name);
         unpublishVirtualization(props.virtualization.name).catch((e: any) => {
+          // tslint:disable-next-line: no-unused-expression
+        props.setPublishingState && props.setPublishingState('STOPPING','error', props.virtualization.name);
           if (e.name === 'AlreadyUnpublished') {
             pushNotification(
               t('unpublishedVirtualization', {

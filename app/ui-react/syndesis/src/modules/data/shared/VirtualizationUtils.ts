@@ -622,6 +622,28 @@ export function canStart(
 }
 
 /**
+ * @param action virtulization user action triggered 
+ * @returns the `Label` text representing the publishing and stopping state
+ */
+export function getStateActionText(
+  action: string
+): string {
+  let result = '';
+  switch (action) {
+    case 'PUBLISHING':
+      result = i18n.t('data:publishInProgress');
+      break;
+    case 'STOPPING':
+      result = i18n.t('data:stopInProgress');
+      break;
+    default:
+      // should not get here as exhausted all cases
+      break;
+  }
+  return result;
+}
+
+/**
  * A virtualization can be stopped if it is running.
  * @param {Virtualization} virtualization the virtualization being checked
  * @returns `true` if the virtualization can be stopped

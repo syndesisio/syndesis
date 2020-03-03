@@ -1,5 +1,5 @@
 import { useVirtualizations } from '@syndesis/api';
-import { Virtualization } from '@syndesis/models';
+import { Virtualization, VirtualizationUserAction } from '@syndesis/models';
 import {
   IActiveFilter,
   IFilterType,
@@ -23,6 +23,7 @@ import {
 import {
   getOdataUrl,
   getPublishingDetails,
+  getStateActionText,
   getStateLabelStyle,
   getStateLabelText,
   isPublishStep,
@@ -77,16 +78,6 @@ export function getVirtualizationsHref(baseUrl: string): string {
   return `${baseUrl}`;
 }
 
-const getVirtualizationActions = (virtualization: Virtualization) => {
-  const virtualizationActions = (
-    <VirtualizationActionContainer
-      includeActions={[]}
-      virtualization={virtualization}
-    />
-  );
-  return virtualizationActions;
-};
-
 export const VirtualizationsPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
   const { t } = useTranslation(['data', 'shared']);
@@ -115,6 +106,15 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     }
 
     return t('usedByMulti', { count: integrationNames.length });
+  };
+
+  /**
+   * State for showing Publishing... on virtualization publish clicked.
+   */
+  const [publishing, setPublishing] = React.useState<VirtualizationUserAction>({action: '', state:'', virtualizationName: ''});
+
+  const setPublishingState = (uAction: string, uState: string, vName: string) => {
+    setPublishing({action: uAction, state: uState,virtualizationName: vName });
   };
 
   return appContext.config.datavirt.enabled === 0 ? (
@@ -194,12 +194,15 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                         const publishStateText = getStateLabelText(
                           publishingDetails
                         );
-
                         return (
                           <VirtualizationListItem
                             key={index}
                             isProgressWithLink={isProgressWithLink}
                             i18nPublishState={publishStateText}
+                            publishingAction={virtualization.name===publishing.virtualizationName ? publishing.action : ''}
+                            publishingState={virtualization.name===publishing.virtualizationName ? publishing.state: ''}
+                            publishingActionText={getStateActionText(publishing.action)}
+                            setPublishingState={setPublishingState}
                             labelType={labelType}
                             detailsPageLink={resolvers.virtualizations.views.root(
                               { virtualization }
@@ -216,7 +219,11 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                             i18nInUseText={getUsedByMessage(
                               virtualization.usedBy
                             )}
-                            dropdownActions={getVirtualizationActions(virtualization)}
+                            dropdownActions={<VirtualizationActionContainer
+                              includeActions={[]}
+                              virtualization={virtualization}
+                              setPublishingState={setPublishingState}
+                            />}
                             currentPublishedState={publishingDetails.state}
                             currentPublishedVersion={
                               virtualization.publishedRevision

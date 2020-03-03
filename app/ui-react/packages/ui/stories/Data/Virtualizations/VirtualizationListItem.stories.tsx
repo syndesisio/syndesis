@@ -22,6 +22,7 @@ const draftText = 'Draft';
 const publishedText = 'Published';
 const publishLogUrl = 'testUrl';
 const publishLogUrlText = 'View Logs';
+const emptyFunction = ()=> undefined;
 const virtualizationActions: JSX.Element = <div>VirtActions</div>;
 
 const publishedVirtualizationNotes =
@@ -59,6 +60,10 @@ stories
           <VirtualizationListItem
             dropdownActions={virtualizationActions}
             isProgressWithLink={true}
+            publishingAction={''}
+            publishingState={''}
+            publishingActionText={''}
+            setPublishingState={emptyFunction}
             i18nPublishState={'Unpublishing...'}
             labelType={'default'}
             publishingStepText={'Building'}
@@ -88,6 +93,10 @@ stories
           dropdownActions={virtualizationActions}
           isProgressWithLink={false}
           i18nPublishState={publishedText}
+          publishingAction={''}
+          publishingState={''}
+          publishingActionText={''}
+          setPublishingState={emptyFunction}
           labelType={'primary'}
           virtualizationName={virtualizationName}
           virtualizationDescription={virtualizationDescription}
