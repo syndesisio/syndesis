@@ -100,6 +100,7 @@ func New(parent *internal.Options) *cobra.Command {
 			util.ExitOnError(err)
 		},
 	}
+	app.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	app.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a comma separated list of addons that should be enabled")
 	app.PersistentFlags().StringVarP(&o.customResource, "custom-resource", "", "", "path to a custom resource file to use when deploying")
 	cmd.AddCommand(app)
