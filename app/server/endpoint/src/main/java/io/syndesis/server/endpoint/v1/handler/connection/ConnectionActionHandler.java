@@ -142,7 +142,7 @@ public class ConnectionActionHandler {
         // lastly put all connection properties
         parameters.putAll(encryptionComponent.decrypt(connection.getConfiguredProperties()));
 
-        final HystrixExecutable<DynamicActionMetadata> meta = createMetadataCommand(action, parameters);
+        final HystrixExecutable<DynamicActionMetadata> meta = createMetadataCommandAction(action, parameters);
         final DynamicActionMetadata dynamicActionMetadata = meta.execute();
 
         final ConnectorDescriptor enrichedDescriptor = applyMetadataTo(generatedDescriptor, dynamicActionMetadata);
@@ -157,9 +157,9 @@ public class ConnectionActionHandler {
         return Response.status(status).entity(metaResult).build();
     }
 
-    protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
-        final Map<String, String> parameters) {
-        return new MetadataCommand(config, connectorId, action, parameters);
+    protected HystrixExecutable<DynamicActionMetadata> createMetadataCommandAction(final ConnectorAction action,
+                                                                                   final Map<String, String> parameters) {
+        return new MetadataCommandAction(config, connectorId, action, parameters);
     }
 
     private static DataShape adaptDataShape(final Optional<DataShape> maybeDataShape) {

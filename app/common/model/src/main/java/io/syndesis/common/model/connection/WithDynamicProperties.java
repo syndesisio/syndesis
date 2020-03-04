@@ -19,23 +19,24 @@ import java.util.List;
 import java.util.Map;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.syndesis.common.model.DataShape;
 import org.immutables.value.Value;
 
-@Value.Immutable
-@JsonDeserialize(builder = DynamicActionMetadata.Builder.class)
-public interface DynamicActionMetadata extends WithDynamicProperties {
+public interface WithDynamicProperties {
 
-    DynamicActionMetadata NOTHING = new DynamicActionMetadata.Builder().build();
+    @Value.Immutable
+    @JsonDeserialize(builder = ActionPropertySuggestion.Builder.class)
+    interface ActionPropertySuggestion {
 
-    final class Builder extends ImmutableDynamicActionMetadata.Builder {
-        // make ImmutableDynamicActionMetadata.Builder accessible
+        final class Builder extends ImmutableActionPropertySuggestion.Builder {
+            public static ActionPropertySuggestion of(final String value, final String displayValue) {
+                return new ActionPropertySuggestion.Builder().value(value).displayValue(displayValue).build();
+            }
+        }
+
+        String displayValue();
+
+        String value();
     }
 
-    @Override
     Map<String, List<ActionPropertySuggestion>> properties();
-
-    DataShape inputShape();
-
-    DataShape outputShape();
 }
