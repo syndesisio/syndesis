@@ -61,9 +61,6 @@ type SyndesisEnvVar string
 
 const EMPTY_FIELD = "<>"
 
-// Location from where the template configuration is located
-var TemplateConfig string
-
 const (
 	EnvRouteHostname                 SyndesisEnvVar = "ROUTE_HOSTNAME"
 	EnvOpenShiftMaster               SyndesisEnvVar = "OPENSHIFT_MASTER"
