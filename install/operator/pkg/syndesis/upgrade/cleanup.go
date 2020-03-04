@@ -17,8 +17,6 @@
 package upgrade
 
 import (
-	"time"
-
 	v1 "github.com/openshift/api/build/v1"
 
 	v12 "github.com/openshift/api/apps/v1"
@@ -69,7 +67,6 @@ func (c *cleanup) deleteDeploymentConfigs() (err error) {
 		}
 	}
 
-	time.Sleep(5 * time.Second)
 	return nil
 }
 
@@ -89,7 +86,6 @@ func (c *cleanup) deleteBuildConfigs() (err error) {
 		}
 	}
 
-	time.Sleep(5 * time.Second)
 	return nil
 }
 
