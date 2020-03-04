@@ -1,6 +1,6 @@
 import {
   Button,
-  List
+  DataList
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -21,7 +21,7 @@ export const IntegrationDetailActivity: React.FC<
   return (
     <PageSection>
       <Container>
-        <div className="integration-detail-activity-toolbar pull-right">
+        <div className={'integration-detail-activity-toolbar pull-right'}>
           {props.linkToOpenShiftLog && (
             <>
               <Link
@@ -33,7 +33,7 @@ export const IntegrationDetailActivity: React.FC<
               &nbsp;|&nbsp;
             </>
           )}
-          <span className="integration-detail-activity-toolbar-last-refresh">
+          <span className={'integration-detail-activity-toolbar-last-refresh'}>
               {props.i18nLastRefresh}
             </span>
           &nbsp;&nbsp;
@@ -46,7 +46,7 @@ export const IntegrationDetailActivity: React.FC<
         </div>
       </Container>
       {props.children ? (
-        <List>{props.children}</List>
+        <DataList aria-label={'integration detail activity list'}>{props.children}</DataList>
       ) : null}
     </PageSection>
   );
