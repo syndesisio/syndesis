@@ -181,7 +181,7 @@ func Build(log logr.Logger, syndesis *v1beta1.Syndesis, client client.Client, ct
 		bbkp,
 		newMigration(base, u.syndesis, u.backup),
 		newInstall(base, u.backup),
-		newScale(base).up(),
+		newCleanup(base),
 	}
 
 	return u, nil
