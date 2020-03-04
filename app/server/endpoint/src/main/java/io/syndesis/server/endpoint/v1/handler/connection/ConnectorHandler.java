@@ -25,8 +25,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status.Family;
 import javax.ws.rs.core.UriInfo;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -35,14 +33,12 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import io.syndesis.common.model.Kind;
@@ -52,6 +48,8 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
+import io.syndesis.common.model.connection.WithDynamicProperties;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.filter.Op;
 import io.syndesis.common.model.icon.Icon;
@@ -129,7 +127,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
 
         // Retrieve dynamic properties, if connector is dynamic
         if (connector.getTags().contains("dynamic")) {
-            connector = enrichWithDynamicProperties(connector);
+            connector = enrichConnectorWithDynamicProperties(connector);
         }
 
         final Optional<String> connectorGroupId = connector.getConnectorGroupId();
@@ -149,48 +147,42 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
      * @param connector
      * @return an enriched {@link Connector}
      */
-    Connector enrichWithDynamicProperties(Connector connector) {
+    Connector enrichConnectorWithDynamicProperties(Connector connector) {
         final String connectorId = connector.getId().get();
         final ConnectorPropertiesHandler propertiesHandler = properties(connectorId);
-
-        final JsonNode jsonResponse;
-        try (Response response = propertiesHandler.enrichWithDynamicProperties(connectorId, null)) {
-            if (response.getStatusInfo().getFamily() != Family.SUCCESSFUL) {
-                return connector;
-            }
-
-            jsonResponse = response.readEntity(JsonNode.class);
+        final Map<String, ConfigurationProperty> dynamicProperties = enrichConfigurationPropertiesWithDynamicProperties(
+            connector.getProperties(),
+            propertiesHandler.dynamicConnectionProperties(connectorId)
+        );
+        if (!dynamicProperties.isEmpty()) {
+            return connector.builder().properties(dynamicProperties).build();
         }
+        return connector;
+    }
 
-        final Iterator<Map.Entry<String, JsonNode>> iterator = jsonResponse.path("properties").fields();
-        final Map<String, ConfigurationProperty> dynamicProperties = new HashMap<>();
-
-        while (iterator.hasNext()) {
-            Map.Entry<String, JsonNode> next = iterator.next();
-            String propertyName = next.getKey();
-            JsonNode property = next.getValue();
+    private static Map<String, ConfigurationProperty> enrichConfigurationPropertiesWithDynamicProperties(Map<String, ConfigurationProperty> inputProperties,
+                                                                                                         DynamicConnectionPropertiesMetadata dynamicConnectionProperties) {
+        Map<String, ConfigurationProperty> dynamicProperties = new HashMap<>();
+        for(Map.Entry<String, List<WithDynamicProperties.ActionPropertySuggestion>> entry: dynamicConnectionProperties.properties().entrySet()){
+            String propertyName = entry.getKey();
+            List<WithDynamicProperties.ActionPropertySuggestion> list = entry.getValue();
             List<ConfigurationProperty.PropertyValue> values = new ArrayList<>();
-            if (property.isArray()) {
-                for (final JsonNode value : property) {
-                    ConfigurationProperty.PropertyValue val = new ConfigurationProperty.PropertyValue.Builder()
-                        .label(value.get("displayValue").asText())
-                        .value(value.get("value").asText())
-                        .build();
-                    values.add(val);
-                }
+
+            for (WithDynamicProperties.ActionPropertySuggestion suggestion : list) {
+                ConfigurationProperty.PropertyValue val = ConfigurationProperty.PropertyValue.Builder.from(suggestion);
+                values.add(val);
             }
+
             if (!values.isEmpty()) {
                 ConfigurationProperty configurationProperty = new ConfigurationProperty.Builder()
-                    .createFrom(connector.getProperties().get(propertyName))
+                    .createFrom(inputProperties.get(propertyName))
                     .addEnum(values.toArray(new ConfigurationProperty.PropertyValue[0]))
                     .build();
                 dynamicProperties.put(propertyName, configurationProperty);
             }
         }
-        if (!dynamicProperties.isEmpty()) {
-            return connector.builder().properties(dynamicProperties).build();
-        }
-        return connector;
+
+        return dynamicProperties;
     }
 
     @Path("/{id}/actions")

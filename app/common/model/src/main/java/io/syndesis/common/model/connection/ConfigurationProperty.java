@@ -21,7 +21,7 @@ import java.util.Optional;
 
 import io.syndesis.common.model.Ordered;
 import io.syndesis.common.model.WithTags;
-import io.syndesis.common.model.connection.DynamicActionMetadata.ActionPropertySuggestion;
+import io.syndesis.common.model.connection.WithDynamicProperties.ActionPropertySuggestion;
 
 import org.immutables.value.Value;
 

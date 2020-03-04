@@ -15,18 +15,21 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.util.Collections;
-import java.util.Map;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import com.netflix.hystrix.HystrixExecutable;
+import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
+import io.syndesis.common.model.connection.WithDynamicProperties;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 
@@ -45,8 +48,13 @@ public class ConnectorPropertiesHandlerTest {
 
         final ConnectorPropertiesHandler handler = new ConnectorPropertiesHandler(config) {
             @Override
-            Client createClient() {
-                return client;
+            protected HystrixExecutable<DynamicConnectionPropertiesMetadata> createMetadataConnectionPropertiesCommand(final String connectorId) {
+                return new MetadataConnectionPropertiesCommand(config, connectorId, Collections.emptyMap()){
+                    @Override
+                    protected Client createClient() {
+                        return client;
+                    }
+                };
             }
         };
 
@@ -55,16 +63,30 @@ public class ConnectorPropertiesHandlerTest {
         final WebTarget target = mock(WebTarget.class);
         when(client.target(url.capture())).thenReturn(target);
         final Invocation.Builder builder = mock(Invocation.Builder.class);
-        when(target.request()).thenReturn(builder);
+        when(target.request(MediaType.APPLICATION_JSON)).thenReturn(builder);
         final Map<String, Object> properties = Collections.emptyMap();
-        @SuppressWarnings("resource")
-        final Response response = mock(Response.class);
-        when(builder.post(Entity.entity(properties, MediaType.APPLICATION_JSON_TYPE))).thenReturn(response);
+        final Map<String, List<WithDynamicProperties.ActionPropertySuggestion>> dynamicProperties = buildProperties();
+        final DynamicConnectionPropertiesMetadata dynamicConnectionPropertiesMetadata =
+            new DynamicConnectionPropertiesMetadata.Builder()
+                .properties(dynamicProperties)
+                .build();
+        when(builder.post(Entity.entity(properties, MediaType.APPLICATION_JSON_TYPE),DynamicConnectionPropertiesMetadata.class))
+            .thenReturn(dynamicConnectionPropertiesMetadata);
+        final DynamicConnectionPropertiesMetadata received = handler.dynamicConnectionProperties("connectorId");
 
-        @SuppressWarnings("resource")
-        final Response received = handler.enrichWithDynamicProperties("connectorId", properties);
-
-        assertThat(received).isSameAs(response);
+        assertThat(received).isSameAs(dynamicConnectionPropertiesMetadata);
         assertThat(url.getValue()).isEqualTo("http://syndesis-meta/api/v1/connectors/connectorId/properties/meta");
+    }
+
+    private static Map<String, List<WithDynamicProperties.ActionPropertySuggestion>> buildProperties() {
+        HashMap<String, List<WithDynamicProperties.ActionPropertySuggestion>> properties = new HashMap<>();
+        List<WithDynamicProperties.ActionPropertySuggestion> values = new ArrayList<>();
+        values.add(new WithDynamicProperties.ActionPropertySuggestion.Builder()
+            .value("valueTest")
+            .displayValue("displayValueTest")
+            .build()
+        );
+        properties.put("someProperty", values);
+        return properties;
     }
 }

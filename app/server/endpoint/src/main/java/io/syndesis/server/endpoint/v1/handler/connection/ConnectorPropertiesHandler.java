@@ -15,42 +15,34 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.util.Map;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.client.Client;
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
+import java.util.Collections;
 
+import com.netflix.hystrix.HystrixExecutable;
 import io.swagger.annotations.Api;
+import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 
 @Api(value = "properties")
 public class ConnectorPropertiesHandler {
-    private final String metaPropertiesUrl;
+    private final MetadataConfigurationProperties config;
 
     public ConnectorPropertiesHandler(final MetadataConfigurationProperties config) {
-        metaPropertiesUrl = String.format("http://%s/api/v1/connectors/%%s/properties/meta", config.getService());
+        this.config = config;
     }
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
-    public Response enrichWithDynamicProperties(@PathParam("id") final String connectorId, final Map<String, Object> props) {
-        // TODO replace properly with circuit breaker
-        String metadataUrl = String.format(metaPropertiesUrl, connectorId);
-        Client client = createClient();
-        WebTarget target = client.target(metadataUrl);
-
-        return target.request().post(Entity.entity(props, MediaType.APPLICATION_JSON_TYPE));
+    public DynamicConnectionPropertiesMetadata dynamicConnectionProperties(@PathParam("id") final String connectorId) {
+        final HystrixExecutable<DynamicConnectionPropertiesMetadata> meta = createMetadataConnectionPropertiesCommand(connectorId);
+        return meta.execute();
     }
 
-    Client createClient() {
-        return new ResteasyClientBuilder().build();
+    protected HystrixExecutable<DynamicConnectionPropertiesMetadata> createMetadataConnectionPropertiesCommand(final String connectorId) {
+        return new MetadataConnectionPropertiesCommand(config, connectorId, Collections.emptyMap());
     }
+
 }

@@ -15,60 +15,40 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
-import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.io.ByteArrayInputStream;
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
+import javax.validation.constraints.NotNull;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
-import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
-import org.jboss.resteasy.client.jaxrs.internal.ClientConfiguration;
-import org.jboss.resteasy.client.jaxrs.internal.ClientResponse;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
-import org.junit.Test;
-import org.springframework.context.ApplicationContext;
-
-import com.fasterxml.jackson.jaxrs.json.JacksonJsonProvider;
-
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.connection.DynamicConnectionPropertiesMetadata;
+import io.syndesis.common.model.connection.WithDynamicProperties;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
-import io.syndesis.server.inspector.Inspectors;
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
+import io.syndesis.server.inspector.Inspectors;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 import io.syndesis.server.verifier.Verifier;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -76,6 +56,15 @@ import okio.Buffer;
 import okio.BufferedSink;
 import okio.BufferedSource;
 import okio.Okio;
+import org.junit.Test;
+import org.springframework.context.ApplicationContext;
+
+import static javax.ws.rs.core.HttpHeaders.CONTENT_LENGTH;
+import static javax.ws.rs.core.HttpHeaders.CONTENT_TYPE;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ConnectorHandlerTest {
 
@@ -127,7 +116,7 @@ public class ConnectorHandlerTest {
             final StreamingOutput so = (StreamingOutput) response.getEntity();
             final ByteArrayOutputStream bos = new ByteArrayOutputStream();
             try (BufferedSink sink = Okio.buffer(Okio.sink(bos)); BufferedSource source = new Buffer();
-                ImageInputStream iis = ImageIO.createImageInputStream(source.inputStream());) {
+                 ImageInputStream iis = ImageIO.createImageInputStream(source.inputStream());) {
                 so.write(sink.outputStream());
                 source.readAll(sink);
                 final Iterator<ImageReader> readers = ImageIO.getImageReaders(iis);
@@ -191,15 +180,14 @@ public class ConnectorHandlerTest {
             }
         };
 
-        @SuppressWarnings("resource")
-        final Response metaResponse = responseWithEntity("{}");
+        final DynamicConnectionPropertiesMetadata metaResponse = DynamicConnectionPropertiesMetadata.NOTHING;
 
-        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+        when(connectorPropertiesHandler.dynamicConnectionProperties("connectorId")).thenReturn(metaResponse);
 
         final Connector connector = new Connector.Builder()
             .id("connectorId")
             .build();
-        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+        final Connector withDynamicProperties = connectorHandler.enrichConnectorWithDynamicProperties(connector);
 
         final Connector expected = new Connector.Builder()
             .id("connectorId")
@@ -221,16 +209,19 @@ public class ConnectorHandlerTest {
             }
         };
 
-        @SuppressWarnings("resource")
-        final Response metaResponse = responseWithEntity("{\"properties\":{\"property\":[{\"displayValue\":\"Value 1\",\"value\":\"value1\"},{\"displayValue\":\"Value 2\",\"value\":\"value2\"}]}}");
-
-        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+        final DynamicConnectionPropertiesMetadata metaResponse = new DynamicConnectionPropertiesMetadata.Builder()
+            .putProperty("property", Arrays.asList(
+                new WithDynamicProperties.ActionPropertySuggestion.Builder().displayValue("Value 1").value("value1").build(),
+                new WithDynamicProperties.ActionPropertySuggestion.Builder().displayValue("Value 2").value("value2").build()
+                )
+            ).build();
+        when(connectorPropertiesHandler.dynamicConnectionProperties("connectorId")).thenReturn(metaResponse);
 
         final Connector connector = new Connector.Builder()
             .id("connectorId")
             .putProperty("property", new ConfigurationProperty.Builder().build())
             .build();
-        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+        final Connector withDynamicProperties = connectorHandler.enrichConnectorWithDynamicProperties(connector);
 
         final Connector expected = new Connector.Builder()
             .id("connectorId")
@@ -240,37 +231,6 @@ public class ConnectorHandlerTest {
             .build();
 
         assertThat(withDynamicProperties).isEqualTo(expected);
-    }
-
-    private static Response responseWithEntity(final String data) {
-        final ClientConfiguration configuration = new ClientConfiguration(new ResteasyProviderFactory().register(JacksonJsonProvider.class));
-        final Response metaResponse = spy(new ClientResponse(configuration) {
-            @Override
-            protected InputStream getInputStream() {
-                return new ByteArrayInputStream(data.getBytes(StandardCharsets.US_ASCII));
-            }
-
-            @Override
-            protected void setInputStream(InputStream is) {
-                // nop
-            }
-
-            @Override
-            public void releaseConnection() throws IOException {
-                // nop
-            }
-
-            @Override
-            public void releaseConnection(boolean consumeInputStream) throws IOException {
-                // nop
-            }
-
-            @Override
-            public MediaType getMediaType() {
-                return MediaType.APPLICATION_JSON_TYPE;
-            }
-        });
-        return metaResponse;
     }
 
     @Test
@@ -286,14 +246,14 @@ public class ConnectorHandlerTest {
             }
         };
 
-        @SuppressWarnings("resource")
-        final Response metaResponse = Response.serverError().build();
-        when(connectorPropertiesHandler.enrichWithDynamicProperties("connectorId", null)).thenReturn(metaResponse);
+        //It would never provide an error, as in such case circuit breaker provide the fallback implementation
+        final DynamicConnectionPropertiesMetadata metaResponse = DynamicConnectionPropertiesMetadata.NOTHING;
+        when(connectorPropertiesHandler.dynamicConnectionProperties("connectorId")).thenReturn(metaResponse);
 
         final Connector connector = new Connector.Builder()
             .id("connectorId")
             .build();
-        final Connector withDynamicProperties = connectorHandler.enrichWithDynamicProperties(connector);
+        final Connector withDynamicProperties = connectorHandler.enrichConnectorWithDynamicProperties(connector);
 
         final Connector expected = new Connector.Builder()
             .id("connectorId")
@@ -320,10 +280,10 @@ public class ConnectorHandlerTest {
     }
 
     private static Integration newIntegration(List<Step> steps) {
-      return new Integration.Builder()
-          .id("test")
-          .name("test")
-          .addFlow(new Flow.Builder().steps(steps).build())
-          .build();
+        return new Integration.Builder()
+            .id("test")
+            .name("test")
+            .addFlow(new Flow.Builder().steps(steps).build())
+            .build();
     }
 }
