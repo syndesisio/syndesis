@@ -57,6 +57,8 @@ export interface IVirtualizationEditorPageProps {
   startActionCustomProps?: any;
   stopActionCustomProps?: any;
 
+  versionPageAction?: VirtualizationUserAction;
+
   /**
    * The breadcrumb kebab menu items. Leave `undefined` if default kebab menu items are wanted.
    */
@@ -105,11 +107,15 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   const [currPublishedState, setCurrPublishedState] = React.useState(
     {} as VirtualizationPublishingDetails
   );
-  
+
   /**
    * State for showing Publishing... on virtualization publish clicked.
    */
-  const [publishing, setPublishing] = React.useState<VirtualizationUserAction>({action: '', state:'', virtualizationName: ''});
+  const [publishing, setPublishing] = React.useState<VirtualizationUserAction>({
+    action: '',
+    state: '',
+    virtualizationName: '',
+  });
 
   /**
    * State for the virtualization description.
@@ -161,8 +167,16 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
     return '';
   });
 
-  const setPublishingState = (uAction: string, uState: string, vName: string) => {
-    setPublishing({action: uAction, state: uState, virtualizationName: vName});
+  const setPublishingState = (
+    uAction: string,
+    uState: string,
+    vName: string
+  ) => {
+    setPublishing({
+      action: uAction,
+      state: uState,
+      virtualizationName: vName,
+    });
   };
 
   /**
@@ -206,15 +220,25 @@ export const VirtualizationEditorPage: React.FunctionComponent<IVirtualizationEd
   }, [currPublishedState, isProgressWithLink, isSubmitted]);
 
   React.useEffect(() => {
-    if(publishing.state === 'submitted'){
+    if (
+      (props.versionPageAction &&
+        props.versionPageAction.state === 'submitted') ||
+      publishing.state === 'submitted'
+    ) {
+      const userAction =
+        (props.versionPageAction && props.versionPageAction.action) ||
+        publishing.action;
       setLabelType('default');
-      setPublishStateText(getStateActionText(publishing.action));
-    }else if(publishing.state === 'error') {
+      setPublishStateText(getStateActionText(userAction));
+    } else if (
+      (props.versionPageAction && props.versionPageAction.state === 'error') ||
+      publishing.state === 'error'
+    ) {
       setLabelType(getStateLabelStyle(currPublishedState));
       setPublishStateText(getStateLabelText(currPublishedState));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [publishing, t]);
+  }, [publishing, t, props.versionPageAction]);
 
   /**
    * Updates the virtualization description.

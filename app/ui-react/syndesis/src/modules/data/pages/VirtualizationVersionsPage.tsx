@@ -1,5 +1,5 @@
 import { useVirtualization, useVirtualizationEditions } from '@syndesis/api';
-import { Virtualization, VirtualizationEdition } from '@syndesis/models';
+import { Virtualization, VirtualizationUserAction } from '@syndesis/models';
 import {
   IVirtualizationVersionItem,
   PageSection,
@@ -21,20 +21,7 @@ import {
   VirtualizationEditorPage,
 } from './VirtualizationEditorPage';
 
-const getDraftActions = (virtualization: Virtualization) => {
-  const buttons = [VirtualizationActionId.Publish];
-  const kebabItems = [VirtualizationActionId.Export];
-  const draftActions = (
-    <VirtualizationActionContainer
-      includeActions={buttons}
-      includeItems={kebabItems}
-      virtualization={virtualization}
-    />
-  );
-  return draftActions;
-};
-
-const getVersionActions = (virtualization: Virtualization, edition: number) => {
+const getkebabItems = (virtualization: Virtualization, edition: number) => {
   const kebabItems =
     virtualization.deployedState === 'RUNNING' &&
     edition === virtualization.deployedRevision
@@ -44,44 +31,7 @@ const getVersionActions = (virtualization: Virtualization, edition: number) => {
           VirtualizationActionId.Export,
           VirtualizationActionId.Revert,
         ];
-  const versionActions = (
-    <VirtualizationActionContainer
-      includeActions={[]}
-      includeItems={kebabItems}
-      virtualization={virtualization}
-      revision={edition}
-    />
-  );
-  return versionActions;
-};
-
-const getSortedEditions = (
-  editions: VirtualizationEdition[],
-  virtualization: Virtualization
-) => {
-  const sorted = editions.sort((a, b) => {
-    return b.revision - a.revision;
-  });
-
-  const versionItems: IVirtualizationVersionItem[] = [];
-  for (const edition of sorted) {
-    const versionItem: IVirtualizationVersionItem = {
-      actions: getVersionActions(virtualization, edition.revision),
-      publishedState: getVersionState(
-        edition.revision,
-        virtualization.deployedState,
-        virtualization.publishedState,
-        virtualization.deployedRevision,
-        virtualization.publishedRevision
-      ),
-      timePublished: edition.createdAt
-        ? new Date(edition.createdAt).toLocaleString()
-        : '',
-      version: edition.revision,
-    };
-    versionItems.push(versionItem);
-  }
-  return versionItems;
+  return kebabItems;
 };
 
 const getVersionState = (
@@ -103,7 +53,11 @@ const getVersionState = (
     }
   }
   // If no deploy status found, consider the version publish state
-  if (virtState === 'NOTFOUND' && virtPublishedRevision && virtPublishedRevision === itemVersion) {
+  if (
+    virtState === 'NOTFOUND' &&
+    virtPublishedRevision &&
+    virtPublishedRevision === itemVersion
+  ) {
     if (virtPublishedState === 'FAILED') {
       virtState = 'FAILED';
     } else if (virtPublishedState !== 'RUNNING') {
@@ -124,6 +78,27 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
     IVirtualizationEditorPageRouteParams,
     IVirtualizationEditorPageRouteState
   >();
+
+  /**
+   * State for showing Publishing... on virtualization publish clicked.
+   */
+  const [publishing, setPublishing] = React.useState<VirtualizationUserAction>({
+    action: '',
+    state: '',
+    virtualizationName: '',
+  });
+
+  const setPublishingState = (
+    uAction: string,
+    uState: string,
+    vName: string
+  ) => {
+    setPublishing({
+      action: uAction,
+      state: uState,
+      virtualizationName: vName,
+    });
+  };
 
   /**
    * Hook to handle localization.
@@ -157,6 +132,7 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
       items={[VirtualizationActionId.Stop, VirtualizationActionId.Delete]}
       actions={[VirtualizationActionId.Publish]}
       publishActionCustomProps={{ as: 'default' }}
+      versionPageAction={publishing}
     >
       <PageSection>
         <WithLoader
@@ -165,19 +141,64 @@ export const VirtualizationVersionsPage: React.FunctionComponent = () => {
           loaderChildren={<VirtualizationListSkeleton width={800} />}
           errorChildren={<ApiError error={error as Error} />}
         >
-          {() => (
-            <VirtualizationVersionsTable
-              a11yActionMenuColumn={t('actionsColumnA11yMessage')}
-              isModified={virtualization.modified}
-              i18nDraft={t('shared:Draft')}
-              i18nEmptyVersionsTitle={t('versionsTableEmptyTitle')}
-              i18nEmptyVersionsMsg={t('versionsTableEmptyMsg')}
-              i18nPublish={t('shared:Publish')}
-              draftActions={getDraftActions(virtualization)}
-              tableHeaders={colHeaders}
-              versionItems={getSortedEditions(editions, virtualization)}
-            />
-          )}
+          {() => {
+            const sorted = editions.sort(
+              (a: { revision: number }, b: { revision: number }) => {
+                return b.revision - a.revision;
+              }
+            );
+
+            const versionItems: IVirtualizationVersionItem[] = [];
+            for (const edition of sorted) {
+              const versionItem: IVirtualizationVersionItem = {
+                actions: (
+                  <VirtualizationActionContainer
+                    includeActions={[]}
+                    includeItems={getkebabItems(
+                      virtualization,
+                      edition.revision
+                    )}
+                    virtualization={virtualization}
+                    revision={edition.revision}
+                    setPublishingState={setPublishingState}
+                  />
+                ),
+                publishedState: getVersionState(
+                  edition.revision,
+                  virtualization.deployedState,
+                  virtualization.publishedState,
+                  virtualization.deployedRevision,
+                  virtualization.publishedRevision
+                ),
+                timePublished: edition.createdAt
+                  ? new Date(edition.createdAt).toLocaleString()
+                  : '',
+                version: edition.revision,
+              };
+              versionItems.push(versionItem);
+            }
+            // return versionItems;
+            return (
+              <VirtualizationVersionsTable
+                a11yActionMenuColumn={t('actionsColumnA11yMessage')}
+                isModified={virtualization.modified}
+                i18nDraft={t('shared:Draft')}
+                i18nEmptyVersionsTitle={t('versionsTableEmptyTitle')}
+                i18nEmptyVersionsMsg={t('versionsTableEmptyMsg')}
+                i18nPublish={t('shared:Publish')}
+                draftActions={
+                  <VirtualizationActionContainer
+                    includeActions={[VirtualizationActionId.Publish]}
+                    includeItems={[VirtualizationActionId.Export]}
+                    virtualization={virtualization}
+                    setPublishingState={setPublishingState}
+                  />
+                }
+                tableHeaders={colHeaders}
+                versionItems={versionItems}
+              />
+            );
+          }}
         </WithLoader>
       </PageSection>
     </VirtualizationEditorPage>
