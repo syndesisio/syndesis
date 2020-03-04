@@ -36,7 +36,7 @@ EOT
         for cmd in $(ls $cmd_dir); do
           if [ -f $cmd_dir/$cmd ]; then
               source $cmd_dir/$cmd
-              printf "   %-15s  %s\n" $cmd "$($cmd::description)"
+              printf "   %-16s  %s\n" $cmd "$($cmd::description)"
           fi
         done
         cat - <<EOT

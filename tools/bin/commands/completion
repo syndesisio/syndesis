@@ -49,109 +49,109 @@ zsh_completion() {
 #compdef syndesis
 
 __syndesis_bash_source() {
-	alias shopt=':'
-	alias _expand=_bash_expand
-	alias _complete=_bash_comp
-	emulate -L sh
-	setopt kshglob noshglob braceexpand
+    alias shopt=':'
+    alias _expand=_bash_expand
+    alias _complete=_bash_comp
+    emulate -L sh
+    setopt kshglob noshglob braceexpand
 
-	source "$@"
+    source "$@"
 }
 
 __syndesis_type() {
-	# -t is not supported by zsh
-	if [ "$1" == "-t" ]; then
-		shift
+    # -t is not supported by zsh
+    if [ "$1" == "-t" ]; then
+        shift
 
-		# fake Bash 4 to disable "complete -o nospace". Instead
-		# "compopt +-o nospace" is used in the code to toggle trailing
-		# spaces. We don't support that, but leave trailing spaces on
-		# all the time
-		if [ "$1" = "__syndesis_compopt" ]; then
-			echo builtin
-			return 0
-		fi
-	fi
-	type "$@"
+        # fake Bash 4 to disable "complete -o nospace". Instead
+        # "compopt +-o nospace" is used in the code to toggle trailing
+        # spaces. We don't support that, but leave trailing spaces on
+        # all the time
+        if [ "$1" = "__syndesis_compopt" ]; then
+            echo builtin
+            return 0
+        fi
+    fi
+    type "$@"
 }
 
 __syndesis_compgen() {
-	local completions w
-	completions=( $(compgen "$@") ) || return $?
+    local completions w
+    completions=( $(compgen "$@") ) || return $?
 
-	# filter by given word as prefix
-	while [[ "$1" = -* && "$1" != -- ]]; do
-		shift
-		shift
-	done
-	if [[ "$1" == -- ]]; then
-		shift
-	fi
-	for w in "${completions[@]}"; do
-		if [[ "${w}" = "$1"* ]]; then
-			echo "${w}"
-		fi
-	done
+    # filter by given word as prefix
+    while [[ "$1" = -* && "$1" != -- ]]; do
+        shift
+        shift
+    done
+    if [[ "$1" == -- ]]; then
+        shift
+    fi
+    for w in "${completions[@]}"; do
+        if [[ "${w}" = "$1"* ]]; then
+            echo "${w}"
+        fi
+    done
 }
 
 __syndesis_compopt() {
-	true # don't do anything. Not supported by bashcompinit in zsh
+    true # don't do anything. Not supported by bashcompinit in zsh
 }
 
 __syndesis_ltrim_colon_completions()
 {
-	if [[ "$1" == *:* && "$COMP_WORDBREAKS" == *:* ]]; then
-		# Remove colon-word prefix from COMPREPLY items
-		local colon_word=${1%${1##*:}}
-		local i=${#COMPREPLY[*]}
-		while [[ $((--i)) -ge 0 ]]; do
-			COMPREPLY[$i]=${COMPREPLY[$i]#"$colon_word"}
-		done
-	fi
+    if [[ "$1" == *:* && "$COMP_WORDBREAKS" == *:* ]]; then
+        # Remove colon-word prefix from COMPREPLY items
+        local colon_word=${1%${1##*:}}
+        local i=${#COMPREPLY[*]}
+        while [[ $((--i)) -ge 0 ]]; do
+            COMPREPLY[$i]=${COMPREPLY[$i]#"$colon_word"}
+        done
+    fi
 }
 
 __syndesis_get_comp_words_by_ref() {
-	cur="${COMP_WORDS[COMP_CWORD]}"
-	prev="${COMP_WORDS[${COMP_CWORD}-1]}"
-	words=("${COMP_WORDS[@]}")
-	cword=("${COMP_CWORD[@]}")
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[${COMP_CWORD}-1]}"
+    words=("${COMP_WORDS[@]}")
+    cword=("${COMP_CWORD[@]}")
 }
 
 __syndesis_filedir() {
-	local RET OLD_IFS w qw
+    local RET OLD_IFS w qw
 
-	__debug "_filedir $@ cur=$cur"
-	if [[ "$1" = \~* ]]; then
-		# somehow does not work. Maybe, zsh does not call this at all
-		eval echo "$1"
-		return 0
-	fi
+    __debug "_filedir $@ cur=$cur"
+    if [[ "$1" = \~* ]]; then
+        # somehow does not work. Maybe, zsh does not call this at all
+        eval echo "$1"
+        return 0
+    fi
 
-	OLD_IFS="$IFS"
-	IFS=$'\n'
-	if [ "$1" = "-d" ]; then
-		shift
-		RET=( $(compgen -d) )
-	else
-		RET=( $(compgen -f) )
-	fi
-	IFS="$OLD_IFS"
+    OLD_IFS="$IFS"
+    IFS=$'\n'
+    if [ "$1" = "-d" ]; then
+        shift
+        RET=( $(compgen -d) )
+    else
+        RET=( $(compgen -f) )
+    fi
+    IFS="$OLD_IFS"
 
-	IFS="," __debug "RET=${RET[@]} len=${#RET[@]}"
+    IFS="," __debug "RET=${RET[@]} len=${#RET[@]}"
 
-	for w in ${RET[@]}; do
-		if [[ ! "${w}" = "${cur}"* ]]; then
-			continue
-		fi
-		if eval "[[ \"\${w}\" = *.$1 || -d \"\${w}\" ]]"; then
-			qw="$(__syndesis_quote "${w}")"
-			if [ -d "${w}" ]; then
-				COMPREPLY+=("${qw}/")
-			else
-				COMPREPLY+=("${qw}")
-			fi
-		fi
-	done
+    for w in ${RET[@]}; do
+        if [[ ! "${w}" = "${cur}"* ]]; then
+            continue
+        fi
+        if eval "[[ \"\${w}\" = *.$1 || -d \"\${w}\" ]]"; then
+            qw="$(__syndesis_quote "${w}")"
+            if [ -d "${w}" ]; then
+                COMPREPLY+=("${qw}/")
+            else
+                COMPREPLY+=("${qw}")
+            fi
+        fi
+    done
 }
 
 __syndesis_quote() {
@@ -159,7 +159,7 @@ __syndesis_quote() {
         # Leave out first character
         printf %q "${1:1}"
     else
-    	printf %q "$1"
+        printf %q "$1"
     fi
 }
 
@@ -169,25 +169,25 @@ autoload -U +X bashcompinit && bashcompinit
 LWORD='[[:<:]]'
 RWORD='[[:>:]]'
 if sed --help 2>&1 | grep -q GNU; then
-	LWORD='\<'
-	RWORD='\>'
+    LWORD='\<'
+    RWORD='\>'
 fi
 
 __syndesis_convert_bash_to_zsh() {
-	sed \
-	-e 's/declare -F/whence -w/' \
-	-e 's/_get_comp_words_by_ref "\$@"/_get_comp_words_by_ref "\$*"/' \
-	-e 's/local \([a-zA-Z0-9_]*\)=/local \1; \1=/' \
-	-e 's/flags+=("\(--.*\)=")/flags+=("\1"); two_word_flags+=("\1")/' \
-	-e 's/must_have_one_flag+=("\(--.*\)=")/must_have_one_flag+=("\1")/' \
-	-e "s/${LWORD}_filedir${RWORD}/__syndesis_filedir/g" \
-	-e "s/${LWORD}_get_comp_words_by_ref${RWORD}/__syndesis_get_comp_words_by_ref/g" \
-	-e "s/${LWORD}__ltrim_colon_completions${RWORD}/__syndesis_ltrim_colon_completions/g" \
-	-e "s/${LWORD}compgen${RWORD}/__syndesis_compgen/g" \
-	-e "s/${LWORD}compopt${RWORD}/__syndesis_compopt/g" \
-	-e "s/${LWORD}declare${RWORD}/builtin declare/g" \
-	-e "s/\\\$(type${RWORD}/\$(__syndesis_type/g" \
-	<<'BASH_COMPLETION_EOF'
+    sed \
+    -e 's/declare -F/whence -w/' \
+    -e 's/_get_comp_words_by_ref "\$@"/_get_comp_words_by_ref "\$*"/' \
+    -e 's/local \([a-zA-Z0-9_]*\)=/local \1; \1=/' \
+    -e 's/flags+=("\(--.*\)=")/flags+=("\1"); two_word_flags+=("\1")/' \
+    -e 's/must_have_one_flag+=("\(--.*\)=")/must_have_one_flag+=("\1")/' \
+    -e "s/${LWORD}_filedir${RWORD}/__syndesis_filedir/g" \
+    -e "s/${LWORD}_get_comp_words_by_ref${RWORD}/__syndesis_get_comp_words_by_ref/g" \
+    -e "s/${LWORD}__ltrim_colon_completions${RWORD}/__syndesis_ltrim_colon_completions/g" \
+    -e "s/${LWORD}compgen${RWORD}/__syndesis_compgen/g" \
+    -e "s/${LWORD}compopt${RWORD}/__syndesis_compopt/g" \
+    -e "s/${LWORD}declare${RWORD}/builtin declare/g" \
+    -e "s/\\\$(type${RWORD}/\$(__syndesis_type/g" \
+    <<'BASH_COMPLETION_EOF'
 EOT
     bash_completion
     cat <<"EOT"
@@ -426,7 +426,7 @@ __handle_word()
 }
 
 __custom_func() {
-	__debug ___custom_func
+    __debug ___custom_func
     case ${last_command} in
     esac
 }
@@ -454,7 +454,7 @@ _syndesis_build() {
     flags+=("--all-images")
     flags+=("-m")
     flags_with_completion+=("-m")
-	flags_completion+=("_modules")
+    flags_completion+=("_modules")
     flags+=("--module")
     flags_with_completion+=("--module")
     flags_completion+=("_modules")
@@ -473,7 +473,6 @@ _syndesis_build() {
     flags+=("-c")
     flags+=("--clean")
     flags+=("--batch-mode")
-    flags+=("--man")
 
 }
 
@@ -507,40 +506,10 @@ _syndesis_dev() {
     must_have_one_noun=()
     noun_aliases=()
 
-	flags+=("--debug")
-	flags+=("--cookie")
-	flags+=("--refresh")
-	flags+=("--version")
-	flags+=("--man")
-}
-
-_syndesis_doc() {
-    last_command="syndesis_doc"
-    commands=()
-
-    flags=()
-    two_word_flags=()
-    local_nonpersistent_flags=()
-    flags_with_completion=()
-    flags_completion=()
-    must_have_one_flag=()
-    must_have_one_noun=()
-    noun_aliases=()
-
-	flags+=("-d")
-	flags+=("--directory")
-	flags+=("-i")
-	flags+=("--input")
-	flags+=("--out")
-	flags+=("--html")
-	flags+=("--pdf")
-	flags+=("--epub")
-	flags+=("--gh-pages")
-	flags+=("-o")
-	flags+=("--open")
-	flags+=("-l")
-	flags+=("--local")
-	flags+=("--man")
+    flags+=("--debug")
+    flags+=("--cookie")
+    flags+=("--refresh")
+    flags+=("--version")
 }
 
 _syndesis_install() {
@@ -588,6 +557,7 @@ _syndesis_minishift() {
     must_have_one_noun=()
     noun_aliases=()
 
+<<<<<<< HEAD
 	flags+=("--install")
 	flags+=("-p")
 	flags+=("--project")
@@ -611,6 +581,31 @@ _syndesis_minishift() {
 	flags+=("--memory-meta")
 	flags+=("--test-support")
 	flags+=("--man")
+=======
+    flags+=("--install")
+    flags+=("-p")
+    flags+=("--project")
+    flags+=("-c")
+    flags+=("--context")
+    flags+=("--reset")
+    flags+=("--full-reset")
+    flags+=("--memory")
+    flags+=("--cpus")
+    flags+=("--disk-size")
+    flags+=("--vm-driver")
+    flags+=("--show-logs")
+    flags+=("--openshift-version")
+    flags+=("--tag")
+    flags+=("--local")
+    flags+=("-o")
+    flags+=("--open")
+    flags+=("--y")
+    flags+=("--yes")
+    flags+=("--memory-server")
+    flags+=("--memory-meta")
+    flags+=("--test-support")
+  flags+=("--camel-k")
+>>>>>>> 1a00f1953b... chore(docs): remove Software Developer Handbook
 }
 
 _syndesis_release() {
@@ -626,19 +621,18 @@ _syndesis_release() {
     must_have_one_noun=()
     noun_aliases=()
 
-	flags+=("-n")
-	flags+=("--dry-run")
-	flags+=("--release-version")
-	flags+=("--snapshot-release")
-	flags+=("--dev-version")
-	flags+=("--settings")
-	flags+=("--local-maven-repo")
-	flags+=("--docker-user")
-	flags+=("--docker-password")
-	flags+=("--no-git-push")
-	flags+=("--git-remote")
-	flags+=("--log")
-	flags+=("--man")
+    flags+=("-n")
+    flags+=("--dry-run")
+    flags+=("--release-version")
+    flags+=("--snapshot-release")
+    flags+=("--dev-version")
+    flags+=("--settings")
+    flags+=("--local-maven-repo")
+    flags+=("--docker-user")
+    flags+=("--docker-password")
+    flags+=("--no-git-push")
+    flags+=("--git-remote")
+    flags+=("--log")
 }
 
 _syndesis_system-test() {
@@ -654,15 +648,14 @@ _syndesis_system-test() {
     must_have_one_noun=()
     noun_aliases=()
 
-	flags+=("--project")
-	flags+=("--token")
-	flags+=("--server")
-	flags+=("--pool")
-	flags+=("--test-id")
-	flags+=("--create-pool")
-	flags+=("--list-pool")
-	flags+=("--release-project")
-	flags+=("--man")
+    flags+=("--project")
+    flags+=("--token")
+    flags+=("--server")
+    flags+=("--pool")
+    flags+=("--test-id")
+    flags+=("--create-pool")
+    flags+=("--list-pool")
+    flags+=("--release-project")
 }
 
 _syndesis()
