@@ -30,6 +30,7 @@ type cleanup struct {
 
 func newCleanup(base step) (c *cleanup) {
 	c = &cleanup{base}
+	c.name = "Cleanup"
 	return c
 }
 
@@ -53,7 +54,7 @@ func (c *cleanup) run() (err error) {
 
 func (c *cleanup) deleteDeploymentConfigs() (err error) {
 	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus", "todo"} {
-		dc := &v1.BuildConfig{}
+		dc := &v12.DeploymentConfig{}
 		if err := c.client.Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
 			if !k8serrors.IsNotFound(err) {
 				c.log.Info(err.Error())
@@ -72,7 +73,7 @@ func (c *cleanup) deleteDeploymentConfigs() (err error) {
 
 func (c *cleanup) deleteBuildConfigs() (err error) {
 	for _, bcName := range []string{"todo"} {
-		bc := &v12.DeploymentConfig{}
+		bc := &v1.BuildConfig{}
 		if err := c.client.Get(c.context, client.ObjectKey{Name: bcName, Namespace: c.namespace}, bc); err != nil {
 			if !k8serrors.IsNotFound(err) {
 				c.log.Info(err.Error())
