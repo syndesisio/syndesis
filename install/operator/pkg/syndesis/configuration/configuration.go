@@ -30,6 +30,8 @@ import (
 	"strings"
 	"time"
 
+	appsv1 "github.com/openshift/api/apps/v1"
+
 	"github.com/imdario/mergo"
 
 	"k8s.io/apimachinery/pkg/types"
@@ -294,6 +296,24 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 
 	if client == nil || len(syndesis.Spec.Components.Database.ExternalDbURL) > 0 {
 		return configuration, nil
+	}
+
+	databaseDeployment := &appsv1.DeploymentConfig{}
+	if err := client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, databaseDeployment); err == nil {
+		for _, c := range databaseDeployment.Spec.Template.Spec.Containers {
+			if c.Name == "postgresql" {
+				//
+				// Does deploment config already contain UPGRADE Env Var?
+				// if it does then DO NOT remove it.
+				//
+				for _, env := range c.Env {
+					if env.Name == "POSTGRESQL_UPGRADE" {
+						configuration.DatabaseNeedsUpgrade = true
+						return configuration, nil
+					}
+				}
+			}
+		}
 	}
 
 	// Determine if the PostgreSQL database running in syndesis-db pod needs upgrading, first fetch the version currently running
