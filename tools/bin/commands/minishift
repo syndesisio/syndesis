@@ -271,6 +271,11 @@ start_minishift() {
     local vmdriver=$(readopt --vm-driver --vmdriver)
     if [ -n "${vmdriver}" ]; then
         extra_args="${extra_args}--vm-driver ${vmdriver} "
+    else
+      if [ $(isMacOs) ]; then
+        echo "Defaulting the vmdriver to hyperkit as xhyve is no longer supported"
+        extra_args="${extra_args}--vm-driver hyperkit "
+      fi
     fi
 
     minishift addons enable admin-user

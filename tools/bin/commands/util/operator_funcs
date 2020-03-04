@@ -97,8 +97,8 @@ download_operator_binary() {
                 | grep ${pattern} \
                 | cut -d '"' -f 4)
         else
-            # retrieve the last 4 releases and get the latest 2.0 release
-            url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=4" \
+            # retrieve the last 20 releases and get the latest 2.0 release
+            url=$(curl -s "https://api.github.com/repos/syndesisio/syndesis/releases?per_page=20" \
                 | grep "download/2" \
                 | grep browser_download_url \
                 | grep ${pattern} \
@@ -106,6 +106,14 @@ download_operator_binary() {
                 | sort -nr \
                 | head -1)
             release_tag=$(echo $url| awk -F '/' '{print $8}')
+        fi
+
+        if [ -z "$url" ]
+        then
+          echo "ERROR - the operator download URL could not be constructed"
+          exit 1
+        else
+          echo "Downloading from $url ..."
         fi
 
         if $(curl -sL ${url} | tar xz -C $(dirname ${OPERATOR_BINARY})); then
