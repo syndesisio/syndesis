@@ -112,7 +112,6 @@ func New(parent *internal.Options) *cobra.Command {
 			util.ExitOnError(err)
 		},
 	}
-	forge.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
 	cmd.AddCommand(forge)
 
@@ -121,10 +120,12 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
+	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
 
+//go:generate go run generator/generator.go
 func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 	switch o.eject {
 	case "":
@@ -147,13 +148,13 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.image = "syndesis-operator"
 	}
 
+	o.databaseImage = defaultDatabaseImage
 	config, err := configuration.GetProperties(configuration.TemplateConfig, o.Context, nil, &v1beta1.Syndesis{})
-	if err != nil {
-		return err
+	if err == nil {
+		o.databaseImage = config.Syndesis.Components.Database.Image
 	}
-	o.databaseImage = config.Syndesis.Components.Database.Image
 
-	return
+	return nil
 }
 
 func (o *Install) after(cmd *cobra.Command, args []string) {
