@@ -112,7 +112,6 @@ func New(parent *internal.Options) *cobra.Command {
 			util.ExitOnError(err)
 		},
 	}
-	forge.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
 	cmd.AddCommand(forge)
 
@@ -121,6 +120,7 @@ func New(parent *internal.Options) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&o.tag, "tag", "", pkg.DefaultOperatorTag, "sets operator tag that gets installed")
 	cmd.PersistentFlags().BoolVarP(&o.wait, "wait", "w", false, "waits for the application to be running")
 	cmd.PersistentFlags().BoolVarP(&o.devSupport, "dev", "", false, "enable development mode by loading images from image stream tags.")
+	cmd.PersistentFlags().StringVarP(&configuration.TemplateConfig, "operator-config", "", "/conf/config.yaml", "Path to the operator configuration file.")
 	cmd.PersistentFlags().AddFlagSet(util.FlagSet)
 	return &cmd
 }
