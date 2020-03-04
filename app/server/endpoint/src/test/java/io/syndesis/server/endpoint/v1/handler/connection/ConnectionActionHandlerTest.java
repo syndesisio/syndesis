@@ -119,8 +119,8 @@ public class ConnectionActionHandlerTest {
 
         handler = new ConnectionActionHandler(connection, new MetadataConfigurationProperties(), new EncryptionComponent(null)) {
             @Override
-            protected HystrixExecutable<DynamicActionMetadata> createMetadataCommand(final ConnectorAction action,
-                final Map<String, String> parameters) {
+            protected HystrixExecutable<DynamicActionMetadata> createMetadataCommandAction(final ConnectorAction action,
+                                                                                           final Map<String, String> parameters) {
                 metadataCommandParameters = parameters;
                 return metadataCommand;
             }
