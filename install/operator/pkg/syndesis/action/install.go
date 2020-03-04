@@ -6,8 +6,6 @@ import (
 	"fmt"
 	"time"
 
-	v12 "github.com/openshift/api/apps/v1"
-
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -67,7 +65,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		a.log.Info("installing Syndesis resource", "name", syndesis.Name)
 	} else if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
 		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
-		a.deleteDeploymentConfigs(ctx, syndesis)
 	}
 
 	resourcesThatShouldExist := map[types.UID]bool{}
@@ -486,29 +483,6 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	}
 
 	return false
-}
-
-// TODO: Delete for 1.10
-// Because: Updating the DeploymentConfigs doesnt delete the existing triggers, so
-// the DC continues triggering redeploys on imageStreamTag change but it is not what we want
-// since we are using docker images
-func (a *installAction) deleteDeploymentConfigs(ctx context.Context, syndesis *v1beta1.Syndesis) {
-	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus"} {
-		dc := &v12.DeploymentConfig{}
-		if err := a.client.Get(ctx, client.ObjectKey{Name: dcName, Namespace: syndesis.Namespace}, dc); err != nil {
-			if !k8serrors.IsNotFound(err) {
-				a.log.Info(err.Error())
-			}
-		} else {
-			if err := a.client.Delete(ctx, dc); err != nil {
-				a.log.Info(err.Error())
-			} else {
-				a.log.Info("force deleted DeploymentConfig", "name", dcName, "app", syndesis.Name)
-			}
-		}
-	}
-
-	time.Sleep(5 * time.Second)
 }
 
 //
