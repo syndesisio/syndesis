@@ -18,6 +18,13 @@ export interface IDvNameValidationResult {
   message?: string;
 }
 
+export interface ISaveViewDefinitionResult {
+  versionConflict: boolean;
+  hasError: boolean;
+  message?: string;
+  viewDefinition?: ViewDefinition;
+}
+
 export const useVirtualizationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
 
@@ -517,17 +524,29 @@ export const useVirtualizationHelpers = () => {
    */
   const saveViewDefinition = async (
     viewDefinition: ViewDefinition
-  ): Promise<ViewDefinition> => {
+  ): Promise<ISaveViewDefinitionResult> => {
     const response = await callFetch({
       body: viewDefinition,
       headers: {},
       method: 'PUT',
       url: `${apiContext.dvApiUri}editors`,
     });
+
+    // Response problem - determine if version conflict
     if (!response.ok) {
-      throw new Error(response.statusText);
+      return {
+        hasError: true,
+        message: response.statusText,
+        versionConflict: response.status === 409,
+      };
+    } else {
+      const viewDefn = (await response.json()) as ViewDefinition;
+      return {
+        hasError: false,
+        versionConflict: false,
+        viewDefinition: viewDefn,
+      }
     }
-    return (await response.json()) as ViewDefinition;
   };
 
   /**

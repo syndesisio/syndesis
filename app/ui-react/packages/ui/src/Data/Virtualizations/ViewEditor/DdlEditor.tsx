@@ -210,6 +210,7 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
             <Alert
               key={idx}
               variant={e.type}
+              isInline={true}
               title={props.i18nValidationResultsTitle}
               action={
                 <AlertActionCloseButton
