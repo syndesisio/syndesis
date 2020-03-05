@@ -61,6 +61,16 @@
     "pageTitle": "Integration Summary",
     "replaceDraft": "Replace Draft"
   },
+  "detailActivity": {
+    "error": "Error",
+    "headerDuration": "Duration",
+    "headerOutput": "Output",
+    "headerStatus": "Status",
+    "headerStep": "Step",
+    "headerTime": "Time",
+    "noOutput": "No output",
+    "success": "Success"
+  },
   "metrics": {
     "lastProcessed": "Last Processed",
     "NoDataAvailable": "No Data Available",
