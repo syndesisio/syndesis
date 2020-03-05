@@ -14,12 +14,12 @@
     }
   },
   "umd/history.js": {
-    "bundled": 33491,
+    "bundled": 33486,
     "minified": 12084,
     "gzipped": 3983
   },
   "umd/history.min.js": {
-    "bundled": 30854,
+    "bundled": 30925,
     "minified": 10134,
     "gzipped": 3566
   },
