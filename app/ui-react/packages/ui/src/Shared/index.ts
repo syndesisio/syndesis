@@ -9,7 +9,6 @@ export * from './HelpDropdown';
 export * from './HttpMethodColors';
 export * from './InlineTextEdit';
 export * from './ListViewToolbar';
-export * from './LogViewer';
 export * from './models';
 export * from './Notifications';
 export * from './OpenApiReviewActions';
