@@ -15,6 +15,10 @@
   align-items: center;
 }
 
+.integration-detail-activity-item .integration-detail-activity-item__status-item svg {
+  margin-right: 15px;
+}
+
 .integration-detail-activity-item .integration-detail-activity-item__output {
   white-space: nowrap;
 }
