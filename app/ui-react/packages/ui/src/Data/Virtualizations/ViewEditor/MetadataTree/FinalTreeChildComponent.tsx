@@ -1,6 +1,5 @@
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import './DdlEditor.css';
 
 export interface ISourceColumn {
   name: string;

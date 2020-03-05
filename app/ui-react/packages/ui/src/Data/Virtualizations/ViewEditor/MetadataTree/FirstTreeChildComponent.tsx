@@ -1,7 +1,6 @@
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
 import { FinalTreeChildComponent } from '..';
-import './DdlEditor.css';
 
 export interface IFirstTreeChildComponentProps {
   metadataTreeTables: Map<string, any>;

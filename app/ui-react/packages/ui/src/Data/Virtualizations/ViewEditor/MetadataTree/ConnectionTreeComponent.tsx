@@ -1,7 +1,7 @@
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
 import { FirstTreeChildComponent } from '..';
-import './DdlEditor.css';
+
 
 export interface IConnectionTreeComponentProps {
   metadataTree: Map<string, any>;
