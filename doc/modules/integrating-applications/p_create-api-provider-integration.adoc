@@ -51,11 +51,11 @@ Optionally, if your document uses the OpenAPI 2 specification, you can click *Co
 * If you are creating a document, then in the API Designer editor
 that {prodname} opens:
 +
-ifndef::developing-and-deploying-apis-with-red-hat-integration[]
+ifndef::developing-and-deploying-api-provider-integrations[]
 .. Define the OpenAPI document as described in
 link:{LinkDesigningAPIs}#create-api-definition[Design and develop an API definition with API Designer].
 endif::[]
-ifdef::developing-and-deploying-apis-with-red-hat-integration[]
+ifdef::developing-and-deploying-api-provider-integrations[]
 .. Define the OpenAPI document as described in
 link:{LinkIntegrationDevDeploy}#p_creating_api_create-api-definition[Creating a REST API definition in API Designer].
 endif::[]
