@@ -144,7 +144,7 @@ Repeat this procedure to edit another operation's flow.
 
 .Testing API provider integrations
 
-ifndef::developing-and-deploying-api-provider-integrations[]
+ifndef::rhmi[]
 
 * Testing API provider integrations running on one of these platforms:
 ** OpenShift Online
@@ -167,9 +167,9 @@ You can disable discovery for an API provider integration if, for example, you d
 link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
 +
 You can enable or disable discovery for each API provider integration.
-endif::[]
+endif::rhmi[]
 
-ifdef::developing-and-deploying-api-provider-integrations[]
+ifdef::rhmi[]
 
 For Red Hat Managed Integration, API discovery is enabled by default and Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
 
@@ -180,4 +180,4 @@ To disable discovery for an API provider integration, in Fuse Online go to the i
 You can use the `curl` utility to confirm that the integration is working as expected. In the `curl` command, specify the external URL that Fuse Online displays after it publishes the API provider integration.  For examples of how to test an integration, see link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
 
 After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
-endif::[]
+endif::rhmi[]
