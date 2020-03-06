@@ -145,15 +145,15 @@ export class ActivityPageTable extends React.Component<
                                 step: IExtendedActivityStep
                               ) => {
                                 return {
-                                  name: step.name || '',
-                                  date: new Date(step.at!).toLocaleString(),
                                   duration: toDurationString(
                                     step.duration!, 'ns'
                                   ),
+                                  name: step.name || '',
+                                  output: step.output,
                                   status: step.isFailed
                                     ? t('shared:Error')
                                     : t('shared:Success'),
-                                  output: step.output
+                                  time: new Date(step.at!).toLocaleString()
                                 };
                               }
                             )}
