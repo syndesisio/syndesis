@@ -144,6 +144,8 @@ Repeat this procedure to edit another operation's flow.
 
 .Testing API provider integrations
 
+ifndef::rhmi[]
+
 * Testing API provider integrations running on one of these platforms:
 ** OpenShift Online
 ** OpenShift Dedicated
@@ -161,7 +163,21 @@ when *API discovery is enabled*
 +
 Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
 +
-You can disable discovery if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in {prodname}. If you disable discovery, {prodname} republishes the integration and provides an external URL for invoking and testing integration execution. To do this, in {prodname} go to the integration’s summary page. On this page, click *Disable discovery*. {prodname} republishes the integration and provides the integration’s URL. For examples of how to test an integration, see
+You can disable discovery for an API provider integration if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in {prodname}. If you disable discovery, {prodname} republishes the integration and provides an external URL for invoking and testing integration execution. To do this, in {prodname} go to the integration’s summary page. On this page, click *Disable discovery*. {prodname} republishes the integration and provides the integration’s URL. For examples of how to test an integration, see
 link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration]. After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
 +
 You can enable or disable discovery for each API provider integration.
+endif::rhmi[]
+
+ifdef::rhmi[]
+
+For Red Hat Managed Integration, API discovery is enabled by default and Red Hat 3scale publishes your API provider integration. To test the integration, open the 3scale dashboard to obtain the integration’s URL.
+
+You can disable discovery for an API provider integration if, for example, you do not want Red Hat 3scale to control access to the integration’s API or you want to test the API provider integration in Fuse Online. If you disable discovery, Fuse Online republishes the integration and provides an external URL for invoking and testing integration execution.
+
+To disable discovery for an API provider integration, in Fuse Online go to the integration’s summary page. On this page, click *Disable discovery*. Fuse Online republishes the integration and provides the integration’s URL.
+
+You can use the `curl` utility to confirm that the integration is working as expected. In the `curl` command, specify the external URL that Fuse Online displays after it publishes the API provider integration.  For examples of how to test an integration, see link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[Testing the example API provider quickstart integration].
+
+After testing, you can re-enable discovery for the API provider integration so that 3scale publishes it.
+endif::rhmi[]
