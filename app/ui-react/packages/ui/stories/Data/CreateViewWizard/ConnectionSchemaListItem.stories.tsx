@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -16,6 +17,8 @@ stories.add('ACTIVE, not loading', () => (
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -24,6 +27,7 @@ stories.add('ACTIVE, not loading', () => (
     i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />
 ));
 
@@ -34,6 +38,8 @@ stories.add('ACTIVE, loading', () => (
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -42,6 +48,7 @@ stories.add('ACTIVE, loading', () => (
     i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={true}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />
 ));
 
@@ -52,6 +59,8 @@ stories.add('INACTIVE, loading', () => (
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.INACTIVE}
     dvStatusMessage={'The connection is inactive'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -60,6 +69,7 @@ stories.add('INACTIVE, loading', () => (
     i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={true}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />
 ));
 
@@ -70,6 +80,8 @@ stories.add('FAILED, not loading', () => (
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.FAILED}
     dvStatusMessage={'The server exception is displayed here'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -78,5 +90,6 @@ stories.add('FAILED, not loading', () => (
     i18nStatusErrorPopoverLink={'Connection error'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />
 ));

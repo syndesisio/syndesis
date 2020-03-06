@@ -70,6 +70,8 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -78,6 +80,7 @@ const connectionItems = [
     i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem2"
@@ -87,6 +90,8 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -95,6 +100,7 @@ const connectionItems = [
     i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
   <ConnectionSchemaListItem
     key="connectionListItem3"
@@ -104,6 +110,8 @@ const connectionItems = [
     haveSelectedSource={false}
     dvStatus={ConnectionStatus.ACTIVE}
     dvStatusMessage={'The connection is active'}
+    i18nLastUpdatedMessage={text('i18nLastUpdatedMessage', 'Last updated: xx.yy.zz')}
+    i18nRefresh={text('i18nRefresh', 'Refresh')}
     i18nRefreshInProgress={text(
       'i18nRefreshInProgress',
       'Refresh in progress...'
@@ -112,6 +120,7 @@ const connectionItems = [
     i18nStatusErrorPopoverLink={'Show connection problem'}
     icon={<div />}
     loading={false}
+    refreshConnectionSchema={action('refreshConnectionSchema')}
   />,
 ];
 
