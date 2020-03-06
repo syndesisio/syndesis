@@ -298,6 +298,8 @@ public class IntegrationTest {
         assertEquals(0, ((List)status.get("errors")).size());
         assertEquals("ACTIVE", status.get("schemaState"));
         assertEquals(Boolean.FALSE, status.get("loading"));
+        Long last = (Long)status.get("lastLoad");
+        assertNotNull(last);
 
         //add another source table
         c.createStatement().execute("create table DV.t2 (col integer)");
@@ -356,6 +358,9 @@ public class IntegrationTest {
         assertEquals(1, ((List)status.get("errors")).size());
         assertEquals("FAILED", status.get("schemaState"));
         assertEquals(Boolean.FALSE, status.get("loading"));
+        Long errorLast = (Long)status.get("lastLoad");
+        assertNotNull(errorLast);
+        assertTrue(errorLast.longValue() > last);
 
         ResponseEntity<List> virts = restTemplate.getForEntity("/v1/virtualizations", List.class);
         assertEquals(HttpStatus.OK, virts.getStatusCode());

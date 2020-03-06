@@ -15,6 +15,7 @@
  */
 package io.syndesis.dv.metadata;
 
+import java.util.Date;
 import java.util.Map;
 
 import io.syndesis.dv.datasources.DefaultSyndesisDataSource;
@@ -34,4 +35,8 @@ public interface TeiidDataSource {
     Map<String, String> getTranslatorProperties();
 
     DefaultSyndesisDataSource getSyndesisDataSource();
+
+    void loadingMetadata();
+
+    Date getLastMetadataLoadTime();
 }
