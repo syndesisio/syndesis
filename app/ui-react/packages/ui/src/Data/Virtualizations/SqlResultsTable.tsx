@@ -59,19 +59,22 @@ const getClassName = (value: string) => {
 
 // row cells are sized based upon the data value lengths
 const getSizedRows = (rows: string[][]) => {
-  const sizedRows: IRow[][] = [];
+  const sizedRows: (IRow | string[])[] = [];
   for (const row of rows) {
-    const rowValues: IRow[] = [];
-    for (const rowValue of row) {
-      const theValue = {
-        props: {
-          className: getClassName(rowValue),
-        },
-        title: rowValue,
-      } as IRow;
-      rowValues.push(theValue);
-    }
-    sizedRows.push(rowValues);
+    const rowData: IRow[] = Object.entries(row).map((node, index) => {
+      const [key, value] = node;
+      return node.map(() => {
+        return {
+          title: value,
+          props: {
+            className: getClassName(value),
+          },
+        }
+      })[0];
+    })
+    sizedRows.push({
+      cells: rowData
+    });
   }
   return sizedRows.length > 0 ? sizedRows : [];
 };
