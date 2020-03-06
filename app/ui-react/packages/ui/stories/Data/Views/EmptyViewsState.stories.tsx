@@ -1,4 +1,3 @@
-import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
@@ -25,8 +24,8 @@ stories.add('Sample', () => (
       i18nCreateViewTip={text('createViewTip', createTip)}
       i18nImportViews={text('importViews', importText)}
       i18nImportViewsTip={text('importViewsTip', importTip)}
-      linkCreateViewHRef={action('/data/create')}
-      linkImportViewsHRef={action('/data/import')}
+      linkCreateViewHRef={'/data/create'}
+      linkImportViewsHRef={'/data/import'}
     />
   </Router>
 ));
