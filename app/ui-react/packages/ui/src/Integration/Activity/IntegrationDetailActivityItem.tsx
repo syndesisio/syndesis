@@ -18,9 +18,9 @@ import {
   global_success_color_100,
 } from '@patternfly/react-tokens';
 import * as React from 'react';
+import { useState } from 'react';
 
 import './IntegrationDetailActivityItem.css';
-import { useState } from 'react';
 
 export interface IIntegrationDetailActivityItemProps {
   date: string;
@@ -30,7 +30,6 @@ export interface IIntegrationDetailActivityItemProps {
   i18nHeaderStep: string;
   i18nHeaderTime: string;
   i18nHeaderDuration: string;
-  i18nHeaderDurationUnit?: string;
   i18nHeaderStatus: string;
   i18nHeaderOutput: string;
   i18nNoErrors: string;
@@ -45,7 +44,26 @@ export interface IIntegrationDetailActivityItemProps {
 
 export const IntegrationDetailActivityItem: React.FC<
   IIntegrationDetailActivityItemProps
-> = ( props ) => {
+> = (
+  {
+    date,
+    errorCount,
+    i18nError,
+    i18nErrorsFound,
+    i18nHeaderStep,
+    i18nHeaderTime,
+    i18nHeaderDuration,
+    i18nHeaderStatus ,
+    i18nHeaderOutput,
+    i18nNoErrors,
+    i18nNoOutput,
+    i18nNoSteps,
+    i18nSuccess,
+    i18nVersion,
+    steps,
+    time,
+    version
+  } ) => {
   const [rowExpanded, setRowExpanded] = useState(false);
 
   const doExpand = () => {
@@ -53,21 +71,21 @@ export const IntegrationDetailActivityItem: React.FC<
   };
 
   const rows = () => {
-    const newRows = props.steps.map((step: any) => {
+    const newRows = steps.map((step: any) => {
       return [{
         cells: [
           step.name,
-          step.date,
+          step.time,
           step.duration,
           {
             title: (
               step.status === 'Success' ? (
                 <>
-                  <OkIcon size={'sm'} color={global_success_color_100.value} />{'  '}{props.i18nSuccess}
+                  <OkIcon size={'sm'} color={global_success_color_100.value} />{'  '}{i18nSuccess}
                 </>
               ) : (
                 <>
-                  <ErrorCircleOIcon size={'sm'} color={global_danger_color_100.value} />{'  '}{props.i18nError}
+                  <ErrorCircleOIcon size={'sm'} color={global_danger_color_100.value} />{'  '}{i18nError}
                 </>
               )
             )
@@ -75,7 +93,7 @@ export const IntegrationDetailActivityItem: React.FC<
           {
             title: (
               <pre className={'integration-detail-activity-item__output-step-data'}>
-                {step.output || props.i18nNoOutput}
+                {step.output || i18nNoOutput}
               </pre>
             )
           }
@@ -87,11 +105,11 @@ export const IntegrationDetailActivityItem: React.FC<
   };
 
   const columns = [
-    props.i18nHeaderStep,
-    props.i18nHeaderTime,
-    props.i18nHeaderDuration,
-    props.i18nHeaderStatus,
-    props.i18nHeaderOutput
+    i18nHeaderStep,
+    i18nHeaderTime,
+    i18nHeaderDuration,
+    i18nHeaderStatus,
+    i18nHeaderOutput
   ];
 
   return (
@@ -105,29 +123,29 @@ export const IntegrationDetailActivityItem: React.FC<
         <DataListItemCells
           dataListCells={[
             <DataListCell id="activity-date" key="date">
-              {props.date}
+              {date}
             </DataListCell>,
             <DataListCell id="activity-time" key="time">
-              {props.time}
+              {time}
             </DataListCell>,
             <DataListCell id="activity-version" key="version">
-              {props.i18nVersion}
+              {i18nVersion}
               &nbsp;
-              {props.version}
+              {version}
             </DataListCell>,
             <DataListCell id="activity-errors" key="errors">
               <div className={'integration-detail-activity-item__status-item'}>
-                {props.errorCount > 0 ? (
+                {errorCount > 0 ? (
                   <>
                     <ErrorCircleOIcon size={'sm'} color={global_danger_color_100.value} />
                     {'  '}
-                    {props.i18nErrorsFound}
+                    {i18nErrorsFound}
                   </>
                 ) : (
                   <>
                     <OkIcon size={'sm'} color={global_success_color_100.value} />
                     {'  '}
-                    {props.i18nNoErrors}
+                    {i18nNoErrors}
                   </>
                 )}
               </div>
@@ -140,7 +158,7 @@ export const IntegrationDetailActivityItem: React.FC<
         id="activity-item"
         isHidden={!rowExpanded}
       >
-        {props.steps ? (
+        {steps ? (
           <Table
             aria-label={'integration detail activity item table'}
             cells={columns}
@@ -151,7 +169,7 @@ export const IntegrationDetailActivityItem: React.FC<
             <TableBody />
           </Table>
         ) : (
-          <span>{props.i18nNoSteps}</span>
+          <span>{i18nNoSteps}</span>
         )}
       </DataListContent>
     </DataListItem>
