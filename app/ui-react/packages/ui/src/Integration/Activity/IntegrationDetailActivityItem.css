@@ -35,6 +35,7 @@
 
 .integration-detail-activity-item__output-step-data {
   max-height: 15em;
+  max-width: 65em;
   padding: 5px;
   border: 0;
   white-space: pre-wrap;
