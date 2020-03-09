@@ -1,4 +1,4 @@
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IOAuthAppListProps {
@@ -7,4 +7,4 @@ export interface IOAuthAppListProps {
 
 export const OAuthAppList: React.FunctionComponent<IOAuthAppListProps> = ({
   children,
-}) => <ListView>{children}</ListView>;
+}) => <DataList aria-label={'oauth app list'}>{children}</DataList>;
