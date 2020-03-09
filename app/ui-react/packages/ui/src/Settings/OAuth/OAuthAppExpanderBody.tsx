@@ -1,5 +1,4 @@
-import { Form } from '@patternfly/react-core';
-import { Alert, Button, Col, Row } from 'patternfly-react';
+import { Alert, Button, Form, Grid, GridItem } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IOAuthAppExpanderBodyProps {
@@ -33,26 +32,26 @@ export const OAuthAppExpanderBody: React.FC<
   return (
     <>
       {showSuccess && (
-        <Row>
-          <Col xs={11}>
-            <Alert type={'success'}>
-              <strong>{i18nAlertTitle}</strong>&nbsp;
+        <Grid sm={11}>
+          <GridItem>
+            <Alert variant={'success'}
+                   title={i18nAlertTitle}>
               {i18nAlertDetail}
             </Alert>
-          </Col>
-        </Row>
+          </GridItem>
+        </Grid>
       )}
-      <Row>
-        <Col xs={12} md={8}>
+      <Grid sm={12} md={8}>
+        <GridItem>
           <Form isHorizontal={true}>{children}</Form>
-        </Col>
-      </Row>
-      <Row>
-        <Col xs={12} md={8}>
-          <>
+        </GridItem>
+      </Grid>
+      <Grid sm={12} md={8}>
+        <GridItem>
+          <div>
             <Button
               data-testid={'o-auth-app-expander-body-save-button'}
-              bsStyle="primary"
+              variant={'primary'}
               onClick={onSave}
               disabled={disableSave}
             >
@@ -65,9 +64,9 @@ export const OAuthAppExpanderBody: React.FC<
             >
               {i18nRemoveButtonText}
             </Button>
-          </>
-        </Col>
-      </Row>
+          </div>
+        </GridItem>
+      </Grid>
     </>
   );
 };
