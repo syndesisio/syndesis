@@ -24,11 +24,13 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
   {
     children,
     configured,
+    expanded,
     i18nNotConfiguredText,
     icon,
+    id,
     name
   }) => {
-  const [rowExpanded, setRowExpanded] = useState(false);
+  const [rowExpanded, setRowExpanded] = useState(expanded);
 
   const doExpand = () => {
     setRowExpanded(!rowExpanded);
@@ -44,7 +46,7 @@ export const OAuthAppListItem: React.FC<IOAuthAppListItemProps> = (
         <DataListToggle
           onClick={doExpand}
           isExpanded={rowExpanded}
-          id={'app-item-toggle'}
+          id={'app-item-toggle-' + id}
         />
         <DataListItemCells
           dataListCells={[
