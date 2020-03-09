@@ -8,7 +8,6 @@ import {
 import {
   IntegrationDetailActivity,
   IntegrationDetailActivityItem,
-  IntegrationDetailActivityItemSteps,
 } from '@syndesis/ui';
 import { toDurationString } from '@syndesis/utils';
 import * as React from 'react';
@@ -129,31 +128,34 @@ export class ActivityPageTable extends React.Component<
                             key={activityIndex}
                             date={date}
                             errorCount={activity.failed ? 1 : 0}
+                            i18nError={t('integrations:detailActivity:error')}
                             i18nErrorsFound={t('integrations:ErrorsFound')}
+                            i18nHeaderDuration={t('integrations:detailActivity:headerDuration')}
+                            i18nHeaderOutput={t('integrations:detailActivity:headerOutput')}
+                            i18nHeaderStatus={t('integrations:detailActivity:headerStatus')}
+                            i18nHeaderStep={t('integrations:detailActivity:headerStep')}
+                            i18nHeaderTime={t('integrations:detailActivity:headerTime')}
+                            i18nNoOutput={t('integrations:detailActivity:noOutput')}
                             i18nNoErrors={t('integrations:NoErrors')}
                             i18nNoSteps={t('integrations:NoSteps')}
+                            i18nSuccess={t('integrations:detailActivity:success')}
                             i18nVersion={t('shared:Version')}
                             steps={(activity.steps || []).map(
                               (
-                                step: IExtendedActivityStep,
-                                stepIndex: number
-                              ) => (
-                                <IntegrationDetailActivityItemSteps
-                                  key={stepIndex}
-                                  duration={toDurationString(
-                                    step.duration!,
-                                    'ns'
-                                  )}
-                                  name={step.name || ''}
-                                  output={step.output}
-                                  time={new Date(step.at!).toLocaleString()}
-                                  status={
-                                    step.isFailed
-                                      ? t('shared:Error')
-                                      : t('shared:Success')
-                                  }
-                                />
-                              )
+                                step: IExtendedActivityStep
+                              ) => {
+                                return {
+                                  duration: toDurationString(
+                                    step.duration!, 'ns'
+                                  ),
+                                  name: step.name || '',
+                                  output: step.output,
+                                  status: step.isFailed
+                                    ? t('shared:Error')
+                                    : t('shared:Success'),
+                                  time: new Date(step.at!).toLocaleString()
+                                };
+                              }
                             )}
                             time={time}
                             version={activity.ver!}

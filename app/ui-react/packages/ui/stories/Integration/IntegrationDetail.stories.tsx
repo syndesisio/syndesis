@@ -6,7 +6,6 @@ import {
   Container,
   IntegrationDetailActivity,
   IntegrationDetailActivityItem,
-  IntegrationDetailActivityItemSteps,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
@@ -21,35 +20,30 @@ import {
 const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
 
 const activityItemsSteps1 = [
-  <IntegrationDetailActivityItemSteps
-    key={0}
-    duration={'4'}
-    name={'Data Mapper'}
-    output={'No output'}
-    status={'Success'}
-    time={'Mar 14, 2019, 14:24:29'}
-  />,
-  <IntegrationDetailActivityItemSteps
-    key={1}
-    duration={'4'}
-    name={'Invoke stored procedure'}
-    output={'No output'}
-    status={'Success'}
-    time={'Mar 14, 2019, 14:24:29'}
-  />,
+  {
+    name: 'Data Mapper',
+    time: 'Mar 14, 2019, 14:24:29',
+    duration: '4',
+    output: 'No output',
+    status: 'Success'
+  },
+  {
+    name: 'Invoke stored procedure',
+    timee: 'Mar 14, 2019, 14:24:29',
+    duration: '4',
+    output: 'No output',
+    status: 'Success'
+  }
 ];
 
 const activityItemsSteps2 = [
-  <IntegrationDetailActivityItemSteps
-    key={0}
-    duration={'67'}
-    name={'Invoke stored procedure'}
-    output={
-      'io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty'
-    }
-    status={'Error'}
-    time={'Mar 14, 2019, 14:23:35'}
-  />,
+  {
+    name: 'Invoke stored procedure',
+    time: 'Mar 14, 2019, 14:23:35',
+    duration: '67',
+    output: 'io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty',
+    status: 'Error'
+  }
 ];
 
 const activityItems = [
@@ -57,15 +51,17 @@ const activityItems = [
     steps={activityItemsSteps1}
     date={'4/16/2019'}
     errorCount={0}
+    i18nError={'Error'}
     i18nErrorsFound={'Errors found'}
     i18nHeaderDuration={'Duration'}
-    i18nHeaderDurationUnit={'ms'}
     i18nHeaderOutput={'Output'}
     i18nHeaderStatus={'Status'}
     i18nHeaderStep={'Step'}
     i18nHeaderTime={'Time'}
     i18nNoErrors={'No errors'}
+    i18nNoOutput={'No output'}
     i18nNoSteps={'No steps information was found for this integration'}
+    i18nSuccess={'Success'}
     i18nVersion={'Version'}
     key={0}
     time={'07:40:28'}
@@ -75,15 +71,17 @@ const activityItems = [
     steps={activityItemsSteps2}
     date={'4/14/2019'}
     errorCount={5}
+    i18nError={'Error'}
     i18nErrorsFound={'Errors found'}
     i18nHeaderDuration={'Duration'}
-    i18nHeaderDurationUnit={'ms'}
     i18nHeaderOutput={'Output'}
     i18nHeaderStatus={'Status'}
     i18nHeaderStep={'Step'}
     i18nHeaderTime={'Time'}
     i18nNoErrors={'No errors'}
+    i18nNoOutput={'No output'}
     i18nNoSteps={'No steps information was found for this integration'}
+    i18nSuccess={'Success'}
     i18nVersion={'Version'}
     key={1}
     time={'07:40:28'}
@@ -154,6 +152,7 @@ storiesOf('Integration/Detail', module)
               key={idx}
               actions={action('onActionClicked')}
               currentState={'Published'}
+              i18nRunning={'Running'}
               i18nTextLastPublished={'Last published on '}
               i18nTextVersion={'Version'}
               updatedAt={'' + deployment.updatedAt}
