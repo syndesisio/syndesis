@@ -2123,6 +2123,18 @@
 
       <dependency>
         <groupId>org.apache.camel</groupId>
+        <artifactId>camel-xml-jaxb</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel</groupId>
         <artifactId>camel-http</artifactId>
         <version>${camel.version}</version>
         <exclusions>
