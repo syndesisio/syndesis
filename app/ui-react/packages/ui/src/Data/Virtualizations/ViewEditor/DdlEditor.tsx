@@ -63,6 +63,16 @@ export interface IDdlEditorProps {
   i18nTitle: string;
 
   /**
+   * The localized text for the MetaData tree title
+   */
+  i18nMetadataTitle: string;
+
+  /**
+   * The localized text for the Loading
+   */
+  i18nLoading: string;
+
+  /**
    * The localized text for the validate results message title
    */
   i18nValidationResultsTitle: string;
@@ -220,9 +230,9 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
       <GridItem span={4}>
         <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
           <Title headingLevel="h5" size="lg">
-            Metadata Tree
+            {props.i18nMetadataTitle}
           </Title>
-          <ConnectionTreeComponent metadataTree={metadataTree} />
+          <ConnectionTreeComponent metadataTree={metadataTree} i18nLoading={props.i18nLoading}/>
         </PageSection>
       </GridItem>
       <GridItem span={8}>

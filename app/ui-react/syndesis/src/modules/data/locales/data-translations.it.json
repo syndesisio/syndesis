@@ -70,6 +70,7 @@
   "importVirtualizationTip": "Importa una virtualizzazione dei dati",
   "importVirtualizationZipInvalid": "Il file compresso non è valido (dv.json non trovato).",
   "Invalid": "Invalido",
+  "metadataTree": "Albero dei metadati",
   "Metrics": "Metrica",
   "metricsCacheHitRatioA11yInfo": "Chiudi le informazioni sul rapporto risultati cache",
   "metricsCacheHitRatioA11yInfoClose": "Informazioni sul rapporto risultati cache",

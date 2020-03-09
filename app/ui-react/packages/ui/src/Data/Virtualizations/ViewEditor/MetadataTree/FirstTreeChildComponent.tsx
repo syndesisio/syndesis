@@ -1,6 +1,6 @@
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import { FinalTreeChildComponent } from '..';
+import { FinalTreeChildComponent, KababActionComponent } from '..';
 
 export interface IFirstTreeChildComponentProps {
   metadataTreeTables: Map<string, any>;
@@ -11,7 +11,16 @@ const getTableRows = (metadataTree: Map<string, any>) => {
   let index = 0;
   metadataTree.forEach((value, key) => {
     const theValue = {
-      cells: [key],
+      cells: [
+        {
+          title: (
+            <div>
+              <span>{key}</span>
+              <KababActionComponent textData={key} />
+            </div>
+          ),
+        },
+      ],
       isOpen: false,
     } as IRow;
     tableRows.push(theValue);
@@ -21,7 +30,6 @@ const getTableRows = (metadataTree: Map<string, any>) => {
           title: <FinalTreeChildComponent metadataTreeColumns={value} />,
         },
       ],
-      fullWidth: true,
       parent: index,
     };
     tableRows.push(childOne);
@@ -44,20 +52,6 @@ export const FirstTreeChildComponent: React.FunctionComponent<IFirstTreeChildCom
     }
   }, [props.metadataTreeTables]);
 
-  const onSelect = (event: any, isSelected: any, rowId: any) => {
-    let rows;
-    if (rowId === -1) {
-      rows = rowsList.map(oneRow => {
-        oneRow.selected = isSelected;
-        return oneRow;
-      });
-    } else {
-      rows = [...rowsList];
-      rows[rowId].selected = isSelected;
-    }
-    setRowsList(rows);
-  };
-
   const onCollapse = (event: any, rowKey: any, isOpen: any) => {
     let rows;
     rows = [...rowsList];
@@ -68,7 +62,6 @@ export const FirstTreeChildComponent: React.FunctionComponent<IFirstTreeChildCom
   return (
     <Table
       aria-label="List of Tables in selected connection."
-      onSelect={onSelect}
       variant={TableVariant.compact}
       onCollapse={onCollapse}
       cells={columns}

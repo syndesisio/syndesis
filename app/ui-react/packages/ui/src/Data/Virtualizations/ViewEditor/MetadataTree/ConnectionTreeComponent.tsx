@@ -1,10 +1,11 @@
+import { Spinner } from '@patternfly/react-core';
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import { FirstTreeChildComponent } from '..';
-
+import { FirstTreeChildComponent, KababActionComponent } from '..';
 
 export interface IConnectionTreeComponentProps {
   metadataTree: Map<string, any>;
+  i18nLoading: string;
 }
 
 const getTableTree = (sourceInfo: any): Map<string, any> => {
@@ -21,7 +22,16 @@ const getTableRows = (metadataTree: Map<string, any>) => {
   let index = 0;
   metadataTree.forEach((value, key) => {
     const theValue = {
-      cells: [key],
+      cells: [
+        {
+          title: (
+            <div>
+              <span>{key}</span>
+              <KababActionComponent textData={key} />
+            </div>
+          ),
+        },
+      ],
       isOpen: false,
     } as IRow;
     tableRows.push(theValue);
@@ -33,7 +43,6 @@ const getTableRows = (metadataTree: Map<string, any>) => {
           ),
         },
       ],
-      fullWidth: true,
       parent: index,
     };
     tableRows.push(childOne);
@@ -56,20 +65,6 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
     }
   }, [props.metadataTree]);
 
-  const onSelect = (event: any, isSelected: any, rowId: any) => {
-    let rows;
-    if (rowId === -1) {
-      rows = rowsList.map(oneRow => {
-        oneRow.selected = isSelected;
-        return oneRow;
-      });
-    } else {
-      rows = [...rowsList];
-      rows[rowId].selected = isSelected;
-    }
-    setRowsList(rows);
-  };
-
   const onCollapse = (event: any, rowKey: any, isOpen: any) => {
     let rows;
     rows = [...rowsList];
@@ -78,9 +73,24 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
   };
 
   return (
-    <Table
+    // <Table
+    //   aria-label="List of Tables in selected connection."
+    //   variant={TableVariant.compact}
+    //   onCollapse={onCollapse}
+    //   cells={columns}
+    //   rows={rowsList}
+    // >
+    //   <TableBody />
+    // </Table>
+    <>
+    {rowsList.length === 0 ? (
+      <>
+      <Spinner size={'lg'} />
+      {props.i18nLoading}
+    </>
+    ): (
+      <Table
       aria-label="List of Tables in selected connection."
-      onSelect={onSelect}
       variant={TableVariant.compact}
       onCollapse={onCollapse}
       cells={columns}
@@ -88,5 +98,7 @@ export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeCom
     >
       <TableBody />
     </Table>
+    )}
+    </>
   );
 };

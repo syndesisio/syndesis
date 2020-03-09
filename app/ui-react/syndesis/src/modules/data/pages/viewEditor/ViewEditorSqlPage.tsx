@@ -328,6 +328,8 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 i18nDoneLabel={t('shared:Done')}
                 i18nSaveLabel={t('shared:Save')}
                 i18nTitle={t('viewEditor.title')}
+                i18nMetadataTitle={t('metadataTree')}
+                i18nLoading={t(('shared:Loading'))}
                 i18nValidationResultsTitle={t('validationResultsTitle')}
                 showValidationMessage={validationMessageVisible}
                 isSaving={isSaving}
