@@ -25,9 +25,10 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	v1 "k8s.io/api/rbac/v1"
 	"k8s.io/apimachinery/pkg/runtime"
+	dynfake "k8s.io/client-go/dynamic/fake"
 	"k8s.io/client-go/kubernetes/scheme"
 	"sigs.k8s.io/controller-runtime/pkg/client"
-	"sigs.k8s.io/controller-runtime/pkg/client/fake"
+	clfake "sigs.k8s.io/controller-runtime/pkg/client/fake"
 )
 
 const (
@@ -52,8 +53,12 @@ func TestInstallOperator(t *testing.T) {
 
 	// Create a fake client to mock API calls and pass it to the cmd
 	objs := []runtime.Object{}
-	cl := fake.NewFakeClient(objs...)
+	cl := clfake.NewFakeClient(objs...)
 	i.Client = &cl
+
+	scheme := runtime.NewScheme()
+	dyncl := dynfake.NewSimpleDynamicClient(scheme)
+	i.DynamicClient = dyncl
 
 	t.Logf("\tTest: When running `operator install --tag`, it should create the role %s", RoleName)
 	if err := i.installOperatorResources(); err != nil {
