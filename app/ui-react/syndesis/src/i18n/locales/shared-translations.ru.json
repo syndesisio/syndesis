@@ -44,6 +44,7 @@
       "Import": "Импорт",
       "Integrations": "Интеграции",
       "Library": "Библиотека",
+      "Loading": "загрузка...",
       "linkCreateConnection": "Создать Соединение",
       "linkCreateIntegration": "Создать Интеграцию",
       "Name": "Имя",
