@@ -1,8 +1,9 @@
 package install
 
 import (
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"time"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 )
 
 func (o *Install) installOperatorResources() error {
@@ -28,7 +29,7 @@ func (o *Install) installOperatorResources() error {
 			return err
 		}
 
-		client, err := o.NewDynamicClient()
+		client, err := o.GetDynamicClient()
 		if err != nil {
 			return err
 		}

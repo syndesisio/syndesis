@@ -15,9 +15,10 @@ type Options struct {
 	KubeConfig string
 	Namespace  string
 
-	Context context.Context
-	Command *cobra.Command
-	Client  *client.Client
+	Context       context.Context
+	Command       *cobra.Command
+	Client        *client.Client
+	DynamicClient dynamic.Interface
 }
 
 func (o *Options) GetClientConfig() *rest.Config {
@@ -37,8 +38,15 @@ func (o *Options) GetClient() (c client.Client, err error) {
 	return *o.Client, nil
 }
 
-func (o *Options) NewDynamicClient() (c dynamic.Interface, err error) {
-	return dynamic.NewForConfig(o.GetClientConfig())
+func (o *Options) GetDynamicClient() (c dynamic.Interface, err error) {
+	if o.DynamicClient == nil {
+		dyncl, err := dynamic.NewForConfig(o.GetClientConfig())
+		if err != nil {
+			return nil, err
+		}
+		o.DynamicClient = dyncl
+	}
+	return o.DynamicClient, nil
 }
 
 func (o *Options) NewApiClient() (*kubernetes.Clientset, error) {
