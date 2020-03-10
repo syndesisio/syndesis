@@ -83,7 +83,7 @@ public abstract class OpenApiParameterGenerator<T extends OasDocument> {
                                                                       final Object defaultValue, List<String> enums) {
         final String name = trimToNull(parameter.name);
         final String description = trimToNull(parameter.description);
-        final boolean required = parameter.required;
+        final boolean required = Boolean.TRUE.equals(parameter.required);
 
         final ConfigurationProperty.Builder propertyBuilder = new ConfigurationProperty.Builder()
             .kind("property")
