@@ -101,8 +101,8 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                 .map((a, idx) => (
                                   <IntegrationEditorActionsListItem
                                     key={idx}
-                                    integrationName={a.name}
-                                    integrationDescription={
+                                    name={a.name}
+                                    description={
                                       a.description ||
                                       'No description available.'
                                     }
