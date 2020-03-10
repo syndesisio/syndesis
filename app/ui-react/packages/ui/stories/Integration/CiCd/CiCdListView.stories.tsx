@@ -5,7 +5,7 @@ import * as React from 'react';
 import { CiCdList, CiCdListItem, CiCdListView } from '../../../src';
 import { CiCdListEmptyState } from '../../../src';
 
-const stories = storiesOf('/Integration/CiCd/CiCdListView', module);
+const stories = storiesOf('Integration/CiCd/CiCdListView', module);
 stories.addDecorator(withKnobs);
 
 stories
