@@ -25,6 +25,8 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"k8s.io/apimachinery/pkg/runtime"
+	dynfake "k8s.io/client-go/dynamic/fake"
 )
 
 const (
@@ -41,6 +43,10 @@ func TestInstallAppNoCustomResource(t *testing.T) {
 
 	ctx := context.TODO()
 	i := &Install{Options: &internal.Options{Namespace: appNS, Context: ctx}, tag: appTag, devSupport: false}
+
+	scheme := runtime.NewScheme()
+	dyncl := dynfake.NewSimpleDynamicClient(scheme)
+	i.DynamicClient = dyncl
 
 	//
 	// Want to compare app resource being installed rather than actually installing
@@ -72,6 +78,10 @@ func TestInstallAppCustomResource(t *testing.T) {
 
 	ctx := context.TODO()
 	i := &Install{Options: &internal.Options{Namespace: appNS, Context: ctx}, tag: appTag, devSupport: false}
+
+	scheme := runtime.NewScheme()
+	dyncl := dynfake.NewSimpleDynamicClient(scheme)
+	i.DynamicClient = dyncl
 
 	//
 	// Want to compare app resource being installed rather than actually installing
