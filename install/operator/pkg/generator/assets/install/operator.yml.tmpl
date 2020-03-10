@@ -95,7 +95,7 @@
             value: "{{.DevSupport}}"
         initContainers:
         - command:
-          - sh
+          - bash
           - -c
           - postgres -V
           image: '{{.DatabaseImage}}'
