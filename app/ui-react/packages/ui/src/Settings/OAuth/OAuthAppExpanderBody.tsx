@@ -1,4 +1,4 @@
-import { Alert, Button, Form, Grid, GridItem } from '@patternfly/react-core';
+import { Alert, Button, Form, Stack, StackItem } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IOAuthAppExpanderBodyProps {
@@ -30,43 +30,37 @@ export const OAuthAppExpanderBody: React.FC<
     showSuccess
   }) => {
   return (
-    <>
+    <Stack gutter={'md'}>
       {showSuccess && (
-        <Grid sm={11}>
-          <GridItem>
-            <Alert variant={'success'}
-                   title={i18nAlertTitle}>
-              {i18nAlertDetail}
-            </Alert>
-          </GridItem>
-        </Grid>
+        <StackItem>
+          <Alert variant={'success'}
+                 title={i18nAlertTitle}>
+            {i18nAlertDetail}
+          </Alert>
+        </StackItem>
       )}
-      <Grid sm={12} md={8}>
-        <GridItem>
-          <Form isHorizontal={true}>{children}</Form>
-        </GridItem>
-      </Grid>
-      <Grid sm={12} md={8}>
-        <GridItem>
-          <div>
-            <Button
-              data-testid={'o-auth-app-expander-body-save-button'}
-              variant={'primary'}
-              onClick={onSave}
-              disabled={disableSave}
-            >
-              {i18nSaveButtonText}
-            </Button>{' '}
-            <Button
-              data-testid={'o-auth-app-expander-body-remove-button'}
-              onClick={onRemove}
-              disabled={disableRemove}
-            >
-              {i18nRemoveButtonText}
-            </Button>
-          </div>
-        </GridItem>
-      </Grid>
-    </>
+      <StackItem>
+        <Form isHorizontal={true}>{children}</Form>
+      </StackItem>
+      <StackItem>
+        <div>
+          <Button
+            data-testid={'o-auth-app-expander-body-save-button'}
+            variant={'primary'}
+            onClick={onSave}
+            disabled={disableSave}
+          >
+            {i18nSaveButtonText}
+          </Button>{' '}
+          <Button
+            data-testid={'o-auth-app-expander-body-remove-button'}
+            onClick={onRemove}
+            disabled={disableRemove}
+          >
+            {i18nRemoveButtonText}
+          </Button>
+        </div>
+      </StackItem>
+    </Stack>
   );
 };
