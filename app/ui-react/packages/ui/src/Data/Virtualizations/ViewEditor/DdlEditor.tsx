@@ -6,11 +6,14 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Grid,
+  GridItem,
   Text,
   TextContent,
   Title,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { ConnectionTreeComponent } from '.';
 import { Loader, PageSection } from '../../../Layout';
 import { ITextEditor, TextEditor } from '../../../Shared';
 import './DdlEditor.css';
@@ -60,6 +63,21 @@ export interface IDdlEditorProps {
   i18nTitle: string;
 
   /**
+   * The localized text for the MetaData tree title
+   */
+  i18nMetadataTitle: string;
+
+  /**
+   * The localized text for the Loading
+   */
+  i18nLoading: string;
+
+  /**
+   * Preview Data Table state
+   */
+  previewExpanded: boolean;
+
+  /**
    * The localized text for the validate results message title
    */
   i18nValidationResultsTitle: string;
@@ -85,6 +103,11 @@ export interface IDdlEditorProps {
   sourceTableInfos: ITableInfo[];
 
   /**
+   * Unformatted Source info
+   */
+  sourceInfo: any;
+
+  /**
    * The callback for closing the validation message
    */
   onCloseValidationMessage: () => void;
@@ -106,6 +129,15 @@ export interface IDdlEditorProps {
    */
   setDirty: (dirty: boolean) => void;
 }
+
+const getMetadataTree = (sourceInfo: any): Map<string, any> => {
+  const treeInfo = new Map<string, any>();
+
+  for (const connection of sourceInfo) {
+    treeInfo.set(connection.name, connection.tables);
+  }
+  return treeInfo;
+};
 
 export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
@@ -200,64 +232,89 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     tabSize: 2,
   };
 
+  const metadataTree = getMetadataTree(props.sourceInfo);
+
   return (
-    <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
-      <Title headingLevel="h5" size="lg">
-        {props.i18nTitle}
-      </Title>
-      {props.showValidationMessage
-        ? props.validationResults.map((e, idx) => (
-            <Alert
-              key={idx}
-              variant={e.type}
-              isInline={true}
-              title={props.i18nValidationResultsTitle}
-              action={
-                <AlertActionCloseButton
-                  onClose={handleCloseValidationMessage}
-                />
-              }
-            >
-              {e.message}
-            </Alert>
-          ))
-        : null}
-      <TextContent>
-        <Text className={'ddl-editor-cursor-position-text'}>
-          {cursorPosition}
-        </Text>
-      </TextContent>
-      <Card>
-        <CardBody className={'ddl-editor__card-body'}>
-          <TextEditor
-            value={initialDdlValue}
-            options={editorOptions}
-            onChange={handleDdlChange}
-            editorDidMount={handleEditorDidMount}
+    <Grid style={{ flexGrow: 1 }}>
+      <GridItem span={4}>
+        <PageSection
+          isFilled={true}
+          variant={'light'}
+          className={
+            props.previewExpanded
+              ? 'ddl-editor_metatree ddl-editor_metatree_scroll'
+              : 'ddl-editor_metatree'
+          }
+        >
+          <Title headingLevel="h5" size="lg">
+            {props.i18nMetadataTitle}
+          </Title>
+          <ConnectionTreeComponent
+            metadataTree={metadataTree}
+            i18nLoading={props.i18nLoading}
           />
-        </CardBody>
-        <CardFooter className={'ddl-editor__card-footer'}>
-          <Button
-            data-testid={'ddl-editor-done-button'}
-            className="ddl-editor__button"
-            isDisabled={props.isSaving}
-            variant={ButtonVariant.secondary}
-            onClick={handleFinish}
-          >
-            {props.i18nDoneLabel}
-          </Button>
-          <Button
-            data-testid={'ddl-editor-save-button'}
-            className="ddl-editor__button"
-            isDisabled={props.isSaving || !hasChanges}
-            variant={ButtonVariant.primary}
-            onClick={handleSave}
-          >
-            {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
-            {props.i18nSaveLabel}
-          </Button>
-        </CardFooter>
-      </Card>
-    </PageSection>
+        </PageSection>
+      </GridItem>
+      <GridItem span={8}>
+        <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
+          <Title headingLevel="h5" size="lg">
+            {props.i18nTitle}
+          </Title>
+          {props.showValidationMessage
+            ? props.validationResults.map((e, idx) => (
+                <Alert
+                  key={idx}
+                  variant={e.type}
+                  isInline={true}
+                  title={props.i18nValidationResultsTitle}
+                  action={
+                    <AlertActionCloseButton
+                      onClose={handleCloseValidationMessage}
+                    />
+                  }
+                >
+                  {e.message}
+                </Alert>
+              ))
+            : null}
+          <TextContent>
+            <Text className={'ddl-editor-cursor-position-text'}>
+              {cursorPosition}
+            </Text>
+          </TextContent>
+          <Card>
+            <CardBody className={'ddl-editor__card-body'}>
+              <TextEditor
+                value={initialDdlValue}
+                options={editorOptions}
+                onChange={handleDdlChange}
+                editorDidMount={handleEditorDidMount}
+              />
+            </CardBody>
+            <CardFooter className={'ddl-editor__card-footer'}>
+              <Button
+                data-testid={'ddl-editor-done-button'}
+                className="ddl-editor__button"
+                isDisabled={props.isSaving}
+                variant={ButtonVariant.secondary}
+                onClick={handleFinish}
+              >
+                {props.i18nDoneLabel}
+              </Button>
+              <Button
+                data-testid={'ddl-editor-save-button'}
+                className="ddl-editor__button"
+                isDisabled={props.isSaving || !hasChanges}
+                variant={ButtonVariant.primary}
+                onClick={handleSave}
+              >
+                {props.isSaving ? <Loader size={'xs'} inline={true} /> : null}
+                {props.i18nSaveLabel}
+              </Button>
+            </CardFooter>
+          </Card>
+        </PageSection>
+      </GridItem>
+    </Grid>
   );
 };

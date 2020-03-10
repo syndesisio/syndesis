@@ -44,6 +44,7 @@
       "Import": "Import",
       "Integrations": "Integrations",
       "Library": "Library",
+      "Loading": "Loading...",
       "linkCreateConnection": "Create Connection",
       "linkCreateIntegration": "Create Integration",
       "Name": "Name",
