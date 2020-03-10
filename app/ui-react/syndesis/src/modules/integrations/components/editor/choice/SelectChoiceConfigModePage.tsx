@@ -35,7 +35,8 @@ import {
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 
-export interface ISelectChoiceConfigModePageProps extends IPageWithEditorBreadcrumb {
+export interface ISelectChoiceConfigModePageProps
+  extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISelectConfigModeRouteParams,
     s: ISelectConfigModeRouteState
@@ -58,7 +59,9 @@ export interface ISelectChoiceConfigModePageProps extends IPageWithEditorBreadcr
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceConfigModePageProps> {
+export class SelectChoiceConfigModePage extends React.Component<
+  ISelectChoiceConfigModePageProps
+> {
   public render() {
     return (
       <WithRouteData<ISelectConfigModeRouteParams, ISelectConfigModeRouteState>>
@@ -66,15 +69,17 @@ export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceCon
           const positionAsNumber = parseInt(params.position, 10);
           const options = [
             {
-              description: 'Provides preselected properties and condition operators for simple expressions.',
+              description:
+                'Provides preselected properties and condition operators for simple expressions.',
               mode: 'basic',
               name: 'Basic expression builder',
             },
             {
-              description: 'User provides condition language expressions for more advanced use cases.',
+              description:
+                'User provides condition language expressions for more advanced use cases.',
               mode: 'advanced',
               name: 'Advanced expression builder',
-            }
+            },
           ];
           return (
             <>
@@ -93,46 +98,40 @@ export class SelectChoiceConfigModePage extends React.Component<ISelectChoiceCon
                   activeIndex: positionAsNumber,
                   activeStep: toUIStep(state.step),
                   steps: toUIStepCollection(
-                    getSteps(
-                      state.integration,
-                      params.flowId
-                    )
+                    getSteps(state.integration, params.flowId)
                   ),
                 })}
                 content={
                   <IntegrationEditorChooseAction>
-                    {options
-                      .map((option, idx) => (
-                        <IntegrationEditorActionsListItem
-                          key={idx}
-                          integrationName={option.name}
-                          integrationDescription={
-                            option.description || 'No description available.'
-                          }
-                          actions={
-                            <ButtonLink
-                              data-testid={
-                                'select-action-page-select-button'
-                              }
-                              href={this.props.selectHref(
-                                {
-                                  ...params,
-                                  configMode: option.mode
-                                } as IChoiceStepRouteParams,
-                                {
-                                  ...state,
-                                  step: {
-                                    ...state.step,
-                                    configuredProperties: undefined
-                                  }
-                                } as IChoiceStepRouteState
-                              )}
-                            >
-                              Select
-                            </ButtonLink>
-                          }
-                        />
-                      ))}
+                    {options.map((option, idx) => (
+                      <IntegrationEditorActionsListItem
+                        key={idx}
+                        name={option.name}
+                        description={
+                          option.description || 'No description available.'
+                        }
+                        actions={
+                          <ButtonLink
+                            data-testid={'select-action-page-select-button'}
+                            href={this.props.selectHref(
+                              {
+                                ...params,
+                                configMode: option.mode,
+                              } as IChoiceStepRouteParams,
+                              {
+                                ...state,
+                                step: {
+                                  ...state.step,
+                                  configuredProperties: undefined,
+                                },
+                              } as IChoiceStepRouteState
+                            )}
+                          >
+                            Select
+                          </ButtonLink>
+                        }
+                      />
+                    ))}
                   </IntegrationEditorChooseAction>
                 }
                 cancelHref={this.props.cancelHref(params, state)}
