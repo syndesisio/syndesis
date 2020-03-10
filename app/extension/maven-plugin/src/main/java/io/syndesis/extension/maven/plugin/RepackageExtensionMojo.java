@@ -61,8 +61,6 @@ import org.eclipse.aether.resolution.ArtifactResult;
 import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.graph.transformer.NoopDependencyGraphTransformer;
 import org.eclipse.aether.util.graph.visitor.PostorderNodeListGenerator;
-import org.springframework.boot.maven.Exclude;
-import org.springframework.boot.maven.ExcludeFilter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -276,14 +274,10 @@ public class RepackageExtensionMojo extends SupportMojo {
         return new Dependency(new DefaultArtifact(gav), null);
     }
 
-    private static ExcludeFilter newExcludeFilter(final Dependency dependency) {
+    private static ArtifactsFilter newExcludeFilter(final Dependency dependency) {
         final Artifact artifact = dependency.getArtifact();
 
-        final Exclude exclude = new Exclude();
-        exclude.setGroupId(artifact.getGroupId());
-        exclude.setArtifactId(artifact.getArtifactId());
-
-        return new ExcludeFilter(exclude);
+        return new ExcludeFilter(artifact.getGroupId(), artifact.getArtifactId());
     }
 
 }

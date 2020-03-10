@@ -15,9 +15,15 @@
  */
 package io.syndesis.server.runtime;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.given;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
@@ -30,21 +36,12 @@ import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.credential.OAuth1CredentialFlowState;
 import io.syndesis.server.credential.OAuth1CredentialProvider;
 import io.syndesis.server.endpoint.v1.handler.setup.OAuthApp;
-
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.oauth1.OAuthToken;
-
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.given;
 
 /**
  * /setup/* related endpoint tests.
@@ -104,7 +101,7 @@ public class SetupITCase extends BaseITCase {
 
         put("/api/v1/setup/oauth-apps/twitter", twitter);
 
-        given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
+        given().ignoreExceptions().await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).until(() -> {
             final CredentialProvider twitterProvider = locator.providerWithId("twitter");
 
             final AcquisitionMethod acquisitionMethod = twitterProvider.acquisitionMethod();
@@ -114,7 +111,7 @@ public class SetupITCase extends BaseITCase {
 
         delete("/api/v1/setup/oauth-apps/twitter");
 
-        given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
+        given().ignoreExceptions().await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).until(() -> {
             try {
                 final CredentialProvider twitterProvider = locator.providerWithId("twitter");
 
@@ -157,7 +154,7 @@ public class SetupITCase extends BaseITCase {
         // connection factory.
         // The connection factory is setup async so we might need to wait a
         // little bit for it to register.
-        given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
+        given().ignoreExceptions().await().atMost(Duration.ofSeconds(10)).pollInterval(Duration.ofSeconds(1)).until(() -> {
             final CredentialProvider twitterCredentialProvider = locator.providerWithId("twitter");
 
             // preparing is something we could not do with a `null`

@@ -23,8 +23,9 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.protocol.BasicHttpContext;
-import org.apache.http.protocol.ExecutionContext;
+//import org.apache.http.protocol.ExecutionContext;
 import org.apache.http.protocol.HttpContext;
+import org.apache.http.protocol.HttpCoreContext;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.junit.After;
 import org.junit.Before;
@@ -124,14 +125,13 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
      * session This method makes request to the base URL and return URL with
      * generated postfix
      */
-    @SuppressWarnings("deprecation")
     protected String getRealRefServiceUrl(String baseUrl) throws ClientProtocolException, IOException {
         CloseableHttpClient httpclient = HttpClients.createDefault();
         HttpGet httpGet = new HttpGet(baseUrl);
         HttpContext httpContext = new BasicHttpContext();
         httpclient.execute(httpGet, httpContext);
-        HttpUriRequest currentReq = (HttpUriRequest)httpContext.getAttribute(ExecutionContext.HTTP_REQUEST);
-        HttpHost currentHost = (HttpHost)httpContext.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+        HttpUriRequest currentReq = (HttpUriRequest)httpContext.getAttribute(HttpCoreContext.HTTP_REQUEST);
+        HttpHost currentHost = (HttpHost)httpContext.getAttribute(HttpCoreContext.HTTP_TARGET_HOST);
 
         return currentReq.getURI().isAbsolute() ? currentReq.getURI().toString() : (currentHost.toURI() + currentReq.getURI());
     }

@@ -46,21 +46,23 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Processor;
-import org.apache.camel.builder.DefaultErrorHandlerBuilder;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ExpressionNode;
 import org.apache.camel.model.LogDefinition;
-import org.apache.camel.model.ModelHelper;
-import org.apache.camel.model.OnExceptionDefinition;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.PipelineDefinition;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
-import org.apache.camel.runtimecatalog.RuntimeCamelCatalog;
+import org.apache.camel.catalog.RuntimeCamelCatalog;
 import org.apache.camel.spi.RoutePolicy;
+import org.apache.camel.spi.XMLRoutesDefinitionLoader;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.ResourceHelper;
+import org.apache.camel.support.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,11 +129,21 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             try {
                 return sourceProvider.getSource(getContext());
             } catch (Exception e) {
-                throw ObjectHelper.wrapRuntimeCamelException(e);
+                throw RuntimeCamelException.wrapRuntimeCamelException(e);
             }
         }
         LOGGER.info("Loading integration from: {}", configurationUri);
         return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
+    }
+
+    @Override
+    public ModelCamelContext getContext() {
+        CamelContext context = super.getContext();
+        if (context == null) {
+            context = new DefaultCamelContext();
+        }
+
+        return context.adapt(ModelCamelContext.class);
     }
 
     @Override
@@ -170,7 +182,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, String.valueOf(stepIndex));
                 if (definition.isPresent()) {
                     parent = definition.get();
-                    parent = configureRouteDefinition(parent, flow, flowId, stepId);
+                    parent = configureRouteDefinition(parent, flow, flowId);
                     parent = createPipeline(parent, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
                     parent = parent.end();
@@ -188,7 +200,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
                 }
             } else {
-                parent = configureRouteDefinition(parent, flow, flowId, stepId);
+                parent = configureRouteDefinition(parent, flow, flowId);
 
                 if (StepKind.aggregate.equals(step.getStepKind())) {
                     if (!splitStack.isEmpty()) {
@@ -285,26 +297,23 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return definition;
     }
 
-    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId, String stepId) {
-        if (definition instanceof RouteDefinition) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId) {
+        if (isRouteDefinitionAndNoContainsConfiguredActivityTrackingPolicies(definition)) {
             final RouteDefinition rd = (RouteDefinition)definition;
-
-            if (containsConfiguredActivityTrackingPolicies(rd)) {
-                // Route has already been configured so no need to go ahead
-                return definition;
-            }
 
             if (ObjectHelper.isNotEmpty(flow.getName())) {
                 rd.routeDescription(flow.getName());
             }
 
-            rd.routeId(flowId);
+            if (!rd.hasCustomIdAssigned()) {
+                rd.routeId(flowId);
+            }
+
             for (ActivityTrackingPolicyFactory factory : activityTrackingPolicyFactories) {
                 if (factory.appliesTo(flow)) {
                     rd.routePolicy(factory.createRoutePolicy(flowId));
                 }
             }
-            rd.getInputs().get(0).id(stepId);
 
             Optional<String> onException = Optional.empty();
             Step onExceptionStep = null;
@@ -318,21 +327,15 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
                 }
             }
-            if (onException.isPresent() && onExceptionStep!=null) {
-                //
-                final OnExceptionDefinition onExceptionDef = new OnExceptionDefinition(Throwable.class)
-                        .handled(true)
-                        .maximumRedeliveries(0);
-
+            if (onException.isPresent() && onExceptionStep != null) {
                 final Processor errorHandler = (Processor) mandatoryLoadResource(
                         this.getContext(), "class:" + onException.get());
                 ((Properties) errorHandler).setProperties(onExceptionStep.getConfiguredProperties());
 
-                final DefaultErrorHandlerBuilder builder = new DefaultErrorHandlerBuilder();
-                builder.setExceptionPolicyStrategy((exceptionPolicies, exchange, exception) -> onExceptionDef);
-                builder.setOnExceptionOccurred(errorHandler);
-
-                rd.setErrorHandlerBuilder(builder);
+                definition.onException(Throwable.class)
+                    .handled(true)
+                    .maximumRedeliveries(0)
+                    .process(errorHandler);
             }
         }
 
@@ -341,16 +344,22 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     /**
      * Checks if given route definition has already been configured with activity tracking policies.
-     * @param routeDefinition the route definition to evaluate.
+     * @param definition the route definition to evaluate.
      * @return true if activity tracking policies have already been configured on given route definition.
      */
-    private boolean containsConfiguredActivityTrackingPolicies(RouteDefinition routeDefinition) {
-        List<RoutePolicy> routePolicies = routeDefinition.getRoutePolicies();
-        if (ObjectHelper.isEmpty(routePolicies)) {
-            return false;
+    private boolean isRouteDefinitionAndNoContainsConfiguredActivityTrackingPolicies(ProcessorDefinition<?> definition) {
+
+        if (definition instanceof RouteDefinition) {
+            RouteDefinition routeDefinition = (RouteDefinition) definition;
+            List<RoutePolicy> routePolicies = routeDefinition.getRoutePolicies();
+            if (ObjectHelper.isEmpty(routePolicies)) {
+                return true;
+            }
+
+            return !activityTrackingPolicyFactories.stream().anyMatch(policyFactory -> routePolicies.stream().anyMatch(policyFactory::isInstance));
         }
 
-        return activityTrackingPolicyFactories.stream().anyMatch(policyFactory -> routePolicies.stream().anyMatch(policyFactory::isInstance));
+        return false;
     }
 
     private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition<?> parent, String stepId) {
@@ -378,11 +387,11 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 properties.put("timerName", "integration");
                 properties.put("period", scheduler.getExpression());
 
-                final RuntimeCamelCatalog catalog = getContext().getRuntimeCamelCatalog();
+                final RuntimeCamelCatalog catalog = getContext().adapt(ExtendedCamelContext.class).getRuntimeCamelCatalog();
                 final String uri = catalog.asEndpointUri("timer", properties, false);
 
                 RouteDefinition route = this.from(uri);
-                route.getInputs().get(0).setId("integration-scheduler");
+                route.getInput().setId("integration-scheduler");
                 flow.getId().ifPresent(route::setId);
 
                 return route;
@@ -404,7 +413,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                                               String.format("Missing step action on step: %s - %s", step.getId(), step.getName())));
 
         if (action.getDescriptor().getKind() == StepAction.Kind.ENDPOINT) {
-            final CamelContext context = getContext();
+            final ModelCamelContext context = getContext();
             final String resource = action.getDescriptor().getResource();
 
             if (ObjectHelper.isNotEmpty(resource) && resources.add(resource)) {
@@ -439,7 +448,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
         if (resource.startsWith("classpath:")) {
             try (InputStream is = ResourceHelper.resolveMandatoryResourceAsInputStream(context, resource)) {
-                instance = ModelHelper.loadRoutesDefinition(context, is);
+                ExtendedCamelContext extendedCamelContext = context.adapt(ExtendedCamelContext.class);
+                XMLRoutesDefinitionLoader loader = extendedCamelContext.getXMLRoutesDefinitionLoader();
+                instance = loader.loadRoutesDefinition(context, is);
             } catch (Exception e) {
                 throw new IllegalArgumentException(e);
             }
@@ -473,7 +484,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             } catch (Exception e) {
                 LOGGER.warn("Unable to configure resource: " + resource, e);
 
-                throw ObjectHelper.wrapRuntimeCamelException(e);
+                throw RuntimeCamelException.wrapRuntimeCamelException(e);
             }
         } else {
             throw new IllegalArgumentException("Unable to convert instance: " + instance);

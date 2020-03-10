@@ -26,7 +26,7 @@ import io.syndesis.connector.rest.swagger.Configuration;
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.methods.CloseableHttpResponse;

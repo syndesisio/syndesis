@@ -66,7 +66,7 @@ public class DataManagerTest {
         @SuppressWarnings("unchecked")
         ListResult<Connector> connectors = dataManager.fetchAll(Connector.class);
         assertThat(connectors.getItems().stream().map(Connector::getId).map(Optional::get))
-            .contains("activemq", "amqp", "fhir", "ftp","sftp", "sql", "salesforce", "jira", "twitter", "aws-s3", "mqtt", "http4", "https4", "dropbox", "slack", "gmail", "webhook", "odata", "box");
+            .contains("activemq", "amqp", "fhir", "ftp","sftp", "sql", "salesforce", "jira", "twitter", "aws-s3", "mqtt", "http", "https", "dropbox", "slack", "gmail", "webhook", "odata", "box");
         Assert.assertTrue(connectors.getTotalCount() > 1);
         Assert.assertTrue(connectors.getItems().size() > 1);
         Assert.assertTrue(connectors.getTotalCount() >= connectors.getItems().size());

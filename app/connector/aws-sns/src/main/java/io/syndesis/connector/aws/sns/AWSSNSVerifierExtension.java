@@ -16,15 +16,13 @@
 package io.syndesis.connector.aws.sns;
 
 import java.util.Map;
-
 import org.apache.camel.CamelContext;
-import org.apache.camel.component.aws.sqs.SqsConfiguration;
+import org.apache.camel.component.aws.sns.SnsConfiguration;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.util.ObjectHelper;
-
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -71,7 +69,7 @@ public class AWSSNSVerifierExtension extends DefaultComponentVerifierExtension {
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.CONNECTIVITY);
 
         try {
-            SqsConfiguration configuration = setProperties(new SqsConfiguration(), parameters);
+            SnsConfiguration configuration = setProperties(new SnsConfiguration(), parameters);
             AWSCredentials credentials = new BasicAWSCredentials(configuration.getAccessKey(), configuration.getSecretKey());
             AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
             AmazonSNS client = AmazonSNSClientBuilder.standard().withCredentials(credentialsProvider).withRegion(Regions.valueOf(configuration.getRegion())).build();

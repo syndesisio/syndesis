@@ -48,7 +48,7 @@ public class FhirTransactionTest extends FhirTestBase {
         Bundle bundle = new Bundle();
         bundle.addEntry(new Bundle.BundleEntryComponent().setResource(new Account().setId("1").setMeta(new Meta().setLastUpdated(new Date()))));
         bundle.addEntry(new Bundle.BundleEntryComponent().setResource(new Patient().setId("2").setMeta(new Meta().setLastUpdated(new Date()))));
-        stubFhirRequest(post(urlEqualTo("/")).withRequestBody(containing(
+        stubFhirRequest(post(urlEqualTo("/?_format=xml")).withRequestBody(containing(
             "<type value=\"transaction\"/><total value=\"2\"/><link><relation value=\"fhir-base\"/></link>" +
                 "<link><relation value=\"self\"/></link>" +
                 "<entry><resource><Account xmlns=\"http://hl7.org/fhir\"><name value=\"Joe\"/></Account></resource>" +

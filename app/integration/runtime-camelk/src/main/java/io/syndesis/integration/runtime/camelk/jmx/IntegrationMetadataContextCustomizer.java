@@ -18,7 +18,6 @@ package io.syndesis.integration.runtime.camelk.jmx;
 import io.syndesis.integration.runtime.jmx.CamelContextMetadataMBean;
 import org.apache.camel.CamelContext;
 import org.apache.camel.k.ContextCustomizer;
-import org.apache.camel.k.Runtime;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class IntegrationMetadataContextCustomizer implements ContextCustomizer {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationMetadataContextCustomizer.class);
 
     @Override
-    public void apply(CamelContext camelContext, Runtime.Registry runtimeRegistry) {
+    public void apply(CamelContext camelContext) {
         try {
             // register custom mbean
             camelContext.addService(new CamelContextMetadataMBean());

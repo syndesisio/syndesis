@@ -1,0 +1,694 @@
+{
+    "id": "i-M-Q3H9OFThFkJMxk9nRz",
+    "version": 1,
+    "createdAt": 1581002072729,
+    "updatedAt": 0,
+    "tags": [
+        "http4",
+        "https4"
+    ],
+    "name": "HTTP Integration",
+    "flows": [
+        {
+            "id": "-M-Q3-aSUml8CyUGBhAk",
+            "tags": [
+                "i-M-Q2vL_FThFkJMxk9nNz",
+                "i-M-Q2zhyFThFkJMxk9nPz"
+            ],
+            "steps": [
+                {
+                    "id": "-M-Q33CXUml8CyUGBhAk",
+                    "configuredProperties": {
+                        "httpMethod": "GET",
+                        "schedulerExpression": "1800000"
+                    },
+                    "metadata": {
+                        "configured": "true"
+                    },
+                    "action": {
+                        "id": "io.syndesis.connector:connector-http:ttps4-periodic-invoke-url",
+                        "name": "Periodic invoke URL",
+                        "description": "Periodically invoke an http endpoint URL",
+                        "descriptor": {
+                            "inputDataShape": {
+                                "kind": "none"
+                            },
+                            "outputDataShape": {
+                                "kind": "any"
+                            },
+                            "propertyDefinitionSteps": [
+                                {
+                                    "name": "properties",
+                                    "properties": {
+                                        "httpMethod": {
+                                            "defaultValue": "GET",
+                                            "deprecated": false,
+                                            "displayName": "Http Method",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "The specific http method to execute.",
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string",
+                                            "enum": [
+                                                {
+                                                    "label": "GET",
+                                                    "value": "GET"
+                                                },
+                                                {
+                                                    "label": "PUT",
+                                                    "value": "PUT"
+                                                },
+                                                {
+                                                    "label": "POST",
+                                                    "value": "POST"
+                                                },
+                                                {
+                                                    "label": "DELETE",
+                                                    "value": "DELETE"
+                                                },
+                                                {
+                                                    "label": "HEAD",
+                                                    "value": "HEAD"
+                                                },
+                                                {
+                                                    "label": "OPTIONS",
+                                                    "value": "OPTIONS"
+                                                },
+                                                {
+                                                    "label": "TRACE",
+                                                    "value": "TRACE"
+                                                },
+                                                {
+                                                    "label": "PATCH",
+                                                    "value": "PATCH"
+                                                }
+                                            ]
+                                        },
+                                        "path": {
+                                            "deprecated": false,
+                                            "displayName": "URL Path",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "Endpoint Path",
+                                            "placeholder": "eg '/path/to/endpoint'",
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        },
+                                        "schedulerExpression": {
+                                            "defaultValue": "1800000",
+                                            "deprecated": false,
+                                            "displayName": "Period",
+                                            "group": "consumer",
+                                            "javaType": "long",
+                                            "kind": "parameter",
+                                            "labelHint": "Delay between scheduling (executing).",
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "duration"
+                                        }
+                                    }
+                                }
+                            ],
+                            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
+                            "connectorCustomizers": [
+                                "io.syndesis.connector.http.HttpConnectorCustomizer"
+                            ]
+                        },
+                        "actionType": "connector",
+                        "pattern": "From"
+                    },
+                    "connection": {
+                        "uses": 1,
+                        "id": "i-M-Q2zhyFThFkJMxk9nPz",
+                        "name": "Secured HTTPS",
+                        "configuredProperties": {
+                            "baseUrl": "secured.com"
+                        },
+                        "connector": {
+                            "id": "https4",
+                            "version": 21,
+                            "actions": [
+                                {
+                                    "id": "io.syndesis.connector:connector-http:https4-invoke-url",
+                                    "name": "Invoke URL",
+                                    "description": "Invoke an http endpoint URL",
+                                    "descriptor": {
+                                        "inputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "outputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "propertyDefinitionSteps": [
+                                            {
+                                                "name": "properties",
+                                                "properties": {
+                                                    "httpMethod": {
+                                                        "defaultValue": "GET",
+                                                        "deprecated": false,
+                                                        "displayName": "Http Method",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "The specific http method to execute.",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string",
+                                                        "enum": [
+                                                            {
+                                                                "label": "GET",
+                                                                "value": "GET"
+                                                            },
+                                                            {
+                                                                "label": "PUT",
+                                                                "value": "PUT"
+                                                            },
+                                                            {
+                                                                "label": "POST",
+                                                                "value": "POST"
+                                                            },
+                                                            {
+                                                                "label": "DELETE",
+                                                                "value": "DELETE"
+                                                            },
+                                                            {
+                                                                "label": "HEAD",
+                                                                "value": "HEAD"
+                                                            },
+                                                            {
+                                                                "label": "OPTIONS",
+                                                                "value": "OPTIONS"
+                                                            },
+                                                            {
+                                                                "label": "TRACE",
+                                                                "value": "TRACE"
+                                                            },
+                                                            {
+                                                                "label": "PATCH",
+                                                                "value": "PATCH"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "path": {
+                                                        "deprecated": false,
+                                                        "displayName": "URL Path",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "description": "properties"
+                                            }
+                                        ],
+                                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4"
+                                    },
+                                    "actionType": "connector",
+                                    "pattern": "To"
+                                },
+                                {
+                                    "id": "io.syndesis.connector:connector-http:ttps4-periodic-invoke-url",
+                                    "name": "Periodic invoke URL",
+                                    "description": "Periodically invoke an http endpoint URL",
+                                    "descriptor": {
+                                        "inputDataShape": {
+                                            "kind": "none"
+                                        },
+                                        "outputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "propertyDefinitionSteps": [
+                                            {
+                                                "name": "properties",
+                                                "properties": {
+                                                    "httpMethod": {
+                                                        "defaultValue": "GET",
+                                                        "deprecated": false,
+                                                        "displayName": "Http Method",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "The specific http method to execute.",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string",
+                                                        "enum": [
+                                                            {
+                                                                "label": "GET",
+                                                                "value": "GET"
+                                                            },
+                                                            {
+                                                                "label": "PUT",
+                                                                "value": "PUT"
+                                                            },
+                                                            {
+                                                                "label": "POST",
+                                                                "value": "POST"
+                                                            },
+                                                            {
+                                                                "label": "DELETE",
+                                                                "value": "DELETE"
+                                                            },
+                                                            {
+                                                                "label": "HEAD",
+                                                                "value": "HEAD"
+                                                            },
+                                                            {
+                                                                "label": "OPTIONS",
+                                                                "value": "OPTIONS"
+                                                            },
+                                                            {
+                                                                "label": "TRACE",
+                                                                "value": "TRACE"
+                                                            },
+                                                            {
+                                                                "label": "PATCH",
+                                                                "value": "PATCH"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "path": {
+                                                        "deprecated": false,
+                                                        "displayName": "URL Path",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Endpoint Path",
+                                                        "placeholder": "eg '/path/to/endpoint'",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string"
+                                                    },
+                                                    "schedulerExpression": {
+                                                        "defaultValue": "1800000",
+                                                        "deprecated": false,
+                                                        "displayName": "Period",
+                                                        "group": "consumer",
+                                                        "javaType": "long",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Delay between scheduling (executing).",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "duration"
+                                                    }
+                                                },
+                                                "description": "properties"
+                                            }
+                                        ],
+                                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
+                                        "connectorCustomizers": [
+                                            "io.syndesis.connector.http.HttpConnectorCustomizer"
+                                        ]
+                                    },
+                                    "actionType": "connector",
+                                    "pattern": "From"
+                                }
+                            ],
+                            "tags": [
+                                "verifier"
+                            ],
+                            "name": "HTTPS",
+                            "properties": {
+                                "baseUrl": {
+                                    "deprecated": false,
+                                    "displayName": "Base URL",
+                                    "group": "common",
+                                    "javaType": "java.lang.String",
+                                    "kind": "parameter",
+                                    "labelHint": "Base Http Endpoint URL",
+                                    "placeholder": "eg 'www.redhat.com'",
+                                    "required": true,
+                                    "secret": false,
+                                    "type": "string"
+                                }
+                            },
+                            "configuredProperties": {
+                                "headerFilterStrategy": "syndesisHeaderStrategy"
+                            },
+                            "dependencies": [
+                                {
+                                    "type": "MAVEN",
+                                    "id": "io.syndesis.connector:connector-http:2.0-SNAPSHOT"
+                                }
+                            ],
+                            "description": "Invoke various HTTPS methods.",
+                            "icon": "assets:https4.svg",
+                            "componentScheme": "https4"
+                        },
+                        "connectorId": "https4",
+                        "icon": "assets:https4.svg",
+                        "description": "Invoke various HTTPS methods.",
+                        "userId": "username",
+                        "lastUpdated": 1581001997181,
+                        "createdDate": 1581001997181,
+                        "isDerived": false
+                    },
+                    "stepKind": "endpoint"
+                },
+                {
+                    "id": "-M-Q35zlUml8CyUGBhAk",
+                    "configuredProperties": {
+                        "httpMethod": "POST"
+                    },
+                    "metadata": {
+                        "configured": "true"
+                    },
+                    "action": {
+                        "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                        "name": "Invoke URL",
+                        "description": "Invoke an http endpoint URL",
+                        "descriptor": {
+                            "inputDataShape": {
+                                "kind": "any"
+                            },
+                            "outputDataShape": {
+                                "kind": "any"
+                            },
+                            "propertyDefinitionSteps": [
+                                {
+                                    "name": "properties",
+                                    "properties": {
+                                        "httpMethod": {
+                                            "defaultValue": "GET",
+                                            "deprecated": false,
+                                            "displayName": "Http Method",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "The specific http method to execute.",
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string",
+                                            "enum": [
+                                                {
+                                                    "label": "GET",
+                                                    "value": "GET"
+                                                },
+                                                {
+                                                    "label": "PUT",
+                                                    "value": "PUT"
+                                                },
+                                                {
+                                                    "label": "POST",
+                                                    "value": "POST"
+                                                },
+                                                {
+                                                    "label": "DELETE",
+                                                    "value": "DELETE"
+                                                },
+                                                {
+                                                    "label": "HEAD",
+                                                    "value": "HEAD"
+                                                },
+                                                {
+                                                    "label": "OPTIONS",
+                                                    "value": "OPTIONS"
+                                                },
+                                                {
+                                                    "label": "TRACE",
+                                                    "value": "TRACE"
+                                                },
+                                                {
+                                                    "label": "PATCH",
+                                                    "value": "PATCH"
+                                                }
+                                            ]
+                                        },
+                                        "path": {
+                                            "deprecated": false,
+                                            "displayName": "URL Path",
+                                            "group": "common",
+                                            "javaType": "java.lang.String",
+                                            "kind": "parameter",
+                                            "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                                            "required": false,
+                                            "secret": false,
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            ],
+                            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4"
+                        },
+                        "actionType": "connector",
+                        "pattern": "To"
+                    },
+                    "connection": {
+                        "uses": 1,
+                        "id": "i-M-Q2vL_FThFkJMxk9nNz",
+                        "name": "Example HTTP",
+                        "configuredProperties": {
+                            "baseUrl": "example.com"
+                        },
+                        "connector": {
+                            "id": "http4",
+                            "version": 21,
+                            "actions": [
+                                {
+                                    "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                                    "name": "Invoke URL",
+                                    "description": "Invoke an http endpoint URL",
+                                    "descriptor": {
+                                        "inputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "outputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "propertyDefinitionSteps": [
+                                            {
+                                                "name": "properties",
+                                                "properties": {
+                                                    "httpMethod": {
+                                                        "defaultValue": "GET",
+                                                        "deprecated": false,
+                                                        "displayName": "Http Method",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "The specific http method to execute.",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string",
+                                                        "enum": [
+                                                            {
+                                                                "label": "GET",
+                                                                "value": "GET"
+                                                            },
+                                                            {
+                                                                "label": "PUT",
+                                                                "value": "PUT"
+                                                            },
+                                                            {
+                                                                "label": "POST",
+                                                                "value": "POST"
+                                                            },
+                                                            {
+                                                                "label": "DELETE",
+                                                                "value": "DELETE"
+                                                            },
+                                                            {
+                                                                "label": "HEAD",
+                                                                "value": "HEAD"
+                                                            },
+                                                            {
+                                                                "label": "OPTIONS",
+                                                                "value": "OPTIONS"
+                                                            },
+                                                            {
+                                                                "label": "TRACE",
+                                                                "value": "TRACE"
+                                                            },
+                                                            {
+                                                                "label": "PATCH",
+                                                                "value": "PATCH"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "path": {
+                                                        "deprecated": false,
+                                                        "displayName": "URL Path",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "description": "properties"
+                                            }
+                                        ],
+                                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4"
+                                    },
+                                    "actionType": "connector",
+                                    "pattern": "To"
+                                },
+                                {
+                                    "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+                                    "name": "Periodic invoke URL",
+                                    "description": "Periodically invoke an http endpoint URL",
+                                    "descriptor": {
+                                        "inputDataShape": {
+                                            "kind": "none"
+                                        },
+                                        "outputDataShape": {
+                                            "kind": "any"
+                                        },
+                                        "propertyDefinitionSteps": [
+                                            {
+                                                "name": "properties",
+                                                "properties": {
+                                                    "httpMethod": {
+                                                        "defaultValue": "GET",
+                                                        "deprecated": false,
+                                                        "displayName": "Http Method",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "The specific http method to execute.",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string",
+                                                        "enum": [
+                                                            {
+                                                                "label": "GET",
+                                                                "value": "GET"
+                                                            },
+                                                            {
+                                                                "label": "PUT",
+                                                                "value": "PUT"
+                                                            },
+                                                            {
+                                                                "label": "POST",
+                                                                "value": "POST"
+                                                            },
+                                                            {
+                                                                "label": "DELETE",
+                                                                "value": "DELETE"
+                                                            },
+                                                            {
+                                                                "label": "HEAD",
+                                                                "value": "HEAD"
+                                                            },
+                                                            {
+                                                                "label": "OPTIONS",
+                                                                "value": "OPTIONS"
+                                                            },
+                                                            {
+                                                                "label": "TRACE",
+                                                                "value": "TRACE"
+                                                            },
+                                                            {
+                                                                "label": "PATCH",
+                                                                "value": "PATCH"
+                                                            }
+                                                        ]
+                                                    },
+                                                    "path": {
+                                                        "deprecated": false,
+                                                        "displayName": "URL Path",
+                                                        "group": "common",
+                                                        "javaType": "java.lang.String",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Endpoint Path",
+                                                        "placeholder": "eg '/path/to/endpoint'",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "string"
+                                                    },
+                                                    "schedulerExpression": {
+                                                        "defaultValue": "1800000",
+                                                        "deprecated": false,
+                                                        "displayName": "Period",
+                                                        "group": "consumer",
+                                                        "javaType": "long",
+                                                        "kind": "parameter",
+                                                        "labelHint": "Delay between scheduling (executing).",
+                                                        "required": false,
+                                                        "secret": false,
+                                                        "type": "duration"
+                                                    }
+                                                },
+                                                "description": "properties"
+                                            }
+                                        ],
+                                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                                        "connectorCustomizers": [
+                                            "io.syndesis.connector.http.HttpConnectorCustomizer"
+                                        ]
+                                    },
+                                    "actionType": "connector",
+                                    "pattern": "From"
+                                }
+                            ],
+                            "tags": [
+                                "verifier"
+                            ],
+                            "name": "HTTP",
+                            "properties": {
+                                "baseUrl": {
+                                    "deprecated": false,
+                                    "displayName": "Base URL",
+                                    "group": "common",
+                                    "javaType": "java.lang.String",
+                                    "kind": "parameter",
+                                    "labelHint": "Base Http Endpoint URL",
+                                    "placeholder": "eg 'www.redhat.com'",
+                                    "required": true,
+                                    "secret": false,
+                                    "type": "string"
+                                }
+                            },
+                            "configuredProperties": {
+                                "headerFilterStrategy": "syndesisHeaderStrategy"
+                            },
+                            "dependencies": [
+                                {
+                                    "type": "MAVEN",
+                                    "id": "io.syndesis.connector:connector-http:2.0-SNAPSHOT"
+                                }
+                            ],
+                            "description": "Invoke various HTTP methods.",
+                            "icon": "assets:http4.svg",
+                            "componentScheme": "http4"
+                        },
+                        "connectorId": "http4",
+                        "icon": "assets:http4.svg",
+                        "description": "Invoke various HTTP methods.",
+                        "userId": "username",
+                        "lastUpdated": 1581001979300,
+                        "createdDate": 1581001979300,
+                        "isDerived": false
+                    },
+                    "stepKind": "endpoint"
+                }
+            ],
+            "type": "PRIMARY"
+        }
+    ],
+    "currentState": "Unpublished",
+    "targetState": "Unpublished",
+    "board": {
+        "id": "i-M-Q3HBCFThFkJMxk9nSz",
+        "metadata": {
+            "integration-id": "i-M-Q3H9OFThFkJMxk9nRz",
+            "integration-version": "1"
+        },
+        "createdAt": 1581002072845,
+        "updatedAt": 1581002072848,
+        "targetResourceId": "i-M-Q3H9OFThFkJMxk9nRz",
+        "notices": 0,
+        "warnings": 0,
+        "errors": 0
+    },
+    "isDraft": true
+}

@@ -43,7 +43,7 @@ public class FhirCreateTest extends FhirTestBase {
 
     @Test
     public void createTest() {
-        stubFhirRequest(post(urlEqualTo("/Patient")).willReturn(okXml(toXml(new OperationOutcome()))));
+        stubFhirRequest(post(urlEqualTo("/Patient?_format=xml")).willReturn(okXml(toXml(new OperationOutcome()))));
 
         template.requestBody("direct:start",
             toXml(new Patient().addName(new HumanName().setFamily("Smith"))), MethodOutcome.class);

@@ -18,7 +18,7 @@ package io.syndesis.connector.fhir.customizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.fhir.internal.FhirDeleteApiMethod;
-import org.apache.camel.util.component.ApiMethod;
+import org.apache.camel.support.component.ApiMethod;
 
 public class FhirDeleteCustomizer extends FhirReadDeleteBaseCustomizer {
 

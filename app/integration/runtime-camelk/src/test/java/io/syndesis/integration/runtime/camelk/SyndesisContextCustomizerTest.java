@@ -17,17 +17,15 @@ package io.syndesis.integration.runtime.camelk;
 
 import java.util.Properties;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.k.Constants;
-import org.apache.camel.k.InMemoryRegistry;
-import org.apache.camel.k.Runtime;
 import org.apache.camel.k.support.RuntimeSupport;
 import org.apache.camel.spi.HeaderFilterStrategy;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class SyndesisContextCustomizerTest {
 
@@ -38,13 +36,11 @@ public class SyndesisContextCustomizerTest {
         Properties properties = new Properties();
         properties.setProperty(Constants.PROPERTY_CAMEL_K_CUSTOMIZER, "syndesis");
 
-        PropertiesComponent pc = context.getComponent("properties", PropertiesComponent.class);
+        PropertiesComponent pc  = new PropertiesComponent();
         pc.setInitialProperties(properties);
+        context.setPropertiesComponent(pc);
 
-        Runtime.Registry registry = new InMemoryRegistry();
-        context.setRegistry(registry);
-
-        RuntimeSupport.configureContext(context, registry);
+        RuntimeSupport.configureContextCustomizers(context);
 
         context.start();
 

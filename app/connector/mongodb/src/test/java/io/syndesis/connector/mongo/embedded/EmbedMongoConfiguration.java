@@ -20,13 +20,16 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-import org.bson.Document;
-import org.slf4j.LoggerFactory;
+import static org.springframework.util.SocketUtils.findAvailableTcpPort;
 
-import com.mongodb.MongoClient;
+import com.mongodb.ConnectionString;
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ReadPreference;
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-
 import de.flapdoodle.embed.mongo.Command;
 import de.flapdoodle.embed.mongo.MongodExecutable;
 import de.flapdoodle.embed.mongo.MongodStarter;
@@ -37,6 +40,7 @@ import de.flapdoodle.embed.mongo.config.MongodConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Net;
 import de.flapdoodle.embed.mongo.config.RuntimeConfigBuilder;
 import de.flapdoodle.embed.mongo.config.Storage;
+import de.flapdoodle.embed.mongo.distribution.Version;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
 import de.flapdoodle.embed.process.config.io.ProcessOutput;
 import de.flapdoodle.embed.process.io.IStreamProcessor;
@@ -44,12 +48,64 @@ import de.flapdoodle.embed.process.io.Processors;
 import de.flapdoodle.embed.process.io.Slf4jLevel;
 import de.flapdoodle.embed.process.io.Slf4jStreamProcessor;
 import de.flapdoodle.embed.process.io.directories.FixedPath;
+import de.flapdoodle.embed.process.runtime.Network;
+import org.bson.Document;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-import static org.springframework.util.SocketUtils.findAvailableTcpPort;
-import static de.flapdoodle.embed.mongo.distribution.Version.Main.V3_6;
-import static de.flapdoodle.embed.process.runtime.Network.localhostIsIPv6;
-
+@Configuration
 public class EmbedMongoConfiguration {
+
+    public static MongoClient getClient(Boolean useCredentials) {
+        return getClient(useCredentials, REPLICA_SET);
+    }
+
+    public static MongoClient getClientNoReplicaSet(Boolean useCredentials) {
+        return getClient(useCredentials, null);
+    }
+
+    private static MongoClient getClient(Boolean useCredentials, String replicaSet) {
+        MongoClientSettings.Builder settings = MongoClientSettings.builder();
+
+        if (useCredentials) {
+            MongoCredential credentials = MongoCredential.createCredential(
+                USER, ADMIN_DB, PASSWORD.toCharArray());
+            settings.credential(credentials);
+        }
+        StringBuilder connectionString = new StringBuilder(String.format("mongodb://%s:%d", HOST, PORT));
+        if (replicaSet != null) {
+            connectionString.append(String.format("/?replicaSet=%s", REPLICA_SET));
+        }
+        ConnectionString uri = new ConnectionString(connectionString.toString());
+        settings.applyConnectionString(uri);
+
+        settings.readPreference(ReadPreference.primaryPreferred());
+
+        return MongoClients.create(settings.build());
+    }
+
+    public static MongoClient getClient() {
+        return getClient(true);
+    }
+
+    public static MongoDatabase getDB() {
+        return getDB(true, "test");
+    }
+
+    public static MongoDatabase getDB(Boolean useCredentials, String db) {
+        return getClient(useCredentials).getDatabase(db);
+    }
+
+    @Bean
+    public MongoClient mongoBean() {
+        return getClient();
+    }
+
+    @Bean
+    public MongoDatabase database() {
+        return getDB();
+    }
 
     public final static int PORT = findAvailableTcpPort();
 
@@ -57,19 +113,21 @@ public class EmbedMongoConfiguration {
     public final static String USER = "test-user";
     public final static String PASSWORD = "test-pwd";
     public final static String ADMIN_DB = "admin";
-    // Client connections
-    public final static MongoClient CLIENT;
-    public final static MongoDatabase DATABASE;
 
-    private EmbedMongoConfiguration(){}
+    public final static String REPLICA_SET = "rs0";
+
+    public EmbedMongoConfiguration() {
+
+    }
 
     static {
         startEmbeddedMongo();
-        // init replica set
-        CLIENT = new MongoClient(HOST, PORT);
-        CLIENT.getDatabase("admin").runCommand(new Document("replSetInitiate", new Document()));
+        startReplicationSet();
         createAuthorizationUser();
-        DATABASE = CLIENT.getDatabase("test");
+    }
+
+    private static void startReplicationSet() {
+        getClientNoReplicaSet(false).getDatabase(ADMIN_DB).runCommand(new Document("replSetInitiate", new Document()));
     }
 
     private static void startEmbeddedMongo() {
@@ -91,11 +149,13 @@ public class EmbedMongoConfiguration {
             .processOutput(processOutput)
             .build();
 
-        final IMongodConfig mongodConfig = createEmbeddedMongoConfiguration();
-
-        final MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
-                .prepare(mongodConfig);
         try {
+            final IMongodConfig mongodConfig = createEmbeddedMongoConfiguration();
+
+            final MongodExecutable mongodExecutable = MongodStarter.getInstance(runtimeConfig)
+                .prepare(mongodConfig);
+
+
             mongodExecutable.start();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
@@ -107,18 +167,20 @@ public class EmbedMongoConfiguration {
             final Path storagePath = Files.createTempDirectory("embeddeddmongo");
             storagePath.toFile().deleteOnExit();
             return new MongodConfigBuilder()
-                    .version(V3_6)
-                    .net(new Net(PORT, localhostIsIPv6()))
-                    .replication(new Storage(storagePath.toString(), "replicationName", 5000))
-                    .build();
+                .version(Version.Main.PRODUCTION)
+                .net(new Net(PORT, Network.localhostIsIPv6()))
+                .replication(new Storage(storagePath.toString(),
+                    REPLICA_SET, 5000))
+                .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
         }
     }
 
     private static void createAuthorizationUser() {
-        MongoDatabase admin = CLIENT.getDatabase("admin");
-        MongoCollection<Document> usersCollection = admin.getCollection("system.users");
+        MongoDatabase admin = getDB(false, "admin");
+        MongoCollection<Document> usersCollection =
+            admin.getCollection("system.users");
         usersCollection.insertOne(Document.parse("{\n"
             + "    \"_id\": \"admin.test-user\",\n"
             + "    \"user\": \"test-user\",\n"

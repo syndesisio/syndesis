@@ -19,13 +19,16 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.extension.api.Step;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.LoggingLevel;
@@ -36,11 +39,6 @@ import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.junit.Test;
 
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 /**
  * Handy class to test logging of log messages and errors
  */
@@ -48,7 +46,7 @@ public class LogsAndErrorsTest {
 
     @Test
     public void testRoute() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(

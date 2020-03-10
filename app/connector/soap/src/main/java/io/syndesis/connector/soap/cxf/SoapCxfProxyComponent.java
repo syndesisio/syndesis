@@ -16,29 +16,27 @@
 package io.syndesis.connector.soap.cxf;
 
 import java.util.Map;
-
-import org.apache.camel.Endpoint;
-import org.apache.camel.component.cxf.CxfEndpoint;
-import org.apache.camel.component.cxf.CxfEndpointConfigurer;
-
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import org.apache.camel.Endpoint;
+import org.apache.camel.component.cxf.CxfConfigurer;
+import org.apache.camel.component.cxf.CxfEndpoint;
 
 public final class SoapCxfProxyComponent extends ComponentProxyComponent {
 
-    private CxfEndpointConfigurer endpointConfigurer;
+    private CxfConfigurer endpointConfigurer;
 
     public SoapCxfProxyComponent(final String componentId, final String componentScheme) {
         super(componentId, componentScheme);
     }
 
-    public void setCxfEndpointConfigurer(CxfEndpointConfigurer endpointConfigurer) {
+    public void setCxfEndpointConfigurer(CxfConfigurer endpointConfigurer) {
         this.endpointConfigurer = endpointConfigurer;
     }
 
     @Override
     protected void configureDelegateEndpoint(ComponentDefinition definition, Endpoint endpoint, Map<String, Object> options) {
         super.configureDelegateEndpoint(definition, endpoint, options);
-        ((CxfEndpoint)endpoint).setCxfEndpointConfigurer(endpointConfigurer);
+        ((CxfEndpoint)endpoint).setCxfConfigurer(endpointConfigurer);
     }
 }

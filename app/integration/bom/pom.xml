@@ -27,8 +27,8 @@
   <packaging>pom</packaging>
 
   <properties>
-    <spring-boot.version>2.1.6.RELEASE</spring-boot.version>
-    <camel.version>2.23.2.fuse-760024</camel.version>
+    <spring-boot.version>2.2.4.RELEASE</spring-boot.version>
+    <camel.version>3.1.0</camel.version>
     <atlasmap.version>1.43.4</atlasmap.version>
     <jackson.databind.version>2.9.10.3</jackson.databind.version>
     <mongodb.version>3.9.0</mongodb.version>
@@ -147,7 +147,7 @@
 
       <!-- Camel BOM for Spring-boot -->
       <dependency>
-        <groupId>org.apache.camel</groupId>
+        <groupId>org.apache.camel.springboot</groupId>
         <artifactId>camel-spring-boot-dependencies</artifactId>
         <version>${camel.version}</version>
         <type>pom</type>
@@ -406,7 +406,6 @@
         <artifactId>connector-mongodb</artifactId>
         <version>${project.version}</version>
       </dependency>
-
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-debezium</artifactId>

@@ -16,10 +16,11 @@
 package io.syndesis.connector.mongo;
 
 import com.mongodb.client.MongoCollection;
-import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
+import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.junit.After;
 import org.junit.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class MongoDBConnectorProducerTestSupport extends MongoDBConnectorTestSupport{
 
@@ -27,9 +28,12 @@ public abstract class MongoDBConnectorProducerTestSupport extends MongoDBConnect
 
     public abstract String getCollectionName();
 
+    @Autowired
+    private MongoDatabase database;
+
     @Before
     public void before(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(getCollectionName());
+        collection = database.getCollection(getCollectionName());
     }
 
     @After

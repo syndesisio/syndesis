@@ -47,6 +47,8 @@ public interface ODataConstants extends Olingo4Constants, StringConstants {
 
     String CONSUMER = "consumer";
 
+    String SCHEDULER = "scheduler";
+
     String INITIAL_DELAY = "initialDelay";
 
     String DELAY = "delay";

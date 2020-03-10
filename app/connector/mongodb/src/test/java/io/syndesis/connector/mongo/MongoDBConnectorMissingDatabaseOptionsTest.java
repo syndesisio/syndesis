@@ -16,9 +16,8 @@
 package io.syndesis.connector.mongo;
 
 import java.util.List;
-
 import io.syndesis.common.model.integration.Step;
-import org.apache.camel.FailedToCreateRouteException;
+import org.apache.camel.FailedToStartRouteException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,10 +33,8 @@ public class MongoDBConnectorMissingDatabaseOptionsTest extends MongoDBConnector
 
     @Override
     @Before
-    public void setUp() {
-        Assertions.assertThatExceptionOfType(FailedToCreateRouteException.class).isThrownBy(super::setUp)
-            .withMessageContaining("Failed to create Producer")
-            .withMessageContaining("databaseName is not empty");
+    public void setUp()  {
+        Assertions.assertThatExceptionOfType(FailedToStartRouteException.class).isThrownBy(super::setUp);
     }
 
     @Override

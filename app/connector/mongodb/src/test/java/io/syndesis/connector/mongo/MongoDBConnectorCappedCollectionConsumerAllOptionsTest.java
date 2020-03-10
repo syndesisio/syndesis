@@ -49,9 +49,9 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION, opts);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION, opts);
         LOG.debug("Created a capped collection named {}", COLLECTION);
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION_TRACKING);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION_TRACKING);
         LOG.debug("Created a tracking collection named {}", COLLECTION_TRACKING);
     }
 
@@ -60,13 +60,13 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
      */
     @AfterClass
     public static void testTrackingIdValue() {
-        List<Document> docsFound = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
+        List<Document> docsFound = EmbedMongoConfiguration.getDB().getCollection(COLLECTION_TRACKING).find().into(new ArrayList<>());
         assertEquals(25, (int) docsFound.get(0).getInteger(COLLECTION_TRACKING_FIELD));
     }
 
     @Before
-    public void init(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
+    public void init() {
+        collection = EmbedMongoConfiguration.getDB().getCollection(COLLECTION);
     }
 
     @Override
@@ -80,22 +80,12 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
     public void mongoTest() throws Exception {
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
-        // We just retain last message
-        mock.setRetainLast(1);
         mock.expectedMessageCount(3);
-        mock.expectedMessagesMatches((Exchange e) -> {
-            try {
-                // We just want to validate the output is coming as json well format
-                @SuppressWarnings("unchecked")
-                List<String> doc = e.getMessage().getBody(List.class);
-                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
-                Assertions.assertThat(jsonNode).isNotNull();
-                Assertions.assertThat(jsonNode.get(COLLECTION_TRACKING_FIELD).asInt()).isEqualTo(25);
-            } catch (IOException ex) {
-                return false;
-            }
-            return true;
-        });
+        mock.expectedMessagesMatches(
+            exchange -> validateDocument(exchange, 10),
+            exchange -> validateDocument(exchange, 20),
+            exchange -> validateDocument(exchange, 25)
+        );
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");
@@ -112,5 +102,18 @@ public class MongoDBConnectorCappedCollectionConsumerAllOptionsTest extends Mong
 
         // Then
         mock.assertIsSatisfied();
+    }
+
+    private static boolean validateDocument(Exchange e, long tracking) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> doc = e.getMessage().getBody(List.class);
+            JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+            Assertions.assertThat(jsonNode).isNotNull();
+            Assertions.assertThat(jsonNode.get(COLLECTION_TRACKING_FIELD).asInt()).isEqualTo(tracking);
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
     }
 }

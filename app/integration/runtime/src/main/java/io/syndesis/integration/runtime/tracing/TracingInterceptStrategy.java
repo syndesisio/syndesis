@@ -25,11 +25,11 @@ import org.apache.camel.AsyncCallback;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.NamedNode;
 import org.apache.camel.Processor;
 import org.apache.camel.model.PipelineDefinition;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.processor.DefaultExchangeFormatter;
-import org.apache.camel.processor.DelegateAsyncProcessor;
+import org.apache.camel.support.processor.DelegateAsyncProcessor;
+import org.apache.camel.support.processor.DefaultExchangeFormatter;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
@@ -44,7 +44,7 @@ public class TracingInterceptStrategy implements InterceptStrategy {
     }
 
     @Override
-    public Processor wrapProcessorInInterceptors(CamelContext context, ProcessorDefinition<?> definition, Processor target, Processor nextTarget) throws Exception {
+    public Processor wrapProcessorInInterceptors(CamelContext context, NamedNode definition, Processor target, Processor nextTarget) throws Exception {
         if (definition instanceof PipelineDefinition) {
             final String id = definition.getId();
             if (ObjectHelper.isEmpty(id)) {

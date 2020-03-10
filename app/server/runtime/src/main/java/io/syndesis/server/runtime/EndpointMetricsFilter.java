@@ -28,6 +28,7 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.ext.Provider;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.metrics.http.Outcome;
 import org.springframework.stereotype.Component;
 
 import io.micrometer.core.instrument.Timer;
@@ -63,6 +64,9 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
         if (sample != null) {
             Timer timer = Timer
                 .builder("http.server.requests")
+                // no way to access the exception
+                .tag("exception", "")
+                .tag("outcome", computeOutcome(responseContext))
                 .tag("method", getMethod(requestContext))
                 .tag("status", getStatus(responseContext))
                 .tag("uri", getUri())
@@ -71,6 +75,10 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
                 .register(registry);
             sample.stop(timer);
         }
+    }
+
+    private static String computeOutcome(final ContainerResponseContext response) {
+        return Outcome.forStatus(response.getStatus()).name();
     }
 
     private static String getMethod(ContainerRequestContext requestContext) {

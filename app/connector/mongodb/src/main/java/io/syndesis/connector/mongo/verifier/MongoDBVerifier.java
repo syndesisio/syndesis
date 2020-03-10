@@ -16,14 +16,13 @@
 package io.syndesis.connector.mongo.verifier;
 
 import java.util.Map;
-
 import io.syndesis.connector.mongo.MongoCustomizersUtil;
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 
 public class MongoDBVerifier extends ComponentVerifier {
 
     public MongoDBVerifier() {
-        super("mongodb3");
+        super("mongodb");
     }
 
     @Override

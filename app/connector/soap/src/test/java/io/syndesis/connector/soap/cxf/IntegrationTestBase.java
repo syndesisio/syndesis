@@ -17,19 +17,16 @@ package io.syndesis.connector.soap.cxf;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Properties;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.properties.PropertiesComponent;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.impl.SimpleRegistry;
-import org.apache.camel.model.ModelCamelContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
+import static org.assertj.core.api.Assertions.assertThat;
 
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -44,15 +41,13 @@ import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import com.github.tomakehurst.wiremock.client.WireMock;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.postRequestedFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.spi.PropertiesSource;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
 
 public abstract class IntegrationTestBase {
 
@@ -135,30 +130,25 @@ public abstract class IntegrationTestBase {
     }
 
     private RouteBuilder createRouteBuilder() {
-        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
+        RouteBuilder rb = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
 
             @Override
             public void configure() throws Exception {
                 errorHandler(defaultErrorHandler().maximumRedeliveries(1));
 
+                getContext().getPropertiesComponent().addPropertiesSource(new PropertiesSource(){
+                    @Override
+                    public String getName() {
+                        return "flow-0.cxf-1.password";
+                    }
+
+                    @Override
+                    public String getProperty(String name) {
+                        return  "TestPassword";
+                    }
+                });
+                getContext().disableJMX();
                 super.configure();
-            }
-
-            @Override
-            protected ModelCamelContext createContainer() {
-                final Properties properties = new Properties();
-                properties.put("flow-0.cxf-1.password", "TestPassword");
-
-                final PropertiesComponent propertiesComponent = new PropertiesComponent();
-                propertiesComponent.setInitialProperties(properties);
-
-                final SimpleRegistry registry = new SimpleRegistry();
-                registry.put("properties", propertiesComponent);
-
-                final ModelCamelContext leanContext = new DefaultCamelContext(registry);
-                leanContext.disableJMX();
-
-                return leanContext;
             }
 
             @Override
@@ -166,6 +156,8 @@ public abstract class IntegrationTestBase {
                 return createIntegration();
             }
         };
+
+        return rb;
     }
 
     private Step operation(final String operationId, final DataShape inputDataShape, final DataShape outputDataShape) {

@@ -19,9 +19,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mongodb.client.MongoClient;
 import com.mongodb.client.model.CreateCollectionOptions;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.ValidationOptions;
@@ -33,13 +33,17 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
 
     private final static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
     private final static String CONNECTOR_ID = "io.syndesis.connector:connector-mongodb-find";
-    private final static String SCHEME = "mongodb3";
+    private final static String SCHEME = "mongodb";
     private final static String COLLECTION = "metadataCollection";
+
+    @Autowired
+    private MongoClient client;
 
     @Override
     protected List<Step> createSteps() {
@@ -82,7 +86,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
             + "            description: \"can be only M or F\" } \n"
             + "      }}");
         ValidationOptions collOptions = new ValidationOptions().validator(Filters.eq("$jsonSchema",jsonSchema));
-        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection,
+        client.getDatabase(DATABASE).createCollection(collection,
             new CreateCollectionOptions().validationOptions(collOptions));
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
@@ -116,7 +120,7 @@ public class MongoDBMetadataTest extends MongoDBConnectorTestSupport {
         properties.put("password", EmbedMongoConfiguration.PASSWORD);
         properties.put("adminDB", EmbedMongoConfiguration.ADMIN_DB);
         // When
-        EmbedMongoConfiguration.CLIENT.getDatabase(DATABASE).createCollection(collection);
+        client.getDatabase(DATABASE).createCollection(collection);
         // Then
         MongoDBMetadataRetrieval metaBridge = new MongoDBMetadataRetrieval();
         SyndesisMetadata metadata = metaBridge.fetch(

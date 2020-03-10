@@ -29,10 +29,46 @@
   <packaging>jar</packaging>
 
   <properties>
-    <hapi-fhir-version>3.5.0</hapi-fhir-version>
+    <hapi-fhir-version>4.1.0</hapi-fhir-version>
   </properties>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-fhir</artifactId>
+        <version>${camel.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-configuration-processor</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <scope>provided</scope>
+    </dependency>
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
@@ -58,6 +94,18 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-support</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -123,13 +171,29 @@
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
-      <artifactId>hapi-fhir-structures-dstu3</artifactId>
+      <artifactId>org.hl7.fhir.dstu3</artifactId>
       <version>${hapi-fhir-version}</version>
     </dependency>
     <dependency>
       <groupId>ca.uhn.hapi.fhir</groupId>
       <artifactId>hapi-fhir-client</artifactId>
       <version>${hapi-fhir-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.fhir</groupId>
+      <artifactId>ucum</artifactId>
+      <version>1.0.2</version>
+      <scope>runtime</scope>
+      <exclusions>
+        <!--
+          https://issues.apache.org/jira/browse/CAMEL-14366
+          https://github.com/FHIR/Ucum-java/pull/12
+        -->
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <!-- test -->

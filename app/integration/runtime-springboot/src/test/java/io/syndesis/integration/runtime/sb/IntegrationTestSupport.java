@@ -20,15 +20,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Arrays;
-import javax.xml.bind.JAXBException;
-
-import io.syndesis.common.util.Resources;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.CamelContext;
-import org.apache.camel.model.ModelHelper;
+import org.apache.camel.ExtendedCamelContext;
+import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.RoutesDefinition;
+import org.apache.camel.spi.ModelToXMLDumper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -38,8 +36,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -57,16 +57,22 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     protected void dumpRoutes(CamelContext context, RoutesDefinition definition) {
+        if (!LOGGER.isInfoEnabled()) {
+            return;
+        }
+
         try {
-            LOGGER.info("Routes: \n{}",ModelHelper.dumpModelAsXml(context, definition));
-        } catch (JAXBException e) {
-            LOGGER.warn("", e);
+            ExtendedCamelContext extendedCamelContext = context.adapt(ExtendedCamelContext.class);
+            ModelToXMLDumper dumper = extendedCamelContext.getModelToXMLDumper();
+            LOGGER.info("Routes: \n{}", dumper.dumpModelAsXml(context, definition));
+        } catch (Exception e) {
+            LOGGER.warn("Unable to dump routes as XML", e);
         }
     }
 
-    protected void dumpRoutes(CamelContext context) {
+    protected void dumpRoutes(ModelCamelContext context) {
         RoutesDefinition definition = new RoutesDefinition();
-        definition.setRoutes(context.getRouteDefinitions());
+        definition.setRoutes(context.adapt(ModelCamelContext.class).getRouteDefinitions());
 
         dumpRoutes(context, definition);
     }

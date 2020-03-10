@@ -19,6 +19,19 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getDefaultCamelContextWithMyBeanInRegistry;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.ArgumentMatchers.isNull;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -28,8 +41,6 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
@@ -42,20 +53,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.getDefaultCamelContextWithMyBeanInRegistry;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.isNull;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 public class SplitAggregateStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitAggregateStepHandlerTest.class);
@@ -84,7 +81,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregate() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -154,7 +151,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateWithTrailingSteps() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -238,7 +235,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateWithTransformation() throws Exception {
-        final CamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
+        final DefaultCamelContext context = getDefaultCamelContextWithMyBeanInRegistry();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -336,7 +333,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateTokenize() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -408,7 +405,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateWithOriginalAggregationStrategy() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -480,7 +477,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateWithLatestAggregationStrategy() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -551,7 +548,7 @@ public class SplitAggregateStepHandlerTest {
 
     @Test
     public void testSplitAggregateScriptAggregationStrategy() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,

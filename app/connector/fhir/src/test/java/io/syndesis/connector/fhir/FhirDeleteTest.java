@@ -42,7 +42,7 @@ public class FhirDeleteTest extends FhirTestBase {
 
     @Test
     public void deleteWithIdProvidedAsParameterTest() {
-        stubFhirRequest(delete(urlEqualTo("/Patient/1234")).willReturn(okXml(toXml(new OperationOutcome().setId("1234")))));
+        stubFhirRequest(delete(urlEqualTo("/Patient/1234?_format=xml")).willReturn(okXml(toXml(new OperationOutcome().setId("1234")))));
 
         OperationOutcome result = template.requestBody("direct:start", "", OperationOutcome.class);
         Assertions.assertThat(result.getId()).isEqualTo("OperationOutcome/1234");
@@ -50,7 +50,7 @@ public class FhirDeleteTest extends FhirTestBase {
 
     @Test
     public void deleteWithIdProvidedInBodyTest() {
-        stubFhirRequest(delete(urlEqualTo("/Patient/4321")).willReturn(okXml(toXml(new OperationOutcome().setId("4321")))));
+        stubFhirRequest(delete(urlEqualTo("/Patient/4321?_format=xml")).willReturn(okXml(toXml(new OperationOutcome().setId("4321")))));
 
         FhirResourceId id = new FhirResourceId();
         id.setId("4321");

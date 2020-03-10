@@ -24,7 +24,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-import org.apache.camel.StringSource;
+import org.apache.camel.util.xml.StringSource;
 import org.apache.cxf.common.xmlschema.LSInputImpl;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

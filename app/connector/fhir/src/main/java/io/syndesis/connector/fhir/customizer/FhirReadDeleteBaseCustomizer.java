@@ -23,7 +23,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.component.ApiMethod;
+import org.apache.camel.support.component.ApiMethod;
 
 import java.util.Map;
 

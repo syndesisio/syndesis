@@ -18,6 +18,11 @@ package io.syndesis.integration.runtime.tracing;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertEquals;
+
 import io.jaegertracing.internal.JaegerSpan;
 import io.jaegertracing.internal.JaegerTracer;
 import io.jaegertracing.internal.samplers.ConstSampler;
@@ -32,9 +37,8 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-
-import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Handler;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -43,14 +47,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-
 public class ActivityTracingWithSplitTest {
-    protected CamelContext context;
+    protected ExtendedCamelContext context;
     protected ArrayList<JaegerSpan> activityEvents;
 
     @Before

@@ -19,6 +19,7 @@ import io.opentracing.Tracer;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.tracing.TracingLogListener;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +43,7 @@ class TracingCamelContextConfiguration implements CamelContextConfiguration {
         camelContext.setUuidGenerator(KeyGenerator::createKey);
 
         // Log listener
-        camelContext.addLogListener(new TracingLogListener(tracer));
+        camelContext.adapt(ExtendedCamelContext.class).addLogListener(new TracingLogListener(tracer));
     }
 
     @Override

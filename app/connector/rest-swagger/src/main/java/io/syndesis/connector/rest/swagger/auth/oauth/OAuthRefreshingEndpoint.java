@@ -25,7 +25,7 @@ import org.apache.camel.Consumer;
 import org.apache.camel.Endpoint;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.http.common.HttpOperationFailedException;
+import org.apache.camel.http.base.HttpOperationFailedException;
 import org.apache.camel.processor.CatchProcessor;
 import org.apache.camel.processor.Pipeline;
 import org.apache.camel.processor.TryProcessor;
@@ -55,7 +55,7 @@ public class OAuthRefreshingEndpoint extends ComponentProxyEndpoint {
 
         final Processor catchProcessor = new CatchProcessor(EXCEPTIONS_HANDLED, catchBody, null, null);
 
-        final Processor tryProcessor = new TryProcessor(producer,
+        final Processor tryProcessor = new TryProcessor(component.getCamelContext(), producer,
             singletonList(catchProcessor), null);
 
         pipeline = new Pipeline(delegate.getCamelContext(), singletonList(tryProcessor));

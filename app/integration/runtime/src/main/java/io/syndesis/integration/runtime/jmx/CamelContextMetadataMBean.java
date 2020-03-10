@@ -16,13 +16,17 @@
 package io.syndesis.integration.runtime.jmx;
 
 import java.util.Date;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.Service;
 import org.apache.camel.api.management.ManagedAttribute;
+import org.apache.camel.api.management.ManagedCamelContext;
 import org.apache.camel.api.management.ManagedResource;
+import org.apache.camel.management.DefaultManagementObjectNameStrategy;
+import org.apache.camel.spi.ManagementObjectNameStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,44 +45,71 @@ public class CamelContextMetadataMBean implements Service, CamelContextAware {
 
     @ManagedAttribute
     public Long getStartTimestamp() {
-        return camelContext.getManagedCamelContext().getStartTimestamp().getTime();
+        return camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getStartTimestamp().getTime();
     }
 
     @ManagedAttribute
     public Long getResetTimestamp() {
-        final Date resetTimestamp = camelContext.getManagedCamelContext().getResetTimestamp();
+        final Date resetTimestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext().getResetTimestamp();
         return resetTimestamp == null ? null : resetTimestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeCompletedTimestamp() {
-        final Date timestamp = camelContext.getManagedCamelContext()
+        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
                 .getLastExchangeCompletedTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
     @ManagedAttribute
     public Long getLastExchangeFailureTimestamp() {
-        final Date timestamp = camelContext.getManagedCamelContext()
+        final Date timestamp = camelContext.getExtension(ManagedCamelContext.class).getManagedCamelContext()
                 .getLastExchangeFailureTimestamp();
         return timestamp == null ? null : timestamp.getTime();
     }
 
     @Override
-    public void start() throws Exception {
+    public void start() {
         // register mbean
         final String contextName = camelContext.getName();
         final String name = String.format("io.syndesis.camel:context=%s,type=context,name=\"%s\"", contextName, contextName);
-        final ObjectName instance = ObjectName.getInstance(name);
+        final ObjectName instanceName;
+        try {
+            instanceName = ObjectName.getInstance(name);
+        } catch (MalformedObjectNameException e) {
+            throw new RuntimeCamelException(e);
+        }
+        final Object currentInstance = this;
 
-        camelContext.getManagementStrategy().manageNamedObject(this, instance);
-        LOG.info("Registered mbean {}", instance);
+        camelContext.getManagementStrategy().setManagementObjectNameStrategy(new DefaultManagementObjectNameStrategy() {
+            @Override
+            public ObjectName getObjectName(Object managedObject) throws MalformedObjectNameException {
+                if (currentInstance.equals(managedObject)) {
+                    return instanceName;
+                } else {
+                    return super.getObjectName(managedObject);
+                }
+            }
+        });
+        try {
+            camelContext.getManagementStrategy().manageObject(this);
+        } catch (Exception e) {
+            throw new RuntimeCamelException(e);
+        }
+        ManagementObjectNameStrategy defaultNameStrategy = camelContext.getManagementStrategy().getManagementObjectNameStrategy();
+        camelContext.getManagementStrategy().setManagementObjectNameStrategy(defaultNameStrategy);
+
+        LOG.info("Registered mbean {}", instanceName);
     }
 
     @Override
-    public void stop() throws Exception {
+    public void stop() {
         // unregister mbean
-        camelContext.getManagementStrategy().unmanageObject(this);
+        try {
+            camelContext.getManagementStrategy().unmanageObject(this);
+        } catch (Exception e) {
+            throw new RuntimeCamelException(e);
+        }
     }
 
     @Override

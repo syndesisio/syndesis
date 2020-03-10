@@ -21,7 +21,7 @@ import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 
 import org.apache.camel.CamelContext;
-import org.apache.camel.component.cxf.ChainedCxfEndpointConfigurer;
+import org.apache.camel.component.cxf.ChainedCxfConfigurer;
 import org.apache.cxf.common.util.PropertyUtils;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.ws.security.wss4j.WSS4JOutInterceptor;
@@ -73,7 +73,7 @@ public final class AuthenticationCustomizer implements ComponentProxyCustomizer 
 
         // set WSSE-UT options and create client out interceptor
         final SoapCxfProxyComponent proxyComponent = (SoapCxfProxyComponent) component;
-        proxyComponent.setCxfEndpointConfigurer(new ChainedCxfEndpointConfigurer.NullCxfEndpointConfigurer() {
+        proxyComponent.setCxfEndpointConfigurer(new ChainedCxfConfigurer.NullCxfConfigurer() {
 
             @Override
             public void configureClient(Client client) {

@@ -15,23 +15,20 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
+import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.CamelContextAware;
+import org.apache.camel.Component;
+import org.apache.camel.support.PropertyBindingSupport;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.CollectionsUtils;
 import io.syndesis.integration.component.proxy.ComponentCustomizer;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Component;
-import org.apache.camel.util.IntrospectionSupport;
-import org.apache.camel.util.ObjectHelper;
-
-import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
-import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
 
 final class HandlerCustomizer {
 
@@ -53,7 +50,7 @@ final class HandlerCustomizer {
 
             // Set the camel context if the customizer implements
             // the CamelContextAware interface.
-            ObjectHelper.trySetCamelContext(customizer, context);
+            CamelContextAware.trySetCamelContext(customizer, context);
 
             // Set input/output data shape if the customizer implements
             // Input/OutputDataShapeAware
@@ -83,7 +80,11 @@ final class HandlerCustomizer {
                 }
 
                 // Bind properties to the customizer
-                if (IntrospectionSupport.setProperty(context, target, key, val)) {
+                if (new PropertyBindingSupport.Builder()
+                                                    .withCamelContext(context)
+                                                    .withProperty(key, val)
+                                                    .withTarget(target)
+                                                    .bind()) {
                     // Remove property if bound to the customizer.
                     iterator.remove();
                 }
