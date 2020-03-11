@@ -236,26 +236,26 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
 
   return (
     <Grid style={{ flexGrow: 1 }}>
-      <GridItem span={4}>
+      <GridItem span={3}>
         <PageSection
           isFilled={true}
           variant={'light'}
-          className={
-            props.previewExpanded
-              ? 'ddl-editor_metatree ddl-editor_metatree_scroll'
-              : 'ddl-editor_metatree'
-          }
+          className={'ddl-editor'}
         >
           <Title headingLevel="h5" size="lg">
             {props.i18nMetadataTitle}
           </Title>
-          <ConnectionTreeComponent
-            metadataTree={metadataTree}
-            i18nLoading={props.i18nLoading}
-          />
+          <div className={props.previewExpanded
+              ? 'ddl-editor_metatree_table ddl-editor_metatree_table_scroll'
+              : 'ddl-editor_metatree_table'}>
+            <ConnectionTreeComponent
+              metadataTree={metadataTree}
+              i18nLoading={props.i18nLoading}
+            />
+          </div>
         </PageSection>
       </GridItem>
-      <GridItem span={8}>
+      <GridItem span={9}>
         <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
           <Title headingLevel="h5" size="lg">
             {props.i18nTitle}

@@ -2,7 +2,7 @@ import { Spinner } from '@patternfly/react-core';
 import { DatabaseIcon } from '@patternfly/react-icons';
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import { FirstTreeChildComponent } from '..';
+import { TreeTableNodeComponent } from '..';
 
 export interface IConnectionTreeComponentProps {
   metadataTree: Map<string, any>;
@@ -40,7 +40,7 @@ const getTableRows = (metadataTree: Map<string, any>) => {
       cells: [
         {
           title: (
-            <FirstTreeChildComponent metadataTreeTables={getTableTree(value)} />
+            <TreeTableNodeComponent metadataTreeTables={getTableTree(value)} />
           ),
         },
       ],

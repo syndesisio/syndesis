@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, DropdownPosition, KebabToggle } from '@patternfly/react-core';
 import * as React from 'react';
 import './KababActionComponent.css';
 
@@ -37,6 +37,7 @@ export const KababActionComponent: React.FunctionComponent<IKababActionComponent
     <Dropdown
       onSelect={onSelect}
       toggle={<KebabToggle onToggle={onToggle} id="toggle-id-kabab-1" />}
+      position={DropdownPosition.right}
       isOpen={isOpen}
       isPlain={true}
       dropdownItems={dropdownItems}

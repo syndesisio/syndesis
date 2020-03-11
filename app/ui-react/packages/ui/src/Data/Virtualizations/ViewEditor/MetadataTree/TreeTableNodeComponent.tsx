@@ -1,9 +1,9 @@
 import { TableIcon } from '@patternfly/react-icons';
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import { FinalTreeChildComponent, KababActionComponent } from '..';
+import { KababActionComponent, TreeColumnNodeComponent } from '..';
 
-export interface IFirstTreeChildComponentProps {
+export interface ITreeTableNodeComponentProps {
   metadataTreeTables: Map<string, any>;
 }
 
@@ -29,7 +29,7 @@ const getTableRows = (metadataTree: Map<string, any>) => {
     const childOne = {
       cells: [
         {
-          title: <FinalTreeChildComponent metadataTreeColumns={value} />,
+          title: <TreeColumnNodeComponent metadataTreeColumns={value} />,
         },
       ],
       // fullWidth: true,
@@ -42,7 +42,7 @@ const getTableRows = (metadataTree: Map<string, any>) => {
   return tableRows.length > 0 ? tableRows : [];
 };
 
-export const FirstTreeChildComponent: React.FunctionComponent<IFirstTreeChildComponentProps> = props => {
+export const TreeTableNodeComponent: React.FunctionComponent<ITreeTableNodeComponentProps> = props => {
   const columns = [''];
 
   const [rowsList, setRowsList] = React.useState<IRow[]>(
