@@ -1,18 +1,18 @@
 import { OutlinedCopyIcon } from '@patternfly/react-icons';
 import { IRow, Table, TableBody, TableVariant } from '@patternfly/react-table';
 import * as React from 'react';
-import './FinalTreeChildComponent.css';
+import './TreeColumnNodeComponent.css';
 
 export interface ISourceColumn {
   name: string;
   datatype: string;
 }
 
-export interface IFinalTreeChildComponentProps {
+export interface ITreeColumnNodeComponentProps {
   metadataTreeColumns: ISourceColumn[];
 }
 
-export const FinalTreeChildComponent: React.FunctionComponent<IFinalTreeChildComponentProps> = props => {
+export const TreeColumnNodeComponent: React.FunctionComponent<ITreeColumnNodeComponentProps> = props => {
   const columns = [''];
 
   const getTableRows = (metadataTree: ISourceColumn[]) => {

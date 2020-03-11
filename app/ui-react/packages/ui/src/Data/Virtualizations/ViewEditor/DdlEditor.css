@@ -4,22 +4,16 @@
   flex-direction: column;
 }
 
-.ddl-editor_metatree {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.ddl-editor_metatree_scroll{
-  max-height: 500px;
+.ddl-editor_metatree_table_scroll{
+  max-height: 400px;
   overflow-y: auto;
 }
 
-.ddl-editor_metatree > .pf-c-table tr > *{
+.ddl-editor_metatree_table > .pf-c-table tr > *{
   padding: 1px 2px !important;
 }
 
-.ddl-editor_metatree .pf-c-table{
+.ddl-editor_metatree_table .pf-c-table{
   --pf-c-table__expandable-row--before--BackgroundColor: none !important;
 }
 
