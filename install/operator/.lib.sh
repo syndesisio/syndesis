@@ -149,6 +149,7 @@ FROM golang:1.13.7
 WORKDIR /go/src/${OPERATOR_GO_PACKAGE}
 ENV GO111MODULE=on
 COPY . .
+RUN go generate ./pkg/...
 RUN go test -test.short -mod=vendor ./cmd/... ./pkg/...
 RUN GOOS=linux   GOARCH=amd64 go build $OPTS -o /dist/linux-amd64/syndesis-operator    -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
 RUN GOOS=darwin  GOARCH=amd64 go build $OPTS -o /dist/darwin-amd64/syndesis-operator   -gcflags all=-trimpath=\${GOPATH} -asmflags all=-trimpath=\${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
