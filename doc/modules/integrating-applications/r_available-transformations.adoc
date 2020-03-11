@@ -125,23 +125,23 @@ from the *From Unit* and *To Unit* menus. The choices are:
 from the *From Unit* and *To Unit* menus. The choices are:
 `Cubic Foot`, `Cubic Meter`, `Gallon US Fluid`, or `Liter`.
 
-|`CurrentDate`
-|None
-|date
-|None
-|Return the current date.
+// |`CurrentDate`
+// |None
+// |date
+// |None
+// |Return the current date.
 
-|`CurrentDateTime`
-|None
-|date
-|None
-|Return the current date and time.
+// |`CurrentDateTime`
+// |None
+// |date
+// |None
+// |Return the current date and time.
 
-|`CurrentTime`
-|None
-|date
-|None
-|Return the current time.
+// |`CurrentTime`
+// |None
+// |date
+// |None
+// |Return the current time.
 
 |`DayOfWeek`
 | date
@@ -198,12 +198,11 @@ input field and return a string that contains the result. This
 is similar to mechanisms that are available in programming languages such
 as Java and C. 
 
-
-|`GenerateUUID`
-|None
-|string
-|None
-|Create a string that represents a random UUID.
+// |`GenerateUUID`
+// |None
+// |string
+// |None
+// |Create a string that represents a random UUID.
 
 |`IndexOf`
 | string +
