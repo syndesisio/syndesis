@@ -301,6 +301,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           const e = new Error();
           e.name = 'NoViews';
           throw e;
+        }else{
+          pushNotification(
+            (t('publishInProgress')),
+            'info'
+          );
         }
 
         publishVirtualization(props.virtualization.name).catch((e: any) => {
@@ -419,6 +424,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Start'),
       id: VirtualizationActionId.Start,
       onClick: async () => {
+        pushNotification(
+          (t('publishInProgress')),
+          'info'
+        );
         setPromptActionOptions({
           buttonText: t('shared:Start'),
           handleAction: async () => {
@@ -479,6 +488,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Stop'),
       id: VirtualizationActionId.Stop,
       onClick: async () => {
+        pushNotification(
+          (t('stopInProgress')),
+          'info'
+        );
         unpublishVirtualization(props.virtualization.name).catch((e: any) => {
           if (e.name === 'AlreadyUnpublished') {
             pushNotification(
