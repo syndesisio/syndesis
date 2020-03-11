@@ -121,6 +121,14 @@
       "description": "Update details about this integration.",
       "saveAndPublish": "Save and publish"
     },
+    "selectChoiceMode": {
+      "basicDescription": "Provides preselected properties and condition operators for simple expressions.",
+      "basicName": "Basic expression builder",
+      "advancedDescription": "User provides condition language expressions for more advanced use cases.",
+      "advancedName": "Advanced expression builder",
+      "ConfigureConditionalFlows": "Configure Conditional",
+      "pageDescription": "Choose how to configure the conditional flows step."
+    },
     "choiceForm": {
       "conditionDescription": "Provide a condition that you want to evaluate (for example, ${header.type} == 'note' or ${body.title} contains 'Important').",
       "conditionName": "Condition",
