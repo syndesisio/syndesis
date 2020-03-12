@@ -1,18 +1,16 @@
 import {
+  Alert,
   Card,
   CardBody,
   CardFooter,
   CardHeader,
+  Form,
+  FormGroup,
+  Radio,
+  TextInput,
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import {
-  Alert,
-  ControlLabel,
-  FormControl,
-  FormGroup,
-  Radio,
-} from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 
@@ -112,51 +110,47 @@ export const ApiClientConnectorCreateSecurity: React.FunctionComponent<IApiClien
         <Title size="2xl">{i18nTitle}</Title>
       </CardHeader>
       <CardBody>
-        <Alert type={'info'}>
-          <span>{i18nDescription}</span>
-        </Alert>
-        <FormGroup controlId={'authenticationType'} disabled={false}>
-          {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => {
-            return (
-              <div key={authType.value + '-' + idx}>
-                <Radio
-                  id={'authenticationType'}
-                  aria-label={'Authentication Type'}
-                  checked={selectedType === authType.value}
-                  name={'authenticationType'}
-                  onClick={() => handleChangeSelectedType(authType.value!)}
-                  readOnly={true}
-                >
-                  {authType.label || i18nNoSecurity}
-                </Radio>
-              </div>
-            );
-          })}
+        <Form>
+          <Alert type={'info'} title={i18nDescription} isInline={true} />
+          <FormGroup fieldId={'authenticationType'}>
+            {authenticationTypes!.map((authType: IAuthenticationTypes, idx) => (
+              <Radio
+                key={authType.value + '-' + idx}
+                id={'authenticationType'}
+                aria-label={authType.label || i18nNoSecurity}
+                label={authType.label || i18nNoSecurity}
+                isChecked={selectedType === authType.value}
+                name={'authenticationType'}
+                onChange={() => handleChangeSelectedType(authType.value!)}
+                value={authType.value}
+                readOnly={true}
+              />
+            ))}
+          </FormGroup>
           {extractAuthType(selectedType) === 'oauth2' && (
             <>
-              <FormGroup controlId={'authorizationUrl'} disabled={false}>
-                <ControlLabel>{i18nAuthorizationUrl}</ControlLabel>
-                <FormControl
+              <FormGroup
+                fieldId={'authorizationUrl'}
+                label={i18nAuthorizationUrl}
+              >
+                <TextInput
+                  id={'authorizationUrl'}
                   type={'text'}
                   value={authUrl}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeAuthUrl(event.target.value)
-                  }
+                  onChange={value => handleChangeAuthUrl(value)}
                 />
               </FormGroup>
-              <FormGroup controlId={'accessTokenUrl'} disabled={false}>
-                <ControlLabel>{i18nAccessTokenUrl}</ControlLabel>
-                <FormControl
+              <FormGroup fieldId={'accessTokenUrl'} label={i18nAccessTokenUrl}>
+                <TextInput
+                  id={'accessTokenUrl'}
                   type={'text'}
                   value={tokenUrl}
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    handleChangeTokenUrl(event.target.value)
-                  }
+                  onChange={value => handleChangeTokenUrl(value)}
                 />
               </FormGroup>
             </>
           )}
-        </FormGroup>
+        </Form>
       </CardBody>
       <CardFooter>
         <div>
