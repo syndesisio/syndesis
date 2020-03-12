@@ -20,10 +20,9 @@ export const IntegrationEditorActionsListItem: React.FunctionComponent<IIntegrat
   actions,
 }) => {
   const nameId = toValidHtmlId(name);
-  const ariaLabel = `actions list item ${nameId}`;
   return (
     <DataListItem
-      aria-labelledby={ariaLabel}
+      aria-labelledby={nameId}
       data-testid={`integration-editor-actions-list-item-${nameId}-list-item`}
     >
       <DataListItemRow>
@@ -34,7 +33,7 @@ export const IntegrationEditorActionsListItem: React.FunctionComponent<IIntegrat
               width={2}
               aria-label={'editor actions list item name'}
             >
-              <b id={ariaLabel}>{name}</b>
+              <b id={nameId}>{name}</b>
             </DataListCell>,
             <DataListCell key={1} width={4}>
               {name === description ? null : <>{description}</>}
@@ -42,7 +41,7 @@ export const IntegrationEditorActionsListItem: React.FunctionComponent<IIntegrat
           ]}
         />
         <DataListAction
-          aria-labelledby={ariaLabel}
+          aria-labelledby={nameId}
           id={'editor-actions-list-item-action'}
           aria-label={'editor-actions-list-actions'}
         >
