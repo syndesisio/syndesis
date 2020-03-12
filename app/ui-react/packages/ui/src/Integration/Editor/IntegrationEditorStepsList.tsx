@@ -1,13 +1,14 @@
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import * as React from 'react';
 import './IntegrationEditorStepsList.css';
 
-export class IntegrationEditorStepsList extends React.Component<{}> {
-  public render() {
-    return (
-      <ListView className={'integration-editor-steps-list'}>
-        {this.props.children}
-      </ListView>
-    );
-  }
-}
+export const IntegrationEditorStepsList: React.FunctionComponent = ({
+  children,
+}) => (
+  <DataList
+    aria-label={'integration editor step list'}
+    className={'integration-editor-steps-list'}
+  >
+    {children}
+  </DataList>
+);
