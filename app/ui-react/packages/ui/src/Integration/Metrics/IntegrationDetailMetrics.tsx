@@ -4,16 +4,14 @@ import {
   CardHeader,
   Grid,
   GridItem,
-  Title
+  Title,
 } from '@patternfly/react-core';
-import { ErrorCircleOIcon, OkIcon } from '@patternfly/react-icons';
-import {
-  AggregateStatusCount,
-  AggregateStatusNotification,
-  AggregateStatusNotifications,
-} from 'patternfly-react';
+import { ErrorCircleOIcon } from '@patternfly/react-icons';
+import { global_danger_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
+import { UptimeMetric } from '../../Dashboard';
 import { PageSection } from '../../Layout';
+import { AggregatedMetricCard } from '../../Shared';
 import './IntegrationDetailMetrics.css';
 
 export interface IIntegrationDetailMetricsProps {
@@ -30,102 +28,71 @@ export interface IIntegrationDetailMetricsProps {
   uptimeDuration?: string;
 }
 
-export class IntegrationDetailMetrics extends React.Component<
-  IIntegrationDetailMetricsProps
-  > {
-  public render() {
-    const okMessagesCount = this.props.messages! - this.props.errors!;
-    const startAsDate = new Date(this.props.start!);
-    const startAsHuman = this.props.i18nSince + startAsDate.toLocaleString();
-    return (
-      <PageSection className="integration-detail-metrics">
-
-        <Grid md={6} xl={3} gutter={'sm'}>
-          <GridItem>
-            <Card data-testid={'integration-detail-metrics-total-errors-card'}>
-              <CardHeader>
-                <Title size="lg">{this.props.i18nTotalErrors}</Title>
-              </CardHeader>
-              <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification>
-                    <ErrorCircleOIcon/>
-                    {this.props.errors ? this.props.errors : 0}
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem>
-            <Card data-testid={'integration-detail-metrics-last-processed-card'}>
-              <CardHeader>
-                <Title size="lg">{this.props.i18nLastProcessed}</Title>
-              </CardHeader>
-              <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification className="integration-detail-metrics__last-processed">
-                    {this.props.lastProcessed
-                      ? this.props.lastProcessed
-                      : this.props.i18nNoDataAvailable}
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem>
-            <Card data-testid={'integration-detail-metrics-total-messages-card'}>
-              <CardHeader>
-                <Title size="lg">
-                  <AggregateStatusCount>
-                    {this.props.messages ? this.props.messages : 0}&nbsp;
-                  </AggregateStatusCount>
-                  {this.props.i18nTotalMessages}
-                </Title>
-              </CardHeader>
-              <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification>
-                    <OkIcon/>
-                    {this.props.errors !== undefined &&
-                      this.props.messages !== undefined
-                      ? okMessagesCount
-                      : 0}
-                    &nbsp;
-                    </AggregateStatusNotification>
-                  <AggregateStatusNotification>
-                    <ErrorCircleOIcon/>
-                    {this.props.errors ? this.props.errors : 0}
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem>
-            <Card data-testid={'integration-detail-metrics-uptime-card'}>
-              <CardHeader>
-                <Title size="lg" className="integration-detail-metrics__uptime-header">
-                  <div>{this.props.i18nUptime}</div>
-                  {this.props.start !== undefined &&
-                    this.props.uptimeDuration !== undefined && (
-                      <div className="integration-detail-metrics__uptime-uptime">
-                        {startAsHuman}
-                      </div>
-                    )}
-                </Title>
-              </CardHeader>
-              <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification className="integration-detail-metrics__duration-difference">
-                    {this.props.uptimeDuration !== undefined
-                      ? this.props.uptimeDuration
-                      : this.props.i18nNoDataAvailable}
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
-              </CardBody>
-            </Card>
-          </GridItem>
-        </Grid>
-      </PageSection>
-    );
-  }
-}
+export const IntegrationDetailMetrics: React.FunctionComponent<IIntegrationDetailMetricsProps> = ({
+  i18nLastProcessed,
+  i18nNoDataAvailable,
+  i18nSince,
+  i18nTotalErrors,
+  i18nTotalMessages,
+  i18nUptime,
+  errors = 0,
+  lastProcessed,
+  messages = 0,
+  start,
+  uptimeDuration,
+}) => {
+  const okMessagesCount = messages - errors;
+  return (
+    <PageSection className="integration-detail-metrics">
+      <Grid md={6} xl={3} gutter={'sm'}>
+        <GridItem>
+          <Card data-testid={'integration-detail-metrics-total-errors-card'}>
+            <CardHeader>
+              <Title size="lg">{i18nTotalErrors}</Title>
+            </CardHeader>
+            <CardBody>
+              <br />
+              <Title size={'xl'}>
+                <ErrorCircleOIcon color={global_danger_color_100.value} />
+                &nbsp;{errors}
+              </Title>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem>
+          <Card data-testid={'integration-detail-metrics-last-processed-card'}>
+            <CardHeader>
+              <Title size={'lg'}>{i18nLastProcessed}</Title>
+            </CardHeader>
+            <CardBody>
+              <br />
+              <Title
+                size={'xl'}
+                className="integration-detail-metrics__last-processed"
+              >
+                {lastProcessed ? lastProcessed : i18nNoDataAvailable}
+              </Title>
+            </CardBody>
+          </Card>
+        </GridItem>
+        <GridItem>
+          <AggregatedMetricCard
+            data-testid={'integration-detail-metrics-total-messages-card'}
+            title={i18nTotalMessages}
+            ok={okMessagesCount}
+            error={errors}
+            total={messages}
+          />
+        </GridItem>
+        <GridItem>
+          <UptimeMetric
+            start={start || 0}
+            uptimeDuration={uptimeDuration || i18nNoDataAvailable}
+            i18nSince={i18nSince}
+            i18nTitle={i18nUptime}
+          />
+        </GridItem>
+      </Grid>
+    </PageSection>
+  );
+};
