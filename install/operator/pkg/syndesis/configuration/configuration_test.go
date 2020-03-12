@@ -105,6 +105,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
 						Meta:       MetaConfiguration{Image: "META_IMAGE"},
 						Database: DatabaseConfiguration{
+							Image:    "DATABASE_IMAGE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteOnce",

@@ -521,6 +521,7 @@ func (config *Config) setConfigFromEnv() error {
 				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
 				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
 				Database: DatabaseConfiguration{
+					Image:    os.Getenv("DATABASE_IMAGE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
