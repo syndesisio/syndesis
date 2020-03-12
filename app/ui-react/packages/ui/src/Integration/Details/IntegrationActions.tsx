@@ -21,64 +21,70 @@ export interface IIntegrationActionsProps {
   editHref?: H.LocationDescriptor;
 }
 
-export class IntegrationActions extends React.Component<
+export const IntegrationActions: React.FunctionComponent<
   IIntegrationActionsProps
-> {
-  public render() {
-    return (
-      <>
-        <ButtonLink
-          data-testid={'integration-actions-edit-button'}
-          className={'edit-integration-btn'}
-          href={this.props.editHref}
-          as={'default'}
-        >
-          {this.props.i18nEditBtn}
-        </ButtonLink>
-        <ButtonLink
-          data-testid={'integration-actions-view-button'}
-          className={'view-integration-btn'}
-          href={this.props.detailsHref}
-          as={'default'}
-        >
-          {this.props.i18nViewBtn}
-        </ButtonLink>
-        <DropdownKebab
-          className={'integration-actions__dropdown-kebab'}
-          id={`integration-${this.props.integrationId}-action-menu`}
-          pullRight={true}
-        >
-          {this.props.actions.map((a, idx) => (
-            <li role={'presentation'} key={idx}>
-              {a.href ? (
-                <Link
-                  data-testid={`integration-actions-${toValidHtmlId(
-                    a.label.toString()
-                  )}`}
-                  to={a.href}
-                  onClick={a.onClick}
-                  role={'menuitem'}
-                  tabIndex={idx + 1}
-                >
-                  {a.label}
-                </Link>
-              ) : (
-                <a
-                  data-testid={`integration-actions-${toValidHtmlId(
-                    a.label.toString()
-                  )}`}
-                  href={'javascript:void(0)'}
-                  onClick={a.onClick}
-                  role={'menuitem'}
-                  tabIndex={idx + 1}
-                >
-                  {a.label}
-                </a>
-              )}
-            </li>
-          ))}
-        </DropdownKebab>
-      </>
-    );
-  }
-}
+> = (
+  {
+    actions,
+    detailsHref,
+    editHref,
+    i18nEditBtn,
+    i18nViewBtn,
+    integrationId
+  }) => {
+  return (
+    <>
+      <ButtonLink
+        data-testid={'integration-actions-edit-button'}
+        className={'edit-integration-btn'}
+        href={editHref}
+        as={'default'}
+      >
+        {i18nEditBtn}
+      </ButtonLink>
+      <ButtonLink
+        data-testid={'integration-actions-view-button'}
+        className={'view-integration-btn'}
+        href={detailsHref}
+        as={'default'}
+      >
+        {i18nViewBtn}
+      </ButtonLink>
+      <DropdownKebab
+        className={'integration-actions__dropdown-kebab'}
+        id={`integration-${integrationId}-action-menu`}
+        pullRight={true}
+      >
+        {actions.map((a, idx) => (
+          <li role={'presentation'} key={idx}>
+            {a.href ? (
+              <Link
+                data-testid={`integration-actions-${toValidHtmlId(
+                  a.label.toString()
+                )}`}
+                to={a.href}
+                onClick={a.onClick}
+                role={'menuitem'}
+                tabIndex={idx + 1}
+              >
+                {a.label}
+              </Link>
+            ) : (
+              <a
+                data-testid={`integration-actions-${toValidHtmlId(
+                  a.label.toString()
+                )}`}
+                href={'javascript:void(0)'}
+                onClick={a.onClick}
+                role={'menuitem'}
+                tabIndex={idx + 1}
+              >
+                {a.label}
+              </a>
+            )}
+          </li>
+        ))}
+      </DropdownKebab>
+    </>
+  );
+};
