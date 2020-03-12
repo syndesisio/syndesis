@@ -95,6 +95,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 							Image:   "DV_IMAGE",
 						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
+						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
@@ -117,6 +118,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 								TestSupport: false,
 							},
 						},
+						AMQ: AMQConfiguration{Image: "AMQ_IMAGE"},
 					},
 				},
 			},
@@ -159,7 +161,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "CAMELK_IMAGE": "CAMELK_IMAGE",
 				"DATABASE_VOLUME_NAME": "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
-				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce",
+				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce", "TODO_IMAGE": "TODO_IMAGE", "AMQ_IMAGE": "AMQ_IMAGE",
 			},
 			wantErr: false,
 		},
@@ -246,7 +248,7 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
 						Ops:     AddonConfiguration{Enabled: false},
-						Todo:    AddonConfiguration{Enabled: true},
+						Todo:    TodoConfiguration{Enabled: true},
 						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
@@ -357,7 +359,7 @@ func getConfigLiteral() *Config {
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
 				Ops:  AddonConfiguration{Enabled: false},
-				Todo: AddonConfiguration{Enabled: false},
+				Todo: TodoConfiguration{Enabled: false},
 				DV: DvConfiguration{
 					Enabled:   false,
 					Image:     "docker.io/teiid/syndesis-dv:latest",
