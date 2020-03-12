@@ -248,8 +248,11 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Ops:     AddonConfiguration{Enabled: false},
-						Todo:    TodoConfiguration{Enabled: true},
+						Ops: AddonConfiguration{Enabled: false},
+						Todo: TodoConfiguration{
+							Enabled: true,
+							Image:   "docker.io/centos/php-71-centos7",
+						},
 						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
@@ -359,8 +362,11 @@ func getConfigLiteral() *Config {
 					ImageAllInOne: "jaegertracing/all-in-one:1.13",
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
-				Ops:  AddonConfiguration{Enabled: false},
-				Todo: TodoConfiguration{Enabled: false},
+				Ops: AddonConfiguration{Enabled: false},
+				Todo: TodoConfiguration{
+					Enabled: false,
+					Image:   "docker.io/centos/php-71-centos7",
+				},
 				DV: DvConfiguration{
 					Enabled:   false,
 					Image:     "docker.io/teiid/syndesis-dv:latest",
@@ -427,6 +433,7 @@ func getConfigLiteral() *Config {
 					Image:     "docker.io/syndesis/syndesis-upgrade:latest",
 					Resources: VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
+				AMQ: AMQConfiguration{Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"},
 			},
 		},
 	}
