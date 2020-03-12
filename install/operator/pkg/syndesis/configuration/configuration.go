@@ -91,6 +91,11 @@ type ComponentsSpec struct {
 	Prometheus PrometheusConfiguration // Configuration monitoring
 	Grafana    GrafanaConfiguration    // Configuration grafana
 	Upgrade    UpgradeConfiguration    // Configuration upgrade
+	AMQ        AMQConfiguration        // Configuration AMQ
+}
+
+type AMQConfiguration struct {
+	Image string
 }
 
 type OauthConfiguration struct {
@@ -189,7 +194,7 @@ type ServerFeatures struct {
 type AddonsSpec struct {
 	Jaeger    JaegerConfiguration
 	Ops       AddonConfiguration
-	Todo      AddonConfiguration
+	Todo      TodoConfiguration
 	Knative   AddonConfiguration
 	DV        DvConfiguration
 	CamelK    CamelKConfiguration
@@ -209,6 +214,10 @@ type JaegerConfiguration struct {
 	ImageOperator string
 }
 
+type TodoConfiguration struct {
+	Enabled bool
+	Image   string
+}
 type DvConfiguration struct {
 	Enabled   bool
 	Resources Resources
@@ -502,6 +511,7 @@ func (config *Config) setConfigFromEnv() error {
 			Addons: AddonsSpec{
 				DV:     DvConfiguration{Image: os.Getenv("DV_IMAGE")},
 				CamelK: CamelKConfiguration{Image: os.Getenv("CAMELK_IMAGE")},
+				Todo:   TodoConfiguration{Image: os.Getenv("TODO_IMAGE")},
 			},
 			Components: ComponentsSpec{
 				Oauth:      OauthConfiguration{Image: os.Getenv("OAUTH_IMAGE")},
@@ -511,6 +521,7 @@ func (config *Config) setConfigFromEnv() error {
 				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
 				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
 				Database: DatabaseConfiguration{
+					Image:    os.Getenv("DATABASE_IMAGE"),
 					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
@@ -521,6 +532,7 @@ func (config *Config) setConfigFromEnv() error {
 				Server: ServerConfiguration{
 					Image: os.Getenv("SERVER_IMAGE"),
 				},
+				AMQ: AMQConfiguration{Image: os.Getenv("AMQ_IMAGE")},
 			},
 		},
 	}

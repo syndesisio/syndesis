@@ -95,6 +95,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 							Image:   "DV_IMAGE",
 						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
+						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
@@ -104,6 +105,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
 						Meta:       MetaConfiguration{Image: "META_IMAGE"},
 						Database: DatabaseConfiguration{
+							Image:    "DATABASE_IMAGE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteOnce",
@@ -117,6 +119,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 								TestSupport: false,
 							},
 						},
+						AMQ: AMQConfiguration{Image: "AMQ_IMAGE"},
 					},
 				},
 			},
@@ -159,7 +162,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "CAMELK_IMAGE": "CAMELK_IMAGE",
 				"DATABASE_VOLUME_NAME": "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
-				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce",
+				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce", "TODO_IMAGE": "TODO_IMAGE", "AMQ_IMAGE": "AMQ_IMAGE",
 			},
 			wantErr: false,
 		},
@@ -245,8 +248,11 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 							ImageAllInOne: "jaegertracing/all-in-one:1.13",
 							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Ops:     AddonConfiguration{Enabled: false},
-						Todo:    AddonConfiguration{Enabled: true},
+						Ops: AddonConfiguration{Enabled: false},
+						Todo: TodoConfiguration{
+							Enabled: true,
+							Image:   "docker.io/centos/php-71-centos7",
+						},
 						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
@@ -356,8 +362,11 @@ func getConfigLiteral() *Config {
 					ImageAllInOne: "jaegertracing/all-in-one:1.13",
 					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
-				Ops:  AddonConfiguration{Enabled: false},
-				Todo: AddonConfiguration{Enabled: false},
+				Ops: AddonConfiguration{Enabled: false},
+				Todo: TodoConfiguration{
+					Enabled: false,
+					Image:   "docker.io/centos/php-71-centos7",
+				},
 				DV: DvConfiguration{
 					Enabled:   false,
 					Image:     "docker.io/teiid/syndesis-dv:latest",
@@ -424,6 +433,7 @@ func getConfigLiteral() *Config {
 					Image:     "docker.io/syndesis/syndesis-upgrade:latest",
 					Resources: VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
+				AMQ: AMQConfiguration{Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"},
 			},
 		},
 	}
