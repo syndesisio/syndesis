@@ -302,13 +302,21 @@ publish_artifacts() {
         \"prerelease\": ${prerelease} \
     }"
 
+    local remote=$(readopt --git-remote)
+    if [ -z "${remote}" ]; then
+      remote=$(git remote get-url origin)
+    fi
+
+    local github_api_url=${remote/github.com/api.github.com\/repos}
+    github_api_url=${github_api_url/%.git/}
+
     local upload_url=$(curl -q -s --fail \
       -X POST \
       -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/json" \
       -d "$data" \
-      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")'
+      ${github_api_url}/releases | jq -r '.upload_url | sub("{.*"; "")'
     )
 
     if [[ ! $upload_url == http* ]]; then
