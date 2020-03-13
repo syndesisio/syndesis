@@ -1,5 +1,10 @@
 import * as H from '@syndesis/history';
-import { DropdownKebab } from 'patternfly-react';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle
+} from '@patternfly/react-core';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../../helpers';
@@ -8,7 +13,7 @@ import './IntegrationActions.css';
 
 export interface IIntegrationAction {
   href?: H.LocationDescriptor;
-  onClick?: (e: React.MouseEvent<any>) => any;
+  onClick?: (event: React.MouseEvent<any> | React.KeyboardEvent | MouseEvent) => void;
   label: string | JSX.Element;
 }
 
@@ -21,9 +26,7 @@ export interface IIntegrationActionsProps {
   editHref?: H.LocationDescriptor;
 }
 
-export const IntegrationActions: React.FunctionComponent<
-  IIntegrationActionsProps
-> = (
+export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProps> = (
   {
     actions,
     detailsHref,
@@ -32,6 +35,12 @@ export const IntegrationActions: React.FunctionComponent<
     i18nViewBtn,
     integrationId
   }) => {
+  const [showDropdown, setShowDropdown] = React.useState(false);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
   return (
     <>
       <ButtonLink
@@ -50,41 +59,30 @@ export const IntegrationActions: React.FunctionComponent<
       >
         {i18nViewBtn}
       </ButtonLink>
-      <DropdownKebab
-        className={'integration-actions__dropdown-kebab'}
-        id={`integration-${integrationId}-action-menu`}
-        pullRight={true}
-      >
-        {actions.map((a, idx) => (
-          <li role={'presentation'} key={idx}>
+
+      <Dropdown
+        toggle={<KebabToggle onToggle={toggleDropdown} id="toggle-dropdown"/>}
+        isOpen={showDropdown}
+        isPlain
+        role={'presentation'}
+        dropdownItems={actions.map((a, idx) => (
+          <DropdownItem key={idx}
+                        data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
+                        onClick={a.onClick}
+                        tabIndex={idx + 1}
+                        role={'menuitem'}
+          >
             {a.href ? (
-              <Link
-                data-testid={`integration-actions-${toValidHtmlId(
-                  a.label.toString()
-                )}`}
-                to={a.href}
-                onClick={a.onClick}
-                role={'menuitem'}
-                tabIndex={idx + 1}
-              >
+              <Link to={a.href}>
                 {a.label}
               </Link>
-            ) : (
-              <a
-                data-testid={`integration-actions-${toValidHtmlId(
-                  a.label.toString()
-                )}`}
-                href={'javascript:void(0)'}
-                onClick={a.onClick}
-                role={'menuitem'}
-                tabIndex={idx + 1}
-              >
-                {a.label}
-              </a>
-            )}
-          </li>
+            ) : a.label}
+          </DropdownItem>
         ))}
-      </DropdownKebab>
+        position={DropdownPosition.right}
+        className={'integration-actions__dropdown-kebab'}
+        id={`integration-${integrationId}-action-menu`}
+      />
     </>
   );
 };
