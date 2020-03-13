@@ -145,8 +145,8 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                           }
                                         )}
                                         editHref={editAction.href}
-                                        i18nEditBtn={'Edit'}
-                                        i18nViewBtn={'View'}
+                                        i18nEditBtn={t('integrations:Edit')}
+                                        i18nViewBtn={t('integrations:View')}
                                       />
                                     }
                                     i18nConfigurationRequired={t(

@@ -75,7 +75,7 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
       </p>
     </Modal>
   );
-  
+
   if (exposureMeans.indexOf(_3SCALE) !== -1) {
     return (
       <>
