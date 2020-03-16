@@ -155,7 +155,7 @@ public class ConnectorHandler extends BaseHandler implements Lister<Connector>, 
             propertiesHandler.dynamicConnectionProperties(connectorId)
         );
         if (!dynamicProperties.isEmpty()) {
-            return connector.builder().properties(dynamicProperties).build();
+            return connector.builder().putAllProperties(dynamicProperties).build();
         }
         return connector;
     }
