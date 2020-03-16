@@ -67,7 +67,7 @@ public class EndpointMetricsFilter implements ContainerRequestFilter, ContainerR
             tags.add(Tag.of("method", getMethod(requestContext)));
             tags.add(Tag.of("status", getStatus(responseContext)));
             tags.add(Tag.of("uri", getUri()));
-            sample.stop(registry.timer("http.server.requests", tags));
+            sample.stop(registry.timer("http.meta.requests", tags));
         }
     }
 
