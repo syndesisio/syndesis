@@ -41,6 +41,34 @@ export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProp
     setShowDropdown(!showDropdown);
   };
 
+  const actionItem = (a: IIntegrationAction, idx: number) => {
+    if (a.href) {
+      return (
+        <li role={'menuitem'} key={idx}>
+          <Link to={a.href}
+                data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
+                onClick={a.onClick}
+                tabIndex={idx + 1}
+                className={'pf-c-dropdown__menu-item'}
+          >
+            {a.label}
+          </Link>
+        </li>
+      )
+    } else {
+      return (
+        <DropdownItem key={idx}
+                      data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
+                      onClick={a.onClick}
+                      tabIndex={idx + 1}
+                      role={'menuitem'}
+        >
+          {a.label}
+        </DropdownItem>
+      );
+    }
+  };
+
   return (
     <>
       <ButtonLink
@@ -65,20 +93,9 @@ export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProp
         isOpen={showDropdown}
         isPlain
         role={'presentation'}
-        dropdownItems={actions.map((a, idx) => (
-          <DropdownItem key={idx}
-                        data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
-                        onClick={a.onClick}
-                        tabIndex={idx + 1}
-                        role={'menuitem'}
-          >
-            {a.href ? (
-              <Link to={a.href}>
-                {a.label}
-              </Link>
-            ) : a.label}
-          </DropdownItem>
-        ))}
+        dropdownItems={actions.map((a, idx) => {
+          return actionItem(a, idx)
+        })}
         position={DropdownPosition.right}
         className={'integration-actions__dropdown-kebab'}
         id={`integration-${integrationId}-action-menu`}
