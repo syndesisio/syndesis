@@ -16,22 +16,20 @@
 package io.syndesis.connector.kafka
     ;
 
-import io.syndesis.connector.support.util.KeyStoreHelper;
+import java.util.Map;
+
+import io.syndesis.connector.kafka.service.KafkaBrokerService;
+import io.syndesis.connector.kafka.service.KafkaBrokerServiceException;
+import io.syndesis.connector.kafka.service.KafkaBrokerServiceImpl;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
-import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import io.syndesis.connector.support.util.ConnectorOptions;
-
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * Component verifier for Kafka Connector.
@@ -72,16 +70,12 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
         final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
         final String certificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
         final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
-
         LOG.debug("Validating Kafka connection to {} with protocol {}", brokers, transportProtocol);
         if (ObjectHelper.isNotEmpty(brokers)) {
-            // Use a key store helper if a self signed certificate is provided
-            KeyStoreHelper brokerKeyStoreHelper = certificate != null ? new KeyStoreHelper(certificate, "brokerCertificate").store() : null;
-            Properties properties = getKafkaAdminClientConfiguration(brokers, transportProtocol, brokerKeyStoreHelper);
-            try (AdminClient client = KafkaAdminClient.create(properties)) {
-                ListTopicsResult topics = client.listTopics();
-                topics.names().get();
-            } catch (Exception e) {
+            KafkaBrokerService kafkaBrokerService = new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
+            try {
+                kafkaBrokerService.ping();
+            } catch (KafkaBrokerServiceException e) {
                 builder.error(
                     ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Unable to connect to Kafka broker")
                         .parameterKey("brokers")
@@ -89,14 +83,6 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
                         .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
                         .build()
                 );
-            } finally {
-                if (brokerKeyStoreHelper != null) {
-                    // Clean up temporary resources used by key store
-                    boolean keystoreDeleted = brokerKeyStoreHelper.clean();
-                    if (!keystoreDeleted) {
-                        LOG.warn("Impossible to delete temporary keystore located at " + brokerKeyStoreHelper.getKeyStorePath());
-                    }
-                }
             }
         } else {
             builder.error(
@@ -105,25 +91,5 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
                     .build()
             );
         }
-    }
-
-    private static Properties getKafkaAdminClientConfiguration(String brokers, String transportProtocol, KeyStoreHelper brokerKeyStoreHelper) {
-        Properties properties = new Properties();
-        properties.put("bootstrap.servers", brokers);
-        properties.put("connections.max.idle.ms", 10000);
-        properties.put("request.timeout.ms", 5000);
-        if (!"PLAINTEXT".equals(transportProtocol)) {
-            properties.put("security.protocol", "SSL");
-            if (brokerKeyStoreHelper != null) {
-                properties.put("ssl.endpoint.identification.algorithm", "");
-                properties.put("ssl.keystore.location", brokerKeyStoreHelper.getKeyStorePath());
-                properties.put("ssl.keystore.password", brokerKeyStoreHelper.getPassword());
-                properties.put("ssl.key.password", brokerKeyStoreHelper.getPassword());
-                properties.put("ssl.truststore.location", brokerKeyStoreHelper.getKeyStorePath());
-                properties.put("ssl.truststore.password", brokerKeyStoreHelper.getPassword());
-
-            }
-        }
-        return properties;
     }
 }
