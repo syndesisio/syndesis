@@ -317,11 +317,13 @@ publish_artifacts() {
     fi
 
     for file in $top_dir/install/operator/releases/*; do
+        echo -n "Upload $file to $upload_url ..."
         curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
           --data-binary "@${file}" \
           ${upload_url}?name=${file##*/} >/dev/null 2>&1
+          echo "done"
         local err=$?
         if [ $err -ne 0 ]; then
           echo "ERROR: Cannot upload release artifact $file on remote github repository"
@@ -329,11 +331,13 @@ publish_artifacts() {
         fi
     done
 
+    echo -n "Upload syndesis-cli.zip to $upload_url ..."
     (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/zip" \
       --data-binary @- \
       ${upload_url}?name=syndesis-cli.zip >/dev/null) 2>&1
+      echo "done"
     local err=$?
     if [ $err -ne 0 ]; then
       echo "ERROR: Cannot upload release artifact syndesis-cli.zip on remote github repository"
