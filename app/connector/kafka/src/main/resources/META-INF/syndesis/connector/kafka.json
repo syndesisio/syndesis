@@ -113,16 +113,41 @@
       "secret": false,
       "type": "typeahead"
     },
+    "transportProtocol": {
+      "componentProperty": true,
+      "defaultValue": "PLAINTEXT",
+      "deprecated": false,
+      "displayName": "Transport Protocol",
+      "enum": [
+        {
+          "label": "PLAIN",
+          "value": "PLAINTEXT"
+        },
+        {
+          "label": "TLS",
+          "value": "SSL"
+        }
+      ],
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The transport protocol. Select TLS for encryption in transit.",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
     "brokerCertificate": {
       "componentProperty": true,
       "deprecated": false,
       "displayName": "Broker certificate",
-      "group": "common",
+      "group": "common,security",
       "javaType": "java.lang.String",
       "kind": "property",
-      "label": "common",
+      "label": "security",
       "labelHint": "Self-signed certificate",
-      "order": "2",
+      "order": "3",
       "required": false,
       "secret": false,
       "type": "textarea"
