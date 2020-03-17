@@ -1,4 +1,4 @@
-import { MessageDialog } from 'patternfly-react';
+import { Button, Modal } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 
@@ -54,46 +54,55 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
     setShowDialog(false);
   };
   const disableDiscoveryDialog = (
-    <MessageDialog
-      show={showDialog}
+    <Modal
+      isSmall={true}
       title={i18nDisableDiscovery}
-      primaryContent={
-        <p className="lead">
-          {i18nDisableDiscoveryConfirm}
-          {isUnpublished ? null : <> {i18nRepublish}</>}?
-        </p>
-      }
-      primaryActionButtonContent={i18nYes}
-      primaryAction={doDisable3scale}
-      secondaryActionButtonContent={i18nNo}
-      secondaryAction={doHideDialog}
-      onHide={doHideDialog}
-      onCancel={doHideDialog}
-    />
+      isOpen={showDialog}
+      onClose={doHideDialog}
+      actions={[
+        <Button key="confirm" variant="primary" onClick={doDisable3scale}>
+          {i18nYes}
+        </Button>,
+        <Button key="cancel" variant="link" onClick={doHideDialog}>
+          {i18nNo}
+        </Button>
+      ]}
+      isFooterLeftAligned={true}
+    >
+      <p className={'lead'}>
+        {i18nDisableDiscoveryConfirm}
+        {isUnpublished ? null : <> {i18nRepublish}</>}?
+      </p>
+    </Modal>
   );
+
   if (exposureMeans.indexOf(_3SCALE) !== -1) {
     return (
       <>
         {exposure !== _3SCALE ? (
           <PageSection>
-            <div className="pf-c-content">
-              <MessageDialog
-                show={showDialog}
+            <div className={'pf-c-content'}>
+              <Modal
+                isSmall={true}
                 title={i18nEnableDiscovery}
-                primaryContent={
-                  <p className="lead">
-                    {i18nEnableDiscoveryConfirm}
-                    {isUnpublished ? null : <> {i18nRepublish}</>}?
-                  </p>
-                }
-                primaryActionButtonContent={i18nYes}
-                primaryAction={doEnable3scale}
-                secondaryActionButtonContent={i18nNo}
-                secondaryAction={doHideDialog}
-                onHide={doHideDialog}
-                onCancel={doHideDialog}
-              />
-              <div className="pf-l-split pf-m-gutter">
+                isOpen={showDialog}
+                onClose={doHideDialog}
+                actions={[
+                  <Button key="confirm" variant="primary" onClick={doEnable3scale}>
+                    {i18nYes}
+                  </Button>,
+                  <Button key="cancel" variant="link" onClick={doHideDialog}>
+                    {i18nNo}
+                  </Button>
+                ]}
+                isFooterLeftAligned={true}
+              >
+                <p className={'lead'}>
+                  {i18nEnableDiscoveryConfirm}
+                  {isUnpublished ? null : <> {i18nRepublish}</>}?
+                </p>
+              </Modal>
+              <div className={'pf-l-split pf-m-gutter'}>
                 <div>
                   <ButtonLink
                     children={i18nEnableDiscovery}
@@ -108,9 +117,9 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
         ) : (
           <>
             <PageSection>
-              <div className="pf-c-content">
+              <div className={'pf-c-content'}>
                 {disableDiscoveryDialog}
-                <div className="pf-l-split pf-m-gutter">
+                <div className={'pf-l-split pf-m-gutter'}>
                   <div>
                     <ButtonLink
                       children={i18nDisableDiscovery}
@@ -129,9 +138,9 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
   } else {
     return exposure === _3SCALE ? (
       <PageSection>
-        <div className="pf-c-content">
+        <div className={'pf-c-content'}>
           {disableDiscoveryDialog}
-          <div className="pf-l-split pf-m-gutter">
+          <div className={'pf-l-split pf-m-gutter'}>
             <div>
               <ButtonLink
                 children={i18nDisableDiscovery}

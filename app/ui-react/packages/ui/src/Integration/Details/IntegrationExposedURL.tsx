@@ -7,7 +7,7 @@ import {
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
-import { CopyToClipboard } from '../../Shared/CopyToClipboard';
+import { CopyToClipboard } from '../../Shared';
 import './IntegrationExposedURL.css';
 
 export interface IIntegrationExposedURLProps {
