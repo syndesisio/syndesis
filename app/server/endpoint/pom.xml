@@ -411,4 +411,16 @@
 
   </dependencies>
 
+  <build>
+    <resources>
+      <resource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+        <includes>
+          <include>model.json</include>
+        </includes>
+      </resource>
+    </resources>
+  </build>
+
 </project>
