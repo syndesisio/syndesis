@@ -1,9 +1,6 @@
-import {
-  TimedToastNotification,
-  ToastNotificationList,
-} from 'patternfly-react';
+import { AlertActionCloseButton, AlertGroup } from '@patternfly/react-core';
 import * as React from 'react';
-import { Container } from '../Layout/Container';
+import { TimedAlert } from './TimedAlert';
 
 export type INotificationType = 'success' | 'info' | 'warning' | 'error';
 
@@ -16,37 +13,38 @@ export interface INotification {
 
 export interface INotificationsProps {
   notifications: INotification[];
-  notificationTimerDelay: number;
-  removeNotificationAction(notification: INotification): void;
+  onClose(key: string): void;
 }
 
-export class Notifications extends React.Component<INotificationsProps> {
-  public render() {
-    return (
-      <ToastNotificationList className="app__notificationList">
-        {this.props.notifications.map(notification => (
-          <TimedToastNotification
-            key={notification.key}
-            type={notification.type}
-            persistent={notification.persistent}
-            onDismiss={this.props.removeNotificationAction.bind(
-              this,
-              notification
-            )}
-            timerdelay={this.props.notificationTimerDelay}
-          >
-            {typeof notification.message === 'string' ? (
-              <Container
-                dangerouslySetInnerHTML={{
-                  __html: notification.message,
-                }}
-              />
-            ) : (
-              <Container>{notification.message}</Container>
-            )}
-          </TimedToastNotification>
-        ))}
-      </ToastNotificationList>
-    );
+function mapType(incoming: INotificationType) {
+  switch (incoming) {
+    case 'error':
+      return 'danger';
+    default:
+      return incoming;
   }
 }
+
+export const Notifications: React.FunctionComponent<INotificationsProps> = ({
+  notifications,
+  onClose,
+}) => {
+  return (
+    <AlertGroup className={'app__notificationList'} isToast={true}>
+      {notifications.map(({ key, type, message, persistent }) => (
+        <TimedAlert
+          key={key}
+          timeout={8000}
+          persistent={persistent}
+          onClose={() => onClose(key)}
+          variant={mapType(type)}
+          title={message}
+          isLiveRegion={true}
+          action={
+            <AlertActionCloseButton onClose={() => onClose(key)} />
+          }
+        />
+      ))}
+    </AlertGroup>
+  );
+};

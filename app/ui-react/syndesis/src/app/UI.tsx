@@ -82,8 +82,11 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
   };
 
   const [notifications, setNotifications] = React.useState<INotification[]>([]);
+  const removeNotification = (toRemove: string) => {
+    setNotifications(items => items.filter(({ key }) => key !== toRemove));
+  };
   const pushNotification = (
-    msg: React.ReactNode,
+    message: React.ReactNode,
     type: INotificationType,
     persistent: boolean = false
   ) => {
@@ -91,18 +94,12 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
       ...notifications,
       {
         key: Date.now().toString(),
-        message: msg,
+        message,
         persistent,
         type,
       },
     ]);
   };
-  const onRemoveNotification = (notification: INotification) => {
-    setNotifications(
-      notifications.filter((n: INotification) => n.key !== notification.key)
-    );
-  };
-
   /* disable listening to the web worker to avoid installing it
   React.useEffect(() => {
     let refreshNotificationDisplayed = false;
@@ -231,8 +228,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                     }
                     <Notifications
                       notifications={notifications}
-                      notificationTimerDelay={8000}
-                      removeNotificationAction={onRemoveNotification}
+                      onClose={removeNotification}
                     />
                     <WithRouter>
                       {({ history, match }) => {
