@@ -151,6 +151,9 @@ release::run() {
     # Release the binaries
     publish_artifacts "${topdir}" "$release_version" $prerelease
 
+    # Cleanup old prereleases
+    delete_prereleases_older_than 40
+
     # Create release description based on commit between releases
     # if check_for_command gren; then
     #    gren release --data-source=commits --tags=$release_version --override
@@ -338,6 +341,80 @@ publish_artifacts() {
     if [ $err -ne 0 ]; then
       echo "ERROR: Cannot upload release artifact syndesis-cli.zip on remote github repository"
       return
+    fi
+}
+
+# return how many days since a release was published
+days_since_published() {
+    url=$1
+    published_at=$(curl -q -s --fail \
+      -X GET \
+      -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+      ${url} | jq -r ".published_at"
+    )
+
+    if [[ $published_at == 20* ]]; then
+        days=$(( ( $(date '+%s') - $(date -d $published_at '+%s') ) / 86400 ))
+        echo $days
+    else
+        echo 0
+    fi
+}
+
+# Delete all prereleases older than $1(default 30) days that are fund in the first
+# release pagewhere an prerelease old enough is found
+delete_prereleases_older_than() {
+    delete_older_than=${1:-30}
+    page=${2:-1}
+
+    # figure out from which page on we should delete, by taking the last
+    # release from the page and checking how many days have passed since published 
+    # 
+    while [[ true ]]; do
+        last_release=$(curl -q -s --fail \
+          -X GET \
+          -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+          https://api.github.com/repos/syndesisio/syndesis/releases?page=${page} | jq -r ".[length -1].url"
+        )
+
+        if [[ "${last_release}" != "null" ]]; then
+            dsp=$(days_since_published $last_release)
+            if (( $dsp > $delete_older_than )); then
+                break;
+            else
+                page=$((page+1))
+            fi
+        else
+            page=0
+            break;
+        fi
+    done
+
+    # at the first release page we found releases older than the desired number,
+    # iterate through all releases and delete prereleases that are older than the
+    # threshold
+    if (( $page > 0 )); then
+        releases_urls=$(curl -q -s --fail \
+          -X GET \
+          -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+          https://api.github.com/repos/syndesisio/syndesis/releases?page=${page} | jq -r ".[].url"
+        )
+
+        for url in $releases_urls; do
+            prerelease=$(curl -q -s --fail \
+                -X GET \
+                -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+                $url | jq ".prerelease"
+            )
+
+            if [[ "$prerelease" == "true" ]]; then
+                dsp=$(days_since_published $url)
+                if (( $dsp > $delete_older_than )); then
+                    echo "$url is prerelease ${dsp} days old, deleting ..."
+                    echo curl -s --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} $url
+                fi
+            fi
+        done
     fi
 }
 
