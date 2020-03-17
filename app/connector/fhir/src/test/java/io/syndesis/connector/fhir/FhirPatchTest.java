@@ -42,7 +42,7 @@ public class FhirPatchTest extends FhirTestBase {
 
     @Test
     public void patchTest() {
-        stubFhirRequest(patch(urlEqualTo("/Patient/1")).willReturn(okXml(toXml(new OperationOutcome()))));
+        stubFhirRequest(patch(urlEqualTo("/Patient/1?_format=xml")).willReturn(okXml(toXml(new OperationOutcome()))));
 
         template.requestBody("direct:start",
             "[{\"op\":\"replace\", \"path\":\"active\", \"value\":true}]", MethodOutcome.class);

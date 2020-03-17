@@ -526,23 +526,23 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
 
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
-        assertNotNull(consumerProperties);
-        assertTrue(consumerProperties.size() > 0);
-        assertEquals(delayValue, consumerProperties.get(DELAY));
-        assertEquals(initialDelayValue, consumerProperties.get(INITIAL_DELAY));
+        Map<String, Object> schedulerProperties = olingo4Endpoint.getSchedulerProperties();
+        assertNotNull(schedulerProperties);
+        assertTrue(schedulerProperties.size() > 0);
+        assertEquals(delayValue, schedulerProperties.get(DELAY));
+        assertEquals(initialDelayValue, schedulerProperties.get(INITIAL_DELAY));
     }
 
     @Test
     public void testODataRouteAlreadySeen() throws Exception {
-        String backoffIdleThreshold = "1";
-        String backoffMultiplier = "1";
+        int backoffIdleThreshold = 1;
+        int backoffMultiplier = 1;
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri())
                                                             .property(FILTER_ALREADY_SEEN, Boolean.TRUE.toString())
-                                                            .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
-                                                            .property(BACKOFF_MULTIPLIER, backoffMultiplier));
+                                                            .property(BACKOFF_IDLE_THRESHOLD, Integer.toString(backoffIdleThreshold))
+                                                            .property(BACKOFF_MULTIPLIER, Integer.toString(backoffMultiplier)));
 
         Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
         Integration odataIntegration = createIntegration(odataStep, mockStep);
@@ -590,26 +590,23 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
-        assertNotNull(consumerProperties);
-        assertTrue(consumerProperties.size() > 0);
-        assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
-        assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
+        assertEquals(backoffIdleThreshold, olingo4Endpoint.getBackoffIdleThreshold());
+        assertEquals(backoffMultiplier, olingo4Endpoint.getBackoffMultiplier());
     }
 
     @Test
     public void testReferenceODataRouteAlreadySeenWithKeyPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "KSFO";
-        String backoffIdleThreshold = "1";
-        String backoffMultiplier = "1";
+        int backoffIdleThreshold = 1;
+        int backoffMultiplier = 1;
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, REF_SERVICE_URI)
                                                             .property(KEY_PREDICATE, keyPredicate)
                                                             .property(FILTER_ALREADY_SEEN, Boolean.TRUE.toString())
-                                                            .property(BACKOFF_IDLE_THRESHOLD, backoffIdleThreshold)
-                                                            .property(BACKOFF_MULTIPLIER, backoffMultiplier));
+                                                            .property(BACKOFF_IDLE_THRESHOLD, Integer.toString(backoffIdleThreshold))
+                                                            .property(BACKOFF_MULTIPLIER, Integer.toString(backoffMultiplier)));
 
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Integration odataIntegration = createIntegration(odataStep, mockStep);
@@ -635,10 +632,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         //
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
-        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
-        assertNotNull(consumerProperties);
-        assertTrue(consumerProperties.size() > 0);
-        assertEquals(backoffIdleThreshold, consumerProperties.get(BACKOFF_IDLE_THRESHOLD));
-        assertEquals(backoffMultiplier, consumerProperties.get(BACKOFF_MULTIPLIER));
+        assertEquals(backoffIdleThreshold, olingo4Endpoint.getBackoffIdleThreshold());
+        assertEquals(backoffMultiplier, olingo4Endpoint.getBackoffMultiplier());
     }
 }

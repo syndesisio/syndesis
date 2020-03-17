@@ -3,9 +3,8 @@ package action
 import (
 	"context"
 	"errors"
+	"fmt"
 	"time"
-
-	v12 "github.com/openshift/api/apps/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/serviceaccount"
@@ -18,11 +17,13 @@ import (
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"k8s.io/apimachinery/pkg/types"
+	"k8s.io/apimachinery/pkg/util/wait"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 
 	"k8s.io/client-go/kubernetes"
 
+	appsv1 "github.com/openshift/api/apps/v1"
 	v1 "github.com/openshift/api/route/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
@@ -64,7 +65,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 		a.log.Info("installing Syndesis resource", "name", syndesis.Name)
 	} else if syndesisPhaseIs(syndesis, v1beta1.SyndesisPhasePostUpgradeRun) {
 		a.log.Info("installing Syndesis resource for the first time after upgrading", "name", syndesis.Name)
-		a.deleteDeploymentConfigs(ctx, syndesis)
 	}
 
 	resourcesThatShouldExist := map[types.UID]bool{}
@@ -253,6 +253,8 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 		a.log.Info("Syndesis resource installed", "name", target.Name)
 	} else if syndesis.Status.Phase == v1beta1.SyndesisPhasePostUpgradeRun {
+		a.removePostgresUpgradeTrigger(ctx, syndesis)
+
 		// Installation completed, set the next state
 		target.Status.Phase = v1beta1.SyndesisPhasePostUpgradeRunSucceed
 		target.Status.Reason = v1beta1.SyndesisStatusReasonMissing
@@ -483,25 +485,48 @@ func linkSecret(sa *corev1.ServiceAccount, secret string) bool {
 	return false
 }
 
-// TODO: Delete for 1.10
-// Because: Updating the DeploymentConfigs doesnt delete the existing triggers, so
-// the DC continues triggering redeploys on imageStreamTag change but it is not what we want
-// since we are using docker images
-func (a *installAction) deleteDeploymentConfigs(ctx context.Context, syndesis *v1beta1.Syndesis) {
-	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus"} {
-		dc := &v12.DeploymentConfig{}
-		if err := a.client.Get(ctx, client.ObjectKey{Name: dcName, Namespace: syndesis.Namespace}, dc); err != nil {
-			if !k8serrors.IsNotFound(err) {
-				a.log.Info(err.Error())
-			}
-		} else {
-			if err := a.client.Delete(ctx, dc); err != nil {
-				a.log.Info(err.Error())
-			} else {
-				a.log.Info("force deleted DeploymentConfig", "name", dcName, "app", syndesis.Name)
-			}
-		}
-	}
+//
+// After the syndesis-db pod starts and has finished upgrading to the version consistent with the image
+// of the container then the POSTGRESQL_UPGRADE=copy environment variable needs to be removed.
+//
+func (a *installAction) removePostgresUpgradeTrigger(context context.Context, syndesis *v1beta1.Syndesis) {
+	pollTimeout := 600 * time.Second
+	pollInterval := 5 * time.Second
 
-	time.Sleep(5 * time.Second)
+	wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
+		dc := &appsv1.DeploymentConfig{}
+		if err := a.client.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
+			a.log.Error(err, "getting `syndesis-db` DeploymentConfig in "+syndesis.Namespace)
+			return false, err
+		}
+
+		if dc.Spec.Replicas != dc.Status.ReadyReplicas {
+			return false, nil
+		}
+
+		for containerIdx, c := range dc.Spec.Template.Spec.Containers {
+			if c.Name != "postgresql" {
+				continue
+			}
+
+			for envIdx, e := range c.Env {
+				if e.Name != "POSTGRESQL_UPGRADE" {
+					continue
+				}
+
+				removeUpgradeEnvVar := client.ConstantPatch(types.JSONPatchType, []byte(fmt.Sprintf(`[{
+					"op": "remove",
+					"path": "/spec/template/spec/containers/%d/env/%d"
+				}]`, containerIdx, envIdx)))
+				if err := a.client.Patch(context, dc, removeUpgradeEnvVar); err != nil {
+					a.log.Error(err, "patching `syndesis-db` DeploymentConfig to remove `POSTGRESQL_UPGRADE` environment variable")
+					return true, err
+				}
+				break
+			}
+			break
+		}
+
+		return true, nil
+	})
 }

@@ -19,13 +19,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.extension.api.Step;
-
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Handler;
@@ -39,16 +42,11 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
 
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
-import static org.assertj.core.api.Assertions.assertThat;
-
 public class ExtensionStepHandlerTest {
 
     @Test
     public void testEndpointExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -99,8 +97,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -112,10 +110,10 @@ public class ExtensionStepHandlerTest {
             assertThat(route.getOutputs().get(3).getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(3).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "Property-1");
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("name", "Property-1");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
             assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "Property-2");
+            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("name", "Property-2");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).isInstanceOf(ToDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).hasFieldOrPropertyWithValue(
@@ -136,7 +134,7 @@ public class ExtensionStepHandlerTest {
 
     @Test
     public void testBeanExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -187,8 +185,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -218,7 +216,7 @@ public class ExtensionStepHandlerTest {
 
     @Test
     public void testStepExtensionStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routeBuilder = newIntegrationRouteBuilder(
@@ -266,8 +264,8 @@ public class ExtensionStepHandlerTest {
 
             RouteDefinition route = context.getRouteDefinitions().get(0);
             assertThat(route).isNotNull();
-            assertThat(route.getInputs()).hasSize(1);
-            assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+            assertThat(route.getInput()).isNotNull();
+            assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
             assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
             assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
@@ -279,10 +277,10 @@ public class ExtensionStepHandlerTest {
             assertThat(route.getOutputs().get(3).getOutputs()).hasSize(4);
             assertThat(route.getOutputs().get(3).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(3).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("headerName", "param1");
+            assertThat(route.getOutputs().get(3).getOutputs().get(1)).hasFieldOrPropertyWithValue("name", "param1");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(1)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-1");
             assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(SetHeaderDefinition.class);
-            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("headerName", "param2");
+            assertThat(route.getOutputs().get(3).getOutputs().get(2)).hasFieldOrPropertyWithValue("name", "param2");
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);

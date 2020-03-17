@@ -48,6 +48,8 @@ public interface EMailConstants extends StringConstants {
 
     String CONSUMER = "consumer";
 
+    String SCHEDULER = "scheduler";
+
     String DELAY = "delay";
 
     String MAIL_SUBJECT = "subject";

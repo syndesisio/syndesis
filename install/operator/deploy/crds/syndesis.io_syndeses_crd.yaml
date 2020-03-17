@@ -370,6 +370,12 @@ spec:
                         type: string
                       enabled:
                         type: boolean
+                      imageAgent:
+                        type: string
+                      imageAllInOne:
+                        type: string
+                      imageOperator:
+                        type: string
                       operatorOnly:
                         type: boolean
                       queryUri:

@@ -2,14 +2,15 @@ import {
   CardBody,
   CardHeader,
   Popover,
+  Spinner,
   Split,
   SplitItem,
   Text,
   TextContent,
   TextVariants,
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
-import { Spinner } from 'patternfly-react';
+import { HelpIcon } from '@patternfly/react-icons';
+import { global_info_color_100 } from '@patternfly/react-tokens';
 import * as React from 'react';
 import './DvMetricsContainer.css';
 import './DvResultSetCacheMetric.css';
@@ -49,7 +50,7 @@ export const DvResultSetCacheMetric: React.FunctionComponent<
       </CardHeader>
       <CardBody>
         {props.loading ? (
-          <Spinner loading={true} inline={false} />
+          <Spinner size={'lg'} />
         ) : props.cacheHitRatioPercentage &&
           props.cacheHitRatioPercentage.length > 0 &&
           props.i18nCacheHitRatioText &&
@@ -67,7 +68,7 @@ export const DvResultSetCacheMetric: React.FunctionComponent<
                 bodyContent={<div>{props.i18nInfoMessage}</div>}
                 closeBtnAriaLabel={props.a11yInfoCloseButton}
               >
-                <InfoCircleIcon color={'blue'} />
+                <HelpIcon size={'md'} color={global_info_color_100.value} />
               </Popover>
             </SplitItem>
           </Split>

@@ -90,7 +90,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", getLocalServerHostAndPort());
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -112,7 +112,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", "http://" + getLocalServerHostAndPort());
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -135,7 +135,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("path", "/withPath");
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -158,7 +158,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("path", "withPath");
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -181,7 +181,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("path", "/withPath");
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -204,7 +204,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("path", "path");
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(2);
             assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
@@ -226,7 +226,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", "https://" + getLocalServerHostAndPort());
 
             Verifier verifier = new HttpVerifier();
-            List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
+            List<VerifierResponse> responses = verifier.verify(context, "http", parameters);
 
             assertThat(responses).hasSize(1);
             assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);

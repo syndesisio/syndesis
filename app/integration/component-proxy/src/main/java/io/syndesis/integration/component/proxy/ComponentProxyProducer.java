@@ -21,10 +21,10 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
-import org.apache.camel.impl.DefaultAsyncProducer;
 import org.apache.camel.processor.Pipeline;
-import org.apache.camel.util.AsyncProcessorConverterHelper;
-import org.apache.camel.util.ServiceHelper;
+import org.apache.camel.support.AsyncProcessorConverterHelper;
+import org.apache.camel.support.DefaultAsyncProducer;
+import org.apache.camel.support.service.ServiceHelper;
 
 /**
  * Connector {@link Producer} which is capable of performing before and after custom processing
@@ -47,13 +47,13 @@ public class ComponentProxyProducer extends DefaultAsyncProducer {
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStart() throws Exception {
-        ServiceHelper.startServices(processor);
+        ServiceHelper.startService(processor);
     }
 
     @Override
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected void doStop() throws Exception {
-        ServiceHelper.stopServices(processor);
+        ServiceHelper.stopService(processor);
     }
 
     @Override

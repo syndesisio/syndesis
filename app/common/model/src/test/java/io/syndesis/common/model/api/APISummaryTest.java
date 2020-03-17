@@ -15,19 +15,20 @@
  */
 package io.syndesis.common.model.api;
 
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.Connector;
+import java.util.Map;
+
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.connection.Connector;
 
-import java.util.Map;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class APISummaryTest {
 
     @Test
     public void testConnectorSummary() {
-        APISummary summary = new APISummary.Builder().createFrom(
+        APISummary summary = APISummary.Builder.createFrom(
             new Connector.Builder().addActions(
                 new ConnectorAction.Builder().addTags("1", "2", "3").build(),
                 new ConnectorAction.Builder().addTags("2", "3", "4").build(),

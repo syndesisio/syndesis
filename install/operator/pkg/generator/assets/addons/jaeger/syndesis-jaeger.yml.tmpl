@@ -11,6 +11,7 @@
   spec:
     strategy: allInOne
     allInOne:
+      image: '{{ .Syndesis.Addons.Jaeger.ImageAllInOne }}'
       options:
         memory:
           max-traces: 100000

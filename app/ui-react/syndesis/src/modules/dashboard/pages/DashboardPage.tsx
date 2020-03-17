@@ -185,6 +185,7 @@ export default () => (
                             t('metricsNoDataAvailable')
                           )}
                           i18nTitle={t('titleUptimeMetric')}
+                          i18nSince={t('since')}
                         />
                       }
                       topIntegrations={

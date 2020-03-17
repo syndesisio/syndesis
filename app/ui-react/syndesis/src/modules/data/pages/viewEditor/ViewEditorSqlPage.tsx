@@ -58,6 +58,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   const [sourceTableColumns, setSourceTableColumns] = React.useState<
     TableColumns[]
   >([]);
+  const [sourceInfo, setSourceInfo] = React.useState<any>([]);
   const [viewValid, setViewValid] = React.useState(true);
   const [
     validationMessageVisible,
@@ -68,6 +69,9 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
   >([]);
   const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
+  const [validationResultsTitle, setValidationResultsTitle] = React.useState(
+    t('validationResultsTitle')
+  );
   const { params, state, history } = useRouteData<
     IViewEditorSqlRouteParams,
     IViewEditorSqlRouteState
@@ -86,6 +90,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
     params.viewDefinitionId,
     state.viewDefinition
   );
+  const [viewVersion, setViewVersion] = React.useState(viewDefn.version);
   const [noResultsTitle, setNoResultsTitle] = React.useState(
     t('preview.resultsTableValidEmptyTitle')
   );
@@ -128,6 +133,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       setNoResultsTitle(t('preview.resultsTableInvalidEmptyTitle'));
       setNoResultsMessage(t('preview.resultsTableInvalidEmptyInfo'));
     }
+    setValidationResultsTitle(t('validationResultsTitle'));
     setValidationResults([validationResult]);
     setValidationMessageVisible(!isValid);
     setViewValid(isValid);
@@ -152,26 +158,33 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       sourcePaths: viewDefn.sourcePaths,
       status: 'ERROR',
       userDefined: true,
+      version: viewVersion,
     };
 
-    try {
-      // Save the View
-      const newView = await saveViewDefinition(view);
-
+    const saveResult = await saveViewDefinition(view);
+    if (!saveResult.hasError) {
+      const newView = saveResult.viewDefinition;
       // Updates view validation state and results
-      updateViewStatusAndResults(newView);
+      updateViewStatusAndResults(newView!);
+      setViewVersion(newView!.version);
 
       setIsSaving(false);
       return true;
-    } catch (error) {
+    } else {
       setIsSaving(false);
-      pushNotification(
-        t('saveViewFailed', {
-          details: error.message ? error.message : '',
-          name: viewDefn.name,
-        }),
-        'error'
-      );
+      const validationResult = {
+        message: saveResult.versionConflict
+          ? t('viewSaveVersionConflictMessage')
+          : t('viewSaveErrorMessage'),
+        type: 'danger',
+      } as IViewEditValidationResult;
+      setNoResultsTitle(t('preview.resultsTableInvalidEmptyTitle'));
+      setNoResultsMessage(t('preview.resultsTableInvalidEmptyInfo'));
+      setValidationResultsTitle(t('viewSaveErrorTitle'));
+      setValidationResults([validationResult]);
+      setValidationMessageVisible(true);
+      setViewValid(false);
+      updateQueryResults(false);
       return false;
     }
   };
@@ -220,7 +233,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
       if (isValid) {
         queryResult = await queryVirtualization(
           params.virtualizationId,
-          getPreviewSql(viewDefn),
+          getPreviewSql(viewDefn.name),
           15,
           0
         );
@@ -261,6 +274,7 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
           setSourceTableColumns(
             generateTableColumns(results as ViewSourceInfo)
           );
+          setSourceInfo(results.schemas);
         } catch (error) {
           pushNotification(error.message, 'error');
         }
@@ -326,10 +340,14 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 i18nDoneLabel={t('shared:Done')}
                 i18nSaveLabel={t('shared:Save')}
                 i18nTitle={t('viewEditor.title')}
-                i18nValidationResultsTitle={t('validationResultsTitle')}
+                i18nMetadataTitle={t('metadataTree')}
+                i18nLoading={t('shared:Loading')}
+                previewExpanded={previewExpanded}
+                i18nValidationResultsTitle={validationResultsTitle}
                 showValidationMessage={validationMessageVisible}
                 isSaving={isSaving}
                 sourceTableInfos={sourceTableColumns}
+                sourceInfo={sourceInfo}
                 onCloseValidationMessage={handleHideValidationMessage}
                 onFinish={handleEditFinished}
                 onSave={handleSaveView}

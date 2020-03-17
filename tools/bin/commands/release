@@ -180,13 +180,18 @@ create_moving_tag_release() {
 calc_timestamp_version() {
     local topdir=$1
     cd $topdir/app
-    # ./mvnw -N help:evaluate -Dexpression="project.version"
     local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^[0-9]' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     if [ -z "${pom_version}" ]; then
         echo "ERROR: Cannot extract version from app/pom.xml"
         exit 1
     fi
     local patch_level=$(git tag | grep ^$pom_version | grep -v '-' | grep '[0-9]*\.[0-9]*\.' | sed -e s/${pom_version}.// | sort -n -r | head -1)
+    if [ -z "${patch_level}" ]; then
+      # without the patch level, i.e. for X.Y-SNAPSHOT in POMs we set
+      # the patch level to -1 to have it evaluate to X.Y.0-YYYYMMDD
+      # instead of X.Y.1-YYYYMMDD below
+      patch_level=-1
+    fi
     echo "${pom_version}.$((patch_level+1))-$(date '+%Y%m%d')"
 }
 

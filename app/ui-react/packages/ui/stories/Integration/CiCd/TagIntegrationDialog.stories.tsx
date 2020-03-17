@@ -1,8 +1,9 @@
+import { Button, ButtonVariant, DataList } from '@patternfly/react-core';
 import { action } from '@storybook/addon-actions';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
-import { Button, ListView } from 'patternfly-react';
 import * as React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import {
   CiCdListSkeleton,
   ITagIntegrationEntry,
@@ -50,34 +51,22 @@ interface ITagIntegrationDialogStoryProps {
   loading: boolean;
 }
 
-interface ITagIntegrationDialogStoryState {
-  showDialog: boolean;
-}
+export const TagIntegrationDialogStory: React.FunctionComponent<ITagIntegrationDialogStoryProps> = props => {
+  const [showDialog, setShowDialog] = React.useState(true);
 
-class TagIntegrationDialogStory extends React.Component<
-  ITagIntegrationDialogStoryProps,
-  ITagIntegrationDialogStoryState
-> {
-  constructor(props) {
-    super(props);
-    this.state = {
-      showDialog: true,
-    };
-    this.openDialog = this.openDialog.bind(this);
-    this.closeDialog = this.closeDialog.bind(this);
-  }
-  public openDialog() {
-    this.setState({ showDialog: true });
-  }
-  public closeDialog() {
-    this.setState({ showDialog: false });
-  }
-  public render() {
-    return (
-      <>
-        {this.state.showDialog && (
+  const openDialog = () => {
+    setShowDialog(true);
+  };
+  const closeDialog = () => {
+    setShowDialog(false);
+  };
+
+  return (
+    <>
+      {showDialog && (
+        <Router>
           <TagIntegrationDialog
-            onHide={this.closeDialog}
+            onHide={closeDialog}
             onSave={action('onSave')}
             i18nTitle={text(
               'Title',
@@ -89,14 +78,14 @@ class TagIntegrationDialogStory extends React.Component<
             {({ handleChange }) => (
               <>
                 <p>{i18nTagIntegrationDialogMessage}</p>
-                {this.props.loading && (
-                  <ListView>
+                {props.loading && (
+                  <DataList aria-label={'TagIntegrationList'}>
                     <CiCdListSkeleton />
-                  </ListView>
+                  </DataList>
                 )}
-                {!this.props.loading && (
+                {!props.loading && (
                   <TagIntegrationDialogBody
-                    initialItems={this.props.items}
+                    initialItems={props.items}
                     onChange={handleChange}
                     manageCiCdHref={text('href', '#example')}
                     i18nEmptyStateButtonText={text(
@@ -116,11 +105,12 @@ class TagIntegrationDialogStory extends React.Component<
               </>
             )}
           </TagIntegrationDialog>
-        )}
-        <Button className="btn btn-primary" onClick={this.openDialog}>
-          Open Dialog
-        </Button>
-      </>
-    );
-  }
-}
+        </Router>
+      )}
+      <Button variant={ButtonVariant.primary} onClick={openDialog}>
+        Open Dialog
+      </Button>
+    </>
+  );
+};
+

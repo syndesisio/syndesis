@@ -27,10 +27,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import org.apache.camel.CamelContext;
+import org.apache.camel.CamelContextAware;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.NoTypeConversionAvailableException;
 import org.apache.camel.Processor;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.TypeConversionException;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.catalog.CamelCatalog;
@@ -39,8 +41,8 @@ import org.apache.camel.component.extension.ComponentExtension;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
-import org.apache.camel.impl.DefaultComponent;
-import org.apache.camel.util.IntrospectionSupport;
+import org.apache.camel.support.DefaultComponent;
+import org.apache.camel.support.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.StringHelper;
 import org.apache.camel.util.URISupport;
@@ -102,7 +104,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         try {
             this.definition = ComponentDefinition.forScheme(catalog, componentScheme);
         } catch (IOException e) {
-            throw ObjectHelper.wrapRuntimeCamelException(e);
+            throw RuntimeCamelException.wrapRuntimeCamelException(e);
         }
 
         registerExtension(this::getComponentVerifierExtension);
@@ -152,10 +154,10 @@ public class ComponentProxyComponent extends DefaultComponent {
         configureDelegateEndpoint(definition, delegate, options);
 
         final ComponentProxyEndpoint answer = new ComponentProxyEndpoint(uri, this, delegate);
-        answer.setBeforeProducer(ObjectHelper.trySetCamelContext(getBeforeProducer(), getCamelContext()));
-        answer.setAfterProducer(ObjectHelper.trySetCamelContext(getAfterProducer(), getCamelContext()));
-        answer.setBeforeConsumer(ObjectHelper.trySetCamelContext(getBeforeConsumer(), getCamelContext()));
-        answer.setAfterConsumer(ObjectHelper.trySetCamelContext(getAfterConsumer(), getCamelContext()));
+        answer.setBeforeProducer(CamelContextAware.trySetCamelContext(getBeforeProducer(), getCamelContext()));
+        answer.setAfterProducer(CamelContextAware.trySetCamelContext(getAfterProducer(), getCamelContext()));
+        answer.setBeforeConsumer(CamelContextAware.trySetCamelContext(getBeforeConsumer(), getCamelContext()));
+        answer.setAfterConsumer(CamelContextAware.trySetCamelContext(getAfterConsumer(), getCamelContext()));
 
         // clean-up parameters so that validation won't fail later on
         // in DefaultConnectorComponent.validateParameters()
@@ -358,7 +360,7 @@ public class ComponentProxyComponent extends DefaultComponent {
                         options.remove(key);
                     }
                 } catch (Exception e) {
-                    throw new IllegalStateException("Unable to set property: `" + key+ "` on component: " + component, e);
+                    LOGGER.warn("Couldn't configure property " + key);
                 }
             }
         }

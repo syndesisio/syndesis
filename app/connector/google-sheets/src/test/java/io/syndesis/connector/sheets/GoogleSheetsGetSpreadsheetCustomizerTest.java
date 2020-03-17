@@ -22,7 +22,7 @@ import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -42,6 +42,7 @@ import io.syndesis.connector.email.model.EMailMessageModel;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
 import static org.assertj.core.api.Assumptions.assumeThat;
+import org.junit.Ignore;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
@@ -93,6 +94,7 @@ public class EMailReadWithTLSRouteTest extends AbstractEmailTest implements Rout
      *
      * Change the credentials in the fields above then execute.
      */
+    @Ignore
     @Test
     public void testImapEMailRouteWithStartTLS() throws Exception {
         assumeThat(HOSTNAME).isNotEqualTo(NO_HOST);

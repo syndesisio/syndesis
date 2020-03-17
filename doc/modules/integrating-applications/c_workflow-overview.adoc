@@ -22,4 +22,4 @@ creating a simple integration looks like this:
 image:images/integrating-applications/general-workflow.png[general workflow]
 
 .Additional resource
-link:{LinkFuseOnlineIntegrationGuide}#workflow-api-providers_api-provider[Workflow for creating API provider integrations].
+link:{LinkFuseOnlineIntegrationGuide}#overview-benefit-api-provider-integrations_api-provider[Benefit, overview, and workflow for creating API provider integrations].

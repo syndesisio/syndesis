@@ -75,14 +75,11 @@
     strategy:
       sourceStrategy:
         from:
-          kind: ImageStreamTag
-          name: 'php:7.0'
-          namespace: openshift
+          kind: DockerImage
+          name: {.Syndesis.Addons.Todo.Image}
       type: Source
     triggers:
       - type: ConfigChange
-      - imageChange:
-        type: ImageChange
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig

@@ -17,8 +17,9 @@
 package io.syndesis.connector.kudu;
 
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.kudu.customizer.KuduInsertCustomizer;
 import org.apache.camel.Exchange;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

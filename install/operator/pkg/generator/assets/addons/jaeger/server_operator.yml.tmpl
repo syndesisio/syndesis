@@ -23,7 +23,7 @@
         serviceAccountName: jaeger-operator
         containers:
         - name: jaeger-operator
-          image: jaegertracing/jaeger-operator:1.13.1
+          image: '{{ .Syndesis.Addons.Jaeger.ImageOperator }}'
           ports:
           - containerPort: 8383
             name: metrics
@@ -43,7 +43,7 @@
           - name: OPERATOR_NAME
             value: "jaeger-operator"
         - name: jaeger-agent
-          image: jaegertracing/jaeger-agent:1.13.1
+          image: '{{ .Syndesis.Addons.Jaeger.ImageAgent }}'
           env:
           - name: POD_NAMESPACE
             valueFrom:

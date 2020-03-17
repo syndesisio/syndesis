@@ -6,9 +6,11 @@ export interface IUptimeMetricProps {
   start: number;
   uptimeDuration: string;
   i18nTitle: string;
+  i18nSince: string;
 }
 
 export const UptimeMetric: React.FunctionComponent<IUptimeMetricProps> = ({
+  i18nSince,
   i18nTitle,
   start,
   uptimeDuration,
@@ -23,7 +25,9 @@ export const UptimeMetric: React.FunctionComponent<IUptimeMetricProps> = ({
       <CardBody>
         <Title size="md" className="metrics-uptime__header">
           <div>{i18nTitle}</div>
-          <div className="metrics-uptime__uptime">since {startAsHuman}</div>
+          <div className="metrics-uptime__uptime">
+            {i18nSince} {startAsHuman}
+          </div>
         </Title>
       </CardBody>
       <CardBody>

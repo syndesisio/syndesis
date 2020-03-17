@@ -1,4 +1,4 @@
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 
@@ -10,7 +10,9 @@ export class IntegrationEditorChooseAction extends React.Component {
   public render() {
     return (
       <PageSection>
-        <ListView>{this.props.children}</ListView>
+        <DataList aria-label={'integration editor choose action list'}>
+          {this.props.children}
+        </DataList>
       </PageSection>
     );
   }

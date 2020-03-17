@@ -19,7 +19,7 @@ anyone creates a new lead.
 ** A connection to AWS S3 can periodically poll a particular bucket
 and trigger execution of a simple integration when the bucket contains files.
 
-* *link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-timers_create[Timer]*. {prodname} triggers execution of a simple integration at the interval that
+* *link:{LinkFuseOnlineIntegrationGuide}#add-timer-connection_create[Timer]*. {prodname} triggers execution of a simple integration at the interval that
 you specify. This can be a simple timer or a `cron` job.
 
 * *link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]*. A client can send an HTTP `GET` or `POST`

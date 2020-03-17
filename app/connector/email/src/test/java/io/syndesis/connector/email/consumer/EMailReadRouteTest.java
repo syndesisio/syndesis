@@ -403,7 +403,7 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         }
         assertNotNull(mailEndpoint);
 
-        Map<String, Object> consumerProperties = mailEndpoint.getConsumerProperties();
+        Map<String, Object> consumerProperties = mailEndpoint.getSchedulerProperties();
         assertNotNull(consumerProperties);
         assertTrue(consumerProperties.size() > 0);
         assertEquals(delayValue, consumerProperties.get(DELAY));

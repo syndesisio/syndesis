@@ -58,6 +58,11 @@ export interface SchemaNode {
   children: SchemaNode[];
 }
 
+export interface TableInfo {
+  connectionName: string;
+  tableName: string;
+}
+
 export interface ViewInfo {
   connectionName: string;
   isUpdate: boolean;

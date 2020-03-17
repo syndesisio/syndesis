@@ -21,9 +21,9 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.Processor;
 import org.apache.camel.Producer;
 import org.apache.camel.api.management.ManagedAttribute;
-import org.apache.camel.impl.DefaultEndpoint;
+import org.apache.camel.support.DefaultEndpoint;
 import org.apache.camel.processor.Pipeline;
-import org.apache.camel.util.ServiceHelper;
+import org.apache.camel.support.service.ServiceHelper;
 
 public class ComponentProxyEndpoint extends DefaultEndpoint implements DelegateEndpoint {
 

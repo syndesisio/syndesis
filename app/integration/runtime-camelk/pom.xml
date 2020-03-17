@@ -55,7 +55,19 @@
     <!-- camel -->
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
+      <artifactId>camel-core-engine</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-base</artifactId>
     </dependency>
 
     <!-- set atlasmap as always required runtime dependency-->
@@ -70,6 +82,12 @@
       <groupId>org.apache.camel.k</groupId>
       <artifactId>camel-k-runtime-core</artifactId>
       <version>${camel-k-runtime.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>javax.xml.bind</groupId>
+          <artifactId>jaxb-api</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -149,6 +167,16 @@
               <dependency>
                   <groupId>org.apache.camel</groupId>
                   <artifactId>camel-catalog</artifactId>
+                  <version>${camel.version}</version>
+              </dependency>
+              <!-- we have to force the version of camel-api due to
+              https://issues.apache.org/jira/browse/CAMEL-14498
+              TODO: remove when the Camel version Camel K is using
+              aligns with the version Syndesis is using
+              -->
+              <dependency>
+                  <groupId>org.apache.camel</groupId>
+                  <artifactId>camel-api</artifactId>
                   <version>${camel.version}</version>
               </dependency>
           </dependencies>

@@ -1,4 +1,8 @@
-import { ConnectionTable, SchemaNodeInfo, SourceColumn } from '@syndesis/models';
+import {
+  ConnectionTable,
+  SchemaNodeInfo,
+  SourceColumn,
+} from '@syndesis/models';
 import {
   SelectedConnectionListView,
   SelectedConnectionTables,
@@ -10,11 +14,15 @@ export interface IConnectionTablesProps {
   selectedSchemaNodes: SchemaNodeInfo[];
   columnDetails: ConnectionTable[];
   onNodeDeselected: (connectionName: string, teiidName: string) => void;
+  setShowPreviewData: (connectionName: string, tableName: string) => void;
 }
 
 export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> = props => {
-  const [expanded, setExpanded] = React.useState(['']);
   const { t } = useTranslation(['data', 'shared']);
+
+  /* States used in component */
+  const [expanded, setExpanded] = React.useState(['']);
+
   const toggle = (id: string) => {
     const newArray = expanded.slice();
     const index = newArray.indexOf(id);
@@ -26,39 +34,48 @@ export const ConnectionTables: React.FunctionComponent<IConnectionTablesProps> =
     setExpanded(newArray);
   };
 
-  const getSeletedTableColumns = (connectionName: string, tabelName: string) => {
+  const getSelectedTableColumns = (
+    connectionName: string,
+    tableName: string
+  ) => {
     let columnList: SourceColumn[] = [];
-    for(const connection of props.columnDetails){
-      if(connection.name === connectionName){
-        for(const table of connection.tables){
-          if(table.name === tabelName){
+    for (const connection of props.columnDetails) {
+      if (connection.name === connectionName) {
+        for (const table of connection.tables) {
+          if (table.name === tableName) {
             columnList = table.columns;
           }
         }
       }
     }
-    return columnList.map( (column: SourceColumn) =>[ column.name, column.datatype])
-  }
+    return columnList.map((column: SourceColumn) => [
+      column.name,
+      column.datatype,
+    ]);
+  };
 
   return (
-    <SelectedConnectionTables 
+    <SelectedConnectionTables
       selectedSchemaNodesLength={props.selectedSchemaNodes.length}
       i18nTablesSelected={t('shared:TablesSelected')}
       i18nEmptyTablePreview={t('shared:EmptyTablePreview')}
       i18nEmptyTablePreviewTitle={t('shared:EmptyTablePreviewTitle')}
-      >
-        {props.selectedSchemaNodes.map((info, index) => (
-          <SelectedConnectionListView
-            key={index}
-            name={info.teiidName}
-            connectionName={info.connectionName}
-            index={index}
-            toggle={toggle}
-            expanded={expanded}
-            onTabelRemoved={props.onNodeDeselected}
-            rows={getSeletedTableColumns(info.connectionName, info.teiidName)}
-          />
-        ))}
+    >
+      {props.selectedSchemaNodes.map((info, index) => (
+        <SelectedConnectionListView
+          key={index}
+          name={info.teiidName}
+          connectionName={info.connectionName}
+          index={index}
+          toggle={toggle}
+          expanded={expanded}
+          onTableRemoved={props.onNodeDeselected}
+          setShowPreviewData={props.setShowPreviewData}
+          i18nRemoveSelection={t('removeSelection')}
+          i18nPreviewData={t('previewData')}
+          rows={getSelectedTableColumns(info.connectionName, info.teiidName)}
+        />
+      ))}
     </SelectedConnectionTables>
   );
 };

@@ -62,10 +62,14 @@ summary page, {prodname} displays the external URL for your REST API service.
 This external URL is the base URL that clients use to
 call your REST API services.
 
+For {prodname} environments on OCP, Red Hat 3scale discovery of API provider integrations might be enabled. In this case, 3scale publishes the URL for invoking services.
+
 .Testing an API provider integration
 To test an API provider integration's flows, you can use the `curl` utility.
-For example, suppose that the following `curl` command triggers execution of the
-flow for the *Get Task by ID* operation. The HTTP `GET` command is the
+For example, the following `curl` command triggers execution of the
+flow for the *Get Task by ID* operation for the REST API service URL: https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/.
+
+The HTTP `GET` command is the
 default request so there is no requirement to specify `GET`.
 The last part of the URL specifies the ID of the task to get:
 

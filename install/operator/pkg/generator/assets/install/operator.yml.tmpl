@@ -67,6 +67,7 @@
     template:
       metadata:
         labels:
+          name: syndesis-operator
           syndesis.io/app: syndesis
           syndesis.io/type: operator
           syndesis.io/component: syndesis-operator
@@ -92,6 +93,13 @@
             value: "syndesis-operator"
           - name: DEV_SUPPORT
             value: "{{.DevSupport}}"
+        initContainers:
+        - command:
+          - bash
+          - -c
+          - postgres -V
+          image: '{{.DatabaseImage}}'
+          name: postgres-version
     triggers:
     - imageChangeParams:
         automatic: true

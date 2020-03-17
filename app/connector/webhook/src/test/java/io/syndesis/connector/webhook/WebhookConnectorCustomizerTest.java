@@ -17,6 +17,8 @@ package io.syndesis.connector.webhook;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -24,9 +26,10 @@ import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProces
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
+import org.apache.camel.Navigate;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
 import org.junit.Test;
@@ -70,12 +73,16 @@ public class WebhookConnectorCustomizerTest {
         "  }\n" + //
         "}";
 
-    final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
+    final ComponentProxyComponent component = new ComponentProxyComponent("dataset-test", "dataset-test");
 
     @Test
     public void shouldAddWrapperProcessorIfSyndesisJsonSchemaGiven() throws Exception {
         final WebhookConnectorCustomizer customizer = new WebhookConnectorCustomizer();
-        customizer.setCamelContext(mock(CamelContext.class));
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
+        customizer.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
+
         customizer.setOutputDataShape(new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA).specification(SIMPLE_SCHEMA).build());
 
         customizer.customize(component, Collections.emptyMap());
@@ -83,12 +90,14 @@ public class WebhookConnectorCustomizerTest {
         final Processor beforeConsumer = component.getBeforeConsumer();
         assertThat(beforeConsumer).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) beforeConsumer;
-        final Collection<Processor> processors = pipeline.getProcessors();
+        final Collection<Processor> processors = pipeline.next();
         assertThat(processors).hasSize(3);
-        assertThat(processors).anySatisfy(p -> assertThat(p).isInstanceOf(HttpRequestWrapperProcessor.class));
-        assertThat(processors).anySatisfy(p -> assertThat(p).isInstanceOf(HttpMessageToDefaultMessageProcessor.class));
+        assertThat(processors).anySatisfy(containsInstanceOf(HttpRequestWrapperProcessor.class));
+        assertThat(processors).anySatisfy(containsInstanceOf(HttpMessageToDefaultMessageProcessor.class));
 
-        final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) processors.stream().filter(p -> p instanceof HttpRequestWrapperProcessor)
+        final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) processors.stream()
+            .map(n -> ((Navigate<?>) n).next().get(0))
+            .filter(HttpRequestWrapperProcessor.class::isInstance)
             .findFirst().get();
         assertThat(wrapper.getParameters()).containsOnly("source", "status");
 
@@ -100,10 +109,23 @@ public class WebhookConnectorCustomizerTest {
         verify(in).removeHeader(Exchange.HTTP_URI);
     }
 
+    private static Consumer<Processor> containsInstanceOf(Class<?> type) {
+        return p -> {
+            assertThat(p).isInstanceOf(Navigate.class);
+            final List<?> next = ((Navigate) p).next();
+
+            assertThat(next).hasOnlyOneElementSatisfying(n -> type.isInstance(n));
+        };
+    }
+
     @Test
     public void shouldDestroyAllOutput() throws Exception {
         final WebhookConnectorCustomizer customizer = new WebhookConnectorCustomizer();
-        customizer.setCamelContext(mock(CamelContext.class));
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
+        customizer.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
+
         customizer.customize(component, Collections.emptyMap());
 
         final Processor afterConsumer = component.getAfterConsumer();

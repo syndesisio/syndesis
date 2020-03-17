@@ -23,12 +23,10 @@ import java.util.NoSuchElementException;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.util.JsonSupport;
-
-import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.RoutesBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.After;
@@ -40,7 +38,7 @@ public abstract class AbstractActivityLoggingTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ActivityLoggingTest.class);
 
-    protected CamelContext context;
+    protected ExtendedCamelContext context;
     protected ActivityTracker activityTracker;
     protected ArrayList<ActivityEvent> activityEvents;
 

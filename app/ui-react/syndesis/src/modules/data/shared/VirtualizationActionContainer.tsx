@@ -51,10 +51,10 @@ interface IPromptActionOptions {
 }
 
 /**
- * @property {IVirtualizationAction} deleteActionProps - the customization of the delete action or `undefined` if the
+ * @property {any} deleteActionProps - the customization of the delete action or `undefined` if the
  * default action properties are wanted
  * @example { disabled: false }
- * @property {IVirtualizationAction} exportActionProps - the customization of the export action or `undefined` if the
+ * @property {any} exportActionProps - the customization of the export action or `undefined` if the
  * default action properties are wanted
  * @example { as: 'primary', i18nLabel: 'My Export' }
  * @property {VirtualizationActionId[]} includeActions - the IDs of the actions wanted as buttons.
@@ -62,31 +62,31 @@ interface IPromptActionOptions {
  * @property {VirtualizationActionId[]} includeItems - the IDs of the actions wanted as kebab menu items.
  * Leave `undefined` if the default actions are wanted. Set to an empty array if no kebab menu is wanted.
  * @property {H.LocationDescriptorObject} postDeleteHref - the virtualization whose actions are being requested
- * @property {IVirtualizationAction} publishActionProps - the customization of the publish action or `undefined` if the
+ * @property {any} publishActionProps - the customization of the publish action or `undefined` if the
  * default action properties are wanted
- * @property {IVirtualizationAction} revertActionProps - the customization of the revert action or `undefined` if the
+ * @property {any} revertActionProps - the customization of the revert action or `undefined` if the
  * default action properties are wanted
- * @property {IVirtualizationAction} revision - the revision for action or `undefined` if not required.
- * @property {IVirtualizationAction} saveActionProps - the customization of the save action or `undefined` if the
+ * @property {any} revision - the revision for action or `undefined` if not required.
+ * @property {any} saveActionProps - the customization of the save action or `undefined` if the
  * default action properties are wanted
- * @property {IVirtualizationAction} startActionProps - the customization of the start action or `undefined` if the
+ * @property {any} startActionProps - the customization of the start action or `undefined` if the
  * default action properties are wanted
- * @property {IVirtualizationAction} stopActionProps - the customization of the stop action or `undefined` if the
+ * @property {any} stopActionProps - the customization of the stop action or `undefined` if the
  * default action properties are wanted
  * @property {Virtualization} virtualization - the virtualization whose actions are being requested
  */
 export interface IVirtualizationActionContainerProps {
-  deleteActionProps?: IVirtualizationAction;
-  exportActionProps?: IVirtualizationAction;
+  deleteActionProps?: any;
+  exportActionProps?: any;
   includeActions?: VirtualizationActionId[];
   includeItems?: VirtualizationActionId[];
   postDeleteHref?: H.LocationDescriptorObject;
-  publishActionProps?: IVirtualizationAction;
-  revertActionProps?: IVirtualizationAction;
+  publishActionProps?: any;
+  revertActionProps?: any;
   revision?: number;
-  saveActionProps?: IVirtualizationAction;
-  startActionProps?: IVirtualizationAction;
-  stopActionProps?: IVirtualizationAction;
+  saveActionProps?: any;
+  startActionProps?: any;
+  stopActionProps?: any;
   virtualization: Virtualization;
 }
 
@@ -301,6 +301,11 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           const e = new Error();
           e.name = 'NoViews';
           throw e;
+        }else{
+          pushNotification(
+            (t('publishInProgress')),
+            'info'
+          );
         }
 
         publishVirtualization(props.virtualization.name).catch((e: any) => {
@@ -419,6 +424,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Start'),
       id: VirtualizationActionId.Start,
       onClick: async () => {
+        pushNotification(
+          (t('publishInProgress')),
+          'info'
+        );
         setPromptActionOptions({
           buttonText: t('shared:Start'),
           handleAction: async () => {
@@ -479,6 +488,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
       i18nLabel: t('shared:Stop'),
       id: VirtualizationActionId.Stop,
       onClick: async () => {
+        pushNotification(
+          (t('stopInProgress')),
+          'info'
+        );
         unpublishVirtualization(props.virtualization.name).catch((e: any) => {
           if (e.name === 'AlreadyUnpublished') {
             pushNotification(
@@ -549,7 +562,10 @@ export const VirtualizationActionContainer: React.FunctionComponent<
           }
           break;
         case VirtualizationActionId.Publish:
-          if (canPublish(props.virtualization)) {
+          // The publish is included, but may be disabled
+          if (!canPublish(props.virtualization)) {
+            actions.push(createPublishAction({ disabled: true }));
+          } else {
             actions.push(createPublishAction(props.publishActionProps));
           }
           break;

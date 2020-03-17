@@ -63,6 +63,7 @@
     <module>salesforce</module>
     <module>sftp</module>
     <module>slack</module>
+    <module>soap</module>
     <module>sql</module>
     <module>telegram</module>
     <module>timer</module>
@@ -78,6 +79,47 @@
     <module>debezium</module>
   </modules>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-server</artifactId>
+        <version>9.4.25.v20191220</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel</groupId>
+        <artifactId>camel-xml-jaxb</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>*</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <!-- dependency used by connector-jira via camel-jira and
+           jira-rest-java-client-core we need to exclude Sun JAXB impl
+           in favor of Glassfish one
+      -->
+      <dependency>
+        <groupId>com.sun.jersey</groupId>
+        <artifactId>jersey-json</artifactId>
+        <version>1.19</version>
+        <exclusions>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <plugins>
       <plugin>
@@ -90,26 +132,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <configuration>
-          <!--
-            We're throwing the enforcement rules out the window because
-            we need to allow dependencies that end up being used at
-            runtime to be dictated by the dependency information from
-            Camel and Spring Boot BOMs.
-          -->
-          <rules combine.self="override">
-            <bannedDependencies>
-              <excludes>
-                <exclude>org.hamcrest:*</exclude>
-              </excludes>
-              <message>Prefer using AssertJ for assertions</message>
-              <searchTransitive>false</searchTransitive>
-            </bannedDependencies>
-          </rules>
-        </configuration>
       </plugin>
     </plugins>
   </build>

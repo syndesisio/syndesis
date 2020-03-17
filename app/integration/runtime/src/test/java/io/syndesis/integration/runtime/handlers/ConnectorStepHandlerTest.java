@@ -27,7 +27,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
 
-import org.apache.camel.CamelContext;
 import org.apache.camel.Endpoint;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.properties.PropertiesComponent;
@@ -85,7 +84,7 @@ public class ConnectorStepHandlerTest {
 
     @Test
     public void testConnectorStepHandler() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         PropertiesComponent propertiesComponent = new PropertiesComponent();
 
@@ -96,8 +95,8 @@ public class ConnectorStepHandlerTest {
         extra.setProperty("flow-0.twitter-timeline-0.consumerSecret", "cs");
         propertiesComponent.setOverrideProperties(extra);
 
-        context.addComponent("properties", propertiesComponent);
-
+        propertiesComponent.setInitialProperties(extra);
+        context.setPropertiesComponent(propertiesComponent);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(

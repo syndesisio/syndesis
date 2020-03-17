@@ -27,7 +27,6 @@
   <artifactId>server-logging-jsondb</artifactId>
   <name>Server :: Logging :: JsonDB</name>
 
-
   <dependencies>
 
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
@@ -129,6 +128,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
     <dependency>

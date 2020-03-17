@@ -6,7 +6,9 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 
 export interface IButtonLinkProps {
-  onClick?: (e: MouseEvent | React.MouseEvent<any> | React.KeyboardEvent<Element>) => void;
+  onClick?: (
+    e: MouseEvent | React.MouseEvent<any> | React.KeyboardEvent<Element>
+  ) => void;
   href?: H.LocationDescriptor;
   className?: string;
   disabled?: boolean;
@@ -44,11 +46,21 @@ export const ButtonLink = React.forwardRef<any, IButtonLinkProps>(
       }
     };
 
-    className = classnames('btn', `btn-${as}`, className, {
-      'btn-lg': size === 'lg',
-      'btn-sm': size === 'sm',
-      'btn-xs': size === 'xs',
-    });
+    className = classnames(
+      'pf-c-button',
+      {
+        'pf-m-danger': as === 'danger' || as === 'warning',
+        'pf-m-link': as === 'link',
+        'pf-m-primary': as === 'primary' || as === 'success',
+        'pf-m-secondary': as === 'default' || as === 'info',
+      },
+      className,
+      {
+        'btn-lg': size === 'lg',
+        'btn-sm': size === 'sm',
+        'btn-xs': size === 'xs',
+      }
+    );
     return href && !disabled ? (
       <Link
         to={href}

@@ -141,6 +141,12 @@
             <artifactId>connector-rest-swagger</artifactId>
             <version>${project.version}</version>
           </dependency>
+          <!-- ==== SOAP CXF ==== -->
+          <dependency>
+            <groupId>io.syndesis.connector</groupId>
+            <artifactId>connector-soap</artifactId>
+            <version>${project.version}</version>
+          </dependency>
         </dependencies>
       </plugin>
 
@@ -699,6 +705,11 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-security</artifactId>
       <scope>runtime</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-actuator</artifactId>
     </dependency>
 
     <dependency>

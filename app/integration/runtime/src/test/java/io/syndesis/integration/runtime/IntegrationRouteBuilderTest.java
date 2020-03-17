@@ -18,13 +18,16 @@ package io.syndesis.integration.runtime;
 import java.util.Arrays;
 import java.util.List;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.LogDefinition;
@@ -36,11 +39,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationRouteBuilderTest {
 
@@ -68,8 +66,8 @@ public class IntegrationRouteBuilderTest {
 
         assertThat(route.getRoutePolicies()).hasSize(1);
 
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:expression");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:expression");
         assertThat(route.getOutputs()).hasSize(2);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);
@@ -108,8 +106,8 @@ public class IntegrationRouteBuilderTest {
         assertThat(primaryRoute.getRoutePolicies()).hasSize(1);
         assertThat(primaryRoute.getRoutePolicies().get(0)).isInstanceOf(IntegrationActivityTrackingPolicy.class);
 
-        assertThat(primaryRoute.getInputs()).hasSize(1);
-        assertThat(primaryRoute.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:expression");
+        assertThat(primaryRoute.getInput()).isNotNull();
+        assertThat(primaryRoute.getInput()).hasFieldOrPropertyWithValue("uri", "direct:expression");
         assertThat(primaryRoute.getOutputs()).hasSize(2);
         assertThat(getOutput(primaryRoute, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(primaryRoute, 0).getOutputs()).hasSize(2);
@@ -140,8 +138,8 @@ public class IntegrationRouteBuilderTest {
         assertThat(conditionalRoute.getRoutePolicies()).hasSize(1);
         assertThat(conditionalRoute.getRoutePolicies().get(0)).isInstanceOf(FlowActivityTrackingPolicy.class);
 
-        assertThat(conditionalRoute.getInputs()).hasSize(1);
-        assertThat(conditionalRoute.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct");
+        assertThat(conditionalRoute.getInput()).isNotNull();
+        assertThat(conditionalRoute.getInput()).hasFieldOrPropertyWithValue("uri", "direct");
         assertThat(conditionalRoute.getOutputs()).hasSize(5);
         assertThat(getOutput(conditionalRoute, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(conditionalRoute, 0).getOutputs()).hasSize(2);

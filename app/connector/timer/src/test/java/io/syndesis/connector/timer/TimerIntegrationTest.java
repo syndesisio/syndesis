@@ -15,10 +15,18 @@
  */
 package io.syndesis.connector.timer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
-
+import org.apache.camel.CamelContext;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.quartz.QuartzEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameters;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -32,18 +40,6 @@ import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.quartz2.QuartzEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.apache.camel.model.ModelCamelContext;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameters;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class TimerIntegrationTest {
@@ -76,20 +72,17 @@ public class TimerIntegrationTest {
     }
 
     RouteBuilder createRouteBuilder() {
-        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
-            @Override
-            protected ModelCamelContext createContainer() {
-                final DefaultCamelContext leanContext = new DefaultCamelContext();
-                leanContext.disableJMX();
-
-                return leanContext;
-            }
-
+        IntegrationRouteBuilder irb = new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
             @Override
             protected Integration loadIntegration() {
                 return createTimerIntegration(action);
             }
         };
+
+        final DefaultCamelContext leanContext = new DefaultCamelContext();
+        leanContext.disableJMX();
+        irb.setContext(leanContext);
+        return irb;
     }
 
     @Parameters

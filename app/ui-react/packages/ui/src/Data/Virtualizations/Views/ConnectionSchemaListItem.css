@@ -1,3 +1,16 @@
-.connection-schema-list-item__status {
-  margin-left: 8px;
+.connection-schema-list-item .connection-schema-list-item__icon-wrapper {
+  margin-top: 4px;
+  width: 4em;
+}
+
+.connection-schema-list-item .pf-c-data-list__item-control {
+  margin-right: 10px;
+}
+
+.connection-schema-list-item .pf-c-data-list__cell {
+  margin-right: 5px;
+}
+
+.connection-schema-list-item .pf-c-data-list__cell:not(:last-child) {
+  margin-right: 5px;
 }

@@ -42,17 +42,17 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
 
     @BeforeClass
     public static void doCollectionSetup() {
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION);
         LOG.debug("Created a change stream collection named {}", COLLECTION);
     }
 
     @Before
-    public void before(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
+    public void before() {
+        collection = EmbedMongoConfiguration.getDB().getCollection(COLLECTION);
     }
 
     @After
-    public void after(){
+    public void after() {
         collection.drop();
     }
 
@@ -65,21 +65,11 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
     public void singleInsertTest() throws Exception {
         // When
         MockEndpoint mock = getMockEndpoint("mock:result");
-        mock.setRetainLast(1);
         mock.expectedMessageCount(2);
-        mock.expectedMessagesMatches((Exchange e) -> {
-            try {
-                // We just want to validate the output is coming as json well format
-                @SuppressWarnings("unchecked")
-                List<String> doc = e.getMessage().getBody(List.class);
-                JsonNode jsonNode = MAPPER.readTree(doc.get(0));
-                Assertions.assertThat(jsonNode).isNotNull();
-                Assertions.assertThat(jsonNode.get("test").asText()).isEqualTo("junit2");
-            } catch (IOException ex) {
-                return false;
-            }
-            return true;
-        });
+        mock.expectedMessagesMatches(
+            exchange -> validateDocument(exchange, "junit"),
+            exchange -> validateDocument(exchange, "junit2")
+        );
         // Given
         Document doc = new Document();
         doc.append("someKey", "someValue");
@@ -91,5 +81,18 @@ public class MongoDBConnectorChangeStreamConsumerTest extends MongoDBConnectorTe
         collection.insertOne(doc2);
         // Then
         mock.assertIsSatisfied();
+    }
+
+    private static boolean validateDocument(Exchange e, String text) {
+        try {
+            @SuppressWarnings("unchecked")
+            List<String> doc = e.getMessage().getBody(List.class);
+            JsonNode jsonNode = MAPPER.readTree(doc.get(0));
+            Assertions.assertThat(jsonNode).isNotNull();
+            Assertions.assertThat(jsonNode.get("test").asText()).isEqualTo(text);
+        } catch (IOException ex) {
+            return false;
+        }
+        return true;
     }
 }

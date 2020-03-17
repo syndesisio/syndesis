@@ -54,7 +54,7 @@ export const DvMetricsContainer: React.FunctionComponent<
       >
         {props.clientSessionProps && (
           <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
-            <Card isHoverable={true} className="dv-metrics-container__card">
+            <Card className="dv-metrics-container__card">
               <DvClientSessionMetric {...props.clientSessionProps} />
             </Card>
           </FlexItem>
@@ -62,7 +62,7 @@ export const DvMetricsContainer: React.FunctionComponent<
 
         {props.requestProps && (
           <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
-            <Card isHoverable={true} className="dv-metrics-container__card">
+            <Card className="dv-metrics-container__card">
               <DvRequestMetric {...props.requestProps} />
             </Card>
           </FlexItem>
@@ -70,7 +70,7 @@ export const DvMetricsContainer: React.FunctionComponent<
 
         {props.resultSetCacheProps && (
           <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
-            <Card isHoverable={true} className="dv-metrics-container__card">
+            <Card className="dv-metrics-container__card">
               <DvResultSetCacheMetric {...props.resultSetCacheProps} />
             </Card>
           </FlexItem>
@@ -78,7 +78,7 @@ export const DvMetricsContainer: React.FunctionComponent<
 
         {props.uptimeProps && (
           <FlexItem breakpointMods={[{ modifier: 'flex-1', breakpoint: 'xl' }]}>
-            <Card isHoverable={true} className="dv-metrics-container__card">
+            <Card className="dv-metrics-container__card">
               <DvUptimeMetric {...props.uptimeProps} />
             </Card>
           </FlexItem>

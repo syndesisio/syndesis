@@ -19,7 +19,7 @@ import io.syndesis.common.util.KeyGenerator;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.spi.LogListener;
-import org.apache.camel.util.CamelLogger;
+import org.apache.camel.spi.CamelLogger;
 import org.slf4j.Marker;
 
 public class IntegrationLoggingListener implements LogListener {

@@ -15,6 +15,12 @@
  */
 package io.syndesis.integration.runtime;
 
+import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
+import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
@@ -23,7 +29,6 @@ import io.syndesis.common.model.integration.Scheduler;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Resources;
-
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.PipelineDefinition;
@@ -34,14 +39,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.SplitDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.junit.Test;
-
-import static java.util.Collections.singleton;
-
-import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.getOutput;
-import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegration;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationRouteTest {
     @Test
@@ -97,8 +94,8 @@ public class IntegrationRouteTest {
         RouteDefinition route = routes.getRoutes().get(0);
 
         // Timer
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
         assertThat(route.getOutputs()).hasSize(5);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);
@@ -171,8 +168,8 @@ public class IntegrationRouteTest {
 
         RouteDefinition route = routes.getRoutes().get(0);
 
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "direct:start");
         assertThat(route.getOutputs()).hasSize(4);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);
@@ -246,8 +243,8 @@ public class IntegrationRouteTest {
 
         RouteDefinition route = routes.getRoutes().get(0);
 
-        assertThat(route.getInputs()).hasSize(1);
-        assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
+        assertThat(route.getInput()).isNotNull();
+        assertThat(route.getInput()).hasFieldOrPropertyWithValue("uri", "timer:integration?period=1s");
         assertThat(route.getOutputs()).hasSize(5);
         assertThat(getOutput(route, 0)).isInstanceOf(PipelineDefinition.class);
         assertThat(getOutput(route, 0).getOutputs()).hasSize(2);

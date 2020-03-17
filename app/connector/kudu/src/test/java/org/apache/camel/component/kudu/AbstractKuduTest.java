@@ -47,8 +47,9 @@ public class AbstractKuduTest extends CamelTestSupport {
         applicationContext = new AnnotationConfigApplicationContext(MockedKuduConfiguration.class);
 
         final CamelContext ctx = new SpringCamelContext(applicationContext);
-        final PropertiesComponent pc = new PropertiesComponent("classpath:test-options.properties");
-        ctx.addComponent("properties", pc);
+        PropertiesComponent pc = new PropertiesComponent();
+        pc.addLocation("classpath:test-options.properties");
+        ctx.setPropertiesComponent(pc);
         return ctx;
     }
 

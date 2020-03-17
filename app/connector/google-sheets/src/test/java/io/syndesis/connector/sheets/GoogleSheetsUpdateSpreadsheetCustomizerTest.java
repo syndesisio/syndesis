@@ -25,7 +25,7 @@ import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollecti
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsApiMethod;
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
-import org.apache.camel.impl.DefaultExchange;
+import org.apache.camel.support.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

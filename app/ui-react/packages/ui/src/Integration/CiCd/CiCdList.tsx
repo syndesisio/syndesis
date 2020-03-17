@@ -1,12 +1,10 @@
-import { ListView } from 'patternfly-react';
+import { DataList } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface ICiCdListProps {
   children: any;
 }
 
-export class CiCdList extends React.Component<ICiCdListProps> {
-  public render() {
-    return <ListView>{this.props.children}</ListView>;
-  }
-}
+export const CiCdList: React.FunctionComponent<ICiCdListProps> = props => {
+  return <DataList aria-label={'cicd list'}>{props.children}</DataList>;
+};

@@ -27,8 +27,8 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 
 import io.syndesis.common.util.json.JsonUtils;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
 import org.apache.camel.spi.HeadersMapFactory;
 import org.junit.Test;
@@ -89,7 +89,8 @@ public class HttpRequestWrapperProcessorTest {
 
         final Exchange exchange = mock(Exchange.class);
         final Message message = mock(Message.class);
-        final CamelContext camelContext = mock(CamelContext.class);
+        final ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+        when(camelContext.adapt(ExtendedCamelContext.class)).thenReturn(camelContext);
         when(camelContext.getHeadersMapFactory()).thenReturn(mock(HeadersMapFactory.class));
         when(exchange.getIn()).thenReturn(message);
         when(exchange.getContext()).thenReturn(camelContext);
@@ -112,7 +113,8 @@ public class HttpRequestWrapperProcessorTest {
 
         final Exchange exchange = mock(Exchange.class);
         final Message message = mock(Message.class);
-        final CamelContext camelContext = mock(CamelContext.class);
+        final ExtendedCamelContext camelContext = mock(ExtendedCamelContext.class);
+        when(camelContext.adapt(ExtendedCamelContext.class)).thenReturn(camelContext);
         when(camelContext.getHeadersMapFactory()).thenReturn(mock(HeadersMapFactory.class));
         when(exchange.getIn()).thenReturn(message);
         when(exchange.getContext()).thenReturn(camelContext);

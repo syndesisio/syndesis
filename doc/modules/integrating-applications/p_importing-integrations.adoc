@@ -45,7 +45,7 @@ See the appropriate topic:
 
 * link:{LinkFuseOnlineConnectorGuide}#register-with-dropbox_dropbox[Registering with Dropbox]
 * link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google]
-* link:{LinkFuseOnlineConnectorGuide}#register-with-jira[Registering with Jira]
+* link:{LinkFuseOnlineConnectorGuide}#registering-with-jira_jira[Registering with Jira]
 * link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[Registering with a REST API]
 * link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering with Salesforce]
 * link:{LinkFuseOnlineConnectorGuide}#connecting-to-concur_connectors[Connecting to SAP Concur]

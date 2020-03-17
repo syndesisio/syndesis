@@ -15,6 +15,10 @@
  */
 package io.syndesis.integration.runtime.logging;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
 import org.apache.camel.CamelExecutionException;
@@ -24,10 +28,6 @@ import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.util.ObjectHelper;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class ActivityLoggingTest extends AbstractActivityLoggingTest {
 

@@ -15,40 +15,8 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.filter.FilterPredicate;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
-import io.syndesis.integration.runtime.util.JsonSupport;
-
-import org.apache.camel.CamelContext;
-import org.apache.camel.Exchange;
-import org.apache.camel.ProducerTemplate;
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mockito;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import static io.syndesis.integration.runtime.IntegrationTestSupport.dumpRoutes;
 import static io.syndesis.integration.runtime.IntegrationTestSupport.newIntegrationRouteBuilder;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -59,6 +27,33 @@ import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.apache.camel.Exchange;
+import org.apache.camel.ProducerTemplate;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mockito;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.filter.FilterPredicate;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
+import io.syndesis.integration.runtime.util.JsonSupport;
 
 public class FilterStepHandlerTest {
     private static final Logger LOGGER = LoggerFactory.getLogger(FilterStepHandlerTest.class);
@@ -86,7 +81,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testPlaintextFilterStep() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -155,7 +150,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testExpressionFilterStep() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -224,7 +219,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testExpressionFilterStepOnArray() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -309,7 +304,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testRuleFilterStepWithJsonSimplePath() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -380,7 +375,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testRuleFilterStepWithJsonComplexPath() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -451,7 +446,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testRuleFilterStepWithJsonArrayPath() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
@@ -525,7 +520,7 @@ public class FilterStepHandlerTest {
 
     @Test
     public void testRuleFilterStepWithPOJO() throws Exception {
-        final CamelContext context = new DefaultCamelContext();
+        final DefaultCamelContext context = new DefaultCamelContext();
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,

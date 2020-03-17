@@ -16,7 +16,7 @@
 package io.syndesis.connector.fhir.customizer;
 
 import org.apache.camel.component.fhir.internal.FhirCreateApiMethod;
-import org.apache.camel.util.component.ApiMethod;
+import org.apache.camel.support.component.ApiMethod;
 
 public class FhirCreateCustomizer extends FhirCreateUpdateBaseCustomizer {
 

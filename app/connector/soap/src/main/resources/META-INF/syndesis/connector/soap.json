@@ -1,0 +1,247 @@
+{
+  "actions": [],
+  "componentScheme": "cxf",
+  "configuredProperties": {
+    "componentName": "connector-soap"
+  },
+  "connectorCustomizers": [
+    "io.syndesis.connector.soap.cxf.SpecificationResourceCustomizer",
+    "io.syndesis.connector.soap.cxf.EndpointCustomizer",
+    "io.syndesis.connector.soap.cxf.auth.AuthenticationCustomizer",
+    "io.syndesis.connector.soap.cxf.payload.RequestCustomizer",
+    "io.syndesis.connector.soap.cxf.payload.ResponseCustomizer"
+  ],
+  "connectorFactory": "io.syndesis.connector.soap.cxf.ConnectorFactory",
+  "dependencies": [
+    {
+      "id": "io.syndesis.connector:connector-soap:@project.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-cxf:@camel.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Meta connector to generate SOAP CXF client connectors",
+  "icon": "",
+  "id": "soap",
+  "metadata": {
+    "hide-from-connection-pages": "true"
+  },
+  "name": "SOAP Client",
+  "properties": {
+    "addTimestamp": {
+      "description": "Add a Timestamp to WS-Security header.",
+      "displayName": "Timestamp",
+      "group": "security",
+      "javaType": "java.lang.Boolean",
+      "kind": "property",
+      "label": "common,security",
+      "order": 6,
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "authenticationType",
+              "value": "ws-security-ut"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "boolean"
+    },
+    "addUsernameTokenCreated": {
+      "description": "Add Created timestamp element to WS-Security Username Token header.",
+      "displayName": "Username Token Created",
+      "group": "security",
+      "javaType": "java.lang.Boolean",
+      "kind": "property",
+      "label": "common,security",
+      "order": 8,
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "passwordType",
+              "value": "PasswordText"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "boolean"
+    },
+    "addUsernameTokenNonce": {
+      "description": "Add Nonce element to WS-Security Username Token header.",
+      "displayName": "Username Token Nonce",
+      "group": "security",
+      "javaType": "java.lang.Boolean",
+      "kind": "property",
+      "label": "common,security",
+      "order": 7,
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "passwordType",
+              "value": "PasswordText"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "boolean"
+    },
+    "address": {
+      "description": "SOAP Endpoint address from WSDL SOAP Binding or user specified address.",
+      "displayName": "Address",
+      "javaType": "java.lang.String",
+      "order": 1,
+      "required": true,
+      "type": "string"
+    },
+    "authenticationType": {
+      "description": "Authentication Type to use to invoke WSDL endpoint, one of [None|Basic|WS-Security Username Token].",
+      "displayName": "Authentication Type",
+      "enum": [
+        {
+          "label": "HTTP Basic Authentication",
+          "value": "basic"
+        },
+        {
+          "label": "None",
+          "value": "none"
+        },
+        {
+          "label": "WS-Security Username Token",
+          "value": "ws-security-ut"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 2,
+      "required": true
+    },
+    "password": {
+      "description": "Authentication password.",
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 5,
+      "relation": [
+        {
+          "action": "DISABLE",
+          "when": [
+            {
+              "id": "passwordType",
+              "value": "none"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "passwordType": {
+      "description": "WS-Security Password Type.",
+      "displayName": "Password Type",
+      "enum": [
+        {
+          "label": "None",
+          "value": "PasswordNone"
+        },
+        {
+          "label": "Text",
+          "value": "PasswordText"
+        },
+        {
+          "label": "Digest",
+          "value": "PasswordDigest"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 3,
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "authenticationType",
+              "value": "ws-security-ut"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "portName": {
+      "description": "Target Port in WSDL.",
+      "displayName": "Port Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "required": true,
+      "type": "hidden"
+    },
+    "serviceName": {
+      "description": "Target service in WSDL.",
+      "displayName": "Service Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "required": true,
+      "type": "hidden"
+    },
+    "soapVersion": {
+      "description": "SOAP Binding version in WSDL.",
+      "displayName": "SOAP Version",
+      "group": "common",
+      "javaType": "java.lang.Double",
+      "kind": "property",
+      "label": "common",
+      "required": true,
+      "type": "hidden"
+    },
+    "specification": {
+      "description": "WSDL document defining the service.",
+      "displayName": "WSDL Document",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "required": true,
+      "type": "hidden"
+    },
+    "username": {
+      "description": "Authentication username.",
+      "displayName": "Username",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": 4,
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  }
+}

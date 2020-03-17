@@ -18,9 +18,9 @@ package io.syndesis.connector.mongo;
 import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.CreateCollectionOptions;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.mongo.embedded.EmbedMongoConfiguration;
@@ -28,11 +28,11 @@ import org.apache.camel.Exchange;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.assertj.core.api.Assertions;
 import org.bson.Document;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnectorTestSupport {
 
@@ -42,27 +42,23 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
 
     protected MongoCollection<Document> collection;
 
+    @Autowired
+    private MongoDatabase database;
+
     // JUnit will execute this method after the @BeforeClass of the superclass
     @BeforeClass
     public static void doCollectionSetup() {
         // The feature only works with capped collections!
         CreateCollectionOptions opts = new CreateCollectionOptions().capped(true).sizeInBytes(1024 * 1024);
-        EmbedMongoConfiguration.DATABASE.createCollection(COLLECTION, opts);
+        EmbedMongoConfiguration.getDB().createCollection(COLLECTION, opts);
         LOG.debug("Created a capped collection named {}", COLLECTION);
     }
-
     @Override
     protected List<Step> createSteps() {
         return fromMongoTailToMock("result", "io.syndesis.connector:connector-mongodb-consumer-tail", DATABASE, COLLECTION,
             "id");
     }
 
-    @Before
-    public void init(){
-        collection = EmbedMongoConfiguration.DATABASE.getCollection(COLLECTION);
-    }
-
-    @Test
     public void mongoTest() throws Exception {
         // When
         String unique = UUID.randomUUID().toString();
@@ -93,7 +89,11 @@ public class MongoDBConnectorCappedCollectionConsumerTest extends MongoDBConnect
     }
 
     @Test
-    public void repeatMongoTest() throws Exception {
+    public void repeatedMongoTest() throws Exception {
+        LOG.debug("Created a capped collection named {}", COLLECTION);
+        collection = database.getCollection(COLLECTION);
+
+        mongoTest();
         // As we are tracking id, any new insert should trigger the new document only
         mongoTest();
     }

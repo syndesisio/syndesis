@@ -24,10 +24,10 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.component.mail.MailComponent;
 import org.apache.camel.component.mail.MailConfiguration;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.EMailUtil;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
@@ -185,7 +185,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
              */
             return ComponentDefinition.forScheme(getCatalog(), getProtocol());
         } catch (IOException ex) {
-            throw ObjectHelper.wrapRuntimeCamelException(ex);
+            throw RuntimeCamelException.wrapRuntimeCamelException(ex);
         }
     }
 
@@ -197,7 +197,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         }
 
         MailConfiguration configuration = new MailConfiguration(getCamelContext());
-        configuration.setProtocol(protocol);
+        configuration.configureProtocol(protocol);
         configuration.setHost(getHost());
         configuration.setPort(getPort());
         configuration.setUsername(getUsername());
@@ -241,7 +241,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
             Map<String, Object> properties = new HashMap<>();
 
             if (getDelay() > -1) {
-                properties.put(CONSUMER + DOT + DELAY, Long.toString(getDelay()));
+                properties.put(SCHEDULER + DOT + DELAY, Long.toString(getDelay()));
             }
 
             if (! properties.isEmpty()) {

@@ -15,24 +15,11 @@
  */
 package io.syndesis.integration.runtime.sb.capture;
 
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Collections;
 import java.util.Map;
-
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.action.StepDescriptor;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
-import io.syndesis.integration.runtime.sb.IntegrationTestSupport;
 import org.apache.camel.Body;
-import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.Handler;
 import org.apache.camel.Message;
@@ -47,9 +34,19 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static java.util.Collections.singleton;
-import static org.assertj.core.api.Assertions.assertThat;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.sb.IntegrationRuntimeAutoConfiguration;
+import io.syndesis.integration.runtime.sb.IntegrationTestSupport;
 
 /**
  * Handy class to test logging of log messages and errors
@@ -71,7 +68,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
     @Test
     public void testCapture() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final SpringCamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -145,7 +142,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
     @Test
     public void testCaptureWithSplitAggregate() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final SpringCamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(
@@ -228,7 +225,7 @@ public class OutMessageCaptureProcessorTest extends IntegrationTestSupport {
 
     @Test
     public void testCaptureWithSplitAggregateAndSchedule() throws Exception {
-        final CamelContext context = new SpringCamelContext(applicationContext);
+        final SpringCamelContext context = new SpringCamelContext(applicationContext);
 
         try {
             Integration integration = newIntegration(

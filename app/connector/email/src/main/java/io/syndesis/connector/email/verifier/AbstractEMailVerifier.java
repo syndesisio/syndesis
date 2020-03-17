@@ -25,7 +25,7 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.mail.JavaMailSender;
 import org.apache.camel.component.mail.MailConfiguration;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.jsse.SSLContextParameters;
+import org.apache.camel.support.jsse.SSLContextParameters;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.EMailUtil;
 import io.syndesis.connector.support.util.ConnectorOptions;
@@ -109,7 +109,11 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
         // setProperties will strip parameters key/values so copy the map
         //
         try {
-            return setProperties(new MailConfiguration(), new HashMap<>(parameters));
+            MailConfiguration configuration = setProperties(new MailConfiguration(), new HashMap<>(parameters));
+            Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters,
+                                                                     PROTOCOL, Protocol::getValueOf, null);
+            configuration.configureProtocol(protocol.id());
+            return configuration;
         } catch (Exception e) {
             throw new IllegalArgumentException("Unable to set parameters", e);
         }

@@ -24,29 +24,15 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonDeserialize(builder = DynamicActionMetadata.Builder.class)
-public interface DynamicActionMetadata {
+public interface DynamicActionMetadata extends WithDynamicProperties {
 
     DynamicActionMetadata NOTHING = new DynamicActionMetadata.Builder().build();
-
-    @Value.Immutable
-    @JsonDeserialize(builder = ActionPropertySuggestion.Builder.class)
-    interface ActionPropertySuggestion {
-
-        final class Builder extends ImmutableActionPropertySuggestion.Builder {
-            public static ActionPropertySuggestion of(final String value, final String displayValue) {
-                return new ActionPropertySuggestion.Builder().value(value).displayValue(displayValue).build();
-            }
-        }
-
-        String displayValue();
-
-        String value();
-    }
 
     final class Builder extends ImmutableDynamicActionMetadata.Builder {
         // make ImmutableDynamicActionMetadata.Builder accessible
     }
 
+    @Override
     Map<String, List<ActionPropertySuggestion>> properties();
 
     DataShape inputShape();

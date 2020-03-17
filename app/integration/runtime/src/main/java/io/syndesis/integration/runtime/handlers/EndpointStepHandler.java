@@ -15,6 +15,18 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Component;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.URISupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -26,19 +38,6 @@ import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-import org.apache.camel.Component;
-import org.apache.camel.model.ModelCamelContext;
-import org.apache.camel.model.ProcessorDefinition;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.URISupport;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
 
 /**
  * This is needed until connectors are migrated to the new architecture.
@@ -107,7 +106,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
             }
         }
 
-        final ModelCamelContext context = builder.getContext();
+        final CamelContext context = builder.getContext();
         LOGGER.debug("Getting component with name: {}", componentName);
         final Component component = context.getComponent(componentName);
         LOGGER.debug("Got component: {}", component);

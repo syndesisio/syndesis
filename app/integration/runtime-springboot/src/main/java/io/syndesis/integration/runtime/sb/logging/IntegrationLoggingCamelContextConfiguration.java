@@ -20,6 +20,7 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import org.apache.camel.CamelContext;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,7 +47,7 @@ public class IntegrationLoggingCamelContextConfiguration implements CamelContext
         camelContext.setUuidGenerator(KeyGenerator::createKey);
 
         // Log listener
-        camelContext.addLogListener(new IntegrationLoggingListener(tracker));
+        camelContext.adapt(ExtendedCamelContext.class).addLogListener(new IntegrationLoggingListener(tracker));
     }
 
     @Override

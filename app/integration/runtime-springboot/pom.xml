@@ -65,10 +65,26 @@
     <!-- camel -->
     <dependency>
       <groupId>org.apache.camel</groupId>
-      <artifactId>camel-core</artifactId>
+      <artifactId>camel-core-engine</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>
+      <artifactId>camel-base</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-mock</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-spring-boot</artifactId>
       <scope>provided</scope>
     </dependency>
@@ -126,8 +142,8 @@
     </dependency>
 
     <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
+      <groupId>jakarta.servlet</groupId>
+      <artifactId>jakarta.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
 
@@ -163,7 +179,7 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.camel</groupId>
+      <groupId>org.apache.camel.springboot</groupId>
       <artifactId>camel-servlet-starter</artifactId>
       <scope>test</scope>
     </dependency>
@@ -195,11 +211,6 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-olingo4</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>jakarta.xml.bind</groupId>
-      <artifactId>jakarta.xml.bind-api</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

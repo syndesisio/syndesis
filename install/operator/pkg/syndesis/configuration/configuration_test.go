@@ -17,12 +17,23 @@
 package configuration
 
 import (
+	"bytes"
 	"context"
+	"io/ioutil"
+	"net/http"
 	"os"
 	"reflect"
 	"testing"
 
 	"sigs.k8s.io/controller-runtime/pkg/client"
+
+	v1 "k8s.io/api/core/v1"
+	"k8s.io/client-go/rest"
+	restclient "k8s.io/client-go/rest"
+	"k8s.io/client-go/rest/fake"
+	"k8s.io/kubectl/pkg/scheme"
+
+	"k8s.io/client-go/kubernetes"
 
 	"github.com/stretchr/testify/assert"
 
@@ -84,6 +95,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 							Image:   "DV_IMAGE",
 						},
 						CamelK: CamelKConfiguration{Image: "CAMELK_IMAGE"},
+						Todo:   TodoConfiguration{Image: "TODO_IMAGE"},
 					},
 					Components: ComponentsSpec{
 						Oauth:      OauthConfiguration{Image: "OAUTH_IMAGE"},
@@ -93,6 +105,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 						Upgrade:    UpgradeConfiguration{Image: "UPGRADE_IMAGE"},
 						Meta:       MetaConfiguration{Image: "META_IMAGE"},
 						Database: DatabaseConfiguration{
+							Image:    "DATABASE_IMAGE",
 							Exporter: ExporterConfiguration{Image: "PSQL_EXPORTER_IMAGE"},
 							Resources: ResourcesWithPersistentVolume{
 								VolumeAccessMode:   "ReadWriteOnce",
@@ -106,6 +119,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 								TestSupport: false,
 							},
 						},
+						AMQ: AMQConfiguration{Image: "AMQ_IMAGE"},
 					},
 				},
 			},
@@ -148,7 +162,7 @@ func Test_setConfigFromEnv(t *testing.T) {
 				"PSQL_EXPORTER_IMAGE": "PSQL_EXPORTER_IMAGE", "DEV_SUPPORT": "true", "TEST_SUPPORT": "false",
 				"INTEGRATION_LIMIT": "30", "DEPLOY_INTEGRATIONS": "true", "CAMELK_IMAGE": "CAMELK_IMAGE",
 				"DATABASE_VOLUME_NAME": "nfs0002", "DATABASE_STORAGE_CLASS": "nfs-storage-class1",
-				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce",
+				"DATABASE_VOLUME_ACCESS_MODE": "ReadWriteOnce", "TODO_IMAGE": "TODO_IMAGE", "AMQ_IMAGE": "AMQ_IMAGE",
 			},
 			wantErr: false,
 		},
@@ -204,9 +218,12 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Spec: v1beta1.SyndesisSpec{
 					Addons: v1beta1.AddonsSpec{
 						Jaeger: v1beta1.JaegerConfiguration{
-							Enabled:      true,
-							SamplerType:  "const",
-							SamplerParam: "0",
+							Enabled:       true,
+							SamplerType:   "const",
+							SamplerParam:  "0",
+							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
+							ImageAllInOne: "jaegertracing/all-in-one:1.13",
+							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
 						Todo: v1beta1.AddonSpec{Enabled: true},
 						DV: v1beta1.DvConfiguration{
@@ -224,12 +241,18 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 				Syndesis: SyndesisConfig{
 					Addons: AddonsSpec{
 						Jaeger: JaegerConfiguration{
-							Enabled:      true,
-							SamplerType:  "const",
-							SamplerParam: "0",
+							Enabled:       true,
+							SamplerType:   "const",
+							SamplerParam:  "0",
+							ImageAgent:    "jaegertracing/jaeger-agent:1.13",
+							ImageAllInOne: "jaegertracing/all-in-one:1.13",
+							ImageOperator: "jaegertracing/jaeger-operator:1.13",
 						},
-						Ops:     AddonConfiguration{Enabled: false},
-						Todo:    AddonConfiguration{Enabled: true},
+						Ops: AddonConfiguration{Enabled: false},
+						Todo: TodoConfiguration{
+							Enabled: true,
+							Image:   "docker.io/centos/php-71-centos7",
+						},
 						Knative: AddonConfiguration{Enabled: false},
 						DV: DvConfiguration{
 							Enabled:   true,
@@ -332,12 +355,18 @@ func getConfigLiteral() *Config {
 			RouteHostname: "",
 			Addons: AddonsSpec{
 				Jaeger: JaegerConfiguration{
-					Enabled:      false,
-					SamplerType:  "const",
-					SamplerParam: "0",
+					Enabled:       false,
+					SamplerType:   "const",
+					SamplerParam:  "0",
+					ImageAgent:    "jaegertracing/jaeger-agent:1.13",
+					ImageAllInOne: "jaegertracing/all-in-one:1.13",
+					ImageOperator: "jaegertracing/jaeger-operator:1.13",
 				},
-				Ops:  AddonConfiguration{Enabled: false},
-				Todo: AddonConfiguration{Enabled: false},
+				Ops: AddonConfiguration{Enabled: false},
+				Todo: TodoConfiguration{
+					Enabled: false,
+					Image:   "docker.io/centos/php-71-centos7",
+				},
 				DV: DvConfiguration{
 					Enabled:   false,
 					Image:     "docker.io/teiid/syndesis-dv:latest",
@@ -404,6 +433,7 @@ func getConfigLiteral() *Config {
 					Image:     "docker.io/syndesis/syndesis-upgrade:latest",
 					Resources: VolumeOnlyResources{VolumeCapacity: "1Gi"},
 				},
+				AMQ: AMQConfiguration{Image: "registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3"},
 			},
 		},
 	}
@@ -516,5 +546,63 @@ func Test_setIntFromEnv(t *testing.T) {
 				os.Unsetenv(k)
 			}
 		})
+	}
+}
+
+func Test_PostgreVersionParsingRegexp(t *testing.T) {
+	tests := []struct {
+		version string
+		value   string
+	}{
+		{"postgres (PostgreSQL) 10.6 (Debian 10.6-1.pgdg90+1)", "10.6"},
+		{"PostgreSQL 9.5.14", "9.5"},
+	}
+
+	for _, test := range tests {
+		extracted := postgresVersionRegex.FindStringSubmatch(test.version)
+		if len(extracted) < 2 || extracted[1] != test.value {
+			t.Errorf("Expecting that version %s would be extracted from %s, but it was %s", test.version, test.value, extracted)
+		}
+	}
+}
+
+func Test_postgreSQLVersionFromInitPod(t *testing.T) {
+	os.Setenv("POD_NAME", "syndesis-operator-3-crpjp")
+	defer func() { os.Unsetenv("POD_NAME") }()
+
+	// this simply returns the same HTTP response for every request
+	fakeClient := &fake.RESTClient{
+		GroupVersion:         v1.SchemeGroupVersion,
+		NegotiatedSerializer: scheme.Codecs,
+		Client: fake.CreateHTTPClient(func(req *http.Request) (*http.Response, error) {
+			expected := "http://localhost/apis/v1/namespaces/syndesis/pods/syndesis-operator-3-crpjp/log?container=postgres-version"
+			if req.URL.String() != expected {
+				t.Errorf("Expecting to fetch pod log via URL like `%s`, but it was `%s`", expected, req.URL.String())
+			}
+			body := ioutil.NopCloser(bytes.NewReader([]byte("PostgreSQL 9.6.12")))
+			return &http.Response{StatusCode: http.StatusOK, Body: body}, nil
+		}),
+	}
+	clientConfig := &restclient.Config{
+		APIPath: "/apis",
+		ContentConfig: rest.ContentConfig{
+			NegotiatedSerializer: scheme.Codecs,
+			GroupVersion:         &v1.SchemeGroupVersion,
+		},
+	}
+	restClient, _ := rest.RESTClientFor(clientConfig)
+	restClient.Client = fakeClient.Client
+	client := kubernetes.New(restClient).CoreV1()
+
+	syndesis := v1beta1.Syndesis{}
+	syndesis.SetNamespace("syndesis")
+
+	version, err := postgreSQLVersionFromInitPod(client, &syndesis)
+	if err != nil {
+		t.Error(err)
+	}
+
+	if version != 9.6 {
+		t.Errorf("Expecting that version would be 9.6, but it was %f", version)
 	}
 }

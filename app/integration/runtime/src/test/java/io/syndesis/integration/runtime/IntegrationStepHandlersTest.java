@@ -15,25 +15,25 @@
  */
 package io.syndesis.integration.runtime;
 
-import io.syndesis.common.util.Resources;
-import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
-import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
-import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
-import io.syndesis.integration.runtime.handlers.TemplateStepHandler;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.action.StepAction.Kind;
+import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Resources;
+import io.syndesis.integration.runtime.handlers.ConnectorStepHandler;
+import io.syndesis.integration.runtime.handlers.EndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.SimpleEndpointStepHandler;
+import io.syndesis.integration.runtime.handlers.TemplateStepHandler;
 import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class IntegrationStepHandlersTest {
 

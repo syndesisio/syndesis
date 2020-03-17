@@ -1,0 +1,662 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Find documents",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "findAll"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerFindCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Find operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Filter expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a filter to match a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-find",
+      "name": "Find",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Insert documents",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "insert"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerInsertCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Save operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-insert",
+      "name": "Insert",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update or insert documents",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "save"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerUpsertCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Upsert result",
+          "description": "How many documents were updated",
+          "kind": "java",
+          "type": "com.mongodb.client.result.UpdateResult"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Upsert operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Upsert expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to match a document to update or new document to be created if _id is not found. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"_id\": :#id, \"color\": /:#color/}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-upsert",
+      "name": "Upsert",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update documents",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "update"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerUpdateCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents updated",
+          "description": "How many documents were updated",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Update operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Filter criteria",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to match a set of documents.",
+                "placeholder": "{\"id\": :#code}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "updateExpression": {
+                "deprecated": false,
+                "displayName": "Update expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Update action to be performed. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{$set: {\"color\": \":#color\"}}",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-update",
+      "name": "Update",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete a document",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "remove"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerDeleteCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents deleted",
+          "description": "How many documents were deleted",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Delete operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Delete expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to delete a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-delete",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Count the number of documents",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "operation": "count"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoProducerCustomizer",
+          "io.syndesis.connector.mongo.MongoProducerCountCustomizer"
+        ],
+        "inputDataShape": {
+          "name": "Filter parameters",
+          "description": "Flat list of parameters contained in the filter provided by user",
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "name": "Documents matching",
+          "description": "How many documents are matching the filter expression",
+          "kind": "java",
+          "type": "java.lang.Long"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Count operation configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used by this operation",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "filter": {
+                "deprecated": false,
+                "displayName": "Count expression",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Expression used as a criteria to count a set of documents. Use :#variable to set variables eventually mapped to any incoming input.",
+                "placeholder": "{\"color\": :#color}",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-count",
+      "name": "Count",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Document tailing",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "consumerType": "tailable"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoConsumerCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Tailing consumer configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection to read documents from",
+                "order": "1",
+                "placeholder": "collection",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackIncreasingField": {
+                "deprecated": false,
+                "displayName": "Collection field used to track incoming documents",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Property used to track new documents, usually an incremental id or timestamp",
+                "order": "2",
+                "placeholder": "_id",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "persistentTailTracking": {
+                "deprecated": false,
+                "displayName": "Persistent tracking enabled",
+                "group": "common",
+                "javaType": "boolean",
+                "kind": "path",
+                "labelHint": "Tick to enable persistent tracking",
+                "order": "3",
+                "placeholder": "false",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "persistentId": {
+                "deprecated": false,
+                "displayName": "Unique id to identify this tracking process",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Specify a different id if you have more than one tracking process in your integrations",
+                "order": "4",
+                "placeholder": "idTracker",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackDb": {
+                "deprecated": false,
+                "displayName": "DB used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Database used to store the offset of this tailing process",
+                "order": "5",
+                "placeholder": "tailTrackDb",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackCollection": {
+                "deprecated": false,
+                "displayName": "Collection used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection used to store the offset of this tailing process",
+                "order": "6",
+                "placeholder": "tailTrackCollection",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tailTrackField": {
+                "deprecated": false,
+                "displayName": "Field used to store tail tracking",
+                "group": "advanced",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Property used to store the offset of this tailing process",
+                "order": "7",
+                "placeholder": "tailTrackField",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-consumer-tail",
+      "name": "Retrieve documents (tail)",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Document change stream",
+      "descriptor": {
+        "componentScheme": "mongodb",
+        "configuredProperties": {
+          "consumerType": "changeStreams"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.mongo.MongoConsumerCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Change stream consumer configuration",
+            "name": "Configuration",
+            "properties": {
+              "collection": {
+                "deprecated": false,
+                "displayName": "Collection name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Collection to read documents from",
+                "order": "1",
+                "placeholder": "collection",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-mongodb-consumer-changestream",
+      "name": "Retrieve documents (stream)",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "configuredProperties": {},
+  "connectorCustomizers": [
+    "io.syndesis.connector.mongo.MongoClientCustomizer"
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Read and writes JSON-like documents.",
+  "icon": "assets:mongodb.png",
+  "id": "mongodb",
+  "name": "MongoDB",
+  "properties": {
+    "host": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Database host(s)",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Comma separated list of databases belonging to the cluster.",
+      "order": "1",
+      "placeholder": "mongodb0.example.com:27017,mongodb1.example.com:27017,mongodb2.example.com:27017",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "user": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Username",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Username for the database connection.",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Password for the database connection.",
+      "order": "3",
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "adminDB": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Administration database",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "admin",
+      "labelHint": "Administration database used to grant permissions.",
+      "order": "4",
+      "placeholder": "admin",
+      "required": false,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "replicaset": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Replica set name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "",
+      "labelHint": "Name of the replica set used by the cluster.",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "database": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Database",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "Database to be used in this connection",
+      "labelHint": "Database to be used by this connection.",
+      "order": "6",
+      "placeholder": "test",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

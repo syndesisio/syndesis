@@ -115,7 +115,7 @@
 
     <!-- Common dependencies -->
     <version.springfox>2.9.2</version.springfox>
-    <shrinkwrap.version>2.2.6</shrinkwrap.version>
+    <shrinkwrap.version>3.1.4</shrinkwrap.version>
 
     <version.com.fasterxml.jackson.databind>2.9.10.1</version.com.fasterxml.jackson.databind>
     <version.com.fasterxml.jackson>2.9.10</version.com.fasterxml.jackson>
@@ -242,6 +242,26 @@
   <!-- Common dependencies -->
   <dependencyManagement>
     <dependencies>
+
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-test</artifactId>
+        <version>${spring-boot.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
 
       <dependency>
         <groupId>org.springframework.boot</groupId>

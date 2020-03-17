@@ -22,11 +22,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import java.util.Properties;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.properties.DefaultPropertiesParser;
 import org.apache.camel.component.properties.PropertiesComponent;
+import org.apache.camel.component.properties.PropertiesLookup;
 import org.apache.camel.component.properties.PropertiesParser;
 import org.apache.camel.spring.SpringCamelContext;
 import org.junit.BeforeClass;
@@ -83,7 +83,7 @@ public abstract class AbstractODataTest implements ODataConstants {
         public PropertiesParser propertiesParser(PropertyResolver propertyResolver) {
             return new DefaultPropertiesParser() {
                 @Override
-                public String parseProperty(String key, String value, Properties properties) {
+                public String parseProperty(String key, String value, PropertiesLookup properties) {
                     return propertyResolver.getProperty(key);
                 }
             };
@@ -167,7 +167,7 @@ public abstract class AbstractODataTest implements ODataConstants {
     protected CamelContext createCamelContext() {
         CamelContext ctx = new SpringCamelContext(applicationContext);
         PropertiesComponent pc = new PropertiesComponent("classpath:odata-test-options.properties");
-        ctx.addComponent("properties", pc);
+        ctx.setPropertiesComponent(pc);
         return ctx;
     }
 

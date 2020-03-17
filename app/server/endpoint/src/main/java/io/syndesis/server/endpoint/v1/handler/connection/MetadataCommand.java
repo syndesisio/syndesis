@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
-import java.util.Map;
-
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.ClientResponseFilter;
@@ -25,53 +23,43 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status.Family;
-
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.connection.DynamicActionMetadata;
-import io.syndesis.common.util.json.JsonUtils;
-import io.syndesis.server.endpoint.v1.SyndesisRestException;
-import io.syndesis.server.endpoint.v1.handler.exception.RestError;
-import io.syndesis.server.verifier.MetadataConfigurationProperties;
+import java.util.Map;
 
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.netflix.hystrix.HystrixThreadPoolProperties;
+import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.server.endpoint.v1.SyndesisRestException;
+import io.syndesis.server.endpoint.v1.handler.exception.RestError;
+import io.syndesis.server.verifier.MetadataConfigurationProperties;
 
-class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
-
-    private final String metadataUrl;
+abstract class MetadataCommand<R> extends HystrixCommand<R> {
 
     private final Map<String, String> parameters;
+    private final Class<R> type;
 
-    MetadataCommand(final MetadataConfigurationProperties configuration, final String connectorId, final ConnectorAction action,
-        final Map<String, String> parameters) {
+    MetadataCommand(final MetadataConfigurationProperties configuration, Class<R> type, final Map<String, String> parameters ) {
         super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("Meta"))//
             .andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter()//
                 .withCoreSize(configuration.getThreads()))//
             .andCommandPropertiesDefaults(HystrixCommandProperties.Setter()//
                 .withExecutionTimeoutInMilliseconds(configuration.getTimeout())));
-
         this.parameters = parameters;
-        this.metadataUrl = String.format("http://%s/api/v1/connectors/%s/actions/%s", configuration.getService(), connectorId, action.getId().get());
+        this.type = type;
     }
 
     @Override
-    protected DynamicActionMetadata getFallback() {
-        return DynamicActionMetadata.NOTHING;
-    }
-
-    @Override
-    protected DynamicActionMetadata run() {
+    protected R run() {
         Client client = null;
 
         try {
             client = createClient();
 
-            final WebTarget target = client.target(metadataUrl);
+            final WebTarget target = client.target(getMetadataURL());
             final Entity<?> entity = Entity.entity(parameters, MediaType.APPLICATION_JSON);
 
-            return target.request(MediaType.APPLICATION_JSON).post(entity, DynamicActionMetadata.class);
+            return target.request(MediaType.APPLICATION_JSON).post(entity, type);
         } finally {
             if (client != null) {
                 client.close();
@@ -79,7 +67,9 @@ class MetadataCommand extends HystrixCommand<DynamicActionMetadata> {
         }
     }
 
-    private static Client createClient() {
+    protected abstract String getMetadataURL();
+
+    protected Client createClient() {
 
         return ClientBuilder.newClient().register((ClientResponseFilter) (requestContext, responseContext) -> {
             if (responseContext.getStatusInfo().getFamily() == Family.SERVER_ERROR

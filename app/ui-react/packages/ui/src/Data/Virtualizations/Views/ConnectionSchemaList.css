@@ -15,6 +15,8 @@
 .connection-schema-list_contentSection{
   flex-grow: 1;
   padding: 0 10px;
+  overflow-y: auto;
+  height: 350px;
 }
 .connection-schema-list_headingSection{
   border-bottom: 2px solid #E1E1E1;

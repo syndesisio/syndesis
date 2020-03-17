@@ -245,6 +245,7 @@ public class ODataTestServer extends Server implements ODataConstants {
         return sslContext;
     }
 
+    @SuppressWarnings( "deprecation" )
     private void initServer(SSLContext sslContext, String userName) throws UnknownHostException {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         context.setContextPath(FORWARD_SLASH);

@@ -15,33 +15,29 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
+import static com.github.tomakehurst.wiremock.client.WireMock.ok;
+import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
+import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.TypeConverter;
 import org.apache.camel.spi.AsyncProcessorAwaitManager;
 import org.junit.Rule;
 import org.junit.Test;
-
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import static com.github.tomakehurst.wiremock.client.WireMock.equalTo;
-import static com.github.tomakehurst.wiremock.client.WireMock.ok;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public class AuthenticationCustomizerTest {
 
@@ -57,7 +53,7 @@ public class AuthenticationCustomizerTest {
         options.put("username", "username");
         options.put("password", "{{password}}");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -79,7 +75,7 @@ public class AuthenticationCustomizerTest {
         options.put("authenticationType", AuthenticationType.oauth2);
         options.put("accessToken", "{{accessToken}}");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -102,7 +98,7 @@ public class AuthenticationCustomizerTest {
         options.put("authenticationParameterValue", "{{key}}");
         options.put("authenticationParameterPlacement", "header");
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -133,7 +129,7 @@ public class AuthenticationCustomizerTest {
         final String authorizationEndpoint = "http://localhost:" + wiremock.port() + "/oauth/authorize";
         options.put("authorizationEndpoint", authorizationEndpoint);
 
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -152,9 +148,11 @@ public class AuthenticationCustomizerTest {
 
     @Test
     public void shouldSupportAllAuthenticationValues() {
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
-        final CamelContext context = mock(CamelContext.class);
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         component.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
 
         final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
 
@@ -169,9 +167,11 @@ public class AuthenticationCustomizerTest {
 
     @Test
     public void shouldSupportNamedAuthenticationValues() {
-        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
-        final CamelContext context = mock(CamelContext.class);
+        final ComponentProxyComponent component = new SwaggerProxyComponent("dataset-test", "dataset-test");
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         component.setCamelContext(context);
+
+        when(context.adapt(ExtendedCamelContext.class)).thenReturn(context);
 
         final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
 
@@ -197,7 +197,7 @@ public class AuthenticationCustomizerTest {
         when(exchange.getOut()).thenReturn(message);
         when(exchange.getPattern()).thenReturn(ExchangePattern.InOut);
 
-        final CamelContext context = mock(CamelContext.class);
+        final ExtendedCamelContext context = mock(ExtendedCamelContext.class);
         when(exchange.getContext()).thenReturn(context);
 
         final AsyncProcessorAwaitManager async = mock(AsyncProcessorAwaitManager.class);
