@@ -1,8 +1,8 @@
-import { DropdownKebab } from 'patternfly-react';
+import {
+  Dropdown, DropdownPosition, KebabToggle } from '@patternfly/react-core';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
-import { toValidHtmlId } from '../../helpers';
 import { IMenuActions } from '../../Shared';
+import { actionItem, IIntegrationAction } from './IntegrationActions';
 
 export interface IIntegrationDetailHistoryListViewItemActionsProps {
   actions: IMenuActions[];
@@ -16,42 +16,26 @@ export const IntegrationDetailHistoryListViewItemActions: React.FunctionComponen
     actions,
     integrationId
   }) => {
+  const [showDropdown, setShowDropdown] = React.useState(false);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const baseIdString = 'integration-detail-history-list-view-item-actions';
+
   return (
-    <DropdownKebab
-      id={`integration-${integrationId}-action-menu`}
-      pullRight={true}
-    >
-      {actions.map((a, index) => {
-        return (
-          <li role={'presentation'} key={index}>
-            {a.href ? (
-              <Link
-                data-testid={`integration-detail-history-list-view-item-actions-${toValidHtmlId(
-                  a.label.toString()
-                )}`}
-                to={a.href}
-                onClick={a.onClick}
-                role={'menuitem'}
-                tabIndex={index + 1}
-              >
-                {a.label}
-              </Link>
-            ) : (
-              <a
-                data-testid={`integration-detail-history-list-view-item-actions-${toValidHtmlId(
-                  a.label.toString()
-                )}`}
-                href={'javascript:void(0)'}
-                onClick={a.onClick}
-                role={'menuitem'}
-                tabIndex={index + 1}
-              >
-                {a.label}
-              </a>
-            )}
-          </li>
-        );
+    <Dropdown
+      toggle={<KebabToggle onToggle={toggleDropdown} id="toggle-dropdown"/>}
+      isOpen={showDropdown}
+      isPlain={true}
+      role={'presentation'}
+      dropdownItems={actions.map((a, idx) => {
+        return actionItem(a as IIntegrationAction, idx, baseIdString)
       })}
-    </DropdownKebab>
+      position={DropdownPosition.right}
+      className={'integration-actions__dropdown-kebab'}
+      id={`integration-${integrationId}-action-menu`}
+    />
   );
 };

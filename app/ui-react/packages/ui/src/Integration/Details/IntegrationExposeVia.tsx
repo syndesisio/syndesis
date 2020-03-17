@@ -1,4 +1,4 @@
-import { Modal, Button } from '@patternfly/react-core';
+import { Button, Modal } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 
@@ -55,7 +55,7 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
   };
   const disableDiscoveryDialog = (
     <Modal
-      isSmall
+      isSmall={true}
       title={i18nDisableDiscovery}
       isOpen={showDialog}
       onClose={doHideDialog}
@@ -67,7 +67,7 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
           {i18nNo}
         </Button>
       ]}
-      isFooterLeftAligned
+      isFooterLeftAligned={true}
     >
       <p className={'lead'}>
         {i18nDisableDiscoveryConfirm}
@@ -83,7 +83,7 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
           <PageSection>
             <div className={'pf-c-content'}>
               <Modal
-                isSmall
+                isSmall={true}
                 title={i18nEnableDiscovery}
                 isOpen={showDialog}
                 onClose={doHideDialog}
@@ -95,7 +95,7 @@ export const IntegrationExposeVia: React.FunctionComponent<IIntegrationExposeVia
                     {i18nNo}
                   </Button>
                 ]}
-                isFooterLeftAligned
+                isFooterLeftAligned={true}
               >
                 <p className={'lead'}>
                   {i18nEnableDiscoveryConfirm}

@@ -1,10 +1,10 @@
-import * as H from '@syndesis/history';
 import {
   Dropdown,
   DropdownItem,
   DropdownPosition,
   KebabToggle
 } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../../helpers';
@@ -26,6 +26,34 @@ export interface IIntegrationActionsProps {
   editHref?: H.LocationDescriptor;
 }
 
+export const actionItem = (a: IIntegrationAction, idx: number, baseIdString: string) => {
+  if (a.href) {
+    return (
+      <li role={'menuitem'} key={idx}>
+        <Link to={a.href}
+              data-testid={baseIdString + `-${toValidHtmlId(a.label.toString())}`}
+              onClick={a.onClick}
+              tabIndex={idx + 1}
+              className={'pf-c-dropdown__menu-item'}
+        >
+          {a.label}
+        </Link>
+      </li>
+    )
+  } else {
+    return (
+      <DropdownItem key={idx}
+                    data-testid={baseIdString + `integration-actions-${toValidHtmlId(a.label.toString())}`}
+                    onClick={a.onClick}
+                    tabIndex={idx + 1}
+                    role={'menuitem'}
+      >
+        {a.label}
+      </DropdownItem>
+    );
+  }
+};
+
 export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProps> = (
   {
     actions,
@@ -41,38 +69,12 @@ export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProp
     setShowDropdown(!showDropdown);
   };
 
-  const actionItem = (a: IIntegrationAction, idx: number) => {
-    if (a.href) {
-      return (
-        <li role={'menuitem'} key={idx}>
-          <Link to={a.href}
-                data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
-                onClick={a.onClick}
-                tabIndex={idx + 1}
-                className={'pf-c-dropdown__menu-item'}
-          >
-            {a.label}
-          </Link>
-        </li>
-      )
-    } else {
-      return (
-        <DropdownItem key={idx}
-                      data-testid={`integration-actions-${toValidHtmlId(a.label.toString())}`}
-                      onClick={a.onClick}
-                      tabIndex={idx + 1}
-                      role={'menuitem'}
-        >
-          {a.label}
-        </DropdownItem>
-      );
-    }
-  };
+  const baseIdString = 'integration-actions';
 
   return (
     <>
       <ButtonLink
-        data-testid={'integration-actions-edit-button'}
+        data-testid={baseIdString + '-edit-button'}
         className={'edit-integration-btn'}
         href={editHref}
         as={'default'}
@@ -80,7 +82,7 @@ export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProp
         {i18nEditBtn}
       </ButtonLink>
       <ButtonLink
-        data-testid={'integration-actions-view-button'}
+        data-testid={baseIdString + '-view-button'}
         className={'view-integration-btn'}
         href={detailsHref}
         as={'default'}
@@ -91,13 +93,13 @@ export const IntegrationActions: React.FunctionComponent<IIntegrationActionsProp
       <Dropdown
         toggle={<KebabToggle onToggle={toggleDropdown} id="toggle-dropdown"/>}
         isOpen={showDropdown}
-        isPlain
+        isPlain={true}
         role={'presentation'}
         dropdownItems={actions.map((a, idx) => {
-          return actionItem(a, idx)
+          return actionItem(a, idx, 'integration-actions')
         })}
         position={DropdownPosition.right}
-        className={'integration-actions__dropdown-kebab'}
+        className={baseIdString + '__dropdown-kebab'}
         id={`integration-${integrationId}-action-menu`}
       />
     </>
