@@ -474,6 +474,9 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                 if (teiidVdb != null) {
                     status.setLoading(teiidVdb.isLoading());
                 }
+                if (tds.getLastMetadataLoadTime() != null) {
+                    status.setLastLoad(tds.getLastMetadataLoadTime());
+                }
                 statuses.add(status);
             }
             LOGGER.debug( "getSyndesisSourceStatuses '{0}' statuses", statuses.size() ); //$NON-NLS-1$
@@ -579,6 +582,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             } else {
                 try {
                     VDBMetaData vdb = generateSourceVdb(teiidSource, vdbName, ddl);
+                    teiidSource.loadingMetadata();
                     getMetadataInstance().deploy(vdb);
                 } catch (KException e) {
                     LOGGER.error("could not deploy source vdb", e); //$NON-NLS-1$
@@ -807,6 +811,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
             } else {
                 status.setSchemaState( RestSyndesisSourceStatus.EntityState.ACTIVE );
             }
+            status.setLastLoad(schema.getModifiedAt());
         } else {
             status.setSchemaState( RestSyndesisSourceStatus.EntityState.MISSING );
         }

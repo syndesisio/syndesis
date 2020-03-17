@@ -16,6 +16,7 @@
 package io.syndesis.dv.server.endpoint;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -58,6 +59,7 @@ public final class RestSyndesisSourceStatus implements V1Constants {
     private EntityState schemaState = EntityState.MISSING;
     private String id;
     private boolean loading;
+    private Date lastLoad;
 
     /**
      * Constructor for use in deserialization.
@@ -167,6 +169,14 @@ public final class RestSyndesisSourceStatus implements V1Constants {
 
     public boolean isLoading() {
         return loading;
+    }
+
+    public void setLastLoad(Date lastLoad) {
+        this.lastLoad = lastLoad;
+    }
+
+    public Date getLastLoad() {
+        return lastLoad;
     }
 
 }
