@@ -239,7 +239,6 @@ export default () => (
                             'integrationStateStopped'
                           )}
                           i18nIntegrations={t('shared:Integrations')}
-                          i18nTotal={t('shared:Total')}
                         />
                       }
                       integrationUpdates={
