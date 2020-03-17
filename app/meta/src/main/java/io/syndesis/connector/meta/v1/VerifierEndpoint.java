@@ -27,6 +27,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import org.apache.camel.CamelContext;
 import org.apache.camel.ExtendedCamelContext;
 import org.apache.camel.NoSuchBeanException;
 import org.apache.camel.spi.FactoryFinder;
@@ -49,7 +51,7 @@ public class VerifierEndpoint {
     @Autowired
     private ApplicationContext applicationContext;
     @Autowired
-    private ExtendedCamelContext camelContext;
+    private CamelContext camelContext;
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
@@ -69,7 +71,7 @@ public class VerifierEndpoint {
 
             try {
                 // Then fallback to camel's factory finder
-                final FactoryFinder finder = camelContext.getFactoryFinder(RESOURCE_PATH);
+                final FactoryFinder finder = camelContext.adapt(ExtendedCamelContext.class).getFactoryFinder(RESOURCE_PATH);
                 Optional<Class<?>> typeOptional = finder.findClass(connectorId);
                 final Class<?> type = typeOptional.orElse(null);
 
