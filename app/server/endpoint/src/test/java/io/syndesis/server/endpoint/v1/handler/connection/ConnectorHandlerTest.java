@@ -234,6 +234,45 @@ public class ConnectorHandlerTest {
     }
 
     @Test
+    public void shouldEnrichDynamicPropertiesKeepingStaticPropertiesWithResponseFromMeta() {
+        final ConnectorPropertiesHandler connectorPropertiesHandler = mock(ConnectorPropertiesHandler.class);
+
+        final ConnectorHandler connectorHandler = new ConnectorHandler(dataManager, NO_VERIFIER, NO_CREDENTIALS, NO_INSPECTORS, NO_STATE,
+            NO_ENCRYPTION_COMPONENT, applicationContext, NO_ICON_DAO, NO_EXTENSION_DATA_MANAGER,
+            NO_METADATA_CONFIGURATION_PROPERTIES) {
+            @Override
+            public ConnectorPropertiesHandler properties(@NotNull String connectorId) {
+                return connectorPropertiesHandler;
+            }
+        };
+
+        final DynamicConnectionPropertiesMetadata metaResponse = new DynamicConnectionPropertiesMetadata.Builder()
+            .putProperty("dynamicProperty", Arrays.asList(
+                new WithDynamicProperties.ActionPropertySuggestion.Builder().displayValue("Value 1").value("value1").build(),
+                new WithDynamicProperties.ActionPropertySuggestion.Builder().displayValue("Value 2").value("value2").build()
+                )
+            ).build();
+        when(connectorPropertiesHandler.dynamicConnectionProperties("connectorId")).thenReturn(metaResponse);
+
+        final Connector connector = new Connector.Builder()
+            .id("connectorId")
+            .putProperty("staticProperty", new ConfigurationProperty.Builder().build())
+            .putProperty("dynamicProperty", new ConfigurationProperty.Builder().build())
+            .build();
+        final Connector withDynamicProperties = connectorHandler.enrichConnectorWithDynamicProperties(connector);
+
+        final Connector expected = new Connector.Builder()
+            .id("connectorId")
+            .putProperty("staticProperty", new ConfigurationProperty.Builder().build())
+            .putProperty("dynamicProperty", new ConfigurationProperty.Builder()
+                .addEnum(PropertyValue.Builder.of("value1", "Value 1"), PropertyValue.Builder.of("value2", "Value 2"))
+                .build())
+            .build();
+
+        assertThat(withDynamicProperties).isEqualTo(expected);
+    }
+
+    @Test
     public void shouldNotFailToEnrichDynamicPropertiesWithErrorResponse() {
         final ConnectorPropertiesHandler connectorPropertiesHandler = mock(ConnectorPropertiesHandler.class);
 
