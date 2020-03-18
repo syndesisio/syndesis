@@ -1,5 +1,6 @@
 import {
   useViewDefinitionDescriptors,
+  useVirtualizationConnectionStatuses,
   useVirtualizationHelpers,
 } from '@syndesis/api';
 import {
@@ -7,6 +8,7 @@ import {
   ViewDefinitionDescriptor,
   ViewInfo,
   Virtualization,
+  VirtualizationSourceStatus,
 } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -15,7 +17,7 @@ import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
-import { ViewInfosContent, ViewsImportSteps } from '../../shared';
+import { DvConnectionStatus, ViewInfosContent, ViewsImportSteps } from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard.
@@ -66,10 +68,61 @@ export const SelectViewsPage: React.FunctionComponent<
     setSaveInProgress(isWorking);
   };
 
+  const getConnectionLoading = (
+    connectionName: string,
+    sourceStatuses: VirtualizationSourceStatus[]
+  ) => {
+    const sourceStatus = sourceStatuses.find(status => status.sourceName === connectionName);
+    let connLoading = false;
+    if(sourceStatus) {
+      connLoading = sourceStatus.loading;
+    }
+    return connLoading;
+  };
+
+  const getConnectionStatus = (
+    connectionName: string,
+    sourceStatuses: VirtualizationSourceStatus[]
+  ) => {
+    const sourceStatus = sourceStatuses.find(status => status.sourceName === connectionName);
+    let resultStatus = '';
+    if(sourceStatus) {
+      switch (sourceStatus.schemaState) {
+        case 'ACTIVE':
+          resultStatus = DvConnectionStatus.ACTIVE;
+          break;
+        case 'FAILED':
+          resultStatus = DvConnectionStatus.FAILED;
+          break;
+        case 'MISSING':
+          resultStatus = DvConnectionStatus.INACTIVE;
+          break;
+        default:
+          break;
+      }
+    }
+    return resultStatus;
+  };
+
+  const getConnectionLastLoad = (
+    connectionName: string,
+    sourceStatuses: VirtualizationSourceStatus[]
+  ) => {
+    const sourceStatus = sourceStatuses.find(status => status.sourceName === connectionName);
+    if(sourceStatus && sourceStatus.lastLoad) {
+      return sourceStatus.lastLoad;
+    }
+    return 0;
+  };
+
   const virtualization = state.virtualization;
   const { resource: viewDefinitionDescriptors } = useViewDefinitionDescriptors(
     virtualization.name
   );
+
+  const {
+    resource: connectionStatuses,
+  } = useVirtualizationConnectionStatuses();
 
   const handleCreateViews = async () => {
     setInProgress(true);
@@ -112,8 +165,12 @@ export const SelectViewsPage: React.FunctionComponent<
       header={<ViewsImportSteps step={2} />}
       content={
         <ViewInfosContent
+          connectionLoading={getConnectionLoading(state.connectionId, connectionStatuses)}
           connectionName={state.connectionId}
+          connectionStatus={getConnectionStatus(state.connectionId, connectionStatuses)}
+          connectionStatusMessage={''}
           existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
+          connectionLastLoad={getConnectionLastLoad(state.connectionId, connectionStatuses)}
           onViewSelected={props.handleAddView}
           onViewDeselected={props.handleRemoveView}
           selectedViews={props.selectedViews}

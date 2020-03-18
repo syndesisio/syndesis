@@ -86,6 +86,7 @@ export interface VirtualizationSourceStatus {
   loading: boolean;
   schemaState: 'ACTIVE' | 'MISSING' | 'FAILED';
   sourceName: string;
+  lastLoad: number;
 }
 
 export interface ViewDefinitionDescriptor {

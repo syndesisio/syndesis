@@ -17,10 +17,10 @@ stories
       <PublishStatusWithProgress
         i18nPublishLogUrlText={'log/url/goes/here'}
         i18nPublishState={'Running'}
-        i18nPublishVersion={2}
         isProgressWithLink={false}
         inListView={false}
         labelType={'primary'}
+        modified={false}
       />
     </Bullseye>
   ))
@@ -29,10 +29,10 @@ stories
       <PublishStatusWithProgress
         i18nPublishLogUrlText={'View Log'}
         i18nPublishState={'Publishing...'}
-        i18nPublishVersion={2}
         isProgressWithLink={false}
         inListView={false}
         labelType={'default'}
+        modified={false}
       />
     </Bullseye>
   ))
@@ -44,8 +44,8 @@ stories
           inListView={false}
           i18nPublishState={'BUILDING'}
           i18nPublishLogUrlText={'View Log'}
-          i18nPublishVersion={2}
           labelType={'default'}
+          modified={false}
           publishingCurrentStep={1}
           publishingLogUrl={'log/url/goes/here'}
           publishingTotalSteps={4}

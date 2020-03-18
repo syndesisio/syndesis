@@ -1,6 +1,7 @@
-import { useVirtualizationConnectionSchema } from '@syndesis/api';
+import { useVirtualizationConnectionSchema, useVirtualizationHelpers } from '@syndesis/api';
 import { SchemaNode, ViewInfo } from '@syndesis/models';
 import {
+  DvConnectionStatus,
   IActiveFilter,
   IFilterType,
   ISortType,
@@ -11,9 +12,10 @@ import {
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
-import { generateAllViewInfos } from './VirtualizationUtils';
+import { generateAllViewInfos, getDateAndTimeDisplay } from './VirtualizationUtils';
 
 function getFilteredAndSortedViewInfos(
   schemaNodes: SchemaNode[],
@@ -59,8 +61,12 @@ const getSelectedViewName = (selectedViews: ViewInfo[]): string[] => {
 };
 
 export interface IViewInfosContentProps {
+  connectionLoading: boolean;
   connectionName: string;
+  connectionStatus: string;
+  connectionStatusMessage: string;
   existingViewNames: string[];
+  connectionLastLoad: number;
   onViewSelected: (view: ViewInfo) => void;
   onViewDeselected: (viewName: string) => void;
   selectedViews: ViewInfo[];
@@ -88,6 +94,16 @@ export const ViewInfosContent: React.FunctionComponent<
   IViewInfosContentProps
 > = props => {
   const { t } = useTranslation(['data', 'shared']);
+  /**
+   * Context that broadcasts global notifications.
+   */
+  const { pushNotification } = React.useContext(UIContext);
+
+  const [lastSchemaRefresh, setLastSchemaRefresh] = React.useState(0);
+
+  const [lastSchemaRefreshMsg, setLastSchemaRefreshMsg] = React.useState(t('schemaLastRefresh', {
+    refreshTime: getDateAndTimeDisplay(props.connectionLastLoad),
+  }));
 
   let displayedViews: ViewInfo[] = [];
   const selectedViewNames: string[] = getSelectedViewName(props.selectedViews);
@@ -105,10 +121,51 @@ export const ViewInfosContent: React.FunctionComponent<
   };
 
   const {
+    refreshConnectionSchema,
+  } = useVirtualizationHelpers();
+
+  /**
+   * Callback that triggers refresh of the connection schema
+   * @param connectionName the name of the connection
+   */
+  const handleRefreshSchema = async (connectionName: string) => {
+    try {
+      pushNotification(
+        t('refreshConnectionSchemaStarted', {
+          name: connectionName,
+        }),
+        'info'
+      );
+      await refreshConnectionSchema(connectionName);
+    } catch (error) {
+      const details = error.message ? error.message : '';
+      // inform user of error
+      pushNotification(
+        t('refreshConnectionSchemaFailed', {
+          details,
+          name: connectionName,
+        }),
+        'error'
+      );
+    }
+  };
+
+  const {
     resource: schema,
     hasData: hasSchema,
     error,
+    read,
   } = useVirtualizationConnectionSchema(props.connectionName);
+
+  React.useEffect(() => {
+    if(props.connectionLastLoad > lastSchemaRefresh) {
+      read();
+      setLastSchemaRefresh(props.connectionLastLoad);
+      setLastSchemaRefreshMsg(t('schemaLastRefresh', {
+        refreshTime: getDateAndTimeDisplay(props.connectionLastLoad),
+      }));
+    }
+  }, [props.connectionLastLoad, lastSchemaRefresh, read, setLastSchemaRefresh, t]);
 
   return (
     <WithListViewToolbarHelpers
@@ -132,13 +189,28 @@ export const ViewInfosContent: React.FunctionComponent<
             sortTypes={sortTypes}
             resultsCount={filteredAndSorted.length}
             {...helpers}
+            connectionLoading={props.connectionLoading}
+            connectionName={props.connectionName}
+            connectionStatus={
+              <DvConnectionStatus
+                dvStatus={props.connectionStatus}
+                dvStatusMessage={props.connectionStatusMessage}
+                i18nRefreshInProgress={t('refreshInProgress')}
+                i18nStatusErrorPopoverTitle={t('connectionStatusPopoverTitle')}
+                i18nStatusErrorPopoverLink={t('connectionStatusPopoverLink')}
+                loading={props.connectionLoading}
+              />
+            }
             i18nEmptyStateInfo={t('emptyStateInfoMessage')}
             i18nEmptyStateTitle={t('emptyStateTitle')}
             i18nName={t('shared:Name')}
             i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
+            i18nLastUpdatedMessage={lastSchemaRefreshMsg}
+            i18nRefresh={t('shared:Refresh')}
             i18nResultsCount={t('shared:resultsCount', {
               count: filteredAndSorted.length,
             })}
+            refreshConnectionSchema={handleRefreshSchema}
           >
             <WithLoader
               error={error !== false}
@@ -146,7 +218,7 @@ export const ViewInfosContent: React.FunctionComponent<
               loaderChildren={<ViewInfoListSkeleton width={800} />}
               errorChildren={<ApiError error={error as Error} />}
             >
-              {() =>
+              {() => (
                 <ViewInfoListItems
                   filteredAndSorted={filteredAndSorted}
                   onSelectionChanged={handleViewSelectionChange}
@@ -158,7 +230,7 @@ export const ViewInfosContent: React.FunctionComponent<
                     y: filteredAndSorted ? filteredAndSorted.length : 0,
                   })}
                 />
-              }
+              )}
             </WithLoader>
           </ViewInfoList>
         );
