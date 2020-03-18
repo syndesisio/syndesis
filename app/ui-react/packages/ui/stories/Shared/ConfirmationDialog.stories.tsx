@@ -1,5 +1,5 @@
+import { Button } from '@patternfly/react-core';
 import { storiesOf } from '@storybook/react';
-import { Button } from 'patternfly-react';
 import * as React from 'react';
 import {
   ConfirmationButtonStyle,
@@ -167,7 +167,7 @@ class ConfirmationDialogStory extends React.Component<
       <>
         <Button
           onClick={this.showModal}
-          bsStyle="primary"
+          variant="primary"
           style={{ height: '10%', margin: '50px', width: '50%' }}
         >
           {this.props.includeDetailsMessage
