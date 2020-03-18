@@ -31,7 +31,7 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
   const getTableRows = () => {
     const tableRows: IRow[] = [];
     for (const row of props.filteredAndSorted) {
-      const rowValues: IRow = [];
+      const rowValues: IRow[] = [];
       const theValue = {
         props: {
           className: 'view_info_list_items_tableName',
@@ -40,18 +40,24 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
       } as IRow;
       rowValues.push(theValue);
       const nodePath = `/${row.nodePath.join('/')}`;
-      rowValues.push(nodePath);
-    const updateLabel = row.isUpdate ? (<div><Label className={'view_info_list_items_labelColor'} isCompact={true}>{props.i18nUpdate}</Label></div>
-        
+      rowValues.push({ title: nodePath });
+      const updateLabel = row.isUpdate ? (
+        <div>
+          <Label className={'view_info_list_items_labelColor'} isCompact={true}>
+            {props.i18nUpdate}
+          </Label>
+        </div>
       ) : (
         <span />
       );
-      rowValues.push(updateLabel);
+      rowValues.push({ title: updateLabel });
+      tableRows.push({
+        cells: rowValues
+      });
       if (props.selectedViewNames.includes(row.viewName)) {
-        rowValues.selected = true;
+        tableRows[tableRows.length-1].selected = true;
       }
-      tableRows.push(rowValues);
-    }
+    }    
     return tableRows.length > 0 ? tableRows : [];
   };
 
@@ -80,7 +86,7 @@ export const ViewInfoListItems: React.FunctionComponent<IViewInfoListItemsProps>
     } else {
       rows = [...rowsList];
       rows[rowId].selected = isSelected;
-      props.onSelectionChanged(rows[rowId][0].title, isSelected);
+      props.onSelectionChanged(props.filteredAndSorted[rowId].viewName, isSelected);
     }
     setRowUpdate(!rowUpdate);
   };    
