@@ -9,7 +9,7 @@ import { LongArrowAltRightIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../../Layout';
-import './CreateViewHeader.css';
+import './ViewWizardHeader.css';
 
 /**
  * @param onCancel - if passed, the Cancel button will be render as a `button`
@@ -31,13 +31,13 @@ import './CreateViewHeader.css';
  * 'Done'.
  */
 
-export interface ICreateViewHeaderProps {
+export interface IViewWizardHeaderProps {
   /**
    * The one-based active step number.
    */
   step: number;
-  i18nChooseTable: string;
-  i18nNameYourView: string;
+  i18nStep1Text: string;
+  i18nStep2Text: string;
   i18nBack: string;
   i18nDone: string;
   i18nNext: string;
@@ -53,10 +53,10 @@ export interface ICreateViewHeaderProps {
   isLastStep?: boolean;
 }
 
-export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> = ({
+export const ViewWizardHeader: React.FunctionComponent<IViewWizardHeaderProps> = ({
   step,
-  i18nChooseTable,
-  i18nNameYourView,
+  i18nStep1Text,
+  i18nStep2Text,
   i18nBack,
   i18nDone,
   i18nNext,
@@ -70,19 +70,19 @@ export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> =
   isNextLoading,
   isNextDisabled,
   isLastStep = false,
-}: ICreateViewHeaderProps) => {
+}: IViewWizardHeaderProps) => {
   return (
-    <Split gutter="md" className={'create_view_header__header-space'}>
+    <Split gutter="md" className={'view_wizard_header__header-space'}>
       <SplitItem>
         <TextContent>
           <Text component={TextVariants.h2}>
             <span
-              className={step !== 1 ? 'create_view_header__Notselected' : ''}
-            >{`1. ${i18nChooseTable}`}</span>
-            <LongArrowAltRightIcon color={'#6A6A6A'} className={'create_view_header__Wizard-step'}/>
+              className={step !== 1 ? 'view_wizard_header__Notselected' : ''}
+            >{`1. ${i18nStep1Text}`}</span>
+            <LongArrowAltRightIcon color={'#6A6A6A'} className={'view_wizard_header__Wizard-step'}/>
             <span
-              className={step !== 2 ? 'create_view_header__Notselected' : ''}
-            >{`2. ${i18nNameYourView}`}</span>
+              className={step !== 2 ? 'view_wizard_header__Notselected' : ''}
+            >{`2. ${i18nStep2Text}`}</span>
           </Text>
         </TextContent>
       </SplitItem>
@@ -90,7 +90,7 @@ export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> =
       <SplitItem>
         {step === 2 && (
           <ButtonLink
-            data-testid={'view-create-layout-back-button'}
+            data-testid={'view-wizard-header-back-button'}
             onClick={onBack}
             href={backHref}
             className={'wizard-pf-back'}
@@ -100,7 +100,7 @@ export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> =
         )}
         &nbsp;
         <ButtonLink
-          data-testid={'view-create-layout-next-button'}
+          data-testid={'view-wizard-header-next-button'}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -118,7 +118,7 @@ export const CreateViewHeader: React.FunctionComponent<ICreateViewHeaderProps> =
         </ButtonLink>
         &nbsp;
         <ButtonLink
-          data-testid={'view-create-layout-cancel-button'}
+          data-testid={'view-wizard-header-cancel-button'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}
