@@ -15,6 +15,7 @@
     "RUNNING": "In Esecuzione",
     "SUBMITTED": "Inserito"
   },
+  "connectionNotFound": "Connessione non trovata",
   "connectionStatusPopoverLink": "Errore di connessione",
   "connectionStatusPopoverTitle": "Errore di connessione",
   "createDataVirtualization": "Crea $t(shared:DataVirtualization)",

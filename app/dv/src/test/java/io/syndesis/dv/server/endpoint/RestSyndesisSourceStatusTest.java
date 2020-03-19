@@ -31,6 +31,7 @@ public class RestSyndesisSourceStatusTest {
     @Test public void testSerialization() {
         RestSyndesisSourceStatus rsss = new RestSyndesisSourceStatus("x");
         rsss.setId("id");
+        rsss.setTeiidName("tName");
         rsss.setErrors(Arrays.asList("some error"));
         rsss.setSchemaState(EntityState.ACTIVE);
         rsss.setLoading(true);
@@ -38,6 +39,7 @@ public class RestSyndesisSourceStatusTest {
         String value = JsonMarshaller.marshall(rsss);
         assertEquals("{\n" +
                 "  \"sourceName\" : \"x\",\n" +
+                "  \"teiidName\" : \"tName\",\n" +
                 "  \"errors\" : [ \"some error\" ],\n" +
                 "  \"schemaState\" : \"ACTIVE\",\n" +
                 "  \"id\" : \"id\",\n" +

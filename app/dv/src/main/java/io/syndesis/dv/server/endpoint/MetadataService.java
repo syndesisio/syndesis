@@ -471,6 +471,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
                 RestSyndesisSourceStatus status = new RestSyndesisSourceStatus(
                         tds.getSyndesisDataSource().getSyndesisName());
                 setSchemaStatus(tds.getSyndesisId(), status);
+                status.setTeiidName(tds.getName());
                 // Name of vdb based on source name
                 String vdbName = getWorkspaceSourceVdbName(tds.getName());
                 TeiidVdb teiidVdb = getMetadataInstance().getVdb(vdbName+LOAD_SUFFIX);
