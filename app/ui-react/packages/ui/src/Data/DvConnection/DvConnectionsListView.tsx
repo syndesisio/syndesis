@@ -22,7 +22,7 @@ export const DvConnectionsListView: React.FunctionComponent<
   return (
     <PageSection noPadding={true}>
       {props.resultsCount > 0 ? (
-        <PageSection>
+        <PageSection variant={'light'}>
           <ListViewToolbar {...props}>
             <div className="form-group">
               <ButtonLink

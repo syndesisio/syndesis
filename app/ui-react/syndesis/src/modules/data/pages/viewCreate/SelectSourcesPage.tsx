@@ -6,7 +6,7 @@ import {
 } from '@syndesis/api';
 import { SchemaNodeInfo, TableInfo, Virtualization } from '@syndesis/models';
 import { QueryResults } from '@syndesis/models/src';
-import { CreateViewHeader, PreviewData, ViewCreateLayout } from '@syndesis/ui';
+import { PreviewData, ViewCreateLayout, ViewWizardHeader } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -145,7 +145,7 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
   return (
     <ViewCreateLayout
       header={
-        <CreateViewHeader
+        <ViewWizardHeader
           step={1}
           cancelHref={resolvers.data.virtualizations.views.root({
             virtualization,
@@ -157,8 +157,8 @@ export const SelectSourcesPage: React.FunctionComponent<ISelectSourcesPageProps>
           isNextDisabled={false}
           isNextLoading={false}
           isLastStep={false}
-          i18nChooseTable={t('shared:ChooseTable')}
-          i18nNameYourView={t('shared:NameYourView')}
+          i18nStep1Text={t('shared:ChooseTable')}
+          i18nStep2Text={t('shared:NameYourView')}
           i18nBack={t('shared:Back')}
           i18nDone={t('shared:Done')}
           i18nNext={t('shared:Next')}
