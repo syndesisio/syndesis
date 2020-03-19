@@ -143,17 +143,32 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
    * @param connectionName the name of the connection
    */
   const handleRefreshSchema = async (connectionName: string) => {
-    try {
-      pushNotification(
-        t('refreshConnectionSchemaStarted', {
-          name: connectionName,
-        }),
-        'info'
-      );
-      await refreshConnectionSchema(connectionName);
-    } catch (error) {
-      const details = error.message ? error.message : '';
-      // inform user of error
+    const srcStatus = props.dvSourceStatuses.find(
+      status => status.sourceName === connectionName
+    );
+    if (srcStatus) {
+      try {
+        pushNotification(
+          t('refreshConnectionSchemaStarted', {
+            name: connectionName,
+          }),
+          'info'
+        );
+        await refreshConnectionSchema(srcStatus.teiidName);
+      } catch (error) {
+        const details = error.message ? error.message : '';
+        // inform user of error
+        pushNotification(
+          t('refreshConnectionSchemaFailed', {
+            details,
+            name: connectionName,
+          }),
+          'error'
+        );
+      }
+    } else {
+      const details = t('connectionNotFound');
+      // connection not found
       pushNotification(
         t('refreshConnectionSchemaFailed', {
           details,
@@ -187,6 +202,13 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     return '';
   };
 
+  const getConnectionTeiidName = (connName: string) => {
+    const status = props.dvSourceStatuses.find(
+      srcStatus => srcStatus.sourceName === connName
+    );
+    return status ? status.teiidName : '';
+  };
+
   return (
     <ConnectionSchemaList
       i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
@@ -207,7 +229,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
         {() =>
           sortedConns.map((c, index) => {
             // get schema nodes for the connection
-            const srcInfos = getSchemaNodeInfos(schema, c.name);
+            const srcInfos = getSchemaNodeInfos(schema, getConnectionTeiidName(c.name));
             return (
               <ConnectionSchemaListItem
                 key={index}
