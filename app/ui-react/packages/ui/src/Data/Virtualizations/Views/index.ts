@@ -8,7 +8,6 @@ export * from './ViewCreateLayout';
 export * from './SelectedConnectionTables';
 export * from './SelectedConnectionListView';
 export * from './PreviewData'
-export * from './CreateViewHeader';
 export * from './ViewInfoList';
 export * from './ViewInfoListItems';
 export * from './ViewInfoListSkeleton';
@@ -16,3 +15,4 @@ export * from './ViewList';
 export * from './ViewListItem';
 export * from './ViewListSkeleton';
 export * from './ViewsImportLayout';
+export * from './ViewWizardHeader';
