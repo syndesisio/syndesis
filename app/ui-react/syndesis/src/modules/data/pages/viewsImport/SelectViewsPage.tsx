@@ -104,6 +104,14 @@ export const SelectViewsPage: React.FunctionComponent<
     return resultStatus;
   };
 
+  const getConnectionTeiidName = (
+    connectionName: string,
+    sourceStatuses: VirtualizationSourceStatus[]
+  ) => {
+    const sourceStatus = sourceStatuses.find(status => status.sourceName === connectionName);
+    return sourceStatus ? sourceStatus.teiidName : '';
+  };
+
   const getConnectionLastLoad = (
     connectionName: string,
     sourceStatuses: VirtualizationSourceStatus[]
@@ -189,6 +197,7 @@ export const SelectViewsPage: React.FunctionComponent<
           connectionName={state.connectionId}
           connectionStatus={getConnectionStatus(state.connectionId, connectionStatuses)}
           connectionStatusMessage={''}
+          connectionTeiidName={getConnectionTeiidName(state.connectionId, connectionStatuses)}
           existingViewNames={getExistingViewNames(viewDefinitionDescriptors)}
           connectionLastLoad={getConnectionLastLoad(state.connectionId, connectionStatuses)}
           onViewSelected={props.handleAddView}

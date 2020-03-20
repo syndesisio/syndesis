@@ -65,6 +65,7 @@ export interface IViewInfosContentProps {
   connectionName: string;
   connectionStatus: string;
   connectionStatusMessage: string;
+  connectionTeiidName: string;
   existingViewNames: string[];
   connectionLastLoad: number;
   onViewSelected: (view: ViewInfo) => void;
@@ -136,7 +137,7 @@ export const ViewInfosContent: React.FunctionComponent<
         }),
         'info'
       );
-      await refreshConnectionSchema(connectionName);
+      await refreshConnectionSchema(props.connectionTeiidName);
     } catch (error) {
       const details = error.message ? error.message : '';
       // inform user of error
@@ -155,7 +156,7 @@ export const ViewInfosContent: React.FunctionComponent<
     hasData: hasSchema,
     error,
     read,
-  } = useVirtualizationConnectionSchema(props.connectionName);
+  } = useVirtualizationConnectionSchema(props.connectionTeiidName);
 
   React.useEffect(() => {
     if(props.connectionLastLoad > lastSchemaRefresh) {
