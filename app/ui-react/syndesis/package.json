@@ -12,6 +12,7 @@
   "dependencies": {
     "@allpro/react-router-pause": "^1.1.3",
     "@craco/craco": "^5.0.2",
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@patternfly/patternfly": "^2.60.1",
     "@patternfly/react-charts": "^5.2.21",
     "@patternfly/react-core": "^3.122.4",
