@@ -126,12 +126,13 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
     private static void processKafkaResource(List<PropertyPair> brokers, Kafka item) {
         //Extract an identifier of this broker
         final ObjectMeta metadata = item.getMetadata();
-        String id = metadata.getNamespace() + "::" + metadata.getName();
-
         List<Listener> listeners = item.getStatus().getListeners();
-
         listeners.stream().filter(KafkaMetaDataRetrieval::typesAllowed).forEach(
-            listener -> getAddress(listener, brokers, id));
+            listener -> getAddress(
+                                    listener,
+                                    brokers,
+                                    String.format("%s::%s (%s)", metadata.getNamespace(), metadata.getName(), listener.getType()))
+        );
     }
 
     /**
@@ -163,7 +164,8 @@ public class KafkaMetaDataRetrieval extends ComponentMetadataRetrieval {
      * Used to filter which types of connections are we interested in. Right now, only plain connections.
      */
     private static boolean typesAllowed(final Listener listener) {
-        return "plain".equalsIgnoreCase(listener.getType());
+        return "plain".equalsIgnoreCase(listener.getType()) ||
+            "tls".equalsIgnoreCase(listener.getType());
     }
 
     /**
