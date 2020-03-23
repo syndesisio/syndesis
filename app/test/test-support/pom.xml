@@ -155,6 +155,11 @@
       <artifactId>junit</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>net.javacrumbs.json-unit</groupId>
+      <artifactId>json-unit-assertj</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <!-- Logging -->
     <dependency>
@@ -163,5 +168,24 @@
     </dependency>
 
   </dependencies>
+  <build>
+    <testResources>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>true</filtering>
+        <excludes>
+          <exclude>**/*.zip</exclude>
+        </excludes>
+      </testResource>
+      <testResource>
+        <directory>src/test/resources</directory>
+        <filtering>false</filtering>
+        <includes>
+          <include>**/*.zip</include>
+        </includes>
+      </testResource>
+    </testResources>
+  </build>
+
 
 </project>
