@@ -27,7 +27,7 @@
     "expect": "^24.5.0",
     "jest": "^25.1.0",
     "jest-cli": "^25.1.0",
-    "jest-dom": "^3.1.3",
+    "jest-dom": "^4.0.0",
     "microbundle": "^0.11.0",
     "react": "^16.6.0",
     "react-docgen-typescript-loader": "^3.1.0",
