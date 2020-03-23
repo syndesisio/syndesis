@@ -49,6 +49,7 @@ type Install struct {
 	customResource string
 	devSupport     bool
 	databaseImage  string
+	templateName   string
 
 	// processing state
 	ejectedResources []unstructured.Unstructured
@@ -113,6 +114,7 @@ func New(parent *internal.Options) *cobra.Command {
 		},
 	}
 	forge.PersistentFlags().StringVarP(&o.addons, "addons", "", "", "a coma separated list of addons that should be enabled")
+	forge.PersistentFlags().StringVarP(&o.templateName, "template-name", "", "", "the name of the template")
 	cmd.AddCommand(forge)
 
 	cmd.PersistentFlags().StringVarP(&o.eject, "eject", "e", "", "eject configuration that would be applied to the cluster in the specified format instead of installing the configuration. One of: json|yaml")
