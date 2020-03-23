@@ -65,6 +65,12 @@ public class KeyStoreHelper {
 
     }
 
+    /**
+     * Create a keystore helper by generating a local temporary keystore file with a self signed certificate.
+     * You may need to use {@link #clean()} method afterward.
+     *
+     * @return an helper object used to get keystore location and password
+     */
     public KeyStoreHelper store() {
         try {
 
@@ -82,6 +88,17 @@ public class KeyStoreHelper {
         }
 
         return this;
+    }
+
+    /**
+     * Used to remove the temporary keystore file created
+     */
+    public boolean clean() {
+        boolean result = tempFile.toFile().delete();
+        // clear fields related to the file
+        this.tempFile = null;
+        this.password = null;
+        return result;
     }
 
     private static String generatePassword() {
@@ -125,4 +142,5 @@ public class KeyStoreHelper {
 
         return keyStore;
     }
+
 }
