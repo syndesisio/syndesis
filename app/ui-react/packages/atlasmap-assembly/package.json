@@ -125,7 +125,7 @@
     "patternfly": "3.59.1",
     "patternfly-ng": "^4.0.0",
     "protractor": "~5.4.2",
-    "puppeteer": "^1.12.2",
+    "puppeteer": "^2.1.1",
     "rimraf": "^3.0.2",
     "rxjs-tslint": "0.1.7",
     "tether": "1.4.7",
