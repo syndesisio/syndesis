@@ -4,9 +4,17 @@
   flex-direction: column;
 }
 
-.ddl-editor_metatree_table_scroll{
-  max-height: 400px;
+.ddl-editor_metatree_table{
   overflow-y: auto;
+}
+
+.ddl-editor_metatree_table_collapsed{
+  max-height: 400px;
+}
+
+.ddl-editor_metatree_table_expanded{
+  max-height: -moz-available;          /* WebKit-based browsers will ignore this. */
+  max-height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
 }
 
 .ddl-editor_metatree_table > .pf-c-table tr > *{

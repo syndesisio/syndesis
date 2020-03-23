@@ -42,35 +42,34 @@ const getTableRows = (metadataTree: Map<string, any>) => {
   return tableRows.length > 0 ? tableRows : [];
 };
 
-export const TreeTableNodeComponent: React.FunctionComponent<ITreeTableNodeComponentProps> = props => {
-  const columns = [''];
+export const TreeTableNodeComponent: React.FunctionComponent<ITreeTableNodeComponentProps> = React.memo(
+  props => {
+    const columns = [''];
 
-  const [rowsList, setRowsList] = React.useState<IRow[]>(
-    getTableRows(props.metadataTreeTables)
-  );
+    const memoisedValue = React.useMemo(
+      () => getTableRows(props.metadataTreeTables),
+      [props.metadataTreeTables]
+    );
 
-  React.useEffect(() => {
-    if (rowsList.length === 0) {
-      setRowsList(getTableRows(props.metadataTreeTables));
-    }
-  }, [props.metadataTreeTables]);
+    const [rowsList, setRowsList] = React.useState<IRow[]>(memoisedValue);
 
-  const onCollapse = (event: any, rowKey: any, isOpen: any) => {
-    let rows;
-    rows = [...rowsList];
-    rows[rowKey].isOpen = isOpen;
-    setRowsList(rows);
-  };
+    const onCollapse = (event: any, rowKey: any, isOpen: any) => {
+      let rows;
+      rows = [...rowsList];
+      rows[rowKey].isOpen = isOpen;
+      setRowsList(rows);
+    };
 
-  return (
-    <Table
-      aria-label="List of Tables in selected connection."
-      variant={TableVariant.compact}
-      onCollapse={onCollapse}
-      cells={columns}
-      rows={rowsList}
-    >
-      <TableBody />
-    </Table>
-  );
-};
+    return (
+      <Table
+        aria-label="List of Tables in selected connection."
+        variant={TableVariant.compact}
+        onCollapse={onCollapse}
+        cells={columns}
+        rows={rowsList}
+      >
+        <TableBody />
+      </Table>
+    );
+  }
+);
