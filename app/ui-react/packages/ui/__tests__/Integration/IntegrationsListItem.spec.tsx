@@ -1,4 +1,4 @@
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 import { cleanup, render } from '@testing-library/react';
