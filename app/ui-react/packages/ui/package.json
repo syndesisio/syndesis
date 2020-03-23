@@ -87,6 +87,7 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.13.0",
     "@syndesis/history": "*",
     "classnames": "^2.2.6",
     "codemirror": "^5.46.0",
