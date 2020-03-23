@@ -1,4 +1,9 @@
-import { Dropdown, DropdownItem, DropdownPosition, KebabToggle } from '@patternfly/react-core';
+import {
+  Dropdown,
+  DropdownItem,
+  DropdownPosition,
+  KebabToggle,
+} from '@patternfly/react-core';
 import * as React from 'react';
 import './KababActionComponent.css';
 
