@@ -58,7 +58,7 @@
 
     <hibernate.validator.version>6.1.2.Final</hibernate.validator.version>
 
-    <jackson.version>2.10.2</jackson.version>
+    <jackson.version>2.10.3</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>4.6.1</kubernetes.client.version>
 
