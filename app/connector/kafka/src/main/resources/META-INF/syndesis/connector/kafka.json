@@ -85,6 +85,9 @@
   ],
   "componentScheme": "kafka",
   "configuredProperties": {},
+  "connectorCustomizers": [
+    "io.syndesis.connector.kafka.KafkaConnectionCustomizer"
+  ],
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",
@@ -104,11 +107,50 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "common",
-      "labelHint": "Comma separated list of Kafka broker URIs in the form host:port. Note that SSL URIs are not supported at this time and will cause an OOM at connection verification (see also https://issues.apache.org/jira/browse/KAFKA-4090)",
+      "labelHint": "Comma separated list of Kafka broker URIs in the form host:port",
       "order": "1",
       "required": true,
       "secret": false,
       "type": "typeahead"
+    },
+    "transportProtocol": {
+      "componentProperty": true,
+      "defaultValue": "PLAINTEXT",
+      "deprecated": false,
+      "displayName": "Transport Protocol",
+      "enum": [
+        {
+          "label": "PLAIN",
+          "value": "PLAINTEXT"
+        },
+        {
+          "label": "TLS",
+          "value": "SSL"
+        }
+      ],
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The transport protocol. Select TLS for encryption in transit.",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "brokerCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Broker certificate",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "Self-signed certificate",
+      "order": "3",
+      "required": false,
+      "secret": false,
+      "type": "textarea"
     }
   },
   "tags": [

@@ -101,8 +101,11 @@ public class KafkaMetaDataRetrievalTest {
 
         final Map<String, List<PropertyPair>> expected = new HashMap<>();
         expected.put("brokers", Arrays.asList(
-            new PropertyPair("my-cluster-kafka-bootstrap.zregvart.svc:9092", "zregvart::my-cluster"),
-            new PropertyPair("zorans-cluster-kafka-bootstrap.zregvart.svc:9092", "zregvart::zorans-cluster")));
+            new PropertyPair("my-cluster-kafka-bootstrap.zregvart.svc:9092", "zregvart::my-cluster (plain)"),
+            new PropertyPair("my-cluster-kafka-bootstrap.zregvart.svc:9093", "zregvart::my-cluster (tls)"),
+            new PropertyPair("zorans-cluster-kafka-bootstrap.zregvart.svc:9092", "zregvart::zorans-cluster (plain)"),
+            new PropertyPair("zorans-cluster-kafka-bootstrap.zregvart.svc:9093", "zregvart::zorans-cluster (tls)")
+            ));
 
         assertThat(properties.getProperties()).containsExactlyEntriesOf(expected);
     }

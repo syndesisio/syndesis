@@ -53,6 +53,10 @@
       <artifactId>camel-kafka</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-component-proxy</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
     </dependency>

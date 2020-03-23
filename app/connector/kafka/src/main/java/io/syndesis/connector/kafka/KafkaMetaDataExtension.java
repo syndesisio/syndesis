@@ -15,22 +15,21 @@
  */
 package io.syndesis.connector.kafka;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
-import org.apache.camel.component.extension.metadata.MetaDataBuilder;
-import org.apache.camel.util.ObjectHelper;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
-import org.apache.kafka.clients.admin.ListTopicsResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import io.syndesis.connector.support.util.ConnectorOptions;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
+
+import io.syndesis.connector.kafka.service.KafkaBrokerService;
+import io.syndesis.connector.kafka.service.KafkaBrokerServiceImpl;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
+import org.apache.camel.component.extension.metadata.MetaDataBuilder;
+import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
     private static final Logger LOG = LoggerFactory.getLogger(KafkaMetaDataExtension.class);
@@ -41,32 +40,22 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
-
-        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
         final String topic = ConnectorOptions.extractOption(parameters, "topic");
+        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
+        final String certificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
+        final String transportProtocol = ConnectorOptions.extractOption(parameters, "transportProtocol");
+        LOG.debug("Getting metadata from Kafka connection to {} with protocol {}", brokers, transportProtocol);
 
-        if( topic == null) {
-            LOG.debug("Retrieving Kafka topics for connection to {}", brokers);
+        if( topic == null ) {
             if (ObjectHelper.isNotEmpty(brokers)) {
-                Properties properties = new Properties();
-                properties.put("bootstrap.servers", brokers);
-                properties.put("connections.max.idle.ms", 10000);
-                properties.put("request.timeout.ms", 5000);
-                try (AdminClient client = KafkaAdminClient.create(properties)) {
-                    ListTopicsResult topics = client.listTopics();
-                    Set<String> topicsNames = topics.names().get();
-
-
-                    return Optional.of(
-                        MetaDataBuilder.on(getCamelContext())
-                            .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-                            .withAttribute(MetaData.JAVA_TYPE, String.class)
-                            .withPayload(topicsNames)
-                            .build()
-                    );
-                } catch (Exception e) {
-                    throw new IllegalStateException("Connection to broker " + brokers + " has failed.", e);
-                }
+                KafkaBrokerService kafkaBrokerService = new KafkaBrokerServiceImpl(brokers, transportProtocol, certificate);
+                return Optional.of(
+                    MetaDataBuilder.on(getCamelContext())
+                        .withAttribute(MetaData.CONTENT_TYPE, "text/plain")
+                        .withAttribute(MetaData.JAVA_TYPE, String.class)
+                        .withPayload(kafkaBrokerService.listTopics())
+                        .build()
+                );
             } else {
                 throw new IllegalStateException("brokers property must have a value.");
             }
