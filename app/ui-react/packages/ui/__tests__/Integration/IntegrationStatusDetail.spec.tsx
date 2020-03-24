@@ -1,5 +1,5 @@
 import * as React from 'react';
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
 import { render } from '@testing-library/react';
 import { IntegrationStatusDetail } from '../../src/Integration';
 
@@ -48,7 +48,7 @@ export default describe('IntegrationStatusDetail', () => {
 
   it('Should show the detailed status', () => {
     const { getByTestId } = render(testComponentPublishingDetailed);
-    expect(getByTestId('integration-status-detail')).toHaveTextContent('');
+    expect(getByTestId('progress-with-link-value')).toBeDefined();
   });
 
   it('Should show the stopping state', () => {
