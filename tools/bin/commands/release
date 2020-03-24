@@ -302,13 +302,38 @@ publish_artifacts() {
         \"prerelease\": ${prerelease} \
     }"
 
+    local remote=$(readopt --git-remote)
+    if [ -z "${remote}" ]; then
+        remote=$(git remote get-url origin)
+    fi
+
+    local github_api_url=${remote/github.com/api.github.com\/repos}
+    github_api_url=${github_api_url/%.git/}
+
+    if [ ${prerelease} == true ]; then
+        # keep only last 10 snapshot releases
+        local major_minor=${tag%.*} # this relies on having two dots in $tag, i.e. at least X.Y.Z
+        if [ -z "${major_minor}" ]; then
+            echo "ERROR: refusing to proceed MAJOR.MINOR version calculated as empty this would delete all releases"
+            return
+        fi
+        local versions_to_discard=$(git tag -l "${major_minor}*" --sort=taggerdate|head -n -10)
+        for version in ${versions_to_discard}; do
+            local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
+            if [ "${release_url}" != "null" ]; then
+                curl -q -s --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
+            fi
+        done
+        git push --delete origin "${versions_to_discard}"
+    fi
+
     local upload_url=$(curl -q -s --fail \
       -X POST \
       -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/json" \
       -d "$data" \
-      https://api.github.com/repos/syndesisio/syndesis/releases | jq -r '.upload_url | sub("{.*"; "")'
+      ${github_api_url}/releases | jq -r '.upload_url | sub("{.*"; "")'
     )
 
     if [[ ! $upload_url == http* ]]; then
