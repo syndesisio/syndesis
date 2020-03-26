@@ -117,7 +117,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
                         .entrySet()
                         .stream()
                         .filter(specEntry -> !Objects.equals("spreadsheetId", specEntry.getKey()))
-                        .forEach(specEntry -> rangeValues.add(dataShape.getOrDefault(specEntry.getKey(), null)));
+                        .forEach(specEntry -> rangeValues.add(dataShape.getOrDefault(specEntry.getKey(), "")));
 
                 values.add(rangeValues);
             }
