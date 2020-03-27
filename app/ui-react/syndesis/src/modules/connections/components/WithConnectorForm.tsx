@@ -19,6 +19,10 @@ export interface IWithConnectorFormChildrenProps {
    */
   fields: JSX.Element;
   /**
+   * some connectors have no configuration
+   */
+  hasProperties: boolean;
+  /**
    * true if the form has been modified.
    */
   dirty: boolean;
@@ -102,9 +106,13 @@ export interface IWithConnectorFormProps {
  * @see [moreConfigurationSteps]{@link IWithConnectorFormProps#moreConfigurationSteps}
  * @see [values]{@link IWithConnectorFormProps#values}
  */
-export const WithConnectorForm: React.FunctionComponent<
-  IWithConnectorFormProps
-> = ({ connector, disabled, initialValue = {}, onSave, children }) => {
+export const WithConnectorForm: React.FunctionComponent<IWithConnectorFormProps> = ({
+  connector,
+  disabled,
+  initialValue = {},
+  onSave,
+  children,
+}) => {
   const { t } = useTranslation('shared');
   const [
     isValidatingAgainstBackend,
@@ -113,15 +121,16 @@ export const WithConnectorForm: React.FunctionComponent<
   const [validationResults, setValidationResults] = React.useState<
     IConnectorConfigurationFormValidationResult[]
   >([]);
-
-  const definition = Object.keys(connector.properties!).reduce((def, key) => {
-    const d = connector.properties![key];
+  const properties = connector.properties || {};
+  const definition = Object.keys(properties).reduce((def, key) => {
+    const d = properties[key];
     def[key] = {
       ...d,
       disabled,
     };
     return def;
   }, {});
+  const hasProperties = Object.keys(definition).length > 0;
   return (
     <WithConnectionHelpers>
       {({ validateConfiguration }) => {
@@ -171,6 +180,7 @@ export const WithConnectorForm: React.FunctionComponent<
                 dirty,
                 fields,
                 handleSubmit,
+                hasProperties,
                 isSubmitting,
                 isValid,
                 isValidating: isValidating || isValidatingAgainstBackend,

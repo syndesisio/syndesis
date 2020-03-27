@@ -11,8 +11,8 @@ export interface ISyndesisAlertProps {
   level: SyndesisAlertLevel;
   message: string;
   detail?: string;
-  i18nTextExpanded: string;
-  i18nTextCollapsed: string;
+  i18nTextExpanded?: string;
+  i18nTextCollapsed?: string;
 }
 
 function mapLevel(incoming: SyndesisAlertLevel) {

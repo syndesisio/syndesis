@@ -10,6 +10,7 @@ import {
   ConnectionDetailsForm,
   ConnectionDetailsHeader,
   ConnectionDetailsOauthCard,
+  ConnectorNothingToConfigureAlert,
   PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -30,9 +31,7 @@ export interface IConnectionDetailsOauthProps {
   configuredProperties: Pick<IConnectionOverview, 'configuredProperties'>;
   onOAuthReconnect: () => void;
 }
-const ConnectionDetailsOAuth: React.FunctionComponent<
-  IConnectionDetailsOauthProps
-> = ({
+const ConnectionDetailsOAuth: React.FunctionComponent<IConnectionDetailsOauthProps> = ({
   connectorId,
   connectionName,
   configuredProperties,
@@ -54,7 +53,10 @@ const ConnectionDetailsOAuth: React.FunctionComponent<
         pushNotification(message, type)
       );
     } catch (e) {
-      pushNotification(`Connection couldn't be verified: ${e.message}`, 'error');
+      pushNotification(
+        `Connection couldn't be verified: ${e.message}`,
+        'error'
+      );
     }
   };
 
@@ -86,9 +88,9 @@ export interface IConnectionDetailsPageProps {
   edit: boolean;
 }
 
-export const ConnectionDetailsPage: React.FunctionComponent<
-  IConnectionDetailsPageProps
-> = ({ edit }) => {
+export const ConnectionDetailsPage: React.FunctionComponent<IConnectionDetailsPageProps> = ({
+  edit,
+}) => {
   const { t } = useTranslation(['connections', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
   const { params, state, history, location } = useRouteData<
@@ -262,6 +264,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
             {({
               fields,
               handleSubmit,
+              hasProperties,
               validationResults,
               dirty,
               isSubmitting,
@@ -303,13 +306,22 @@ export const ConnectionDetailsPage: React.FunctionComponent<
                     handleSubmit={handleSubmit}
                     isValid={!dirty || isValid}
                     isWorking={isSubmitting || isValidating}
+                    hasProperties={hasProperties}
                     validationResults={validationResults}
                     isEditing={edit}
                     onCancelEditing={cancelEditing}
                     onStartEditing={startEditing}
                     onValidate={validateForm}
                   >
-                    {fields}
+                    <>
+                      {hasProperties ? (
+                        fields
+                      ) : (
+                        <ConnectorNothingToConfigureAlert
+                          i18nAlert={'There are no properties to configure'}
+                        />
+                      )}
+                    </>
                   </ConnectionDetailsForm>
                 )}
                 {connection.derived && (
