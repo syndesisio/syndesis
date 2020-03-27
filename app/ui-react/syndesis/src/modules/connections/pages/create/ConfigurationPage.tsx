@@ -6,6 +6,7 @@ import {
   ConnectionSetupOAuthCard,
   ConnectorAuthorization,
   ConnectorConfigurationForm,
+  ConnectorNothingToConfigureAlert,
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
@@ -216,6 +217,7 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                         {({
                           fields,
                           handleSubmit,
+                          hasProperties,
                           validationResults,
                           submitForm,
                           isSubmitting,
@@ -240,7 +242,17 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                             i18nSave={t('shared:Save')}
                             i18nNext={t('shared:Next')}
                           >
-                            {fields}
+                            <>
+                              {hasProperties ? (
+                                fields
+                              ) : (
+                                <ConnectorNothingToConfigureAlert
+                                  i18nAlert={
+                                    'There are no properties to configure'
+                                  }
+                                />
+                              )}
+                            </>
                           </ConnectorConfigurationForm>
                         )}
                       </WithConnectorForm>

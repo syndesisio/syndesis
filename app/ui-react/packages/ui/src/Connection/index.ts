@@ -8,5 +8,6 @@ export * from './ConnectionsGridCell';
 export * from './ConnectionSkeleton';
 export * from './ConnectionsListView';
 export * from './ConnectorAuthorization';
+export * from './ConnectorNothingToConfigureAlert';
 export * from './ConnectorConfigurationForm';
 export * from './ConnectionSetupOAuthCard';
