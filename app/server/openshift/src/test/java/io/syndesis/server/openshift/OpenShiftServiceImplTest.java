@@ -34,6 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -244,6 +245,8 @@ public class OpenShiftServiceImplTest {
         final Service expectedService = new ServiceBuilder()
             .withNewMetadata()
                 .withName(openshiftName(name))
+                .withAnnotations(new HashMap<String, String>())
+                .withLabels(new HashMap<String, String>())
             .endMetadata()
             .withNewSpec()
                 .addNewPort()
@@ -285,6 +288,8 @@ public class OpenShiftServiceImplTest {
         final Service expectedService = new ServiceBuilder()
             .withNewMetadata()
                 .withName(openshiftName(name))
+                .withAnnotations(new HashMap<String, String>())
+                .withLabels(new HashMap<String, String>())
             .endMetadata()
             .withNewSpec()
                 .addNewPort()
