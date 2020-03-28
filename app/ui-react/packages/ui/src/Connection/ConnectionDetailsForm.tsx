@@ -55,6 +55,11 @@ export interface IConnectionDetailsFormProps {
   isWorking: boolean;
 
   /**
+   * `true` if the connector has configuration fields, false if there are none
+   */
+  hasProperties: boolean;
+
+  /**
    * Form level validationResults
    */
   validationResults: IConnectionDetailsValidationResult[];
@@ -95,6 +100,7 @@ export const ConnectionDetailsForm: React.FunctionComponent<IConnectionDetailsFo
   i18nValidateLabel,
   isValid,
   isWorking,
+  hasProperties,
   validationResults,
   handleSubmit,
   onValidate,
@@ -135,13 +141,17 @@ export const ConnectionDetailsForm: React.FunctionComponent<IConnectionDetailsFo
                     {i18nValidateLabel}
                   </Button>
                 ) : (
-                  <Button
-                    data-testid={'connection-details-form-edit-button'}
-                    variant="primary"
-                    onClick={onStartEditing}
-                  >
-                    {i18nEditLabel}
-                  </Button>
+                  <>
+                    {hasProperties && (
+                      <Button
+                        data-testid={'connection-details-form-edit-button'}
+                        variant="primary"
+                        onClick={onStartEditing}
+                      >
+                        {i18nEditLabel}
+                      </Button>
+                    )}
+                  </>
                 )}
               </div>
             </Form>
