@@ -239,12 +239,12 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(2L, valueRange.getValues().size());
         Assert.assertEquals(3L, valueRange.getValues().get(0).size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertNull(valueRange.getValues().get(0).get(1));
+        Assert.assertEquals("", valueRange.getValues().get(0).get(1));
         Assert.assertEquals("c1", valueRange.getValues().get(0).get(2));
         Assert.assertEquals(3L, valueRange.getValues().get(1).size());
         Assert.assertEquals("a2", valueRange.getValues().get(1).get(0));
         Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
-        Assert.assertNull(valueRange.getValues().get(1).get(2));
+        Assert.assertEquals("", valueRange.getValues().get(1).get(2));
     }
 
     @Test
@@ -280,12 +280,12 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals(2L, valueRange.getValues().size());
         Assert.assertEquals(3L, valueRange.getValues().get(0).size());
         Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
-        Assert.assertNull(valueRange.getValues().get(0).get(1));
+        Assert.assertEquals("", valueRange.getValues().get(0).get(1));
         Assert.assertEquals("c1", valueRange.getValues().get(0).get(2));
         Assert.assertEquals(3L, valueRange.getValues().get(1).size());
         Assert.assertEquals("a2", valueRange.getValues().get(1).get(0));
         Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
-        Assert.assertNull(valueRange.getValues().get(1).get(2));
+        Assert.assertEquals("", valueRange.getValues().get(1).get(2));
     }
 
     @Test
