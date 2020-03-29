@@ -317,7 +317,7 @@ publish_artifacts() {
             echo "ERROR: refusing to proceed MAJOR.MINOR version calculated as empty this would delete all releases"
             return
         fi
-        local versions_to_discard=$(git tag -l "${major_minor}*" --sort=taggerdate|head -n -10)
+        local versions_to_discard=$(git for-each-ref --format="%(refname:short)" --sort=creatordate refs/tags/${major_minor}*|head -n -10)
         for version in ${versions_to_discard}; do
             local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
             if [ "${release_url}" != "null" ]; then
