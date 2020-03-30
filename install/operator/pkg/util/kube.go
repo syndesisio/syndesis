@@ -45,13 +45,13 @@ func GetClientNamespace(configPath string) (string, error) {
 
 func WaitForDeploymentReady(ctx context.Context, client dynamic.Interface, namespace string, name string, timeout time.Duration) (bool, error) {
 	gvr := schema.GroupVersionResource{
-		Group:    "apps.openshift.io",
+		Group:    "apps",
 		Version:  "v1",
-		Resource: "deploymentconfigs",
+		Resource: "deployments",
 	}
 	return WaitForResourceCondition(ctx, client, gvr, namespace, name, timeout, func(resource *unstructured.Unstructured) (bool, error) {
 		availableReplicas := MustRenderGoTemplate("{{.status.availableReplicas}}", resource.Object)
-		if availableReplicas != "" {
+		if availableReplicas != "" && availableReplicas != "<no value>" {
 			i, err := strconv.Atoi(availableReplicas)
 			if err != nil {
 				return false, err

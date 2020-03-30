@@ -23,8 +23,8 @@ import (
 
 	"k8s.io/client-go/kubernetes"
 
-	appsv1 "github.com/openshift/api/apps/v1"
 	v1 "github.com/openshift/api/route/v1"
+	appsv1 "k8s.io/api/apps/v1"
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
@@ -503,17 +503,17 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 
 	rtClient, _ := a.clientTools.RuntimeClient()
 	wait.Poll(pollInterval, pollTimeout, func() (done bool, err error) {
-		dc := &appsv1.DeploymentConfig{}
-		if err := rtClient.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dc); err != nil {
-			a.log.Error(err, "getting `syndesis-db` DeploymentConfig in "+syndesis.Namespace)
+		dep := &appsv1.Deployment{}
+		if err := rtClient.Get(context, types.NamespacedName{Namespace: syndesis.Namespace, Name: "syndesis-db"}, dep); err != nil {
+			a.log.Error(err, "getting `syndesis-db` Deployment in "+syndesis.Namespace)
 			return false, err
 		}
 
-		if dc.Spec.Replicas != dc.Status.ReadyReplicas {
+		if *dep.Spec.Replicas != dep.Status.Replicas {
 			return false, nil
 		}
 
-		for containerIdx, c := range dc.Spec.Template.Spec.Containers {
+		for containerIdx, c := range dep.Spec.Template.Spec.Containers {
 			if c.Name != "postgresql" {
 				continue
 			}
@@ -527,8 +527,8 @@ func (a *installAction) removePostgresUpgradeTrigger(context context.Context, sy
 					"op": "remove",
 					"path": "/spec/template/spec/containers/%d/env/%d"
 				}]`, containerIdx, envIdx)))
-				if err := rtClient.Patch(context, dc, removeUpgradeEnvVar); err != nil {
-					a.log.Error(err, "patching `syndesis-db` DeploymentConfig to remove `POSTGRESQL_UPGRADE` environment variable")
+				if err := rtClient.Patch(context, dep, removeUpgradeEnvVar); err != nil {
+					a.log.Error(err, "patching `syndesis-db` Deployment to remove `POSTGRESQL_UPGRADE` environment variable")
 					return true, err
 				}
 				break

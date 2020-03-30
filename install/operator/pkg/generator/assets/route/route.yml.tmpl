@@ -1,3 +1,4 @@
+{{ if .ApiServer.Routes }}
 - apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
@@ -18,3 +19,4 @@
     to:
       kind: Service
       name: syndesis-oauthproxy
+{{end}}

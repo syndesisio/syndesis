@@ -16,8 +16,8 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-ui
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -28,22 +28,20 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-ui
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-ui
     strategy:
-      rollingParams:
-        intervalSeconds: 1
+      rollingUpdate:
         maxSurge: 25%
         maxUnavailable: 25%
-        timeoutSeconds: 600
-        updatePeriodSeconds: 1
       resources:
         limits:
           memory: "256Mi"
         requests:
           memory: "20Mi"
-      type: Rolling
+      type: RollingUpdate
     template:
       metadata:
         labels:
@@ -55,17 +53,17 @@
         serviceAccountName: syndesis-default
         containers:
         - name: syndesis-ui
-{{if .DevSupport}}
-          image: ' '
-{{else}}
           image: '{{ dockerImageFromComponent .Syndesis.Components.UI.Image .Syndesis.SHA }}'
-{{end}}
           env:
 # We need a config value to change to trigger a new deployment which switching the DevSupport flag.
 # Just changing the image name is not considered a config change.
           - name: DEV_SUPPORT
             value: '{{.DevSupport}}'
+        {{if .DevSupport}}
+          imagePullPolicy: Always
+        {{else}}
           imagePullPolicy: IfNotPresent
+        {{end}}
           livenessProbe:
             httpGet:
               path: "/"
@@ -91,35 +89,6 @@
         - configMap:
             name: syndesis-ui-config
           name: config-volume
-    triggers:
-    - type: ConfigChange
-{{if .DevSupport}}
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-ui
-        from:
-          kind: ImageStreamTag
-          name: 'syndesis-ui:latest'
-          namespace: '{{.OpenShiftProject}}'
-      type: ImageChange
-
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-ui
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-ui
-  spec:
-    tags:
-    - name: "latest"
-      from:
-        kind: ImageStreamTag
-        name: 'syndesis-ui:latest'
-{{end}}
 
 - apiVersion: v1
   kind: ConfigMap

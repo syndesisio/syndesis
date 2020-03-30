@@ -19,7 +19,7 @@ package upgrade
 import (
 	"time"
 
-	appsv1 "github.com/openshift/api/apps/v1"
+	appsv1 "k8s.io/api/apps/v1"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -86,10 +86,10 @@ func dirToS(d direction) string {
 	return [...]string{"up", "down"}[d]
 }
 
-// Scale DeploymentConfigs up or down
+// Scale Deployments up or down
 func (s *scale) scale() (err error) {
 	var replicas int32
-	var dcs = []string{"syndesis-meta", "syndesis-server"}
+	var deps = []string{"syndesis-meta", "syndesis-server"}
 
 	if s.dir == up {
 		replicas = 1
@@ -101,43 +101,43 @@ func (s *scale) scale() (err error) {
 	}
 
 	// Scale up or down
-	s.log.Info("scale DeploymentConfig", "direction", dirToS(s.dir), "deployments", dcs)
-	for _, dn := range dcs {
-		dc := &appsv1.DeploymentConfig{}
-		if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
+	s.log.Info("scale Deployment", "direction", dirToS(s.dir), "deployments", deps)
+	for _, dn := range deps {
+		dep := &appsv1.Deployment{}
+		if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dep); err != nil {
 			return err
 		}
 
-		if dc.Spec.Replicas != replicas {
-			s.log.Info("scaling DeploymentConfigs", "name", dn, "desired replicas", replicas, "replicas", dc.Spec.Replicas)
-			dc.Spec.Replicas = replicas
-			if err = rtClient.Update(s.context, dc); err != nil {
+		if *dep.Spec.Replicas != replicas {
+			s.log.Info("scaling Deployments", "name", dn, "desired replicas", replicas, "replicas", dep.Spec.Replicas)
+			dep.Spec.Replicas = &replicas
+			if err = rtClient.Update(s.context, dep); err != nil {
 				return err
 			}
 		}
 	}
 
-	// Wait for DeploymentConfigs to correctly scale
-	s.log.Info("waiting for DeploymentConfig to scale", "direction", dirToS(s.dir), "deployments", dcs)
+	// Wait for Deployments to correctly scale
+	s.log.Info("waiting for Deployment to scale", "direction", dirToS(s.dir), "deployments", deps)
 	err = wait.Poll(s.interval, s.timeout, func() (done bool, err error) {
-		for i, dn := range dcs {
-			dc := &appsv1.DeploymentConfig{}
-			if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dc); err != nil {
+		for i, dn := range deps {
+			dep := &appsv1.Deployment{}
+			if err = rtClient.Get(s.context, types.NamespacedName{Namespace: s.namespace, Name: dn}, dep); err != nil {
 				return false, err
 			}
 
-			if dc.Status.AvailableReplicas == replicas {
-				s.log.Info("deploymentConfig successfully scaled", "name", dn, "desired replicas", replicas, "available replicas", dc.Status.AvailableReplicas)
-				if len(dcs) == 1 {
-					dcs = dcs[:len(dcs)-1]
+			if dep.Status.AvailableReplicas == replicas {
+				s.log.Info("deployment successfully scaled", "name", dn, "desired replicas", replicas, "available replicas", dep.Status.AvailableReplicas)
+				if len(deps) == 1 {
+					deps = deps[:len(deps)-1]
 				} else {
-					dcs = append(dcs[:i], dcs[i+1:]...)
+					deps = append(deps[:i], deps[i+1:]...)
 				}
 			} else {
-				s.log.Info("waiting for DeploymentConfig to reach desired number of replicas", "name", dn, "desired replicas", replicas, "available replicas", dc.Status.AvailableReplicas)
+				s.log.Info("waiting for Deployment to reach desired number of replicas", "name", dn, "desired replicas", replicas, "available replicas", dep.Status.AvailableReplicas)
 			}
 
-			if len(dcs) == 0 {
+			if len(deps) == 0 {
 				return true, nil
 			}
 		}
@@ -149,7 +149,7 @@ func (s *scale) scale() (err error) {
 }
 
 /*
- * Scale should always run and rollback, we want the DeploymentConfigs replicas set to one
+ * Scale should always run and rollback, we want the Deployments replicas set to one
  * even if some steps failed rolling back
  */
 func (s *scale) canRollback() bool {

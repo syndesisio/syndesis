@@ -1,4 +1,4 @@
-{{- if .Productized}}
+{{- if and .Productized .ApiServer.ImageStreams}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -33,8 +33,8 @@
       targetPort: 61613
     selector:
       syndesis.io/example: broker-amq
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -44,9 +44,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/example: broker-amq
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/example: broker-amq
     strategy:
       type: Recreate
     template:
@@ -85,6 +86,4 @@
               - -c
               - /opt/amq/bin/readinessProbe.sh
         terminationGracePeriodSeconds: 60
-    triggers:
-    - type: ConfigChange
 {{- end}}

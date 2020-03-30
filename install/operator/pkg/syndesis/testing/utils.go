@@ -33,11 +33,17 @@ func openshiftApiClient() clientset.Interface {
 	api := gofake.NewSimpleClientset()
 	fd := api.Discovery().(*discoveryfake.FakeDiscovery)
 
-	res := metav1.APIResourceList{
-		GroupVersion: "apps.openshift.io/4.0",
+	res1 := metav1.APIResourceList{
+		GroupVersion: "image.openshift.io/v1",
+	}
+	res2 := metav1.APIResourceList{
+		GroupVersion: "route.openshift.io/v1",
+	}
+	res3 := metav1.APIResourceList{
+		GroupVersion: "oauth.openshift.io/v1",
 	}
 
-	fd.Resources = []*metav1.APIResourceList{&res}
+	fd.Resources = []*metav1.APIResourceList{&res1, &res2, &res3}
 
 	return api
 }

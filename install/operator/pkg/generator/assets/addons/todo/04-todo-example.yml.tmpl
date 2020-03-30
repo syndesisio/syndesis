@@ -81,8 +81,8 @@
     triggers:
       - type: ConfigChange
 
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -91,9 +91,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: todo
-      syndesis.io/component: todo
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: todo
+        syndesis.io/component: todo
     strategy:
       resources:
         limits:
@@ -125,7 +126,7 @@
                 value: sampledb
             imagePullPolicy: Always
             name: todo
-            image: ' '
+            image: 'todo:latest'
             resources:
               limits:
                 memory: 256Mi
@@ -142,14 +143,4 @@
         securityContext: {}
         terminationGracePeriodSeconds: 30
     test: false
-    triggers:
-      - type: ConfigChange
-      - imageChangeParams:
-          automatic: true
-          containerNames:
-            - todo
-          from:
-            kind: ImageStreamTag
-            name: todo:latest
-        type: ImageChange
 {{end}}

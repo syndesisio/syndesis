@@ -52,7 +52,7 @@ func CreateOrUpdate(ctx context.Context, cl client.Client, o runtime.Object, ski
 		mergeMap(mergePath, existing.Object, desired.Object, skip)
 		updatedYaml = Dump(existing)
 
-		//if d.GetKind() == "DeploymentConfig" && d.GetName() == "syndesis-meta" {
+		//if d.GetKind() == "Deployment" && d.GetName() == "syndesis-meta" {
 		//	Debug("existing:", existing, "(index .Object.spec.template.spec.containers 0).resources.limits.memory")
 		//}
 		return nil
@@ -83,7 +83,7 @@ func mergeMap(path string, to map[string]interface{}, from map[string]interface{
 
 		// handle cases like https://issues.jboss.org/browse/ENTESB-11711 setting a env value to "" does not work well, k8s gives delete
 		// the value field under the covers, and we keep trying to set it again to the "" value.
-		if field == "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/env/#/value" && (value == nil || value == "") {
+		if field == "apps/v1/Deployment/spec/template/spec/containers/#/env/#/value" && (value == nil || value == "") {
 			delete(to, key)
 			continue
 		}
@@ -143,7 +143,7 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 		if from == "" {
 			return to
 		}
-	case "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/image":
+	case "apps/v1/Deployment/spec/template/spec/containers/#/image":
 		if from == "" || from == " " {
 			// We are using an image stream.. typically we want to preserve the image
 			// that this gets updated with since it's an image pushed to the cluster registry...
@@ -154,11 +154,11 @@ func mergeValue(path string, to interface{}, from interface{}, skip map[string]b
 			}
 			return to
 		}
-	case "apps.openshift.io/v1/DeploymentConfig/spec/triggers/#/imageChangeParams/from/namespace":
+	case "apps/v1/Deployment/spec/triggers/#/imageChangeParams/from/namespace":
 		return to
 	case "v1/PersistentVolumeClaim/spec/resources/requests/storage":
 		return to
-	case "apps.openshift.io/v1/DeploymentConfig/spec/template/spec/containers/#/resources/limits/memory":
+	case "apps/v1/Deployment/spec/template/spec/containers/#/resources/limits/memory":
 		// This might be the same value, in a different format.
 		fromQ := resource.MustParse(fmt.Sprint(from))
 		fromI, _ := fromQ.AsInt64()

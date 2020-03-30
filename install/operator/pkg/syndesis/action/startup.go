@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 
-	v1 "github.com/openshift/api/apps/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1beta1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/clienttools"
+	v1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/labels"
@@ -33,10 +33,10 @@ func (a *startupAction) CanExecute(syndesis *v1beta1.Syndesis) bool {
 
 func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis) error {
 
-	list := v1.DeploymentConfigList{
+	list := v1.DeploymentList{
 		TypeMeta: metav1.TypeMeta{
-			Kind:       "DeploymentConfig",
-			APIVersion: "apps.openshift.io/v1",
+			Kind:       "Deployment",
+			APIVersion: "apps/v1",
 		},
 	}
 	selector, err := labels.Parse("syndesis.io/app=syndesis,syndesis.io/type=infrastructure")
@@ -54,17 +54,17 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 
 	if len(list.Items) == 0 {
-		return errors.New("no deployment configs detected in the namespace")
+		return errors.New("no deployments detected in the namespace")
 	}
 
 	ready := true
 	var failedDeployment *string
 	for _, depl := range list.Items {
-		if depl.Spec.Replicas != depl.Status.ReadyReplicas {
+		if *depl.Spec.Replicas != depl.Status.ReadyReplicas {
 			a.log.V(2).Info("Not ready", "desired", depl.Spec.Replicas, "actual", depl.Status.ReadyReplicas, "deployment", depl.Name)
 			ready = false
 		}
-		if depl.Spec.Replicas != depl.Status.Replicas && depl.Status.Replicas == 0 && !isProcessing(&depl) {
+		if *depl.Spec.Replicas != depl.Status.Replicas && depl.Status.Replicas == 0 && !isProcessing(&depl) {
 			failedDeployment = &depl.Name
 		}
 	}
@@ -93,7 +93,7 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	}
 }
 
-func isProcessing(dc *v1.DeploymentConfig) bool {
+func isProcessing(dc *v1.Deployment) bool {
 	for _, condition := range dc.Status.Conditions {
 		if condition.Type == v1.DeploymentProgressing {
 			if condition.Status == corev1.ConditionFalse {

@@ -17,8 +17,8 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-server
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -29,9 +29,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-server
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-server
     strategy:
       resources:
         limits:
@@ -111,12 +112,12 @@
           - name: JAVA_DEBUG
             value: "true"
 {{end}}
-{{if .DevSupport}}
-          image: ' '
-{{else}}
           image: '{{ dockerImageFromComponent .Syndesis.Components.Server.Image .Syndesis.SHA }}'
-{{end}}
+{{if .DevSupport}}
+          imagePullPolicy: Always
+{{else}}
           imagePullPolicy: IfNotPresent
+{{end}}
           livenessProbe:
             httpGet:
               port: 8080
@@ -159,35 +160,6 @@
         - name: config-volume
           configMap:
             name: syndesis-server-config
-    triggers:
-    - type: ConfigChange
-{{if .DevSupport}}
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-server
-        from:
-          kind: ImageStreamTag
-          name: 'syndesis-server:latest'
-          namespace: '{{.OpenShiftProject}}'
-      type: ImageChange
-
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-server
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-server
-  spec:
-    tags:
-    - name: "latest"
-      from:
-        kind: ImageStreamTag
-        name: 'syndesis-server:latest'
-{{end}}
 
 # workaround camel-k metrics
 - apiVersion: v1

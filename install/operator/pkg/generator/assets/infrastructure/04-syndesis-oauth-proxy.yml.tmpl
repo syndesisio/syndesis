@@ -1,3 +1,4 @@
+{{ if .ApiServer.EmbeddedProvider }}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -18,8 +19,8 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-oauthproxy
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -30,15 +31,11 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-oauthproxy
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-oauthproxy
     strategy:
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
       type: Recreate
     template:
       metadata:
@@ -119,5 +116,4 @@
         - name: syndesis-oauthproxy-tls
           secret:
             secretName: syndesis-oauthproxy-tls
-    triggers:
-    - type: ConfigChange
+{{end}}

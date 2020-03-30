@@ -124,8 +124,8 @@
     resources:
       requests:
         storage: {{.Syndesis.Components.Prometheus.Resources.VolumeCapacity}}
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     name: syndesis-prometheus
     labels:
@@ -136,9 +136,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-prometheus
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-prometheus
     strategy:
       type: Recreate
       resources:
@@ -158,7 +159,11 @@
         containers:
         - name: prometheus
           image: '{{ dockerImageFromComponent .Syndesis.Components.Prometheus.Image .Syndesis.SHA }}'
+        {{if .DevSupport}}
+          imagePullPolicy: Always
+        {{else}}
           imagePullPolicy: IfNotPresent
+        {{end}}
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
             - '--storage.tsdb.retention=30d'
@@ -191,5 +196,3 @@
         - name: syndesis-prometheus-config
           configMap:
             name: syndesis-prometheus-config
-    triggers:
-    - type: ConfigChange

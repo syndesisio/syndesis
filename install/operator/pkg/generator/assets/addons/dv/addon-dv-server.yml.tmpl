@@ -16,8 +16,8 @@
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/component: syndesis-dv
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -28,9 +28,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-dv
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-dv
     strategy:
       resources:
         limits:
@@ -76,12 +77,12 @@
           - name: JAVA_DEBUG
             value: "true"
 {{end}}
-{{if .DevSupport}}
-          image: ' '
-{{else}}
           image: '{{ dockerImageFromComponent .Syndesis.Addons.DV.Image .Syndesis.SHA }}'
-{{end}}
+{{if .DevSupport}}
+          imagePullPolicy: Always
+{{else}}
           imagePullPolicy: IfNotPresent
+{{end}}
           livenessProbe:
             httpGet:
               port: 8080
@@ -127,8 +128,6 @@
         - name: config-volume
           configMap:
             name: syndesis-server-config
-    triggers:
-    - type: ConfigChange
 {{if .DevSupport}}
     - imageChangeParams:
         automatic: true
@@ -139,7 +138,9 @@
           name: syndesis-dv:latest
           namespace: {{.OpenShiftProject}}
       type: ImageChange
+{{end}}
 
+{{- if and .DevSupport .ApiServer.ImageStreams}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:

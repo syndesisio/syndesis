@@ -48,6 +48,7 @@ type Install struct {
 	addons         string
 	customResource string
 	devSupport     bool
+	apiServer      configuration.ApiServerSpec
 	databaseImage  string
 	templateName   string
 
@@ -145,8 +146,20 @@ func (o *Install) before(_ *cobra.Command, args []string) (err error) {
 		o.ejectedResources = []unstructured.Unstructured{}
 	}
 
+	apiClient, err := o.ClientTools().ApiClient()
+	if err != nil {
+		return err
+	}
+
+	apiSpec, err := configuration.ApiCapabilities(apiClient)
+	if err != nil {
+		return err
+	}
+	o.apiServer = *apiSpec
+
 	// The default operator image is not valid /w dev mode since it can't have a repository in the image name.
-	if o.devSupport && o.image == pkg.DefaultOperatorImage {
+	// Not applicable on other platforms so check for Openshift
+	if o.devSupport && o.image == pkg.DefaultOperatorImage && apiSpec.ImageStreams {
 		o.image = "syndesis-operator"
 	}
 
@@ -193,6 +206,7 @@ type RenderScope struct {
 	Image         string
 	Tag           string
 	Namespace     string
+	ApiServer     configuration.ApiServerSpec
 	DevSupport    bool
 	Role          string
 	Kind          string
@@ -251,6 +265,7 @@ func (o *Install) render(fromFile string) ([]unstructured.Unstructured, error) {
 		Image:         o.image,
 		Tag:           o.tag,
 		DevSupport:    o.devSupport,
+		ApiServer:     o.apiServer,
 		Role:          RoleName,
 		Kind:          "Role",
 		EnabledAddons: addons,

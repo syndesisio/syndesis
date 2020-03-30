@@ -47,8 +47,8 @@
     to:
       kind: Service
       name: syndesis-public-oauthproxy
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
     labels:
       app: syndesis
@@ -59,9 +59,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-public-oauthproxy
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-public-oauthproxy
     strategy:
       resources:
         limits:
@@ -137,5 +138,3 @@
         - name: syndesis-public-oauthproxy-tls
           secret:
             secretName: syndesis-public-oauthproxy-tls
-    triggers:
-    - type: ConfigChange

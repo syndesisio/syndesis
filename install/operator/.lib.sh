@@ -127,6 +127,11 @@ build_operator()
             go build  "$@" -o ./dist/${GOOS}-${GOARCH}/syndesis-operator \
                 -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
                 ./cmd/manager
+
+            echo building ./dist/${GOOS}-${GOARCH}/platform-detect executable
+            go build -o ./dist/${GOOS}-${GOARCH}/platform-detect \
+                -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
+                ./cmd/detect
           done
         done
         mkdir -p ./build/_output/bin

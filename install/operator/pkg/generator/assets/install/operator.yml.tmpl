@@ -23,6 +23,8 @@
     kind: Role
     name: syndesis-operator
     apiGroup: rbac.authorization.k8s.io
+
+{{- if .ApiServer.ImageStreams}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -47,9 +49,26 @@
       importPolicy:
         scheduled: true
     {{end}}
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+{{end}}
+
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
+    annotations:
+    {{- if .ApiServer.ImageStreams}}
+      #
+      # Sets a trigger on this deployment to overwrite
+      # the template.spec.image property and point to
+      # the syndesis-operator image stream.
+      #
+      # If in dev mode, modify the tag accordingly.
+      #
+      {{if .DevSupport}}
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+      {{else}}
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+      {{end}}
+    {{end}}
     name: syndesis-operator
     labels:
       app: syndesis
@@ -61,9 +80,10 @@
       type: Recreate
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
-      syndesis.io/type: operator
-      syndesis.io/component: syndesis-operator
+      matchLabels:
+        syndesis.io/app: syndesis
+        syndesis.io/type: operator
+        syndesis.io/component: syndesis-operator
     template:
       metadata:
         labels:
@@ -75,8 +95,12 @@
         serviceAccountName: syndesis-operator
         containers:
         - name: syndesis-operator
-          image: ' '
+          image: {{.Image}}:{{.Tag}}
+        {{- if .DevSupport}}
+          imagePullPolicy: Always
+        {{else}}
           imagePullPolicy: IfNotPresent
+        {{end}}
           ports:
           - containerPort: 60000
             name: metrics
@@ -100,17 +124,3 @@
           - postgres -V
           image: '{{.DatabaseImage}}'
           name: postgres-version
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-operator
-        from:
-          kind: ImageStreamTag
-          {{- if .DevSupport}}
-          name: syndesis-operator:latest
-          {{else}}
-          name: syndesis-operator:{{.Tag}}
-          {{- end}}
-      type: ImageChange
-    - type: ConfigChange
