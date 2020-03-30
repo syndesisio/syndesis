@@ -171,6 +171,7 @@ public class EmbedMongoConfiguration {
                 .net(new Net(PORT, Network.localhostIsIPv6()))
                 .replication(new Storage(storagePath.toString(),
                     REPLICA_SET, 5000))
+                .stopTimeoutInMillis(10000)
                 .build();
         } catch (IOException e) {
             throw new UncheckedIOException(e);
