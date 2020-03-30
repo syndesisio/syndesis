@@ -26,6 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import io.syndesis.common.model.ToJson;
+import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithModificationTimestamps;
 import io.syndesis.common.model.WithName;
@@ -46,7 +47,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public interface IntegrationBase
-    extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources {
+    extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources, WithDependencies {
 
     default Optional<Connection> findConnectionById(final String connectionId) {
         if (getConnections() == null) {

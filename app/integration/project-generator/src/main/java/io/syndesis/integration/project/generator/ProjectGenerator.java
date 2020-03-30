@@ -315,7 +315,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
     private void addExtensions(TarArchiveOutputStream tos, Integration integration) throws IOException {
         final Set<String> extensions = resourceManager.collectDependencies(integration).stream()
-            .filter(Dependency::isExtension)
+            .filter(d-> d.isExtension() || d.isExtensionTag())
             .map(Dependency::getId)
             .collect(Collectors.toCollection(TreeSet::new));
 
