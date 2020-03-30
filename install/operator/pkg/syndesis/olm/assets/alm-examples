@@ -1,0 +1,21 @@
+[{
+  "apiVersion": "syndesis.io/v1beta1",
+  "kind": "Syndesis",
+  "metadata": {
+    "name": "app"
+  },
+  "spec" : {
+    "addons": {
+      "todo": {
+        "enabled": false
+      },
+      "ops": {
+        "enabled": false
+      },
+      "jaeger": {
+        "enabled": false,
+        "clientOnly": true
+      }
+    }
+  }
+}]

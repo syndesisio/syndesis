@@ -20,6 +20,8 @@ import (
 	"context"
 	"flag"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/cmd/internal/olm"
+
 	"os"
 
 	"github.com/spf13/cobra"
@@ -68,6 +70,7 @@ func NewOperator(ctx context.Context) (*cobra.Command, error) {
 	cmd.AddCommand(uninstall.New(&options))
 	cmd.AddCommand(backup.NewBackup(&options))
 	cmd.AddCommand(backup.NewRestore(&options))
+	cmd.AddCommand(olm.New(&options))
 
 	return &cmd, nil
 }
