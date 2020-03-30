@@ -1,0 +1,25 @@
+### Syndesis operator
+Syndesis is a flexible and customizable, open source platform that provides core integration capabilities as a service.
+
+This operator installs as well as configures the following syndesis components:
+- syndesis-server
+- syndesis-meta
+- syndesis-ui
+- syndesis-db
+- syndesis-prometheus
+- syndesis-proxy
+- syndesis-oauthproxy
+
+### How to install
+When the operator is installed (you have created a subscription and the operator is running in the selected namespace) create a new CR of Kind Syndesis (click the Create New button). The CR spec contains all defaults (see below).
+
+### CR Defaults
+The CR definition is pretty simple and an empy CR will trigger a base installation.
+
+Within the addons section, users are able to enable specific addons. The available addons at the moment are:
+- camelk: enables kamelk
+- jaeger: enable jaeger
+- ops: enables monitoring, requires extra CRDs
+- todo: a simple todo application
+
+To enable addons, set "addon_name": {"enabled": true} in the CR.
