@@ -304,11 +304,12 @@ publish_artifacts() {
 
     local remote=$(readopt --git-remote)
     if [ -z "${remote}" ]; then
-        remote=$(git remote get-url origin)
+        remote=$(git config --get remote.origin.url)
     fi
 
     local github_api_url=${remote/github.com/api.github.com\/repos}
-    github_api_url=${github_api_url/%.git/}
+    github_api_url=${github_api_url/%.git/} # remove .git at the end
+    github_api_url=${github_api_url/\/*@/\//} # remove any username in https://username@...
 
     if [ ${prerelease} == true ]; then
         # keep only last 10 snapshot releases
