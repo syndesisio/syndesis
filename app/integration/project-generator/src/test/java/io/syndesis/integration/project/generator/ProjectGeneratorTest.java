@@ -612,6 +612,39 @@ public class ProjectGeneratorTest {
     }
 
     @Test
+    public void testIntegrationAndFlowsDependencyCollection() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Dependency integrationMavenDependency = Dependency.maven("io.syndesis:something-integration:1.0.0");
+        Dependency integrationlibraryExtension = Dependency.libraryTag("someLibraryIntegrationTag");
+        Dependency flow1MavenDependency = Dependency.maven("io.syndesis:something:1.0.0");
+        Dependency flow1libraryExtension = Dependency.libraryTag("someLibraryTag");
+        Dependency flow2libraryExtension = Dependency.libraryTag("someLibraryTag2");
+
+        Integration integration = new Integration.Builder()
+            .id("test-integration")
+            .name("Test Integration")
+            .description("This is a test integration!")
+            .addDependency(integrationMavenDependency)
+            .addDependency(integrationlibraryExtension)
+            .addFlow(new Flow.Builder()
+                .steps(Collections.emptyList())
+                .addDependency(flow1MavenDependency)
+                .addDependency(flow1libraryExtension)
+                .build())
+            .addFlow(new Flow.Builder()
+                .steps(Collections.emptyList())
+                .addDependency(flow2libraryExtension)
+                .build())
+            .build();
+
+        Collection<Dependency> dependencies = resourceManager.collectDependencies(integration);
+
+        assertThat(dependencies).contains(integrationMavenDependency, integrationlibraryExtension,
+            flow1MavenDependency, flow1libraryExtension, flow2libraryExtension);
+    }
+
+    @Test
     public void testGenerateTemplateStepProjectDependencies() throws Exception {
         TestResourceManager resourceManager = new TestResourceManager();
 
