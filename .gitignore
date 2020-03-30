@@ -98,5 +98,8 @@ ui-react/*/.rts2_cache*
 # package-lock.json
 */ui-react/package-lock.json
 
+# operator generated files
+install/operator/pkg/cmd/internal/install/install_defaults.go
+
 # operator binary
 tools/bin/commands/binaries/syndesis
