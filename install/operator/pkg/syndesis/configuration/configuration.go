@@ -60,6 +60,7 @@ var log = logf.Log.WithName("configuration")
 type Config struct {
 	AllowLocalHost             bool
 	Productized                bool
+	Version                    string         // Syndesis version
 	DevSupport                 bool           // If set to true, pull docker images from imagetag instead of upstream source
 	Scheduled                  bool           // Legacy parameter to set scheduled:true in the imagestreams, but we dont use many imagestreams nowadays
 	ProductName                string         // Usually syndesis or fuse-online
