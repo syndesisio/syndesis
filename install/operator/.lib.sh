@@ -116,8 +116,12 @@ build_operator()
         echo building executable
         go test -test.short -mod=vendor ./cmd/... ./pkg/...
 
+        if [ -z "${GOOSLIST}" ]; then
+            GOOSLIST="linux darwin windows"
+        fi
+
         for GOARCH in amd64 ; do
-          for GOOS in linux darwin windows ; do
+          for GOOS in ${GOOSLIST} ; do
             export GOARCH GOOS
             echo building ./dist/${GOOS}-${GOARCH}/syndesis-operator executable
             go build  "$@" -o ./dist/${GOOS}-${GOARCH}/syndesis-operator \
