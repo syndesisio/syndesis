@@ -1,5 +1,5 @@
-apiVersion: apps.openshift.io/v1
-kind: DeploymentConfig
+apiVersion: apps/v1
+kind: Deployment
 metadata:
   creationTimestamp: "2020-01-30T20:28:07Z"
   generation: 1
@@ -7,9 +7,9 @@ metadata:
     app: syndesis
     owner: 05c92d60-439f-11ea-ab61-52fdfc072182
     syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-meta
+    syndesis.io/component: syndesis-ui
     syndesis.io/type: infrastructure
-  name: syndesis-meta
+  name: syndesis-ui
   namespace: syndesis
   ownerReferences:
   - apiVersion: syndesis.io/v1beta1
@@ -18,126 +18,104 @@ metadata:
     kind: Syndesis
     name: app
     uid: 05c92d60-439f-11ea-ab61-52fdfc072182
-  resourceVersion: "110292"
-  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-meta
-  uid: 063fab63-439f-11ea-851f-0a580a80010d
+  resourceVersion: "110256"
+  selfLink: /apis/apps.openshift.io/v1/namespaces/syndesis/deploymentconfigs/syndesis-ui
+  uid: 06345332-439f-11ea-851f-0a580a80010d
 spec:
   replicas: 1
   revisionHistoryLimit: 10
   selector:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-meta
+    matchLabels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
   strategy:
     activeDeadlineSeconds: 21600
-    recreateParams:
-      timeoutSeconds: 600
     resources:
       limits:
         memory: 256Mi
       requests:
         memory: 20Mi
-    type: Recreate
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
   template:
     metadata:
       creationTimestamp: null
       labels:
         app: syndesis
         syndesis.io/app: syndesis
-        syndesis.io/component: syndesis-meta
+        syndesis.io/component: syndesis-ui
         syndesis.io/type: infrastructure
     spec:
       containers:
       - env:
-        - name: JAVA_APP_DIR
-          value: /deployments
-        - name: LOADER_HOME
-          value: /deployments/ext
-        - name: JAVA_OPTIONS
-          value: -Djava.net.preferIPv4Stack=true -Duser.home=/tmp
-        - name: NAMESPACE
-          valueFrom:
-            fieldRef:
-              apiVersion: v1
-              fieldPath: metadata.namespace
-        image: docker.io/syndesis/syndesis-meta:latest
+        - name: DEV_SUPPORT
+          value: "false"
+        image: docker.io/syndesis/syndesis-ui:latest
         imagePullPolicy: IfNotPresent
         livenessProbe:
-          failureThreshold: 5
+          failureThreshold: 3
           httpGet:
-            path: /health
-            port: 8181
+            path: /
+            port: 8080
             scheme: HTTP
-          initialDelaySeconds: 300
-          periodSeconds: 20
+          initialDelaySeconds: 30
+          periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
-        name: syndesis-meta
+        name: syndesis-ui
         ports:
         - containerPort: 8080
-          name: http
-          protocol: TCP
-        - containerPort: 8181
-          name: metrics
-          protocol: TCP
-        - containerPort: 9779
-          name: prometheus
-          protocol: TCP
-        - containerPort: 8778
-          name: jolokia
           protocol: TCP
         readinessProbe:
           failureThreshold: 3
           httpGet:
-            path: /health
-            port: 8181
+            path: /
+            port: 8080
             scheme: HTTP
-          initialDelaySeconds: 10
+          initialDelaySeconds: 1
           periodSeconds: 10
           successThreshold: 1
           timeoutSeconds: 1
         resources:
           limits:
-            memory: 512Mi
+            memory: 255Mi
           requests:
-            memory: 280Mi
+            memory: 50Mi
         terminationMessagePath: /dev/termination-log
         terminationMessagePolicy: File
         volumeMounts:
-        - mountPath: /deployments/config
+        - mountPath: /opt/app-root/src/config
           name: config-volume
-        - mountPath: /deployments/ext
-          name: ext-volume
-        workingDir: /deployments
       dnsPolicy: ClusterFirst
       restartPolicy: Always
       schedulerName: default-scheduler
       securityContext: {}
-      serviceAccount: syndesis-server
-      serviceAccountName: syndesis-server
+      serviceAccount: syndesis-default
+      serviceAccountName: syndesis-default
       terminationGracePeriodSeconds: 30
       volumes:
-      - name: ext-volume
-        persistentVolumeClaim:
-          claimName: syndesis-meta
       - configMap:
           defaultMode: 420
-          name: syndesis-meta-config
+          name: syndesis-ui-config
         name: config-volume
   test: false
-  triggers:
-  - type: ConfigChange
 status:
   availableReplicas: 1
   conditions:
-  - lastTransitionTime: "2020-01-30T20:28:41Z"
-    lastUpdateTime: "2020-01-30T20:28:41Z"
+  - lastTransitionTime: "2020-01-30T20:28:33Z"
+    lastUpdateTime: "2020-01-30T20:28:33Z"
     message: Deployment config has minimum availability.
     status: "True"
     type: Available
-  - lastTransitionTime: "2020-01-30T20:28:15Z"
-    lastUpdateTime: "2020-01-30T20:28:42Z"
-    message: replication controller "syndesis-meta-1" successfully rolled out
+  - lastTransitionTime: "2020-01-30T20:28:34Z"
+    lastUpdateTime: "2020-01-30T20:28:34Z"
+    message: replication controller "syndesis-ui-1" successfully rolled out
     reason: NewReplicationControllerAvailable
     status: "True"
     type: Progressing

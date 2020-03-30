@@ -43,6 +43,8 @@
     kind: ClusterRole
     name: {{ .Role }}-olm
 {{- end }}
+
+{{- if .ApiServer.ImageStreams}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -67,9 +69,26 @@
       importPolicy:
         scheduled: true
     {{end}}
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+{{end}}
+
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
+    {{- if .ApiServer.ImageStreams}}
+    annotations:
+      #
+      # Sets a trigger on this deployment to overwrite
+      # the template.spec.image property and point to
+      # the syndesis-operator image stream.
+      #
+      # If in dev mode, modify the tag accordingly.
+      #
+      {{if .DevSupport}}
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+      {{else}}
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-operator:{{.Tag}}"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-operator\")].image"}]'
+      {{end}}
+    {{end}}
     name: syndesis-operator
     labels:
       app: syndesis
@@ -81,9 +100,10 @@
       type: Recreate
     replicas: 1
     selector:
-      syndesis.io/app: syndesis
-      syndesis.io/type: operator
-      syndesis.io/component: syndesis-operator
+      matchLabels:
+        syndesis.io/app: syndesis
+        syndesis.io/type: operator
+        syndesis.io/component: syndesis-operator
     template:
       metadata:
         labels:
@@ -95,8 +115,19 @@
         serviceAccountName: syndesis-operator
         containers:
         - name: syndesis-operator
-          image: ' '
+          #
+          # Image will always start out being set to the release .Image:.Tag pair
+          # In kubernetes this would remain the case even when developing
+          #  -- Developer provides a registry/image combination for .Image
+          # In openshift this would be overwritten by the trigger annotation
+          #  -- Developer provides a new image in the associated imagestream
+          #
+          image: {{.Image}}:{{.Tag}}
+        {{- if .DevSupport}}
+          imagePullPolicy: Always
+        {{else}}
           imagePullPolicy: IfNotPresent
+        {{end}}
           ports:
           - containerPort: 60000
             name: metrics
@@ -129,17 +160,3 @@
         volumes:
         - name: syndesis-operator-data
           emptyDir: {}
-    triggers:
-    - imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-operator
-        from:
-          kind: ImageStreamTag
-          {{- if .DevSupport}}
-          name: syndesis-operator:latest
-          {{else}}
-          name: syndesis-operator:{{.Tag}}
-          {{- end}}
-      type: ImageChange
-    - type: ConfigChange

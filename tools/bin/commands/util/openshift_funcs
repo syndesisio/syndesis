@@ -15,8 +15,11 @@ check_oc_version()
     #
     set_gnugrep
 
-    local test=$(oc version | $gnugrep -Eiv 'kubernetes|server' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
-    
+    local test=$(oc version | $gnugrep -Eiv 'ubernetes|erver' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+    if [ -z "${test}" ]; then
+        test=$(oc version | $gnugrep 'lient' | $gnugrep -o '[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}\?')
+    fi
+
     if [ -z "$test" ]; then
       echo "ERROR: 'Version of oc could not be found'"
       return

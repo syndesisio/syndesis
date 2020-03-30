@@ -28,9 +28,10 @@ spec:
     protocol: TCP
     targetPort: 5432
   selector:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-db
+    matchLabels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-db
   sessionAffinity: None
   type: ClusterIP
 status:

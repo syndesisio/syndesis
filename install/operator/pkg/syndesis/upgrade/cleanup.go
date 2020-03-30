@@ -19,7 +19,7 @@ package upgrade
 import (
 	v1 "github.com/openshift/api/build/v1"
 
-	v12 "github.com/openshift/api/apps/v1"
+	appsv1 "k8s.io/api/apps/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -36,12 +36,12 @@ func newCleanup(base step) (c *cleanup) {
 
 /*
  * TODO: Delete for 1.10
- * Because: Updating the DeploymentConfigs doesnt delete the existing triggers, so
+ * Because: Updating the Deployments doesnt delete the existing triggers, so
  * the DC continues triggering redeploys on imageStreamTag change but it is not what we want
  * since we are using docker images
  */
 func (c *cleanup) run() (err error) {
-	if err = c.deleteDeploymentConfigs(); err != nil {
+	if err = c.deleteDeployments(); err != nil {
 		return err
 	}
 
@@ -52,23 +52,23 @@ func (c *cleanup) run() (err error) {
 	return nil
 }
 
-func (c *cleanup) deleteDeploymentConfigs() (err error) {
+func (c *cleanup) deleteDeployments() (err error) {
 	rtClient, err := c.clientTools.RuntimeClient()
 	if err != nil {
 		return err
 	}
 
-	for _, dcName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus", "todo"} {
-		dc := &v12.DeploymentConfig{}
-		if err := rtClient.Get(c.context, client.ObjectKey{Name: dcName, Namespace: c.namespace}, dc); err != nil {
+	for _, depName := range []string{"syndesis-meta", "syndesis-server", "syndesis-ui", "syndesis-prometheus", "todo"} {
+		dep := &appsv1.Deployment{}
+		if err := rtClient.Get(c.context, client.ObjectKey{Name: depName, Namespace: c.namespace}, dep); err != nil {
 			if !k8serrors.IsNotFound(err) {
 				c.log.Info(err.Error())
 			}
 		} else {
-			if err := rtClient.Delete(c.context, dc); err != nil {
+			if err := rtClient.Delete(c.context, dep); err != nil {
 				c.log.Info(err.Error())
 			} else {
-				c.log.Info("force deleted DeploymentConfig", "name", dcName)
+				c.log.Info("force deleted Deployment", "name", depName)
 			}
 		}
 	}

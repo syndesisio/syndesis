@@ -28,9 +28,10 @@ spec:
     protocol: TCP
     targetPort: 9090
   selector:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/component: syndesis-prometheus
+    matchLabels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-prometheus
   sessionAffinity: None
   type: ClusterIP
 status:

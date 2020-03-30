@@ -32,9 +32,18 @@
     resources:
       requests:
         storage: {{.Syndesis.Components.Meta.Resources.VolumeCapacity}}
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
+- apiVersion: apps/v1
+  kind: Deployment
   metadata:
+    {{- if and .ApiServer.ImageStreams .DevSupport}}
+    annotations:
+      #
+      # Sets a trigger on this deployment to overwrite
+      # the template.spec.image property and point to
+      # the syndesis-meta image stream.
+      #
+      image.openshift.io/triggers: '[{"from":{"kind":"ImageStreamTag","name":"syndesis-meta:latest"},"fieldPath":"spec.template.spec.containers[?(@.name==\"syndesis-meta\")].image"}]'
+    {{end}}
     labels:
       app: syndesis
       syndesis.io/app: syndesis
@@ -44,9 +53,10 @@
   spec:
     replicas: 1
     selector:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/component: syndesis-meta
+      matchLabels:
+        app: syndesis
+        syndesis.io/app: syndesis
+        syndesis.io/component: syndesis-meta
     strategy:
       resources:
         limits:
@@ -88,14 +98,23 @@
           - name: JAEGER_SAMPLER_PARAM
             value: "{{.Syndesis.Addons.Jaeger.SamplerParam}}"
 {{end}}
-{{if .DevSupport}}
+        {{if .DevSupport}}
           - name: JAVA_DEBUG
             value: "true"
-          image: ' '
-{{else}}
+        {{end}}
+          #
+          # Image will always start out being set to the release .Image:.Tag pair
+          # In kubernetes this would remain the case even when developing
+          #  -- Developer provides a registry/image combination for .Image
+          # In openshift this would be overwritten by the trigger annotation
+          #  -- Developer provides a new image in the associated imagestream
+          #
           image: '{{ .Syndesis.Components.Meta.Image }}'
-{{end}}
+        {{if .DevSupport}}
+          imagePullPolicy: Always
+        {{else}}
           imagePullPolicy: IfNotPresent
+        {{end}}
           readinessProbe:
             httpGet:
               path: /health
@@ -141,19 +160,8 @@
         - name: config-volume
           configMap:
             name: syndesis-meta-config
-    triggers:
-    - type: ConfigChange
-{{if .DevSupport}}
-    - type: ImageChange
-      imageChangeParams:
-        automatic: true
-        containerNames:
-        - syndesis-meta
-        from:
-          kind: ImageStreamTag
-          name: syndesis-meta:latest
-          namespace: {{.OpenShiftProject}}
 
+{{- if and .DevSupport .ApiServer.ImageStreams}}
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
