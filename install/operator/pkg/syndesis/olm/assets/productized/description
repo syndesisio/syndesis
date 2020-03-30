@@ -1,0 +1,58 @@
+Fuse Online is a flexible and customizable, open source platform that provides core integration capabilities as a service.
+
+This operator installs as well as configures the following Fuse Online components:
+- syndesis-server
+- syndesis-meta
+- syndesis-ui
+- syndesis-db
+- syndesis-prometheus
+- syndesis-proxy
+- syndesis-oauthproxy
+
+### Before you begin
+You must configure authentication to Red Hat container registry before you can import and use the Red Hat Fuse OpenShift Image Streams. Follow instruction given below to configure the registration to container registry.
+
+1. Log in to the OpenShift Server as an administrator, as follow:
+    ```
+    oc login -u system:admin
+    ```
+2. Log in to the OpenShift project where you will be installing the operator.
+    ```
+    oc project fuse-online
+    ```
+3. Create a docker-registry secret using either Red Hat Customer Portal account or Red Hat Developer Program account credentials.
+    ```
+    oc create secret docker-registry syndesis-pull-secret \
+      --docker-server=registry.redhat.io \
+      --docker-username=CUSTOMER_PORTAL_USERNAME \
+      --docker-password=CUSTOMER_PORTAL_PASSWORD \
+      --docker-email=EMAIL_ADDRESS
+    ```
+    NOTE: You need to create a docker-registry secret in every new namespace where the image streams reside and which use registry.redhat.io.
+
+    If you do not wish to use your Red Hat account username and password to create the secret, it is recommended to create an authentication token using a [registry service account](https://access.redhat.com/terms-based-registry/).
+
+### How to install
+- When the operator is installed (you have created a subscription and the operator is running in the selected namespace) and before you create a new CR of Kind Syndesis, you have to link the secret created in the previous section to the operator service account.
+```
+oc secrets link syndesis-operator syndesis-pull-secret --for=pull
+```
+
+- Create a new CR of Kind Syndesis (click the Create New button). The CR spec contains all defaults (see below).
+
+### CR Defaults
+The CR definition is pretty simple and an empy CR will trigger a base installation.
+
+Within the addons section, users are able to enable specific addons. The available addons at the moment are:
+- camelk: enables kamelk
+- jaeger: enable jaeger
+- ops: enables monitoring, requires extra CRDs
+- todo: a simple todo application
+
+- When you enable Jaeger addon, you should link the previously created `syndesis-pull-secret` secret to jaeger service accounts.
+```
+oc secrets link jaeger-operator syndesis-pull-secret --for=pull
+oc secrets link syndesis-jaeger-ui-proxy syndesis-pull-secret --for=pull
+```
+
+To enable addons, set "addon_name": {"enabled": true} in the CR.
