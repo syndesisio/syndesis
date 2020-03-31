@@ -27,6 +27,8 @@ import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.repository.RepositoryManagerImpl;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -44,15 +46,18 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 import org.teiid.runtime.EmbeddedConfiguration;
 
 import io.syndesis.dv.RepositoryManager;
+import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
 
 @Configuration
 @EnableConfigurationProperties({DvConfigurationProperties.class, SpringMavenProperties.class})
 @ComponentScan(basePackageClasses = {RepositoryManagerImpl.class, DefaultMetadataInstance.class, SyndesisConnectionSynchronizer.class})
 @EnableAsync
 public class DvAutoConfiguration implements ApplicationListener<ContextRefreshedEvent>, AsyncConfigurer {
+    private static final Log LOGGER = LogFactory.getLog(DvAutoConfiguration.class);
 
     @Value("${encrypt.key}")
     private String encryptKey;
@@ -96,7 +101,6 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     @Bean
     @ConditionalOnMissingBean
     public TeiidServer teiidServer() {
-
         // turning off PostgreSQL support
         System.setProperty("org.teiid.addPGMetadata", "false");
         System.setProperty("org.teiid.hiddenMetadataResolvable", "true");
@@ -134,5 +138,13 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
         ThreadPoolTaskExecutor tpte = new ThreadPoolTaskExecutor();
         tpte.initialize();
         return tpte;
+    }
+
+    @Bean
+    public ServerEndpointExporter endpointExporter() {
+        ServerEndpointExporter endpointExporter = new ServerEndpointExporter();
+        endpointExporter.setAnnotatedEndpointClasses(TeiidDdlWebSocketEndpoint.class);
+        LOGGER.info("DV DDL Language Server endpoint created");
+        return endpointExporter;
     }
 }
