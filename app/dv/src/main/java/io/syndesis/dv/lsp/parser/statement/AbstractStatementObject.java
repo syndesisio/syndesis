@@ -23,7 +23,6 @@ import org.teiid.language.SQLConstants;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.parser.DdlAnalyzerConstants;
-import io.syndesis.dv.lsp.parser.DdlAnalyzerException;
 import io.syndesis.dv.lsp.parser.DdlTokenAnalyzer;
 
 public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
@@ -47,39 +46,6 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
     protected abstract void parseAndValidate();
 
     protected abstract TokenContext getTokenContext(Position position);
-
-    public DdlAnalyzerException checkAllBrackets(int leftBracketKind, int rightBracketKind) {
-        int numUnmatchedParens = 0;
-        DdlAnalyzerException exception = null;
-        Token[] tkns = getTokens();
-        for (int iTkn = 0; iTkn < tkns.length; iTkn++) {
-            Token token = tkns[iTkn];
-            if (token.kind == leftBracketKind) {
-                numUnmatchedParens++;
-            }
-            if (token.kind == rightBracketKind) {
-                numUnmatchedParens--;
-            }
-
-            // If the ## goes < 0 throw exception because they should be correctly nested
-            // VALID: ( () () )
-            // INVALID ( )) () (
-            // ^ would occur here
-            if (exception == null && numUnmatchedParens < 0) {
-                exception = new DdlAnalyzerException("Bracket at location " //$NON-NLS-1$
-                        + this.analyzer.getPositionString(token) + " does not properly match previous bracket"); //$NON-NLS-1$
-            }
-            if (exception != null) {
-                break;
-            }
-        }
-
-        if (numUnmatchedParens != 0) {
-            exception = new DdlAnalyzerException("Missing or mismatched brackets"); //$NON-NLS-1$
-        }
-
-        return exception;
-    }
 
     protected Token findTokenByKind(int kind) {
         for (Token tkn : getTokens()) {
@@ -181,10 +147,6 @@ public abstract class AbstractStatementObject implements DdlAnalyzerConstants  {
 
     public String positionToString(Position position) {
         return "Line " + (position.getLine()+1) + " Column " + (position.getCharacter()+1);
-    }
-
-    protected boolean isKeywordToken(Token tkn) {
-		return SQLConstants.isReservedWord(tkn.image.toUpperCase()) || SQLConstants.getNonReservedWords().contains(tkn.image.toUpperCase() );
     }
 
     protected boolean isReservedKeywordToken(Token tkn) {

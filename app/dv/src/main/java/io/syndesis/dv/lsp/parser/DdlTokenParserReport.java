@@ -37,12 +37,6 @@ public class DdlTokenParserReport {
         }
     }
 
-    protected void addExceptions(List<DdlAnalyzerException> exceptions) {
-        if (exceptions != null && !exceptions.isEmpty()) {
-            this.exceptions.addAll(exceptions);
-        }
-    }
-
     public boolean doParensMatch() {
         return parensMatch;
     }

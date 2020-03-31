@@ -127,15 +127,6 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
         return items;
     }
 
-    public CompletionItem generateCompletionItem(String word) {
-        return createKeywordItem(word, null, null);
-    }
-
-    public CompletionItem generateCompletionItem(String[] itemData) {
-        // String[] >> label, detail, documentation, insertText
-        return generateCompletionItem(itemData[0], itemData[1], itemData[2], itemData[3]);
-    }
-
     public CompletionItem generateCompletionItem(String label, String details, String documentation, String insertText) {
         // String[] >> label, detail, documentation, insertText
         if( insertText != null ) {
@@ -178,7 +169,6 @@ public class CompletionItemBuilder implements DdlCompletionConstants {
      * The tokenImage[...] call is returning strings wrapped in double-quotes
      *
      * Need to return a simple string
-     * @param tokenImageString string
      * @return string without double quotes
      */
     public String getKeywordLabel(int keywordId, boolean upperCase) {
