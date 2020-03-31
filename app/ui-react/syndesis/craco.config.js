@@ -3,33 +3,11 @@ const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = function({ env, paths }) {
   return {
-    // disable the custom loading of sourcemaps, it's too slow
-    /*
-    webpack: {
-      configure: (webpackConfig, { env, paths }) => {
-        webpackConfig.module.rules[2].oneOf = webpackConfig.module.rules[2].oneOf.map(
-          r => {
-            if (r.loader && r.loader.indexOf('babel-loader') >= 0) {
-              r.options.sourceMaps = true;
-            }
-            return r;
-          }
-        );
-        return webpackConfig;
-      },
-    },
-    */
     overrideCracoConfig: ({
       cracoConfig,
       pluginOptions,
       context: { env, paths },
     }) => {
-      if (pluginOptions.preText) {
-        console.log(pluginOptions.preText);
-      }
-
-      console.log(JSON.stringify(craconfig, null, 4));
-
       // Always return the config object.
       return cracoConfig;
     },
@@ -41,7 +19,7 @@ module.exports = function({ env, paths }) {
           ...webpackConfig.optimization,
           minimizer: [
             new TerserPlugin({
-              parallel: 2,
+              parallel: 1,
             }),
           ],
         },
@@ -57,13 +35,6 @@ module.exports = function({ env, paths }) {
           languages: ['sql', 'pgsql'],
         }),
       ],
-    },
-    jest: {
-      configure: (jestConfig, { env, paths, resolve, rootDir }) => ({
-        ...jestConfig,
-
-        moduleFileExtensions: ['ts', 'tsx', 'js'],
-      }),
     },
   };
 };

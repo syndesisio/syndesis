@@ -15,68 +15,20 @@
  */
 package io.syndesis.dv.lsp;
 
-import java.io.Closeable;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import javax.websocket.DeploymentException;
-import javax.websocket.Endpoint;
-import javax.websocket.server.ServerApplicationConfig;
-import javax.websocket.server.ServerEndpointConfig;
 
 import org.eclipse.lsp4j.jsonrpc.Launcher;
 import org.eclipse.lsp4j.launch.LSPLauncher;
 import org.eclipse.lsp4j.services.LanguageClient;
-import org.glassfish.tyrus.server.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
+import io.syndesis.dv.lsp.websocket.DdlWebSocketRunner;
 
-public class TeiidDdlLanguageServerRunner {
-
-    static class TeiidDdlWebSocketServerConfigProvider implements ServerApplicationConfig {
-
-        private static final String WEBSOCKET_TEIID_DDL_SERVER_PATH = "/teiid-ddl-language-server";
-
-        @Override
-        public Set<ServerEndpointConfig> getEndpointConfigs(Set<Class<? extends Endpoint>> endpointClasses) {
-            ServerEndpointConfig conf = ServerEndpointConfig.Builder.create(TeiidDdlWebSocketEndpoint.class, WEBSOCKET_TEIID_DDL_SERVER_PATH).build();
-            return Collections.singleton(conf);
-        }
-
-        @Override
-        public Set<Class<?>> getAnnotatedEndpointClasses(Set<Class<?>> scanned) {
-            return scanned;
-        }
-
-    }
-
-    static class TeiidDdlWebSocketRunner implements Closeable {
-
-        private Server server;
-
-        public TeiidDdlWebSocketRunner() throws DeploymentException {
-            this(null, null, null);
-        }
-
-        public TeiidDdlWebSocketRunner(String hostname, Integer port, String contextPath) throws DeploymentException {
-            server = new Server(hostname, port == null ? 0:port, contextPath, null, TeiidDdlWebSocketServerConfigProvider.class);
-            Runtime.getRuntime().addShutdownHook(new Thread(server::stop, "teiid-ddl-lsp-websocket-server-shutdown-hook"));
-
-            server.start();
-            LOGGER.info("DDL LSP Websocket server started on port " + server.getPort());
-        }
-
-        @Override
-        public void close() {
-            server.stop();
-        }
-
-    }
-
+public class DdlLanguageServerRunner {
     /**
      * For test only
      */
@@ -97,7 +49,7 @@ public class TeiidDdlLanguageServerRunner {
             int port = extractPort(arguments);
             String hostname = extractHostname(arguments);
             String contextPath = extractContextPath(arguments);
-            try (TeiidDdlWebSocketRunner runner = new TeiidDdlWebSocketRunner(hostname, port, contextPath);) {
+            try (DdlWebSocketRunner runner = new DdlWebSocketRunner(hostname, port, contextPath);) {
                 Thread.currentThread().join();
             }
         } else {
