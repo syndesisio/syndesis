@@ -27,8 +27,6 @@ import io.syndesis.dv.openshift.SyndesisConnectionSynchronizer;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.repository.RepositoryManagerImpl;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -57,7 +55,6 @@ import io.syndesis.dv.lsp.websocket.TeiidDdlWebSocketEndpoint;
 @ComponentScan(basePackageClasses = {RepositoryManagerImpl.class, DefaultMetadataInstance.class, SyndesisConnectionSynchronizer.class})
 @EnableAsync
 public class DvAutoConfiguration implements ApplicationListener<ContextRefreshedEvent>, AsyncConfigurer {
-    private static final Log LOGGER = LogFactory.getLog(DvAutoConfiguration.class);
 
     @Value("${encrypt.key}")
     private String encryptKey;
@@ -101,6 +98,7 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     @Bean
     @ConditionalOnMissingBean
     public TeiidServer teiidServer() {
+
         // turning off PostgreSQL support
         System.setProperty("org.teiid.addPGMetadata", "false");
         System.setProperty("org.teiid.hiddenMetadataResolvable", "true");
@@ -144,7 +142,6 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     public ServerEndpointExporter endpointExporter() {
         ServerEndpointExporter endpointExporter = new ServerEndpointExporter();
         endpointExporter.setAnnotatedEndpointClasses(TeiidDdlWebSocketEndpoint.class);
-        LOGGER.info("DV DDL Language Server endpoint created");
         return endpointExporter;
     }
 }

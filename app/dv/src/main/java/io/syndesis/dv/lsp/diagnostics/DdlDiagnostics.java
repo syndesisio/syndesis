@@ -69,7 +69,6 @@ public class DdlDiagnostics {
 	 *
 	 * @param ddlDocument
 	 * @param diagnostics
-	 * @param monitor
 	 * @throws BadLocationException
 	 */
 	private void doBasicDiagnostics(TextDocumentItem ddlDocument, List<Diagnostic> diagnostics)

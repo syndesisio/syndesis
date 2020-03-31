@@ -161,7 +161,7 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     }
 
     private String[] stringListToArray(List<String> array) {
-        return array.toArray(new String[0]);
+        return array.toArray(new String[array.size()]);
     }
 
     public STATEMENT_TYPE getStatementType() {
@@ -308,63 +308,6 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
     	return bracketsMatch(tkns, startTokenId, LPAREN, RPAREN);
     }
 
-    public Token[] getBracketedTokens(Token[] tkns, int startTokenId, int bracketStart, int bracketEnd) throws DdlAnalyzerException {
-        int numUnmatchedParens = 0;
-
-        for(int iTkn = 0; iTkn<tokens.length; iTkn++) {
-            if( iTkn < startTokenId) {
-            	continue;
-            }
-
-            Token token = tkns[iTkn];
-            if( token.kind == bracketStart) {
-            	numUnmatchedParens++;
-            }
-
-            if( token.kind == bracketEnd) {
-            	numUnmatchedParens--;
-            }
-
-            if( numUnmatchedParens == 0) {
-                List<Token> bracketedTokens = new ArrayList<Token>(tkns.length);
-                for(int jTkn = startTokenId+1; jTkn < iTkn; jTkn++) {
-                    bracketedTokens.add(tkns[jTkn]);
-                }
-                return bracketedTokens.toArray(new Token[0]);
-            }
-        }
-
-        Token startTkn = tkns[startTokenId];
-        DdlAnalyzerException exception = new DdlAnalyzerException(
-                "Brackets do not match for bracket type '" + startTkn.image +
-                "' at position (" + startTkn.beginLine + ", " + startTkn.beginColumn + ")");
-
-        exception.getDiagnostic().setMessage(exception.getMessage());
-        exception.getDiagnostic().setSeverity(DiagnosticSeverity.Error);
-        Token lastToken = tokens[tokens.length-1];
-        Position startPosition = new Position(startTkn.beginLine, startTkn.beginColumn);
-        Position endPosition = new Position(lastToken.endLine, lastToken.endColumn);
-        exception.getDiagnostic().setRange(new Range(startPosition, endPosition));
-        throw exception;
-    }
-
-    public int getStatementStartLength(STATEMENT_TYPE type) {
-    	switch(type) {
-	    	case CREATE_VIEW_TYPE:
-	    	case CREATE_TABLE_TYPE:
-	    		return 2;
-	    	case CREATE_FOREIGN_TABLE_TYPE:
-	    	case CREATE_VIRTUAL_VIEW_TYPE:
-	    		return 3;
-	    	case CREATE_GLOBAL_TEMPORARY_TABLE_TYPE:
-	    	case CREATE_FOREIGN_TEMPORARY_TABLE_TYPE:
-	    		return 4;
-	    	case UNKNOWN_STATEMENT_TYPE:
-	    	default:
-    	}
-		return 0;
-    }
-
     public void addException(DdlAnalyzerException exception) {
         if (exception != null) {
             this.report.addException(exception);
@@ -383,12 +326,6 @@ public class DdlTokenAnalyzer implements DdlAnalyzerConstants {
                         errorMessage,
                         new Range(startPosition, endPosition)); //$NON-NLS-1$);
         this.addException(exception);
-    }
-
-    public void addExceptions(List<DdlAnalyzerException> exceptions) {
-        if (exceptions != null && !exceptions.isEmpty()) {
-            this.report.addExceptions(exceptions);
-        }
     }
 
     public List<DdlAnalyzerException> getExceptions() {
