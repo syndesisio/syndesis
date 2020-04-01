@@ -302,14 +302,17 @@ publish_artifacts() {
         \"prerelease\": ${prerelease} \
     }"
 
-    local remote=$(readopt --git-remote)
-    if [ -z "${remote}" ]; then
-        remote=$(git config --get remote.origin.url)
-    fi
-
-    local github_api_url=${remote/github.com/api.github.com\/repos}
+    local remote=origin
+    local github_api_url=$(git config --get remote.${remote:-origin}.url)
+    # try to get URL to GitHub API server from remote should support both git and HTTP style remotes
+    # e.g for:
+    # git@github.com:syndesisio/syndesis.git
+    # https://github.com/syndesisio/syndesis.git
+    # result should be:
+    # https://api.github.com/repos/syndesisio/syndesis
+    github_api_url=${github_api_url/github.com?/api.github.com\/repos\/} # change from https://github.com to https://api.github.com, also account for `:` non-http git remote
     github_api_url=${github_api_url/%.git/} # remove .git at the end
-    github_api_url=${github_api_url/\/*@/\//} # remove any username in https://username@...
+    github_api_url=${github_api_url/*@/https:\//} # remove any username in ...@api.github.com
 
     if [ ${prerelease} == true ]; then
         # keep only last 10 snapshot releases
