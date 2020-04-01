@@ -97,7 +97,7 @@
                   "actionType": "connector",
                   "description": "Cron Timer",
                   "descriptor": {
-                    "componentScheme": "quartz2",
+                    "componentScheme": "quartz",
                     "configuredProperties": {
                       "triggerName": "syndesis-quartz"
                     },
@@ -136,11 +136,11 @@
               ],
               "dependencies": [
                 {
-                  "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+                  "id": "io.syndesis.connector:connector-timer:${project.version}",
                   "type": "MAVEN"
                 },
                 {
-                  "id": "org.apache.camel:camel-quartz2:2.21.0.fuse-730054",
+                  "id": "org.apache.camel:camel-quartz:${camel.version}",
                   "type": "MAVEN"
                 }
               ],
