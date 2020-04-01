@@ -784,6 +784,21 @@
               <exception>
                 <conflictingDependencies>
                   <dependency>
+                    <groupId>com.consol.citrus</groupId>
+                    <artifactId>citrus-core-spring</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.consol.citrus</groupId>
+                    <artifactId>citrus-spring-integration</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.w3._2001.xmlschema</package>
+                </packages>
+              </exception>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
                     <groupId>org.apache.camel</groupId>
                     <artifactId>camel-util-json</artifactId>
                   </dependency>
@@ -3095,6 +3110,46 @@
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-junit</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-api</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-base</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-validation-json</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
         <artifactId>citrus-jms</artifactId>
         <version>${citrus.version}</version>
         <exclusions>
@@ -3185,6 +3240,10 @@
           <exclusion>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
           </exclusion>
           <exclusion>
             <groupId>javax.mail</groupId>
