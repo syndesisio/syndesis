@@ -3,10 +3,13 @@ import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { IConnector } from '@syndesis/models';
 import {
+  ConnectionCreatorBreadcrumb,
+  ConnectionCreatorBreadSteps,
+  ConnectionCreatorFooter,
   ConnectionCreatorLayout,
+  ConnectionCreatorToggleList,
   ConnectorConfigurationForm,
   PageLoader,
-  PageSection,
 } from '@syndesis/ui';
 import {
   useRouteData,
@@ -18,8 +21,6 @@ import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import { ConnectionCreatorBreadSteps } from '../../components';
-import { ConnectionCreatorBreadcrumb } from '../../components/ConnectionCreatorBreadcrumb';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -93,7 +94,7 @@ export const ReviewPage: React.FunctionComponent = () => {
             );
             await saveConnection(connection);
             pushNotification(
-              `<strong>Connection created</strong> Connection <strong>${name}</strong> successfully created`,
+              t('connections:connectionCreatedSuccess', { name }),
               'success'
             );
             allowNavigation();
@@ -107,7 +108,7 @@ export const ReviewPage: React.FunctionComponent = () => {
         const initialValidator = (values: ISaveForm) =>
           validateRequiredProperties(
             definition,
-            (name: string) => `${name} is required`,
+            (name: string) => t('shared:fieldRequired', { field: name }),
             values
           );
         const validator = async (values: ISaveForm) => {
@@ -152,29 +153,67 @@ export const ReviewPage: React.FunctionComponent = () => {
                   <>
                     <PageTitle title={t('connections:create:review:title')} />
                     <ConnectionCreatorBreadcrumb
-                      cancelHref={resolvers.connections()}
+                      connectionsHref={resolvers.connections()}
+                      i18nCancel={t('shared:Cancel')}
+                      i18nConnections={t('shared:Connections')}
+                      i18nCreateConnection={t('shared:CreateConnection')}
                     />
                     <ConnectionCreatorLayout
-                      header={<ConnectionCreatorBreadSteps step={3} />}
+                      toggle={
+                        <ConnectionCreatorToggleList
+                          step={3}
+                          i18nSelectConnector={t(
+                            'connections:create:connector:title'
+                          )}
+                          i18nConfigureConnection={t(
+                            'connections:create:configure:title'
+                          )}
+                          i18nNameConnection={t(
+                            'connections:create:review:title'
+                          )}
+                        />
+                      }
+                      navigation={
+                        <ConnectionCreatorBreadSteps
+                          step={3}
+                          i18nSelectConnector={t(
+                            'connections:create:connector:title'
+                          )}
+                          i18nConfigureConnection={t(
+                            'connections:create:configure:title'
+                          )}
+                          i18nNameConnection={t(
+                            'connections:create:review:title'
+                          )}
+                        />
+                      }
+                      footer={
+                        <ConnectionCreatorFooter
+                          backHref={resolvers.create.configureConnector({
+                            connector,
+                          })}
+                          cancelHref={resolvers.connections()}
+                          onNext={submitForm}
+                          isNextDisabled={!isValid}
+                          isNextLoading={isSubmitting || isValidating}
+                          isLastStep={true}
+                          i18nBack={t('shared:Back')}
+                          i18nCancel={t('shared:Cancel')}
+                          i18nSave={t('shared:Save')}
+                          i18nNext={t('shared:Next')}
+                        />
+                      }
                       content={
-                        <PageSection>
-                          <ConnectorConfigurationForm
-                            i18nFormTitle={t('connections:create:review:title')}
-                            handleSubmit={handleSubmit}
-                            backHref={resolvers.create.configureConnector({
-                              connector,
-                            })}
-                            onNext={submitForm}
-                            isNextDisabled={!isValid}
-                            isNextLoading={isSubmitting || isValidating}
-                            isValidating={false}
-                            isLastStep={true}
-                            i18nSave={t('shared:Save')}
-                            i18nNext={t('shared:Next')}
-                          >
-                            {fields}
-                          </ConnectorConfigurationForm>
-                        </PageSection>
+                        <ConnectorConfigurationForm
+                          i18nFormTitle={t('connections:create:review:title')}
+                          i18nValidate={t('shared:Validate')}
+                          isNextDisabled={!isValid}
+                          isNextLoading={isSubmitting || isValidating}
+                          isValidating={false}
+                          handleSubmit={handleSubmit}
+                        >
+                          {fields}
+                        </ConnectorConfigurationForm>
                       }
                     />
                   </>
