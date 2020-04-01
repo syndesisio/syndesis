@@ -56,18 +56,19 @@ public class ReflectiveFilterer<T> implements Function<ListResult<T>, ListResult
         return intermediate;
     }
 
-    @SuppressWarnings("PMD.CyclomaticComplexity")
     private PredicateFilter<T> equalityFilter(final Class<T> modelClass, final String property, final String value) {
-        Method stringGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property, String.class);
-        if (stringGetMethod != null) {
-            return new PredicateFilter<>(o -> {
-                try {
-                    return value.equals(stringGetMethod.invoke(o));
-                } catch (InvocationTargetException | IllegalAccessException e) {
-                    throw new IllegalArgumentException("Cannot extract String value from " + stringGetMethod + " for object " + o, e);
-                }
-            });
+        PredicateFilter<T> optionalFilter = equalityOptionalFilter(modelClass, property, value);
+        if (optionalFilter != null){
+            return optionalFilter;
         }
+        PredicateFilter<T> objectFilter = equalityObjectFilter(modelClass, property, value);
+        if (objectFilter != null){
+            return objectFilter;
+        }
+        throw new IllegalArgumentException(String.format("Cannot find field %s in %s as field", property, modelClass.getName()));
+    }
+
+    private PredicateFilter<T> equalityOptionalFilter(final Class<T> modelClass, final String property, final String value) {
         Method optionalStringGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property, Optional.class);
         if (optionalStringGetMethod != null) {
             return new PredicateFilter<>(o -> {
@@ -78,7 +79,20 @@ public class ReflectiveFilterer<T> implements Function<ListResult<T>, ListResult
                 }
             });
         }
-        Method objectGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property, Object.class);
+        return null;
+    }
+
+    private PredicateFilter<T> equalityObjectFilter(final Class<T> modelClass, final String property, final String value) {
+        Method objectGetMethod = ReflectionUtils.getGetMethodOfType(modelClass, property,
+            Object.class,
+            boolean.class,
+            byte.class,
+            short.class,
+            int.class,
+            long.class,
+            float.class,
+            double.class
+            );
         if (objectGetMethod != null) {
             return new PredicateFilter<>(o -> {
                 try {
@@ -88,6 +102,7 @@ public class ReflectiveFilterer<T> implements Function<ListResult<T>, ListResult
                 }
             });
         }
-        throw new IllegalArgumentException(String.format("Cannot find field %s in %s as field", property, modelClass.getName()));
+        return null;
     }
+
 }

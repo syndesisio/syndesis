@@ -23,6 +23,9 @@ import java.util.function.Function;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.integration.Integration;
 
+import io.syndesis.server.endpoint.util.test.person.TestPerson;
+import io.syndesis.server.endpoint.util.test.person.TestPersonInterface;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,12 +34,17 @@ import static org.junit.Assert.assertEquals;
 
 public class ReflectiveSorterTest {
 
+    List<TestPersonInterface> data;
+
+    @Before
+    public void setup(){
+        data = TestPerson.getTestData();
+    }
+
     @Test
     public void stringSort() {
 
-        List<TestPersonInterface> toSort = getTestData();
-
-        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "asc")));
+        data.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "asc")));
         String[] expectedNames = {
             "Feynman",
             "Heisenberg",
@@ -45,23 +53,21 @@ public class ReflectiveSorterTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
+            assertEquals(data.get(i).getLastName(), expectedNames[i]);
         }
 
-        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "DESC")));
+        data.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "DESC")));
         List<String> reversed = Arrays.asList(expectedNames);
         Collections.reverse(reversed);
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
+            assertEquals(data.get(i).getLastName(), expectedNames[i]);
         }
     }
 
     @Test
     public void intSort() {
-        List<TestPersonInterface> toSort = getTestData();
-
-        toSort.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("birthYear", null)));
+        data.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("birthYear", null)));
         String[] expectedNames = {
             "Maxwell",
             "Schrödinger",
@@ -70,27 +76,27 @@ public class ReflectiveSorterTest {
         };
 
         for (int i = 0; i < expectedNames.length; i++) {
-            assertEquals(toSort.get(i).getLastName(), expectedNames[i]);
+            assertEquals(data.get(i).getLastName(), expectedNames[i]);
         }
     }
 
     @Test
     public void invalidType() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("blub", "asc"))))
-            .withMessage("Cannot find field blub in io.syndesis.server.endpoint.util.ReflectiveSorterTest$TestPersonInterface as int or String field");
+            .isThrownBy(() -> data.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("blub", "asc"))))
+            .withMessage("Cannot find field blub in io.syndesis.server.endpoint.util.test.person.TestPersonInterface as int or String field");
     }
 
     @Test
     public void invalidDirection() {
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> getTestData().sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "blub"))))
+            .isThrownBy(() -> data.sort(new ReflectiveSorter<>(TestPersonInterface.class, getOptions("lastName", "blub"))))
             .withMessage("No enum constant io.syndesis.server.endpoint.util.SortOptions.SortDirection.BLUB");
     }
 
     @Test
     public void noParams() {
-        ListResult<TestPersonInterface> toSort = new ListResult.Builder<TestPersonInterface>().items(getTestData()).totalCount(getTestData().size()).build();
+        ListResult<TestPersonInterface> toSort = new ListResult.Builder<TestPersonInterface>().items(data).totalCount(data.size()).build();
         Function<ListResult<TestPersonInterface>, ListResult<TestPersonInterface>> operator =
             new ReflectiveSorter<>(TestPersonInterface.class, getOptions(null, null));
         ListResult<TestPersonInterface> sorted = operator.apply(toSort);
@@ -105,7 +111,7 @@ public class ReflectiveSorterTest {
         for (int i = 0; i < expectedNames.length; i++) {
             assertEquals(sorted.getItems().get(i).getLastName(), expectedNames[i]);
         }
-        assertEquals(getTestData().size(), sorted.getTotalCount());
+        assertEquals(data.size(), sorted.getTotalCount());
 
     }
 
@@ -136,53 +142,5 @@ public class ReflectiveSorterTest {
                 return direction != null ? SortDirection.valueOf(direction.toUpperCase()) : SortDirection.ASC;
             }
         };
-    }
-
-    private static List<TestPersonInterface> getTestData() {
-        return Arrays.asList(
-
-            new TestPerson( "Erwin", "Schrödinger", 1887),
-            new TestPerson( "Werner", "Heisenberg", 1901),
-            new TestPerson("Richard", "Feynman", 1918),
-            new TestPerson( "James Clerk", "Maxwell", 1831)
-
-                            );
-    }
-
-    interface TestPersonInterface extends TestPersonBase {
-        String getFirstName();
-        int getBirthYear();
-    }
-
-    interface TestPersonBase {
-        String getLastName();
-    }
-
-    static class TestPerson implements TestPersonInterface {
-
-        private final String firstName;
-        private final String lastName;
-        private final int birthYear;
-
-        TestPerson(String firstName, String lastName, int birthYear) {
-            this.firstName = firstName;
-            this.lastName = lastName;
-            this.birthYear = birthYear;
-        }
-
-        @Override
-        public String getFirstName() {
-            return firstName;
-        }
-
-        @Override
-        public String getLastName() {
-            return lastName;
-        }
-
-        @Override
-        public int getBirthYear() {
-            return birthYear;
-        }
     }
 }
