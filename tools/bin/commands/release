@@ -49,7 +49,7 @@ get_release_version() {
     local release_version=$(readopt --release-version)
     if [ -z "${release_version}" ]; then
         echo "ERROR: Please specify --release-version"
-        exit 1
+        return 1
     fi
     echo $release_version
 }
@@ -183,7 +183,7 @@ calc_timestamp_version() {
     local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^[0-9]' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     if [ -z "${pom_version}" ]; then
         echo "ERROR: Cannot extract version from app/pom.xml"
-        exit 1
+        return 1
     fi
     local patch_level=$(git tag | grep ^$pom_version | grep -v '-' | grep '[0-9]*\.[0-9]*\.' | sed -e s/${pom_version}.// | sort -n -r | head -1)
     if [ -z "${patch_level}" ]; then
@@ -316,19 +316,19 @@ publish_artifacts() {
         local major_minor=${tag%.*} # this relies on having two dots in $tag, i.e. at least X.Y.Z
         if [ -z "${major_minor}" ]; then
             echo "ERROR: refusing to proceed MAJOR.MINOR version calculated as empty this would delete all releases"
-            return
+            return 1
         fi
         local versions_to_discard=$(git for-each-ref --format="%(refname:short)" --sort=creatordate refs/tags/${major_minor}*|head -n -10)
         for version in ${versions_to_discard}; do
             local release_url=$(curl -q -s -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} "${github_api_url}/releases/tags/${version}" | jq -r .url)
             if [ "${release_url}" != "null" ]; then
-                curl -q -s --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
+                curl -q -s -S --fail -X DELETE -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} ${release_url}
             fi
         done
         git push --delete origin "${versions_to_discard}"
     fi
 
-    local upload_url=$(curl -q -s --fail \
+    local upload_url=$(curl -q -s -S --fail \
       -X POST \
       -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
@@ -339,12 +339,12 @@ publish_artifacts() {
 
     if [[ ! $upload_url == http* ]]; then
         echo "ERROR: Cannot create release on remote github repository. Check if a release with the same tag already exists."
-        return
+        return 1
     fi
 
     for file in $top_dir/install/operator/releases/*; do
         echo -n "Upload $file to $upload_url ..."
-        curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+        curl -q -s -S --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
           -H "Accept: application/vnd.github.v3+json" \
           -H "Content-Type: application/tar+gzip" \
           --data-binary "@${file}" \
@@ -353,12 +353,12 @@ publish_artifacts() {
         local err=$?
         if [ $err -ne 0 ]; then
           echo "ERROR: Cannot upload release artifact $file on remote github repository"
-          return
+          return 1
         fi
     done
 
     echo -n "Upload syndesis-cli.zip to $upload_url ..."
-    (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
+    (cd "$top_dir/tools/bin/" && zip -q -r - . | curl -q -s -S --fail -X POST -u ${GITHUB_USERNAME}:${GITHUB_ACCESS_TOKEN} \
       -H "Accept: application/vnd.github.v3+json" \
       -H "Content-Type: application/zip" \
       --data-binary @- \
@@ -367,7 +367,7 @@ publish_artifacts() {
     local err=$?
     if [ $err -ne 0 ]; then
       echo "ERROR: Cannot upload release artifact syndesis-cli.zip on remote github repository"
-      return
+      return 1
     fi
 }
 
