@@ -106,6 +106,7 @@ quay_transfer: &quay_transfer
 jobs:
   ui:
     <<: *job_defaults
+    no_output_timeout: 20m
     environment:
       DOCKER_IMAGES: syndesis-ui
       CHROME_BIN: "/usr/bin/google-chrome"
