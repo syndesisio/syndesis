@@ -73,11 +73,6 @@
     </dependency>
     <dependency>
       <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
       <artifactId>citrus-jms</artifactId>
       <scope>test</scope>
     </dependency>

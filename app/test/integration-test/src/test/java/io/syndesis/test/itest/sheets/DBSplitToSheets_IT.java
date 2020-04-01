@@ -20,9 +20,9 @@ import javax.sql.DataSource;
 import java.time.Duration;
 import java.util.Arrays;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
@@ -32,6 +32,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
+
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -61,26 +64,26 @@ public class DBSplitToSheets_IT extends GoogleSheetsTestSupport {
 
     @Test
     @CitrusTest
-    public void testDBSplitToSheets(@CitrusResource TestRunner runner) {
-        runner.sql(builder -> builder.dataSource(sampleDb)
+    public void testDBSplitToSheets(@CitrusResource TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into contact (first_name, last_name, company, lead_source) values ('Joe','Jackson','Red Hat','google-sheets')",
                                           "insert into contact (first_name, last_name, company, lead_source) values ('Joanne','Jackson','Red Hat','google-sheets')")));
 
-        runner.http(builder -> builder.server(googleSheetsApiServer)
+        runner.when(http().server(googleSheetsApiServer)
                         .receive()
                         .put()
                         .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joe\",\"Jackson\",\"Red Hat\"]]}"));
 
-        runner.http(builder -> builder.server(googleSheetsApiServer)
+        runner.then(http().server(googleSheetsApiServer)
                         .send()
                         .response(HttpStatus.OK));
 
-        runner.http(builder -> builder.server(googleSheetsApiServer)
+        runner.then(http().server(googleSheetsApiServer)
                 .receive()
                 .put()
                 .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"Joanne\",\"Jackson\",\"Red Hat\"]]}"));
 
-        runner.http(builder -> builder.server(googleSheetsApiServer)
+        runner.then(http().server(googleSheetsApiServer)
                 .send()
                 .response(HttpStatus.OK));
     }
