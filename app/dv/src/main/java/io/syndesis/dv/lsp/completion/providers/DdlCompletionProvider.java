@@ -20,6 +20,8 @@ import java.util.List;
 
 import org.eclipse.lsp4j.CompletionItem;
 import org.eclipse.lsp4j.Position;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.teiid.query.parser.Token;
 
 import io.syndesis.dv.lsp.completion.DdlCompletionConstants;
@@ -29,6 +31,8 @@ import io.syndesis.dv.lsp.parser.statement.CreateViewStatement;
 import io.syndesis.dv.lsp.parser.statement.TokenContext;
 
 public class DdlCompletionProvider extends CompletionItemBuilder implements DdlCompletionConstants {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(DdlCompletionProvider.class);
 
     private boolean doPrintToConsole = false;
 
@@ -125,8 +129,7 @@ public class DdlCompletionProvider extends CompletionItemBuilder implements DdlC
                 analyzer.logReport();
             }
         } catch (Exception e) {
-            System.out.print("\n TeiidDdlCompletionProvider.getCompletionItems() ERROR parsing DDL >> " + e.getMessage() + "\n");
-            e.printStackTrace();
+            LOGGER.error("\n TeiidDdlCompletionProvider.getCompletionItems() ERROR parsing DDL >> " + e.getMessage() + "\n", e);
         }
         systemPrint("\n CompletionItems = " + items.size() + "\n");
 

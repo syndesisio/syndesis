@@ -44,7 +44,7 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
     public TeiidDdlLanguageServer() {
         this.textDocumentService = new TeiidDdlTextDocumentService(this);
         this.workspaceService = new TeiidDdlWorkspaceService();
-        LOGGER.info("TeiidDdlLanguageServer()  doc and workspace services created");
+        LOGGER.debug("TeiidDdlLanguageServer()  doc and workspace services created");
     }
 
     /**
@@ -76,7 +76,7 @@ public class TeiidDdlLanguageServer implements LanguageServer, LanguageClientAwa
 
     @Override
     public CompletableFuture<Object> shutdown() {
-        LOGGER.info("Shutting down Teiid DDL language server");
+        LOGGER.debug("Shutting down Teiid DDL language server");
         return CompletableFuture.completedFuture(new Object());
     }
 

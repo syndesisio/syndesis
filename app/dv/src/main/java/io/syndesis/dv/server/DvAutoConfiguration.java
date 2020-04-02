@@ -144,7 +144,6 @@ public class DvAutoConfiguration implements ApplicationListener<ContextRefreshed
     public ServerEndpointExporter endpointExporter() {
         ServerEndpointExporter endpointExporter = new ServerEndpointExporter();
         endpointExporter.setAnnotatedEndpointClasses(TeiidDdlWebSocketEndpoint.class);
-        LOGGER.info("DV DDL Language Server endpoint created");
         return endpointExporter;
     }
 }

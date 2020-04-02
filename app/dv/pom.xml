@@ -93,7 +93,7 @@
     <basepom.check.skip-dependency>true</basepom.check.skip-dependency>
     <basepom.check.skip-dependency-management>true</basepom.check.skip-dependency-management>
     <basepom.check.skip-duplicate-finder>true</basepom.check.skip-duplicate-finder>
-	  <javac.werror></javac.werror>
+    <javac.werror></javac.werror>
     <version.io.opentracing.contrib>1.0.1</version.io.opentracing.contrib>
 
     <version.org.teiid>${teiid.version}</version.org.teiid>
