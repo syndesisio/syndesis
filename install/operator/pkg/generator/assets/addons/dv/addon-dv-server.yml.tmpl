@@ -61,7 +61,7 @@
           - name: GC_MAX_METASPACE_SIZE
             value: "512"
           - name: BUILD_IMAGE_STREAM
-            value: syndesis-s2i:{{ tagOf .Syndesis.Components.S2I.Image }}
+            value: syndesis-s2i:{{ tagOf .Syndesis.Components.S2I.Tag }}
           - name: POSTGRESQL_PASSWORD
             value: {{.Syndesis.Components.Database.Password}}
           - name: POSTGRESQL_USER
@@ -77,7 +77,7 @@
 {{if .DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Addons.DV.Image }}'
+          image: '{{ dockerImageFromComponent .Syndesis.Addons.DV.Image .Syndesis.SHA }}'
 {{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:

@@ -14,7 +14,7 @@
         serviceAccountName: syndesis-default
         containers:
         - name: upgrade-db-migration
-          image: "{{ .Syndesis.Components.Upgrade.Image }}"
+          image: "{{ dockerImageFromComponent .Syndesis.Components.Upgrade.Image .Syndesis.SHA }}"
           command:
             - "/opt/entrypoint.sh"
             - "--user"

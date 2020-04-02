@@ -114,7 +114,7 @@
 {{if .DevSupport}}
           image: ' '
 {{else}}
-          image: '{{ .Syndesis.Components.Server.Image }}'
+          image: '{{ dockerImageFromComponent .Syndesis.Components.Server.Image .Syndesis.SHA }}'
 {{end}}
           imagePullPolicy: IfNotPresent
           livenessProbe:

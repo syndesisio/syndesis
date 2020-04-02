@@ -76,6 +76,7 @@ type Config struct {
 
 type SyndesisConfig struct {
 	DemoData      bool           // Enables starting up with demo data
+	SHA           bool           // Whether we use SHA reference for docker images. If false, tag are used instead
 	RouteHostname string         // The external hostname to access Syndesis
 	Components    ComponentsSpec // Server, Meta, Ui, Name specifications and configurations
 	Addons        AddonsSpec     // Addons specifications and configurations
@@ -95,43 +96,66 @@ type ComponentsSpec struct {
 	AMQ        AMQConfiguration        // Configuration AMQ
 }
 
+type Imageable interface {
+	Get(bool) string // Get docker image with SHA reference or Tag depending on parameter
+}
+
+type Image struct {
+	Tag string
+	SHA string
+}
+
+// Return the right docker image given the sha parameter. Assumption is that the
+// image tag is always defined. In case sha is not defined but it is desired, fall
+// back to tag
+func (i Image) Get(sha bool) (image string) {
+	image = i.Tag
+	if sha {
+		if len(i.SHA) != 0 {
+			image = i.SHA
+		}
+	}
+
+	return
+}
+
 type AMQConfiguration struct {
-	Image string
+	Image
 }
 
 type OauthConfiguration struct {
+	Image
 	CookieSecret    string // Secret to use to encrypt oauth cookies
-	Image           string // Docker image for Oauth
 	DisableSarCheck bool   // Enable or disable SAR checks all together
 	SarNamespace    string // The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation
 }
 
 type UIConfiguration struct {
-	Image string // Docker image for ui pod
+	Image
 }
 
 type S2IConfiguration struct {
-	Image string // Docker image for s2i pod
+	Image
 }
 
 type DatabaseConfiguration struct {
+	Image
 	User             string                        // Username for PostgreSQL user that will be used for accessing the database
 	Name             string                        // Name of the PostgreSQL database accessed
 	URL              string                        // Host and port of the PostgreSQL database to access
 	ExternalDbURL    string                        // If specified, use an external database instead of the installed by syndesis
 	Resources        ResourcesWithPersistentVolume // Resources, memory and database volume size
 	Exporter         ExporterConfiguration         // The exporter exports metrics in prometheus format
-	Image            string                        // Docker image for database
 	Password         string                        // Password for the PostgreSQL connection user
 	SampledbPassword string                        // Password for the PostgreSQL sampledb user
 }
 
 type ExporterConfiguration struct {
-	Image string // Docker image for postgres_exporter
+	Image
 }
 
 type PrometheusConfiguration struct {
-	Image     string              // Docker image for prometheus
+	Image
 	Rules     string              // Monitoring rules for prometheus
 	Resources ResourcesWithVolume // Set volume size for prometheus pod, where metrics are stored
 }
@@ -141,21 +165,21 @@ type GrafanaConfiguration struct {
 }
 
 type ServerConfiguration struct {
+	Image
 	Resources                    Resources      // Resources reserved for server pod
 	Features                     ServerFeatures // Server features: integration limits and check interval, support for demo data and more
-	Image                        string         // Docker image for server
 	SyndesisEncryptKey           string         // The encryption key used to encrypt/decrypt stored secrets
 	ClientStateAuthenticationKey string         // Key used to perform authentication of client side stored state
 	ClientStateEncryptionKey     string         // Key used to perform encryption of client side stored state
 }
 
 type MetaConfiguration struct {
-	Image     string              // Docker image for meta
+	Image
 	Resources ResourcesWithVolume // Resources for meta pod, memory
 }
 
 type UpgradeConfiguration struct {
-	Image     string              // Docker image for Upgrade pod
+	Image
 	Resources VolumeOnlyResources // Resources for upgrade pod, memory and volume size where database dump is saved
 }
 
@@ -216,13 +240,14 @@ type JaegerConfiguration struct {
 }
 
 type TodoConfiguration struct {
+	Image
 	Enabled bool
-	Image   string
 }
+
 type DvConfiguration struct {
+	Image
 	Enabled   bool
 	Resources Resources
-	Image     string
 }
 
 type PublicApiConfiguration struct {
@@ -236,10 +261,10 @@ type AddonConfiguration struct {
 }
 
 type CamelKConfiguration struct {
+	Image
 	Enabled       bool
 	CamelVersion  string
 	CamelKRuntime string
-	Image         string
 }
 
 type AddonInstance struct {
@@ -329,7 +354,7 @@ func GetProperties(file string, ctx context.Context, client client.Client, synde
 	// Determine if the PostgreSQL database running in syndesis-db pod needs upgrading, first fetch the version currently running
 	currentPostgreSQLVersion, err := util.PostgreSQLVersionAt("syndesis", configuration.Syndesis.Components.Database.Password, syndesis.Spec.Components.Database.Name, "syndesis-db", 5432)
 	if err != nil {
-		log.Error(err, "Unable to determine current version of PostgreSQL running in syndesis-db pod")
+		// log.Error(err, "Unable to determine current version of PostgreSQL running in syndesis-db pod")
 		return configuration, nil
 	}
 
@@ -510,20 +535,20 @@ func (config *Config) setConfigFromEnv() error {
 	imgEnv := Config{
 		Syndesis: SyndesisConfig{
 			Addons: AddonsSpec{
-				DV:     DvConfiguration{Image: os.Getenv("DV_IMAGE")},
-				CamelK: CamelKConfiguration{Image: os.Getenv("CAMELK_IMAGE")},
-				Todo:   TodoConfiguration{Image: os.Getenv("TODO_IMAGE")},
+				DV:     DvConfiguration{Image: Image{Tag: os.Getenv("DV_IMAGE")}},
+				CamelK: CamelKConfiguration{Image: Image{Tag: os.Getenv("CAMELK_IMAGE")}},
+				Todo:   TodoConfiguration{Image: Image{Tag: os.Getenv("TODO_IMAGE")}},
 			},
 			Components: ComponentsSpec{
-				Oauth:      OauthConfiguration{Image: os.Getenv("OAUTH_IMAGE")},
-				UI:         UIConfiguration{Image: os.Getenv("UI_IMAGE")},
-				S2I:        S2IConfiguration{Image: os.Getenv("S2I_IMAGE")},
-				Prometheus: PrometheusConfiguration{Image: os.Getenv("PROMETHEUS_IMAGE")},
-				Upgrade:    UpgradeConfiguration{Image: os.Getenv("UPGRADE_IMAGE")},
-				Meta:       MetaConfiguration{Image: os.Getenv("META_IMAGE")},
+				Oauth:      OauthConfiguration{Image: Image{Tag: os.Getenv("OAUTH_IMAGE")}},
+				UI:         UIConfiguration{Image: Image{Tag: os.Getenv("UI_IMAGE")}},
+				S2I:        S2IConfiguration{Image: Image{Tag: os.Getenv("S2I_IMAGE")}},
+				Prometheus: PrometheusConfiguration{Image: Image{Tag: os.Getenv("PROMETHEUS_IMAGE")}},
+				Upgrade:    UpgradeConfiguration{Image: Image{Tag: os.Getenv("UPGRADE_IMAGE")}},
+				Meta:       MetaConfiguration{Image: Image{Tag: os.Getenv("META_IMAGE")}},
 				Database: DatabaseConfiguration{
-					Image:    os.Getenv("DATABASE_IMAGE"),
-					Exporter: ExporterConfiguration{Image: os.Getenv("PSQL_EXPORTER_IMAGE")},
+					Image:    Image{Tag: os.Getenv("DATABASE_IMAGE")},
+					Exporter: ExporterConfiguration{Image: Image{Tag: os.Getenv("PSQL_EXPORTER_IMAGE")}},
 					Resources: ResourcesWithPersistentVolume{
 						VolumeAccessMode:   os.Getenv("DATABASE_VOLUME_ACCESS_MODE"),
 						VolumeStorageClass: os.Getenv("DATABASE_STORAGE_CLASS"),
@@ -531,9 +556,9 @@ func (config *Config) setConfigFromEnv() error {
 					},
 				},
 				Server: ServerConfiguration{
-					Image: os.Getenv("SERVER_IMAGE"),
+					Image: Image{Tag: os.Getenv("SERVER_IMAGE")},
 				},
-				AMQ: AMQConfiguration{Image: os.Getenv("AMQ_IMAGE")},
+				AMQ: AMQConfiguration{Image: Image{Tag: os.Getenv("AMQ_IMAGE")}},
 			},
 		},
 	}

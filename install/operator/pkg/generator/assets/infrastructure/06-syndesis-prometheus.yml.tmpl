@@ -157,7 +157,7 @@
         serviceAccountName: syndesis-prometheus
         containers:
         - name: prometheus
-          image: '{{ .Syndesis.Components.Prometheus.Image }}'
+          image: '{{ dockerImageFromComponent .Syndesis.Components.Prometheus.Image .Syndesis.SHA }}'
           imagePullPolicy: IfNotPresent
           args:
             - '--config.file=/etc/prometheus/prometheus.yml'
