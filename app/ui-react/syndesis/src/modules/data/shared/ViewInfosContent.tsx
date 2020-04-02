@@ -100,6 +100,8 @@ export const ViewInfosContent: React.FunctionComponent<
    */
   const { pushNotification } = React.useContext(UIContext);
 
+  const [schemaList, setSchemaList] = React.useState<SchemaNode[]>([]);
+
   const [lastSchemaRefresh, setLastSchemaRefresh] = React.useState(0);
 
   const [lastSchemaRefreshMsg, setLastSchemaRefreshMsg] = React.useState(t('schemaLastRefresh', {
@@ -153,10 +155,16 @@ export const ViewInfosContent: React.FunctionComponent<
 
   const {
     resource: schema,
-    hasData: hasSchema,
+    hasData,
     error,
     read,
   } = useVirtualizationConnectionSchema(props.connectionTeiidName);
+
+  React.useEffect(()=>{
+    if(schema.length === 1){
+      setSchemaList(schema);
+    }
+  },[schema,hasData]);
 
   React.useEffect(() => {
     if(props.connectionLastLoad > lastSchemaRefresh) {
@@ -175,7 +183,7 @@ export const ViewInfosContent: React.FunctionComponent<
     >
       {helpers => {
         const filteredAndSorted = getFilteredAndSortedViewInfos(
-          schema,
+          schemaList,
           helpers.activeFilters,
           helpers.currentSortType,
           helpers.isSortAscending,
@@ -183,12 +191,13 @@ export const ViewInfosContent: React.FunctionComponent<
           props.existingViewNames
         );
         displayedViews = filteredAndSorted.slice();
+        const schemaLength = schemaList[0] ? schemaList[0].children.length : 0;
 
         return (
           <ViewInfoList
             filterTypes={filterTypes}
             sortTypes={sortTypes}
-            resultsCount={filteredAndSorted.length}
+            resultsCount={schemaLength}
             {...helpers}
             connectionLoading={props.connectionLoading}
             connectionName={props.connectionName}
@@ -209,13 +218,13 @@ export const ViewInfosContent: React.FunctionComponent<
             i18nLastUpdatedMessage={lastSchemaRefreshMsg}
             i18nRefresh={t('shared:Refresh')}
             i18nResultsCount={t('shared:resultsCount', {
-              count: filteredAndSorted.length,
+              count: schemaLength,
             })}
             refreshConnectionSchema={handleRefreshSchema}
           >
             <WithLoader
               error={error !== false}
-              loading={!hasSchema}
+              loading={schemaList[0] ? !schemaList[0].children.length : true}
               loaderChildren={<ViewInfoListSkeleton width={800} />}
               errorChildren={<ApiError error={error as Error} />}
             >
@@ -228,7 +237,7 @@ export const ViewInfosContent: React.FunctionComponent<
                   i18nUpdate={t('shared:Update')}
                   i18nSelectAll={t('importViewSelectAll', {
                     x: selectedViewNames ? selectedViewNames.length : 0,
-                    y: filteredAndSorted ? filteredAndSorted.length : 0,
+                    y: schemaLength,
                   })}
                 />
               )}
