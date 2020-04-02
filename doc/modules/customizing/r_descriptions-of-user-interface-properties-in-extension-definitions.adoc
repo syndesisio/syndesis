@@ -69,7 +69,7 @@ image:images/integrating-applications/IRC-create-connection-fields.png[Hostname,
 
 In a connector extension:
 
-* The toplevel `properties` object controls 
+* The toplevel `properties` object is required. It controls 
 what {prodname} displays when a {prodname} user selects the connector
 to create a connection. This `properties` object contains a set 
 of properties for each form control for creating a connection.
