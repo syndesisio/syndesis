@@ -20,6 +20,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"path/filepath"
 	"sort"
 	"strings"
 	"unicode"
@@ -55,7 +56,7 @@ type TemplateParam struct {
 	Spec        *ConfigSpec
 }
 
-var params = map[string]TemplateParam{}
+var templateParams = map[string]TemplateParam{}
 
 type SyndesisEnvVar string
 
@@ -92,25 +93,33 @@ const (
 	EnvKomodoMemoryLimit             SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
 	EnvDatavirtEnabled               SyndesisEnvVar = "DATAVIRT_ENABLED"
 
-	EnvSyndesisServerTag   SyndesisEnvVar = "SYNDESIS_SERVER_TAG"
-	EnvSyndesisUITag       SyndesisEnvVar = "SYNDESIS_UI_TAG"
-	EnvSyndesisS2ITag      SyndesisEnvVar = "SYNDESIS_S2I_TAG"
-	EnvSyndesisMetaTag     SyndesisEnvVar = "SYNDESIS_META_TAG"
-	EnvPostgresTag         SyndesisEnvVar = "SYNDESIS_POSTGRES_TAG"
-	EnvPostgresExporterTag SyndesisEnvVar = "POSTGRES_EXPORTER_TAG"
-	EnvKomodoTag           SyndesisEnvVar = "KOMODO_TAG"
-	EnvPrometheusTag       SyndesisEnvVar = "PROMETHEUS_TAG"
-	EnvOauthProxyTag       SyndesisEnvVar = "OAUTH_PROXY_TAG"
-
 	EnvUpgradeVolumeCapacity  SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvManagementUrlFor3scale SyndesisEnvVar = "OPENSHIFT_MANAGEMENT_URL_FOR3SCALE"
+
+	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
+	EnvImageStreamNamespace          SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
+
+	EnvFuseS2iImage        SyndesisEnvVar = "FUSE_S2I_IMAGE"
+	EnvFuseMetaImage       SyndesisEnvVar = "FUSE_META_IMAGE"
+	EnvFuseServerImage     SyndesisEnvVar = "FUSE_SERVER_IMAGE"
+	EnvFuseUIImage         SyndesisEnvVar = "FUSE_UI_IMAGE"
+	EnvFuseOauthImage      SyndesisEnvVar = "FUSE_OAUTH_IMAGE"
+	EnvPrometheusImage     SyndesisEnvVar = "FUSE_PROMETHEUS_IMAGE"
+	EnvFuseDBImage         SyndesisEnvVar = "FUSE_DB_IMAGE"
+	EnvFuseDBExporterImage SyndesisEnvVar = "FUSE_DB_EXPORTER_IMAGE"
+	EnvFuseDVImage         SyndesisEnvVar = "FUSE_DV_IMAGE"
 )
 
-var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
+//
+// The parameters provided for injecting values
+// into the resulting templates
+//
+var allTemplateParams = map[SyndesisEnvVar]ConfigSpec{
 	EnvRouteHostname:                 {Description: "The external hostname to access Syndesis"},
 	EnvOpenShiftMaster:               {Value: "https://localhost:8443", Required: true, Description: "Public OpenShift master address"},
 	EnvOpenShiftConsoleUrl:           {Value: "https://localhost:8443", Description: "The URL to the OpenShift console"},
 	EnvOpenShiftProject:              {Required: true, Description: "The name of the OpenShift project Syndesis is being deployed into"},
+	EnvImageStreamNamespace:          {Value: EMPTY_FIELD, Description: "Namespace containing image streams"},
 	EnvOpenShiftOauthClientSecret:    {Generate: "expression", FromLen: 64, Required: true, Description: "OpenShift OAuth client secret"},
 	EnvPostgresqlMemoryLimit:         {Value: "255Mi", Description: "Maximum amount of memory the PostgreSQL container can use"},
 	EnvPostgresqlUser:                {Value: "syndesis", Description: "Username for PostgreSQL user that will be used for accessing the database"},
@@ -129,26 +138,25 @@ var AllConfigOptions = map[SyndesisEnvVar]ConfigSpec{
 	EnvServerMemoryLimit:             {Value: "800Mi", Required: true, Description: "Maximum amount of memory the syndesis-server service might use"},
 	EnvClientStateAuthenticationKey:  {Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform authentication of client side stored state"},
 	EnvClientStateEncryptionKey:      {Generate: "expression", FromLen: 32, Required: true, Description: "Key used to perform encryption of client side stored state"},
-	EnvSyndesisRegistry:              {Value: "docker.io", Description: "Registry from where to fetch Syndesis images"},
+	EnvSyndesisRegistry:              {Value: "docker-registry.default.svc:5000", Description: "Registry from where to fetch Syndesis images"},
 	EnvDemoDataEnabled:               {Value: "false", Required: true, Description: "Enables starting up with demo data"},
 	EnvMaxIntegrationsPerUser:        {Value: "1", Required: true, Description: "Maximum number of integrations single user can create"},
 	EnvIntegrationStateCheckInterval: {Value: "60", Required: true, Description: "Interval for checking the state of the integrations"},
 	EnvSarNamespace:                  {Required: true, Description: "The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation"},
 	EnvKomodoMemoryLimit:             {Value: "1024Mi", Required: true, Description: "Maximum amount of memory the data virtualization service might use"},
 	EnvDatavirtEnabled:               {Value: "0", Required: true, Description: "Set to 0 to disable data virtualization, set to 1 to enable data virtualization"},
+	EnvControllersIntegrationEnabled: {Value: "true", Description: "Should deployment of integrations be enabled?"},
+	EnvManagementUrlFor3scale:        {Value: "", Description: "Url to 3scale for exposing services"},
 
-	EnvSyndesisServerTag:   {},
-	EnvSyndesisUITag:       {},
-	EnvSyndesisS2ITag:      {},
-	EnvSyndesisMetaTag:     {},
-	EnvPostgresTag:         {},
-	EnvPostgresExporterTag: {},
-	EnvKomodoTag:           {},
-	EnvPrometheusTag:       {},
-	EnvOauthProxyTag:       {},
-
-	EnvUpgradeVolumeCapacity:  {Value: "1Gi", Required: true, Description: "Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi"},
-	EnvManagementUrlFor3scale: {Value: "", Description: "Url to 3scale for exposing services"},
+	EnvFuseS2iImage:        {Value: EMPTY_FIELD, Required: true, Description: "The Fuse S2i image and tag"},
+	EnvFuseMetaImage:       {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Meta image and tag"},
+	EnvFuseServerImage:     {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Server image and tag"},
+	EnvFuseUIImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse UI image and tag"},
+	EnvFuseOauthImage:      {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Oauth Proxy image and tag"},
+	EnvPrometheusImage:     {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Prometheus image and tag"},
+	EnvFuseDBImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database image and tag"},
+	EnvFuseDBExporterImage: {Value: EMPTY_FIELD, Required: true, Description: "The Fuse Database Exporter image and tag"},
+	EnvFuseDVImage:         {Value: EMPTY_FIELD, Required: true, Description: "The Fuse DV image and tag"},
 }
 
 func (cs ConfigSpec) From() string {
@@ -156,6 +164,11 @@ func (cs ConfigSpec) From() string {
 }
 
 func (o *Install) installForge() error {
+
+	if o.templateName == "" {
+		return errors.New("A template name must be specified")
+	}
+
 	// Create an empty syndesis CR which will
 	// be filled with parameters placeholder values
 	//
@@ -164,6 +177,45 @@ func (o *Install) installForge() error {
 	if err != nil {
 		return err
 	}
+
+	// Include broker-amq
+	configuration.Productized = true
+
+	synConf := &configuration.Syndesis
+	components := &synConf.Components
+
+	// Fix route host name
+	configuration.Syndesis.RouteHostname = convertToParam(string(EnvRouteHostname))
+
+	configuration.OpenShiftConsoleUrl = convertToParam(string(EnvOpenShiftConsoleUrl))
+	components.Server.Features.OpenShiftMaster = convertToParam(string(EnvOpenShiftMaster))
+	components.Server.Features.ManagementUrlFor3scale = convertToParam(string(EnvManagementUrlFor3scale))
+	components.Oauth.SarNamespace = convertToParam(string(EnvSarNamespace))
+
+	components.S2I.Image.Tag = retargetImage(EnvFuseS2iImage, &components.S2I.Image.Tag)
+	components.UI.Image.Tag = retargetImage(EnvFuseUIImage, &components.UI.Tag)
+	components.Server.Image.Tag = retargetImage(EnvFuseServerImage, &components.Server.Tag)
+	components.Meta.Image.Tag = retargetImage(EnvFuseMetaImage, &components.Meta.Tag)
+	components.Oauth.Image.Tag = retargetImage(EnvFuseOauthImage, &components.Oauth.Tag)
+	components.Prometheus.Image.Tag = retargetImage(EnvPrometheusImage, &components.Prometheus.Tag)
+	components.Database.Image.Tag = retargetImage(EnvFuseDBImage, &components.Database.Tag)
+	components.Database.Exporter.Image.Tag = retargetImage(EnvFuseDBExporterImage, &components.Database.Exporter.Tag)
+	synConf.Addons.DV.Image.Tag = retargetImage(EnvFuseDVImage, &synConf.Addons.DV.Tag)
+
+	// components.Database.Image = retargetImage(&components.Database.Image, string(EnvPostgresImageTag))
+
+	// Fix Secrets
+	components.Database.User = convertToParam(string(EnvPostgresqlUser))
+	components.Database.Password = convertToParam(string(EnvPostgresqlPassword))
+	components.Database.Name = convertToParam(string(EnvPostgresqlDatabase))
+	components.Database.SampledbPassword = convertToParam(string(EnvPostgresqlSampledbPassword))
+
+	configuration.OpenShiftOauthClientSecret = convertToParam(string(EnvOpenShiftOauthClientSecret))
+	components.Oauth.CookieSecret = convertToParam(string(EnvOauthCookieSecret))
+	components.Server.SyndesisEncryptKey = convertToParam(string(EnvSyndesisEncryptKey))
+	components.Server.ClientStateAuthenticationKey = convertToParam(string(EnvClientStateAuthenticationKey))
+	components.Server.ClientStateEncryptionKey = convertToParam(string(EnvClientStateEncryptionKey))
+
 	//
 	// Process the yml template files containing
 	// the framework for application
@@ -174,7 +226,14 @@ func (o *Install) installForge() error {
 	if err != nil {
 		return err
 	}
+
 	resources = append(resources, route...)
+
+	db, err := generator.RenderDir("./database/", configuration)
+	if err != nil {
+		return err
+	}
+	resources = append(resources, db...)
 
 	// Render the remaining syndesis resources...
 	infra, err := generator.RenderDir("./infrastructure/", configuration)
@@ -187,59 +246,72 @@ func (o *Install) installForge() error {
 	// Determine if any addons specified
 	// and include accordingly
 	//
-	addonArr := make([]string, 0)
+	reqAddons := make([]string, 0)
 	if o.addons != "" {
-		addonArr = strings.Split(o.addons, ",")
+		reqAddons = strings.Split(o.addons, ",")
 	}
 
-	addons := map[string]*bool{
-		"jaeger":    &configuration.Syndesis.Addons.Jaeger.Enabled,
-		"ops":       &configuration.Syndesis.Addons.Ops.Enabled,
-		"dv":        &configuration.Syndesis.Addons.DV.Enabled,
-		"camelk":    &configuration.Syndesis.Addons.CamelK.Enabled,
-		"knative":   &configuration.Syndesis.Addons.Knative.Enabled,
-		"publicApi": &configuration.Syndesis.Addons.PublicApi.Enabled,
-		"todo":      &configuration.Syndesis.Addons.Todo.Enabled,
+	addonsPath := "./addons"
+	addonsDir, err := generator.GetAssetsFS().Open(addonsPath)
+	if err != nil {
+		return err
+	}
+	defer addonsDir.Close()
+
+	addons, err := addonsDir.Readdir(0)
+	if err != nil {
+		return err
 	}
 
-	for _, addon := range addonArr {
-		if *addons[addon] != true {
-			t := true
-			addons[addon] = &t
-		}
+	for _, reqAddon := range reqAddons {
+		for _, addonInfo := range addons {
+			if reqAddon != addonInfo.Name() {
+				continue
+			}
 
-		addonDir := "./addons/" + addon + "/"
-		f, err := generator.GetAssetsFS().Open(addonDir)
-		if err != nil {
-			fmt.Printf("unsupported addon configured %s: %s", "addon", addon)
-			return err
-		}
-		f.Close()
+			// Found addon so need to Enable it in the configuration
+			// before rendering the files in the directory
+			switch reqAddon {
+			case "jaeger":
+				configuration.Syndesis.Addons.Jaeger.Enabled = true
+			case "ops":
+				configuration.Syndesis.Addons.Ops.Enabled = true
+			case "dv":
+				configuration.Syndesis.Addons.DV.Enabled = true
+			case "camelk":
+				configuration.Syndesis.Addons.CamelK.Enabled = true
+			case "knative":
+				configuration.Syndesis.Addons.Knative.Enabled = true
+			case "publicApi":
+				configuration.Syndesis.Addons.PublicApi.Enabled = true
+			case "todo":
+				configuration.Syndesis.Addons.Todo.Enabled = true
+			}
 
-		addonResources, err := generator.RenderDir(addonDir, configuration)
-		if err != nil {
-			return err
-		}
+			addonDir := filepath.Join(addonsPath, reqAddon)
+			f, err := generator.GetAssetsFS().Open(addonDir)
+			if err != nil {
+				return err
+			}
+			f.Close()
 
-		resources = append(resources, addonResources...)
+			addonRes, err := generator.RenderDir(addonDir, configuration)
+			if err != nil {
+				return err
+			}
+
+			resources = append(resources, addonRes...)
+		}
 	}
-
-	//
-	// TODO
-	// Consider if this is applicable since it uses the syndesis-operator serviceaccount
-	//
-	// Render the remaining syndesis resources...
-	// upg, err := generator.RenderDir("./upgrade/", gen)
-	// if err != nil {
-	// 	return err
-	// }
-	// resources = append(resources, upg...)
 
 	//
 	// Perform post process of the resources,
 	// substituting variables in place of hard-coded values
 	//
-	postProcess(resources)
+	err = postProcess(resources)
+	if err != nil {
+		return err
+	}
 
 	//
 	// Finally export all the resources to the template
@@ -248,12 +320,26 @@ func (o *Install) installForge() error {
 		o.eject = "yaml"
 	}
 
-	err = exportTo(resources, o.eject)
+	err = exportTo(resources, o.eject, o.templateName)
 	if err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func retargetImage(parameter SyndesisEnvVar, imgPath *string) string {
+	image := filepath.Base(*imgPath)
+
+	var param = allTemplateParams[parameter]
+	param.Value = image
+	allTemplateParams[parameter] = param
+
+	regVar := convertToParam(string(EnvSyndesisRegistry))
+	nmVar := convertToParam(string(EnvImageStreamNamespace))
+	imgVar := convertToParam(string(parameter))
+
+	return filepath.Join(regVar, nmVar, imgVar)
 }
 
 func convertToParam(name string) string {
@@ -265,7 +351,7 @@ func convertToParam(name string) string {
 	name = strings.TrimPrefix(name, "ENDPOINTS_")
 
 	evar := "${" + name + "}"
-	if _, ok := params[evar]; !ok {
+	if _, ok := templateParams[evar]; !ok {
 		displayName := strings.ToLower(name)
 		displayName = strings.ReplaceAll(displayName, "_", " ")
 		displayName = strings.Title(displayName)
@@ -275,10 +361,10 @@ func convertToParam(name string) string {
 			DisplayName: displayName,
 		}
 
-		if cvar, ok := AllConfigOptions[SyndesisEnvVar(name)]; ok {
+		if cvar, ok := allTemplateParams[SyndesisEnvVar(name)]; ok {
 			v.Spec = &cvar
 		}
-		params[evar] = v
+		templateParams[evar] = v
 	}
 
 	return evar
@@ -294,6 +380,14 @@ func fixHardcodedExceptions(key string, value interface{}) interface{} {
 		return convertToParam(string(EnvMaxIntegrationsPerUser))
 	case "maxIntegrationsPerUser":
 		return convertToParam(string(EnvMaxIntegrationsPerUser))
+	case "builderImageStreamTag":
+		convertToParam(string(EnvFuseS2iImage))
+	case "imageStreamNamespace":
+		return convertToParam(string(EnvImageStreamNamespace))
+	}
+
+	if value == "syndesis-s2i:latest" {
+		return convertToParam(string(EnvFuseS2iImage))
 	}
 
 	return value
@@ -308,23 +402,89 @@ func fixDataVirt(value interface{}) interface{} {
 	return value
 }
 
-func analyzeType(value interface{}) int {
+func analyzeType(value interface{}) (int, interface{}) {
 	switch v := value.(type) {
 	case []interface{}:
-		processSlice(cast.ToSlice(v))
-		return 1
+		value = processSlice(cast.ToSlice(v))
+		return 1, value
 	case map[string]interface{}:
 		processMap(cast.ToStringMap(value))
-		return 2
+		return 2, value
 	}
 
-	return 0
+	return 0, value
 }
 
-func processSlice(content []interface{}) {
-	for _, value := range content {
-		analyzeType(value)
+func remove(s []interface{}, i int) []interface{} {
+	return append(s[:i], s[i+1:]...)
+}
+
+//
+// The camel.apache.org rule apiGroup cannot be installed
+// in the template by a regular user and not necessary in
+// the use-case for this template generation so we need to
+// identify it for removal
+//
+func isCamelRuleMap(value interface{}) bool {
+	switch v := value.(type) {
+	case map[string]interface{}:
+		//
+		// map[apiGroups:[camel.apache.org] resources:... ...]]
+		//
+		m := cast.ToStringMap(v)
+
+		if apiGroup, ok := m["apiGroups"]; ok {
+			switch a := apiGroup.(type) {
+			case []interface{}:
+				arr := cast.ToSlice(a)
+				if len(arr) == 1 && arr[0] == "camel.apache.org" {
+					// Found it!
+					return true
+				}
+			}
+		}
 	}
+
+	return false
+}
+
+func processSlice(content []interface{}) []interface{} {
+	finalizerIdx, camelRuleIdx := -1, -1
+	for idx, value := range content {
+		if isCamelRuleMap(value) {
+			//
+			// The camel rules are not applicable and
+			// need to be removed since they can only
+			// be applied by a cluster admin
+			//
+			camelRuleIdx = idx
+		}
+		//
+		// Need to remove the finalizers permission
+		// as cannot install templates with it
+		//
+		if value == "deploymentconfigs/finalizers" {
+			finalizerIdx = idx
+			continue
+		}
+		_, value = analyzeType(value)
+	}
+
+	//
+	// Remove the camel group permission
+	//
+	if camelRuleIdx >= 0 {
+		content = remove(content, camelRuleIdx)
+	}
+
+	//
+	// Remove the finalizer permission
+	//
+	if finalizerIdx >= 0 {
+		content = remove(content, finalizerIdx)
+	}
+
+	return content
 }
 
 func isNameValueMap(theMap map[string]interface{}) bool {
@@ -373,7 +533,9 @@ func processMap(content map[string]interface{}) error {
 			continue
 		}
 
-		if analyzeType(value) > 0 {
+		status, value := analyzeType(value)
+		if status > 0 {
+			content[key] = value
 			continue
 		}
 
@@ -442,7 +604,7 @@ func lowerCaseFirst(str string) string {
 	return ""
 }
 
-func exportTo(resources []unstructured.Unstructured, format string) error {
+func exportTo(resources []unstructured.Unstructured, format string, templateName string) error {
 	//
 	// Strip the resource content out of the unstructured
 	//
@@ -454,7 +616,7 @@ func exportTo(resources []unstructured.Unstructured, format string) error {
 	exportTemplate := unstructured.Unstructured{}
 	exportTemplate.SetKind("Template")
 	exportTemplate.SetAPIVersion("template.openshift.io/v1")
-	exportTemplate.SetName("fuse-ignite-1.8")
+	exportTemplate.SetName(templateName)
 
 	labels := map[string]string{}
 	labels["app"] = "syndesis"
@@ -470,11 +632,10 @@ func exportTo(resources []unstructured.Unstructured, format string) error {
 	// specification
 	//
 	paramList := make([]interface{}, 0)
-	for k, v := range params {
-		if strings.HasSuffix(k, "_TAG}") ||
-			strings.HasSuffix(k, "_LIMIT}") {
+	for k, v := range templateParams {
+		if strings.HasSuffix(k, "_LIMIT}") {
 			//
-			// TAG & LIMIT parameters not used
+			// LIMIT parameters not used
 			//
 			continue
 		}

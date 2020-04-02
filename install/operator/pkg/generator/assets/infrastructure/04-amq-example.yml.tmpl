@@ -11,7 +11,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.3
+        name: '{{ dockerImageFromComponent .Syndesis.Components.AMQ.Image .Syndesis.SHA }}'
       importPolicy:
         scheduled: true
       name: "1.3"

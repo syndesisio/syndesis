@@ -28,6 +28,8 @@ import (
 	"strings"
 	"text/template"
 
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+
 	"github.com/pkg/errors"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -76,7 +78,16 @@ var templateFunctions = template.FuncMap{
 			return false, nil
 		}
 	},
-	"tagOf": util.TagOf,
+	"tagOf": func(image string) string {
+		splits := strings.Split(image, ":")
+		if len(splits) == 1 {
+			return "latest"
+		}
+		return splits[len(splits)-1]
+	},
+	"dockerImageFromComponent": func(i configuration.Imageable, sha bool) (image string) {
+		return i.Get(sha)
+	},
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
