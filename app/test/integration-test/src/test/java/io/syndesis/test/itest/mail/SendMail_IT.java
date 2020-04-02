@@ -20,15 +20,17 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.time.Duration;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
+import com.consol.citrus.container.BeforeTest;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
 import com.consol.citrus.mail.message.MailMessage;
 import com.consol.citrus.mail.server.MailServer;
+import com.consol.citrus.mail.server.MailServerBuilder;
 import com.consol.citrus.util.FileUtils;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
@@ -44,6 +46,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -83,19 +91,19 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testSendMail(@CitrusResource TestRunner runner) throws IOException {
+    public void testSendMail(@CitrusResource TestCaseRunner runner) throws IOException {
         runner.variable("first_name", "John");
         runner.variable("company", "Red Hat");
         runner.variable("email", "john@syndesis.org");
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.given(http().client(webHookClient)
                 .send()
                 .post()
                 .fork(true)
                 .payload(getWebhookPayload()));
 
         String mailBody = FileUtils.readToString(new ClassPathResource("mail.txt", SendMail_IT.class));
-        runner.receive(builder -> builder.endpoint(mailServer)
+        runner.when(receive().endpoint(mailServer)
                         .message(MailMessage.request()
                                 .from("people-team@syndesis.org")
                                 .to("${email}")
@@ -104,10 +112,10 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                                 .subject("Welcome!")
                                 .body(mailBody, "text/plain; charset=UTF-8")));
 
-        runner.send(builder -> builder.endpoint(mailServer)
+        runner.then(send().endpoint(mailServer)
                         .message(MailMessage.response(250, "OK")));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.NO_CONTENT));
 
@@ -116,26 +124,26 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testSendMailError(@CitrusResource TestRunner runner) {
+    public void testSendMailError(@CitrusResource TestCaseRunner runner) {
         runner.variable("first_name", "Joanne");
         runner.variable("company", "Red Hat");
         runner.variable("email", "joanne@syndesis.org");
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.given(http().client(webHookClient)
                 .send()
                 .post()
                 .fork(true)
                 .payload(getWebhookPayload()));
 
-        runner.receive(builder -> builder.endpoint(mailServer)
+        runner.when(receive().endpoint(mailServer)
                         .header(CitrusMailMessageHeaders.MAIL_FROM, "people-team@syndesis.org")
                         .header(CitrusMailMessageHeaders.MAIL_TO, "${email}")
                         .header(CitrusMailMessageHeaders.MAIL_SUBJECT, "Welcome!"));
 
-        runner.send(builder -> builder.endpoint(mailServer)
+        runner.then(send().endpoint(mailServer)
                         .message(MailMessage.response(421, "Service not available, closing transmission channel")));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.INTERNAL_SERVER_ERROR));
 
@@ -146,8 +154,8 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
         return "{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}";
     }
 
-    private void verifyRecordsInDb(TestRunner runner, int numberOfRecords, String task) {
-        runner.query(builder -> builder.dataSource(sampleDb)
+    private void verifyRecordsInDb(TestCaseRunner runner, int numberOfRecords, String task) {
+        runner.run(query(sampleDb)
                 .statement("select count(*) as found_records from todo where task='" + task + "'")
                 .validate("found_records", String.valueOf(numberOfRecords)));
     }
@@ -156,14 +164,14 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
     public static class EndpointConfig {
         @Bean
         public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
+            return new HttpClientBuilder()
                     .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", integrationContainer.getServerPort()))
                     .build();
         }
 
         @Bean
         public MailServer mailServer() {
-            return CitrusEndpoints.mail().server()
+            return new MailServerBuilder()
                     .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .autoStart(true)
                     .autoAccept(true)
@@ -172,14 +180,13 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
         }
 
         @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                                                 .statement("delete from todo where task like 'New hire for%'"));
-                }
-            };
+        public BeforeTest beforeTest(DataSource sampleDb) {
+            SequenceBeforeTest actions = new SequenceBeforeTest();
+            actions.addTestAction(
+                sql(sampleDb)
+                    .statement("delete from todo where task like 'New hire for%'")
+            );
+            return actions;
         }
     }
 }

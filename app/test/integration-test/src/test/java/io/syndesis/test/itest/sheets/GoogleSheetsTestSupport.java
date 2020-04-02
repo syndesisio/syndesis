@@ -22,10 +22,10 @@ import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
+import com.consol.citrus.container.BeforeTest;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
@@ -35,6 +35,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
+
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
 
 /**
  * @author Christoph Deppisch
@@ -56,8 +58,7 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
             filterMap.put("request-caching-filter", new RequestCachingServletFilter());
             filterMap.put("gzip-filter", new GzipServletFilter());
 
-            return CitrusEndpoints.http()
-                    .server()
+            return new HttpServerBuilder()
                     .port(GOOGLE_SHEETS_SERVER_PORT)
                     .autoStart(true)
                     .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
@@ -66,14 +67,14 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
         }
 
         @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                            .statement("delete from contact"));
-                }
-            };
+        public BeforeTest beforeTest(DataSource sampleDb) {
+            SequenceBeforeTest actions = new SequenceBeforeTest();
+            actions.addTestAction(
+                sql(sampleDb)
+                    .dataSource(sampleDb)
+                    .statement("delete from todo")
+            );
+            return actions;
         }
     }
 }
