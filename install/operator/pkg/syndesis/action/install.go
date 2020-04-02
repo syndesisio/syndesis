@@ -98,7 +98,8 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 
 	token, err := serviceaccount.GetServiceAccountToken(ctx, a.client, serviceAccount.Name, syndesis.Namespace)
 	if err != nil {
-		return err
+		a.log.Info("Unable to get service account token", "error message", err.Error())
+		return nil
 	}
 	config.OpenShiftOauthClientSecret = token
 
@@ -115,8 +116,10 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1beta1.Syndesis)
 	routes, _ := util.SeperateStructuredAndUnstructured(a.scheme, all)
 	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, routes)
 	if err != nil {
-		return err
+		a.log.Info("Unable to set route syndesis", "error message", err.Error())
+		return nil
 	}
+
 	if err := config.SetRoute(ctx, a.client, syndesis); err != nil {
 		return err
 	}

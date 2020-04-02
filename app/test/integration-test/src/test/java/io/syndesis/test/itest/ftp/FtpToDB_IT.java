@@ -18,11 +18,11 @@ package io.syndesis.test.itest.ftp;
 
 import java.time.Duration;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.container.IteratingConditionExpression;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.ftp.message.FtpMessage;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
@@ -36,6 +36,11 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.container.RepeatOnErrorUntilTrue.Builder.repeatOnError;
 
 /**
  * @author Christoph Deppisch
@@ -62,17 +67,17 @@ public class FtpToDB_IT extends FtpTestSupport {
 
     @Test
     @CitrusTest
-    public void testFtpToDB(@CitrusResource TestRunner runner) {
-        runner.receive(receiveMessageBuilder -> receiveMessageBuilder
+    public void testFtpToDB(@CitrusResource TestCaseRunner runner) {
+        runner.given(receive()
                 .endpoint(ftpTestServer)
                 .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                 .message(FtpMessage.command(FTPCmd.RETR).arguments("todo.json")));
 
-        runner.send(sendMessageBuilder -> sendMessageBuilder
+        runner.when(send()
                 .endpoint(ftpTestServer)
                 .message(FtpMessage.success()));
 
-        runner.repeatOnError()
+        runner.then(repeatOnError()
                 .startsWith(1)
                 .autoSleep(1000L)
                 .until(new IteratingConditionExpression() {
@@ -81,11 +86,11 @@ public class FtpToDB_IT extends FtpTestSupport {
                         return index > 10;
                     }
                 })
-                .actions(runner.query(builder -> builder.dataSource(sampleDb)
+                .actions(query(sampleDb)
                         .statement("select count(*) as found_records from todo")
                         .validate("found_records", String.valueOf(3))));
 
-        runner.query(builder -> builder.dataSource(sampleDb)
+        runner.then(query(sampleDb)
                 .statement("select task, completed from todo")
                 .validate("task", "FTP task #1", "FTP task #2", "FTP task #3")
                 .validate("completed", "0", "1", "0"));

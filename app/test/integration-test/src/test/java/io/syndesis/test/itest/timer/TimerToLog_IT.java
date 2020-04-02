@@ -17,7 +17,6 @@
 package io.syndesis.test.itest.timer;
 
 import java.util.Arrays;
-
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
@@ -30,11 +29,13 @@ import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContaine
 import io.syndesis.test.integration.source.JsonIntegrationSource;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import org.junit.Test;
+import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.wait.strategy.Wait;
 
 /**
  * @author Christoph Deppisch
  */
+@ContextConfiguration(classes = TimerToLog_IT.EndpointConfig.class)
 public class TimerToLog_IT extends SyndesisIntegrationTestSupport {
 
     @Test
@@ -84,7 +85,7 @@ public class TimerToLog_IT extends SyndesisIntegrationTestSupport {
     public void timeToLogExportTest() {
         SyndesisIntegrationRuntimeContainer.Builder integrationContainerBuilder = new SyndesisIntegrationRuntimeContainer.Builder()
                 .name("timer-to-log-export")
-                .fromExport(TimerToLog_IT.class.getResourceAsStream("TimerToLog-export.zip"));
+                 .fromSource(new JsonIntegrationSource(TimerToLog_IT.class.getResourceAsStream("model-info.json")));
 
         try (SyndesisIntegrationRuntimeContainer integrationContainer = integrationContainerBuilder.build()
                 .waitingFor(Wait.forLogMessage(".*\"message\":\"Hello Syndesis!\".*\\s", 2))) {

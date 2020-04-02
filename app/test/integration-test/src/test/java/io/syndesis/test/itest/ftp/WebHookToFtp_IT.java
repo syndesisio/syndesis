@@ -20,15 +20,15 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.actions.AbstractTestAction;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
 import com.consol.citrus.context.TestContext;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.exceptions.CitrusRuntimeException;
 import com.consol.citrus.ftp.message.FtpMessage;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.message.DefaultMessage;
 import com.consol.citrus.util.FileUtils;
 import com.consol.citrus.validation.json.JsonMessageValidationContext;
@@ -48,6 +48,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.actions.ReceiveMessageAction.Builder.receive;
+import static com.consol.citrus.actions.SendMessageAction.Builder.send;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -76,34 +80,34 @@ public class WebHookToFtp_IT extends FtpTestSupport {
 
     @Test
     @CitrusTest
-    public void testWebHookToFtp(@CitrusResource TestRunner runner) {
+    public void testWebHookToFtp(@CitrusResource TestCaseRunner runner) {
         runner.variable("first_name", "Joanne");
         runner.variable("company", "Red Hat");
         runner.variable("email", "joanne@syndesis.org");
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.when(http().client(webHookClient)
                 .send()
                 .post()
                 .fork(true)
                 .payload("{\"first_name\":\"${first_name}\",\"company\":\"${company}\",\"mail\":\"${email}\"}"));
 
-        runner.receive(receiveMessageBuilder -> receiveMessageBuilder
+        runner.then(receive()
                 .endpoint(ftpTestServer)
                 .message(FtpMessage.command(FTPCmd.STOR).arguments("tmp_contacts.csv")));
 
-        runner.send(sendMessageBuilder -> sendMessageBuilder
+        runner.then(send()
                 .endpoint(ftpTestServer)
                 .message(FtpMessage.success()));
 
-        runner.receive(receiveMessageBuilder -> receiveMessageBuilder
+        runner.then(receive()
                 .endpoint(ftpTestServer)
                 .message(FtpMessage.command(FTPCmd.RNFR).arguments("public/tmp_contacts.csv")));
 
-        runner.send(sendMessageBuilder -> sendMessageBuilder
+        runner.then(send()
                 .endpoint(ftpTestServer)
                 .message(FtpMessage.success()));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.NO_CONTENT));
 
@@ -114,7 +118,7 @@ public class WebHookToFtp_IT extends FtpTestSupport {
     public static class EndpointConfig {
         @Bean
         public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
+            return new HttpClientBuilder()
                     .requestUrl(String.format("http://localhost:%s/webhook/contact", integrationContainer.getServerPort()))
                     .build();
         }

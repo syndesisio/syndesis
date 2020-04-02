@@ -199,7 +199,7 @@
       <!-- atlasmap -->
       <dependency>
         <groupId>io.atlasmap</groupId>
-        <artifactId>camel-atlasmap</artifactId>
+        <artifactId>camel3-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
 

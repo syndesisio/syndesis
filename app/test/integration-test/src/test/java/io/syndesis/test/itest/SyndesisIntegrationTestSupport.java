@@ -18,7 +18,7 @@ package io.syndesis.test.itest;
 
 import javax.sql.DataSource;
 
-import com.consol.citrus.dsl.junit.JUnit4CitrusTest;
+import com.consol.citrus.junit.JUnit4CitrusSupport;
 import io.syndesis.test.container.db.SyndesisDbContainer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,7 +29,7 @@ import org.springframework.test.context.ContextConfiguration;
  * @author Christoph Deppisch
  */
 @ContextConfiguration(classes = SyndesisIntegrationTestSupport.EndpointConfig.class)
-public abstract class SyndesisIntegrationTestSupport extends JUnit4CitrusTest {
+public abstract class SyndesisIntegrationTestSupport extends JUnit4CitrusSupport {
 
     private static final SyndesisDbContainer syndesisDb;
 

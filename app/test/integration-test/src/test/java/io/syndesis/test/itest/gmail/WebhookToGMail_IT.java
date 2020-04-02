@@ -15,18 +15,18 @@
  */
 package io.syndesis.test.itest.gmail;
 
+import com.consol.citrus.TestCaseRunner;
+import com.consol.citrus.annotations.CitrusResource;
+import com.consol.citrus.annotations.CitrusTest;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
-
 import org.junit.ClassRule;
 import org.junit.Test;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 
-import com.consol.citrus.annotations.CitrusResource;
-import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.runner.TestRunner;
+import static com.consol.citrus.container.Wait.Builder.waitFor;
 
 public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
 
@@ -43,11 +43,11 @@ public class WebhookToGMail_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void waitForIntegrationToBeHealthy(@CitrusResource final TestRunner runner) {
-        runner.waitFor().http()
-            .method(HttpMethod.GET)
+    public void waitForIntegrationToBeHealthy(@CitrusResource final TestCaseRunner runner) {
+        runner.run(waitFor().http()
+            .method(HttpMethod.GET.name())
             .seconds(10L)
-            .status(HttpStatus.OK)
-            .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+            .status(HttpStatus.OK.value())
+            .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort())));
     }
 }

@@ -73,7 +73,7 @@
     <!-- set atlasmap as always required runtime dependency-->
     <dependency>
       <groupId>io.atlasmap</groupId>
-      <artifactId>camel-atlasmap</artifactId>
+      <artifactId>camel3-atlasmap</artifactId>
       <scope>runtime</scope>
     </dependency>
 

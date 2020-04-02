@@ -39,7 +39,7 @@
     <deploy.archives>false</deploy.archives>
 
     <!-- Atlasmap version -->
-    <atlasmap.version>1.43.4</atlasmap.version>
+    <atlasmap.version>1.44.0-M1</atlasmap.version>
 
     <!-- Image names -->
     <image.s2i>syndesis/syndesis-s2i:%l</image.s2i>
@@ -132,7 +132,7 @@
     <junit5.version>5.6.0</junit5.version>
     <powermock.version>2.0.4</powermock.version>
     <testcontainers.version>1.12.5</testcontainers.version>
-    <citrus.version>2.8.0</citrus.version>
+    <citrus.version>3.0.0-M1</citrus.version>
     <mockito.version>2.19.0</mockito.version>
     <mongodb.version>3.11.2</mongodb.version>
 
@@ -781,6 +781,21 @@
               <ignoredClassPattern>^javax\.activation\..*$</ignoredClassPattern>
             </ignoredClassPatterns>
             <exceptions>
+              <exception>
+                <conflictingDependencies>
+                  <dependency>
+                    <groupId>com.consol.citrus</groupId>
+                    <artifactId>citrus-core-spring</artifactId>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.consol.citrus</groupId>
+                    <artifactId>citrus-spring-integration</artifactId>
+                  </dependency>
+                </conflictingDependencies>
+                <packages>
+                  <package>org.w3._2001.xmlschema</package>
+                </packages>
+              </exception>
               <exception>
                 <conflictingDependencies>
                   <dependency>
@@ -2921,7 +2936,7 @@
 
       <dependency>
         <groupId>io.atlasmap</groupId>
-        <artifactId>camel-atlasmap</artifactId>
+        <artifactId>camel3-atlasmap</artifactId>
         <version>${atlasmap.version}</version>
       </dependency>
 
@@ -3095,18 +3110,43 @@
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
-        <artifactId>citrus-java-dsl</artifactId>
+        <artifactId>citrus-junit</artifactId>
         <version>${citrus.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus.model</groupId>
-        <artifactId>citrus-model-core</artifactId>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-api</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-base</artifactId>
         <version>${citrus.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.consol.citrus.model</groupId>
-        <artifactId>citrus-model-http</artifactId>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-validation-json</artifactId>
         <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>com.consol.citrus</groupId>
@@ -3200,6 +3240,10 @@
           <exclusion>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>javax.mail</artifactId>
           </exclusion>
           <exclusion>
             <groupId>javax.mail</groupId>

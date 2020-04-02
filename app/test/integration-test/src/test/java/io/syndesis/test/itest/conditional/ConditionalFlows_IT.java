@@ -18,12 +18,13 @@ package io.syndesis.test.itest.conditional;
 
 import javax.sql.DataSource;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
-import com.consol.citrus.dsl.runner.TestRunnerBeforeTestSupport;
+import com.consol.citrus.container.BeforeTest;
+import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
+import com.consol.citrus.http.client.HttpClientBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
@@ -34,6 +35,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
+
+import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.ExecuteSQLQueryAction.Builder.query;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -66,13 +71,13 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testWebHookToDb(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.client(webHookClient)
+    public void testWebHookToDb(@CitrusResource TestCaseRunner runner) {
+        runner.when(http().client(webHookClient)
                 .send()
                 .post()
                 .payload(contact("John", "Red Hat")));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.NO_CONTENT));
 
@@ -81,13 +86,13 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testWebHookToDbBasicFilter(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.client(webHookClient)
+    public void testWebHookToDbBasicFilter(@CitrusResource TestCaseRunner runner) {
+        runner.when(http().client(webHookClient)
                 .send()
                 .post()
                 .payload(contact("Bill", "Microsoft")));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.NO_CONTENT));
 
@@ -96,13 +101,13 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testWebHookToDbAdvancedFilter(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.client(webHookClient)
+    public void testWebHookToDbAdvancedFilter(@CitrusResource TestCaseRunner runner) {
+        runner.when(http().client(webHookClient)
                 .send()
                 .post()
                 .payload(contact("Joanna", "Red Hat")));
 
-        runner.http(builder -> builder.client(webHookClient)
+        runner.then(http().client(webHookClient)
                 .receive()
                 .response(HttpStatus.NO_CONTENT));
 
@@ -113,8 +118,8 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
         return String.format("{\"first_name\":\"%s\",\"company\":\"%s\"}", firstName, company);
     }
 
-    private void verifyRecordInDb(TestRunner runner, String task) {
-        runner.query(builder -> builder.dataSource(sampleDb)
+    private void verifyRecordInDb(TestCaseRunner runner, String task) {
+        runner.then(query(sampleDb)
                 .statement("select count(*) as found_records from todo where task='" + task + "'")
                 .validate("found_records", String.valueOf(1)));
     }
@@ -124,20 +129,20 @@ public class ConditionalFlows_IT extends SyndesisIntegrationTestSupport {
     public static class EndpointConfig {
         @Bean
         public HttpClient webHookClient() {
-            return CitrusEndpoints.http().client()
+            return new HttpClientBuilder()
                     .requestUrl(String.format("http://localhost:%s/webhook/test-webhook", integrationContainer.getServerPort()))
                     .build();
         }
 
         @Bean
-        public TestRunnerBeforeTestSupport beforeTest(DataSource sampleDb) {
-            return new TestRunnerBeforeTestSupport() {
-                @Override
-                public void beforeTest(TestRunner runner) {
-                    runner.sql(builder -> builder.dataSource(sampleDb)
-                                                 .statement("delete from todo"));
-                }
-            };
+        public BeforeTest beforeTest(DataSource sampleDb) {
+            SequenceBeforeTest actions = new SequenceBeforeTest();
+            actions.addTestAction(
+                sql(sampleDb)
+                    .dataSource(sampleDb)
+                    .statement("delete from todo")
+            );
+            return actions;
         }
     }
 }
