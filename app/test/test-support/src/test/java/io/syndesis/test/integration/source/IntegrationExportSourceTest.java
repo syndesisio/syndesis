@@ -20,9 +20,10 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Paths;
 
+import static net.javacrumbs.jsonunit.assertj.JsonAssertions.assertThatJson;
+
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.util.json.JsonUtils;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -34,13 +35,14 @@ public class IntegrationExportSourceTest {
     public void shouldGetFromZip() throws IOException {
         Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog-export.zip"));
-        Assert.assertEquals(expected, source.get());
+        assertThatJson(expected).isEqualTo(source.get());
+
     }
 
     @Test
     public void shouldGetFromDirectory() throws IOException, URISyntaxException {
         Integration expected = JsonUtils.readFromStream(IntegrationExportSourceTest.class.getResourceAsStream("TimerToLog.json"), Integration.class);
         IntegrationExportSource source = new IntegrationExportSource(Paths.get(IntegrationExportSourceTest.class.getResource("TimerToLog-export").toURI()));
-        Assert.assertEquals(expected, source.get());
+        assertThatJson(expected).isEqualTo(source.get());
     }
 }

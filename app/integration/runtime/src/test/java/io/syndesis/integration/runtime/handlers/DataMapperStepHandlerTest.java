@@ -42,7 +42,6 @@ import org.apache.camel.model.SetHeaderDefinition;
 import org.apache.camel.model.ToDefinition;
 import org.apache.camel.support.DefaultExchange;
 import org.apache.camel.support.DefaultMessage;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -51,7 +50,6 @@ public class DataMapperStepHandlerTest {
     private final CamelContext camelContext = new DefaultCamelContext();
 
     @Test
-    @Ignore("TODO: re-enable this once AtlasMap is based on Camel 3, the test will fail because of DefaultComponent's package rename")
     public void testDataMapperStep() throws Exception {
         final DefaultCamelContext context = new DefaultCamelContext();
 
@@ -103,7 +101,6 @@ public class DataMapperStepHandlerTest {
     }
 
     @Test
-    @Ignore("TODO: re-enable this once AtlasMap is based on Camel 3, the test will fail because of DefaultComponent's package rename")
     public void testJsonTypeProcessors() throws Exception {
         final DefaultCamelContext context = new DefaultCamelContext();
 
@@ -164,7 +161,6 @@ public class DataMapperStepHandlerTest {
     }
 
     @Test
-    @Ignore("TODO: re-enable this once AtlasMap is based on Camel 3, the test will fail because of DefaultComponent's package rename")
     public void testJsonTypeProcessorsSkip() throws Exception {
         final DefaultCamelContext context = new DefaultCamelContext();
 

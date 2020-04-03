@@ -1,0 +1,48 @@
+{
+    "name": "TableBodyOptionsCompletionItems",
+    "version": "1.0.0",
+    "items": [
+        {
+            "label": "ANNOTATION",
+            "kind": "SNIPPET",
+            "detail": "",
+            "documentation": "description for table element",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "ANNOTATION '${1:value}'",
+            "insertTextFormat": "SNIPPET",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": ""
+        },
+        {
+            "label": "CARDINALITY",
+            "kind": "SNIPPET",
+            "detail": "",
+            "documentation": "Costing information. Number of rows in the table. Used for planning purposes ",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "CARDINALITY ${1:number}",
+            "insertTextFormat": "SNIPPET",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": ""
+        },
+        {
+            "label": "UPDATABLE",
+            "kind": "SNIPPET",
+            "detail": "",
+            "documentation": "Defines if the view is allowed to update or not.  Defaults to true if the view/table is updatable. ",
+            "deprecated": "false",
+            "preselect": "false",
+            "sortText": "false",
+            "insertText": "UPDATABLE '${1:boolean}'",
+            "insertTextFormat": "SNIPPET",
+            "textEdit": "",
+            "additionalTextEdits": "",
+            "commitCharacters": ""
+        }
+    ]
+}

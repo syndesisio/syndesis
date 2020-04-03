@@ -18,11 +18,11 @@ package io.syndesis.test.itest.http;
 
 import java.time.Duration;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
@@ -37,6 +37,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.actions.ReceiveTimeoutAction.Builder.receiveTimeout;
+import static com.consol.citrus.container.Wait.Builder.waitFor;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -71,63 +75,63 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testGetHealth(@CitrusResource TestRunner runner) {
-        runner.waitFor().http()
-                .method(HttpMethod.GET)
+    public void testGetHealth(@CitrusResource TestCaseRunner runner) {
+        runner.run(waitFor().http()
+                .method(HttpMethod.GET.name())
                 .seconds(10L)
-                .status(HttpStatus.OK)
-                .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort()));
+                .status(HttpStatus.OK.value())
+                .url(String.format("http://localhost:%s/actuator/health", integrationContainer.getManagementPort())));
     }
 
     @Test
     @CitrusTest
-    public void testHttpToHttp(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.server(todoApiServer)
+    public void testHttpToHttp(@CitrusResource TestCaseRunner runner) {
+        runner.given(http().server(todoApiServer)
                 .receive()
                 .get());
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
                 .payload("[{\"id\": \"1\", \"task\":\"Learn to play drums\", \"completed\": 0}," +
                           "{\"id\": \"2\", \"task\":\"Learn to play guitar\", \"completed\": 0}," +
                           "{\"id\": \"3\", \"task\":\"Important: Learn to play piano\", \"completed\": 0}]"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
                 .receive()
                 .put()
                 .payload("{\"id\": \"1\", \"task\":\"Important: Learn to play drums\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.ACCEPTED));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
                 .receive()
                 .put()
                 .payload("{\"id\": \"2\", \"task\":\"Important: Learn to play guitar\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.ACCEPTED));
 
-        runner.receiveTimeout(builder -> builder.endpoint(todoApiServer)
+        runner.then(receiveTimeout(todoApiServer)
                 .timeout(1000L));
     }
 
     @Test
     @CitrusTest
-    public void testHttpToHttpEmptyBody(@CitrusResource TestRunner runner) {
-        runner.http(builder -> builder.server(todoApiServer)
+    public void testHttpToHttpEmptyBody(@CitrusResource TestCaseRunner runner) {
+        runner.given(http().server(todoApiServer)
                 .receive()
                 .get());
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
                 .send()
                 .response(HttpStatus.OK)
                 .payload("[]"));
 
-        runner.receiveTimeout(builder -> builder.endpoint(todoApiServer)
+        runner.then(receiveTimeout(todoApiServer)
                 .timeout(1000L));
     }
 
@@ -135,8 +139,7 @@ public class HttpToHttp_IT extends SyndesisIntegrationTestSupport {
     public static class EndpointConfig {
         @Bean
         public HttpServer todoApiServer() {
-            return CitrusEndpoints.http()
-                    .server()
+            return new HttpServerBuilder()
                     .port(TODO_SERVER_PORT)
                     .autoStart(true)
                     .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())

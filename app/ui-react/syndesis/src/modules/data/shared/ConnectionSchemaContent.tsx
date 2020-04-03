@@ -126,7 +126,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     error,
     read,
   } = useVirtualizationConnectionSchema();
-  
+
   const {
     refreshConnectionSchema,
   } = useVirtualizationHelpers();
@@ -213,7 +213,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
     <ConnectionSchemaList
       i18nEmptyStateInfo={t('activeConnectionsEmptyStateInfo')}
       i18nEmptyStateTitle={t('activeConnectionsEmptyStateTitle')}
-      i18nLinkCreateConnection={t('shared:linkCreateConnection')}
+      i18nLinkCreateConnection={t('shared:CreateConnection')}
       hasListData={sortedConns.length > 0}
       linkToConnectionCreate={resolvers.connections.create.selectConnector()}
       loading={props.loading}
@@ -241,7 +241,7 @@ export const ConnectionSchemaContent: React.FunctionComponent<IConnectionSchemaC
                   props.selectedSchemaNodes[0]
                     ? isConnectionSelected(c.name)
                     : false
-                }                
+                }
                 i18nLastUpdatedMessage={getConnectionLastRefreshMessage(c.name)}
                 i18nRefresh={t('Refresh')}
                 i18nRefreshInProgress={t('refreshInProgress')}

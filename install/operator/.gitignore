@@ -6,3 +6,4 @@ dist
 build.sh
 before_launch.sh
 /operator-builder.tmp
+pkg/cmd/internal/install/install_defaults.go

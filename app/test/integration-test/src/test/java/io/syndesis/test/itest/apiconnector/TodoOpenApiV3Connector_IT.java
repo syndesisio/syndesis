@@ -18,11 +18,11 @@ package io.syndesis.test.itest.apiconnector;
 
 import java.time.Duration;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.endpoint.CitrusEndpoints;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
+import com.consol.citrus.http.server.HttpServerBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
@@ -37,6 +37,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.actions.EchoAction.Builder.echo;
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -76,69 +79,69 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
 
     @Test
     @CitrusTest
-    public void testAddAndList(@CitrusResource TestRunner runner) {
+    public void testAddAndList(@CitrusResource TestCaseRunner runner) {
         runner.variable("id", "citrus:randomNumber(4)");
         runner.variable("task", "Hello from todo client!");
 
-        runner.echo("Add new task");
+        runner.run(echo("Add new task"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
             .receive()
             .post("/api")
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"task\":\"${task}\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.CREATED)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
-        runner.echo("Update task");
+        runner.run(echo("Update task"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
             .receive()
             .put("/api/${id}")
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"id\": ${id}, \"task\":\"citrus:upperCase(${task})\", \"completed\": 0}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
-        runner.echo("Fetch task by id");
+        runner.run(echo("Fetch task by id"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
             .receive()
             .get("/api/${id}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}"));
 
-        runner.echo("List all tasks");
+        runner.run(echo("List all tasks"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
             .receive()
             .get("/api"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.OK)
             .contentType(MediaType.APPLICATION_JSON_UTF8_VALUE)
             .payload("[{\"id\": ${id}, \"task\":\"${task}\", \"completed\": 0}]"));
 
-        runner.echo("Delete task by id");
+        runner.run(echo("Delete task by id"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.when(http().server(todoApiServer)
             .receive()
             .delete("/api/${id}"));
 
-        runner.http(builder -> builder.server(todoApiServer)
+        runner.then(http().server(todoApiServer)
             .send()
             .response(HttpStatus.NO_CONTENT));
     }
@@ -147,8 +150,7 @@ public class TodoOpenApiV3Connector_IT extends SyndesisIntegrationTestSupport {
     public static class EndpointConfig {
         @Bean
         public HttpServer todoApiServer() {
-            return CitrusEndpoints.http()
-                .server()
+            return new HttpServerBuilder()
                 .port(TODO_SERVER_PORT)
                 .autoStart(true)
                 .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())

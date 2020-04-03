@@ -46,7 +46,7 @@ extension definition JSON file and which data structures are required.
 `description` +
 `version` +
 `extensionId` +
-`extensionType` 
+`extensionType` +
 `properties` +
 `actions` +
 `dependencies` * + 
@@ -113,7 +113,7 @@ Syndesis version 1.3, the following extension types are supported:
 ** `Connectors`
 ** `Libraries`
 
-* *properties* at the top level in a connector extension controls 
+* *properties* at the top level in a connector extension is required. It controls 
 what {prodname} displays when a {prodname} user selects the connector
 to create a connection. This `properties` object contains a set 
 of properties for each form control for creating a connection.

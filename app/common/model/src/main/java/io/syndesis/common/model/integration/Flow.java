@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
@@ -36,7 +37,7 @@ import org.immutables.value.Value;
 @Value.Immutable
 @JsonDeserialize(builder = Flow.Builder.class)
 @SuppressWarnings("immutables")
-public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithMetadata, Serializable {
+public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithMetadata, WithDependencies, Serializable {
 
     class Builder extends ImmutableFlow.Builder {
         // allow access to ImmutableIntegration.Builder

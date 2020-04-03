@@ -236,7 +236,7 @@
             "actionType": "connector",
             "description": "Specify a cron utility expression for a more complex integration execution schedule.",
             "descriptor": {
-              "componentScheme": "quartz2",
+              "componentScheme": "quartz",
               "configuredProperties": {
                 "triggerName": "syndesis-quartz"
               },
@@ -275,11 +275,11 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-timer:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-timer:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760017",
+            "id": "org.apache.camel:camel-quartz:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -521,7 +521,7 @@
           "actionType": "connector",
           "description": "Specify a cron utility expression for a more complex integration execution schedule.",
           "descriptor": {
-            "componentScheme": "quartz2",
+            "componentScheme": "quartz",
             "configuredProperties": {
               "triggerName": "syndesis-quartz"
             },
@@ -560,11 +560,11 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-timer:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-timer:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760017",
+          "id": "org.apache.camel:camel-quartz:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -676,7 +676,7 @@
                       "actionType": "connector",
                       "description": "Specify a cron utility expression for a more complex integration execution schedule.",
                       "descriptor": {
-                        "componentScheme": "quartz2",
+                        "componentScheme": "quartz",
                         "configuredProperties": {
                           "triggerName": "syndesis-quartz"
                         },
@@ -715,11 +715,11 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-timer:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-timer:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-quartz2:2.23.2.fuse-760017",
+                      "id": "org.apache.camel:camel-quartz:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],

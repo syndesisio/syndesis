@@ -16,9 +16,9 @@
 
 package io.syndesis.test.itest.sheets;
 
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.dsl.runner.TestRunner;
 import com.consol.citrus.http.server.HttpServer;
 import io.syndesis.test.container.integration.SyndesisIntegrationRuntimeContainer;
 import org.junit.Test;
@@ -26,6 +26,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.testcontainers.containers.GenericContainer;
+
+import static com.consol.citrus.http.actions.HttpActionBuilder.http;
 
 /**
  * @author Christoph Deppisch
@@ -49,17 +51,17 @@ public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
 
     @Test
     @CitrusTest
-    public void testNamedColumns(@CitrusResource TestRunner runner) {
+    public void testNamedColumns(@CitrusResource TestCaseRunner runner) {
         try (SyndesisIntegrationRuntimeContainer container = integrationContainer.build()) {
             container.start();
 
-            runner.http(builder -> builder.server(googleSheetsApiServer)
+            runner.when(http().server(googleSheetsApiServer)
                     .receive()
                     .get("/v4/spreadsheets/testSheetId/values:batchGet")
                     .queryParam("ranges", "Drinks!A:E")
                     .queryParam("majorDimension", "ROWS"));
 
-            runner.http(builder -> builder.server(googleSheetsApiServer)
+            runner.then(http().server(googleSheetsApiServer)
                     .send()
                     .response(HttpStatus.OK)
                     .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -74,12 +76,12 @@ public class SheetsToSheets_IT extends GoogleSheetsTestSupport {
                                 "]" +
                             "}"));
 
-            runner.http(builder -> builder.server(googleSheetsApiServer)
+            runner.when(http().server(googleSheetsApiServer)
                     .receive()
                     .put("/v4/spreadsheets/testSheetId/values/Copy!A:E")
                     .payload("{\"majorDimension\":\"ROWS\",\"values\":[[\"a1\", \"b1\", \"c1\", \"d1\", \"e1\"]]}"));
 
-            runner.http(builder -> builder.server(googleSheetsApiServer)
+            runner.then(http().server(googleSheetsApiServer)
                     .send()
                     .response(HttpStatus.OK));
         }
