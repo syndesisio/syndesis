@@ -42,8 +42,8 @@ EOT
 get_release_version() {
 
     if [ $(hasflag --snapshot-release) ]; then
-            echo $(calc_timestamp_version "$topdir")
-            return
+        echo $(calc_timestamp_version "$topdir")
+        return 1
     fi
 
     local release_version=$(readopt --release-version)
@@ -179,8 +179,7 @@ create_moving_tag_release() {
 
 calc_timestamp_version() {
     local topdir=$1
-    cd $topdir/app
-    local pom_version=$(./mvnw -N help:evaluate -Dexpression="project.version" | grep  '^[0-9]' | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
+    local pom_version=$(grep -oPm2 "(?<=<version>)[^<]+" "$topdir/app/pom.xml"| tail -1| sed -e 's/\([0-9]*\.[0-9]*\).*/\1/')
     if [ -z "${pom_version}" ]; then
         echo "ERROR: Cannot extract version from app/pom.xml"
         return 1
@@ -579,8 +578,8 @@ extract_minor_version() {
     local version=$1
     local minor_version=$(echo $version | sed 's/^\([0-9]*\.[0-9]*\)\.[0-9]*\(-.*\)*$/\1/')
     if [ "$minor_version" = "$version" ]; then
-        echo "ERROR: Cannot extract minor version from $version"
-        return
+        echo "ERROR: Cannot extract minor version from ${version}, computed ${minor_version}"
+        return 1
     fi
     echo $minor_version
 }
