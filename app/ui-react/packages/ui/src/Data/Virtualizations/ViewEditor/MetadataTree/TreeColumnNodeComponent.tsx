@@ -12,51 +12,43 @@ export interface ITreeColumnNodeComponentProps {
   metadataTreeColumns: ISourceColumn[];
 }
 
-export const TreeColumnNodeComponent: React.FunctionComponent<ITreeColumnNodeComponentProps> = props => {
-  const columns = [''];
+export const TreeColumnNodeComponent: React.FunctionComponent<ITreeColumnNodeComponentProps> = React.memo(
+  props => {
+    const columns = [''];
 
-  const getTableRows = (metadataTree: ISourceColumn[]) => {
-    const tableRows: Array<IRow | string[]> = [];
-    for (const column of metadataTree) {
-      const theValue = {
-        cells: [
-          {
-            title: (
-              <div className={'final-tree-child-component_kabab'}>
-                <span>{column.name}</span>
-                <OutlinedCopyIcon
-                  className={'final-tree-child-component_kabab_copy'}
-                />
-              </div>
-            ),
-          },
-        ],
-        // fullWidth: true,
-      } as IRow;
-      tableRows.push(theValue);
-    }
+    const getTableRows = (metadataTree: ISourceColumn[]) => {
+      const tableRows: Array<IRow | string[]> = [];
+      for (const column of metadataTree) {
+        const theValue = {
+          cells: [
+            {
+              title: (
+                <div className={'final-tree-child-component_kabab'}>
+                  <span>{column.name}</span>
+                  <OutlinedCopyIcon
+                    className={'final-tree-child-component_kabab_copy'}
+                  />
+                </div>
+              ),
+            },
+          ],
+          // fullWidth: true,
+        } as IRow;
+        tableRows.push(theValue);
+      }
 
-    return tableRows.length > 0 ? tableRows : [];
-  };
+      return tableRows.length > 0 ? tableRows : [];
+    };
 
-  const [rowsList, setRowsList] = React.useState<IRow[]>(
-    getTableRows(props.metadataTreeColumns)
-  );
-
-  React.useEffect(() => {
-    if (rowsList.length === 0) {
-      setRowsList(getTableRows(props.metadataTreeColumns));
-    }
-  }, [props.metadataTreeColumns]);
-
-  return (
-    <Table
-      aria-label="List of Tables in selected connection."
-      variant={TableVariant.compact}
-      cells={columns}
-      rows={rowsList}
-    >
-      <TableBody />
-    </Table>
-  );
-};
+    return (
+      <Table
+        aria-label="List of Tables in selected connection."
+        variant={TableVariant.compact}
+        cells={columns}
+        rows={getTableRows(props.metadataTreeColumns)}
+      >
+        <TableBody />
+      </Table>
+    );
+  }
+);

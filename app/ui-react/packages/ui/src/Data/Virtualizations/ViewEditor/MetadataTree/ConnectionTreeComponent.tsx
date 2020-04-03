@@ -9,89 +9,97 @@ export interface IConnectionTreeComponentProps {
   i18nLoading: string;
 }
 
-const getTableTree = (sourceInfo: any): Map<string, any> => {
-  const treeInfo = new Map<string, any>();
-
-  for (const table of sourceInfo) {
-    treeInfo.set(table.name, table.columns);
-  }
-  return treeInfo;
+const compPropsAreEqual = (prevProps: any, nextProps: any) => {
+  return prevProps.metadataTree === nextProps.metadataTree;
 };
+export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeComponentProps> = React.memo(
+  props => {
+    const columns = [''];
 
-const getTableRows = (metadataTree: Map<string, any>) => {
-  const tableRows: Array<IRow | string[]> = [];
-  let index = 0;
-  metadataTree.forEach((value, key) => {
-    const theValue = {
-      cells: [
-        {
-          title: (
-            <div>
-              <DatabaseIcon />
-              <span style={{ paddingLeft: '10px' }}>{key}</span>
-            </div>
-          ),
-        },
-      ],
-      isOpen: false,
-    } as IRow;
-    tableRows.push(theValue);
-    const childOne = {
-      cells: [
-        {
-          title: (
-            <TreeTableNodeComponent metadataTreeTables={getTableTree(value)} />
-          ),
-        },
-      ],
-      fullWidth: true,
-      parent: index,
+    const getTableTree = (sourceInfo: any): Map<string, any> => {
+      const treeInfo = new Map<string, any>();
+
+      for (const table of sourceInfo) {
+        treeInfo.set(table.name, table.columns);
+      }
+      return treeInfo;
     };
-    tableRows.push(childOne);
-    index = index + 2;
-  });
 
-  return tableRows.length > 0 ? tableRows : [];
-};
+    const getTableRows = (metadataTree: Map<string, any>) => {
+      const tableRows: Array<IRow | string[]> = [];
+      let index = 0;
+      metadataTree.forEach((value, key) => {
+        const theValue = {
+          cells: [
+            {
+              title: (
+                <div>
+                  <DatabaseIcon />
+                  <span style={{ paddingLeft: '10px' }}>{key}</span>
+                </div>
+              ),
+            },
+          ],
+          isOpen: false,
+        } as IRow;
+        tableRows.push(theValue);
+        const childOne = {
+          cells: [
+            {
+              title: (
+                <TreeTableNodeComponent
+                  metadataTreeTables={getTableTree(value)}
+                />
+              ),
+            },
+          ],
+          fullWidth: true,
+          parent: index,
+        };
+        tableRows.push(childOne);
+        index = index + 2;
+      });
 
-export const ConnectionTreeComponent: React.FunctionComponent<IConnectionTreeComponentProps> = props => {
-  const columns = [''];
+      return tableRows.length > 0 ? tableRows : [];
+    };
+    const memoisedValue = React.useMemo(
+      () => getTableRows(props.metadataTree),
+      [props.metadataTree]
+    );
 
-  const [rowsList, setRowsList] = React.useState<IRow[]>(
-    getTableRows(props.metadataTree)
-  );
+    const [rowsList, setRowsList] = React.useState<IRow[]>(memoisedValue);
 
-  React.useEffect(() => {
-    if (rowsList.length === 0) {
-      setRowsList(getTableRows(props.metadataTree));
-    }
-  }, [props.metadataTree]);
+    React.useEffect(() => {
+      setRowsList(memoisedValue);
+    }, [props.metadataTree]);
 
-  const onCollapse = (event: any, rowKey: any, isOpen: any) => {
-    let rows;
-    rows = [...rowsList];
-    rows[rowKey].isOpen = isOpen;
-    setRowsList(rows);
-  };
+    const onCollapse = (event: any, rowKey: any, isOpen: any) => {
+      let rows;
+      rows = [...rowsList];
+      rows[rowKey].isOpen = isOpen;
+      setRowsList(rows);
+    };
 
-  return (
-    <>
-      {rowsList.length === 0 ? (
-        <>
-          <Spinner size={'lg'} />
-          {props.i18nLoading}
-        </>
-      ) : (
-        <Table
-          aria-label="List of Tables in selected connection."
-          variant={TableVariant.compact}
-          onCollapse={onCollapse}
-          cells={columns}
-          rows={rowsList}
-        >
-          <TableBody />
-        </Table>
-      )}
-    </>
-  );
-};
+    return (
+      <>
+        {rowsList.length === 0 ? (
+          <>
+            <Spinner size={'lg'} />
+            {props.i18nLoading}
+          </>
+        ) : (
+          <Table
+            aria-label="List of Tables in selected connection."
+            variant={TableVariant.compact}
+            onCollapse={onCollapse}
+            cells={columns}
+            rows={rowsList}
+          >
+            <TableBody />
+          </Table>
+        )}
+      </>
+    );
+  },
+  compPropsAreEqual
+);
