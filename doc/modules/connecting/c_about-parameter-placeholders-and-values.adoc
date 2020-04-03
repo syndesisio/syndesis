@@ -30,7 +30,7 @@ to the flow before the database connection. In the data mapping
 step, map the appropriate source data fields to the target data
 fields, for example, map source data to the `:#param_1`, `:#param_2`, and
 `:#param_3` target fields. See
-link:{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step_map[Adding a data mapper step].
+link:{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step_create[Adding a data mapper step].
 
 .Batch update with a collection of parameter values 
 
