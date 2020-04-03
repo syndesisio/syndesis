@@ -108,7 +108,7 @@ public class MetadataServiceTest {
     public void testGetSchema() throws Exception {
         List<RestSchemaNode> nodes = null;
         try {
-            nodes = metadataService.getSchema("source2");
+            nodes = metadataService.getSourceSchema("source2");
             fail();
         } catch (ResponseStatusException e) {
             //no source yet
@@ -121,35 +121,41 @@ public class MetadataServiceTest {
                 "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar');"
                 + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'schema=s%20x/t%20bl=bar1');");
 
-        nodes = metadataService.getSchema("source2");
-        assertEquals("[ {\n" +
-                "  \"children\" : [ {\n" +
-                "    \"children\" : [ ],\n" +
-                "    \"name\" : \"bar\",\n" +
-                "    \"teiidName\" : \"tbl\",\n" +
-                "    \"connectionName\" : \"source2\",\n" +
-                "    \"type\" : \"t bl\",\n" +
-                "    \"queryable\" : true\n" +
-                "  }, {\n" +
-                "    \"children\" : [ ],\n" +
-                "    \"name\" : \"bar1\",\n" +
-                "    \"teiidName\" : \"tbl1\",\n" +
-                "    \"connectionName\" : \"source2\",\n" +
-                "    \"type\" : \"t bl\",\n" +
-                "    \"queryable\" : true\n" +
-                "  } ],\n" +
-                "  \"name\" : \"s x\",\n" +
-                "  \"connectionName\" : \"source2\",\n" +
-                "  \"type\" : \"schema\",\n" +
-                "  \"queryable\" : false\n" +
-                "} ]", JsonMarshaller.marshall(nodes));
-    }
-
+        nodes = metadataService.getSourceSchema("source2");
+        assertEquals(
+            "[ {\n" +
+            "  \"children\" : [ {\n" +
+            "    \"children\" : [ {\n" +
+            "      \"children\" : [ ],\n" +
+            "      \"name\" : \"bar\",\n" +
+            "      \"teiidName\" : \"tbl\",\n" +
+            "      \"connectionName\" : \"source2\",\n" +
+            "      \"type\" : \"t bl\",\n" +
+            "      \"queryable\" : true\n" +
+            "    }, {\n" +
+            "      \"children\" : [ ],\n" +
+            "      \"name\" : \"bar1\",\n" +
+            "      \"teiidName\" : \"tbl1\",\n" +
+            "      \"connectionName\" : \"source2\",\n" +
+            "      \"type\" : \"t bl\",\n" +
+            "      \"queryable\" : true\n" +
+            "    } ],\n" +
+            "    \"name\" : \"s x\",\n" +
+            "    \"connectionName\" : \"source2\",\n" +
+            "    \"type\" : \"schema\",\n" +
+            "    \"queryable\" : false\n" +
+            "  } ],\n" +
+            "  \"name\" : \"source2\",\n" +
+            "  \"type\" : \"teiidSource\",\n" +
+            "  \"queryable\" : false\n" +
+            "} ]", JsonMarshaller.marshall(nodes));
+        }
+  
     @Test
     public void testGetSchemaSingleLevel() throws Exception {
         List<RestSchemaNode> nodes = null;
         try {
-            nodes = metadataService.getSchema("source3");
+            nodes = metadataService.getSourceSchema("source3");
             fail();
         } catch (ResponseStatusException e) {
             //no source yet
@@ -164,22 +170,28 @@ public class MetadataServiceTest {
                 "create foreign table tbl (col string) options (\"teiid_rel:fqn\" 'collection=bar');"
                 + "create foreign table tbl1 (col string) options (\"teiid_rel:fqn\" 'collection=bar1');");
 
-        nodes = metadataService.getSchema("source3");
-        assertEquals("[ {\n" +
-                "  \"children\" : [ ],\n" +
-                "  \"name\" : \"bar\",\n" +
-                "  \"teiidName\" : \"tbl\",\n" +
-                "  \"connectionName\" : \"source3\",\n" +
-                "  \"type\" : \"collection\",\n" +
-                "  \"queryable\" : true\n" +
-                "}, {\n" +
-                "  \"children\" : [ ],\n" +
-                "  \"name\" : \"bar1\",\n" +
-                "  \"teiidName\" : \"tbl1\",\n" +
-                "  \"connectionName\" : \"source3\",\n" +
-                "  \"type\" : \"collection\",\n" +
-                "  \"queryable\" : true\n" +
-                "} ]", JsonMarshaller.marshall(nodes));
+        nodes = metadataService.getSourceSchema("source3");
+        assertEquals(
+            "[ {\n" +
+            "  \"children\" : [ {\n" +
+            "    \"children\" : [ ],\n" +
+            "    \"name\" : \"bar\",\n" +
+            "    \"teiidName\" : \"tbl\",\n" +
+            "    \"connectionName\" : \"source3\",\n" +
+            "    \"type\" : \"collection\",\n" +
+            "    \"queryable\" : true\n" +
+            "  }, {\n" +
+            "    \"children\" : [ ],\n" +
+            "    \"name\" : \"bar1\",\n" +
+            "    \"teiidName\" : \"tbl1\",\n" +
+            "    \"connectionName\" : \"source3\",\n" +
+            "    \"type\" : \"collection\",\n" +
+            "    \"queryable\" : true\n" +
+            "  } ],\n" +
+            "  \"name\" : \"source3\",\n" +
+            "  \"type\" : \"teiidSource\",\n" +
+            "  \"queryable\" : false\n" +
+            "} ]", JsonMarshaller.marshall(nodes));
     }
 
     @Test

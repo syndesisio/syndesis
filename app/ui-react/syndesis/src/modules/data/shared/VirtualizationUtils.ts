@@ -174,7 +174,7 @@ export function generateSchemaNodeInfos(
       schemaNodeInfos.push(view);
     }
     // Update path for next level
-    if (schemaNode.type !== 'root') {
+    if (schemaNode.type !== 'teiidSource') {
       sourcePath.push(schemaNode.name);
     }
     // Process this nodes children

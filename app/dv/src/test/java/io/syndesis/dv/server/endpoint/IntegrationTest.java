@@ -294,7 +294,7 @@ public class IntegrationTest {
         //test that unqualified does not work
         query("select col from t union select 1 as col", dvName, false);
 
-        ResponseEntity<List> sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/syndesisSourceStatuses", List.class);
+        ResponseEntity<List> sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", List.class);
         assertEquals(HttpStatus.OK, sourceStatusResponse.getStatusCode());
         Map status = (Map)sourceStatusResponse.getBody().get(0);
         assertEquals(0, ((List)status.get("errors")).size());
@@ -354,7 +354,7 @@ public class IntegrationTest {
             }
         }
 
-        sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/syndesisSourceStatuses", List.class);
+        sourceStatusResponse = restTemplate.getForEntity("/v1/metadata/sourceStatuses", List.class);
         assertEquals(HttpStatus.OK, sourceStatusResponse.getStatusCode());
         status = (Map)sourceStatusResponse.getBody().get(0);
         assertEquals(1, ((List)status.get("errors")).size());
