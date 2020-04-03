@@ -8,16 +8,23 @@ import {
   CardFooter,
   Grid,
   GridItem,
-  Text,
-  TextContent,
   Title,
 } from '@patternfly/react-core';
+import * as monaco from 'monaco-editor-core';
+import {
+  CloseAction,
+  createConnection,
+  ErrorAction,
+  MonacoLanguageClient,
+  MonacoServices,
+} from 'monaco-languageclient';
 import * as React from 'react';
+import { useRef } from 'react';
+import MonacoEditor from 'react-monaco-editor';
+import { listen, MessageConnection } from 'vscode-ws-jsonrpc';
 import { ConnectionTreeComponent } from '.';
 import { Loader, PageSection } from '../../../Layout';
-import { ITextEditor, TextEditor } from '../../../Shared';
 import './DdlEditor.css';
-import { dvLanguageMode, loadDvMime } from './DvAutocomplete';
 
 export interface IViewEditValidationResult {
   message: string;
@@ -88,6 +95,11 @@ export interface IDdlEditorProps {
   showValidationMessage: boolean;
 
   /**
+   *
+   */
+  languageServerUrl: string;
+
+  /**
    * `true` if save is in progress.
    */
   isSaving: boolean;
@@ -141,32 +153,100 @@ const getMetadataTree = (sourceInfo: any): Map<string, any> => {
 
 export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   const [ddlValue, setDdlValue] = React.useState(props.viewDdl);
-  const [initialDdlValue] = React.useState(props.viewDdl);
   const [hasChanges, setHasChanges] = React.useState(false);
   const [savedValue, setSavedValue] = React.useState(props.viewDdl);
-  const [keywordsRegistered, setKeywordsRegistered] = React.useState(false);
-  const [cursorPosition, setCursorPosition] = React.useState(
-    `( ${props.i18nCursorLine} ?, ${props.i18nCursorColumn} ? )`
-  );
+  const currentValueGetter = useRef();
+
+  const editorRef = useRef();
+  const LANGUAGE_ID = 'sql';
+  let webSocket: WebSocket;
+
+  /*
+   * When the text editor has been rendered, we need to create the language server connection and wire
+   * it up to a new code mirror adapter
+   */
+  const handleEditorDidMount = (valueGetter: any, editor: any) => {
+    editor.codelens = false;
+    currentValueGetter.current = valueGetter;
+    editorRef.current = editor;
+
+    // ***************************************************************************
+    // AFTER the editor is mounted, need to wire the editor to the language server
+    // ***************************************************************************
+
+    MonacoServices.install(editor);
+
+    // create the web socket
+    // Eclipse launched test web service:  'ws://localhost:8025/teiid-ddl-language-server';
+    // Target URL should look like this:  'wss://syndesis-syndesis.nip.io.192.168.42.99.nip.io/dv/teiid-ddl-language-server';
+    let url: string;
+
+    if (props.languageServerUrl.indexOf('https://') > -1) {
+      url = props.languageServerUrl
+        .replace('https://', 'wss://')
+        .replace('/v1', '');
+    } else {
+      url = props.languageServerUrl
+        .replace('http://', 'ws://')
+        .replace('/v1', '');
+    }
+    // const url = 'ws://localhost:8025/teiid-ddl-language-server';
+
+    webSocket = new WebSocket(url, []);
+
+    // listen when the web socket is opened
+    listen({
+      webSocket,
+      // tslint:disable-next-line:object-literal-sort-keys
+      onConnection: connection => {
+        // create and start the language client
+        const languageClient = createLanguageClient(connection);
+        const disposable = languageClient.start();
+        connection.onClose(() => disposable.dispose());
+      },
+    });
+  };
+
+  /*
+   * When the text editor has been rendered, we need to create the language server connection and wire
+   * it up to a new code mirror adapter
+   */
+  const handleEditorWillMount = () => {
+    monaco.languages.register({
+      extensions: ['.ddl'],
+      id: LANGUAGE_ID,
+    });
+  };
+
+  const createLanguageClient = (connection: MessageConnection) => {
+    return new MonacoLanguageClient({
+      name: 'Sample Language Client',
+      // tslint:disable-next-line:object-literal-sort-keys
+      clientOptions: {
+        // use a language id as a document selector
+        documentSelector: [LANGUAGE_ID],
+        // disable the default error handler
+        errorHandler: {
+          closed: () => CloseAction.DoNotRestart,
+          error: () => ErrorAction.Continue,
+        },
+      },
+      // create a language client connection from the JSON RPC connection on demand
+      connectionProvider: {
+        get: (errorHandler, closeHandler) => {
+          return Promise.resolve(
+            createConnection(connection, errorHandler, closeHandler)
+          );
+        },
+      },
+    });
+  };
 
   const handleCloseValidationMessage = () => {
     props.onCloseValidationMessage();
   };
 
-  const handleEditorDidMount = (editor: ITextEditor) => {
-    editor.on('cursorActivity', cm => {
-      const pos = editor.getCursor();
-      setCursorPosition(getCursorText(pos));
-    });
-  };
-
-  const getCursorText = (pos: any) => {
-    return `( ${props.i18nCursorLine} ${pos.line + 1}, ${
-      props.i18nCursorColumn
-    } ${pos.ch + 1} )`;
-  };
-
-  const handleDdlChange = (editor: ITextEditor, data: any, value: string) => {
+  const handleEditorChange = (value: any) => {
     setDdlValue(value);
     handleCloseValidationMessage();
 
@@ -182,6 +262,12 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     props.onFinish();
   };
 
+  React.useEffect(() => {
+    return () => {
+      webSocket.close();
+    };
+  }, []);
+
   const handleSave = async () => {
     const saved = await props.onSave(ddlValue);
     if (saved) {
@@ -191,45 +277,10 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
     }
   };
 
-  /**
-   * reformats the tableInfo into the format expected by hintOptions
-   * Example -
-   *   tables: {
-   *     countries: ['name', 'population', 'size'],
-   *     users: ['name', 'score', 'birthDate'],
-   *   }
-   * @param tableInfos the table infos
-   */
-  const getHintOptions = (tableInfos: ITableInfo[]) => {
-    if (!keywordsRegistered) {
-      loadDvMime();
-      setKeywordsRegistered(true);
-    }
-
-    const result = { tables: {} };
-
-    for (const tableInfo of tableInfos) {
-      result.tables[tableInfo.name] = tableInfo.columnNames;
-    }
-    return result;
-  };
-
   const editorOptions = {
-    autoCloseBrackets: true,
-    autofocus: true,
-    extraKeys: { 'Ctrl-Space': 'autocomplete' },
-    gutters: ['CodeMirror-lint-markers'],
-    hintOptions: getHintOptions(props.sourceTableInfos),
-    indentWithTabs: true,
-    lineNumbers: true,
-    lineWrapping: true,
-    matchBrackets: true,
-    mode: dvLanguageMode,
-    placeholder: props.i18nDdlTextPlaceholder,
-    readOnly: false,
-    showCursorWhenSelecting: true,
-    styleActiveLine: true,
-    tabSize: 2,
+    codeLens: false,
+    selectOnLineNumbers: true,
+    useTabStops: true,
   };
 
   const metadataTree = getMetadataTree(props.sourceInfo);
@@ -237,17 +288,17 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
   return (
     <Grid style={{ flexGrow: 1 }}>
       <GridItem span={3}>
-        <PageSection
-          isFilled={true}
-          variant={'light'}
-          className={'ddl-editor'}
-        >
+        <PageSection isFilled={true} variant={'light'} className={'ddl-editor'}>
           <Title headingLevel="h5" size="lg">
             {props.i18nMetadataTitle}
           </Title>
-          <div className={props.previewExpanded
-              ? 'ddl-editor_metatree_table ddl-editor_metatree_table_scroll'
-              : 'ddl-editor_metatree_table'}>
+          <div
+            className={
+              props.previewExpanded
+                ? 'ddl-editor_metatree_table ddl-editor_metatree_table_scroll'
+                : 'ddl-editor_metatree_table'
+            }
+          >
             <ConnectionTreeComponent
               metadataTree={metadataTree}
               i18nLoading={props.i18nLoading}
@@ -277,18 +328,18 @@ export const DdlEditor: React.FunctionComponent<IDdlEditorProps> = props => {
                 </Alert>
               ))
             : null}
-          <TextContent>
-            <Text className={'ddl-editor-cursor-position-text'}>
-              {cursorPosition}
-            </Text>
-          </TextContent>
           <Card>
             <CardBody className={'ddl-editor__card-body'}>
-              <TextEditor
-                value={initialDdlValue}
+              <MonacoEditor
+                width="100%"
+                height="300"
+                language={LANGUAGE_ID}
+                theme="vs"
+                value={ddlValue}
                 options={editorOptions}
-                onChange={handleDdlChange}
+                onChange={handleEditorChange}
                 editorDidMount={handleEditorDidMount}
+                editorWillMount={handleEditorWillMount}
               />
             </CardBody>
             <CardFooter className={'ddl-editor__card-footer'}>
