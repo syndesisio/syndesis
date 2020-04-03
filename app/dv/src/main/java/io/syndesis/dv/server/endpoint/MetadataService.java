@@ -372,47 +372,11 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     /**
-     * @param teiidSourceName  the name of the source whose tables are being requested (cannot be empty)
-     * @return the JSON representation of the tables collection (never <code>null</code>)
-     * @throws Exception
-     */
-    @RequestMapping(value = TEIID_SOURCE_PLACEHOLDER + FS + "schema", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation( value = "Get the native schema for the teiid source",
-                   response = RestSchemaNode.class,
-                   responseContainer =  "List")
-    @ApiResponses( value = {
-        @ApiResponse( code = 403, message = "An error has occurred." ),
-        @ApiResponse( code = 404, message = "No teiid source could be found with the specified name" ),
-        @ApiResponse( code = 406, message = "Only JSON is returned by this operation" )
-    } )
-    public List<RestSchemaNode> getSchema(@ApiParam( value = "Name of the teiid source", required = true )
-                               @PathVariable(TEIID_SOURCE) final String teiidSourceName ) throws Exception {
-        return repositoryManager.runInTransaction(true, ()->{
-            // Find the bound teiid source corresponding to the syndesis source
-            TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
-
-            if (teiidSource == null) {
-                LOGGER.debug( "Connection '%s' was not found", teiidSourceName ); //$NON-NLS-1$
-                throw notFound( teiidSourceName );
-            }
-
-            Schema schemaModel = findSchemaModel( teiidSource );
-
-            List<RestSchemaNode> schemaNodes = Collections.emptyList();
-            if ( schemaModel != null ) {
-                schemaNodes = generateSourceSchema(teiidSourceName, schemaModel.getTables().values());
-            }
-
-            return schemaNodes;
-        });
-    }
-
-    /**
      * @return the JSON representation of the schema collection (never <code>null</code>)
      * @throws Exception
      */
-    @RequestMapping(value = "connectionSchema", method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation( value = "Get the native schema for all syndesis sources",
+    @RequestMapping(value = {"sourceSchema", "sourceSchema" + FS + TEIID_SOURCE_PLACEHOLDER}, method = RequestMethod.GET, produces = { MediaType.APPLICATION_JSON_VALUE })
+    @ApiOperation( value = "Get the native schema for a teiid source.  In no teiidSource supplied, all schema are returned",
                    response = RestSchemaNode.class,
                    responseContainer = "List")
     @ApiResponses( value = {
@@ -420,33 +384,47 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         @ApiResponse( code = 404, message = "No results found" ),
         @ApiResponse( code = 406, message = "Only JSON is returned by this operation" )
     } )
-    public List<RestSchemaNode> getAllConnectionSchema() throws Exception {
+    public List<RestSchemaNode> getSourceSchema(
+                                @ApiParam(value = "Name of the teiid source", required = false)
+                                final @PathVariable(required=false, name=V1Constants.TEIID_SOURCE) String teiidSourceName) throws Exception {
         SyndesisConnectionMonitor.setUpdate(true);
-        return repositoryManager.runInTransaction(true, ()->{
+        return repositoryManager.runInTransaction(true, () -> {
+
             List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
+            Collection<TeiidDataSource> resultTeiidSources = new ArrayList();
+            if (teiidSourceName != null) {
+                // Find the bound teiid source corresponding to the syndesis source
+                TeiidDataSource teiidSource = findTeiidDatasource(teiidSourceName);
 
-            // Get teiid datasources
-            Collection<? extends TeiidDataSource> allTeiidSources = getMetadataInstance().getDataSources();
+                if (teiidSource == null) {
+                    LOGGER.debug("teiid source '%s' was not found", teiidSourceName); //$NON-NLS-1$
+                    throw notFound(teiidSourceName);
+                }
+                resultTeiidSources.add(teiidSource);
+            } else {
+                resultTeiidSources.addAll(getMetadataInstance().getDataSources());
+            }
 
-            // Add status summary for each of the syndesis sources.  Determine if there is a matching teiid source
-            for (TeiidDataSource teiidSource : allTeiidSources) {
-                final Schema schemaModel = findSchemaModel( teiidSource );
+            for (TeiidDataSource teiidSource : resultTeiidSources) {
+                final Schema schemaModel = findSchemaModel(teiidSource);
 
-                if ( schemaModel == null ) {
+                if (schemaModel == null) {
                     continue;
                 }
 
-                List<RestSchemaNode> schemaNodes = this.generateSourceSchema(schemaModel.getName(), schemaModel.getTables().values());
-                if(schemaNodes != null && !schemaNodes.isEmpty()) {
+                List<RestSchemaNode> schemaNodes = this.generateSourceSchema(schemaModel.getName(),
+                        schemaModel.getTables().values());
+                if (schemaNodes != null && !schemaNodes.isEmpty()) {
                     RestSchemaNode rootNode = new RestSchemaNode();
                     rootNode.setName(schemaModel.getName());
-                    rootNode.setType("root");
-                    for(RestSchemaNode sNode: schemaNodes) {
+                    rootNode.setType("teiidSource");
+                    for (RestSchemaNode sNode : schemaNodes) {
                         rootNode.addChild(sNode);
                     }
                     rootNodes.add(rootNode);
                 }
             }
+
             return rootNodes;
         });
     }
@@ -456,8 +434,8 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
      * @return a JSON document representing the statuses of the sources (never <code>null</code>)
      * @throws Exception
      */
-    @RequestMapping(value = V1Constants.SYNDESIS_SOURCE_STATUSES, method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE })
-    @ApiOperation(value = "Return the syndesis source statuses",
+    @RequestMapping(value = V1Constants.SOURCE_STATUSES, method = RequestMethod.GET, produces = {MediaType.APPLICATION_JSON_VALUE })
+    @ApiOperation(value = "Return the source statuses",
         response = RestSyndesisSourceStatus.class,
         responseContainer = "List")
     @ApiResponses(value = {@ApiResponse(code = 403, message = "An error has occurred.")
