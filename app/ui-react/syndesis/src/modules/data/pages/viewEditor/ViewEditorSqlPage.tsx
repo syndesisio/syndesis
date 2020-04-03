@@ -1,5 +1,4 @@
 import {
-  ApiContext,
   useViewDefinition,
   useVirtualization,
   useVirtualizationHelpers,
@@ -335,33 +334,28 @@ export const ViewEditorSqlPage: React.FunctionComponent = () => {
                 </Link>
                 <span>{t('viewNameBreadcrumb', { name: viewDefn.name })}</span>
               </Breadcrumb>
-              <ApiContext.Consumer>
-                {({ dvApiUri, headers }) => (
-                  <DdlEditor
-                    viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
-                    i18nCursorColumn={t('cursorColumn')}
-                    i18nCursorLine={t('cursorLine')}
-                    i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
-                    i18nDoneLabel={t('shared:Done')}
-                    i18nSaveLabel={t('shared:Save')}
-                    i18nTitle={t('viewEditor.title')}
-                    i18nMetadataTitle={t('metadataTree')}
-                    i18nLoading={t('shared:Loading')}
-                    previewExpanded={previewExpanded}
-                    languageServerUrl={`${dvApiUri}teiid-ddl-language-server`}
-                    i18nValidationResultsTitle={validationResultsTitle}
-                    showValidationMessage={validationMessageVisible}
-                    isSaving={isSaving}
-                    sourceTableInfos={sourceTableColumns}
-                    sourceInfo={sourceInfo}
-                    onCloseValidationMessage={handleHideValidationMessage}
-                    onFinish={handleEditFinished}
-                    onSave={handleSaveView}
-                    setDirty={handleDirtyStateChanged}
-                    validationResults={validationResults}
-                  />
-                )}
-              </ApiContext.Consumer>
+              <DdlEditor
+                viewDdl={viewDefn.ddl ? viewDefn.ddl : ''}
+                i18nCursorColumn={t('cursorColumn')}
+                i18nCursorLine={t('cursorLine')}
+                i18nDdlTextPlaceholder={t('ddlTextPlaceholder')}
+                i18nDoneLabel={t('shared:Done')}
+                i18nSaveLabel={t('shared:Save')}
+                i18nTitle={t('viewEditor.title')}
+                i18nMetadataTitle={t('metadataTree')}
+                i18nLoading={t('shared:Loading')}
+                previewExpanded={previewExpanded}
+                i18nValidationResultsTitle={validationResultsTitle}
+                showValidationMessage={validationMessageVisible}
+                isSaving={isSaving}
+                sourceTableInfos={sourceTableColumns}
+                sourceInfo={sourceInfo}
+                onCloseValidationMessage={handleHideValidationMessage}
+                onFinish={handleEditFinished}
+                onSave={handleSaveView}
+                setDirty={handleDirtyStateChanged}
+                validationResults={validationResults}
+              />
               <ExpandablePreview
                 i18nEmptyResultsTitle={noResultsTitle}
                 i18nEmptyResultsMsg={noResultsMessage}

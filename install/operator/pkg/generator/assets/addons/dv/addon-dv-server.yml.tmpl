@@ -9,8 +9,7 @@
     name: syndesis-dv
   spec:
     ports:
-    - name: http
-      port: 80
+    - port: 80
       protocol: TCP
       targetPort: 8080
     selector:
@@ -155,4 +154,3 @@
         kind: ImageStreamTag
         name: 'syndesis-dv:latest'
 {{end}}
-
