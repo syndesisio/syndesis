@@ -65,6 +65,7 @@ import io.syndesis.dv.metadata.internal.DefaultMetadataInstance;
 import io.syndesis.dv.metadata.query.QSResult;
 import io.syndesis.dv.model.DataVirtualization;
 import io.syndesis.dv.model.SourceSchema;
+import io.syndesis.dv.openshift.SyndesisConnectionMonitor;
 import io.syndesis.dv.openshift.TeiidOpenShiftClient;
 import io.syndesis.dv.server.DvService;
 import io.syndesis.dv.server.Messages;
@@ -204,6 +205,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
     }
 
     protected TeiidVdb updatePreviewVdb(String dvName) throws Exception {
+        SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, ()->{
             DataVirtualization dv = repositoryManager.findDataVirtualization(dvName);
             if (dv == null) {
@@ -419,6 +421,7 @@ public class MetadataService extends DvService implements ServiceVdbGenerator.Sc
         @ApiResponse( code = 406, message = "Only JSON is returned by this operation" )
     } )
     public List<RestSchemaNode> getAllConnectionSchema() throws Exception {
+        SyndesisConnectionMonitor.setUpdate(true);
         return repositoryManager.runInTransaction(true, ()->{
             List<RestSchemaNode> rootNodes = new ArrayList<RestSchemaNode>();
 
