@@ -148,6 +148,9 @@ release::run() {
         prerelease=true
     fi
 
+    # Push everything (if configured)
+    git_push "$topdir" "$release_version" "$moving_tag"
+
     # Release the binaries
     publish_artifacts "${topdir}" "$release_version" $prerelease
 
@@ -155,9 +158,6 @@ release::run() {
     # if check_for_command gren; then
     #    gren release --data-source=commits --tags=$release_version --override
     # fi
-
-    # Push everything (if configured)
-    git_push "$topdir" "$release_version" "$moving_tag"
 }
 
 create_moving_tag_release() {
@@ -298,6 +298,7 @@ publish_artifacts() {
     local data="{\
         \"tag_name\": \"${tag}\", \
         \"name\": \"${tag}\", \
+        \"target_commitish\": \"$(git rev-parse HEAD)\", \
         \"prerelease\": ${prerelease} \
     }"
 
