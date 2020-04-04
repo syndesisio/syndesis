@@ -31,7 +31,7 @@ require (
 	github.com/stretchr/testify v1.4.0
 	github.com/testcontainers/testcontainers-go v0.3.1
 	gopkg.in/yaml.v2 v2.2.8
-	k8s.io/api v0.17.2
+	k8s.io/api v0.18.0
 	k8s.io/apimachinery v0.17.2
 	k8s.io/client-go v12.0.0+incompatible
 	k8s.io/code-generator v0.17.1
