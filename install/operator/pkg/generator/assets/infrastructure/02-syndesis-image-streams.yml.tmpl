@@ -15,10 +15,10 @@
         kind: ImageStreamTag
         name: 'syndesis-s2i:latest'
       {{else}}
-    - name: "{{ tagOf .Syndesis.Components.S2I.Image }}"
+    - name: "{{ tagOf .Syndesis.Components.S2I.Tag }}"
       from:
         kind: DockerImage
-        name: '{{ .Syndesis.Components.S2I.Image }}'
+        name: '{{ dockerImageFromComponent .Syndesis.Components.S2I.Image .Syndesis.SHA }}'
       {{if .Scheduled}}
       importPolicy:
         scheduled: true

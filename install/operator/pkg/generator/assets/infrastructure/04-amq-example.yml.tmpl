@@ -11,7 +11,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: '{{.Syndesis.Components.AMQ.Image}}'
+        name: '{{ dockerImageFromComponent .Syndesis.Components.AMQ.Image .Syndesis.SHA }}'
       importPolicy:
         scheduled: true
       name: "1.3"
