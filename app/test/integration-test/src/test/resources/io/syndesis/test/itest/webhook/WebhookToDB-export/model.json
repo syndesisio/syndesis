@@ -232,7 +232,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:${project.version}",
             "type": "MAVEN"
           },
           {
@@ -374,7 +374,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-webhook:${project.version}",
             "type": "MAVEN"
           }
         ],
@@ -625,7 +625,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:${project.version}",
           "type": "MAVEN"
         },
         {
@@ -755,7 +755,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-webhook:${project.version}",
           "type": "MAVEN"
         }
       ],
@@ -897,7 +897,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-webhook:${project.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -1307,7 +1307,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {

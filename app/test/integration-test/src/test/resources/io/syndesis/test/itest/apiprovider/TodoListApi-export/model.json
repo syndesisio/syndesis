@@ -664,7 +664,7 @@
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+            "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
             "type": "MAVEN"
           }
         ],
@@ -1037,7 +1037,7 @@
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+          "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
           "type": "MAVEN"
         }
       ],
@@ -1755,7 +1755,7 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
                       "type": "MAVEN"
                     }
                   ],
@@ -2855,7 +2855,7 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
                       "type": "MAVEN"
                     }
                   ],
@@ -3295,7 +3295,7 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
                       "type": "MAVEN"
                     }
                   ],
@@ -4497,7 +4497,7 @@
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-servlet-starter:2.21.0.${camel.version}-730054",
+                      "id": "org.apache.camel.springboot:camel-servlet-starter:2.21.0.${camel.version}-730054",
                       "type": "MAVEN"
                     }
                   ],
