@@ -16,6 +16,7 @@
 package io.syndesis.common.model.integration;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -25,6 +26,7 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
@@ -117,11 +119,30 @@ public interface IntegrationBase
     @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
     Optional<String> getExposure();
 
+
     @JsonIgnore
     default Set<String> getExtensionIds() {
-        return getFlows().stream()
-            .flatMap(f -> f.getExtensionIds().stream())
-            .collect(Collectors.toSet());
+        Set<String> extensionIds = new HashSet<>();
+        extensionIds.addAll(
+            getDependencies().stream()
+                .filter(Dependency::isExtensionTag)
+                .map(Dependency::getId)
+                .collect(Collectors.toSet())
+        );
+        extensionIds.addAll(
+            getFlows().stream()
+                .flatMap(f-> f.getDependencies().stream()
+                    .filter(Dependency::isExtensionTag)
+                    .map(Dependency::getId)
+                )
+                .collect(Collectors.toSet())
+        );
+        extensionIds.addAll(
+            getFlows().stream()
+                .flatMap(f -> f.getExtensionIds().stream())
+                .collect(Collectors.toSet())
+        );
+        return extensionIds;
     }
 
     @Value.Default

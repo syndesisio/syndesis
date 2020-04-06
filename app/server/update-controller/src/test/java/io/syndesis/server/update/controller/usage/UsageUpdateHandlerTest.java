@@ -67,6 +67,24 @@ public class UsageUpdateHandlerTest {
             .build())
         .build();
 
+    private final Integration integrationWithDependencyLibraryExtension = new Integration.Builder()
+        .id("integration-2")
+        .addDependency(new Dependency.Builder()
+            .id("extension-1")
+            .type(Type.EXTENSION_TAG)
+            .build())
+        .build();
+
+    private final Integration integrationWithFlowsDependencyLibraryExtension = new Integration.Builder()
+        .id("integration-3")
+        .addFlow(new Flow.Builder()
+            .addDependency(new Dependency.Builder()
+                .id("extension-1")
+                .type(Type.EXTENSION_TAG)
+                .build())
+            .build())
+        .build();
+
     static class TestIntegrationBuilder extends Integration.Builder {
         TestIntegrationBuilder withFlowConnections(final Connection... connections) {
             return (TestIntegrationBuilder) addFlow(new Flow.Builder().addConnections(connections).build());
@@ -146,6 +164,32 @@ public class UsageUpdateHandlerTest {
     @Test
     public void shouldCountUsedExtensions() {
         when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithExtension));
+
+        handler.processInternal(NOT_USED);
+
+        verify(dataManager).fetchAll(Integration.class);
+        verify(dataManager).fetchAll(Connection.class);
+        verify(dataManager).fetchAll(Extension.class);
+        verify(dataManager).update(UsageUpdateHandler.withUpdatedUsage(extension, 1));
+        verifyNoMoreInteractions(dataManager);
+    }
+
+    @Test
+    public void shouldCountUsedIntegrationDependencyLibrariesExtensions() {
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithDependencyLibraryExtension));
+
+        handler.processInternal(NOT_USED);
+
+        verify(dataManager).fetchAll(Integration.class);
+        verify(dataManager).fetchAll(Connection.class);
+        verify(dataManager).fetchAll(Extension.class);
+        verify(dataManager).update(UsageUpdateHandler.withUpdatedUsage(extension, 1));
+        verifyNoMoreInteractions(dataManager);
+    }
+
+    @Test
+    public void shouldCountUsedFlowsDependencyLibrariesExtensions() {
+        when(dataManager.fetchAll(Integration.class)).thenReturn(ListResult.of(integrationWithFlowsDependencyLibraryExtension));
 
         handler.processInternal(NOT_USED);
 
