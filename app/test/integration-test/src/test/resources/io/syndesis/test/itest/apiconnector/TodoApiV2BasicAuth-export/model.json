@@ -43,7 +43,7 @@
         "componentScheme": "rest-openapi",
         "configuredProperties": {
           "authenticationType": "basic:username_password",
-          "componentName": "connector-rest-swagger-http4",
+          "componentName": "connector-rest-swagger-http",
           "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"security\":[{\"username_password\":[]}],\"operationId\":\"getTasks\"}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
         },
         "connectorCustomizers": [
@@ -59,15 +59,15 @@
         "connectorGroupId": "swagger-connector-template",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760017",
+            "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-http4:2.23.2.fuse-760017",
+            "id": "org.apache.camel:camel-http:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -340,7 +340,7 @@
       "componentScheme": "rest-openapi",
       "configuredProperties": {
         "authenticationType": "basic:username_password",
-        "componentName": "connector-rest-swagger-http4",
+        "componentName": "connector-rest-swagger-http",
         "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"security\":[{\"username_password\":[]}],\"operationId\":\"getTasks\"}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
       },
       "connectorCustomizers": [
@@ -356,15 +356,15 @@
       "connectorGroupId": "swagger-connector-template",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760017",
+          "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-http4:2.23.2.fuse-760017",
+          "id": "org.apache.camel:camel-http:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -822,7 +822,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"security\":[{\"username_password\":[]}],\"operationId\":\"getTasks\"}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -838,15 +838,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760017",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760017",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],

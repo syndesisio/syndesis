@@ -49,7 +49,7 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-http.
          */
-        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/http4.json")
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/http.json")
         static class HttpUsed {
             // auto configuration test
         }
@@ -57,7 +57,7 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-https.
          */
-        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/https4.json")
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/https.json")
         static class HttpsUsed {
             // auto configuration test
         }

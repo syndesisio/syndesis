@@ -232,7 +232,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:${project.version}",
             "type": "MAVEN"
           },
           {
@@ -1019,7 +1019,7 @@
         "connectorFactory": "io.syndesis.connector.sheets.GoogleSheetsConnectorFactory",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-google-sheets:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-google-sheets:${project.version}",
             "type": "MAVEN"
           }
         ],
@@ -1968,7 +1968,7 @@
       "connectorFactory": "io.syndesis.connector.sheets.GoogleSheetsConnectorFactory",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-google-sheets:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-google-sheets:${project.version}",
           "type": "MAVEN"
         }
       ],
@@ -2435,7 +2435,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:${project.version}",
           "type": "MAVEN"
         },
         {
@@ -2823,7 +2823,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -3206,7 +3206,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:${project.version}",
                       "type": "MAVEN"
                     },
                     {
@@ -4150,7 +4150,7 @@
                   "connectorFactory": "io.syndesis.connector.sheets.GoogleSheetsConnectorFactory",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-google-sheets:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-google-sheets:${project.version}",
                       "type": "MAVEN"
                     }
                   ],
