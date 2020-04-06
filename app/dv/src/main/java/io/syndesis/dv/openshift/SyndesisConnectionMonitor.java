@@ -47,6 +47,7 @@ public class SyndesisConnectionMonitor {
     private ObjectMapper mapper = new ObjectMapper();
     private SyndesisConnectionSynchronizer connectionSynchronizer;
     private ScheduledThreadPoolExecutor executor;
+    private static volatile boolean UPDATE = true;
 
     static class Message {
         private String event;
@@ -224,12 +225,17 @@ public class SyndesisConnectionMonitor {
         this.executor.scheduleAtFixedRate(()->this.connect(), 5, 15, TimeUnit.SECONDS);
         this.executor.scheduleAtFixedRate(()->{
             try {
-                if (connected) {
+                if (connected && UPDATE) {
                     connectionSynchronizer.synchronizeConnections(true);
+                    UPDATE = false;
                 }
             } catch (KException e) {
                 LOGGER.error("failed to synchronize", e);
             }
-        }, 5, 5, TimeUnit.MINUTES);
+        }, 5, 15, TimeUnit.MINUTES);
+    }
+
+    public static void setUpdate(boolean update) {
+        UPDATE = update;
     }
 }
