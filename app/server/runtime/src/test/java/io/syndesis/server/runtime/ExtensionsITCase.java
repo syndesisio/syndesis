@@ -352,9 +352,56 @@ public class ExtensionsITCase extends BaseITCase {
             .hasOnlyOneElementSatisfying(v -> assertThat(v.message()).startsWith("The extension already exists"));
     }
 
+    @Test
+    public void shouldListNoDependencyLibraries() throws IOException {
+        // Create one extension
+        final ResponseEntity<Extension> created = post("/api/v1/extensions", multipartBody(extensionData(1)),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId()).isPresent();
+        final String id = created.getBody().getId().get();
+
+        // Install it
+        post("/api/v1/extensions/" + id + "/install", null, Void.class,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
+
+        final ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions?extensionType=Libraries",
+            new ParameterizedTypeReference<ListResult<Extension>>() {
+            }, tokenRule.validToken(), HttpStatus.OK);
+
+        assertThat(list.getBody().getItems()).hasSize(0);
+    }
+
+    @Test
+    public void shouldListDependencyLibraries() throws IOException {
+        // Create one extension
+        final ResponseEntity<Extension> created = post("/api/v1/extensions", multipartBody(
+            extensionData(1, Extension.Type.Libraries)
+            ),
+            Extension.class, tokenRule.validToken(), HttpStatus.OK, multipartHeaders());
+
+        assertThat(created.getBody().getId()).isPresent();
+        final String id = created.getBody().getId().get();
+
+        // Install it
+        post("/api/v1/extensions/" + id + "/install", null, Void.class,
+            tokenRule.validToken(), HttpStatus.NO_CONTENT);
+
+        final ResponseEntity<ListResult<Extension>> list = get("/api/v1/extensions?extensionType=Libraries",
+            new ParameterizedTypeReference<ListResult<Extension>>() {
+            }, tokenRule.validToken(), HttpStatus.OK);
+
+        assertThat(list.getBody().getItems()).hasSize(1);
+    }
+
     // ===========================================================
 
     private static byte[] extensionData(final int prg) throws IOException {
+        // Default, use a Steps extension type
+        return extensionData(prg, Extension.Type.Steps);
+    }
+
+    private static byte[] extensionData(final int prg, Extension.Type extensionType) throws IOException {
         try (ByteArrayOutputStream data = new ByteArrayOutputStream();
             JarOutputStream jar = new JarOutputStream(data)) {
 
@@ -367,7 +414,7 @@ public class ExtensionsITCase extends BaseITCase {
                 .name("Extension " + prg)
                 .description("Extension Description " + prg)
                 .version("1.0")
-                .extensionType(Extension.Type.Steps)
+                .extensionType(extensionType)
                 .build();
 
             final JsonNode extensionTree = ExtensionConverter.getDefault().toPublicExtension(extension);
