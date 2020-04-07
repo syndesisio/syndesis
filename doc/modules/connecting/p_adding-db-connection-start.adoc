@@ -43,7 +43,7 @@ five minutes.
 
 .Limitations on the use of SQL extensions
 SQL statements that you enter in the *Query* field must be standard SQL constructs. 
-Fuse Online does not recognize or parse SQL extensions such as Procedural Language/PostgreSQL (PL/pgSQL) 
+{prodname} does not recognize or parse SQL extensions such as Procedural Language/PostgreSQL (PL/pgSQL) 
 or Oracle Procedural Language Extensions to SQL (PL/SQL). 
 However, you can use SQL extensions within stored procedures.
  
