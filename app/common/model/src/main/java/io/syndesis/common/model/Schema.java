@@ -20,7 +20,7 @@ package io.syndesis.common.model;
  */
 public final class Schema {
     // changing this will reset all the DB data.
-    public static final int VERSION = 40;
+    public static final int VERSION = 41;
 
     private Schema() {
       // quasi utility class

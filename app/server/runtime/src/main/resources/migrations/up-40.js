@@ -68,6 +68,13 @@ migrate("integrations", "/integrations", function(integration) {
                             if (Array.isArray(step.connection.connector.actions)) {
                                 step.connection.connector.actions.forEach(migrateAction);
                             }
+
+                            if(Array.isArray(step.connection.connector.dependencies)) {
+                                step.connection.connector.dependencies.forEach(function(dependency) {
+                                    dependency.id = change("org.apache.camel:camel-servlet-starter",
+                                                    "org.apache.camel.springboot:camel-servlet-starter", ch)(dependency.id);
+                                }
+                            }
                         }
                     }
                 });
