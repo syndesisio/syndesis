@@ -153,6 +153,6 @@ public class WebHookToDB_IT extends SyndesisIntegrationTestSupport {
     private void cleanupDatabase(TestCaseRunner runner) {
         runner.given(sql(sampleDb)
             .dataSource(sampleDb)
-            .statement("delete from todo"));
+            .statement("delete from contact"));
     }
 }
