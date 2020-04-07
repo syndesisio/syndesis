@@ -23,8 +23,6 @@ import java.time.Duration;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import com.consol.citrus.mail.message.CitrusMailMessageHeaders;
@@ -92,6 +90,8 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testSendMail(@CitrusResource TestCaseRunner runner) throws IOException {
+        cleanupDatabase(runner);
+
         runner.variable("first_name", "John");
         runner.variable("company", "Red Hat");
         runner.variable("email", "john@syndesis.org");
@@ -125,6 +125,8 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testSendMailError(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.variable("first_name", "Joanne");
         runner.variable("company", "Red Hat");
         runner.variable("email", "joanne@syndesis.org");
@@ -178,15 +180,11 @@ public class SendMail_IT extends SyndesisIntegrationTestSupport {
                     .port(MAIL_SERVER_PORT)
                     .build();
         }
+    }
 
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .statement("delete from todo where task like 'New hire for%'")
-            );
-            return actions;
-        }
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from todo"));
     }
 }

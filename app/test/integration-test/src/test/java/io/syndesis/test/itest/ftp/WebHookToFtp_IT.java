@@ -81,6 +81,8 @@ public class WebHookToFtp_IT extends FtpTestSupport {
     @Test
     @CitrusTest
     public void testWebHookToFtp(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.variable("first_name", "Joanne");
         runner.variable("company", "Red Hat");
         runner.variable("email", "joanne@syndesis.org");

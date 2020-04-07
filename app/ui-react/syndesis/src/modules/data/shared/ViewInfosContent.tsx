@@ -157,7 +157,7 @@ export const ViewInfosContent: React.FunctionComponent<
     hasData,
     error,
     read,
-  } = useVirtualizationConnectionSchema();
+  } = useVirtualizationConnectionSchema(props.connectionTeiidName);
 
   React.useEffect(()=>{
     if (hasData) {
