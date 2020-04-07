@@ -177,7 +177,7 @@
         "componentScheme": "rest-openapi",
         "configuredProperties": {
           "authenticationType": "basic:username_password",
-          "componentName": "connector-rest-swagger-http4",
+          "componentName": "connector-rest-swagger-http",
           "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
         },
         "connectorCustomizers": [
@@ -193,15 +193,15 @@
         "connectorGroupId": "swagger-connector-template",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+            "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+            "id": "org.apache.camel:camel-http:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -608,7 +608,7 @@
       "componentScheme": "rest-openapi",
       "configuredProperties": {
         "authenticationType": "basic:username_password",
-        "componentName": "connector-rest-swagger-http4",
+        "componentName": "connector-rest-swagger-http",
         "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
       },
       "connectorCustomizers": [
@@ -624,15 +624,15 @@
       "connectorGroupId": "swagger-connector-template",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+          "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+          "id": "org.apache.camel:camel-http:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -1272,7 +1272,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -1288,15 +1288,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -1679,7 +1679,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -1695,15 +1695,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2086,7 +2086,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -2102,15 +2102,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2458,7 +2458,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -2474,15 +2474,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2859,7 +2859,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"produces\":[\"application/json\"],\"operationId\":\"79c1dab0-402f-4f88-a565-74ed843fd063\"},\"post\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"operationId\":\"3b2c4ee8-bf5b-4baf-925e-272240e12546\"}},\"/{id}\":{\"get\":{\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"ceb3e147-6ac8-405a-81f3-52c3c873e16c\"},\"put\":{\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"4e4a2624-0489-4c0c-bbcd-f7e8f1c1db6f\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}],\"operationId\":\"d0a44f7b-3ee8-4489-a5d4-f1a6f8b73611\"}}},\"responses\":{\"TaskList\":{\"description\":\"All is good\",\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/definitions/Task\"}}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
                   },
                   "connectorCustomizers": [
@@ -2875,15 +2875,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],

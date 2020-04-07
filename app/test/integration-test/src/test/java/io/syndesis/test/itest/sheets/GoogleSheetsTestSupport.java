@@ -22,8 +22,7 @@ import java.time.Duration;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
+import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import com.consol.citrus.http.servlet.RequestCachingServletFilter;
@@ -65,16 +64,11 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
                     .filters(filterMap)
                     .build();
         }
+    }
 
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
+    protected void cleanupDatabase(TestCaseRunner runner, DataSource sampleDb) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from todo"));
     }
 }

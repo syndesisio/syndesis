@@ -65,6 +65,8 @@ public class DBToSheets_IT extends GoogleSheetsTestSupport {
     @Test
     @CitrusTest
     public void testDBToSheets(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner, sampleDb);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into contact (first_name, last_name, company, lead_source) values ('Joe','Jackson','Red Hat','google-sheets')",
                                           "insert into contact (first_name, last_name, company, lead_source) values ('Joanne','Jackson','Red Hat','google-sheets')")));

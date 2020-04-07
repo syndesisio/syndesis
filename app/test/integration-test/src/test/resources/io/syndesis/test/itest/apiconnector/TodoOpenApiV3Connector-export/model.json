@@ -177,7 +177,7 @@
         "componentScheme": "rest-openapi",
         "configuredProperties": {
           "authenticationType": "basic:username_password",
-          "componentName": "connector-rest-swagger-http4",
+          "componentName": "connector-rest-swagger-http",
           "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
         },
         "connectorCustomizers": [
@@ -193,15 +193,15 @@
         "connectorGroupId": "swagger-connector-template",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+            "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
             "type": "MAVEN"
           },
           {
-            "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+            "id": "org.apache.camel:camel-http:${camel.version}",
             "type": "MAVEN"
           }
         ],
@@ -608,7 +608,7 @@
       "componentScheme": "rest-openapi",
       "configuredProperties": {
         "authenticationType": "basic:username_password",
-        "componentName": "connector-rest-swagger-http4",
+        "componentName": "connector-rest-swagger-http",
         "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
       },
       "connectorCustomizers": [
@@ -624,15 +624,15 @@
       "connectorGroupId": "swagger-connector-template",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+          "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
           "type": "MAVEN"
         },
         {
-          "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+          "id": "org.apache.camel:camel-http:${camel.version}",
           "type": "MAVEN"
         }
       ],
@@ -1272,7 +1272,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
                   },
                   "connectorCustomizers": [
@@ -1288,15 +1288,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -1679,7 +1679,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
                   },
                   "connectorCustomizers": [
@@ -1695,15 +1695,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2086,7 +2086,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
                   },
                   "connectorCustomizers": [
@@ -2102,15 +2102,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2458,7 +2458,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
                   },
                   "connectorCustomizers": [
@@ -2474,15 +2474,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],
@@ -2859,7 +2859,7 @@
                   "componentScheme": "rest-openapi",
                   "configuredProperties": {
                     "authenticationType": "basic:username_password",
-                    "componentName": "connector-rest-swagger-http4",
+                    "componentName": "connector-rest-swagger-http",
                     "specification": "{\"openapi\":\"3.0.2\",\"servers\":[{\"url\":\"{scheme}://hostname/api\",\"variables\":{\"scheme\":{\"enum\":[\"http\",\"https\"],\"default\":\"https\",\"description\":\"The supported protocol schemes.\"}}}],\"paths\":{\"/\":{\"get\":{\"operationId\":\"f4384275-7325-4f4a-bd83-db2fde707398\"},\"post\":{\"requestBody\":{\"$ref\":\"#/components/requestBodies/NewTask\"},\"operationId\":\"2dd3ddc1-b8d9-45cb-a8da-2e98827196aa\"}},\"/{id}\":{\"get\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"a5ee6a72-8161-4a2f-a6e5-f6bcb0c40e1f\"},\"put\":{\"requestBody\":{\"description\":\"Task with updates\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true},\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e2bdc74b-30bf-4056-b3cb-8b17d7d5633b\"},\"delete\":{\"parameters\":[{\"name\":\"id\",\"schema\":{\"format\":\"int64\",\"type\":\"integer\"},\"in\":\"path\"}],\"operationId\":\"e9fa6e05-e6ee-4379-9408-6b8e564aa9db\"}}},\"components\":{\"schemas\":{\"Task\":{\"type\":\"object\",\"properties\":{\"id\":{\"format\":\"int64\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\",\"type\":\"integer\"},\"task\":{\"title\":\"The task\",\"description\":\"Task line\",\"type\":\"string\"},\"completed\":{\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"maximum\":1,\"minimum\":0,\"type\":\"integer\"}}}},\"responses\":{\"TaskList\":{\"content\":{\"application/json\":{\"schema\":{\"type\":\"array\",\"items\":{\"$ref\":\"#/components/schemas/Task\"}}}},\"description\":\"All is good\"}},\"requestBodies\":{\"NewTask\":{\"description\":\"New task to create\",\"content\":{\"application/json\":{\"schema\":{\"$ref\":\"#/components/schemas/Task\"}}},\"required\":true}},\"securitySchemes\":{\"username_password\":{\"scheme\":\"basic\",\"type\":\"http\"}}}}"
                   },
                   "connectorCustomizers": [
@@ -2875,15 +2875,15 @@
                   "connectorGroupId": "swagger-connector-template",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-rest-swagger:2.0-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-rest-swagger:${project.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-rest-openapi:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-rest-openapi:${camel.version}",
                       "type": "MAVEN"
                     },
                     {
-                      "id": "org.apache.camel:camel-http4:2.23.2.fuse-760011",
+                      "id": "org.apache.camel:camel-http:${camel.version}",
                       "type": "MAVEN"
                     }
                   ],

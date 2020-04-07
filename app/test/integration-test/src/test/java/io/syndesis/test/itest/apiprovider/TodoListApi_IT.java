@@ -22,8 +22,6 @@ import java.util.Arrays;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -77,6 +75,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetOpenApiSpec(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(waitFor().http()
                 .method(HttpMethod.GET.name())
                 .seconds(10L)
@@ -97,6 +97,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testAddTodoList(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(http().client(todoListApiClient)
                 .send()
                 .post("/todos")
@@ -117,6 +119,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetTodoList(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
@@ -137,6 +141,8 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetEmptyTodoList(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.when(http().client(todoListApiClient)
                 .send()
                 .get("/todos"));
@@ -155,16 +161,11 @@ public class TodoListApi_IT extends SyndesisIntegrationTestSupport {
                     .requestUrl(String.format("http://localhost:%s", integrationContainer.getServerPort()))
                     .build();
         }
+    }
 
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from todo"));
     }
 }

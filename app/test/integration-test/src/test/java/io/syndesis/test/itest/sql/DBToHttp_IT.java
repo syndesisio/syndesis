@@ -23,8 +23,6 @@ import java.util.Arrays;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.server.HttpServer;
 import com.consol.citrus.http.server.HttpServerBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -79,6 +77,8 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testDBToHttp(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into contact (first_name, last_name, company) values ('Joe','Jackson','Red Hat')",
                                           "insert into contact (first_name, last_name, company) values ('Joanne','Jackson','Red Hat')")));
@@ -113,18 +113,11 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
                     .timeout(Duration.ofSeconds(SyndesisTestEnvironment.getDefaultTimeout()).toMillis())
                     .build();
         }
-
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
     }
 
-
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from contact"));
+    }
 }

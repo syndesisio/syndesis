@@ -22,8 +22,6 @@ import java.util.Arrays;
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
 import com.consol.citrus.annotations.CitrusTest;
-import com.consol.citrus.container.BeforeTest;
-import com.consol.citrus.container.SequenceBeforeTest;
 import com.consol.citrus.http.client.HttpClient;
 import com.consol.citrus.http.client.HttpClientBuilder;
 import io.syndesis.test.SyndesisTestEnvironment;
@@ -98,6 +96,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetById(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statement("insert into todo (id, task, completed) values (9999, 'Walk the dog', 0)"));
 
@@ -114,6 +114,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetAll(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
@@ -134,6 +136,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetOpen(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
@@ -156,6 +160,8 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
     @Test
     @CitrusTest
     public void testGetDone(@CitrusResource TestCaseRunner runner) {
+        cleanupDatabase(runner);
+
         runner.given(sql(sampleDb)
                 .statements(Arrays.asList("insert into todo (task, completed) values ('Wash the dog', 0)",
                         "insert into todo (task, completed) values ('Feed the dog', 0)",
@@ -182,16 +188,11 @@ public class TodoApi_IT extends SyndesisIntegrationTestSupport {
                     .requestUrl(String.format("http://localhost:%s", integrationContainer.getServerPort()))
                     .build();
         }
+    }
 
-        @Bean
-        public BeforeTest beforeTest(DataSource sampleDb) {
-            SequenceBeforeTest actions = new SequenceBeforeTest();
-            actions.addTestAction(
-                sql(sampleDb)
-                    .dataSource(sampleDb)
-                    .statement("delete from todo")
-            );
-            return actions;
-        }
+    private void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(sql(sampleDb)
+            .dataSource(sampleDb)
+            .statement("delete from todo"));
     }
 }
