@@ -29,6 +29,7 @@ import com.consol.citrus.http.servlet.RequestCachingServletFilter;
 import io.syndesis.test.SyndesisTestEnvironment;
 import io.syndesis.test.itest.SyndesisIntegrationTestSupport;
 import io.syndesis.test.itest.sheets.util.GzipServletFilter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,6 +37,7 @@ import org.springframework.util.SocketUtils;
 import org.testcontainers.Testcontainers;
 
 import static com.consol.citrus.actions.ExecuteSQLAction.Builder.sql;
+import static com.consol.citrus.actions.PurgeEndpointAction.Builder.purgeEndpoints;
 
 /**
  * @author Christoph Deppisch
@@ -47,6 +49,12 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
     static {
         Testcontainers.exposeHostPorts(GOOGLE_SHEETS_SERVER_PORT);
     }
+
+    @Autowired
+    protected DataSource sampleDb;
+
+    @Autowired
+    protected HttpServer googleSheetsApiServer;
 
     @Configuration
     public static class EndpointConfig {
@@ -66,9 +74,12 @@ public class GoogleSheetsTestSupport extends SyndesisIntegrationTestSupport {
         }
     }
 
-    protected void cleanupDatabase(TestCaseRunner runner, DataSource sampleDb) {
+    protected void cleanupDatabase(TestCaseRunner runner) {
+        runner.given(purgeEndpoints()
+                    .endpoint(googleSheetsApiServer));
+
         runner.given(sql(sampleDb)
             .dataSource(sampleDb)
-            .statement("delete from todo"));
+            .statement("delete from contact"));
     }
 }
