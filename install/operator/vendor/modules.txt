@@ -1,6 +1,6 @@
 # cloud.google.com/go v0.38.0
 cloud.google.com/go/compute/metadata
-# github.com/DATA-DOG/go-sqlmock v1.3.3
+# github.com/DATA-DOG/go-sqlmock v1.4.1
 github.com/DATA-DOG/go-sqlmock
 # github.com/Microsoft/go-winio v0.4.12
 github.com/Microsoft/go-winio
@@ -243,14 +243,14 @@ github.com/shurcooL/vfsgen
 github.com/sirupsen/logrus
 # github.com/spf13/cast v1.3.0
 github.com/spf13/cast
-# github.com/spf13/cobra v0.0.5
+# github.com/spf13/cobra v0.0.7
 github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 github.com/spf13/pflag
 # github.com/stretchr/testify v1.4.0
 github.com/stretchr/testify/assert
 github.com/stretchr/testify/require
-# github.com/testcontainers/testcontainers-go v0.3.0
+# github.com/testcontainers/testcontainers-go v0.3.1
 github.com/testcontainers/testcontainers-go
 github.com/testcontainers/testcontainers-go/wait
 # go.uber.org/atomic v1.4.0
@@ -337,7 +337,7 @@ gopkg.in/fsnotify.v1
 gopkg.in/inf.v0
 # gopkg.in/yaml.v2 v2.2.8
 gopkg.in/yaml.v2
-# k8s.io/api v0.17.2 => k8s.io/api v0.0.0-20191016110408-35e52d86657a
+# k8s.io/api v0.18.0 => k8s.io/api v0.0.0-20191016110408-35e52d86657a
 k8s.io/api/admission/v1
 k8s.io/api/admission/v1beta1
 k8s.io/api/admissionregistration/v1
@@ -507,7 +507,7 @@ k8s.io/client-go/util/jsonpath
 k8s.io/client-go/util/keyutil
 k8s.io/client-go/util/retry
 k8s.io/client-go/util/workqueue
-# k8s.io/code-generator v0.17.1 => k8s.io/code-generator v0.0.0-20191004115455-8e001e5d1894
+# k8s.io/code-generator v0.18.0 => k8s.io/code-generator v0.0.0-20191004115455-8e001e5d1894
 k8s.io/code-generator/cmd/client-gen
 k8s.io/code-generator/cmd/client-gen/args
 k8s.io/code-generator/cmd/client-gen/generators

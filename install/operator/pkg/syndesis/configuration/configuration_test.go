@@ -271,8 +271,8 @@ func Test_setSyndesisFromCustomResource(t *testing.T) {
 								Tag: "fabric8/s2i-java:3.0-java8",
 								SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
 							},
-							CamelVersion:  "2.23.2.fuse-760024",
-							CamelKRuntime: "0.3.4.fuse-740008",
+							CamelVersion:  "3.1.0",
+							CamelKRuntime: "1.1.0",
 						},
 						PublicApi: PublicApiConfiguration{
 							Enabled:       true,
@@ -391,8 +391,8 @@ func getConfigLiteral() *Config {
 				},
 				CamelK: CamelKConfiguration{
 					Enabled:       false,
-					CamelVersion:  "2.23.2.fuse-760024",
-					CamelKRuntime: "0.3.4.fuse-740008",
+					CamelVersion:  "3.1.0",
+					CamelKRuntime: "1.1.0",
 					Image: Image{
 						Tag: "fabric8/s2i-java:3.0-java8",
 						SHA: "fabric8/s2i-java:3.0-java8@sha256:4d13fcc6eda389d4d679602171e11593eadae9b9",
