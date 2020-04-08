@@ -2435,7 +2435,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:${project.version}",,
+          "id": "io.syndesis.connector:connector-sql:${project.version}",
           "type": "MAVEN"
         },
         {

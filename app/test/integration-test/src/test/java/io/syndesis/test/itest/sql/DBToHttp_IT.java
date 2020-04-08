@@ -19,6 +19,7 @@ package io.syndesis.test.itest.sql;
 import javax.sql.DataSource;
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 
 import com.consol.citrus.TestCaseRunner;
 import com.consol.citrus.annotations.CitrusResource;
@@ -86,6 +87,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.when(http().server(httpTestServer)
                 .receive()
                 .put()
+                .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joanne)@"))
                 .payload("{\"contact\":\"Joanne Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
@@ -95,6 +97,7 @@ public class DBToHttp_IT extends SyndesisIntegrationTestSupport {
         runner.then(http().server(httpTestServer)
                 .receive()
                 .put()
+                .selector(Collections.singletonMap("jsonPath:$.contact", "@startsWith(Joe)@"))
                 .payload("{\"contact\":\"Joe Jackson Red Hat\"}"));
 
         runner.then(http().server(httpTestServer)
