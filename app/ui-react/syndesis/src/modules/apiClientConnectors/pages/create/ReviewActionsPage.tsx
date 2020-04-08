@@ -1,11 +1,11 @@
 import { useApiConnectorSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
+  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorLayout,
   ButtonLink,
   OpenApiReviewActions,
-  PageLoader,
-  PageSection,
+  PageLoader
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -14,7 +14,6 @@ import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
-  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorWizardSteps,
 } from '../../components';
 import resolvers from '../../resolvers';
@@ -55,91 +54,95 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
           {() => (
             <>
               <PageTitle title={t('apiClientConnectors:create:review:title')} />
-              <ApiConnectorCreatorBreadcrumb cancelHref={resolvers.list()} />
+              <ApiConnectorCreatorBreadcrumb
+                cancelHref={resolvers.list()}
+                connectorsHref={resolvers.list()}
+                i18nCancel={t('shared:Cancel')}
+                i18nConnectors={t('shared:Connections')}
+                i18nCreateConnection={t('shared:CreateConnection')}
+              />
               <ApiConnectorCreatorLayout
-                header={<ApiConnectorCreatorWizardSteps step={2} />}
                 content={
-                  <PageSection>
-                    <WithLoader
-                      loading={loading}
-                      loaderChildren={<PageLoader />}
-                      error={error !== false}
-                      errorChildren={<ApiError error={error as Error} />}
-                    >
-                      {() => (
-                        <>
-                          <OpenApiReviewActions
-                            i18nApiDefinitionHeading={t(
-                              'apiClientConnectors:create:review:sectionApiDefinition'
-                            )}
-                            i18nDescriptionLabel={t(
-                              'apiClientConnectors:create:review:descriptionLabel'
-                            )}
-                            i18nImportedHeading={t(
-                              'apiClientConnectors:create:review:sectionImported'
-                            )}
-                            i18nNameLabel={t(
-                              'apiClientConnectors:create:review:nameLabel'
-                            )}
-                            apiProviderDescription={apiSummary!.description}
-                            apiProviderName={apiSummary!.name}
-                            i18nOperationsHtmlMessage={`<strong>${
-                              apiSummary!.actionsSummary!.totalActions
-                            }</strong> operations`}
-                            i18nWarningsHeading={t(
-                              'apiClientConnectors:create:review:sectionWarnings'
-                            )}
-                            warningMessages={
-                              apiSummary!.warnings
-                                ? apiSummary!.warnings.map(
-                                    warning => (warning as any).message
-                                  )
-                                : undefined
-                            }
-                            i18nErrorsHeading={t(
-                              'apiClientConnectors:review:sectionErrors'
-                            )}
-                            errorMessages={
-                              apiSummary!.errors
-                                ? apiSummary!.errors.map(
-                                    (e: any) => `${e.property}: ${e.message}`
-                                  )
-                                : undefined
-                            }
-                            actions={
-                              <div>
-                                <ButtonLink href={resolvers.create.upload()}>
-                                  {t('Back')}
-                                </ButtonLink>
-                                &nbsp;&nbsp;&nbsp;
-                                <ButtonLink
-                                  href={resolvers.create.specification({
-                                    specification: apiSummary!
-                                      .configuredProperties!.specification,
-                                  })}
-                                >
-                                  {t(
-                                    'apiClientConnectors:create:review:btnReviewEdit'
-                                  )}
-                                </ButtonLink>
-                                &nbsp;
-                                <ButtonLink
-                                  as={'primary'}
-                                  disabled={apiSummary!.errors}
-                                  href={resolvers.create.security({
-                                    specification: apiSummary!,
-                                  })}
-                                >
-                                  {t('Next')}
-                                </ButtonLink>
-                              </div>
-                            }
-                          />
-                        </>
-                      )}
-                    </WithLoader>
-                  </PageSection>
+                  <WithLoader
+                    loading={loading}
+                    loaderChildren={<PageLoader />}
+                    error={error !== false}
+                    errorChildren={<ApiError error={error as Error} />}
+                  >
+                    {() => (
+                      <>
+                        <OpenApiReviewActions
+                          i18nApiDefinitionHeading={t(
+                            'apiClientConnectors:create:review:sectionApiDefinition'
+                          )}
+                          i18nDescriptionLabel={t(
+                            'apiClientConnectors:create:review:descriptionLabel'
+                          )}
+                          i18nImportedHeading={t(
+                            'apiClientConnectors:create:review:sectionImported'
+                          )}
+                          i18nNameLabel={t(
+                            'apiClientConnectors:create:review:nameLabel'
+                          )}
+                          apiProviderDescription={apiSummary!.description}
+                          apiProviderName={apiSummary!.name}
+                          i18nOperationsHtmlMessage={`<strong>${
+                            apiSummary!.actionsSummary!.totalActions
+                          }</strong> operations`}
+                          i18nWarningsHeading={t(
+                            'apiClientConnectors:create:review:sectionWarnings'
+                          )}
+                          warningMessages={
+                            apiSummary!.warnings
+                              ? apiSummary!.warnings.map(
+                              warning => (warning as any).message
+                              )
+                              : undefined
+                          }
+                          i18nErrorsHeading={t(
+                            'apiClientConnectors:review:sectionErrors'
+                          )}
+                          errorMessages={
+                            apiSummary!.errors
+                              ? apiSummary!.errors.map(
+                              (e: any) => `${e.property}: ${e.message}`
+                              )
+                              : undefined
+                          }
+                          actions={
+                            <div>
+                              <ButtonLink href={resolvers.create.upload()}>
+                                {t('Back')}
+                              </ButtonLink>
+                              &nbsp;&nbsp;&nbsp;
+                              <ButtonLink
+                                href={resolvers.create.specification({
+                                  specification: apiSummary!
+                                    .configuredProperties!.specification,
+                                })}
+                              >
+                                {t(
+                                  'apiClientConnectors:create:review:btnReviewEdit'
+                                )}
+                              </ButtonLink>
+                              &nbsp;
+                              <ButtonLink
+                                as={'primary'}
+                                disabled={apiSummary!.errors}
+                                href={resolvers.create.security({
+                                  specification: apiSummary!,
+                                })}
+                              >
+                                {t('Next')}
+                              </ButtonLink>
+                            </div>
+                          }
+                        />
+                      </>
+                    )}
+                  </WithLoader>
                 }
+                navigation={<ApiConnectorCreatorWizardSteps step={2} />}
               />
             </>
           )}

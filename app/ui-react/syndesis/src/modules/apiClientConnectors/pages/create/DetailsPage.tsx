@@ -2,10 +2,10 @@ import { useApiConnectorCreator } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models';
 import {
+  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorLayout,
   ButtonLink,
-  Loader,
-  PageSection,
+  Loader
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -14,7 +14,6 @@ import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
-  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorWizardSteps,
   ApiConnectorInfoForm,
   IConnectorValues,
@@ -78,45 +77,49 @@ export const DetailsPage: React.FunctionComponent = () => {
         return (
           <>
             <PageTitle title={t('apiClientConnectors:create:details:title')} />
-            <ApiConnectorCreatorBreadcrumb cancelHref={resolvers.list()} />
+            <ApiConnectorCreatorBreadcrumb
+              cancelHref={resolvers.list()}
+              connectorsHref={resolvers.list()}
+              i18nCancel={t('shared:Cancel')}
+              i18nConnectors={t('shared:Connections')}
+              i18nCreateConnection={t('shared:CreateConnection')}
+            />
             <ApiConnectorCreatorLayout
-              header={<ApiConnectorCreatorWizardSteps step={4} />}
               content={
-                <PageSection>
-                  <ApiConnectorInfoForm
-                    name={state.specification.name}
-                    description={state.specification.description}
-                    isEditing={true}
-                    handleSubmit={handleSubmit}
-                  >
-                    {({ submitForm, isSubmitting, isUploadingImage }) => (
-                      <>
-                        <ButtonLink
-                          data-testid={
-                            'api-connector-details-form-cancel-button'
-                          }
-                          className="api-connector-details-form__editButton"
-                          href={resolvers.create.security(state)}
-                        >
-                          {t('shared:Back')}
-                        </ButtonLink>
-                        <ButtonLink
-                          data-testid={'api-connector-details-form-save-button'}
-                          as={'primary'}
-                          className={'api-connector-details-form__editButton'}
-                          disabled={isSubmitting || isUploadingImage}
-                          onClick={submitForm}
-                        >
-                          {(isSubmitting || isUploadingImage) && (
-                            <Loader size={'sm'} inline={true} />
-                          )}
-                          {t('shared:Save')}
-                        </ButtonLink>
-                      </>
-                    )}
-                  </ApiConnectorInfoForm>
-                </PageSection>
+                <ApiConnectorInfoForm
+                  name={state.specification.name}
+                  description={state.specification.description}
+                  isEditing={true}
+                  handleSubmit={handleSubmit}
+                >
+                  {({ submitForm, isSubmitting, isUploadingImage }) => (
+                    <>
+                      <ButtonLink
+                        data-testid={
+                          'api-connector-details-form-cancel-button'
+                        }
+                        className="api-connector-details-form__editButton"
+                        href={resolvers.create.security(state)}
+                      >
+                        {t('shared:Back')}
+                      </ButtonLink>
+                      <ButtonLink
+                        data-testid={'api-connector-details-form-save-button'}
+                        as={'primary'}
+                        className={'api-connector-details-form__editButton'}
+                        disabled={isSubmitting || isUploadingImage}
+                        onClick={submitForm}
+                      >
+                        {(isSubmitting || isUploadingImage) && (
+                          <Loader size={'sm'} inline={true} />
+                        )}
+                        {t('shared:Save')}
+                      </ButtonLink>
+                    </>
+                  )}
+                </ApiConnectorInfoForm>
               }
+              navigation={<ApiConnectorCreatorWizardSteps step={4} />}
             />
           </>
         );

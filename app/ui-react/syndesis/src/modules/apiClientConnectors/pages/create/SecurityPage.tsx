@@ -1,9 +1,9 @@
 import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models';
 import {
+  ApiConnectorCreatorBreadcrumb,
   ApiClientConnectorCreateSecurity,
-  ApiConnectorCreatorLayout,
-  PageSection,
+  ApiConnectorCreatorLayout
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -11,7 +11,6 @@ import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
-  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorWizardSteps,
 } from '../../components';
 import resolvers from '../../resolvers';
@@ -90,51 +89,55 @@ export const SecurityPage: React.FunctionComponent = () => {
               <PageTitle
                 title={t('apiClientConnectors:create:security:title')}
               />
-              <ApiConnectorCreatorBreadcrumb cancelHref={resolvers.list()} />
+              <ApiConnectorCreatorBreadcrumb
+                cancelHref={resolvers.list()}
+                connectorsHref={resolvers.list()}
+                i18nCancel={t('shared:Cancel')}
+                i18nConnectors={t('shared:Connections')}
+                i18nCreateConnection={t('shared:CreateConnection')}
+              />
               <ApiConnectorCreatorLayout
-                header={<ApiConnectorCreatorWizardSteps step={3} />}
                 content={
-                  <PageSection>
-                    <ApiClientConnectorCreateSecurity
-                      initialAccessTokenUrl={
-                        (properties!.tokenEndpoint &&
-                          properties!.tokenEndpoint.defaultValue)
-                      }
-                      initialAuthenticationType={
-                        properties!.authenticationType.defaultValue
-                      }
-                      initialAuthorizationUrl={
-                        (properties!.authorizationEndpoint &&
-                          properties!.authorizationEndpoint.defaultValue)
-                      }
-                      authenticationTypes={
-                        properties!.authenticationType &&
-                        (
-                          properties!.authenticationType.enum || []
-                        ).sort((a, b) => a.value!.localeCompare(b.value!))
-                      }
-                      backHref={backHref}
-                      extractAuthType={extractAuthType}
-                      i18nAccessTokenUrl={t(
-                        'apiClientConnectors:create:security:accessTokenUrl'
-                      )}
-                      i18nAuthorizationUrl={t(
-                        'apiClientConnectors:create:security:authorizationUrl'
-                      )}
-                      i18nBtnBack={t('Back')}
-                      i18nBtnNext={t('Next')}
-                      i18nNoSecurity={t(
-                        'apiClientConnectors:create:security:noSecurity'
-                      )}
-                      i18nTitle={t('apiClientConnectors:create:security:title')}
-                      i18nDescription={t(
-                        'apiClientConnectors:create:security:description'
-                      )}
-                      isValid={isValid}
-                      onNext={onNext}
-                    />
-                  </PageSection>
+                  <ApiClientConnectorCreateSecurity
+                    initialAccessTokenUrl={
+                      (properties!.tokenEndpoint &&
+                        properties!.tokenEndpoint.defaultValue)
+                    }
+                    initialAuthenticationType={
+                      properties!.authenticationType.defaultValue
+                    }
+                    initialAuthorizationUrl={
+                      (properties!.authorizationEndpoint &&
+                        properties!.authorizationEndpoint.defaultValue)
+                    }
+                    authenticationTypes={
+                      properties!.authenticationType &&
+                      (
+                        properties!.authenticationType.enum || []
+                      ).sort((a, b) => a.value!.localeCompare(b.value!))
+                    }
+                    backHref={backHref}
+                    extractAuthType={extractAuthType}
+                    i18nAccessTokenUrl={t(
+                      'apiClientConnectors:create:security:accessTokenUrl'
+                    )}
+                    i18nAuthorizationUrl={t(
+                      'apiClientConnectors:create:security:authorizationUrl'
+                    )}
+                    i18nBtnBack={t('Back')}
+                    i18nBtnNext={t('Next')}
+                    i18nNoSecurity={t(
+                      'apiClientConnectors:create:security:noSecurity'
+                    )}
+                    i18nTitle={t('apiClientConnectors:create:security:title')}
+                    i18nDescription={t(
+                      'apiClientConnectors:create:security:description'
+                    )}
+                    isValid={isValid}
+                    onNext={onNext}
+                  />
                 }
+                navigation={<ApiConnectorCreatorWizardSteps step={3} />}
               />
             </>
           )}

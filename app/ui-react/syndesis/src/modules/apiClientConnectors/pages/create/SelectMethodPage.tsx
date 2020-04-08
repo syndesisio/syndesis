@@ -1,4 +1,5 @@
 import {
+  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorLayout,
   Method,
   OpenApiSelectMethod,
@@ -9,7 +10,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import {
-  ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorWizardSteps,
 } from '../../components';
 import resolvers from '../../resolvers';
@@ -26,9 +26,14 @@ export const SelectMethodPage: React.FunctionComponent = () => {
           <PageTitle
             title={t('apiClientConnectors:create:selectMethod:title')}
           />
-          <ApiConnectorCreatorBreadcrumb cancelHref={resolvers.list()} />
+          <ApiConnectorCreatorBreadcrumb
+            i18nCancel={t('shared:Cancel')}
+            i18nConnectors={t('apiClientConnectors:apiConnectorsPageTitle')}
+            i18nCreateConnection={t('apiClientConnectors:CreateApiConnector')}
+            cancelHref={resolvers.list()}
+            connectorsHref={resolvers.list()}
+          />
           <ApiConnectorCreatorLayout
-            header={<ApiConnectorCreatorWizardSteps step={1} />}
             content={
               <PageSection>
                 <OpenApiSelectMethod
@@ -69,6 +74,7 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 />
               </PageSection>
             }
+            navigation={<ApiConnectorCreatorWizardSteps step={1} />}
           />
         </>
       )}
