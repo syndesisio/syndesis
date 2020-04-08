@@ -236,7 +236,7 @@
         "dependencies": [
           {
             "type": "MAVEN",
-            "id": "io.syndesis.connector:connector-http:1.8-SNAPSHOT"
+            "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT"
           }
         ],
         "description": "Invoke various HTTP methods.",
@@ -809,7 +809,7 @@
                   "dependencies": [
                     {
                       "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-timer:1.8-SNAPSHOT"
+                      "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT"
                     },
                     {
                       "type": "MAVEN",
@@ -1038,7 +1038,7 @@
                   "dependencies": [
                     {
                       "type": "MAVEN",
-                      "id": "io.syndesis.connector:connector-http:1.8-SNAPSHOT"
+                      "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT"
                     }
                   ],
                   "description": "Invoke various HTTP methods.",
@@ -1457,7 +1457,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-activemq:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-activemq:1.10-SNAPSHOT"
         }
       ],
       "description": "Subscribe for and publish messages.",
@@ -1815,7 +1815,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-amqp:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-amqp:1.10-SNAPSHOT"
         }
       ],
       "description": "Subscribe for and publish messages.",
@@ -1958,7 +1958,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
         },
         {
           "type": "MAVEN",
@@ -2142,7 +2142,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-aws-ddb:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-aws-ddb:1.10-SNAPSHOT"
         }
       ],
       "description": "Interact with a Dynamo DB instance.",
@@ -2423,7 +2423,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-aws-s3:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-aws-s3:1.10-SNAPSHOT"
         }
       ],
       "description": "Retrieve and store objects.",
@@ -2545,7 +2545,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-aws-sns:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-aws-sns:1.10-SNAPSHOT"
         }
       ],
       "description": "Send messages.",
@@ -2946,7 +2946,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-aws-sqs:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-aws-sqs:1.10-SNAPSHOT"
         }
       ],
       "description": "Send and receive messages.",
@@ -3147,7 +3147,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-box:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-box:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "tech-preview": "true" },
@@ -3257,7 +3257,7 @@
             },
             "configuredProperties": { "operationId": "operation-48" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3265,7 +3265,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3289,7 +3289,7 @@
             },
             "configuredProperties": { "operationId": "operation-8" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3297,7 +3297,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3321,7 +3321,7 @@
             },
             "configuredProperties": { "operationId": "operation-3" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3329,7 +3329,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3353,7 +3353,7 @@
             },
             "configuredProperties": { "operationId": "operation-21" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3361,7 +3361,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3385,7 +3385,7 @@
             },
             "configuredProperties": { "operationId": "operation-28" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3393,7 +3393,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3417,7 +3417,7 @@
             },
             "configuredProperties": { "operationId": "operation-39" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3425,7 +3425,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3449,7 +3449,7 @@
             },
             "configuredProperties": { "operationId": "operation-34" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3457,7 +3457,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3481,7 +3481,7 @@
             },
             "configuredProperties": { "operationId": "operation-56" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3489,7 +3489,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3513,7 +3513,7 @@
             },
             "configuredProperties": { "operationId": "operation-65" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3521,7 +3521,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3545,7 +3545,7 @@
             },
             "configuredProperties": { "operationId": "operation-61" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3553,7 +3553,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3577,7 +3577,7 @@
             },
             "configuredProperties": { "operationId": "operation-67" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3585,7 +3585,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3609,7 +3609,7 @@
             },
             "configuredProperties": { "operationId": "operation-53" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3617,7 +3617,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3641,7 +3641,7 @@
             },
             "configuredProperties": { "operationId": "operation-83" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3649,7 +3649,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3673,7 +3673,7 @@
             },
             "configuredProperties": { "operationId": "operation-16" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3681,7 +3681,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3705,7 +3705,7 @@
             },
             "configuredProperties": { "operationId": "operation-59" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3713,7 +3713,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3737,7 +3737,7 @@
             },
             "configuredProperties": { "operationId": "operation-64" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3745,7 +3745,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3769,7 +3769,7 @@
             },
             "configuredProperties": { "operationId": "operation-84" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3777,7 +3777,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3801,7 +3801,7 @@
             },
             "configuredProperties": { "operationId": "operation-80" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3809,7 +3809,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3833,7 +3833,7 @@
             },
             "configuredProperties": { "operationId": "operation-11" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3841,7 +3841,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3865,7 +3865,7 @@
             },
             "configuredProperties": { "operationId": "operation-6" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3873,7 +3873,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3897,7 +3897,7 @@
             },
             "configuredProperties": { "operationId": "operation-24" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3905,7 +3905,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3929,7 +3929,7 @@
             },
             "configuredProperties": { "operationId": "operation-31" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3937,7 +3937,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3961,7 +3961,7 @@
             },
             "configuredProperties": { "operationId": "operation-37" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -3969,7 +3969,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -3993,7 +3993,7 @@
             },
             "configuredProperties": { "operationId": "operation-54" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4001,7 +4001,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4025,7 +4025,7 @@
             },
             "configuredProperties": { "operationId": "operation-70" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4033,7 +4033,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4057,7 +4057,7 @@
             },
             "configuredProperties": { "operationId": "operation-14" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4065,7 +4065,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4089,7 +4089,7 @@
             },
             "configuredProperties": { "operationId": "operation-44" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4097,7 +4097,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4121,7 +4121,7 @@
             },
             "configuredProperties": { "operationId": "operation-62" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4129,7 +4129,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4153,7 +4153,7 @@
             },
             "configuredProperties": { "operationId": "operation-76" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4161,7 +4161,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4185,7 +4185,7 @@
             },
             "configuredProperties": { "operationId": "operation-1" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4193,7 +4193,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4217,7 +4217,7 @@
             },
             "configuredProperties": { "operationId": "operation-9" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4225,7 +4225,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4249,7 +4249,7 @@
             },
             "configuredProperties": { "operationId": "operation-4" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4257,7 +4257,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4281,7 +4281,7 @@
             },
             "configuredProperties": { "operationId": "operation-18" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4289,7 +4289,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4313,7 +4313,7 @@
             },
             "configuredProperties": { "operationId": "operation-22" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4321,7 +4321,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4345,7 +4345,7 @@
             },
             "configuredProperties": { "operationId": "operation-29" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4353,7 +4353,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4377,7 +4377,7 @@
             },
             "configuredProperties": { "operationId": "operation-40" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4385,7 +4385,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4409,7 +4409,7 @@
             },
             "configuredProperties": { "operationId": "operation-35" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4417,7 +4417,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4441,7 +4441,7 @@
             },
             "configuredProperties": { "operationId": "operation-57" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4449,7 +4449,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4473,7 +4473,7 @@
             },
             "configuredProperties": { "operationId": "operation-71" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4481,7 +4481,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4505,7 +4505,7 @@
             },
             "configuredProperties": { "operationId": "operation-0" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4513,7 +4513,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4537,7 +4537,7 @@
             },
             "configuredProperties": { "operationId": "operation-2" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4545,7 +4545,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4569,7 +4569,7 @@
             },
             "configuredProperties": { "operationId": "operation-7" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4577,7 +4577,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4601,7 +4601,7 @@
             },
             "configuredProperties": { "operationId": "operation-12" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4609,7 +4609,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4633,7 +4633,7 @@
             },
             "configuredProperties": { "operationId": "operation-17" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4641,7 +4641,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4665,7 +4665,7 @@
             },
             "configuredProperties": { "operationId": "operation-20" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4673,7 +4673,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4697,7 +4697,7 @@
             },
             "configuredProperties": { "operationId": "operation-27" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4705,7 +4705,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4729,7 +4729,7 @@
             },
             "configuredProperties": { "operationId": "operation-43" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4737,7 +4737,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4761,7 +4761,7 @@
             },
             "configuredProperties": { "operationId": "operation-50" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4769,7 +4769,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4793,7 +4793,7 @@
             },
             "configuredProperties": { "operationId": "operation-55" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4801,7 +4801,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4825,7 +4825,7 @@
             },
             "configuredProperties": { "operationId": "operation-60" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4833,7 +4833,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4857,7 +4857,7 @@
             },
             "configuredProperties": { "operationId": "operation-77" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4865,7 +4865,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4889,7 +4889,7 @@
             },
             "configuredProperties": { "operationId": "operation-25" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4897,7 +4897,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4921,7 +4921,7 @@
             },
             "configuredProperties": { "operationId": "operation-26" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4929,7 +4929,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4953,7 +4953,7 @@
             },
             "configuredProperties": { "operationId": "operation-73" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4961,7 +4961,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -4985,7 +4985,7 @@
             },
             "configuredProperties": { "operationId": "operation-42" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -4993,7 +4993,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5017,7 +5017,7 @@
             },
             "configuredProperties": { "operationId": "operation-32" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5025,7 +5025,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5049,7 +5049,7 @@
             },
             "configuredProperties": { "operationId": "operation-49" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5057,7 +5057,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5081,7 +5081,7 @@
             },
             "configuredProperties": { "operationId": "operation-75" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5089,7 +5089,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5113,7 +5113,7 @@
             },
             "configuredProperties": { "operationId": "operation-45" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5121,7 +5121,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5145,7 +5145,7 @@
             },
             "configuredProperties": { "operationId": "operation-68" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5153,7 +5153,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5177,7 +5177,7 @@
             },
             "configuredProperties": { "operationId": "operation-33" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5185,7 +5185,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5209,7 +5209,7 @@
             },
             "configuredProperties": { "operationId": "operation-38" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5217,7 +5217,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5241,7 +5241,7 @@
             },
             "configuredProperties": { "operationId": "operation-46" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5249,7 +5249,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5273,7 +5273,7 @@
             },
             "configuredProperties": { "operationId": "operation-66" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5281,7 +5281,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5305,7 +5305,7 @@
             },
             "configuredProperties": { "operationId": "operation-51" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5313,7 +5313,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5337,7 +5337,7 @@
             },
             "configuredProperties": { "operationId": "operation-81" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5345,7 +5345,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5369,7 +5369,7 @@
             },
             "configuredProperties": { "operationId": "operation-72" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5377,7 +5377,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5401,7 +5401,7 @@
             },
             "configuredProperties": { "operationId": "operation-47" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5409,7 +5409,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5433,7 +5433,7 @@
             },
             "configuredProperties": { "operationId": "operation-15" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5441,7 +5441,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5465,7 +5465,7 @@
             },
             "configuredProperties": { "operationId": "operation-19" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5473,7 +5473,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5497,7 +5497,7 @@
             },
             "configuredProperties": { "operationId": "operation-58" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5505,7 +5505,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5529,7 +5529,7 @@
             },
             "configuredProperties": { "operationId": "operation-10" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5537,7 +5537,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5561,7 +5561,7 @@
             },
             "configuredProperties": { "operationId": "operation-5" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5569,7 +5569,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5593,7 +5593,7 @@
             },
             "configuredProperties": { "operationId": "operation-23" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5601,7 +5601,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5625,7 +5625,7 @@
             },
             "configuredProperties": { "operationId": "operation-30" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5633,7 +5633,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5657,7 +5657,7 @@
             },
             "configuredProperties": { "operationId": "operation-74" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5665,7 +5665,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5689,7 +5689,7 @@
             },
             "configuredProperties": { "operationId": "operation-41" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5697,7 +5697,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5721,7 +5721,7 @@
             },
             "configuredProperties": { "operationId": "operation-36" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5729,7 +5729,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5753,7 +5753,7 @@
             },
             "configuredProperties": { "operationId": "operation-69" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5761,7 +5761,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5785,7 +5785,7 @@
             },
             "configuredProperties": { "operationId": "operation-82" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5793,7 +5793,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5817,7 +5817,7 @@
             },
             "configuredProperties": { "operationId": "operation-52" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5825,7 +5825,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -5849,7 +5849,7 @@
             },
             "configuredProperties": { "operationId": "operation-78" },
             "connectorId": "concur",
-            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
+            "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT",
             "componentScheme": "rest-swagger"
           },
           "tags": ["Resources"],
@@ -5857,7 +5857,7 @@
           "dependencies": [
             {
               "type": "MAVEN",
-              "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+              "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
             }
           ],
           "pattern": "To"
@@ -6230,7 +6230,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-dropbox:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-dropbox:1.10-SNAPSHOT"
         }
       ],
       "description": "Download and upload files.",
@@ -6452,7 +6452,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-email:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-email:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "tech-preview": "true" },
@@ -6696,7 +6696,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-email:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-email:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "tech-preview": "true" },
@@ -7200,7 +7200,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-fhir:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-fhir:1.10-SNAPSHOT"
         }
       ],
       "description": "Communicate with a FHIR server.",
@@ -7266,7 +7266,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-flow:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-flow:1.10-SNAPSHOT"
         }
       ],
       "metadata": {
@@ -7610,7 +7610,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-ftp:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-ftp:1.10-SNAPSHOT"
         }
       ],
       "description": "Download and upload files.",
@@ -7967,7 +7967,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-gmail:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-gmail:1.10-SNAPSHOT"
         }
       ],
       "description": "Receive and send messages.",
@@ -8613,7 +8613,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-google-calendar:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-google-calendar:1.10-SNAPSHOT"
         }
       ],
       "description": "Receive, create and update events.",
@@ -8771,7 +8771,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-http:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT"
         }
       ],
       "description": "Invoke various HTTP methods.",
@@ -8930,7 +8930,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-http:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT"
         }
       ],
       "description": "Invoke various HTTPS methods.",
@@ -9115,7 +9115,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-irc:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-irc:1.10-SNAPSHOT"
         }
       ],
       "description": "Send and receive messages to/from an IRC chat.",
@@ -9735,7 +9735,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-jira:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-jira:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "tech-preview": "true" },
@@ -9838,7 +9838,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-kafka:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-kafka:1.10-SNAPSHOT"
         }
       ],
       "description": "Subscribe for and publish messages",
@@ -10020,7 +10020,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-knative:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-knative:1.10-SNAPSHOT"
         },
         {
           "type": "MAVEN",
@@ -10166,7 +10166,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-kudu:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-kudu:1.10-SNAPSHOT"
         }
       ],
       "description": "Manage Apache Kudu resources.",
@@ -10273,7 +10273,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-log:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-log:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "hide-from-connection-pages": "true" },
@@ -10543,7 +10543,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-mongodb:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-mongodb:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "tech-preview": "true" },
@@ -10683,7 +10683,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-mqtt:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-mqtt:1.10-SNAPSHOT"
         }
       ],
       "description": "Subscribe for and publish messages.",
@@ -11059,7 +11059,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-odata:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-odata:1.10-SNAPSHOT"
         }
       ],
       "description": "Communicate with an OData service.",
@@ -11241,7 +11241,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-rest-swagger:1.10-SNAPSHOT"
         },
         {
           "type": "MAVEN",
@@ -11870,7 +11870,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-salesforce:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-salesforce:1.10-SNAPSHOT"
         }
       ],
       "description": "Manage customer relations in the cloud.",
@@ -12073,7 +12073,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-servicenow:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-servicenow:1.10-SNAPSHOT"
         }
       ],
       "description": "Retrieve and create records.",
@@ -12414,7 +12414,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-sftp:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-sftp:1.10-SNAPSHOT"
         }
       ],
       "description": "Upload and download files using Secure File Transfer Protocol.",
@@ -13460,7 +13460,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-google-sheets:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-google-sheets:1.10-SNAPSHOT"
         }
       ],
       "description": "Read and write data to spreadsheets.",
@@ -13686,7 +13686,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-slack:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-slack:1.10-SNAPSHOT"
         }
       ],
       "description": "Obtain and send messages.",
@@ -14008,7 +14008,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-sql:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT"
         },
         { "type": "EXTENSION_TAG", "id": "jdbc-driver" }
       ],
@@ -14103,7 +14103,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-telegram:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-telegram:1.10-SNAPSHOT"
         }
       ],
       "description": "Receive and send messages.",
@@ -14189,7 +14189,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-timer:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT"
         },
         {
           "type": "MAVEN",
@@ -14486,7 +14486,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-twitter:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-twitter:1.10-SNAPSHOT"
         }
       ],
       "description": "Trigger integrations based on tweet content.",
@@ -14546,7 +14546,7 @@
       "dependencies": [
         {
           "type": "MAVEN",
-          "id": "io.syndesis.connector:connector-webhook:1.8-SNAPSHOT"
+          "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT"
         }
       ],
       "metadata": { "hide-from-connection-pages": "true" },
@@ -14707,7 +14707,7 @@
                     "dependencies": [
                       {
                         "type": "MAVEN",
-                        "id": "io.syndesis.connector:connector-timer:1.8-SNAPSHOT"
+                        "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT"
                       },
                       {
                         "type": "MAVEN",
@@ -14936,7 +14936,7 @@
                     "dependencies": [
                       {
                         "type": "MAVEN",
-                        "id": "io.syndesis.connector:connector-http:1.8-SNAPSHOT"
+                        "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT"
                       }
                     ],
                     "description": "Invoke various HTTP methods.",

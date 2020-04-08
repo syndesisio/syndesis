@@ -86,7 +86,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -201,7 +201,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -356,7 +356,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-timer:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-timer:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {

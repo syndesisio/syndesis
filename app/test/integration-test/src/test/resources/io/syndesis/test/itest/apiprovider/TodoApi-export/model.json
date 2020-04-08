@@ -232,7 +232,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -655,7 +655,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -1027,7 +1027,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1273,7 +1273,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1747,7 +1747,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -2107,7 +2107,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -2872,7 +2872,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -3305,7 +3305,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -3635,7 +3635,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -4400,7 +4400,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -4833,7 +4833,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -5163,7 +5163,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -6019,7 +6019,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -6452,7 +6452,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -6782,7 +6782,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {
@@ -7638,7 +7638,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-api-provider:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {

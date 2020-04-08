@@ -256,7 +256,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -558,7 +558,7 @@
         "componentScheme": "ftp",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-ftp:1.10-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -960,7 +960,7 @@
       "componentScheme": "ftp",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-ftp:1.10-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1395,7 +1395,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1798,7 +1798,7 @@
                   "componentScheme": "ftp",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-ftp:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-ftp:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
@@ -2393,7 +2393,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {

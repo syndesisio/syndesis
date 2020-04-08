@@ -415,7 +415,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -1093,7 +1093,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -1532,7 +1532,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -2204,7 +2204,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -2643,7 +2643,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -3321,7 +3321,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -3760,7 +3760,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -4432,7 +4432,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -4871,7 +4871,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
@@ -5543,7 +5543,7 @@
               "dependencies": [
                 {
                   "type": "MAVEN",
-                  "id": "io.syndesis.connector:connector-api-provider:1.8-SNAPSHOT"
+                  "id": "io.syndesis.connector:connector-api-provider:1.10-SNAPSHOT"
                 },
                 {
                   "type": "MAVEN",
