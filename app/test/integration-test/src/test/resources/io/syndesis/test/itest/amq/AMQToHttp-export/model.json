@@ -300,7 +300,7 @@
         "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-activemq:1.10-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -645,7 +645,7 @@
         },
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -977,7 +977,7 @@
       "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-activemq:1.10-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1308,7 +1308,7 @@
       },
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1743,7 +1743,7 @@
                   "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-activemq:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-activemq:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
@@ -2236,7 +2236,7 @@
                   },
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-http:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],

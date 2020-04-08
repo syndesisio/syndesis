@@ -232,7 +232,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
             "type": "MAVEN"
           },
           {
@@ -468,7 +468,7 @@
         },
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-email:1.10-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -664,7 +664,7 @@
         ],
         "dependencies": [
           {
-            "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+            "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
             "type": "MAVEN"
           }
         ],
@@ -834,7 +834,7 @@
       },
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-email:1.10-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1187,7 +1187,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
           "type": "MAVEN"
         },
         {
@@ -1317,7 +1317,7 @@
       ],
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
@@ -1458,7 +1458,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-webhook:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
@@ -1855,7 +1855,7 @@
                   },
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-email:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-email:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     }
                   ],
@@ -2372,7 +2372,7 @@
                   ],
                   "dependencies": [
                     {
-                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "id": "io.syndesis.connector:connector-sql:1.10-SNAPSHOT",
                       "type": "MAVEN"
                     },
                     {

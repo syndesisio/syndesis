@@ -213,7 +213,7 @@
                 },
                 "dependencies": [
                     {
-                        "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                        "id": "io.syndesis.connector:connector-gmail:1.10-SNAPSHOT",
                         "type": "MAVEN"
                     }
                 ],
@@ -461,7 +461,7 @@
                 ],
                 "dependencies": [
                     {
-                        "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                        "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
                         "type": "MAVEN"
                     }
                 ],
@@ -685,7 +685,7 @@
             },
             "dependencies": [
                 {
-                    "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                    "id": "io.syndesis.connector:connector-gmail:1.10-SNAPSHOT",
                     "type": "MAVEN"
                 }
             ],
@@ -921,7 +921,7 @@
             ],
             "dependencies": [
                 {
-                    "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                    "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
                     "type": "MAVEN"
                 }
             ],
@@ -1062,7 +1062,7 @@
                                     ],
                                     "dependencies": [
                                         {
-                                            "id": "io.syndesis.connector:connector-webhook:1.9-SNAPSHOT",
+                                            "id": "io.syndesis.connector:connector-webhook:1.10-SNAPSHOT",
                                             "type": "MAVEN"
                                         }
                                     ],
@@ -1430,7 +1430,7 @@
                                     },
                                     "dependencies": [
                                         {
-                                            "id": "io.syndesis.connector:connector-gmail:1.9-SNAPSHOT",
+                                            "id": "io.syndesis.connector:connector-gmail:1.10-SNAPSHOT",
                                             "type": "MAVEN"
                                         }
                                     ],
