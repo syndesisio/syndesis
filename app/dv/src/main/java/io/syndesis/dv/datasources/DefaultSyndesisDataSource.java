@@ -19,7 +19,7 @@ import java.util.Map;
 
 import io.syndesis.dv.metadata.internal.TeiidDataSourceImpl;
 
-public class DefaultSyndesisDataSource {
+public class DefaultSyndesisDataSource implements Cloneable {
     private String syndesisConnectionId;
     private String syndesisName;
     private volatile String teiidName;
@@ -92,5 +92,14 @@ public class DefaultSyndesisDataSource {
 
     public void setTeiidName(String teiidName) {
         this.teiidName = teiidName;
+    }
+
+    @Override
+    public DefaultSyndesisDataSource clone() {
+        try {
+            return (DefaultSyndesisDataSource)super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
