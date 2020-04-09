@@ -5,6 +5,7 @@ import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorToggleList,
   ButtonLink,
   Loader
 } from '@syndesis/ui';
@@ -122,6 +123,15 @@ export const DetailsPage: React.FunctionComponent = () => {
               navigation={
                 <ApiConnectorCreatorBreadSteps
                   step={4}
+                  i18nDetails={t('apiClientConnectors:create:details:title')}
+                  i18nReview={t('apiClientConnectors:create:review:title')}
+                  i18nSecurity={t('apiClientConnectors:create:security:title')}
+                  i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                />
+              }
+              toggle={
+                <ApiConnectorCreatorToggleList
+                  step={1}
                   i18nDetails={t('apiClientConnectors:create:details:title')}
                   i18nReview={t('apiClientConnectors:create:review:title')}
                   i18nSecurity={t('apiClientConnectors:create:security:title')}
