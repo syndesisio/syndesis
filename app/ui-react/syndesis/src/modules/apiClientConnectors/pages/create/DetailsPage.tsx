@@ -3,6 +3,7 @@ import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
+  ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
   ButtonLink,
   Loader
@@ -14,7 +15,6 @@ import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
-  ApiConnectorCreatorWizardSteps,
   ApiConnectorInfoForm,
   IConnectorValues,
 } from '../../components';
@@ -119,7 +119,15 @@ export const DetailsPage: React.FunctionComponent = () => {
                   )}
                 </ApiConnectorInfoForm>
               }
-              navigation={<ApiConnectorCreatorWizardSteps step={4} />}
+              navigation={
+                <ApiConnectorCreatorBreadSteps
+                  step={4}
+                  i18nDetails={t('apiClientConnectors:create:details:title')}
+                  i18nReview={t('apiClientConnectors:create:review:title')}
+                  i18nSecurity={t('apiClientConnectors:create:security:title')}
+                  i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                />
+              }
             />
           </>
         );

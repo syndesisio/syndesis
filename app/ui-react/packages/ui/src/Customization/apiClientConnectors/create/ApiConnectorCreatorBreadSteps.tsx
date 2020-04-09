@@ -13,8 +13,6 @@ export interface IApiConnectorCreatorBreadStepsProps {
   i18nReview: string;
   i18nSecurity: string;
   i18nSelectMethod: string;
-  i18nConfigureApiConnector: string;
-  i18nNameApiConnector: string;
 }
 
 /**

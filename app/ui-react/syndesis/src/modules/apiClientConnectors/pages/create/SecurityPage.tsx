@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models';
 import {
   ApiConnectorCreatorBreadcrumb,
+  ApiConnectorCreatorBreadSteps,
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout
 } from '@syndesis/ui';
@@ -10,9 +11,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import {
-  ApiConnectorCreatorWizardSteps,
-} from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -137,7 +135,15 @@ export const SecurityPage: React.FunctionComponent = () => {
                     onNext={onNext}
                   />
                 }
-                navigation={<ApiConnectorCreatorWizardSteps step={3} />}
+                navigation={
+                  <ApiConnectorCreatorBreadSteps
+                    step={3}
+                    i18nDetails={t('apiClientConnectors:create:details:title')}
+                    i18nReview={t('apiClientConnectors:create:review:title')}
+                    i18nSecurity={t('apiClientConnectors:create:security:title')}
+                    i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                  />
+                }
               />
             </>
           )}
