@@ -1,21 +1,24 @@
 import * as React from 'react';
 
-export interface IApiClientCreatorToggleListProps {
+export interface IApiConnectorCreatorToggleListProps {
   step: number;
-  i18nSelectConnector: string;
-  i18nConfigureConnector: string;
-  i18nNameConnector: string;
+  i18nDetails: string;
+  i18nReview: string;
+  i18nSecurity: string;
+  i18nSelectMethod: string;
 }
 
-export const ApiClientCreatorToggleList: React.FunctionComponent<IApiClientCreatorToggleListProps> = ({
-  i18nConfigureConnector,
-  i18nNameConnector,
-  i18nSelectConnector,
-  step,
-}) => {
+export const ApiConnectorCreatorToggleList: React.FunctionComponent<IApiConnectorCreatorToggleListProps> = (
+  {
+    i18nDetails,
+    i18nReview,
+    i18nSecurity,
+    i18nSelectMethod,
+    step,
+  }) => {
   return (
     <button
-      aria-label="Wizard Header Toggle"
+      aria-label="Wizard Navigation Toggle"
       className="pf-c-wizard__toggle"
       aria-expanded="false"
     >
@@ -23,19 +26,25 @@ export const ApiClientCreatorToggleList: React.FunctionComponent<IApiClientCreat
         {step === 1 && (
           <li className="pf-c-wizard__toggle-list-item">
             <span className="pf-c-wizard__toggle-num">1</span>
-            {i18nSelectConnector}
+            {i18nSelectMethod}
           </li>
         )}
         {step === 2 && (
           <li className="pf-c-wizard__toggle-list-item">
             <span className="pf-c-wizard__toggle-num">2</span>
-            {i18nConfigureConnector}
+            {i18nReview}
           </li>
         )}
         {step === 3 && (
           <li className="pf-c-wizard__toggle-list-item">
             <span className="pf-c-wizard__toggle-num">3</span>
-            {i18nNameConnector}
+            {i18nSecurity}
+          </li>
+        )}
+        {step === 4 && (
+          <li className="pf-c-wizard__toggle-list-item">
+            <span className="pf-c-wizard__toggle-num">4</span>
+            {i18nDetails}
           </li>
         )}
       </ol>

@@ -2,9 +2,9 @@ import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
+  ApiConnectorCreatorToggleList,
   Method,
   OpenApiSelectMethod,
-  PageSection,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -33,47 +33,54 @@ export const SelectMethodPage: React.FunctionComponent = () => {
           />
           <ApiConnectorCreatorLayout
             content={
-              <PageSection>
-                <OpenApiSelectMethod
-                  disableDropzone={false}
-                  fileExtensions={t(
-                    'apiClientConnectors:create:selectMethod:dndFileExtensions'
-                  )}
-                  i18nBtnNext={t('shared:Next')}
-                  i18nHelpMessage={t(
-                    'apiClientConnectors:create:selectMethod:dndHelpMessage'
-                  )}
-                  i18nInstructions={t(
-                    'apiClientConnectors:create:selectMethod:dndInstructions'
-                  )}
-                  i18nNoFileSelectedMessage={t(
-                    'apiClientConnectors:create:selectMethod:dndNoFileSelectedLabel'
-                  )}
-                  i18nSelectedFileLabel={t(
-                    'apiClientConnectors:create:selectMethod:dndSelectedFileLabel'
-                  )}
-                  i18nUploadFailedMessage={t(
-                    'apiClientConnectors:create:selectMethod:dndUploadFailedMessage'
-                  )}
-                  i18nUploadSuccessMessage={t(
-                    'apiClientConnectors:create:selectMethod:dndUploadSuccessMessage'
-                  )}
-                  i18nMethodFromFile={t(
-                    'apiClientConnectors:create:selectMethod:methodFromFile'
-                  )}
-                  i18nMethodFromUrl={t(
-                    'apiClientConnectors:create:selectMethod:methodFromUrl'
-                  )}
-                  i18nUrlNote={t(
-                    'apiClientConnectors:create:selectMethod:urlNote'
-                  )}
-                  onNext={onNext}
-                  allowFromScratch={false}
-                />
-              </PageSection>
+              <OpenApiSelectMethod
+                disableDropzone={false}
+                fileExtensions={t(
+                  'apiClientConnectors:create:selectMethod:dndFileExtensions'
+                )}
+                i18nBtnNext={t('shared:Next')}
+                i18nHelpMessage={t(
+                  'apiClientConnectors:create:selectMethod:dndHelpMessage'
+                )}
+                i18nInstructions={t(
+                  'apiClientConnectors:create:selectMethod:dndInstructions'
+                )}
+                i18nNoFileSelectedMessage={t(
+                  'apiClientConnectors:create:selectMethod:dndNoFileSelectedLabel'
+                )}
+                i18nSelectedFileLabel={t(
+                  'apiClientConnectors:create:selectMethod:dndSelectedFileLabel'
+                )}
+                i18nUploadFailedMessage={t(
+                  'apiClientConnectors:create:selectMethod:dndUploadFailedMessage'
+                )}
+                i18nUploadSuccessMessage={t(
+                  'apiClientConnectors:create:selectMethod:dndUploadSuccessMessage'
+                )}
+                i18nMethodFromFile={t(
+                  'apiClientConnectors:create:selectMethod:methodFromFile'
+                )}
+                i18nMethodFromUrl={t(
+                  'apiClientConnectors:create:selectMethod:methodFromUrl'
+                )}
+                i18nUrlNote={t(
+                  'apiClientConnectors:create:selectMethod:urlNote'
+                )}
+                onNext={onNext}
+                allowFromScratch={false}
+              />
             }
             navigation={
               <ApiConnectorCreatorBreadSteps
+                step={1}
+                i18nDetails={t('apiClientConnectors:create:details:title')}
+                i18nReview={t('apiClientConnectors:create:review:title')}
+                i18nSecurity={t('apiClientConnectors:create:security:title')}
+                i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+              />
+            }
+            toggle={
+              <ApiConnectorCreatorToggleList
                 step={1}
                 i18nDetails={t('apiClientConnectors:create:details:title')}
                 i18nReview={t('apiClientConnectors:create:review:title')}

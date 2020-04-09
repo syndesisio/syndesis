@@ -4,7 +4,8 @@ import {
   ApiConnectorCreatorBreadcrumb,
   ApiConnectorCreatorBreadSteps,
   ApiClientConnectorCreateSecurity,
-  ApiConnectorCreatorLayout
+  ApiConnectorCreatorLayout,
+  ApiConnectorCreatorToggleList
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -27,7 +28,7 @@ export const SecurityPage: React.FunctionComponent = () => {
   });
   const onNext = (authType?: string, authUrl?: string, tokenUrl?: string) => {
     if (authType === 'unselected') {
-      throw new Error('Invalid authentication typp allowed');
+      throw new Error('Invalid authentication type allowed');
     }
     history.push(
       resolvers.create.save({
@@ -138,6 +139,15 @@ export const SecurityPage: React.FunctionComponent = () => {
                 navigation={
                   <ApiConnectorCreatorBreadSteps
                     step={3}
+                    i18nDetails={t('apiClientConnectors:create:details:title')}
+                    i18nReview={t('apiClientConnectors:create:review:title')}
+                    i18nSecurity={t('apiClientConnectors:create:security:title')}
+                    i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                  />
+                }
+                toggle={
+                  <ApiConnectorCreatorToggleList
+                    step={1}
                     i18nDetails={t('apiClientConnectors:create:details:title')}
                     i18nReview={t('apiClientConnectors:create:review:title')}
                     i18nSecurity={t('apiClientConnectors:create:security:title')}

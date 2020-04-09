@@ -1,7 +1,7 @@
 import { Alert, Form, Stack, StackItem, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';
-import { ERROR, WARNING } from '../Shared/models';
+import { ERROR, WARNING } from '../Shared';
 
 export interface IConnectorConfigurationFormValidationResult {
   message: string;
