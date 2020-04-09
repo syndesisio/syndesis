@@ -1,5 +1,6 @@
 import {
   ApiConnectorCreatorBreadcrumb,
+  ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
   Method,
   OpenApiSelectMethod,
@@ -9,9 +10,6 @@ import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
-import {
-  ApiConnectorCreatorWizardSteps,
-} from '../../components';
 import resolvers from '../../resolvers';
 
 export const SelectMethodPage: React.FunctionComponent = () => {
@@ -74,7 +72,15 @@ export const SelectMethodPage: React.FunctionComponent = () => {
                 />
               </PageSection>
             }
-            navigation={<ApiConnectorCreatorWizardSteps step={1} />}
+            navigation={
+              <ApiConnectorCreatorBreadSteps
+                step={1}
+                i18nDetails={t('apiClientConnectors:create:details:title')}
+                i18nReview={t('apiClientConnectors:create:review:title')}
+                i18nSecurity={t('apiClientConnectors:create:security:title')}
+                i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+              />
+            }
           />
         </>
       )}

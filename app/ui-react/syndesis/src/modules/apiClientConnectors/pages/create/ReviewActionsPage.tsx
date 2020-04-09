@@ -2,6 +2,7 @@ import { useApiConnectorSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ApiConnectorCreatorBreadcrumb,
+  ApiConnectorCreatorBreadSteps,
   ApiConnectorCreatorLayout,
   ButtonLink,
   OpenApiReviewActions,
@@ -13,9 +14,6 @@ import { Translation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
-import {
-  ApiConnectorCreatorWizardSteps,
-} from '../../components';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
 
@@ -142,7 +140,15 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                     )}
                   </WithLoader>
                 }
-                navigation={<ApiConnectorCreatorWizardSteps step={2} />}
+                navigation={
+                  <ApiConnectorCreatorBreadSteps
+                    step={2}
+                    i18nDetails={t('apiClientConnectors:create:details:title')}
+                    i18nReview={t('apiClientConnectors:create:review:title')}
+                    i18nSecurity={t('apiClientConnectors:create:security:title')}
+                    i18nSelectMethod={t('apiClientConnectors:create:selectMethod:title')}
+                  />
+                }
               />
             </>
           )}
