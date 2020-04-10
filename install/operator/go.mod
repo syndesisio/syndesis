@@ -44,7 +44,7 @@ require (
 
 require (
 	github.com/operator-framework/operator-sdk v0.16.0
-	sigs.k8s.io/controller-runtime v0.4.0
+	sigs.k8s.io/controller-runtime v0.5.2
 )
 
 // Pinned to kubernetes-1.16.2, this is a requirement for operator-sdk 0.14.0
