@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
+console.log("Migrating to schema 40 ...");
+
+
 migrate("integrations", "/integrations", function(integration) {
     var changed = false;
 
     var ch = function() {
         changed = true;
-    }
+    };
 
     if (Array.isArray(integration.tags)) {
         integration.tags = integration.tags.map(change("http4", "http", ch))
@@ -68,19 +71,17 @@ migrate("integrations", "/integrations", function(integration) {
                             if (Array.isArray(step.connection.connector.actions)) {
                                 step.connection.connector.actions.forEach(migrateAction);
                             }
-
-                            if(Array.isArray(step.connection.connector.dependencies)) {
-                                step.connection.connector.dependencies.forEach(function(dependency) {
-                                    dependency.id = change("org.apache.camel:camel-servlet-starter",
-                                                    "org.apache.camel.springboot:camel-servlet-starter", ch)(dependency.id);
-                                }
-                            }
                         }
                     }
                 });
             }
         });
-    }
+     }
 
     return changed;
 });
+
+
+console.log("Migration to schema 40 completed");
+
+
