@@ -45,6 +45,7 @@ import java.util.stream.Collectors;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import io.syndesis.common.model.Dependency;
@@ -75,7 +76,6 @@ import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
-import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.util.PredicateFilter;
@@ -90,7 +90,7 @@ import org.springframework.stereotype.Component;
 @Api(value = "extensions")
 @Component
 @ConditionalOnBean(FileDAO.class)
-public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
+public class ExtensionHandler extends BaseHandler implements Getter<Extension>, Deleter<Extension> {
 
     private final FileDAO fileStore;
     private final ExtensionActivator extensionActivator;
@@ -249,7 +249,6 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return integrations(extension);
     }
 
-    @Override
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiImplicitParams({
@@ -264,12 +263,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         @ApiImplicitParam(
             name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
         @ApiImplicitParam(
-            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string"),
-        @ApiImplicitParam(
-            name = "extensionType", value = "The type to filter results on", paramType = "query", dataType = "string"),
+            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string")
     })
-    public ListResult<Extension> list(@Context UriInfo uriInfo) {
-        String extensionType = uriInfo.getQueryParameters().getFirst("extensionType");
+    public ListResult<Extension> list(@Context UriInfo uriInfo, @ApiParam(required = false) @QueryParam("extensionType") String extensionType) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
         if (query == null) {
