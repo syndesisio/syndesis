@@ -15,13 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.extension;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
@@ -41,14 +34,20 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.enums.ParameterIn;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
@@ -77,9 +76,9 @@ import io.syndesis.server.endpoint.v1.SyndesisRestException;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
-import io.syndesis.server.endpoint.v1.operations.Lister;
 import io.syndesis.server.endpoint.v1.operations.PaginationOptionsFromQueryParams;
 import io.syndesis.server.endpoint.v1.operations.SortOptionsFromQueryParams;
+import io.syndesis.server.endpoint.v1.util.PredicateFilter;
 import okio.BufferedSink;
 import okio.Okio;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
@@ -91,7 +90,7 @@ import org.springframework.stereotype.Component;
 @Tag(name = "extensions")
 @Component
 @ConditionalOnBean(FileDAO.class)
-public class ExtensionHandler extends BaseHandler implements Lister<Extension>, Getter<Extension>, Deleter<Extension> {
+public class ExtensionHandler extends BaseHandler implements Getter<Extension>, Deleter<Extension> {
 
     private final FileDAO fileStore;
     private final ExtensionActivator extensionActivator;
@@ -241,13 +240,21 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Parameter(name = "sort", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "Sort the result list according to the given field value")
-    @Parameter(name = "direction", in = ParameterIn.QUERY, schema = @Schema(type = "string", allowableValues = {"asc", "desc"}), description = "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)")
-    @Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "1"), description = "Page number to return")
-    @Parameter(name = "per_page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"), description = "Number of records per page")
-    @Parameter(name = "query", in = ParameterIn.QUERY, schema = @Schema(type = "string"), description = "The search query to filter results on")
-    @Override
-    public ListResult<Extension> list(@Context UriInfo uriInfo) {
+    @ApiImplicitParams({
+        @ApiImplicitParam(
+            name = "sort", value = "Sort the result list according to the given field value",
+            paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "direction", value = "Sorting direction when a 'sort' field is provided. Can be 'asc' " +
+            "(ascending) or 'desc' (descending)", paramType = "query", dataType = "string"),
+        @ApiImplicitParam(
+            name = "page", value = "Page number to return", paramType = "query", dataType = "integer", defaultValue = "1"),
+        @ApiImplicitParam(
+            name = "per_page", value = "Number of records per page", paramType = "query", dataType = "integer", defaultValue = "20"),
+        @ApiImplicitParam(
+            name = "query", value = "The search query to filter results on", paramType = "query", dataType = "string")
+    })
+    public ListResult<Extension> list(@Context UriInfo uriInfo, @ApiParam(required = false) @QueryParam("extensionType") String extensionType) {
         // Defaulting to display only Installed extensions
         String query = uriInfo.getQueryParameters().getFirst("query");
         if (query == null) {
@@ -257,6 +264,9 @@ public class ExtensionHandler extends BaseHandler implements Lister<Extension>, 
         return getDataManager().fetchAll(
             Extension.class,
             new ReflectiveFilterer<>(Extension.class, FilterOptionsParser.fromString(query)),
+            new PredicateFilter<>(
+                extension -> extensionType == null || extension.getExtensionType().equals(Extension.Type.valueOf(extensionType))
+            ),
             new ReflectiveSorter<>(Extension.class, new SortOptionsFromQueryParams(uriInfo)),
             new PaginationFilter<>(new PaginationOptionsFromQueryParams(uriInfo))
         );
